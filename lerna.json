@@ -1,0 +1,14 @@
+{
+  "version": "independent",
+  "command": {
+    "publish": {
+      "ignoreChanges": [
+        "example/**",
+        "test/**"
+      ]
+    }
+  },
+  "packages": [
+    "packages/*"
+  ]
+}

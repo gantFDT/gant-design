@@ -1,0 +1,39 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "dist",
+    "module": "esnext",
+    "target": "es5",
+    "lib": [
+      "esnext",
+      "dom"
+    ],
+    "sourceMap": true,
+    "allowJs": true,
+    "jsx": "react",
+    "moduleResolution": "node",
+    "rootDir": ".",
+    "forceConsistentCasingInFileNames": false,
+    "noImplicitReturns": false,
+    "noImplicitThis": false,
+    "noImplicitAny": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "strictNullChecks": false,
+    "importHelpers": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "experimentalDecorators": true,
+    "downlevelIteration": true,
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    }
+  },
+  "exclude": [
+    "node_modules",
+    "dist",
+    "stories"
+  ]
+}

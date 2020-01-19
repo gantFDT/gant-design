@@ -1,0 +1,84 @@
+@import '../../gantd/src/style/index.less';
+@import '../../gantd/src/style/theme/index.less';
+@colorpicker-prefix-cls: ~'@{gant-prefix}-colorpicker';
+
+.@{colorpicker-prefix-cls} {
+
+  &-mainwrap{
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+    background: rgb(255, 255, 255);
+    border: 0px solid rgba(0, 0, 0, 0.25);
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 4px;
+    border-radius: 4px;
+    padding: 10px 6px 6px 90px;
+  }
+
+  &-preview{
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    width: 80px;
+    height: 100%;
+    margin: -10px 0 0 -90px;
+    font-size: 13px;
+    border-radius: 4px 0 0 4px;
+  }
+
+  &-onlypreview{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    width: 80px;
+    height: 52px;
+    font-size: 13px;
+    border-radius: 4px;
+    border: 0px solid rgba(0, 0, 0, 0.25);
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 4px;
+  }
+
+  &-itemwrap{
+    position: relative;
+  }
+
+  &-mainitem{
+    height: 30px;
+    width: 30px;
+    margin: 0 6px 6px 0;
+    border-radius: 4px;
+  }
+
+  &-picker{
+    position: absolute;
+    left: -5px;
+    z-index: 9;
+  }
+
+  &-inputlabel{
+    background: rgb(240, 240, 240);
+    height: 30px;
+    width: 30px;
+    border-radius: 4px 0px 0px 4px;
+    color: rgb(152, 161, 164);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &-input{
+    width: 100px;
+    font-size: 14px;
+    color: rgb(102, 102, 102);
+    border: 0px;
+    outline: none;
+    height: 28px;
+    box-shadow: rgb(240, 240, 240) 0px 0px 0px 1px inset;
+    box-sizing: content-box;
+    border-radius: 0px 4px 4px 0px;
+    padding-left: 8px;
+  }
+}

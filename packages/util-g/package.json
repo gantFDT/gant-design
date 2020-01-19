@@ -1,0 +1,14 @@
+{
+  "name": "util-g",
+  "version": "0.0.2",
+  "description": "Gant utilities.",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {},
+  "keywords": [
+    "modules",
+    "util"
+  ],
+  "author": "GantFDT",
+  "license": "MIT"
+}

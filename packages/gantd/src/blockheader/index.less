@@ -1,0 +1,82 @@
+@import '../style/index.less';
+@blockheader-prefix-cls: ~'@{gant-prefix}-blockheader';
+
+.@{blockheader-prefix-cls} {
+  width: 100%;
+  min-height: 40px;
+  padding: 2px 0;
+
+  &:after {
+    content: '';
+    width: 100%;
+    display: block;
+    height: 0px;
+    clear: both;
+    visibility: hidden;
+  }
+
+  &-wrapper {
+    display: flex;
+    align-items: center;
+  }
+
+  &-title {
+    color: #000;
+    font-size: 14px;
+    line-height: 34px;
+    margin-left: 5px;
+    font-weight: bold;
+    display: inline-block;
+    flex: 1;
+    // smart功能有界面配置, 不能用overflow
+    // overflow: hidden;
+    // white-space: nowrap;
+    // text-overflow: ellipsis;
+    position: relative;
+  }
+
+  &-icon {
+    display: inline-block;
+    color: #000;
+    text-align: center;
+    line-height: 40px;
+    font-size: 20px;
+  }
+
+  &-line {
+    width: 3px;
+    height: 20px;
+    background: #000;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  &-num {
+    font-weight: bold;
+    display: inline-block;
+    width: fit-content;
+    height: 20px;
+    background: #000;
+    min-width: 20px;
+    color: #fff;
+    text-align: center;
+    line-height: 20px;
+    border-radius: 3px;
+  }
+
+  &-extra {
+    float: right;
+
+    &>* {
+      margin: 5px;
+    }
+  }
+
+  &-beforeExtra {
+    float: left;
+
+    &>* {
+      margin: 5px;
+    }
+  }
+}

@@ -1,0 +1,14 @@
+.npmrc
+
+.DS_Store
+/node_modules
+/packages/*/node_modules
+/packages/*/LICENSE
+*.log
+*.cache
+/build
+/.eslintcache
+dist
+lib
+package-lock.json
+.idea/
