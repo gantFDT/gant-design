@@ -23,7 +23,8 @@
   "scripts": {
     "dev": "start-storybook -p 60001",
     "build-storybook": "build-storybook",
-    "compile": "gulp"
+    "compile": "gulp",
+    "build": "node ./scripts/build"
   },
   "files": [
     "lib",

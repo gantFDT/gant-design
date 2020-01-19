@@ -10,8 +10,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const FilterWarningsPlugin = require('webpack-filter-warnings-plugin');
-const ChunkDistFilesPlugin = require('./plugins/chunkdistfiles');
-const babelConfig = require('./babelConfig.json');
+const babelConfig = require('../../babelConfig.json');
 
 function resolve(moduleName) {
     return require.resolve(moduleName);
@@ -22,10 +21,7 @@ const pkg = require(path.join(process.cwd(), 'package.json'));
 module.exports = {
     mode: 'production', // "production" | "development" | "none"
     entry: {
-      ['gantd']: path.resolve(__dirname, 'packages/gantd/src/index.js'),
-      ['color-picker-g']: path.resolve(__dirname, 'packages/color-picker-g/src/index.jsx'),
-      ['submenu-g']: path.resolve(__dirname, 'packages/submenu-g/src/index.jsx'),
-      ['util-g']: path.resolve(__dirname, 'packages/util-g/src/index.ts'),
+      gantd: path.resolve(__dirname, 'src/index.js')
     },
     resolve: {
         // 解析模块请求的选项
@@ -41,7 +37,7 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: '[name].js', // 「入口分块(entry chunk)」的文件名模板（出口分块？）
-        library: pkg.name, // 导出库(exported library)的名称
+        library: 'gantd', // 导出库(exported library)的名称
         libraryTarget: 'umd' // 使用 module.exports 导出
     },
     externals: {
@@ -68,10 +64,7 @@ module.exports = {
         rules: [{
             test: /\.(jsx|js)?$/,
             include: [
-                path.resolve(__dirname, "packages"),
-            ],
-            exclude: [
-                path.resolve(__dirname, "node_modules")
+              path.resolve(__dirname, "../"),
             ],
             // 这里是匹配条件，每个选项都接收一个正则表达式或字符串
             // test 和 include 具有相同的作用，都是必须匹配选项
@@ -89,10 +82,7 @@ module.exports = {
         }, {
             test: /\.(tsx|ts)?$/,
             include: [
-                path.resolve(__dirname, "packages"),
-            ],
-            exclude: [
-                path.resolve(__dirname, "node_modules")
+              path.resolve(__dirname, "../"),
             ],
             use: 'ts-loader'
         }, {
@@ -165,8 +155,7 @@ module.exports = {
         new MiniCssExtractPlugin({
             filename: '[name].css',
             chunkFilename: '[id].css'
-        }),
-        new ChunkDistFilesPlugin()
+        })
     ],
 
     optimization: {
