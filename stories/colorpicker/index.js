@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ColorPicker from '@/color-picker-g/src';
+import ColorPicker from '@pkgs/color-picker-g/src';
 import CodeDecorator from '../_util/CodeDecorator'
 import code from './code.js';
 
@@ -43,7 +43,7 @@ function DisabledUse() {
 
 const config = {
     codes: code,
-    inline: true,
+    // inline: true,
     useage: ``,
     children: [
         {

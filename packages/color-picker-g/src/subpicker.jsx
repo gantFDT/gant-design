@@ -10,7 +10,7 @@ const styles = {
     position: 'relative',
   },
   body: {
-    padding: '15px 9px 9px 15px',
+    padding: '5px 4px 2px 10px',
   },
   triangle: {
     width: '0px',
@@ -20,7 +20,7 @@ const styles = {
     borderColor: 'transparent transparent #fff transparent',
     position: 'absolute',
     top: '-10px',
-    left: '12px'
+    left: '8px'
   },
   triangleShadow: {
     width: '0px',
@@ -29,14 +29,14 @@ const styles = {
     borderWidth: '0 9px 10px 9px',
     position: 'absolute',
     top: '-11px',
-    left: '12px'
+    left: '8px'
   },
   swatch: {
-    width: '30px',
-    height: '30px',
+    width: '26px',
+    height: '26px',
     float: 'left',
-    borderRadius: '4px',
-    margin: '0 6px 6px 0',
+    borderRadius: '3px',
+    margin: '0 6px 3px 0',
   },
   clear: {
     clear: 'both',
@@ -46,7 +46,7 @@ const styles = {
 const SubPicker = props => {
   const {
     onChange,
-    width = 204,
+    width = 174,
     colors = ['#1890FF'],
     placement
   } = props;

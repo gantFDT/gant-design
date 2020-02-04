@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { EditableInput } from 'react-color/lib/components/common';
-import { ConfigConsumer } from '../../gantd/src/config-provider';
-import { hex2hsl } from '../../util-g/src';
+import { ConfigConsumer } from '@gantd/config-provider';
+import { hex2hsl } from '@util-g';
 import { presetPalettes } from '@ant-design/colors';
 import SubPicker from './subpicker';
 import './index.less';
@@ -41,12 +41,17 @@ const inputStyles = {
     color: '#666',
     border: 'none',
     outline: 'none',
-    height: 28,
+    height: 24,
     boxShadow: 'inset 0 0 0 1px #F0F0F0',
     boxSizing: 'content-box',
     borderRadius: '0 4px 4px 0',
     float: 'left',
     paddingLeft: 8,
+  },
+  disabled: {
+    color: '#999',
+    backgroundColor: 'rgba(125,125,125,0.05)',
+    cursor: 'not-allowed'
   }
 };
 
@@ -98,7 +103,7 @@ function ColorPicker(props) {
     const [h, s, l] = hex2hsl('#' + showText);
     return (
       !edit?(
-        <div className={`${prefixCls}-onlypreview`} style={{backgroundColor:currentColor,width:width||80}}>#{showText}</div>
+        <div className={`${prefixCls}-onlypreview`} style={{backgroundColor:currentColor, width: width !== 'auto' ? width : 80}}>#{showText}</div>
       ):(
         <div className={`${prefixCls}-mainwrap`} style={{width}}>
           <div className={`${prefixCls}-preview`} style={{backgroundColor:currentColor, color: l < 0.8 ? '#fff' : '#000'}}>#{showText}</div>
@@ -119,7 +124,7 @@ function ColorPicker(props) {
                     className={`${prefixCls}-mainitem`}
                     style={{
                       backgroundColor:primary, 
-                      cursor: disabled ? 'auto' : 'pointer'
+                      cursor: disabled ? 'not-allowed' : 'pointer'
                     }}
                   ></div>
                   {!disabled && visibleStatus===id && (
@@ -136,19 +141,21 @@ function ColorPicker(props) {
               )
             })
           }
-          <div className={`${prefixCls}-inputlabel`}>#</div>
-          {
-            disabled ? (
-              <input type="text" value={ showText } disabled style={ inputStyles.input }/>
-            ) : (
-              <EditableInput
-                label={ null }
-                style={ inputStyles }
-                value={ showText }
-                onChange={ inputColor }
-              />
-            )
-          }
+          <div style={{display:'flex', marginBottom: 3}}>
+            <div className={`${prefixCls}-inputlabel`} style={{ cursor: disabled ? 'not-allowed' : 'pointer' }}>#</div>
+            {
+              disabled ? (
+                <input type="text" value={ showText } disabled style={ {...inputStyles.input, ...inputStyles.disabled} }/>
+              ) : (
+                <EditableInput
+                  label={ null }
+                  style={ inputStyles }
+                  value={ showText }
+                  onChange={ inputColor }
+                />
+              )
+            }
+          </div>
         </div>
       )
     );

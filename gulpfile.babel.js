@@ -20,15 +20,21 @@ let pkgs = fs.readdirSync(path.join(__dirname, 'packages'),{withFileTypes:true})
   .filter(item=>item.isDirectory()&&item.name !== 'gantd')
   .map(item=>item.name);
 
+/**
+ * 编译非gantd包的js文件
+ * @param {*} dirName 文件夹名
+ */
 const jstask = function (dirName) {
   return src([`packages/${dirName}/src/*.jsx`, `packages/${dirName}/src/*.js`])
     .pipe(babel(babelConfig))
     .pipe(
+      // 处理路径等问题
       through2.obj(function (chunk, enc, next) {
         let content = chunk.contents.toString()
         content = content.replace(/\.less/g, '.css')
         content = content.replace(/\.jsx/g, '.js')
-        content = content.replace(/\.\.\/\.\.\/gantd\/src/g, 'gantd/lib')
+        content = content.replace(/@gantd/g, 'gantd/lib')
+        content = content.replace(/@util-g/g, 'util-g')
         const buf = Buffer.from(content)
         chunk.contents = buf
         this.push(chunk)
@@ -37,10 +43,11 @@ const jstask = function (dirName) {
     )
     .pipe(dest(`packages/${dirName}/lib/`))
     .pipe(
+      // 复制到gantd文件夹里面的时候处理路径等问题
       through2.obj(function (chunk, enc, next) {
         let content = chunk.contents.toString()
         content = content.replace(/gantd\/lib/g, '..')
-        content = content.replace(/\.\.\/\.\.\/util\-g\/src/g, '../util')
+        content = content.replace(/util\-g/g, '../util')
         const buf = Buffer.from(content)
         chunk.contents = buf
         this.push(chunk)

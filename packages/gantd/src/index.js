@@ -20,6 +20,6 @@ export { default as BlockHeader } from './blockheader';
 
 export { default as Intro } from './intro';
 
-export { default as ColorPicker } from '../../color-picker-g/src';
+export { default as ColorPicker } from '@pkgs/color-picker-g/src';
 
-export { default as SubMenu } from '../../submenu-g/src';
+export { default as SubMenu } from '@pkgs/submenu-g/src';

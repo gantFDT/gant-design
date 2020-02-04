@@ -3,8 +3,8 @@ import './index.less';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Menu, Badge } from 'antd';
-import { ConfigConsumer } from '../../gantd/src/config-provider';
-import Icon from '../../gantd/src/icon';
+import { ConfigConsumer } from '@gantd/config-provider';
+import Icon from '@gantd/icon';
 
 //收缩时菜单的宽
 const collapsedWidth = 40;

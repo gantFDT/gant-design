@@ -38,10 +38,12 @@ module.exports = async ({ config, mode }) => {
 			]
 		},
 		resolve: {
-			// 用于查找模块的目录
+      // 用于查找模块的目录
+      
 			extensions: [".js", ".ts", ".json", ".jsx", ".tsx"],
 			alias: {
-				"@": path.resolve('packages'),
+				"@pkgs": path.resolve('packages'),
+				"@util-g": path.resolve('packages/util-g/src'),
 				"@gantd": path.resolve('packages/gantd/src'),
 			}
 		},
