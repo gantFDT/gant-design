@@ -1,5 +1,6 @@
 import React, { useCallback, useState, useEffect } from 'react';
-import { EditableInput } from 'react-color/lib/components/common';
+import { EditableInput, Sketch } from 'react-color/lib/components/common';
+import Chrome from 'react-color/lib/Chrome';
 import { ConfigConsumer } from '@gantd/config-provider';
 import { hex2hsl } from '@util-g';
 import { presetPalettes } from '@ant-design/colors';
@@ -55,17 +56,6 @@ const inputStyles = {
   }
 };
 
-// export interface ColorPickerProps {
-//   value: string,
-//   onChange(value: string): void,
-//   prefixCls?: string,
-//   width?: string | number,
-//   edit?: boolean,
-//   disabled?: boolean,
-//   placement?: string
-// }
-
-// function ColorPicker(props: ColorPickerProps) {
 function ColorPicker(props) {
   const {
     value,
@@ -78,6 +68,7 @@ function ColorPicker(props) {
   } = props;
 
   const [visibleStatus, setVisibleStatus] = useState('');
+  const [pickerVisible, setPickerVisible] = useState(false);
   const [currentColor, setCurrentColor] = useState('');
 
   const modifyColor = useCallback((color) => {
@@ -119,6 +110,7 @@ function ColorPicker(props) {
                   key={id}
                   onMouseEnter={()=>setVisibleStatus(id)}
                   onMouseLeave={()=>setVisibleStatus('')}
+                  onClick={()=>modifyColor(primary)}
                 >
                   <div
                     className={`${prefixCls}-mainitem`}
@@ -142,7 +134,23 @@ function ColorPicker(props) {
             })
           }
           <div style={{display:'flex', marginBottom: 3}}>
-            <div className={`${prefixCls}-inputlabel`} style={{ cursor: disabled ? 'not-allowed' : 'pointer' }}>#</div>
+            <div
+              onMouseEnter={()=>!disabled && setPickerVisible(true)}
+              onMouseLeave={()=>setPickerVisible(false)}
+              className={`${prefixCls}-inputlabel`}
+              style={{ position: 'relative', cursor: disabled ? 'not-allowed' : 'pointer' }}
+            >
+              <span>#</span>
+              {
+                pickerVisible && <div style={{position: 'absolute', bottom: -33, left: 0, zIndex: 9}} >
+                  <Chrome
+                    color={currentColor}
+                    onChange={color => modifyColor(color.hex)}
+                    disableAlpha
+                  />
+                </div>
+              }
+            </div>
             {
               disabled ? (
                 <input type="text" value={ showText } disabled style={ {...inputStyles.input, ...inputStyles.disabled} }/>
