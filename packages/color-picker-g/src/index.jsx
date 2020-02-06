@@ -9,17 +9,12 @@ import './index.less';
 
 const inputStyles = {
   input:{
-    width: 55,
+    width: 60,
     fontSize: 13,
     border: 'none',
     outline: 'none',
     height: '100%',
     backgroundColor: 'transparent',
-  },
-  disabled: {
-    color: '#999',
-    backgroundColor: 'rgba(125,125,125,0.05)',
-    cursor: 'not-allowed'
   }
 };
 
