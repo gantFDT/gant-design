@@ -6,11 +6,11 @@ const styles = {
     background: '#fff',
     border: '0 solid rgba(0,0,0,0.25)',
     boxShadow: '0 1px 4px rgba(0,0,0,0.25)',
-    borderRadius: '4px',
+    borderRadius: '3px',
     position: 'relative',
   },
   body: {
-    padding: '5px 4px 2px 10px',
+    padding: '3px 0 0 3px',
   },
   triangle: {
     width: '0px',
@@ -20,7 +20,7 @@ const styles = {
     borderColor: 'transparent transparent #fff transparent',
     position: 'absolute',
     top: '-10px',
-    left: '8px'
+    left: '7px'
   },
   triangleShadow: {
     width: '0px',
@@ -29,14 +29,14 @@ const styles = {
     borderWidth: '0 9px 10px 9px',
     position: 'absolute',
     top: '-11px',
-    left: '8px'
+    left: '7px'
   },
   swatch: {
     width: '26px',
     height: '26px',
     float: 'left',
     borderRadius: '3px',
-    margin: '0 6px 3px 0',
+    margin: '0 3px 3px 0',
   },
   clear: {
     clear: 'both',
@@ -46,12 +46,13 @@ const styles = {
 const SubPicker = props => {
   const {
     onChange,
-    width = 174,
+    width = 148,
     colors = ['#1890FF'],
     placement
   } = props;
   
-  const handleChange = (color) => {
+  const handleChange = (color, ev) => {
+		ev.stopPropagation();
     onChange&&onChange(color);
   }
 

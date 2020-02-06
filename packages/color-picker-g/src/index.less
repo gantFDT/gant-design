@@ -12,20 +12,30 @@
     border: 0px solid rgba(0, 0, 0, 0.25);
     box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 4px;
     border-radius: 4px;
-    padding: 3px 6px 0px 90px;
+    padding: 3px 3px 0px 83px;
   }
 
   &-preview{
     position: absolute;
+    left: 0;
+    top: 0;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    align-items: stretch;
+    text-align: center;
+    line-height: 32px;
     color: #fff;
     width: 80px;
     height: 100%;
-    margin: -3px 0 0 -90px;
     font-size: 13px;
     border-radius: 4px 0 0 4px;
+
+    &-text{
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: not-allowed;
+    }
   }
 
   &-onlypreview{
@@ -48,37 +58,35 @@
   &-mainitem{
     height: 26px;
     width: 26px;
-    margin: 0 6px 3px 0;
+    margin: 0 3px 3px 0;
     border-radius: 3px;
   }
 
   &-picker{
     position: absolute;
-    left: -5px;
+    left: -3px;
     z-index: 9;
   }
 
   &-inputlabel{
-    background: rgb(240, 240, 240);
-    height: 26px;
-    width: 30px;
-    border-radius: 4px 0px 0px 4px;
-    color: rgb(152, 161, 164);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 20px;
+    height: 100%;
+    position: relative;
+    z-index: 9;
+
+    span{
+      display: flex;
+      height: 100%;
+      align-items: center;
+      justify-content: flex-end;
+    }
   }
 
   &-input{
-    width: 100px;
+    flex: 1;
     font-size: 14px;
-    color: rgb(102, 102, 102);
-    border: 0px;
+    border: none;
     outline: none;
     height: 24px;
-    box-shadow: rgb(240, 240, 240) 0px 0px 0px 1px inset;
-    box-sizing: content-box;
-    border-radius: 0px 4px 4px 0px;
-    padding-left: 8px;
   }
 }
