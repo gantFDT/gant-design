@@ -8,13 +8,15 @@ const Chrome = (props) => {
     rgb,
     hsl,
     hsv,
-    placement = 'top',
+    placement,
     className = '',
   } = props;
 
   const styles = {
     picker: {
       width,
+      display: 'flex',
+      flexDirection: 'column',
       background: '#fff',
       borderRadius: '2px',
       boxShadow: '0 0 2px rgba(0,0,0,.3), 0 4px 8px rgba(0,0,0,.3)',
@@ -80,7 +82,7 @@ const Chrome = (props) => {
       borderWidth: '0 9px 10px 9px',
       borderColor: 'transparent transparent #fff transparent',
       position: 'absolute',
-      top: '10px',
+      top: '0',
       left: '33px'
     },
     triangleShadow: {
@@ -88,14 +90,15 @@ const Chrome = (props) => {
       height: '0px',
       borderStyle: 'solid',
       borderWidth: '0 9px 10px 9px',
+      borderColor: 'transparent transparent rgba(0,0,0,.1) transparent',
       position: 'absolute',
-      top: '9px',
+      top: '-1px',
       left: '33px'
     },
   }
 
   return (
-    <div style={ styles.picker } className={ `chrome-picker ${ className }` }>
+    <div style={{...styles.picker, flexDirection: placement === 'top' ? 'column' : 'column-reverse'}} className={ `chrome-picker ${ className }` }>
 
       <div style={ placement === 'top' ? {
         ...styles.triangleShadow,

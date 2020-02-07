@@ -23,6 +23,28 @@ const code_2 = `
 import React, { useState } from 'react';
 import { ColorPicker } from 'gantd';
 
+function BasicUse() {
+  const [color, setColor] = useState('#1890FF');
+  
+  return <>
+    <h3 style={{color}}>颜色选择器</h3>
+    <ColorPicker
+      placement="bottom"
+      value={color}
+      onChange={setColor.bind(null)}
+    />
+  </>
+}
+
+ReactDOM.render(
+    <BasicUse />,
+    mountNode,
+);
+`;
+const code_3 = `
+import React, { useState } from 'react';
+import { ColorPicker } from 'gantd';
+
 function ReadOnlyUse() {
   const [color, setColor] = useState('#1890FF');
   
@@ -41,7 +63,7 @@ ReactDOM.render(
     mountNode,
 );
 `;
-const code_3 = `
+const code_4 = `
 import React, { useState } from 'react';
 import { ColorPicker } from 'gantd';
 
@@ -63,4 +85,4 @@ ReactDOM.render(
     ReadOnlyUse,
 );
 `;
-export default [code_1,code_2,code_3];
+export default [code_1,code_2,code_3,code_4];

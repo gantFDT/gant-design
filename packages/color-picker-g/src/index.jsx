@@ -77,7 +77,14 @@ function ColorPicker(props) {
                   <span>#</span>
                   {
                     pickerVisible && <div
-                      style={{ position: 'absolute', top: -172, paddingBottom: 10, left: 0, zIndex: 99 }}
+                      style={{
+                        position: 'absolute',
+                        left: 0,
+                        zIndex: 99,
+                        ...placement === 'top' ?
+                        { top: -172, paddingBottom: 10 } :
+                        { bottom: -172, paddingTop: 10 }
+                      }}
                     >
                       <Chrome
                         color={currentColor}
@@ -118,7 +125,7 @@ function ColorPicker(props) {
                     }}
                   ></div>
                   {!disabled && visibleStatus===id && (
-                    <div className={`${prefixCls}-picker`} style={{bottom: placement === 'top' ? 29 : undefined, paddingBottom: 10}}>
+                    <div className={`${prefixCls}-picker`} style={placement === 'top' ? { bottom: 29, paddingBottom: 10 } : { top: 27, paddingTop: 10 }}>
                       <SubPicker
                         placement={placement}
                         color={currentColor}

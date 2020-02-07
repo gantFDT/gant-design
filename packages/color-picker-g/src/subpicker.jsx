@@ -27,6 +27,7 @@ const styles = {
     height: '0px',
     borderStyle: 'solid',
     borderWidth: '0 9px 10px 9px',
+    borderColor: 'transparent transparent rgba(0,0,0,.1) transparent',
     position: 'absolute',
     top: '-11px',
     left: '7px'
