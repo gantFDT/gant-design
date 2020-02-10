@@ -1,0 +1,63 @@
+@import '../../gantd/src/style/index.less';
+@import '../../gantd/src/style/theme/index.less';
+@component: ~'@{gant-prefix}-auto-reload';
+
+.@{component} {
+  &-container {
+    padding: 0 5px !important;
+    border-color: var(--btn-default-border-color) !important;
+    box-shadow: none !important;
+    line-height: 22px;
+    overflow: hidden;
+
+    &:hover {
+      background-color: transparent !important;
+      color: var(--btn-default-color) !important;
+    }
+  }
+
+  &-toolTipContainer {
+    p {
+      margin-bottom: 0px;
+      line-height: 20px;
+    }
+  }
+
+  &-autoSwitch {
+    vertical-align: -2px !important;
+  }
+
+  &-toolTipTime {
+    display: inline-block;
+    line-height: 22px;
+    height: 22px !important;
+
+    &:hover {
+      color: var(--primary-color)
+    }
+  }
+
+  &-autoTimeInput {
+    border: none !important;
+    border-radius: 0px !important;
+    padding: 0px !important;
+    line-height: 22px !important;
+    height: 22px !important;
+    vertical-align: 0px;
+    width: 44px !important;
+    box-shadow: none !important;
+
+
+    .ant-input-number-input {
+      padding: 0px;
+      padding-right: 22px;
+      // text-align: center;
+    }
+
+    .ant-input-number-handler-wrap {
+      opacity: 1;
+    }
+
+  }
+
+}

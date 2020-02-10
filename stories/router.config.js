@@ -8,72 +8,75 @@ export default [
 	// 		}
 	// 	]
 	// },
-	// {
-	// 	name: "components|Common 公共",
-	// 	children: [
-	// 		{
-	// 			name: 'Card',
-	// 			nameZh: '卡片'
-	// 		},
-	// 		{
-	// 			name: 'Exception',
-	// 			nameZh: '异常显现'
-	// 		},
-	// 		{
-	// 			name: 'PageLoading',
-	// 			nameZh: '页面加载显示'
-	// 		},
-	// 		{
-	// 			name: 'ProfileCard',
-	// 			nameZh: '档案卡片'
-	// 		},
-	// 		{
-	// 			name: 'Intro',
-	// 			nameZh: '简介'
-	// 		},
-	// 		{
-	// 			name: 'icon',
-	// 			nameZh: '图标'
-	// 		},
-	// 		{
-	// 			name: 'flexgroup',
-	// 			nameZh: '弹性按钮组'
-	// 		},
-	// 		{
-	// 			name: 'gantanchor',
-	// 			nameZh: '锚点'
-	// 		},
-	// 	]
-	// },
+	{
+		name: "components|Common 公共",
+		children: [{
+			name: 'auto-reload-g',
+			nameZh: '自动刷新组件'
+		},
+			// {
+			// 	name: 'Card',
+			// 	nameZh: '卡片'
+			// },
+			// {
+			// 	name: 'Exception',
+			// 	nameZh: '异常显现'
+			// },
+			// {
+			// 	name: 'PageLoading',
+			// 	nameZh: '页面加载显示'
+			// },
+			// {
+			// 	name: 'ProfileCard',
+			// 	nameZh: '档案卡片'
+			// },
+			// {
+			// 	name: 'Intro',
+			// 	nameZh: '简介'
+			// },
+			// {
+			// 	name: 'icon',
+			// 	nameZh: '图标'
+			// },
+			// {
+			// 	name: 'flexgroup',
+			// 	nameZh: '弹性按钮组'
+			// },
+			// {
+			// 	name: 'gantanchor',
+			// 	nameZh: '锚点'
+			// },
+		]
+	},
 	{
 		name: "components|Layout 布局",
 		children: [
-	// 		{
-	// 			name: 'BlockHeader',
-	// 			nameZh: '段落标题'
-	// 		},
+			// 		{
+			// 			name: 'BlockHeader',
+			// 			nameZh: '段落标题'
+			// 		},
 			{
 				name: 'SubMenu',
 				nameZh: '子菜单'
 			},
-	// 		{
-	// 			name: 'FooterToolbar',
-	// 			nameZh: '底部固定工具栏'
-	// 		}
+			// 		{
+			// 			name: 'FooterToolbar',
+			// 			nameZh: '底部固定工具栏'
+			// 		}
 		]
 	}, {
-	// 	name: "components|List 列表",
-	// 	children: [
-	// 		{
-	// 			name: 'VisibleMenu',
-	// 			nameZh: '动态列'
-	// 		},
-	// 		{
-	// 			name: 'Table',
-	// 			nameZh: '表格'
-	// 		},
-	// 	]
-	// }, {
+		// 	name: "components|List 列表",
+		// 	children: [
+		// 		{
+		// 			name: 'VisibleMenu',
+		// 			nameZh: '动态列'
+		// 		},
+		// 		{
+		// 			name: 'Table',
+		// 			nameZh: '表格'
+		// 		},
+		// 	]
+		// }, {
 		name: "components|Form 表单",
 		children: [
 			// {
@@ -129,29 +132,29 @@ export default [
 				nameZh: '颜色选择器'
 			},
 		]
-	// }, {
-	// 	name: "components|Compose 高阶组件",
-	// 	children: [
-	// 		{
-	// 			name: 'anchor',
-	// 			nameZh: '锚点'
-	// 		}
-	// 	]
-	// }, {
-	// 	name: "components|Specific 特殊",
-	// 	children: [
-	// 		{
-	// 			name: 'TaskBoard',
-	// 			nameZh: '任务面板'
-	// 		},
-	// 		{
-	// 			name: "FiledSchema",
-	// 			nameZh: "属性配置"
-	// 		},
-	// 		{
-	// 			name: "Copy",
-	// 			nameZh: "剪切板"
-	// 		}
-	// 	]
+		// }, {
+		// 	name: "components|Compose 高阶组件",
+		// 	children: [
+		// 		{
+		// 			name: 'anchor',
+		// 			nameZh: '锚点'
+		// 		}
+		// 	]
+		// }, {
+		// 	name: "components|Specific 特殊",
+		// 	children: [
+		// 		{
+		// 			name: 'TaskBoard',
+		// 			nameZh: '任务面板'
+		// 		},
+		// 		{
+		// 			name: "FiledSchema",
+		// 			nameZh: "属性配置"
+		// 		},
+		// 		{
+		// 			name: "Copy",
+		// 			nameZh: "剪切板"
+		// 		}
+		// 	]
 	}
 ]
