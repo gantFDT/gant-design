@@ -1,4 +1,3 @@
-import 'antd/lib/menu/style/index.css';
 import './index.less';
 import React from 'react';
 import { isEqual } from 'lodash';
