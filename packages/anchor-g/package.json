@@ -1,7 +1,7 @@
 {
-  "name": "auto-reload-g",
+  "name": "anchor-g",
   "version": "0.0.3",
-  "description": "auto-reload",
+  "description": "gantd anchor",
   "main": "dist/index.js",
   "scripts": {},
   "keywords": [
@@ -13,10 +13,8 @@
   "author": "GantFDT",
   "license": "MIT",
   "dependencies": {
-    "@ant-design/colors": "^3.1.0",
     "antd": "^3.26.5",
     "util-g": "^0.0.3",
-    "gantd": "^1.0.53",
     "react": "^16.12.0"
   }
 }
