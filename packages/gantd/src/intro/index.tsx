@@ -4,8 +4,8 @@ import React from 'react';
 import LocaleReceiver from '../locale-provider/LocaleReceiver'
 import { ConfigConsumer } from '../config-provider'
 
-export default class Intro extends React.Component {
-  renderContent(locale) {
+const Intro = (props) => {
+  const renderContent = (locale) => {
     const {
       prefixCls: customizePrefixCls,
       imageAlign = 'left',
@@ -13,14 +13,18 @@ export default class Intro extends React.Component {
       image,
       title,
       content
-    } = this.props;
+    } = props;
     return (
       <ConfigConsumer>
-        {({getPrefixCls})=>{
+        {({ getPrefixCls }) => {
           const prefixCls = getPrefixCls('intro', customizePrefixCls);
           const wrapPrefixCls = prefixCls + '-wrap';
           return (
-            <div className={prefixCls} style={{ flexDirection: imageAlign == 'right' && 'row-reverse', padding: image && '15px', marginBottom: !image && '15px' }} >
+            <div className={prefixCls} style={{
+              flexDirection: imageAlign == 'right' ? 'row-reverse' : 'row',
+              padding: image ? '15px' : 0,
+              marginBottom: !image ? '15px' : 0
+            }} >
               {image && <div className={`${prefixCls}-image`} style={{ backgroundImage: `url(${image}`, borderRadius: `${imageRadius}px` }}></div>}
               <div className={wrapPrefixCls} style={{ padding: image && '15px' }}>
                 <div className={`${wrapPrefixCls}-title`}>{title || locale.title}</div>
@@ -32,12 +36,13 @@ export default class Intro extends React.Component {
       </ConfigConsumer>
     )
   }
-  render() {
-    return (
-      <LocaleReceiver componentName="Intro">
-        {this.renderContent}
-      </LocaleReceiver>
-    );
-  }
+
+  return (
+    <LocaleReceiver componentName="Intro">
+      {renderContent}
+    </LocaleReceiver>
+  );
+
 }
 
+export default Intro

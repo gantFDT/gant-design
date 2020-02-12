@@ -11,8 +11,9 @@ export default [
 	{
 		name: "components|Common 公共",
 		children: [{
-			name: 'auto-reload-g',
-			nameZh: '自动刷新组件'
+			name: 'AutoReload',
+			nameZh: '自动刷新组件',
+			package:'auto-reload-g',
 		},
 			// {
 			// 	name: 'Card',
@@ -30,10 +31,10 @@ export default [
 			// 	name: 'ProfileCard',
 			// 	nameZh: '档案卡片'
 			// },
-			// {
-			// 	name: 'Intro',
-			// 	nameZh: '简介'
-			// },
+			{
+				name: 'Intro',
+				nameZh: '简介'
+			},
 			// {
 			// 	name: 'icon',
 			// 	nameZh: '图标'
@@ -57,7 +58,13 @@ export default [
 			// 		},
 			{
 				name: 'SubMenu',
-				nameZh: '子菜单'
+				nameZh: '子菜单',
+				package:'submenu-g',
+			},
+			{
+				name: 'OverflowTool',
+				nameZh: '子菜单',
+				package:'overflow-tool-g',
 			},
 			// 		{
 			// 			name: 'FooterToolbar',
@@ -129,7 +136,8 @@ export default [
 			// },
 			{
 				name: 'ColorPicker',
-				nameZh: '颜色选择器'
+				nameZh: '颜色选择器',
+				package:'color-picker-g',
 			},
 		]
 		// }, {

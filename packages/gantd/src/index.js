@@ -25,3 +25,7 @@ export { default as ConfigProvider } from './config-provider';
 export { default as ColorPicker } from '@pkgs/color-picker-g/src';
 
 export { default as SubMenu } from '@pkgs/submenu-g/src';
+
+export { default as AutoReload } from '@pkgs/auto-reload-g/src';
+
+export { default as OverflowTool } from '@pkgs/overflow-tool-g/src';
