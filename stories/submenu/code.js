@@ -11,54 +11,67 @@ const SubMenuIcon = Icon.createFromIconfontCN('SubMenuIcon', {
 function BasicUse() {
   const menuData = [
     {
-      name: '个人设置',
-      icon: <SubMenuIcon type='icon-xingming' />,
+      title: '个人设置',
+      icon: <Icon.Submenuicon type='icon-xingming' />,
       path: 'personal',
+      count: 10
     },
     {
-      name: '语言偏好',
-      icon: <SubMenuIcon type='icon-yuyan' />,
+      title: '语言偏好',
+      icon: <Icon.Submenuicon type='icon-yuyan' />,
       path: 'preferences',
     },
     {
-      name: '修改密码',
-      icon: <SubMenuIcon type='icon-iconbi' />,
+      title: '修改密码',
+      icon: <Icon.Submenuicon type='icon-iconbi' />,
       path: 'editpwd',
+      count: 10
     },
     {
-      name: '关注领域',
-      icon: <SubMenuIcon type='icon-mubiao' />,
+      title: '关注领域',
+      icon: <Icon.Submenuicon type='icon-mubiao' />,
       path: 'focus',
+      count: 10
     },
     {
-      name: '历史消息',
-      icon: <SubMenuIcon type='icon-lishi' />,
+      title: '历史消息',
+      icon: <Icon.Submenuicon type='icon-lishi' />,
       path: 'historymsg',
+      count: 10
     },
     {
-      name: '账号绑定',
-      icon: <SubMenuIcon type='icon-bangding' />,
+      title: '账号绑定',
+      icon: <Icon.Submenuicon type='icon-bangding' />,
       path: 'accountbind',
+      count: 10
     }
   ].map(item => ({ ...item, key: item.path }));
 
-  const [selectedKey, setSelectedKey] = useState(menuData[0].name)
+  const [selectedKey, setSelectedKey] = useState(menuData[0].path);
+  const menuBoxRef = useRef(null);
+  const onSelectedChange = (key, record, item) => setSelectedKey(key);
+  const onSwitchChange = (mode) => {
+    // console.log('当前状态', mode)
+  };
 
-  const onSelectedChange = (path, eventKey) => {
-    setSelectedKey(eventKey);
-  }
-
-  return (
+   return (
     <SubMenu
       menuData={menuData}
       selectedKey={selectedKey}
       width={180}
-      heightDiff={0}
+      setMenuBoxRef={ref => { menuBoxRef.current = ref }}
+      showFlipOverFooter
+      onCollapseChange={(collapsed) => {
+        console.log(collapsed)
+        console.log(menuBoxRef)
+      }}
       onSelectedChange={onSelectedChange}
+      onSwitchChange={onSwitchChange}
       extra={
-        <div id='menuExtra' style={{  padding:'10px', display: 'flex', justifyContent: 'center', alignItems: 'center' ,height:'auto',width:'auto'}}>
+        <div style={{ padding: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <div>
-            <Avatar size={64} style={{height:'30px',width:'30px'}} src={'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1560143638308&di=bd43a25e740c8010cd803bffb6191a74&imgtype=0&src=http%3A%2F%2Fimg3.duitang.com%2Fuploads%2Fitem%2F201605%2F07%2F20160507191419_J2m8R.thumb.700_0.jpeg'} />
+            <Avatar size={64} src={'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1560143638308&di=bd43a25e740c8010cd803bffb6191a74&imgtype=0&src=http%3A%2F%2Fimg3.duitang.com%2Fuploads%2Fitem%2F201605%2F07%2F20160507191419_J2m8R.thumb.700_0.jpeg'} />
+            <div style={{ textAlign: 'center' }}>777777</div>
           </div>
         </div>
       }
@@ -90,52 +103,57 @@ const SubMenuIcon = Icon.createFromIconfontCN('SubMenuIcon', {
 function TopLayout() {
   const menuData = [
     {
-      name: '个人设置',
+      title: '个人设置',
       icon: <SubMenuIcon type='icon-xingming' />,
       path: 'personal',
+      count: 100
     },
     {
-      name: '语言偏好',
+      title: '语言偏好',
       icon: <SubMenuIcon type='icon-yuyan' />,
       path: 'preferences',
+      count: 100
     },
     {
-      name: '修改密码',
+      title: '修改密码',
       icon: <SubMenuIcon type='icon-iconbi' />,
       path: 'editpwd',
+      count: 100
     },
     {
-      name: '关注领域',
+      title: '关注领域',
       icon: <SubMenuIcon type='icon-mubiao' />,
       path: 'focus',
+      count: 100
     },
     {
-      name: '历史消息',
+      title: '历史消息',
       icon: <SubMenuIcon type='icon-lishi' />,
       path: 'historymsg',
+      count: 100
     },
     {
-      name: '账号绑定',
+      title: '账号绑定',
       icon: <SubMenuIcon type='icon-bangding' />,
       path: 'accountbind',
-    },
-    
+      count: 100
+    }
   ].map(item => ({ ...item, key: item.path }));
 
-  const [selectedKey, setSelectedKey] = useState(menuData[0].name)
+  const [selectedKey, setSelectedKey] = useState(menuData[0].path);
 
-  const onSelectedChange = (path, eventKey) => {
-    setSelectedKey(eventKey);
-  }
+  const onSelectedChange = (key, record, item) => setSelectedKey(key);
 
   return (
     <SubMenu
       menuData={menuData}
       selectedKey={selectedKey}
       mode='horizontal'
+      showMenuMagnet
+      fixedTopHeight={0}
       onSelectedChange={onSelectedChange}
     >
-      <div style={{ padding: '20px' }}>
+      <div style={{ padding: '20px', height: 800 }}>
         {selectedKey}
       </div>
     </SubMenu>
@@ -160,43 +178,46 @@ const SubMenuIcon = Icon.createFromIconfontCN('SubMenuIcon', {
 function ExtraUse() {
   const menuData = [
     {
-      name: '个人设置',
+      title: '个人设置',
       icon: <SubMenuIcon type='icon-xingming' />,
       path: 'personal',
+      count: 200
     },
     {
-      name: '语言偏好',
+      title: '语言偏好',
       icon: <SubMenuIcon type='icon-yuyan' />,
       path: 'preferences',
+      count: 200
     },
     {
-      name: '修改密码',
+      title: '修改密码',
       icon: <SubMenuIcon type='icon-iconbi' />,
       path: 'editpwd',
+      count: 200
     },
     {
-      name: '关注领域',
+      title: '关注领域',
       icon: <SubMenuIcon type='icon-mubiao' />,
       path: 'focus',
+      count: 200
     },
     {
-      name: '历史消息',
+      title: '历史消息',
       icon: <SubMenuIcon type='icon-lishi' />,
       path: 'historymsg',
+      count: 200
     },
     {
-      name: '账号绑定',
+      title: '账号绑定',
       icon: <SubMenuIcon type='icon-bangding' />,
       path: 'accountbind',
+      count: 200
     },
-    
   ].map(item => ({ ...item, key: item.path }));
 
-  const [selectedKey, setSelectedKey] = useState(menuData[0].name)
+  const [selectedKey, setSelectedKey] = useState(menuData[0].path);
 
-  const onSelectedChange = (path, eventKey) => {
-    setSelectedKey(eventKey);
-  }
+  const onSelectedChange = (key, record, item) => setSelectedKey(key);
 
   return (
     <SubMenu
