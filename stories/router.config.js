@@ -13,7 +13,7 @@ export default [
 		children: [{
 			name: 'AutoReload',
 			nameZh: '自动刷新组件',
-			independent:true
+			package:'auto-reload-g',
 		},
 			// {
 			// 	name: 'Card',
@@ -59,12 +59,12 @@ export default [
 			{
 				name: 'SubMenu',
 				nameZh: '子菜单',
-				independent:true
+				package:'submenu-g',
 			},
 			{
 				name: 'OverflowTool',
 				nameZh: '子菜单',
-				independent:true
+				package:'overflow-tool-g',
 			},
 			// 		{
 			// 			name: 'FooterToolbar',
@@ -137,7 +137,7 @@ export default [
 			{
 				name: 'ColorPicker',
 				nameZh: '颜色选择器',
-				independent:true
+				package:'color-picker-g',
 			},
 		]
 		// }, {
