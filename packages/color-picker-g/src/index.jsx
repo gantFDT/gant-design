@@ -87,6 +87,7 @@ function ColorPicker(props) {
                       }}
                     >
                       <Chrome
+                        prefixCls={prefixCls}
                         color={currentColor}
                         placement={placement}
                         onChange={color => modifyColor(color.hex)}
@@ -127,6 +128,7 @@ function ColorPicker(props) {
                   {!disabled && visibleStatus===id && (
                     <div className={`${prefixCls}-picker`} style={placement === 'top' ? { bottom: 29, paddingBottom: 10 } : { top: 27, paddingTop: 10 }}>
                       <SubPicker
+                        prefixCls={prefixCls}
                         placement={placement}
                         color={currentColor}
                         colors={children}

@@ -62,9 +62,16 @@ export default [
 				package: 'submenu-g',
 			},
 			{
+				name: 'Anchor',
+				nameZh: '锚点',
+				package:'anchor-g',
+			},
+			{
 				name: 'OverflowTool',
 				nameZh: '子菜单',
 				package: 'overflow-tool-g',
+				nameZh: '溢出工具组',
+				package:'overflow-tool-g',
 			},
 			// 		{
 			// 			name: 'FooterToolbar',
