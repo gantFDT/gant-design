@@ -1,0 +1,134 @@
+@import '../../gantd/src/style/theme/index.less';
+@profilecard-prefix-cls: ~'@{gant-prefix}-modal';
+
+@defaultIconColor: #000;
+@activeIconColor: #fff;
+
+.@{profilecard-prefix-cls} {
+
+    &-resizableModalDefault {
+        pointer-events: none;
+    }
+
+    &-resizableModalDialog {
+        pointer-events: auto;
+    }
+
+    &-resizableModalWrapper {
+        overflow: hidden !important;
+
+        .ant-modal {
+            display: flex;
+            max-width: none;
+            // transform-origin: 50% 50% !important;
+        }
+
+        .ant-modal-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+
+            .ant-modal-close {
+                transition: none;
+            }
+
+            .ant-modal-close-x {
+                &:hover {
+                    background-color: #ff4d4f;
+
+                    i {
+                        color: @activeIconColor;
+                    }
+                }
+
+                &:active {
+                    background-color: #f5222d;
+
+                    i {
+                        color: @activeIconColor;
+                    }
+                }
+            }
+        }
+
+        .ant-modal-body {
+            flex: 1;
+            overflow-y: auto;
+        }
+    }
+
+    &-resizableModalTitle {
+        cursor: move;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    &-resizableModalContent {
+        height: 100%;
+    }
+
+    &-maximizeAnchor {
+        right: 56px;
+        width: 56px;
+        top: 0;
+        cursor: pointer;
+        height: 56px;
+        position: absolute;
+
+        i {
+            font-size: 16px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--modal-header-color);
+        }
+
+        &:hover {
+            background-color: #E3E3E3;
+
+            i {
+                color: @activeIconColor;
+            }
+        }
+    }
+
+    &-resizeAnchor {
+        right: -10px;
+        width: 30px;
+        bottom: -10px;
+        cursor: se-resize;
+        height: 30px;
+        position: absolute;
+
+        i {
+            opacity: 0;
+            visibility: hidden;
+            width: 12px;
+            right: 14px;
+            border: 2px solid transparent;
+            height: 12px;
+            bottom: 14px;
+            position: absolute;
+            border-top: 0;
+            border-left: 0;
+            transition: all .3s;
+        }
+
+        &:hover {
+            i {
+                opacity: 1;
+                visibility: visible;
+                border-color: rgba(0, 0, 0, 1);
+                transition: all .3s;
+            }
+        }
+    }
+
+    &-defaultFooterContent {
+        display: flex;
+        justify-content: space-between;
+    }
+}

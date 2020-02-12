@@ -13,28 +13,28 @@ export default [
 		children: [{
 			name: 'AutoReload',
 			nameZh: '自动刷新组件',
-			package:'auto-reload-g',
+			package: 'auto-reload-g',
 		},
-			// {
-			// 	name: 'Card',
-			// 	nameZh: '卡片'
-			// },
-			// {
-			// 	name: 'Exception',
-			// 	nameZh: '异常显现'
-			// },
-			// {
-			// 	name: 'PageLoading',
-			// 	nameZh: '页面加载显示'
-			// },
-			// {
-			// 	name: 'ProfileCard',
-			// 	nameZh: '档案卡片'
-			// },
-			{
-				name: 'Intro',
-				nameZh: '简介'
-			},
+		// {
+		// 	name: 'Card',
+		// 	nameZh: '卡片'
+		// },
+		// {
+		// 	name: 'Exception',
+		// 	nameZh: '异常显现'
+		// },
+		// {
+		// 	name: 'PageLoading',
+		// 	nameZh: '页面加载显示'
+		// },
+		// {
+		// 	name: 'ProfileCard',
+		// 	nameZh: '档案卡片'
+		// },
+		{
+			name: 'Intro',
+			nameZh: '简介'
+		},
 			// {
 			// 	name: 'icon',
 			// 	nameZh: '图标'
@@ -59,12 +59,12 @@ export default [
 			{
 				name: 'SubMenu',
 				nameZh: '子菜单',
-				package:'submenu-g',
+				package: 'submenu-g',
 			},
 			{
 				name: 'OverflowTool',
 				nameZh: '子菜单',
-				package:'overflow-tool-g',
+				package: 'overflow-tool-g',
 			},
 			// 		{
 			// 			name: 'FooterToolbar',
@@ -137,7 +137,7 @@ export default [
 			{
 				name: 'ColorPicker',
 				nameZh: '颜色选择器',
-				package:'color-picker-g',
+				package: 'color-picker-g',
 			},
 		]
 		// }, {
@@ -164,5 +164,12 @@ export default [
 		// 			nameZh: "剪切板"
 		// 		}
 		// 	]
+	}, {
+		name: "components|Feedback 反馈",
+		children: [{
+			name: 'modal',
+			nameZh: '弹窗',
+			package: 'auto-modal-g',
+		},]
 	}
 ]
