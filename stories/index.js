@@ -10,7 +10,7 @@ pages.map(page => {
 		const Component = require('./' + dirname + "/index.js").default;
 		let marked = ``
 		let config = {};
-		let title = `${item.name} ${item.nameZh} `;
+		let title = `${item.name} ${item.nameZh} ${item.independent ? '📦' : ''}`;
 		try {
 			marked = require('./' + dirname + "/README.md");
 			config = require('./' + dirname + "/config.js");
@@ -23,7 +23,7 @@ pages.map(page => {
 				alignItems: 'center'
 			}}>
 				<div style={{ fontSize: '30px', color: '#000' }}>{title}</div>
-				{item.independent && <Tag color="#108ee9" style={{marginLeft:'10px'}}>可独立使用</Tag>}
+				{item.independent && <Tag color="#108ee9" style={{ marginLeft: '10px' }}>可使用独立包</Tag>}
 			</div>
 			<Component /></>, {
 			notes: {
