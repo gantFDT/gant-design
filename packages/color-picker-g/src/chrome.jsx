@@ -9,7 +9,7 @@ const Chrome = (props) => {
     hsl,
     hsv,
     placement,
-    className = '',
+    prefixCls,
   } = props;
 
   const styles = {
@@ -17,7 +17,6 @@ const Chrome = (props) => {
       width,
       display: 'flex',
       flexDirection: 'column',
-      background: '#fff',
       borderRadius: '2px',
       boxShadow: '0 0 2px rgba(0,0,0,.3), 0 4px 8px rgba(0,0,0,.3)',
       boxSizing: 'initial',
@@ -98,7 +97,7 @@ const Chrome = (props) => {
   }
 
   return (
-    <div style={{...styles.picker, flexDirection: placement === 'top' ? 'column' : 'column-reverse'}} className={ `chrome-picker ${ className }` }>
+    <div style={{...styles.picker, flexDirection: placement === 'top' ? 'column' : 'column-reverse'}} className={ `${prefixCls}-chromepicker`}>
 
       <div style={ placement === 'top' ? {
         ...styles.triangleShadow,

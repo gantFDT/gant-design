@@ -3,7 +3,6 @@ import { Swatch } from 'react-color/lib/components/common';
 
 const styles = {
   card: {
-    background: '#fff',
     border: '0 solid rgba(0,0,0,0.25)',
     boxShadow: '0 1px 4px rgba(0,0,0,0.25)',
     borderRadius: '3px',
@@ -49,7 +48,8 @@ const SubPicker = props => {
     onChange,
     width = 148,
     colors = ['#1890FF'],
-    placement
+    placement,
+    prefixCls
   } = props;
   
   const handleChange = (color, ev) => {
@@ -58,7 +58,7 @@ const SubPicker = props => {
   }
 
   return (
-    <div style={{...styles.card, width }}>
+    <div style={{...styles.card, width }} className={`${prefixCls}-subpicker`}>
       <div style={ placement === 'top' ? {
         ...styles.triangleShadow,
         borderWidth: '10px 9px 0 9px',
