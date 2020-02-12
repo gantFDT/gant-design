@@ -28,10 +28,8 @@
   },
   "files": [
     "lib",
-    "dist",
-    "babel-plugin-import-gantd-options.js"
+    "dist"
   ],
-  "types": "lib/index.d.ts",
   "peerDependencies": {
     "prop-types": "^15.6.0",
     "react": "^16.0.0",

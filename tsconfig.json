@@ -26,9 +26,15 @@
     "downlevelIteration": true,
     "allowSyntheticDefaultImports": true,
     "paths": {
-      "@/*": [
-        "src/*"
-      ]
+      "@gantd/*": [
+        "packages/gantd/src/*"
+      ],
+      "@pkgs/*": [
+        "packages/*"
+      ],
+      "@util-g/*": [
+        "packages/util-g/src/*"
+      ],
     }
   },
   "exclude": [

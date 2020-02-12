@@ -1,5 +1,8 @@
+import 'antd/dist/antd.css';
 import React, { useState } from 'react';
-import { Card, Collapse, Icon, Tooltip, Row, Col, Button } from 'antd';
+import { Card, Collapse, Icon, Tooltip, Row, Col } from 'antd';
+import { ConfigProvider } from '@gantd';
+import zhCN from '@gantd/locale/zh_CN';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { githubGist } from 'react-syntax-highlighter/dist/esm/styles/hljs';
@@ -139,6 +142,7 @@ export default ({ config }) => {
         </CodeBox>
     });
     return (
+      <ConfigProvider locale={zhCN}>
         <>
             {useage && <div>
                 <h2 style={headerStyle}>何时使用</h2>
@@ -155,5 +159,6 @@ export default ({ config }) => {
             </Row>
                 : elements}
         </>
+      </ConfigProvider> 
     )
 }

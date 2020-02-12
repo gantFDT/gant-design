@@ -1,6 +1,7 @@
 
 const path = require('path');
-const webpackMerge = require('webpack-merge')
+const webpackMerge = require('webpack-merge');
+const babelConfig = require('../babelConfig');
 
 // Export a function. Accept the base config as the only param.
 module.exports = async ({ config, mode }) => {
@@ -18,6 +19,19 @@ module.exports = async ({ config, mode }) => {
 	return webpackMerge(config, {
 		module: {
 			rules: [
+        {
+          test: /\.(jsx|js)?$/,
+          include: [
+            path.resolve(__dirname, "../packages"),
+            path.resolve(__dirname, "../stories"),
+          ],
+          use: [
+            {
+              loader: 'babel-loader',
+              options: babelConfig
+            }
+          ]
+        },
 				{
 					test: /\.less$/,
 					use: ['style-loader', 'css-loader', {
@@ -26,7 +40,6 @@ module.exports = async ({ config, mode }) => {
 					}],
 					include: [
             path.resolve(__dirname, '../packages'),
-            path.resolve(__dirname, '../common'),
           ]
 				},
 				{

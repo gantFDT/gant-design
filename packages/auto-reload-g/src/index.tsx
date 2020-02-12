@@ -1,18 +1,22 @@
-import 'antd/dist/antd.css';
-// import 'antd/lib/switch/style/index.css';
-// import 'antd/lib/InputNumber/style/index.css';
-import React, { useCallback, useState, useEffect } from 'react';
-// import { ConfigConsumer } from '@gantd/config-provider';
-import { Button, Tooltip, Divider, Switch, InputNumber, Icon } from 'antd'
 import './index.less';
+import React, { useCallback, useState, useEffect } from 'react';
+import { ConfigContext } from '@gantd/config-provider';
+import defaultLocale from '@gantd/locale/default';
+import { Tooltip, Divider, Switch, InputNumber, Icon } from 'antd'
 import moment from 'moment';
 import classnames from 'classnames'
-
-const tr = a => a
 
 const format = "hh:mm:ss"
 
 interface Props {
+  locale?: {
+    tips: string,
+    close: string,
+    open: string,
+    set: string,
+    unit: string
+  },
+  prefixCls?: string,
   auto?: boolean,
   interval?: number,
   refresh: () => void,
@@ -24,13 +28,18 @@ let playFun: any = null;
 
 const AutoReload: React.SFC<Props> = ({ auto = false, interval = 1,  ...props }) => {
   const {
+    locale,
+    prefixCls: customizePrefixCls,
     className,
     style,
     time,
     refresh = () => { }
   } = props;
-  // const prefixCls = getPrefixCls('auto-reload');
-  const prefixCls = 'gant-auto-reload'
+
+  const { locale: contextLocale = defaultLocale, getPrefixCls } = React.useContext(ConfigContext);
+  const autoReloadLocale = locale || contextLocale.AutoReload;
+  const prefixCls = getPrefixCls('auto-reload', customizePrefixCls);
+
   const clsString = classnames(prefixCls, className);
 
   const [updateTime, setUpdateTime] = useState(time ? time : moment().format(format));
@@ -73,19 +82,19 @@ const AutoReload: React.SFC<Props> = ({ auto = false, interval = 1,  ...props })
   }, [setAutoTime])
 
   return <><div className={classnames('ant-btn', 'ant-btn-sm', prefixCls + '-container', clsString)} style={style} >
-    <Tooltip title={`${tr("最新数据更新时间")},${tr("点击更新数据")}`} >
+    <Tooltip title={autoReloadLocale.tips} >
       <div onClick={handleRefresh} className={prefixCls + '-toolTipTime'} ><span style={{ verticalAlign: 0 }} > <Icon type='redo' /></span> {updateTime}</div>
     </Tooltip>
     <Divider type="vertical" />
-    <Tooltip title={autoRefresh ? tr("关闭自动更新") : tr("开启自动更新")} >
+    <Tooltip title={autoRefresh ? autoReloadLocale.close : autoReloadLocale.open} >
       <Switch className={prefixCls + '-autoSwitch'} size="small" checked={autoRefresh} onChange={switchChange} />
     </Tooltip>
     {
       autoRefresh && <>
         <Divider type="vertical" />
         <Tooltip title={<div className={prefixCls + '-toolTipContainer'} >
-          <p>{tr("设置自动更新触发时间")}</p>
-          <p>({tr("单位")}：{tr("分")})</p>
+          <p>{autoReloadLocale.set}</p>
+          <p>({autoReloadLocale.unit})</p>
         </div>} >
           <InputNumber value={autoTime}
             min={1}
@@ -101,4 +110,4 @@ const AutoReload: React.SFC<Props> = ({ auto = false, interval = 1,  ...props })
   </>
 }
 
-export default AutoReload
+export default AutoReload;
