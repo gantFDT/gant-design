@@ -13,47 +13,45 @@ const SubMenuIcon = Icon.createFromIconfontCN('Submenuicon', {
 function BasicUse() {
   const menuData = [
     {
-      name: '个人设置',
+      title: '个人设置',
       icon: <Icon.Submenuicon type='icon-xingming' />,
       path: 'personal',
       count: 10
     },
     {
-      name: '语言偏好',
+      title: '语言偏好',
       icon: <Icon.Submenuicon type='icon-yuyan' />,
       path: 'preferences',
     },
     {
-      name: '修改密码',
+      title: '修改密码',
       icon: <Icon.Submenuicon type='icon-iconbi' />,
       path: 'editpwd',
       count: 10
     },
     {
-      name: '关注领域',
+      title: '关注领域',
       icon: <Icon.Submenuicon type='icon-mubiao' />,
       path: 'focus',
       count: 10
     },
     {
-      name: '历史消息',
+      title: '历史消息',
       icon: <Icon.Submenuicon type='icon-lishi' />,
       path: 'historymsg',
       count: 10
     },
     {
-      name: '账号绑定',
+      title: '账号绑定',
       icon: <Icon.Submenuicon type='icon-bangding' />,
       path: 'accountbind',
       count: 10
     }
   ].map(item => ({ ...item, key: item.path }));
 
-  const [selectedKey, setSelectedKey] = useState(menuData[0].name)
+  const [selectedKey, setSelectedKey] = useState(menuData[0].path)
   const menuBoxRef = useRef(null);
-  const onSelectedChange = (path, eventKey) => {
-    setSelectedKey(eventKey);
-  }
+  const onSelectedChange = (key, record, item) => setSelectedKey(key);
   const onSwitchChange = (mode) => {
     // console.log('当前状态', mode)
   }
@@ -63,8 +61,8 @@ function BasicUse() {
       menuData={menuData}
       selectedKey={selectedKey}
       width={180}
-      heightDiff={0}
       setMenuBoxRef={ref => { menuBoxRef.current = ref }}
+      showFlipOverFooter
       onCollapseChange={(collapsed) => {
         console.log(collapsed)
         console.log(menuBoxRef)
@@ -91,57 +89,57 @@ function BasicUse() {
 function TopLayout() {
   const menuData = [
     {
-      name: '个人设置',
+      title: '个人设置',
       icon: <SubMenuIcon type='icon-xingming' />,
       path: 'personal',
       count: 100
     },
     {
-      name: '语言偏好',
+      title: '语言偏好',
       icon: <SubMenuIcon type='icon-yuyan' />,
       path: 'preferences',
       count: 100
     },
     {
-      name: '修改密码',
+      title: '修改密码',
       icon: <SubMenuIcon type='icon-iconbi' />,
       path: 'editpwd',
       count: 100
     },
     {
-      name: '关注领域',
+      title: '关注领域',
       icon: <SubMenuIcon type='icon-mubiao' />,
       path: 'focus',
       count: 100
     },
     {
-      name: '历史消息',
+      title: '历史消息',
       icon: <SubMenuIcon type='icon-lishi' />,
       path: 'historymsg',
       count: 100
     },
     {
-      name: '账号绑定',
+      title: '账号绑定',
       icon: <SubMenuIcon type='icon-bangding' />,
       path: 'accountbind',
       count: 100
     }
   ].map(item => ({ ...item, key: item.path }));
 
-  const [selectedKey, setSelectedKey] = useState(menuData[0].name)
+  const [selectedKey, setSelectedKey] = useState(menuData[0].path);
 
-  const onSelectedChange = (path, eventKey) => {
-    setSelectedKey(eventKey);
-  }
+  const onSelectedChange = (key, record, item) => setSelectedKey(key);
 
   return (
     <SubMenu
       menuData={menuData}
       selectedKey={selectedKey}
       mode='horizontal'
+      showMenuMagnet
+      fixedTopHeight={0}
       onSelectedChange={onSelectedChange}
     >
-      <div style={{ padding: '20px' }}>
+      <div style={{ padding: '20px', height: 800 }}>
         {selectedKey}
       </div>
     </SubMenu>
@@ -150,49 +148,46 @@ function TopLayout() {
 function ExtraUse() {
   const menuData = [
     {
-      name: '个人设置',
+      title: '个人设置',
       icon: <SubMenuIcon type='icon-xingming' />,
       path: 'personal',
       count: 200
     },
     {
-      name: '语言偏好',
+      title: '语言偏好',
       icon: <SubMenuIcon type='icon-yuyan' />,
       path: 'preferences',
       count: 200
     },
     {
-      name: '修改密码',
+      title: '修改密码',
       icon: <SubMenuIcon type='icon-iconbi' />,
       path: 'editpwd',
       count: 200
     },
     {
-      name: '关注领域',
+      title: '关注领域',
       icon: <SubMenuIcon type='icon-mubiao' />,
       path: 'focus',
       count: 200
     },
     {
-      name: '历史消息',
+      title: '历史消息',
       icon: <SubMenuIcon type='icon-lishi' />,
       path: 'historymsg',
       count: 200
     },
     {
-      name: '账号绑定',
+      title: '账号绑定',
       icon: <SubMenuIcon type='icon-bangding' />,
       path: 'accountbind',
       count: 200
     },
-
   ].map(item => ({ ...item, key: item.path }));
 
-  const [selectedKey, setSelectedKey] = useState(menuData[0].name)
+  const [selectedKey, setSelectedKey] = useState(menuData[0].path);
 
-  const onSelectedChange = (path, eventKey) => {
-    setSelectedKey(eventKey);
-  }
+  const onSelectedChange = (key, record, item) => setSelectedKey(key);
 
   return (
     <SubMenu
@@ -215,12 +210,12 @@ const config = {
   children: [
     {
       title: '基本用法',
-      describe: '最简单的用法，默认为左右布局，可切换上下布局',
+      describe: '最简单的用法，默认为左右布局，可切换上下布局,可翻页的页脚功能',
       cmp: BasicUse
     },
     {
       title: '默认上下布局',
-      describe: '默认上下布局',
+      describe: '默认上下布局,磁吸功能',
       cmp: TopLayout
     },
     {

@@ -20,15 +20,15 @@ addParameters({
 
 // 组件容器
 addDecorator(CenterDecorator)
-if (NODE_ENV == 'development') {
-	let results;
-	try {
-		results = require('../.jest-test-results.json');
-	} catch (err) {
-		console.warn('Warning: .jest-test-results.json is not exist, if you want to know the tests info , run "npm run test" first. ')
-	};
-	addDecorator(withTests({ results }))
-}
+// if (NODE_ENV == 'development') {
+// 	let results;
+// 	try {
+// 		results = require('../.jest-test-results.json');
+// 	} catch (err) {
+// 		console.warn('Warning: .jest-test-results.json is not exist, if you want to know the tests info , run "npm run test" first. ')
+// 	};
+// 	addDecorator(withTests({ results }))
+// }
 
 // 响应式预览
 // addParameters({
