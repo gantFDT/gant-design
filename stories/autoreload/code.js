@@ -1,6 +1,6 @@
 const code_1 = `
 import React, { useState } from 'react';
-import { ColorPicker } from 'gantd';
+import { AutoReload } from 'gantd';
 
 function Use1() {
   return <>
@@ -18,7 +18,7 @@ ReactDOM.render(
 
 const code_2 = `
 import React, { useState } from 'react';
-import { ColorPicker } from 'gantd';
+import { AutoReload } from 'gantd';
 
 function Use2() {
   return <>
