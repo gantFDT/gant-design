@@ -1,7 +1,7 @@
 {
-  "name": "auto-reload-g",
+  "name": "overflow-tool-g",
   "version": "0.0.3",
-  "description": "auto-reload",
+  "description": "gantd overflow-tool",
   "main": "lib/index.js",
   "scripts": {},
   "keywords": [
@@ -17,6 +17,7 @@
     "antd": "^3.26.5",
     "util-g": "^0.0.3",
     "gantd": "^1.0.53",
-    "react": "^16.12.0"
+    "react": "^16.12.0",
+    "react-resize-detector": "^4.2.1"
   }
 }
