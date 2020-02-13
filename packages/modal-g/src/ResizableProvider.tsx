@@ -22,10 +22,10 @@ const initialModalState: ModalStateOutter = {
 }
 
 interface ResizableProviderProps {
-    initalState: ModalStateOutter,
-    maxZIndex: number,
-    minWidth: number,
-    minHeight: number
+    initalState?: ModalStateOutter,
+    maxZIndex?: number,
+    minWidth?: number,
+    minHeight?: number
 }
 
 export const ResizableProvider: React.FC<ResizableProviderProps> = ({ initalState = {}, maxZIndex = 0, minWidth = 200, minHeight = 200, children }) => {

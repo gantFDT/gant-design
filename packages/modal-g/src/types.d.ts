@@ -43,5 +43,6 @@ interface ModalInnerProps {
     visible: boolean,
     title: string,
     wrapClassName?: string,
-    confirmLoading?: boolean
+    confirmLoading?: boolean,
+    children?: React.ReactNode
 }
