@@ -33,5 +33,4 @@ pages.map(page => {
 			...config
 		})
 	})
-	storiresPage
 })
