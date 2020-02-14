@@ -86,7 +86,8 @@ export default [
       },
       {
         name: 'Table',
-        nameZh: '表格'
+        nameZh: '表格',
+        package: 'table-g',
       },
     ]
   }, {
