@@ -1,6 +1,6 @@
 import './index.less';
 import React, { useContext, ReactNode } from 'react';
-import { ConfigContext } from '../config-provider';
+import { ConfigContext } from '@gantd/config-provider';
 import classnames from 'classnames';
 
 export interface BlockHeaderProps {

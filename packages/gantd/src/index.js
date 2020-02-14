@@ -16,8 +16,6 @@ if (
 /* @remove-on-es-build-end */
 import './style/index.less'
 
-// export { default as BlockHeader } from './blockheader';
-
 export { default as Intro } from './intro';
 
 export { default as Icon } from './icon';
@@ -33,6 +31,8 @@ export { default as withAnchor } from './compose/anchor'
 export { default as EditStatus } from './compose/editstatus'
 
 export { default as SwitchStatus } from './compose/switchstatus'
+
+export { default as BlockHeader } from '@pkgs/header-g/src';
 
 export { default as Table } from '@pkgs/table-g/src';
 
