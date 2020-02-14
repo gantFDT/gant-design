@@ -1,6 +1,6 @@
 import './index.less';
-import React, { Component, ReactNode, useRef, useState, useEffect, useMemo, useCallback } from 'react';
-// import { ConfigConsumer } from '../config-provider';
+import React, { ReactNode, useRef, useState, useEffect, useMemo, useCallback, useContext } from 'react';
+import { ConfigContext } from '@gantd/config-provider';
 import classnames from 'classnames'
 import { Dropdown, Menu, Button } from 'antd'
 import Icon from '@gantd/icon';
@@ -136,10 +136,11 @@ const BlockHeader = (props: BlockHeaderIF) => {
         })
     }, [hiddenStartIndex])
 
-    const getPrefixCls = (cls) => 'gant-' + cls
+
+    const { getPrefixCls } = useContext(ConfigContext);
+    const prefixCls = getPrefixCls('blockheader', customizePrefixCls);
     const width = '100%'
 
-    const prefixCls = 'gant-blockheader';
     const clsString = classnames(prefixCls, className);
 
     return (
