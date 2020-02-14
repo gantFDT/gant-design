@@ -1,5 +1,6 @@
-@import '../style/index.less';
+@import '../../gantd/src/style/index.less';
 @blockheader-prefix-cls: ~'@{gant-prefix}-blockheader';
+
 
 .@{blockheader-prefix-cls} {
   width: 100%;
@@ -27,12 +28,17 @@
     margin-left: 5px;
     font-weight: bold;
     display: inline-block;
-    flex: 1;
+    // flex: 1;
     // smart功能有界面配置, 不能用overflow
     // overflow: hidden;
     // white-space: nowrap;
     // text-overflow: ellipsis;
     position: relative;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+  
+    word-break: break-all;
   }
 
   &-icon {
@@ -64,13 +70,13 @@
     border-radius: 3px;
   }
 
-  &-extra {
-    float: right;
+  // &-extra {
+  //   float: right;
 
-    &>* {
-      margin: 5px;
-    }
-  }
+  //   &>* {
+  //     margin: 5px;
+  //   }
+  // }
 
   &-beforeExtra {
     float: left;
@@ -78,5 +84,42 @@
     &>* {
       margin: 5px;
     }
+  }
+}
+
+@flex-group: ~'@{gant-prefix}-overflow-tool';
+
+.@{flex-group}-outer {
+  position: relative;
+  flex: 1;
+  width: 0;
+
+  .@{flex-group}-inner {
+    display: flex;
+
+    .@{flex-group}-space {
+      -webkit-box-flex: 1;
+      flex: auto;
+      margin: 0 !important;
+      padding: 0 !important;
+      border: 0 !important;
+      height: 1px;
+    }
+
+    &>* {
+      flex-grow: 0;
+      flex-shrink: 0;
+      margin:0 5px;
+    }
+  }
+
+  .@{flex-group}-icon {
+    // width:30px;
+    // min-width:30px;
+    // position: absolute;
+    // top:0px;
+    // right:0px;
+    margin-left: 5px;
+    // line-height: 30px;
   }
 }
