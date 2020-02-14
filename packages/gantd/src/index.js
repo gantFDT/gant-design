@@ -22,7 +22,19 @@ export { default as Intro } from './intro';
 
 export { default as Icon } from './icon';
 
+export { default as VisibleMenu } from './visiblemenu';
+
 export { default as ConfigProvider } from './config-provider';
+
+export { default as withEdit } from './compose/withEdit'
+
+export { default as withAnchor } from './compose/anchor'
+
+export { default as EditStatus } from './compose/editstatus'
+
+export { default as SwitchStatus } from './compose/switchstatus'
+
+export { default as Table } from '@pkgs/table-g/src';
 
 export { default as ColorPicker } from '@pkgs/color-picker-g/src';
 
