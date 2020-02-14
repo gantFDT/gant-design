@@ -10,7 +10,7 @@ export interface ConfigConsumerProps {
   getPopupContainer?: (triggerNode: HTMLElement) => HTMLElement;
   rootPrefixCls?: string;
   getPrefixCls: (suffixCls: string, customizePrefixCls?: string) => string;
-  renderEmpty: RenderEmptyHandler;
+  renderEmpty?: RenderEmptyHandler;
   csp?: CSPConfig;
   autoInsertSpaceInButton?: boolean;
   locale?: Locale;
