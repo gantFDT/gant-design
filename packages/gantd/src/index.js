@@ -16,7 +16,7 @@ if (
 /* @remove-on-es-build-end */
 import './style/index.less'
 
-export { default as BlockHeader } from './blockheader';
+// export { default as BlockHeader } from './blockheader';
 
 export { default as Intro } from './intro';
 

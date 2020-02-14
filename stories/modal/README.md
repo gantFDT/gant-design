@@ -1,25 +1,52 @@
 ## API
 
-属性如下
+Modal - 属性如下
 
-| 属性               | 说明                                   | 类型                      | 默认值                    |
-| ------------------ | -------------------------------------- | ------------------------- | ------------------------- |
-| collapsed          | 菜单是否折叠                           | boolean                   | `false`                   |
-| mode               | 菜单类型，现在支持水平、和内嵌模式两种 | string/ horizontal inline | inline                    |
-| selectedKey        | 选中的菜单name值，默认为第一个 , 必填  | string                    |                           |
-| width              | 菜单宽度                               | number / string           | `200`                     |
-| fixedTopHeight     | 最小高度与窗口高度的差值               | number                    | 0                         |
-| subMinHeight       | 菜单最小高度                           | number / string           | `112`                     |
-| collapsedWidth     | 菜单折叠宽度                           | number / string           | `40`                      |
-| extra              | 菜单额外内容                           | reactNode                 |                           |
-| menuData           | 菜单渲染项, 必填                       | array                     | []                        |
-| showMenuMagnet     | 菜单渲染项                             | boolean                   | false                     |
-| showFlipOverFooter | 菜单渲染项                             | boolean                   | false                     |
-| style              | 额外样式                               | cSSProperties             |                           |
-| classname          | classname属性                          | string                    |                           |
-| onSwitchChange     | 切换菜单后执行的回调函数               | function                  | (nowMode) => void         |
-| onCollapseChange   | 切换菜单后执行的回调函数               | function                  | (collapsed) => void       |
-| onSelectedChange   | 切换菜单后执行的回调函数               | function                  | (key,record,item) => void |
+| 属性          | 说明                                                        | 类型         | 默认值                                              |
+| ------------- | ----------------------------------------------------------- | ------------ | --------------------------------------------------- |
+| classname     | 弹窗层自定义class                                           | string       |                                                     |
+| style         | 弹窗额外样式                                                | css          |                                                     |
+| itemState     | 窗自定义默认参数                                            | object       | {x: 0,y: 0,width: 520,height: 520,maximized: false} |
+| visible       | 是否可见                                                    | bool         | false                                               |
+| isModalDialog | 是否为模态窗口                                              | bool         | false                                               |
+| maxZIndex     | 当前最大堆叠等级                                            | number       |                                                     |
+| children      | 自定义弹窗内容                                              | reactElement |                                                     |
+| onSizeChange  | 宽高改变的回调                                              | function     | (width,height)=>{...}                               |
+| canMaximize   | 控制最大化、小屏化按钮功能的显隐+双击header切换该状态的功能 | bool         | true                                                |
+| canResize     | 是否可以拖动改变窗口大小                                    | bool         | true                                                |
+| onOk          | 提交按钮回调                                                | function     | ()=>{ }                                             |
+| onCancel      | 取消按钮回调                                                | function     | ()=>{ }                                             |
+
+ResizableProvider - 属性如下
+
+| 属性        | 说明                   | 类型   | 默认值                                              |
+| ----------- | ---------------------- | ------ | --------------------------------------------------- |
+| maxZIndex   | 当前最大堆叠等级       | number | 0                                                   |
+| minWidth    | 拖动伸缩最小宽度限制   | number | 200                                                 |
+| minHeight   | 拖动伸缩最小高度限制   | number | 200                                                 |
+| initalState | 通用初始化弹窗默认参数 | object | {x: 0,y: 0,width: 520,height: 520,maximized: false} |
+
+ResizableModal - 属性如下
+
+| 属性             | 说明                                                        | 类型         | 默认值                                              |
+| ---------------- | ----------------------------------------------------------- | ------------ | --------------------------------------------------- |
+| id               | 唯一标识（必填）                                            | string       |                                                     |
+| itemState        | 窗自定义默认参数                                            | object       | {x: 0,y: 0,width: 520,height: 520,maximized: false} |
+| isModalDialog    | 是否为模态窗口                                              | bool         | false                                               |
+| cancelText       | 取消按钮文案                                                | string       | 取消                                                |
+| okText           | 提交按钮文案                                                | string       | 确认                                                |
+| disabled         | 提交按钮禁用                                                | bool         | false                                               |
+| children         | 自定义弹窗内容                                              | reactElement |                                                     |
+| canMaximize      | 控制最大化、小屏化按钮功能的显隐+双击header切换该状态的功能 | bool         | true                                                |
+| canResize        | 是否可以拖动改变窗口大小                                    | bool         | true                                                |
+| footerLeftExtra  | 默认的footer左侧插槽                                        | reactElement |                                                     |
+| footerRightExtra | 默认的footer右侧插槽                                        | reactElement |                                                     |
+| wrapClassName    | 弹窗层自定义class                                           | string       |                                                     |
+| style            | 弹窗额外样式                                                | css          |                                                     |
+| onOk             | 提交按钮回调                                                | function     | ()=>{ }                                             |
+| onCancel         | 取消按钮回调                                                | function     | ()=>{ }                                             |
+
 ## 注意
+ResizableModal的其他更多底层modal属性请参考antd-modal
 
 ## FAQ

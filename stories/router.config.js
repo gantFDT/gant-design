@@ -50,10 +50,11 @@ export default [
     ]
   },
   {
-    name: "components|Layout 布局",
+    name: "components|Container 容器",
     children: [{
-        name: 'BlockHeader',
-        nameZh: '段落标题'
+        name: 'Header',
+        nameZh: '标头',
+        package: 'header-g',
       },
       {
         name: 'SubMenu',
@@ -65,13 +66,13 @@ export default [
         nameZh: '锚点',
         package: 'anchor-g',
       },
-      {
-        name: 'OverflowTool',
-        nameZh: '子菜单',
-        package: 'overflow-tool-g',
-        nameZh: '溢出工具组',
-        package: 'overflow-tool-g',
-      },
+      // {
+      // 	name: 'OverflowTool',
+      // 	nameZh: '子菜单',
+      // 	package: 'overflow-tool-g',
+      // 	nameZh: '溢出工具组',
+      // 	package: 'overflow-tool-g',
+      // },
       // 		{
       // 			name: 'FooterToolbar',
       // 			nameZh: '底部固定工具栏'
@@ -85,8 +86,7 @@ export default [
       },
       {
         name: 'Table',
-        nameZh: '表格',
-        package: 'table-g',
+        nameZh: '表格'
       },
     ]
   }, {

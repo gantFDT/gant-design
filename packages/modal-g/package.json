@@ -14,7 +14,6 @@
     "license": "MIT",
     "dependencies": {
         "antd": "^3.26.5",
-        "gantd": "^1.0.53",
         "react": "^16.12.0"
     }
 }

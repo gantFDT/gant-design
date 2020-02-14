@@ -39,7 +39,6 @@ const ModalInner: React.FC<Props> = function ModalInner(props) {
         footerLeftExtra,//默认的footer左侧插槽
         footerRightExtra,//默认的footer右侧插槽
         disabled,       //提交按钮是否禁用
-        okBtnSolid,     //提交按钮是否实心
         cancelText,     //取消按钮文案
         okText,         //提交按钮文案
         onCancel,       //取消按钮回调
@@ -133,7 +132,6 @@ const ModalInner: React.FC<Props> = function ModalInner(props) {
                 <Button
                     size="small"
                     type='primary'
-                    className={okBtnSolid ? 'btn-solid' : ''}
                     loading={confirmLoading}
                     disabled={disabled}
                     onClick={onOk}
@@ -161,7 +159,6 @@ const defaultProps = {
     footerLeftExtra: null,
     footerRightExtra: null,
     disabled: false,
-    okBtnSolid: false,
     cancelText: cancelTextDefault,
     okText: okTextDefault,
     onCancel: () => { },
