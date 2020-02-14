@@ -103,7 +103,7 @@ function BottomLineUse() {
 const config = {
     codes: code,
     inline: true,
-    useage: '需要在布局中设置定制化的区块标题使用',
+    useage: '需要单独使用标头的地方，特色是工具栏溢出效果，也可做为工具栏使用',
     children: [
         {
             title: '基本用法',
