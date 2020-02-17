@@ -11,10 +11,10 @@ export default [{
     	name: 'Input',
     	nameZh: '输入框'
     },
-    // {
-    // 	name: 'CellPhone',
-    // 	nameZh: '手机号输入框'
-    // },
+    {
+    	name: 'InputCellPhone',
+    	nameZh: '手机号输入框'
+    },
     // {
     // 	name: 'email',
     // 	nameZh: '邮箱输入框'

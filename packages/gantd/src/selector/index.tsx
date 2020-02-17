@@ -48,7 +48,7 @@ export type Query<T> = (f: string) => Promise<T[]>
 
 type Label = NArray<string>
 
-// export type GetLabelText = (v: SelectValue, s: (v: SelectValue) => void) => void
+export type GetLabelText = (v: SelectValue, s: (v: SelectValue) => void) => void
 
 // 重写defaultProps中部分数据的类型
 type DefaultProps<R> = ProtoExtends<typeof defaultprop, {
@@ -56,7 +56,7 @@ type DefaultProps<R> = ProtoExtends<typeof defaultprop, {
   defaultList: R[],
   style: React.CSSProperties,
   optionLabel: Label,
-  getLabelText: Function,
+  getLabelText: GetLabelText,
   multiple: boolean,
   onSelect: (k: string, item: R) => void,
 }>
