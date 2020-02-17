@@ -49,7 +49,7 @@ export default [{
     },
     {
       name: 'datepicker',
-      nameZh: '日期组件'
+      nameZh: '日期选择器'
     },
     {
       name: 'ColorPicker',
