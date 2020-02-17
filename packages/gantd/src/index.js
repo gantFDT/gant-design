@@ -23,6 +23,7 @@ export { default as Icon } from './icon';
 export { default as AutoReload } from '@pkgs/auto-reload-g/src';
 
 //容器
+export { default as Card } from './card';
 export { default as BlockHeader } from '@pkgs/header-g/src';
 export { default as SubMenu } from '@pkgs/submenu-g/src';
 export { default as withAnchor } from './compose/anchor'
