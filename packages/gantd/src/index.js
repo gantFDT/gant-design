@@ -40,7 +40,7 @@ export { default as BlockHeader } from '@pkgs/header-g/src';
 
 export { default as Table } from '@pkgs/table-g/src';
 
-export { default as ColorPicker } from '@pkgs/color-picker-g/src';
+
 
 export { default as SubMenu } from '@pkgs/submenu-g/src';
 
@@ -55,3 +55,11 @@ export { default as InputTelePhone } from './inputtelephone';
 export { default as InputUrl } from './inputurl';
 export { default as InputEmail } from './inputemail'
 export { default as InputLanguage } from './inputlanguage';
+export { default as InputMoney } from './inputmoney';
+export { default as InputNumber } from './inputnumber'
+
+export { default as DatePicker, RangePicker } from './datepicker'
+export { default as ColorPicker } from '@pkgs/color-picker-g/src';
+
+export { default as Selector } from './selector';
+export { default as LocationSelector } from './locationselector';

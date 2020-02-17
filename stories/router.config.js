@@ -4,65 +4,68 @@ export default [{
     name: 'Idea',
     nameZh: '理念'
   }]
-},{
+}, {
   name: "组件|数据单元",
   children: [
     {
-    	name: 'Input',
-    	nameZh: '输入框'
+      name: 'Input',
+      nameZh: '输入框'
     },
     {
-    	name: 'InputCellPhone',
-    	nameZh: '手机号输入框'
+      name: 'InputCellPhone',
+      nameZh: '手机号输入框'
     },
     {
-    	name: 'InputTelephone',
-    	nameZh: '电话输入框'
+      name: 'InputTelephone',
+      nameZh: '电话输入框'
     },
     {
-    	name: 'InputUrl',
-    	nameZh: '链接输入框'
+      name: 'InputUrl',
+      nameZh: '链接输入框'
     },
     {
-    	name: 'InputEmail',
-    	nameZh: '邮箱输入框'
+      name: 'InputEmail',
+      nameZh: '邮箱输入框'
     },
     {
-    	name: 'InputLanguage',
-    	nameZh: '语言类型输入框'
+      name: 'InputLanguage',
+      nameZh: '语言类型输入框'
     },
-    // {
-    // 	name: 'datepicker',
-    // 	nameZh: '日期组件'
-    // },
-    // {
-    // 	name: 'inputnumber',
-    // 	nameZh: '数字选择器'
-    // },
+
+    {
+      name: 'InputNumber',
+      nameZh: '数字选择器'
+    },
     // {
     // 	name: 'select',
     // 	nameZh: '基础选择器'
     // },
-    
-    
-    // {
-    // 	name: 'inputmoney',
-    // 	nameZh: '金额输入框'
-    // },
-    // {
-    // 	name: 'location',
-    // 	nameZh: '地址选择器'
-    // },
-    
-    // {
-    // 	name: 'selector',
-    // 	nameZh: '基础选择器'
-    // },
+
+
+    {
+      name: 'InputMoney',
+      nameZh: '金额输入框'
+    },
+    {
+      name: 'selector',
+      nameZh: '基础选择器'
+    },
+    {
+      name: 'LocationSelector',
+      nameZh: '地址选择器'
+    },
+    {
+      name: 'datepicker',
+      nameZh: '日期组件'
+    },
     {
       name: 'ColorPicker',
       nameZh: '颜色选择器',
       package: 'color-picker-g',
-    }]
+    },
+
+
+  ]
 
   // }, {
   // 	name: "components|Compose 高阶组件",
