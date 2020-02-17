@@ -63,3 +63,4 @@ export { default as ColorPicker } from '@pkgs/color-picker-g/src';
 
 export { default as Selector } from './selector';
 export { default as LocationSelector } from './locationselector';
+export { default as IconSelector } from './iconselector';
