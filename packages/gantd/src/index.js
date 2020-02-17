@@ -15,40 +15,28 @@ if (
 }
 /* @remove-on-es-build-end */
 import './style/index.less'
-
-export { default as Intro } from './intro';
-
-export { default as Icon } from './icon';
-
-export { default as VisibleMenu } from './visiblemenu';
-
 export { default as ConfigProvider } from './config-provider';
-
-
-
-export { default as withEdit } from './compose/withEdit'
-
-export { default as withAnchor } from './compose/anchor'
-
-export { default as EditStatus } from './compose/editstatus'
-
-export { default as SwitchStatus } from './compose/switchstatus'
-
-
-
-export { default as BlockHeader } from '@pkgs/header-g/src';
-
-export { default as Table } from '@pkgs/table-g/src';
-
-
-
-export { default as SubMenu } from '@pkgs/submenu-g/src';
-
+// export {default as LocaleProvider} from './locale-provider'
+//其他
+export { default as Intro } from './intro';
+export { default as Icon } from './icon';
 export { default as AutoReload } from '@pkgs/auto-reload-g/src';
 
-export { default as OverflowTool } from '@pkgs/overflow-tool-g/src';
+//容器
+export { default as Card } from './card';
+export { default as BlockHeader } from '@pkgs/header-g/src';
+export { default as SubMenu } from '@pkgs/submenu-g/src';
+export { default as withAnchor } from './compose/anchor'
 
+//列表
+export { default as Table } from '@pkgs/table-g/src';
 
+//读写分离
+export { default as withEdit } from './compose/withEdit'
+export { default as EditStatus } from './compose/editstatus'
+export { default as SwitchStatus } from './compose/switchstatus'
+//数据单元
+  // input
 export { default as Input, TextArea, Search, Group, Password } from './input'
 export { default as InputCellPhone } from './inputcellphone'
 export { default as InputTelePhone } from './inputtelephone';
@@ -57,9 +45,15 @@ export { default as InputEmail } from './inputemail'
 export { default as InputLanguage } from './inputlanguage';
 export { default as InputMoney } from './inputmoney';
 export { default as InputNumber } from './inputnumber'
-
+  //picker
 export { default as DatePicker, RangePicker } from './datepicker'
 export { default as ColorPicker } from '@pkgs/color-picker-g/src';
-
+  //selector
 export { default as Selector } from './selector';
 export { default as LocationSelector } from './locationselector';
+export { default as IconSelector } from './iconselector';
+
+
+//废弃
+export { default as OverflowTool } from '@pkgs/overflow-tool-g/src';
+export { default as VisibleMenu } from './visiblemenu';

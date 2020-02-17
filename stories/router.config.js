@@ -31,17 +31,10 @@ export default [{
       name: 'InputLanguage',
       nameZh: '语言类型输入框'
     },
-
     {
       name: 'InputNumber',
       nameZh: '数字选择器'
     },
-    // {
-    // 	name: 'select',
-    // 	nameZh: '基础选择器'
-    // },
-
-
     {
       name: 'InputMoney',
       nameZh: '金额输入框'
@@ -63,8 +56,10 @@ export default [{
       nameZh: '颜色选择器',
       package: 'color-picker-g',
     },
-
-
+    {
+      name: 'IconSelector',
+      nameZh: '图标选择器',
+    },
   ]
 
   // }, {
@@ -149,7 +144,10 @@ export default [{
   }, {
     name: 'Intro',
     nameZh: '简介'
-  },
+  },{
+    name: 'Icon',
+    nameZh: '图标'
+  }
     // {
     // 			name: 'TaskBoard',
     // 			nameZh: '任务面板'
