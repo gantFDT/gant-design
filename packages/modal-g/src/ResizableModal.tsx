@@ -144,7 +144,7 @@ const ModalInner: React.FC<Props> = function ModalInner(props) {
             {children}
         </div>
         {canMaximize && <div className={`${prefixCls}-maximizeAnchor`} onClick={toggleMaximize}>
-            <Icon type={maximize ? 'fullscreen' : 'fullscreen-exit'} />
+            <Icon type={maximize ? 'switcher' : 'border'} />
         </div>}
         {canResize && !maximize && <div className={`${prefixCls}-resizeAnchor`} onMouseDown={onMouseResize}><i></i></div>}
     </Modal>
