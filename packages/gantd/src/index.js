@@ -51,3 +51,7 @@ export { default as OverflowTool } from '@pkgs/overflow-tool-g/src';
 
 export { default as Input, TextArea, Search, Group, Password } from './input'
 export { default as InputCellPhone } from './inputcellphone'
+export { default as InputTelePhone } from './inputtelephone';
+export { default as InputUrl } from './inputurl';
+export { default as InputEmail } from './inputemail'
+export { default as InputLanguage } from './inputlanguage';

@@ -15,10 +15,22 @@ export default [{
     	name: 'InputCellPhone',
     	nameZh: '手机号输入框'
     },
-    // {
-    // 	name: 'email',
-    // 	nameZh: '邮箱输入框'
-    // },
+    {
+    	name: 'InputTelephone',
+    	nameZh: '电话输入框'
+    },
+    {
+    	name: 'InputUrl',
+    	nameZh: '链接输入框'
+    },
+    {
+    	name: 'InputEmail',
+    	nameZh: '邮箱输入框'
+    },
+    {
+    	name: 'InputLanguage',
+    	nameZh: '语言类型输入框'
+    },
     // {
     // 	name: 'datepicker',
     // 	nameZh: '日期组件'
@@ -31,14 +43,8 @@ export default [{
     // 	name: 'select',
     // 	nameZh: '基础选择器'
     // },
-    // {
-    // 	name: 'url',
-    // 	nameZh: '地址输入框'
-    // },
-    // {
-    // 	name: 'inputlang',
-    // 	nameZh: '语言类型输入框'
-    // },
+    
+    
     // {
     // 	name: 'inputmoney',
     // 	nameZh: '金额输入框'
@@ -47,10 +53,7 @@ export default [{
     // 	name: 'location',
     // 	nameZh: '地址选择器'
     // },
-    // {
-    // 	name: 'telephone',
-    // 	nameZh: '电话输入框'
-    // },
+    
     // {
     // 	name: 'selector',
     // 	nameZh: '基础选择器'
