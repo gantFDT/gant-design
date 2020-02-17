@@ -92,10 +92,10 @@ export default [{
 {
   name: "组件| 表单",
   children: [
-    // {
-    //   name: 'SchemaForm',
-
-    // },
+    {
+      name: 'SchemaForm',
+      nameZh: '表单'
+    },
   ]
 }, {
   name: "组件| 列表",

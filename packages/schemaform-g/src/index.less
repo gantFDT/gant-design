@@ -1,0 +1,65 @@
+@import '../../gantd/src/style/index.less';
+@import '~antd/es/style/themes/index.less';
+@component: ~'@{gant-prefix}-schemaform';
+
+.@{component} {
+  &-schemaCard {
+    clear: both;
+  }
+
+  &-schemaForm {
+
+    .ant-form-item-label label::after,
+    .ant-col-24.ant-form-item-label label::after,
+    .ant-col-xl-24.ant-form-item-label label::after {
+      display: inline;
+    }
+
+    .ant-input-number {
+      line-height: 31px;
+    }
+
+    .ant-form-item-control {
+      margin-bottom: 16px !important;
+      line-height: 33px !important;
+
+      .ant-form-explain {
+        position: absolute;
+        bottom: -16px;
+        font-size: 12px;
+        min-height: 16px;
+        line-height: 16px;
+      }
+    }
+
+    .ant-form-item-label {
+      line-height: 33px !important;
+    }
+
+    .ant-input {
+      padding: 4px 11px !important
+    }
+
+    &-showRequiredMark {
+      .ant-form-item-required::before {
+        display: inline;
+      }
+    }
+  }
+
+  &-right {
+    .ant-form-item-label {
+      text-align: right;
+    }
+  }
+
+  &-left {
+    .ant-form-item-label {
+      text-align: left;
+    }
+  }
+
+  &-schemaTable {
+    padding: 5px;
+  }
+}
