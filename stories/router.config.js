@@ -7,10 +7,10 @@ export default [{
 },{
   name: "组件|数据单元",
   children: [
-    // {
-    // 	name: 'Input',
-    // 	nameZh: '输入框'
-    // },
+    {
+    	name: 'Input',
+    	nameZh: '输入框'
+    },
     // {
     // 	name: 'CellPhone',
     // 	nameZh: '手机号输入框'

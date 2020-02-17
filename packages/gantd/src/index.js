@@ -24,6 +24,8 @@ export { default as VisibleMenu } from './visiblemenu';
 
 export { default as ConfigProvider } from './config-provider';
 
+
+
 export { default as withEdit } from './compose/withEdit'
 
 export { default as withAnchor } from './compose/anchor'
@@ -31,6 +33,8 @@ export { default as withAnchor } from './compose/anchor'
 export { default as EditStatus } from './compose/editstatus'
 
 export { default as SwitchStatus } from './compose/switchstatus'
+
+
 
 export { default as BlockHeader } from '@pkgs/header-g/src';
 
@@ -43,3 +47,6 @@ export { default as SubMenu } from '@pkgs/submenu-g/src';
 export { default as AutoReload } from '@pkgs/auto-reload-g/src';
 
 export { default as OverflowTool } from '@pkgs/overflow-tool-g/src';
+
+
+export { default as Input, TextArea, Search, Group, Password } from './input'

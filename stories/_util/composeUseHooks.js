@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { EditStatus } from '@'
+import { EditStatus } from '@pkgs/gantd/src'
 
 export const WrapperValue = defaultValue => Component => props => {
   const [value, setValue] = useState(defaultValue)
