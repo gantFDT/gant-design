@@ -9,24 +9,24 @@ const codeList = [
   const onSave = (id, value, cb) => cb()
   
   return (
-    <CellPhone value={value} onChange={setValue} onSave={onSave} />
+    <InputCellPhone value={value} onChange={setValue} onSave={onSave} />
   )`,
   `const [value, setValue] = useState('18811012138')
   const onSave = (id, value, cb) => cb()
   return (
-    <CellPhone value={value} onChange={setValue} onSave={onSave} />
+    <InputCellPhone value={value} onChange={setValue} onSave={onSave} />
   )`,
   `return (
     <>
-      <CellPhone value={'18811012138'} allowEdit={false} />
-      <CellPhone value={'18811012138'} edit style={{ marginTop: 10 }} />
+      <InputCellPhone value={'18811012138'} allowEdit={false} />
+      <InputCellPhone value={'18811012138'} edit style={{ marginTop: 10 }} />
     </>
   )`
 ]
 
 const config = {
   codes: codeList.map(code => (
-    `import { CellPhone } from 'gantd';
+    `import { InputCellPhone } from 'gantd';
 import React, { useState } from 'react';
 
 function Demo(){
