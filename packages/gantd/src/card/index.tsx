@@ -7,54 +7,37 @@ import React from 'react';
 import classnames from 'classnames';
 import './index.less';
 
+interface CardIf {
+  children: React.ReactNode,
+  className: string,
+  bordered: boolean,
+  bodyStyle: object,
+  showBoxShadow: boolean,
+  headStyle: object
+}
 
-// const contentHei = window.mainContainerMinHeight;
 const dafaultBodyStyle = {
   padding: 10
 }
-export const Card = () => {
-  // static propTypes = {
-  //     className: propTypes.string,
-  //     size: propTypes.string,
-  //     bordered: propTypes.bool,
-  //     bodyStyle: propTypes.object,
-  //     defaultMinHei: propTypes.bool,
-  //     showBoxShadow: propTypes.bool,
-  //     headStyle:propTypes.object,
-  //     headeHeight:propTypes.number
-  // }
 
-  // static defaultProps = {
-  //     className: '',
-  //     defaultMinHei: false,
-  //     showBoxShadow: false,
-  //     bordered: true,
-  //     bodyStyle: {},
-  //     headStyle:{},
-  //     headeHeight:40
-  // }
-
-
-  const { children, className, size, bordered, bodyStyle, defaultMinHei, showBoxShadow, headStyle, headeHeight, ...restProps } = this.props;
-  // let _defaultBodyStyle = defaultMinHei ? { ...dafaultBodyStyle, minHeight: contentHei - (bordered ? 52 : 50) } : dafaultBodyStyle;
-
+const Card = (props: CardIf) => {
+  const { children, className, bordered, bodyStyle, showBoxShadow, headStyle, ...restProps } = props;
   const prefixCls = ('gantd-card');
-
   return (
     <AntCard
       className={classnames(prefixCls, showBoxShadow ? prefixCls + '-page-boxshadow' : '', className)}
       bordered={bordered}
-      bodyStyle={{ ...bodyStyle }}
+      bodyStyle={{ ...dafaultBodyStyle, ...bodyStyle }}
       size='small'
-      headStyle={{ height: headeHeight, display: 'flex', ...headStyle }}
+      headStyle={{ display: 'flex', ...headStyle }}
       {...restProps}
     >
       {children}
     </AntCard>
   );
-
-
 }
+
+export default Card
 
 
 

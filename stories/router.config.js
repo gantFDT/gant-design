@@ -154,6 +154,10 @@ export default [{
   {
     name: 'TaskBoard',
     nameZh: '任务面板'
+  },
+  {
+    name: 'Loading',
+    nameZh: '载入中'
   }
     // {
     // 			name: 'TaskBoard',

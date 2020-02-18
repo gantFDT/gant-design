@@ -6,7 +6,7 @@ import { ConfigConsumer } from '../config-provider'
 //页面加载loading
 import pageLoadings from './loadings'
 
-export default class PageLoading extends Component {
+export default class Loading extends Component {
   // static propTypes = {
   //   className: propTypes.string,
   //   size: propTypes.string,
@@ -27,7 +27,7 @@ export default class PageLoading extends Component {
   renderWithConfigConsumer = ({ getPrefixCls }) => {
     const prefixCls = getPrefixCls('pageloading');
     const { index = 0, height = 200, className, ...rest } = this.props;
-    const clsString = classnames(prefixCls, 'aligncenter', className);
+    const clsString = classnames(prefixCls, 'gant-align-center', className);
     return (
       <div style={{height:height   }} className={clsString}>
         {pageLoadings[index]}

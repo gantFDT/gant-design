@@ -117,14 +117,14 @@ export default [
 
   <div className={classnames('loader', 'ball-zig-zag')}>
     <div></div>
-    <div class="turn">
+    <div className="turn">
       <div></div>
     </div>
   </div>,
 
   <div className={classnames('loader', 'ball-zig-zag-deflect')}>
     <div></div>
-    <div class="turn">
+    <div className="turn">
       <div></div>
     </div>
   </div>,
@@ -141,10 +141,10 @@ export default [
 
   <div className={classnames('loader', 'ball-triangle-path')}>
     <div></div>
-    <div class="turn150">
+    <div className="turn150">
       <div></div>
     </div>
-    <div class="turn-150">
+    <div className="turn-150">
       <div></div>
     </div>
   </div>,
@@ -158,7 +158,7 @@ export default [
 
 
   <div className={classnames('loader', 'line-scale')}>
-    <div class="pa">
+    <div className="pa">
       <div></div>
       <div></div>
       <div></div>
@@ -169,7 +169,7 @@ export default [
 
 
   <div className={classnames('loader', 'line-scale-pulse-out')} >
-    <div class="pa">
+    <div className="pa">
       <div></div>
       <div></div>
       <div></div>
@@ -180,7 +180,7 @@ export default [
 
 
   <div className={classnames('loader', 'line-scale-pulse-out-rapid')}>
-    <div class="pa">
+    <div className="pa">
       <div></div>
       <div></div>
       <div></div>
@@ -191,7 +191,7 @@ export default [
 
 
   <div className={classnames('loader', 'line-scale-party')}>
-    <div class="pa">
+    <div className="pa">
       <div></div>
       <div></div>
       <div></div>
