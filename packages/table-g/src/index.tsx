@@ -691,7 +691,7 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
     // 缺省显示
     const emptyText = useMemo(() => {
         return (
-            <div className="aligncenter" style={{ height: _.get(scroll, 'y') }}>
+            <div className="gant-align-center" style={{ height: _.get(scroll, 'y') }}>
                 <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={props.emptyDescription} />
             </div>
         )

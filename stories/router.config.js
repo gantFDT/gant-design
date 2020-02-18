@@ -119,9 +119,12 @@ export default [{
     package: 'anchor-g',
   },
   {
-    name: 'modal',
+    name: 'Modal',
     nameZh: '弹窗',
     package: 'auto-modal-g',
+  },{
+    name: 'Toolbar',
+    nameZh: '工具条',
   }
     // {
     // 	name: 'OverflowTool',

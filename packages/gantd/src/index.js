@@ -22,11 +22,7 @@ export { default as Intro } from './intro';
 export { default as Icon } from './icon';
 export { default as AutoReload } from '@pkgs/auto-reload-g/src';
 
-//容器
-export { default as Card } from './card';
-export { default as BlockHeader } from '@pkgs/header-g/src';
-export { default as SubMenu } from '@pkgs/submenu-g/src';
-export { default as withAnchor } from './compose/anchor'
+
 
 //列表
 export { default as Table } from '@pkgs/table-g/src';
@@ -53,6 +49,13 @@ export { default as Selector } from './selector';
 export { default as LocationSelector } from './locationselector';
 export { default as IconSelector } from './iconselector';
 
+
+//容器
+export { default as Card } from './card';
+export { default as BlockHeader } from '@pkgs/header-g/src';
+export { default as SubMenu } from '@pkgs/submenu-g/src';
+export { default as withAnchor } from './compose/anchor'
+export { default as Toolbar } from './toolbar'
 
 //废弃
 export { default as OverflowTool } from '@pkgs/overflow-tool-g/src';

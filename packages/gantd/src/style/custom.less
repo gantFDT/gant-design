@@ -1,40 +1,4 @@
-//datafrom
-.dataform {
-  .ant-form-item-control-wrapper {
-    width: calc(100% - 120px) !important;
-  }
-
-  .ant-form-item-label-left {
-    width: 120px !important;
-  }
-
-  .ant-form-item-label>label {
-    color: rgba(125, 125, 125, 0.65) !important;
-    width: 100%;
-    overflow: hidden;
-    display: block;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-
-  .ant-form-item {
-    color: rgba(125, 125, 125, 0.9) !important;
-  }
-
-  &.readform {
-    .has-error .ant-form-explain {
-      display: none;
-    }
-  }
-}
-
-
-
-
-
-
-
-
+//定制antd
 
 
 .ant-table-column-title {
@@ -233,4 +197,50 @@
 
 .ant-pagination {
   font-size: 12px !important;
+}
+
+
+.ant-card-head {
+  margin-bottom: 0 !important;
+}
+
+
+
+.ant-table-small {
+  border-radius: 0px;
+}
+
+
+.ant-pagination {
+  padding-right: 20px !important;
+}
+
+
+
+.form-item-align-left {
+  :global(.ant-form-item-label) {
+    text-align: left;
+  }
+}
+
+.form-item-align-right {
+  :global(.ant-form-item-label) {
+    text-align: right;
+  }
+}
+.ant-page-header-title-view-extra {
+  right: 0px !important;
+}
+
+.ant-form-item {
+  margin-bottom: 0px !important;
+}
+
+.ant-form-item {
+  color: rgba(0, 0, 0, 0.9) !important;
+}
+
+//锚点
+.ant-anchor-wrapper {
+  background-color: transparent !important;
 }

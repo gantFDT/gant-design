@@ -1,16 +1,8 @@
 @import 'theme/default.less';
 @import 'mixin/style';
 
-.blur {
-  .blur(5px);
-}
 
-.border1 {
-  .border();
-}
-
-;
-
+//外边距，5倍颗粒度，最大20
 .margin-generator(@size) when (@size <=20) {
   @num: @size*5;
 
@@ -18,37 +10,36 @@
     margin: @num * 1px !important;
   }
 
-  .@{gant-prefix}-margintop-@{num} {
+  .@{gant-prefix}-margin-top-@{num} {
     margin-top: @num * 1px !important;
   }
 
-  .@{gant-prefix}-marginleft-@{num} {
+  .@{gant-prefix}-margin-left-@{num} {
     margin-left: @num * 1px !important;
   }
 
-  .@{gant-prefix}-marginright-@{num} {
+  .@{gant-prefix}-margin-right-@{num} {
     margin-right: @num * 1px !important;
   }
 
-  .@{gant-prefix}-marginbottom-@{num} {
+  .@{gant-prefix}-margin-bottom-@{num} {
     margin-bottom: @num * 1px !important;
   }
 
-  .@{gant-prefix}-marginh-@{num} {
+  .@{gant-prefix}-margin-h-@{num} {
     margin-left: @num * 1px !important;
     margin-right: @num * 1px !important;
   }
 
-  .@{gant-prefix}-marginv-@{num} {
+  .@{gant-prefix}-margin-v-@{num} {
     margin-top: @num * 1px !important;
     margin-bottom: @num * 1px !important;
   }
 
   .margin-generator(@size+1)
 }
-
 .margin-generator(1);
-
+//内边距，5倍颗粒度，最大20
 .padding-generator(@size) when (@size <=20) {
   @num: @size*5;
 
@@ -56,102 +47,64 @@
     padding: @num * 1px !important;
   }
 
-  .@{gant-prefix}-paddingtop-@{num} {
+  .@{gant-prefix}-padding-top-@{num} {
     padding-top: @num * 1px !important;
   }
 
-  .@{gant-prefix}-paddingleft-@{num} {
+  .@{gant-prefix}-padding-left-@{num} {
     padding-left: @num * 1px !important;
   }
 
-  .@{gant-prefix}-paddingright-@{num} {
+  .@{gant-prefix}-padding-right-@{num} {
     padding-right: @num * 1px !important;
   }
 
-  .@{gant-prefix}-paddingbottom-@{num} {
+  .@{gant-prefix}-padding-bottom-@{num} {
     padding-bottom: @num * 1px !important;
   }
 
-  .@{gant-prefix}-paddingh-@{num} {
+  .@{gant-prefix}-padding-h-@{num} {
     padding-left: @num * 1px !important;
     padding-right: @num * 1px !important;
   }
 
-  .@{gant-prefix}-paddingv-@{num} {
+  .@{gant-prefix}-padding-v-@{num} {
     padding-top: @num * 1px !important;
     padding-bottom: @num * 1px !important;
   }
 
   .padding-generator(@size+1)
 }
-
 .padding-generator(1);
 
 
-.full {
-  width: 100% !important;
-  height: 100% !important;
-}
-
-
-
-.hidden {
-  display: none !important;
-}
-
-.displayblock {
-  display: block !important;
-}
-
-.show {
-  display: initial !important;
-}
-
-//清除浮动
-.clearFloat {
-  width: 100% !important;
-  display: block !important;
-  height: 0px !important;
-  clear: both !important;
-  visibility: hidden !important;
-}
-
-.center {
-  text-align: center;
-  margin: 0 auto;
-}
-
-.flex-item {
-  flex: 1;
-}
-
-.flex-wrap {
-  flex-direction: row;
+//限制显示行数
+.omitdisplay {
+  word-break: break-all;
+  text-overflow: ellipsis;
+  display: box;
   display: -webkit-box;
-  display: -ms-flexbox;
-  display: -webkit-flex;
-  display: flex;
+  -webkit-line-clamp: 1;
+  /*! autoprefixer: off */
+  -webkit-box-orient: vertical;
+  /* autoprefixer: on */
+  overflow: hidden;
+  word-break: break-all;
 }
 
-.flex-column {
-  flex-direction: column;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: -webkit-flex;
-  display: flex;
-
-  .flex-end {
-    align-self: flex-end;
+.omit-generator(@line) when (@line <=10) {
+  .@{gant-prefix}-omit-@{line} {
+    .omitdisplay;
+    -webkit-line-clamp: @line;
   }
+
+  .omit-generator(@line+1);
 }
 
-.fixed {
-  position: fixed;
-  top: 0;
-  left: 0;
-}
+.omit-generator(1);
 
-.aligncenter {
+//上下左右居中
+.@{gant-prefix}-align-center {
   box-sizing: border-box;
   flex-shrink: 0;
   position: relative;
@@ -169,186 +122,6 @@
   align-items: center;
 }
 
-.radius3 {
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.radius5 {
-  border-radius: 5px;
-}
-
-.alignleft {
-  text-align: left;
-  display: inline;
-}
-
-.alignright {
-  text-align: right;
-  display: inline;
-}
-
-
-.displayinlineblock {
-  display: inline-block;
-}
 
 
 
-
-
-.ant-card-head {
-  margin-bottom: 0 !important;
-}
-
-
-
-.ant-table-small {
-  border-radius: 0px;
-}
-
-
-.ant-pagination {
-  padding-right: 20px !important;
-}
-
-.pointer {
-  cursor: pointer;
-}
-
-.form-item-align-left {
-  :global(.ant-form-item-label) {
-    text-align: left;
-  }
-}
-
-.form-item-align-right {
-  :global(.ant-form-item-label) {
-    text-align: right;
-  }
-}
-
-
-
-.iconbtn {
-  margin: 0 5px;
-  padding: 0 8px !important;
-}
-
-
-.ant-page-header-title-view-extra {
-  right: 0px !important;
-}
-
-
-//全局formitem marginbottom
-.ant-form-item {
-  margin-bottom: 0px !important;
-}
-
-.text-overflow-hidden {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.ant-form-item {
-  color: rgba(0, 0, 0, 0.9) !important;
-}
-
-
-
-//锚点
-.ant-anchor-wrapper {
-  background-color: transparent !important;
-}
-
-
-
-//特小头像20
-.smallavatar {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  display: inline-block;
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center center;
-  vertical-align: bottom;
-}
-
-.drawerbar {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  border-top: 1px solid rgba(126,126,126,0.3);
-  padding: 10px 16px;
-  text-align: right;
-  left: 0;
-  background: #fff;
-  border-radius: 0 0 4px 4px;
-}
-
-//超出省略显示
-.omitdisplay {
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
-
-//一行文字超出隐藏省略号显示
-.omitdisplayline1 {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
-  overflow: hidden;
-}
-
-//两行文字超出隐藏省略号显示
-.omitdisplayline2 {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
-}
-
-//两行文字超出隐藏省略号显示
-.omitdisplayline3 {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-  overflow: hidden;
-}
-
-
-
-//grid 魔法棒样式
-//魔法棒鼠标样式
-.magiccursor {
-  background: lightyellow;
-  cursor: url('http://data.favori.cc/magic.cur'), auto !important;
-
-  div {
-    cursor: url('http://data.favori.cc/magic.cur'), auto !important;
-  }
-
-  table {
-    cursor: url('http://data.favori.cc/magic.cur'), auto !important;
-  }
-
-  tr {
-    cursor: url('http://data.favori.cc/magic.cur'), auto !important;
-  }
-
-  td {
-    cursor: url('http://data.favori.cc/magic.cur'), auto !important;
-
-    &:hover {
-      background: lightblue;
-    }
-  }
-
-  span {
-    cursor: url('http://data.favori.cc/magic.cur'), auto !important;
-  }
-}
