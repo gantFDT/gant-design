@@ -9,7 +9,7 @@ export default [{
   children: [
     {
       name: 'Input',
-      nameZh: '输入框'
+      nameZh: '文本输入框'
     },
     {
       name: 'InputCellPhone',
@@ -33,7 +33,7 @@ export default [{
     },
     {
       name: 'InputNumber',
-      nameZh: '数字选择器'
+      nameZh: '数字输入框'
     },
     {
       name: 'InputMoney',
