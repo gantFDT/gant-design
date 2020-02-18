@@ -13,12 +13,6 @@
   height:100%;
   border-right:none !important;
 
-  &>&-collapsed {
-    left: 0;
-    text-overflow: clip;
-    padding: 0 12px !important;
-  }
-
   &>&-collapsed.ant-menu-item-selected::after {
     opacity: 0;
   }
@@ -53,6 +47,16 @@
     box-shadow: 0 0px 8px 0 rgba(0, 0, 0, 0.06), 0 1px 0px 0 rgba(0, 0, 0, 0.02);
     border-radius: 3px;
     overflow: hidden;
+
+    .ant-menu-inline-collapsed>.ant-menu-item {
+      left: 0;
+      text-overflow: clip;
+      padding: 0 12px !important;
+    }
+
+    .ant-menu-vertical .ant-menu-item {
+      margin: 0;
+    }
   }
 
   &-pagecard {
