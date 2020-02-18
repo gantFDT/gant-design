@@ -21,7 +21,7 @@ export { default as ConfigProvider } from './config-provider';
 export { default as Intro } from './intro';
 export { default as Icon } from './icon';
 export { default as AutoReload } from '@pkgs/auto-reload-g/src';
-
+export { default as TaskBoard } from './taskboard'
 
 
 //列表
@@ -57,6 +57,10 @@ export { default as SubMenu } from '@pkgs/submenu-g/src';
 export { default as withAnchor } from './compose/anchor'
 export { default as Toolbar } from './toolbar'
 
+
 //废弃
 export { default as OverflowTool } from '@pkgs/overflow-tool-g/src';
 export { default as VisibleMenu } from './visiblemenu';
+export { default as ProfileCard } from './profilecard'
+export { default as Exception } from './exception';
+export { default as PageLoading } from './pageloading'

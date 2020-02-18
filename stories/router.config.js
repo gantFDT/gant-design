@@ -29,7 +29,7 @@ export default [{
     },
     {
       name: 'InputLanguage',
-      nameZh: '语言类型输入框'
+      nameZh: '多语言文本输入框'
     },
     {
       name: 'InputNumber',
@@ -141,15 +141,19 @@ export default [{
 }, {
   name: '组件|其他',
   children: [{
+    name: 'Icon',
+    nameZh: '图标'
+  },{
     name: 'AutoReload',
     nameZh: '自动刷新组件',
     package: 'auto-reload-g',
   }, {
     name: 'Intro',
     nameZh: '简介'
-  },{
-    name: 'Icon',
-    nameZh: '图标'
+  },
+  {
+    name: 'TaskBoard',
+    nameZh: '任务面板'
   }
     // {
     // 			name: 'TaskBoard',
