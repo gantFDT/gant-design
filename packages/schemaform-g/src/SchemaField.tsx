@@ -13,37 +13,37 @@ const tr = (v) => v
 
 function SchemaField(props: Schema, ref: any) {
 	const { options, title, props: FiledProps, componentType, name, isRequired, initialValue: defaultValue, required, edit, uiData, operator } = props
-	const { form: { getFieldDecorator, resetFields, validateFieldsAndScroll, }, onSave, data, customFileds, emitDependenciesChange, prefixCls } = useContext(FormContext)
+	const { form: { getFieldDecorator, resetFields, validateFieldsAndScroll, }, onSave, data, customFields, emitDependenciesChange, prefixCls } = useContext(FormContext)
 	const onCancel = useCallback(
 		(value) => name && resetFields([name]), [componentType, name],
 	)
 	const onItemSave = useCallback((id, value, cb) => {
 		name && validateFieldsAndScroll([name], (errors: any, values: object) => {
-			if (errors) return;
+			if (errors) return
 			onSave(id, value, cb)
 		})
 	}, [name])
-	const optionsRules = options && options.rules ? options.rules : [];
-	const { col, labelAlign, labelCol, wrapperCol, extra } = uiData;
+	const optionsRules = options && options.rules ? options.rules : []
+	const { col, labelAlign, labelCol, wrapperCol, extra } = uiData
 
-	// let initialValue = defaultValue === undefined ? get(data, `${name}`, undefined) : defaultValue;
+	// let initialValue = defaultValue === undefined ? get(data, `${name}`, undefined) : defaultValue
 	let initialValue = useMemo(() => {
-		return defaultValue === undefined ? get(data, `${name}`, undefined) : defaultValue;
+		return defaultValue === undefined ? get(data, `${name}`, undefined) : defaultValue
 	}, [defaultValue])
-	if (initialValue == undefined && componentType === "ColorPicker") initialValue = "#ffffff";
-	const itemEdit = FiledProps && FiledProps.allowEdit === false ? EditStatus.CANCEL : edit;
-	const colLayout = typeof col === "number" ? { span: col } : col;
-	const labelColLayout = typeof labelCol === "number" ? { span: labelCol } : labelCol;
-	const wrapperColayout = typeof wrapperCol === "number" ? { span: wrapperCol } : wrapperCol;
+	if (initialValue == undefined && componentType === "ColorPicker") initialValue = "#ffffff"
+	const itemEdit = FiledProps && FiledProps.allowEdit === false ? EditStatus.CANCEL : edit
+	const colLayout = typeof col === "number" ? { span: col } : col
+	const labelColLayout = typeof labelCol === "number" ? { span: labelCol } : labelCol
+	const wrapperColayout = typeof wrapperCol === "number" ? { span: wrapperCol } : wrapperCol
 	const fieldComponent = useMemo(() => {
 		let component = get(getFields(), `${componentType}`, null)
 		if (component == null) {
-			const customIndex = findIndex(customFileds, (item) => item.type === componentType);
-			component = get(customFileds, `[${customIndex}].component`, Input)
+			const customIndex = findIndex(customFields, (item) => item.type === componentType)
+			component = get(customFields, `[${customIndex}].component`, Input)
 		}
 		const { initialValue, ...othterProps } = FiledProps || {}
 		return React.createElement(component, { ...othterProps, edit: itemEdit, onCancel, onSave: onItemSave })
-	}, [FiledProps, itemEdit, onCancel, onItemSave, componentType, customFileds])
+	}, [FiledProps, itemEdit, onCancel, onItemSave, componentType, customFields])
 
 	useEffect(() => {
 		if (![null, undefined].includes(initialValue)) {

@@ -20,33 +20,33 @@ class SchemaForm extends React.Component<Props>{
 		edit: EditStatus.EDIT,
 		onSave: () => true,
 		data: {},
-		customFileds: [],
+		customFields: [],
 		backgroundColor: "transparent"
 	}
 	componentDidUpdate(pervPops: Props) {
-		const { data, schema, form: { getFieldsValue, setFieldsValue } } = this.props;
-		const vals = getFieldsValue();
+		const { data, schema, form: { getFieldsValue, setFieldsValue } } = this.props
+		const vals = getFieldsValue()
 		if (!isEqual(pervPops.data, data) && !isEqual(vals, getDateToForm(data, schema))) {
-			const newVals: any = getNewValue(vals, data);
+			const newVals: any = getNewValue(vals, data)
 			setFieldsValue(newVals)
 		}
 	}
 	resetFields = (names?: string[]) => {
-		const { form: { resetFields } } = this.props;
+		const { form: { resetFields } } = this.props
 		return resetFields(names)
 	}
 	validateForm = (names: string[]) => {
-		const { form: { validateFieldsAndScroll } } = this.props;
+		const { form: { validateFieldsAndScroll } } = this.props
 		return new Promise(resolve => {
 			validateFieldsAndScroll(names, (errors, values) => resolve({ errors, values }))
 		})
 	}
 	getFieldsValue = (names?: string[]) => {
-		const { form: { getFieldsValue } } = this.props;
+		const { form: { getFieldsValue } } = this.props
 		return getFieldsValue(names)
 	}
 	setFieldsValue = (data: object) => {
-		const { form: { setFieldsValue } } = this.props;
+		const { form: { setFieldsValue } } = this.props
 		setFieldsValue(data)
 	}
 	render() {
@@ -58,12 +58,12 @@ class SchemaForm extends React.Component<Props>{
 			titleConfig,
 			onSave,
 			data,
-			customFileds,
+			customFields,
 			backgroundColor,
 			className,
 			emitDependenciesChange,
 			prefixCls: customizePrefixCls,
-		} = this.props;
+		} = this.props
 
 		if (isEmpty(schema)) {
 			console.warn('schema is null')
@@ -72,7 +72,7 @@ class SchemaForm extends React.Component<Props>{
 		return <ConfigContext.Consumer>
 			{({ locale: contextLocale = defaultLocale, getPrefixCls }) => {
 				const prefixCls = getPrefixCls('schemaform', customizePrefixCls)
-				return <FormContext.Provider value={{ form, edit, onSave, data, customFileds, emitDependenciesChange, prefixCls }} >
+				return <FormContext.Provider value={{ form, edit, onSave, data, customFields, emitDependenciesChange, prefixCls }} >
 					<div className={classnames(className)} style={{ backgroundColor }} >
 						<_SchemaForm schema={schema} uiSchema={uiSchema} titleConfig={titleConfig} />
 					</div>

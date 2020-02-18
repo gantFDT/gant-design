@@ -4,10 +4,9 @@ import { ColProps } from 'antd/lib/grid/col'
 import { WrappedFormUtils, GetFieldDecoratorOptions } from 'antd/lib/form/Form.d'
 import { FormLabelAlign } from 'antd/lib/form/FormItem'
 
-export type Type = "object" | "table" | "array" | "number" | "string" | "boolean" | "date"
+export type Type = "object" | "array" | "number" | "string" | "boolean" | "date"
 export enum Types {
 	object = "object",
-	table = "table",
 	array = "array",
 	number = "number",
 	string = "string",
@@ -18,7 +17,7 @@ export interface Context {
 	form: WrappedFormUtils,
 	onSave: (id: any, value: any, cb: any) => any,
 	data?: object | undefined,
-	customFileds?: CustomFileds[],
+	customFields?: CustomFields[],
 	backgroundColor?: string,
 	edit?: EditStatus | EditObject,
 	emitDependenciesChange: (key: string, value: any) => void,
@@ -41,7 +40,7 @@ export interface Schema {
 	props?: any,
 	[propName: string]: any;
 }
-export interface CustomFileds {
+export interface CustomFields {
 	type: string,
 	component: React.ElementType
 }
@@ -56,7 +55,7 @@ export interface OptionalProps {
 	titleConfig?: TitleSchema,
 	data?: object,
 	onChange?: Function,
-	customFileds?: CustomFileds[],
+	customFields?: CustomFields[],
 	backgroundColor?: string,
 	wrappedComponentRef?: any,
 	onRef?: any,

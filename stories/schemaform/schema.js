@@ -1,190 +1,62 @@
 export const schema = {
     type: "object",
     title: "普通表单",
+    required: ["key_1"],
     propertyType: {
-        input: {
-            title: "input 组件",
-            type: "string"
+        key_1: {
+            title: "普通输入框",
+            type: "string",
         },
-        input2: {
-            title: "input2",
-            type: "string"
+        key_2: {
+            title: "数字输入框",
+            type: "number",
+            componentType: "InputNumber"
         },
+        key_3: {
+            title: "金额",
+            type: "string",
+            componentType: "InputMoney"
+        },
+        key_4: {
+            title: "url地址",
+            type: "string",
+            componentType: "Url"
+        },
+        key_5: {
+            title: "邮箱",
+            type: "string",
+            componentType: "Email"
+        },
+        key_6: {
+            title: "语言",
+            type: "string",
+            componentType: "Language"
+        },
+        key_7: {
+            title: "手机号",
+            type: "string",
+            componentType: "CellPhone"
+        },
+        key_8: {
+            title: "多行输入框",
+            type: "string",
+            componentType: "TextArea"
+        },
+        key_9: {
+            title: "日期选择器",
+            type: "string",
+            componentType: "DatePicker"
+        },
+        key_10: {
+            title: "日期区间选择器",
+            type: "string",
+            componentType: "RangePicker"
+        },
+        // key_11: {
+        //     title: "颜色选择",
+        //     type: "string",
+        //     componentType: "ColorPicker"
+        // },
     }
 
 }
-// export const configSchma = {
-//     type: "object",
-//     title: "配置普通表单",
-//     propertyType: {
-//         "col": {
-//             title: "col",
-//             type: "number",
-//             componentType: "InputNumber",
-//             props: {
-//                 max: 24,
-//                 min: 0
-//             }
-//         },
-//         "gutter": {
-//             title: "gutter",
-//             type: "number",
-//             componentType: "InputNumber",
-//             props: {
-//                 min: 0
-//             }
-//         },
-//         "labelCol": {
-//             title: "labelCol",
-//             type: "number",
-//             componentType: "InputNumber",
-//             props: {
-//                 max: 24,
-//                 min: 0
-//             }
-//         },
-//         "wrapperCol": {
-//             title: "wrapperCol",
-//             type: "number",
-//             componentType: "InputNumber",
-//             props: {
-//                 max: 24,
-//                 min: 0
-//             }
-//         },
-//         "labelAlign": {
-//             title: "labelAlign",
-//             type: "string",
-//             componentType: "Select",
-//             props: {
-//                 dataSource: [
-//                     {
-//                         label: "左",
-//                         value: "left"
-//                     },
-//                     {
-//                         label: "右",
-//                         value: "right"
-//                     }
-//                 ]
-//             }
-//         },
-//         "backgroundColor": {
-//             title: "backgroundColor",
-//             type: "string",
-//             componentType: "ColorPicker",
-//         }
-//     }
-// }
-
-// export const gridSchema = {
-//     title: "自适应布局表单",
-//     type: "object",
-//     propertyType: {
-//         input: {
-//             title: "input 组件",
-//             type: "string"
-//         },
-//         inputNumber: {
-//             title: "inputNumber 组件",
-//             type: "number",
-//             componentType: "InputNumber"
-//         },
-//         inputMoney: {
-//             title: "InputMoney 组件",
-//             type: "string",
-//             componentType: "InputMoney"
-//         },
-//         url: {
-//             title: "Url 组件",
-//             type: "string",
-//             componentType: "Url"
-//         },
-//         telePhone: {
-//             title: "TelePhone 组件",
-//             type: "string",
-//             componentType: "InputNumber"
-//         },
-//         datePicker: {
-//             title: "DatePicker 组件",
-//             type: "date",
-//             componentType: "DatePicker"
-//         }
-//     }
-
-// }
-
-// export const nestSchema = {
-//     title: "嵌套表单—— parent",
-//     type: "object",
-//     propertyType: {
-//         input: {
-//             title: "input 组件",
-//             type: "string"
-//         },
-//         inputNumber: {
-//             title: "inputNumber 组件",
-//             type: "number",
-//             componentType: "InputNumber"
-//         },
-//         children: {
-//             type: "object",
-//             title: "嵌套表单—— children",
-//             propertyType: {
-//                 inputMoney: {
-//                     title: "InputMoney 组件",
-//                     type: "string",
-//                     componentType: "InputMoney"
-//                 },
-//                 url: {
-//                     title: "Url 组件",
-//                     type: "string",
-//                     componentType: "Url"
-//                 },
-//                 grandson: {
-//                     type: "object",
-//                     title: "嵌套表单—— grandson",
-//                     propertyType: {
-//                         telePhone: {
-//                             title: "TelePhone 组件",
-//                             type: "string",
-//                             componentType: "InputNumber"
-//                         },
-//                         datePicker: {
-//                             title: "DatePicker 组件",
-//                             type: "date",
-//                             componentType: "DatePicker"
-//                         }
-//                     }
-//                 }
-
-//             }
-//         }
-//     }
-// }
-
-// export const tableSchema = {
-//     type: "table",
-//     title: "table 表单",
-//     items: {
-//         input: {
-//             title: "input 组件",
-//             type: "string"
-//         },
-//         inputNumber: {
-//             title: "inputNumber 组件",
-//             type: "number",
-//             componentType: "InputNumber"
-//         },
-//         inputMoney: {
-//             title: "InputMoney 组件",
-//             type: "string",
-//             componentType: "InputMoney"
-//         },
-//         url: {
-//             title: "Url 组件",
-//             type: "string",
-//             componentType: "Url"
-//         },
-//     }
-// }

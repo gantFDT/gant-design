@@ -1,5 +1,4 @@
 @import '../../gantd/src/style/index.less';
-@import '~antd/es/style/themes/index.less';
 @component: ~'@{gant-prefix}-schemaform';
 
 .@{component} {
@@ -40,7 +39,7 @@
       padding: 4px 11px !important
     }
 
-    &-showRequiredMark {
+    .@{component}-showRequiredMark {
       .ant-form-item-required::before {
         display: inline;
       }

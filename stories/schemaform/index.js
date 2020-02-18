@@ -10,31 +10,43 @@ function BasicUse() {
     const [uiSchema, setUiSchema] = useState({
         "ui:col": 24,
         "ui:gutter": 10,
-        "ui:labelCol": 4,
-        "ui:wrapperCol": 20,
+        "ui:labelCol": 6,
+        "ui:wrapperCol": 18,
         "ui:labelAlign": "left",
         "ui:backgroundColor": "#fff"
     })
     const [edit, setEdit] = useState(EditStatus.EDIT)
     const [state, setState] = useState({})
-
+    const formRef = useRef(null)
     const onChange2 = (val, vals) => {
-        console.log("onChange2", vals)
         setState(vals)
     }
+    const onSubmit = async () => {
+        if (!formRef.current) return;
+        const { errors, values: formValues } = await formRef.current.validateForm()
+        console.log('formValues', formValues)
+    }
 
-    return (
-        <div style={{ margin: 10 }}>
+    const titleConfig = {
+        "title:extra": (
             <Radio.Group size='small' onChange={(e) => setEdit(e.target.value)} value={edit}>
                 <Radio.Button value={EditStatus.EDIT}>写</Radio.Button>
                 <Radio.Button value={EditStatus.CANCEL}>读</Radio.Button>
             </Radio.Group>
-            <FormSchema edit={edit} schema={schema} data={state}
-                uiSchema={uiSchema}
-                onChange={onChange2}
-            />
-        </div>
-    )
+        )
+    }
+    return <div style={{ margin: 10 }}>
+        <FormSchema
+            wrappedComponentRef={formRef}
+            edit={edit}
+            schema={schema}
+            data={state}
+            uiSchema={uiSchema}
+            onChange={onChange2}
+            titleConfig={titleConfig}
+        />
+        <Button onClick={onSubmit}>提交</Button>
+    </div>
 }
 
 const config = {

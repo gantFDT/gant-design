@@ -1,108 +1,63 @@
 import {
-	Input, 
-	// InputNumber, InputLang, InputMoney,
-	// Select, Selector, Email, Location, TelePhone, DatePicker, 
-	ColorPicker,
-	// Url,
-	TextArea,
-	// CellPhone,
-} from '@gantd/index';
-// import { ImageUpload, FileUpload, CodeList, LanguageInput } from '../index'
+	Input, TextArea, InputMoney, InputNumber,
+	InputCellPhone as CellPhone, InputTelePhone as TelePhone,
+	InputUrl as Url, InputEmail as Email, InputLanguage as Language,
+	ColorPicker, DatePicker, RangePicker,
+	Selector, LocationSelector, IconSelector
+} from '@gantd/index'
 import { Switch, Checkbox, Radio, AutoComplete } from 'antd'
-// const { RangePicker } = DatePicker;
-// import { UserSelector, RoleSelector, GroupSelector, UserGroupSelector } from '@/components/specific'
-// import {
-// 	CodeListSelector, UnitDomanSelector,
-// 	UnitSelector, MetadataSelector,
-// 	Objectselector, Fieldselector
-// } from '@/components/specific/selectors'
-// import SelectEdit from '../selectedit'
-// import IconHouse from '@/components/common/iconhouse';
-const CheckboxGorup = Checkbox.Group;
+const CheckboxGorup = Checkbox.Group
 const RadioGroup = Radio.Group
 
 export enum Fields {
 	Input = "Input",
 	InputNumber = "InputNumber",
-	LanguageInput = "LanguageInput",
 	InputMoney = "InputMoney",
-	DatePicker = "DatePicker",
-	Select = "Select",
-	Selector = "Selector",
-	Email = "Email",
-	Location = "Location",
-	TelePhone = "TelePhone",
-	ColorPicker = "ColorPicker",
-	TextArea = "TextArea",
 	Url = "Url",
+	Email = "Email",
+	Language = "Language",
 	CellPhone = "CellPhone",
-	ImageUpload = "ImageUpload",
-	FileUpload = "FileUpload",
-	CodeList = "CodeList",
-	UserSelector = "UserSelector",
-	RoleSelector = "RoleSelector",
-	GroupSelector = "GroupSelector",
-	UserGroupSelector = "UserGroupSelector",
+	TelePhone = "TelePhone",
+	TextArea = "TextArea",
+	DatePicker = "DatePicker",
 	RangePicker = "RangePicker",
-	IconHouse = "IconHouse",
+	ColorPicker = "ColorPicker",
+	Selector = "Selector",
+	IconSelector = "IconSelector",
+	LocationSelector = "LocationSelector",
 	Switch = "Switch",
 	Checkbox = "Checkbox",
 	CheckboxGorup = "CheckboxGorup",
 	Radio = "Radio",
 	RadioGroup = "RadioGroup",
-	SelectEdit = "SelectEdit",
-	CodeListSelector = "UnitDomanSelector",
-	UnitSelector = "UnitSelector",
-	UnitDomanSelector = "UnitDomanSelector",
-	MetadataSelector = "MetadataSelector",
-	Objectselector = "Objectselector",
-	Fieldselector = "Fieldselector",
-	AutoComplete="AutoComplete"
+	AutoComplete = "AutoComplete"
 }
-
 
 let fields = {
 	[Fields.Input]: Input,
-	// [Fields.InputNumber]: InputNumber,
-	// [Fields.LanguageInput]: LanguageInput,
-	// [Fields.InputMoney]: InputMoney,
-	// [Fields.DatePicker]: DatePicker,
-	// [Fields.Select]: Select,
-	// [Fields.Selector]: Selector,
-	// [Fields.Email]: Email,
-	[Fields.Location]: Location,
-	// [Fields.TelePhone]: TelePhone,
-	[Fields.ColorPicker]: ColorPicker,
+	[Fields.InputNumber]: InputNumber,
+	[Fields.InputMoney]: InputMoney,
+	[Fields.Url]: Url,
+	[Fields.Email]: Email,
+	[Fields.Language]: Language,
+	[Fields.TelePhone]: TelePhone,
+	[Fields.CellPhone]: CellPhone,
 	[Fields.TextArea]: TextArea,
-	// [Fields.Url]: Url,
-	// [Fields.CellPhone]: CellPhone,
-	// [Fields.ImageUpload]: ImageUpload,
-	// [Fields.FileUpload]: FileUpload,
-	// [Fields.CodeList]: CodeList,
-	// [Fields.UserSelector]: UserSelector,
-	// [Fields.RoleSelector]: RoleSelector,
-	// [Fields.GroupSelector]: GroupSelector,
-	// [Fields.UserGroupSelector]: UserGroupSelector,
-	// [Fields.RangePicker]: RangePicker,
-	// [Fields.IconHouse]: IconHouse,
+	[Fields.DatePicker]: DatePicker,
+	[Fields.RangePicker]: RangePicker,
+	[Fields.ColorPicker]: ColorPicker,
+	[Fields.Selector]: Selector,
+	[Fields.IconSelector]: IconSelector,
+	[Fields.LocationSelector]: LocationSelector,
 	[Fields.Switch]: Switch,
 	[Fields.Checkbox]: Checkbox,
 	[Fields.CheckboxGorup]: CheckboxGorup,
 	[Fields.Radio]: Radio,
 	[Fields.RadioGroup]: RadioGroup,
-	// [Fields.SelectEdit]: SelectEdit,
-	// [Fields.CodeListSelector]: CodeListSelector,
-	// [Fields.UnitDomanSelector]: UnitDomanSelector,
-	// [Fields.UnitSelector]: UnitSelector,
-	// [Fields.MetadataSelector]: MetadataSelector,
-	// [Fields.Objectselector]: Objectselector,
-	// [Fields.Fieldselector]: Fieldselector,
 	[Fields.AutoComplete]: AutoComplete
 }
 export function getFields() {
-	return {
-		...fields
-	}
+	return { ...fields }
 }
 
 export function setFields(field: any) {
