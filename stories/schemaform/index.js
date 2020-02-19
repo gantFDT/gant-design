@@ -1,18 +1,22 @@
-import React, { useState, useRef, useMemo } from 'react'
-import { Button, Switch, Radio } from 'antd'
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react'
+import { Button, Switch, Radio, Rate } from 'antd'
 import { EditStatus, SwitchStatus } from '@pkgs/gantd/src/index'
 import FormSchema from '@pkgs/schema-form-g/src'
-import { schema, operateSchema, editStatusSchema, configSchma } from './schema'
+import { schema, operateSchema, editStatusSchema, configSchma, bindDataSchema, customCmpSchema } from './schema'
 import CodeDecorator from '../_util/CodeDecorator'
 import code from './code.js'
 
+const initalUiSchema = {
+    "ui:col": 24,
+    "ui:gutter": 10,
+    "ui:labelCol": 4,
+    "ui:wrapperCol": 20,
+    "ui:labelAlign": "left",
+    "ui:padding": 10,
+    "ui:backgroundColor": "#fff"
+}
+
 function BasicUse() {
-    const uiSchema = {
-        "ui:col": 24,
-        "ui:gutter": 10,
-        "ui:labelCol": 4,
-        "ui:wrapperCol": 20,
-    }
     const [edit, setEdit] = useState(EditStatus.EDIT)
     const formRef = useRef(null)
 
@@ -26,7 +30,7 @@ function BasicUse() {
             wrappedComponentRef={formRef}
             edit={edit}
             schema={schema}
-            uiSchema={uiSchema}
+            uiSchema={initalUiSchema}
         />
         <div style={{ float: 'right' }}>
             <Button type='primary' onClick={onSubmit}>提交</Button>
@@ -111,15 +115,6 @@ function OperatorUse() {
 }
 
 function CustomOptions() {
-    const [uiSchema, setUiSchema] = useState({
-        "ui:col": 24,
-        "ui:gutter": 10,
-        "ui:labelCol": 4,
-        "ui:wrapperCol": 20,
-        "ui:labelAlign": "left",
-        "ui:padding": 10,
-        "ui:backgroundColor": "#fff"
-    })
     const configUI = {
         "ui:labelCol": 6,
         "ui:wrapperCol": 18,
@@ -128,7 +123,9 @@ function CustomOptions() {
             "ui:wrapperCol": 24,
         }
     }
-    const [state, setState] = useState({});
+
+    const [uiSchema, setUiSchema] = useState(initalUiSchema)
+
     const data = useMemo(() => {
         const newData = {}
         Object.keys(uiSchema).map(keyname => {
@@ -137,6 +134,7 @@ function CustomOptions() {
         })
         return newData
     }, [uiSchema])
+
     const onChange = (val) => {
         const newData = {}
         Object.keys(val).map(keyname => {
@@ -144,27 +142,22 @@ function CustomOptions() {
         });
         setUiSchema(uiSchema => ({ ...uiSchema, ...newData }))
     }
-    const onChange2 = (val, vals) => {
-        console.log("onChange2", vals)
-        setState(vals)
-    }
-    const Reset = () => {
-        setState({})
-    }
+    const Reset = () => setUiSchema(initalUiSchema)
+
     return (
         <div>
             <div style={{ display: 'flex' }}>
                 <div style={{ flex: 1 }}>
-                    <FormSchema schema={schema} data={state}
+                    <FormSchema
+                        schema={schema}
                         uiSchema={uiSchema}
-                        onChange={onChange2}
                     />
                 </div>
                 <div style={{ width: 400, marginLeft: 20 }}>
                     <FormSchema schema={configSchma} uiSchema={configUI} data={data} onChange={onChange} />
                 </div>
             </div>
-            <div style={{ float: 'right' }}><Button onClick={Reset}>重置</Button></div>
+            <div style={{ float: 'right' }}><Button onClick={Reset}>重置UI</Button></div>
         </div>
     )
 }
@@ -191,6 +184,73 @@ function GridLayout() {
     }
     return <div style={{ margin: 10 }} >
         <FormSchema uiSchema={uiSchema} schema={schema} />
+    </div>
+}
+
+function bindData() {
+    const [data, setData] = useState({ key_1: '1', key_2: '2' })
+    const formRef = useRef(null)
+
+    const onChange = (val, vals) => {
+        setData(vals)
+    }
+
+    return <div style={{ margin: 10 }} >
+        <div style={{ display: 'flex' }}>
+            <div style={{ width: 300 }}>
+                <p>key_1：<span>{data.key_1}</span></p>
+                <p>key_2：<span>{data.key_2}</span></p>
+            </div>
+            <div style={{ flex: 1 }}>
+                <FormSchema
+                    wrappedComponentRef={formRef}
+                    uiSchema={initalUiSchema}
+                    data={data}
+                    onChange={onChange}
+                    schema={bindDataSchema}
+                />
+            </div>
+        </div>
+    </div>
+}
+function dependenceData() {
+    const dependenceSchema = {
+        type: "object",
+        title: "依赖关系",
+        propertyType: {
+            "key_1": {
+                title: "姓氏",
+                type: "string",
+            },
+            "key_2": {
+                title: "全名",
+                type: "string",
+                dependencies: ["key_1"],
+                onDependenciesChange: (value, props, form) => {
+                    form && form.setFieldsValue({ key_2: value })
+                }
+            },
+        }
+    }
+    return <div style={{ margin: 10 }}>
+        <FormSchema
+            uiSchema={initalUiSchema}
+            schema={dependenceSchema}
+        />
+    </div>
+}
+
+function customCmp() {
+
+    return <div style={{ margin: 10 }}>
+        <FormSchema
+            uiSchema={initalUiSchema}
+            schema={customCmpSchema}
+            customFields={[{
+                type: "CustomComponent",
+                component: Rate
+            }]}
+        />
     </div>
 }
 
@@ -228,6 +288,21 @@ const config = {
             title: '自适应布局',
             describe: '',
             cmp: GridLayout
+        },
+        {
+            title: '数据双向绑定',
+            describe: '',
+            cmp: bindData
+        },
+        {
+            title: '前置依赖',
+            describe: '',
+            cmp: dependenceData
+        },
+        {
+            title: '扩展自定义字段',
+            describe: '',
+            cmp: customCmp
         },
     ]
 };
