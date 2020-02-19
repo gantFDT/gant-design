@@ -2,7 +2,7 @@
   "name": "overflow-tool-g",
   "version": "0.0.12",
   "description": "gantd overflow-tool",
-  "main": "lib/index.js",
+  "main": "overflowtool/index.js",
   "scripts": {},
   "keywords": [
     "React",

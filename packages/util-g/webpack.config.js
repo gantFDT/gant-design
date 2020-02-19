@@ -30,14 +30,16 @@ module.exports = {
             'node_modules'
         ],// 用于查找模块的目录
         extensions: [".js", ".ts", ".tsx", ".json", ".jsx", ".css"],// 使用的扩展名
-        // alias: {// 模块别名列表
-        //     [pkg.name]: process.cwd()
-        // },
+        alias: {// 模块别名列表
+          "@pkgs": path.resolve('..'),
+          "@util-g": path.resolve(__dirname, '../util-g/src'),
+          "@gantd": path.resolve(__dirname, '../gantd/src'),
+        },
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: '[name].js', // 「入口分块(entry chunk)」的文件名模板（出口分块？）
-        library: 'util', // 导出库(exported library)的名称
+        library: 'colorpicker', // 导出库(exported library)的名称
         libraryTarget: 'umd' // 使用 module.exports 导出
     },
     externals: {

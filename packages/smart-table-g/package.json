@@ -2,7 +2,7 @@
   "name": "smart-table-g",
   "version": "0.0.1",
   "description": "gantd smart-table-g",
-  "main": "dist/index.js",
+  "main": "dist/smarttable.js",
   "scripts": {},
   "keywords": [
     "React",

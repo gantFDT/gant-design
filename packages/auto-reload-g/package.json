@@ -2,7 +2,7 @@
   "name": "auto-reload-g",
   "version": "0.0.12",
   "description": "auto-reload",
-  "main": "dist/index.js",
+  "main": "dist/autoreload.js",
   "scripts": {},
   "keywords": [
     "React",

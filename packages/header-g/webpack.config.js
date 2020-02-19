@@ -21,7 +21,7 @@ const pkg = require(path.join(process.cwd(), 'package.json'));
 module.exports = {
     mode: 'production', // "production" | "development" | "none"
     entry: {
-      colorpicker: path.resolve(__dirname, 'src/index.tsx')
+      header: path.resolve(__dirname, 'src/index.tsx')
     },
     resolve: {
         // 解析模块请求的选项
@@ -31,7 +31,9 @@ module.exports = {
         ],// 用于查找模块的目录
         extensions: [".js", ".ts", ".tsx", ".json", ".jsx", ".css"],// 使用的扩展名
         alias: {// 模块别名列表
-          '@gantd': path.resolve(__dirname, '../gantd/src')
+          "@pkgs": path.resolve('..'),
+          "@util-g": path.resolve(__dirname, '../util-g/src'),
+          "@gantd": path.resolve(__dirname, '../gantd/src'),
         },
     },
     output: {

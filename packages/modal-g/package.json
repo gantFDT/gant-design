@@ -2,7 +2,7 @@
     "name": "modal-g",
     "version": "0.0.12",
     "description": "gantd modal",
-    "main": "lib/index.js",
+    "main": "dist/modal.js",
     "scripts": {},
     "keywords": [
         "React",

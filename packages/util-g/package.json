@@ -2,8 +2,7 @@
   "name": "util-g",
   "version": "0.0.12",
   "description": "Gant utilities.",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "main": "dist/util.js",
   "scripts": {},
   "keywords": [
     "modules",

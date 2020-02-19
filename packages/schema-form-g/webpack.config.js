@@ -21,7 +21,7 @@ const pkg = require(path.join(process.cwd(), 'package.json'));
 module.exports = {
     mode: 'production', // "production" | "development" | "none"
     entry: {
-        modal: path.resolve(__dirname, 'src/index.jsx')
+      schemaform: path.resolve(__dirname, 'src/index.tsx')
     },
     resolve: {
         // 解析模块请求的选项
@@ -30,14 +30,16 @@ module.exports = {
             'node_modules'
         ],// 用于查找模块的目录
         extensions: [".js", ".ts", ".tsx", ".json", ".jsx", ".css"],// 使用的扩展名
-        // alias: {// 模块别名列表
-        //     [pkg.name]: process.cwd()
-        // },
+        alias: {// 模块别名列表
+          "@pkgs": path.resolve('..'),
+          "@util-g": path.resolve(__dirname, '../util-g/src'),
+          "@gantd": path.resolve(__dirname, '../gantd/src'),
+        },
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: '[name].js', // 「入口分块(entry chunk)」的文件名模板（出口分块？）
-        library: 'formschema', // 导出库(exported library)的名称
+        library: 'colorpicker', // 导出库(exported library)的名称
         libraryTarget: 'umd' // 使用 module.exports 导出
     },
     externals: {
@@ -64,7 +66,7 @@ module.exports = {
         rules: [{
             test: /\.(jsx|js)?$/,
             include: [
-                path.resolve(__dirname, "../"),
+              path.resolve(__dirname, "../"),
             ],
             // 这里是匹配条件，每个选项都接收一个正则表达式或字符串
             // test 和 include 具有相同的作用，都是必须匹配选项
@@ -74,15 +76,15 @@ module.exports = {
             // - 在 include 和 exclude 中使用绝对路径数组
             // - 尽量避免 exclude，更倾向于使用 include
             use: [
-                {
-                    loader: 'babel-loader',
-                    options: babelConfig
-                }
+              {
+                loader: 'babel-loader',
+                options: babelConfig
+              }
             ]
         }, {
             test: /\.(tsx|ts)?$/,
             include: [
-                path.resolve(__dirname, "../"),
+              path.resolve(__dirname, "../"),
             ],
             use: 'ts-loader'
         }, {

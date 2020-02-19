@@ -2,7 +2,7 @@
   "name": "color-picker-g",
   "version": "0.0.32",
   "description": "Simple colorpicker used with value & onChange property",
-  "main": "lib/index.js",
+  "main": "dist/colorpicker.js",
   "scripts": {},
   "keywords": [
     "React",

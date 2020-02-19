@@ -2,7 +2,7 @@
   "name": "anchor-g",
   "version": "0.0.12",
   "description": "gantd anchor",
-  "main": "dist/index.js",
+  "main": "dist/anchor.js",
   "scripts": {},
   "keywords": [
     "React",

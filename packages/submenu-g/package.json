@@ -2,7 +2,7 @@
   "name": "submenu-g",
   "version": "0.0.12",
   "description": "Container component for page-level menu",
-  "main": "lib/index.js",
+  "main": "dist/submenu.js",
   "scripts": {},
   "keywords": [
     "React",
