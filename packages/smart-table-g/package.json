@@ -1,0 +1,23 @@
+{
+  "name": "smart-table-g",
+  "version": "0.0.1",
+  "description": "gantd smart-table-g",
+  "main": "dist/index.js",
+  "scripts": {},
+  "keywords": [
+    "React",
+    "gantd",
+    "antd",
+    "table",
+    "smart",
+    "configgable"
+  ],
+  "author": "GantFDT",
+  "license": "MIT",
+  "dependencies": {
+    "antd": "^3.26.5",
+    "util-g": "^0.0.3",
+    "react": "^16.12.0",
+    "react-resize-detector": "^4.2.1"
+  }
+}

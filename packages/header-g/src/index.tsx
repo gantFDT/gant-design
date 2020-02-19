@@ -7,8 +7,7 @@ import Icon from '@gantd/icon';
 import ReactResizeDetector from 'react-resize-detector';
 import _ from 'lodash'
 
-
-enum headerType {
+export enum headerType {
   icon,
   line,
   num

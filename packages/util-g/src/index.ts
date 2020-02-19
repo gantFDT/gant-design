@@ -44,3 +44,29 @@ export const hex2hsl = (hexColor: string): string | number|string[] => {
   }
   return sColor;
 };
+
+/**
+ * 生成uuid
+ */
+export function guid() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    var r = Math.random() * 16 | 0,
+      v = c == 'x' ? r : (r & 0x3 | 0x8)
+    return v.toString(16)
+  })
+}
+
+/**
+ * 判断类型
+ */
+export const getType = (obj: any) => Object.prototype.toString.call(obj).slice(8, -1);
+
+/**
+ * JSON深拷贝
+ */
+export const deepCopy4JSON: <T>(data: T) => T = (obj) => JSON.parse(JSON.stringify(obj));
+
+/**
+ * JSON数据相等
+ */
+export const JSONisEqual = (a: object, b: object) => JSON.stringify(a) === JSON.stringify(b);

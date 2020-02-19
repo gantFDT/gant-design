@@ -4,6 +4,7 @@ import * as PropTypes from 'prop-types';
 export interface Locale {
   locale: string;
   AutoReload: any;
+  SmartTable: any;
   Modal: any;
 }
 
