@@ -1,6 +1,6 @@
 {
     "name": "table-g",
-    "version": "0.0.11",
+    "version": "0.0.12",
     "description": "gantd table",
     "main": "dist/table.js",
     "scripts": {},
@@ -14,7 +14,7 @@
     "license": "MIT",
     "dependencies": {
         "antd": "^3.26.5",
-        "gantd": "^1.0.53",
+        "gantd": "^1.0.54-alpha.0",
         "react": "^16.12.0"
     }
 }
