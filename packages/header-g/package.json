@@ -3,6 +3,7 @@
   "version": "0.0.12",
   "description": "gantd header-g",
   "main": "dist/header.js",
+  
   "scripts": {},
   "keywords": [
     "React",
