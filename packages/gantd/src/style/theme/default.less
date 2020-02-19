@@ -7,7 +7,7 @@
 :root {
   // -------- Colors ----------- 颜色
   --primary-color: @theme;
-  --component-background: rgba(255,255,255,1);
+  --component-background: rgba(255, 255, 255, 1);
   --text-color: fade(@black, 65%);
   --text-color-secondary: fade(@black, 45%);
   --text-color-inverse: @white;
@@ -68,9 +68,24 @@
   --shadow-1-left: -2px 0 8px @shadow-color;
   --shadow-1-right: 2px 0 8px @shadow-color;
   --shadow-2: 0 4px 12px @shadow-color;
-  
+
   // Button
-  --btn-default-color: rgba(0,0,0,0.5);
+  --btn-default-color: rgba(0, 0, 0, 0.5);
   --btn-default-bg: #333;
-  --btn-default-border-color: rgba(0,0,0,0.2);
+  --btn-default-border-color: rgba(0, 0, 0, 0.2);
+
+  // Modal
+  --modal-highlight-color: @red-6;
+  --modal-body-padding: 10px;
+  --modal-header-bg: @component-background;
+  --modal-footer-bg: transparent;
+  --modal-footer-reset-color: rgba(0, 0, 0, 1);
+  --modal-footer-border-color-split: @border-color-split;
+  --modal-mask-bg: fade(@black, 45%);
+  --modal-header-bg: @component-background;
+  --modal-header-color: @text-color;
+  --modal-header-hover-color: rgba(0, 0, 0, 1);
+  --modal-header-icon-hover-color: #fff;
+  --model-header-danger-icon-bg: @red-6;
+  --model-header-default-icon-bg: rgba(0, 0, 0, 0.2);
 }

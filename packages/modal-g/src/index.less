@@ -1,8 +1,7 @@
 @import '../../gantd/src/style/theme/index.less';
 @profilecard-prefix-cls: ~'@{gant-prefix}-modal';
 
-@defaultIconColor: #000;
-@activeIconColor: #fff;
+@activeIconColor: var(--modal-header-icon-hover-color);
 
 .@{profilecard-prefix-cls} {
 
@@ -35,7 +34,7 @@
 
             .ant-modal-close-x {
                 &:hover {
-                    background-color: #ff4d4f;
+                    background-color: var(--model-header-danger-icon-bg);
 
                     i {
                         color: @activeIconColor;
@@ -43,7 +42,7 @@
                 }
 
                 &:active {
-                    background-color: #f5222d;
+                    background-color: var(--modal-highlight-color);
 
                     i {
                         color: @activeIconColor;
@@ -86,7 +85,7 @@
             }
 
             &:hover {
-                background-color: #E3E3E3;
+                background-color: var(--model-header-default-icon-bg);
 
                 i {
                     color: @activeIconColor;
@@ -120,10 +119,16 @@
                 i {
                     opacity: 1;
                     visibility: visible;
-                    border-color: rgba(0, 0, 0, 1);
+                    border-color: var(--modal-footer-reset-color);
                     transition: all .3s;
                 }
             }
+        }
+    }
+
+    &-maximize {
+        .ant-modal-content {
+            border-radius: 0;
         }
     }
 

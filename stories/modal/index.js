@@ -1,6 +1,6 @@
-import React, { useState, useContext, useMemo } from 'react'
-import { Button, Switch } from 'antd'
-import Modal, { ResizableModal, ResizableProvider, ModalContext } from '@pkgs/modal-g/src'
+import React, { useState } from 'react'
+import { Button } from 'antd'
+import Modal, { ResizableModal, ResizableProvider } from '@pkgs/modal-g/src'
 import CodeDecorator from '../_util/CodeDecorator'
 import code from './code.js'
 const ButtonGroup = Button.Group;
@@ -50,32 +50,6 @@ function CustomUse() {
         </div>
     )
 }
-
-// function PositionUse() {
-//     const [visible, setVisible] = useState(false);
-//     const [widthAndHei, setWidthAndHei] = useState([400, 400]);
-//     const onSizeChange = (width, height) => {
-//         setWidthAndHei([width, height])
-//     }
-//     return (
-//         <div style={{ margin: 10 }}>
-//             <div style={{ marginBottom: 10 }}>
-//                 <Button size="small" onClick={() => { setVisible(true) }}>触发弹窗</Button>
-//             </div>
-//             <Modal
-//                 title='自定义属性标题'
-//                 itemState={{ x: 50, y: 50 }}
-//                 visible={visible}
-//                 maxZIndex={12}
-//                 footer={null}
-//                 onCancel={() => { setVisible(false) }}
-//                 onSizeChange={onSizeChange}
-//             >
-//                 自定义弹出位置
-//             </Modal>
-//         </div>
-//     )
-// }
 
 function MaximizeUse() {
     const [visible, setVisible] = useState(false)

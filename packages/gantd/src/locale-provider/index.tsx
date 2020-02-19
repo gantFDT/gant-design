@@ -4,6 +4,7 @@ import * as PropTypes from 'prop-types';
 export interface Locale {
   locale: string;
   AutoReload: any;
+  Modal: any;
 }
 
 export interface LocaleProviderProps {
@@ -41,7 +42,7 @@ export default class LocaleProvider extends React.Component<LocaleProviderProps,
   }
 
   componentWillUnmount() {
-    
+
   }
 
   render() {

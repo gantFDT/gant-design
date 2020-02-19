@@ -7,7 +7,8 @@ const uuid = 'modal-g-uuid';
 const ContextContent = ({
     id,
     onSizeChange,
-    children }) => {
+    children
+}) => {
     const { state: { modals } } = useContext(ModalContext);
     const { width, height } = modals[id];
 

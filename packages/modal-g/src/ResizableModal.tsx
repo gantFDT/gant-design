@@ -10,22 +10,14 @@ import { useDrag, useResize, usePrev } from './Hooks';
 import { ModalContext } from './Context';
 import { getModalState } from './Reducer';
 import { ActionTypes } from './Reducer'
-
-const tr = a => a;
 const modalStyle = { margin: 0, paddingBottom: 0 };
-const cancelTextDefault = tr('取消');
-const okTextDefault = tr('确认');
-
-// const Icon = Icon.createFromIconfontCN('Icon', {
-//     scriptUrl: '//at.alicdn.com/t/font_687278_5i22ts2wtbx.js'
-// })
-
 
 type Props = ModalInnerProps & Partial<typeof defaultProps>
 
 const ModalInner: React.FC<Props> = function ModalInner(props) {
     const {
         prefixCls: customizePrefixCls, //自定义class前缀
+        locale,         //自定义国际化
         id,             //弹窗唯一标识
         itemState,      //单个弹窗的自定义属性
         visible,        //弹窗标题
@@ -39,8 +31,6 @@ const ModalInner: React.FC<Props> = function ModalInner(props) {
         footerLeftExtra,//默认的footer左侧插槽
         footerRightExtra,//默认的footer右侧插槽
         disabled,       //提交按钮是否禁用
-        cancelText,     //取消按钮文案
-        okText,         //提交按钮文案
         onCancel,       //取消按钮回调
         onOk,           //提交按钮回调
         children,       //自定义弹窗内容
@@ -48,7 +38,7 @@ const ModalInner: React.FC<Props> = function ModalInner(props) {
     } = props;
 
     const { locale: contextLocale = defaultLocale, getPrefixCls } = React.useContext(ConfigContext);
-    // const autoReloadLocale = locale || contextLocale.AutoReload;
+    const modalLocale = locale || contextLocale.Modal;
     const prefixCls = getPrefixCls('modal', customizePrefixCls);
 
     const { dispatch, state } = useContext(ModalContext);
@@ -93,8 +83,8 @@ const ModalInner: React.FC<Props> = function ModalInner(props) {
 
     const onMouseDrag = useDrag(x, y, onDrag)
     const onMouseResize = useResize(x, y, width, height, onResize)
-    const titleElement = useMemo(
-        () => <div
+    const titleElement = useMemo(() => (
+        <div
             className={`${prefixCls}-resizableModalTitle`}
             style={canMaximize ? { marginRight: 88 } : { marginRight: 32 }}
             onMouseDown={onMouseDrag}
@@ -102,15 +92,17 @@ const ModalInner: React.FC<Props> = function ModalInner(props) {
             onDoubleClick={toggleMaximize}
         >
             {title}
-        </div>, [onMouseDrag, onFocus, toggleMaximize, title, canMaximize],
+        </div>
+    ), [onMouseDrag, onFocus, toggleMaximize, title, canMaximize],
     )
     const combineWrapClassName = useMemo(() => {
         return classnames(
             `${prefixCls}-resizableModalWrapper`,
             isModalDialog ? `${prefixCls}-resizableModalDialog` : `${prefixCls}-resizableModalDefault`,
+            maximize && `${prefixCls}-maximize`,
             wrapClassName
         )
-    }, [isModalDialog])
+    }, [maximize, isModalDialog])
 
     return <Modal
         wrapClassName={combineWrapClassName}
@@ -128,14 +120,14 @@ const ModalInner: React.FC<Props> = function ModalInner(props) {
             {footerLeftExtra && <div>{footerLeftExtra}</div>}
             <div>
                 {footerRightExtra}
-                <Button size="small" onClick={onCancel}>{cancelText}</Button>
+                <Button size="small" onClick={onCancel}>{modalLocale.cancel}</Button>
                 <Button
                     size="small"
                     type='primary'
                     loading={confirmLoading}
                     disabled={disabled}
                     onClick={onOk}
-                >{okText}</Button>
+                >{modalLocale.submit}</Button>
             </div>
         </div>}
         {...restProps}
@@ -159,8 +151,6 @@ const defaultProps = {
     footerLeftExtra: null,
     footerRightExtra: null,
     disabled: false,
-    cancelText: cancelTextDefault,
-    okText: okTextDefault,
     onCancel: () => { },
     onOk: () => { },
 }

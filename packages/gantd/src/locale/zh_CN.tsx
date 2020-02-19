@@ -10,4 +10,8 @@ export default {
     set: '设置自动更新触发时间',
     unit: '单位：分'
   },
+  Modal: {
+    submit: '确认',
+    cancel: '取消'
+  }
 };

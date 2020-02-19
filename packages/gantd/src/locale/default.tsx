@@ -11,5 +11,9 @@ export default {
     set: 'Set automatic update trigger time',
     unit: 'Unit: Minute'
   },
+  Modal: {
+    submit: 'submit',
+    cancel: 'cancel'
+  }
 };
 
