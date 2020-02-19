@@ -9,11 +9,9 @@
     }
   },
   "packages": [
-    "packages/favorinpmtest"
+    "packages/gantd"
   ],
   "all": [
-    "packages/favorinpmtest",
-
     "packages/anchor-g",
     "packages/auto-reload-g",
     "packages/color-picker-g",
