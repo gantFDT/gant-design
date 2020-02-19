@@ -13,7 +13,7 @@ import { ProtoExtends, PartRequired } from '@util-g/type'
 import VisibleMenu from "@gantd/visiblemenu"
 import { getColumns, renderColumnItem, useRowSelection, getStorageWidth, switchIndex, usePagination, setMainTableBorder, diffList, setStyle, getComputedColIndex, computeIndex } from './_utils'
 import { ConfigConsumer } from '@gantd/config-provider'
-import BlockHeader from '@pkgs/header-g/src'
+import Header from '@pkgs/header-g/src'
 import EditStatus from '@gantd/compose/editstatus'
 
 import TableComponent from './tableRef'
@@ -779,7 +779,7 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
         return (
             <>
                 {(title || headerRightElement.length || headerLeft) && (
-                    <BlockHeader
+                    <Header
                         title={title}
                         {...headerProps}
                         beforeExtra={headerLeft}

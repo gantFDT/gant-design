@@ -53,7 +53,7 @@ function BasicUse() {
   const onSwitchChange = (mode) => {
     // console.log('当前状态', mode)
   };
-
+  const activeMenu = _.find(menuData, i=>i.path === selectedKey)
    return (
     <SubMenu
       menuData={menuData}
@@ -76,8 +76,8 @@ function BasicUse() {
         </div>
       }
     >
-      <div style={{ padding: '20px' }}>
-        {selectedKey}
+      <div style={{ padding: '20px', height: 400 }}>
+        {activeMenu['title']}
       </div>
     </SubMenu>
   )
@@ -143,7 +143,7 @@ function TopLayout() {
   const [selectedKey, setSelectedKey] = useState(menuData[0].path);
 
   const onSelectedChange = (key, record, item) => setSelectedKey(key);
-
+  const activeMenu = _.find(menuData, i=>i.path === selectedKey)
   return (
     <SubMenu
       menuData={menuData}
@@ -154,7 +154,7 @@ function TopLayout() {
       onSelectedChange={onSelectedChange}
     >
       <div style={{ padding: '20px', height: 800 }}>
-        {selectedKey}
+      {activeMenu['title']}
       </div>
     </SubMenu>
   )
@@ -218,7 +218,7 @@ function ExtraUse() {
   const [selectedKey, setSelectedKey] = useState(menuData[0].path);
 
   const onSelectedChange = (key, record, item) => setSelectedKey(key);
-
+  const activeMenu = _.find(menuData, i=>i.path === selectedKey)
   return (
     <SubMenu
       menuData={menuData}
@@ -227,7 +227,7 @@ function ExtraUse() {
       onSelectedChange={onSelectedChange}
     >
       <div style={{ padding: '20px' }}>
-        {selectedKey}
+      {activeMenu['title']}
       </div>
     </SubMenu>
   )

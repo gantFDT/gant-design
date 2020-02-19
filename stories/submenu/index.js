@@ -4,7 +4,7 @@ import SubMenu from '@pkgs/submenu-g/src'
 import { Avatar } from 'antd'
 import CodeDecorator from '../_util/CodeDecorator'
 import code from './code.js'
-
+import _ from 'lodash'
 
 const SubMenuIcon = Icon.createFromIconfontCN('Submenuicon', {
   scriptUrl: '//at.alicdn.com/t/font_687278_5i22ts2wtbx.js'
@@ -55,7 +55,7 @@ function BasicUse() {
   const onSwitchChange = (mode) => {
     // console.log('当前状态', mode)
   }
-
+  const activeMenu = _.find(menuData, i => i.path === selectedKey)
   return (
     <SubMenu
       menuData={menuData}
@@ -78,8 +78,8 @@ function BasicUse() {
         </div>
       }
     >
-      <div style={{ padding: '20px' }}>
-        {selectedKey}
+      <div style={{ padding: '20px', height: 400 }}>
+        {activeMenu['title']}
       </div>
     </SubMenu>
   )
@@ -129,7 +129,7 @@ function TopLayout() {
   const [selectedKey, setSelectedKey] = useState(menuData[0].path);
 
   const onSelectedChange = (key, record, item) => setSelectedKey(key);
-
+  const activeMenu = _.find(menuData, i => i.path === selectedKey)
   return (
     <SubMenu
       menuData={menuData}
@@ -139,8 +139,8 @@ function TopLayout() {
       fixedTopHeight={0}
       onSelectedChange={onSelectedChange}
     >
-      <div style={{ padding: '20px', height: 800 }}>
-        {selectedKey}
+      <div style={{ padding: '20px', height: 400 }}>
+        {activeMenu['title']}
       </div>
     </SubMenu>
   )
@@ -188,7 +188,7 @@ function ExtraUse() {
   const [selectedKey, setSelectedKey] = useState(menuData[0].path);
 
   const onSelectedChange = (key, record, item) => setSelectedKey(key);
-
+  const activeMenu = _.find(menuData, i => i.path === selectedKey)
   return (
     <SubMenu
       menuData={menuData}
@@ -197,7 +197,7 @@ function ExtraUse() {
       onSelectedChange={onSelectedChange}
     >
       <div style={{ padding: '20px' }}>
-        {selectedKey}
+        {activeMenu['title']}
       </div>
     </SubMenu>
   )
@@ -206,7 +206,7 @@ function ExtraUse() {
 const config = {
   codes: code,
   useage: '这是一个容器组件，适用于页面级菜单，业务对象有多个领域或属性分组时使用',
-  inline: true,
+  // inline: true,
   children: [
     {
       title: '基本用法',
