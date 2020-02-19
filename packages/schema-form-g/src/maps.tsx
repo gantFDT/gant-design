@@ -6,7 +6,7 @@ import {
 	Selector, LocationSelector, IconSelector
 } from '@gantd/index'
 import { Switch, Checkbox, Radio, AutoComplete } from 'antd'
-const CheckboxGorup = Checkbox.Group
+const CheckboxGroup = Checkbox.Group
 const RadioGroup = Radio.Group
 
 export enum Fields {
@@ -28,7 +28,7 @@ export enum Fields {
 	LocationSelector = "LocationSelector",
 	Switch = "Switch",
 	Checkbox = "Checkbox",
-	CheckboxGorup = "CheckboxGorup",
+	CheckboxGroup = "CheckboxGroup",
 	Radio = "Radio",
 	RadioGroup = "RadioGroup",
 	AutoComplete = "AutoComplete"
@@ -53,7 +53,7 @@ let fields = {
 	[Fields.LocationSelector]: LocationSelector,
 	[Fields.Switch]: Switch,
 	[Fields.Checkbox]: Checkbox,
-	[Fields.CheckboxGorup]: CheckboxGorup,
+	[Fields.CheckboxGroup]: CheckboxGroup,
 	[Fields.Radio]: Radio,
 	[Fields.RadioGroup]: RadioGroup,
 	[Fields.AutoComplete]: AutoComplete
