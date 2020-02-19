@@ -128,9 +128,9 @@ const configSchma = {
         "labelAlign": {
             title: "labelAlign",
             type: "string",
-            componentType: "Select",
+            componentType: "Selector",
             props: {
-                dataSource: [
+                defaultList: [
                     {
                         label: "左",
                         value: "left"
@@ -155,4 +155,41 @@ const configSchma = {
     }
 }
 
-export { schema, operateSchema, editStatusSchema, configSchma }
+const bindDataSchema = {
+    type: "object",
+    title: "支持双向绑定的表单",
+    propertyType: {
+        key_1: {
+            title: "普通输入框_1",
+            type: "string",
+        },
+        key_2: {
+            title: "普通输入框_2",
+            type: "string",
+        },
+    }
+}
+
+const customCmpSchema = {
+    type: "object",
+    title: "扩展自定义组件",
+    propertyType: {
+        key_1: {
+            title: "普通输入框_1",
+            type: "string",
+        },
+        key_2: {
+            title: "自定义组件",
+            type: "string",
+            componentType: 'CustomComponent'
+        },
+    }
+}
+export {
+    schema,
+    operateSchema,
+    editStatusSchema,
+    configSchma,
+    bindDataSchema,
+    customCmpSchema
+}

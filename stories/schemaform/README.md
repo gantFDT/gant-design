@@ -10,7 +10,7 @@ FormSchema
 | className      | 添加class名称                                       | string              |                 |
 | data           | 按照schema结构赋值                                  | object              | {}              |
 | edit           | 带有继承性，可直接赋予父级，也可指定单独filed或form | EditStatus          | EditStatus.EDIT |
-| customFileds   | 自定义组件                                          | array               | []              |
+| customFields   | 自定义组件                                          | array               | []              |
 | onChange       | form值改变是调用                                    | (values)=>void      | ()=>{}          |
 | onSave         | 在EditStatus.CANCEL状态下编辑单个field触发          | (id,value,cb)=>void | ()=>{}          |
 | onSchemaChange | 当依赖项改变，更新schema时的回调                    | (schema)=>void      | ()=>{}          |
@@ -120,8 +120,4 @@ const uiSchema={
 #### 5.如何拓展自定义组件？
 针对不同项目可能出现不同或特定的field组件时，这就需要我们拓展FormSchema。
 
-###### 1.maps全局拓展
-在组件中暴露 setField方法，该方法可以直接拓展filedMaps的池；例如：
-setField({name:Compoent})
-
-###### 2.customFileds
+###### 使用customFields
