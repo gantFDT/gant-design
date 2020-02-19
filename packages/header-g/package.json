@@ -2,7 +2,7 @@
   "name": "header-g",
   "version": "0.0.12",
   "description": "gantd header-g",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
   "scripts": {},
   "keywords": [
     "React",
