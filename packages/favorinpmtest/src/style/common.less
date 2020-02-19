@@ -1,0 +1,127 @@
+@import 'theme/default.less';
+@import 'mixin/style';
+
+
+//外边距，5倍颗粒度，最大20
+.margin-generator(@size) when (@size <=20) {
+  @num: @size*5;
+
+  .@{gant-prefix}-margin-@{num} {
+    margin: @num * 1px !important;
+  }
+
+  .@{gant-prefix}-margin-top-@{num} {
+    margin-top: @num * 1px !important;
+  }
+
+  .@{gant-prefix}-margin-left-@{num} {
+    margin-left: @num * 1px !important;
+  }
+
+  .@{gant-prefix}-margin-right-@{num} {
+    margin-right: @num * 1px !important;
+  }
+
+  .@{gant-prefix}-margin-bottom-@{num} {
+    margin-bottom: @num * 1px !important;
+  }
+
+  .@{gant-prefix}-margin-h-@{num} {
+    margin-left: @num * 1px !important;
+    margin-right: @num * 1px !important;
+  }
+
+  .@{gant-prefix}-margin-v-@{num} {
+    margin-top: @num * 1px !important;
+    margin-bottom: @num * 1px !important;
+  }
+
+  .margin-generator(@size+1)
+}
+.margin-generator(1);
+//内边距，5倍颗粒度，最大20
+.padding-generator(@size) when (@size <=20) {
+  @num: @size*5;
+
+  .@{gant-prefix}-padding-@{num} {
+    padding: @num * 1px !important;
+  }
+
+  .@{gant-prefix}-padding-top-@{num} {
+    padding-top: @num * 1px !important;
+  }
+
+  .@{gant-prefix}-padding-left-@{num} {
+    padding-left: @num * 1px !important;
+  }
+
+  .@{gant-prefix}-padding-right-@{num} {
+    padding-right: @num * 1px !important;
+  }
+
+  .@{gant-prefix}-padding-bottom-@{num} {
+    padding-bottom: @num * 1px !important;
+  }
+
+  .@{gant-prefix}-padding-h-@{num} {
+    padding-left: @num * 1px !important;
+    padding-right: @num * 1px !important;
+  }
+
+  .@{gant-prefix}-padding-v-@{num} {
+    padding-top: @num * 1px !important;
+    padding-bottom: @num * 1px !important;
+  }
+
+  .padding-generator(@size+1)
+}
+.padding-generator(1);
+
+
+//限制显示行数
+.omitdisplay {
+  word-break: break-all;
+  text-overflow: ellipsis;
+  display: box;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  /*! autoprefixer: off */
+  -webkit-box-orient: vertical;
+  /* autoprefixer: on */
+  overflow: hidden;
+  word-break: break-all;
+}
+
+.omit-generator(@line) when (@line <=10) {
+  .@{gant-prefix}-omit-@{line} {
+    .omitdisplay;
+    -webkit-line-clamp: @line;
+  }
+
+  .omit-generator(@line+1);
+}
+
+.omit-generator(1);
+
+//上下左右居中
+.@{gant-prefix}-align-center {
+  box-sizing: border-box;
+  flex-shrink: 0;
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex !important;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+}
+
+
+
+

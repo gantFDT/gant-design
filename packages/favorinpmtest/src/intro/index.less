@@ -1,0 +1,35 @@
+@import '../style/index.less';
+@intro-prefix-cls: ~'@{gant-prefix}-intro';
+
+.@{intro-prefix-cls} {
+  display: flex;
+  width: 100%;
+
+  &-image {
+    width: 120px;
+    height: 120px;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+  }
+
+  &-wrap {
+    flex: 1;
+    // padding: 15px;
+
+    &-title {
+      width: 100%;
+      font-size: 20px;
+      font-weight: bold;
+      color: #202020;
+    }
+
+    &-content {
+      width: 100%;
+      font-size: 12px;
+      color: #696969;
+      line-height: 200%;
+      margin-top: 15px;
+    }
+  }
+}
