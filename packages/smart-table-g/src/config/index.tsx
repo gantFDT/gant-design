@@ -52,7 +52,7 @@ function ConfigModal(props: ConfigModalProps) {
   }, [])
 
   const handlerSave = useCallback(() => {
-    if(!panelConfig.columnConfigs.filter((record: any)=>record.checked).length) return notification.info({
+    if(!panelConfig.columnFields.filter((record: any)=>record.checked).length) return notification.info({
       message: locale.saveMessage
     })
     onOk && onOk(fakeView)
