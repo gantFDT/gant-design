@@ -1,7 +1,6 @@
-export const schema = {
+const schema = {
     type: "object",
     title: "普通表单",
-    required: ["key_1"],
     propertyType: {
         key_1: {
             title: "普通输入框",
@@ -37,26 +36,123 @@ export const schema = {
             type: "string",
             componentType: "CellPhone"
         },
-        key_8: {
-            title: "多行输入框",
-            type: "string",
-            componentType: "TextArea"
-        },
-        key_9: {
-            title: "日期选择器",
-            type: "string",
-            componentType: "DatePicker"
-        },
-        key_10: {
-            title: "日期区间选择器",
-            type: "string",
-            componentType: "RangePicker"
-        },
-        // key_11: {
-        //     title: "颜色选择",
-        //     type: "string",
-        //     componentType: "ColorPicker"
-        // },
     }
-
 }
+
+const operateSchema = {
+    type: "object",
+    title: "带操作符的高级搜索",
+    required: ["key_1"],
+    propertyType: {
+        key_1: {
+            title: "名字",
+            type: "string",
+            operator: 'LIKE'
+        },
+        key_2: {
+            title: "年纪",
+            type: "string",
+            componentType: "InputNumber",
+            operator: 'LT_EQ'
+        },
+        key_3: {
+            title: "成绩",
+            type: "string",
+            componentType: "InputNumber",
+            operator: 'GT'
+        },
+    }
+}
+
+const editStatusSchema = {
+    type: "object",
+    title: "可切换编辑状态的表单",
+    required: ["key_1"],
+    propertyType: {
+        key_1: {
+            title: "普通输入框",
+            type: "string",
+        },
+        key_2: {
+            title: "数字输入框",
+            type: "number",
+            componentType: "InputNumber"
+        },
+        key_3: {
+            title: "金额",
+            type: "string",
+            componentType: "InputMoney"
+        },
+    }
+}
+
+const configSchma = {
+    type: "object",
+    title: "配置普通表单",
+    propertyType: {
+        "col": {
+            title: "col",
+            type: "number",
+            componentType: "InputNumber",
+            props: {
+                max: 24,
+                min: 0
+            }
+        },
+        "gutter": {
+            title: "gutter",
+            type: "number",
+            componentType: "InputNumber",
+            props: {
+                min: 0
+            }
+        },
+        "labelCol": {
+            title: "labelCol",
+            type: "number",
+            componentType: "InputNumber",
+            props: {
+                max: 24,
+                min: 0
+            }
+        },
+        "wrapperCol": {
+            title: "wrapperCol",
+            type: "number",
+            componentType: "InputNumber",
+            props: {
+                max: 24,
+                min: 0
+            }
+        },
+        "labelAlign": {
+            title: "labelAlign",
+            type: "string",
+            componentType: "Select",
+            props: {
+                dataSource: [
+                    {
+                        label: "左",
+                        value: "left"
+                    },
+                    {
+                        label: "右",
+                        value: "right"
+                    }
+                ]
+            }
+        },
+        "padding": {
+            title: "padding",
+            type: 'string',
+            componentType: "InputNumber",
+        },
+        "backgroundColor": {
+            title: "backgroundColor",
+            type: "string",
+            componentType: "ColorPicker",
+        }
+    }
+}
+
+export { schema, operateSchema, editStatusSchema, configSchma }

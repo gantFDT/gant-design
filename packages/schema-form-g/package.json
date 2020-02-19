@@ -1,5 +1,5 @@
 {
-    "name": "schemaform-g",
+    "name": "schema-form-g",
     "version": "0.0.1",
     "description": "gantd schemaform",
     "main": "dist/index.js",

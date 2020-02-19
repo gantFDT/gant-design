@@ -13,13 +13,13 @@
 | collapsedWidth     | 菜单折叠宽度                           | number / string           | `40`                      |
 | extra              | 菜单额外内容                           | reactNode                 |                           |
 | menuData           | 菜单渲染项, 必填                       | array                     | []                        |
-| showMenuMagnet     | 菜单渲染项                             | boolean                   | false                     |
-| showFlipOverFooter | 菜单渲染项                             | boolean                   | false                     |
+| showMenuMagnet     | 是否显示磁吸功能                       | boolean                   | false                     |
+| showFlipOverFooter | 是否显示翻页页脚                       | boolean                   | false                     |
 | style              | 额外样式                               | cSSProperties             |                           |
 | classname          | classname属性                          | string                    |                           |
-| onSwitchChange     | 切换菜单后执行的回调函数               | function                  | (nowMode) => void         |
-| onCollapseChange   | 切换菜单后执行的回调函数               | function                  | (collapsed) => void       |
-| onSelectedChange   | 切换菜单后执行的回调函数               | function                  | (key,record,item) => void |
+| onSwitchChange     | 切换菜单后的执行回调函数               | function                  | (nowMode) => void         |
+| onCollapseChange   | 菜单折叠展开后的执行回调函数           | function                  | (collapsed) => void       |
+| onSelectedChange   | 菜单子项被点击触发后的执行回调函数     | function                  | (key,record,item) => void |
 ## 注意
 
 ## FAQ

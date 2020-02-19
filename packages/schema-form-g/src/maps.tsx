@@ -1,5 +1,5 @@
 import {
-	Input, TextArea, InputMoney, InputNumber,
+	Input, Password, TextArea, InputMoney, InputNumber,
 	InputCellPhone as CellPhone, InputTelePhone as TelePhone,
 	InputUrl as Url, InputEmail as Email, InputLanguage as Language,
 	ColorPicker, DatePicker, RangePicker,
@@ -11,6 +11,7 @@ const RadioGroup = Radio.Group
 
 export enum Fields {
 	Input = "Input",
+	Password = "Password",
 	InputNumber = "InputNumber",
 	InputMoney = "InputMoney",
 	Url = "Url",
@@ -35,6 +36,7 @@ export enum Fields {
 
 let fields = {
 	[Fields.Input]: Input,
+	[Fields.Password]: Password,
 	[Fields.InputNumber]: InputNumber,
 	[Fields.InputMoney]: InputMoney,
 	[Fields.Url]: Url,
