@@ -1,24 +1,46 @@
-## Input 输入框
 
-通过鼠标或键盘输入内容，是最基础的表单域的包装。
+## EditStatus说明
 
-### 何时使用
+EditStatus状态如下所示：
 
-需要用户输入表单域内容时。
+```ts
+enum EditStatus {
+  SAVE = 'SAVE',
+  EDIT = 'EDIT',
+  CANCEL = 'CANCEL',
+}
 
-提供组合型输入框，带搜索的输入框，还可以进行大小选择。
+```
 
-### API
+可以看到它是一个枚举类型，总共有3个状态，分别是SAVE, EDIT,CANCEL，通过ts可以很容易得到
 
-|参数|说明|类型|默认值|是否所有表单组件都需要的参数
-|:-:|:-:|:-:|:-:|:-:|
-|allowEdit|是否允许表单组件的自身编辑(读模式下是否显示后面的编辑按钮)|boolean|true|是
-|edit|组件的编辑状态(是否处于编辑模式)|boolean|false|是
-|value|输入框内容|string| |是
-|onChange|输入框内容变化时的回调| function(value)| |是
-|onSave|点击对勾按钮的回调|function(id, value, cb)| |是
-|onCancel|点击取消按钮的回调|function(value)| | |
+状态含义：
 
-> onSave函数参数说明:`id`表示通过`getFieldDecorator`标识的id，没有的时候返回undefined。`value`表示当前输入框的值。`cb`是一个回调，通常用于手动关闭编辑状态
+• CANCEL：有两个含义，其一是一般作为默认状态使用，另一个含义是组件处于EDIT状态，当用户取消编辑的时候，就会切换回CANCEL状态，这个时候组件不会保留用户在编辑状态下做的任何更改
 
-其他更多参数[参考](https://ant-design.gitee.io/components/input-cn/)
+• EDIT：编辑状态，在这个状态下表示用户可以进行操作数据的行为。
+
+• SAVE：直译为保存状态，组件在这个状态下与CANCEL一致，用户不能进行任何数据的操作。而与CANCEL的区别是，当组件状态由EDIT切换为SAVE的时候，用户之前的数据更改将被保留下来
+
+EditStatus主要引用与表单组件，与可编辑表格中。
+
+## SwitchStatus说明
+
+实际应用中，我们需要频繁去切换状态就不可避免的频繁去读写状态：
+
+```js
+setEdit(EditStatus.CANCEL)
+// 或者
+setEdit(EditStatus.SAVE)
+// 再或者根据目前的状态去切换
+setEdit(status => {
+    if(status === EditStatus.CANCEL){
+        return EditStatus.EDIT
+    }
+    else{
+        return EditStatus.CANCEL
+    }
+})
+```
+
+为了简化在切换状态时候的操作，建立了一个SwitchStatus方法，用于简便的对编辑状态进行操作
