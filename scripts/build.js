@@ -17,6 +17,6 @@ co(function* () {
   res = yield Promise.all(pkgs.map(pkgName => execCmd(`cd ${path.join(__dirname, '../packages', pkgName)} && webpack`)))
   if(res.some)
   console.log(res)
-  Ora.succeed(chalk.green(`共${res.length}个包，成功${res.filter(R => R)}个，失败${res.filter(R => !R)}个。`))
+  Ora.succeed(chalk.green(`共${res.length}个包，成功${res.filter(R => R).length}个，失败${res.filter(R => !R).length}个。`))
   Ora.stop()
 })
