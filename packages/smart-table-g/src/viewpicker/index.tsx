@@ -11,7 +11,7 @@ const styles = {
     fontWeight: 'bold',
     fontSize: 12,
     lineHeight: '20px',
-    display: 'inlineBlock',
+    display: 'inline-block',
     opacity: 0,
     cursor: 'pointer',
     transition: 'all 0.3s'

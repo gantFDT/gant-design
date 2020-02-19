@@ -147,7 +147,7 @@ function Sortable(props: SortableProps) {
   );
 
   const SortableList = SortableContainer(() => {
-    return <div className="gant-smart-table-sortable">
+    return <div className="sortableList">
       {fakeDataSource.map((collection, idx) => (
         <React.Fragment key={idx}>
           {
@@ -178,7 +178,7 @@ function Sortable(props: SortableProps) {
   }, [dataSource])
 
   return (
-    <div style={{paddingBottom:10}}>
+    <div style={{paddingBottom:10}} className="gant-smart-table-sortable">
       <Row type="flex" align="middle" justify="space-between" className="tableHeader">
         <div style={{flexGrow:0}}>
           <Checkbox
