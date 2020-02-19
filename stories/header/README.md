@@ -6,7 +6,6 @@
 | 属性        | 说明                                   | 类型               | 默认值      |
 | ----------- | -------------------------------------- | ------------------ | ----------- |
 | type        | 标签类型，可选值为 `line` `icon` `num` | string             | 'line'      |
-| id          | 供锚点使用的标识                       | string             |             |
 | title       | 提示文字                               | string             |             |
 | beforeExtra | 左侧额外容器                           | string \ ReactNode |             |
 | extra       | 右侧额外容器                           | string \ ReactNode |             |

@@ -13,8 +13,8 @@ enum headerType {
   line,
   num
 }
-interface BlockHeaderIF {
-  id?: string,
+interface HeaderIF {
+  // id?: string,
   type?: headerType,
   bottomLine?: boolean,
   title?: string | ReactNode,
@@ -27,10 +27,10 @@ interface BlockHeaderIF {
   [props: string]: any
 }
 
-const BlockHeader = (props: BlockHeaderIF) => {
+const Header = (props: HeaderIF) => {
   let {
     prefixCls: customizePrefixCls,
-    id,
+    // id,
     type = '',
     bottomLine = false,
     title,
@@ -154,7 +154,7 @@ const BlockHeader = (props: BlockHeaderIF) => {
 
   return (
 
-    <div id={id} className={clsString} style={{ borderBottom: bottomLine && '1px solid #edebe9', ...style }}>
+    <div className={clsString} style={{ borderBottom: bottomLine && '1px solid #edebe9', ...style }} {...restProps}>
       <div className={prefixCls + '-wrapper'}>
         <div className={prefixCls + '-beforeExtra'}>
           {beforeExtra}
@@ -181,7 +181,7 @@ const BlockHeader = (props: BlockHeaderIF) => {
               overlayStyle={{ zIndex: 1 }}
               overlayClassName={prefixCls + '-dropdown'}
             >
-              <Button icon="ellipsis" className={getPrefixCls('overflow-tool-icon')} style={{ height: toolsHeight }} />
+              <Button icon="ellipsis" className={getPrefixCls('overflow-tool-icon')} style={{ height: toolsHeight,width: toolsHeight}} />
             </Dropdown>}
           </div>
           <div className={prefixCls + '-menu'} style={{ position: 'fixed', top: 0, left: 0,transform:'translateY(-1000px)' }} ref={(ref) => dropRef.current = ref}>{getDrapContent}</div>
@@ -192,4 +192,4 @@ const BlockHeader = (props: BlockHeaderIF) => {
   )
 }
 
-export default BlockHeader
+export default Header

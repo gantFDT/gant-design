@@ -89,7 +89,8 @@ export default [{
   children: [
     {
       name: 'SchemaForm',
-      nameZh: '表单'
+      nameZh: '数据驱动表单',
+      package:'schema-form-g'
     },
   ]
 }, {

@@ -1,5 +1,5 @@
 import React, { useCallback, useContext } from 'react'
-import { BlockHeader, EditStatus } from '@gantd/index'
+import { Header, EditStatus } from '@gantd/index'
 import { Form, Row } from 'antd'
 import { Schema, UISchema, TitleSchema } from './interface'
 import { FormContext } from './index'
@@ -72,7 +72,7 @@ export default function SchemaForm(props: SchemaFormProps) {
 		return <div className={classnames(`${prefixCls}-schemaCard`, filedEdit === EditStatus.EDIT && `${prefixCls}-showRequiredMark`)}
 			key={pathName}
 			style={{ padding: padding, backgroundColor: containerColor }}>
-			{(pathName ? titleSchema.visible : title) && <BlockHeader title={title}  {...titleSchema} id={titleSchema.id ? titleSchema.id : id} />}
+			{(pathName ? titleSchema.visible : title) && <Header title={title}  {...titleSchema} id={titleSchema.id ? titleSchema.id : id} />}
 			<Row gutter={gutter}>{contents}</Row>
 		</div>
 	}, [schema, edit, titleConfig, uiSchema])
