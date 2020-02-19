@@ -11,7 +11,8 @@
 | layout         | 锚点类型，支持水平、和竖直两种                                              | string/ horizontal、 vertical | vertical |
 | onLayoutChange | 切换layout时的回调函数                                                      | function(layout)              |          |
 | minHeight      | 内容最小高度                                                                | number                        | 400      |
-
+| style          | 额外样式                                                                    | cSSProperties                 |          |
+| className      | 类名                                                                        | string                        |          |
 
     
 ### list props 

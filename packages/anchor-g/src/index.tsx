@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { Dropdown, Menu, Layout, Anchor, Icon } from 'antd';
 import { ConfigContext } from '@gantd/config-provider';
 import './index.less';
-
+import classnames from 'classnames'
 
 const GantAnchor = (props) => {
   let {
@@ -13,6 +13,8 @@ const GantAnchor = (props) => {
     layout = 'vertical',
     onLayoutChange,
     minHeight = 400,
+    className,
+    style,
     ...nextProps
   } = props
   const { getPrefixCls } = React.useContext(ConfigContext);
@@ -151,7 +153,7 @@ const GantAnchor = (props) => {
   return (
     <>
       {stateMode == 'vertical' ?
-        <div className={`${prefixCls}-verticallayout`}>
+        <div className={classnames(className,`${prefixCls}-verticallayout`)} style={{...style}}>
           <Layout>
             <Layout.Content style={{}}>
               <div style={{ padding: '0px', minHeight }}>
@@ -169,7 +171,7 @@ const GantAnchor = (props) => {
           </Layout>
         </div>
         :
-        <div className='gant-card-horizontalanchor' style={{ padding: '0 0 10px', zIndex: 1, minHeight }}>
+        <div className={classnames(className,'gant-card-horizontalanchor')} style={{ padding: '0 0 10px', zIndex: 1, minHeight,...style }}>
           <div className={`${prefixCls}-horAnchorOut`}>
             <div className={`gant-gantanchor`} id='anchorBoxId' style={{ zIndex: 1 }}>
               <Icon type="left" style={{ display: leftArrowsShow ? 'block' : 'none', float: 'left' }} className={`${prefixCls}-iconCss`} onClick={() => handleMobileTabs('left')} />

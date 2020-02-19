@@ -157,7 +157,7 @@ export function getTitle(title: TitleSchema, pathName?: string): any {
 	{
 		alias: "bottomLine",
 		name: "title:bottomLine",
-		defaultValue: true
+		defaultValue: false
 	},
 	{
 		alias: "canWrap",

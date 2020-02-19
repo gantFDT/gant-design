@@ -4,7 +4,16 @@ import React from 'react';
 import LocaleReceiver from '../locale-provider/LocaleReceiver'
 import { ConfigConsumer } from '../config-provider'
 
-const Intro = (props) => {
+interface IntroIF{
+  imageAlign?:string,
+  imageRadius?:number,
+  image?:string,
+  title?:string | React.ReactNode,
+  content?:string | React.ReactNode,
+  [props:string]:any
+}
+
+const Intro = (props:IntroIF) => {
   const renderContent = (locale) => {
     const {
       prefixCls: customizePrefixCls,
