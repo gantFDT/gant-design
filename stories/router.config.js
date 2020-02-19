@@ -6,7 +6,10 @@ export default [{
   }]
 }, {
   name: "组件|数据单元",
-  children: [
+  children: [{
+    name:'RW',
+    nameZh:'读写分离'
+  },
     {
       name: 'Input',
       nameZh: '文本输入框'

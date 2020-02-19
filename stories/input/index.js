@@ -31,7 +31,7 @@ ReactDOM.render(
         return (
           <>
             <Switch checked={allow} onChange={checked => setAllow(checked)} style={{ marginBottom: 10 }}></Switch>
-            <Input placeholder='基本用法' allowEdit={allow} />
+            <Input placeholder='基本用法' allowEdit={'SAVE'} />
           </>
         )
       }
