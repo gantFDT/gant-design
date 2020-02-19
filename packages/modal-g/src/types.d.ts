@@ -33,11 +33,14 @@ type ModalsState = {
     initialModalState: ModalStateOutter
 }
 
-
-
+interface ModalLocale {
+    submit: string,
+    cancel: string
+}
 
 interface ModalInnerProps {
     prefixCls?: string,
+    locale?: ModalLocale,
     id: string,
     itemState: ModalStateOutter,
     visible: boolean,
