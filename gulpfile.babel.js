@@ -20,7 +20,7 @@ function clean(cb) {
 //   .filter(item=>item.isDirectory()&&item.name !== 'gantd')
 //   .map(item=>item.name);
 
-let pkgs = ['data-cell-g','color-picker-g'];
+let pkgs = ['color-picker-g'];
 
 /**
  * 编译非gantd包的js文件
