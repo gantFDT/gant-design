@@ -80,7 +80,14 @@ const SwitchStatusUse = () => {
 
 
 const config = {
-  useage: '当需要读写分离的时候',
+  useage: `
+  对于对象的信息，我们并不是一上来就要去更改，更多的时候应该是先去读这个对象。</br>
+  我们需要一种机制让读写分离开,而不是让用户一来就看到很多编辑框。</br>
+  <b>🦁 数据单元是什么？</b></br>
+  数据单元是数据展示的最小单元组件，它可以支持只读模式和写模式。</br>
+  <b>✊🏼 同时支持在表单和表格中使用</b></br>
+  不光是表单分读写，同样，表格也可以分读写
+  `,
   codes: codeList.map(code => (
     `import React, { useState } from 'react';
      import { Switch, Button } from 'antd';
