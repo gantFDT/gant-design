@@ -159,11 +159,6 @@ export function getTitle(title: TitleSchema, pathName?: string): any {
 		name: "title:bottomLine",
 		defaultValue: false
 	},
-	{
-		alias: "canWrap",
-		name: "title:canWrap",
-		defaultValue: false
-	},
 	];
 	let titleData = {}, titleSchemaData = pathName ? get(title, pathName) : title;
 	if (titleSchemaData === undefined && pathName) {
