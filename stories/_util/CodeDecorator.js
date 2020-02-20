@@ -124,7 +124,7 @@ function CodeBox({ id, title = '标题', isActive, describe = '暂无描述', co
                 <div style={metaStyle}>
                     {title && <div style={titleStyle}>{title}</div>}
                     {/* <div style={descriptionStyle}>{describe}</div> */}
-                    <div style={descriptionStyle} dangerouslySetInnerHTML = {{ __html: describe }} />
+                    <div style={descriptionStyle} dangerouslySetInnerHTML={{ __html: describe }} />
                 </div>
                 {code && <Collapse bordered={false} style={collapseStyle} >
                     <Panel header='显示代码' style={{ borderBottom: 0 }} extra={genExtra()}>
@@ -184,8 +184,11 @@ export default ({ config }) => {
     return (
         <ConfigProvider locale={zhCN}>
             {useage && <div>
-                <h2 style={headerStyle}>何时使用</h2>
-                <div>{useage}</div>
+                <h2 style={headerStyle}>特性</h2>
+                {_.isObject(useage) ?
+                    <div style={{ fontSize: 14 }}>{useage}</div> :
+                    <div style={{ fontSize: 14 }} dangerouslySetInnerHTML={{ __html: useage }} />
+                }
             </div>}
             <h2 style={headerStyle}>代码演示</h2>
             {showAnchor ? <Anchor

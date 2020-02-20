@@ -27,7 +27,7 @@ function Use2() {
 const config = {
   codes: code,
   inline: true,
-  useage: ``,
+  useage: `有些业务场景需要轮询，AutoReload即可满足让用户决定是否开启定时刷新`,
   children: [
     {
       title: '基本用法',
