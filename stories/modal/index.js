@@ -125,7 +125,12 @@ function multipleModalsUse() {
 
 const config = {
     codes: code,
-    useage: '这是一个弹出式对话框。支持拖拽移动和大小伸缩、窗口化和全屏化状态的切换、实时响应浏览器窗口变化、模态窗口模式等功能，并支持同屏展示多个弹出框。',
+    useage: `
+  <b>支持拖拽移动和大小伸缩</b></br>
+  <b>窗口化和全屏化状态的切换</b></br>
+  <b>实时响应浏览器窗口变化</b></br>
+  <b>可支持非模态窗口模式等功能，并支持同屏展示多个弹出框</b></br>
+  `,
     inline: true,
     children: [
         {
