@@ -135,7 +135,8 @@ function CodeBox({ id, title = '标题', isActive, describe = '暂无描述', co
 };
 /**
 * @config useage[string|ReactNode] 何时使用内容
-*         inline[bool]是否一行两列展示 默认false
+*         inline[bool] 是否一行两列展示 默认false
+*         showAnchor[bool] 是否展示示例锚点 默认true
 *         codes[array] 示例代码集合
 *         children[array] 示例items集合 [{title:'...','describe':'...',cmp:function},...]
 */
