@@ -3,7 +3,7 @@ import React, { ReactNode, useRef, useState, useEffect, useMemo, useCallback } f
 import classnames from 'classnames'
 import { Dropdown, Menu, Button, Icon } from 'antd'
 import ReactResizeDetector from 'react-resize-detector';
-import _ from 'lodash'
+import _ from 'lodash';
 
 export enum headerType {
   icon,
