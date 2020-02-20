@@ -97,7 +97,12 @@ function BasicUse() {
 
 const config = {
   codes: [code],
-  useage: '用于给区域加锚点',
+  useage: `
+  <b>📚 可快速切换锚点展示为页签效果</b></br>
+  在横向空间很局限时，用户可以把锚点快速切换为顶部页签效果</br>
+  <b>⛏ 磁吸效果</b></br>
+  当菜单滚动超出屏幕时，可以开启磁吸效果</br>
+  `,
   showAnchor: false,
   children: [
     {

@@ -61,34 +61,37 @@ const tstask = function (dirName) {
   src([`packages/${dirName}/src/*.tsx`, `packages/${dirName}/src/*.ts`])
     .pipe(
       ts({
-        allowJs: false,
-        target: 'ES5',
-        declaration: true
+        "sourceMap": true,
+        "allowJs": true,
+        "jsx": "react",
+        "forceConsistentCasingInFileNames": false,
+        "noImplicitReturns": false,
+        "noImplicitThis": false,
+        "noImplicitAny": false,
+        "noUnusedLocals": false,
+        "noUnusedParameters": false,
+        "strictNullChecks": false,
+        "importHelpers": true,
+        "suppressImplicitAnyIndexErrors": true,
+        "experimentalDecorators": true,
+        "downlevelIteration": true,
+        "allowSyntheticDefaultImports": true,
       })
     )
-    .pipe(dest(`packages/${dirName}/lib/`))
-
-  src([`packages/${dirName}/src/*.tsx`, `packages/${dirName}/src/*.ts`])
+    .pipe(babel(babelConfig))
     .pipe(
-      ts({
-        allowJs: false,
-        target: 'ES5',
-        declaration: true
-      })
-    )
-    .pipe(dest(`packages/${dirName}/lib/`))
-    .pipe(
+      // 处理路径等问题
       through2.obj(function (chunk, enc, next) {
         let content = chunk.contents.toString()
-        content = content.replace(/\.\.\/\.\.\/gantd\/src/g, '..')
-        content = content.replace(/\.\.\/\.\.\/util\-g\/src/g, '../util')
+        content = content.replace(/\.less/g, '.css')
+        content = content.replace(/\.jsx/g, '.js')
         const buf = Buffer.from(content)
         chunk.contents = buf
         this.push(chunk)
         next()
       })
     )
-    .pipe(dest(`packages/gantd/lib/${dirName.slice(0, -2).replace(/\-/g,'')}/`))
+    .pipe(dest(`packages/${dirName}/lib/`))
 }
 
 const jstasks = pkgs.map(pkg => cb => {
@@ -175,5 +178,23 @@ const compileGantd = (cb) => {
 }
 
 const compile = parallel(compileGantd, ...jstasks, ...csstasks)
+
+exports.libHeader = function() {
+  rimraf.sync(path.resolve(__dirname, 'packages/header-g/lib/'))
+  
+  tstask('header-g');
+  src(`packages/header-g/src/*.less`)
+    .pipe(dest(`packages/header-g/lib/`))
+
+  src(`packages/header-g/src/*.less`)
+    .pipe(less({
+      plugins: [
+        new LessNpm({ prefix: '~' })
+      ],
+      javascriptEnabled: true,
+    }))
+    .pipe(postcss([autoprefixer()]))
+    .pipe(dest(`packages/header-g/lib/`))
+}
 
 exports.default = series(clean, compile)

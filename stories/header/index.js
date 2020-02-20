@@ -82,15 +82,15 @@ function ExtraUse() {
 }
 function ColorUse() {
     return <>
-        <Header type='line' title="标题(短线)" color="#1890ff"/>
-        <Header type='icon' icon="file-text" title="标题(图标)" color="#1890ff"/>
-        <Header type='num' title="标题(数字)" color="#1890ff"/>
+        <Header type='line' title="标题(短线)" color="#1890ff" />
+        <Header type='icon' icon="file-text" title="标题(图标)" color="#1890ff" />
+        <Header type='num' title="标题(数字)" color="#1890ff" />
         <Header
             title="标题(回退)"
             beforeExtra={
                 <Icon
                     type="left"
-                    style={{ marginRight: 10,color:"#1EA7FD" }}
+                    style={{ marginRight: 10, color: "#1EA7FD" }}
                     onClick={() => { message.info('goback success') }}
                 />
             }
@@ -106,7 +106,12 @@ function BottomLineUse() {
 const config = {
     codes: code,
     inline: true,
-    useage: '需要单独使用标头的地方，特色是工具栏溢出效果，也可做为工具栏使用',
+    useage: `
+    <b>🕯 常用类型</b></br>
+    标题可以用三种类型的修饰</br>
+    <b>🤸‍♂️ 工具栏溢出显示</b></br>
+    当工具栏放置了很多按钮时，我们的容器不足以展示，但还是可以显示完整的按钮</br>
+    `,
     children: [
         {
             title: '基本用法',
