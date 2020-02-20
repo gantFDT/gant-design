@@ -151,12 +151,10 @@ export default ({ config }) => {
         return children.map(({ title, describe, cmp: Comp, code }, key) => {
             let id = `demo_${key}`;
             anchors.push({ id: id, title });
-            
             let thisCode = code ? code : codes[key];
             if(React.isValidElement(Comp)){
                 thisCode = reactElementToJSXString(Comp)
             }
-            console.log('Comp', React.isValidElement(Comp), Comp)
             return <CodeBox
                 id={id}
                 key={key}
