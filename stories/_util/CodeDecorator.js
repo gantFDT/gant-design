@@ -8,7 +8,9 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { githubGist } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { version } from '../../package.json';
+import reactElementToJSXString from 'react-element-to-jsx-string';
 const Panel = Collapse.Panel;
+
 // console.log('version', version)
 
 const headerStyle = {
@@ -146,18 +148,24 @@ export default ({ config }) => {
     }, [])
 
     const elements = useMemo(() => {
-        return children.map(({ title, describe, cmp: Comp }, key) => {
+        return children.map(({ title, describe, cmp: Comp, code }, key) => {
             let id = `demo_${key}`;
             anchors.push({ id: id, title });
+            
+            let thisCode = code ? code : codes[key];
+            if(React.isValidElement(Comp)){
+                thisCode = reactElementToJSXString(Comp)
+            }
+            console.log('Comp', React.isValidElement(Comp), Comp)
             return <CodeBox
                 id={id}
                 key={key}
                 title={title}
                 describe={describe}
-                code={codes[key]}
+                code={thisCode}
                 isActive={`#${id}` == currentAnchor}
             >
-                <Comp />
+                {React.isValidElement(Comp) ? Comp : <Comp />}
             </CodeBox>
         });
     }, [codes, children, currentAnchor])

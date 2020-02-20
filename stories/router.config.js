@@ -7,62 +7,62 @@ export default [{
 }, {
   name: "组件|数据单元",
   children: [{
-    name:'RW',
-    nameZh:'读写分离'
+    name: 'RW',
+    nameZh: '读写分离'
   },
-    {
-      name: 'Input',
-      nameZh: '文本输入框'
-    },
-    {
-      name: 'InputCellPhone',
-      nameZh: '手机号输入框'
-    },
-    {
-      name: 'InputTelephone',
-      nameZh: '电话输入框'
-    },
-    {
-      name: 'InputUrl',
-      nameZh: '链接输入框'
-    },
-    {
-      name: 'InputEmail',
-      nameZh: '邮箱输入框'
-    },
-    {
-      name: 'InputLanguage',
-      nameZh: '多语言文本输入框'
-    },
-    {
-      name: 'InputNumber',
-      nameZh: '数字输入框'
-    },
-    {
-      name: 'InputMoney',
-      nameZh: '金额输入框'
-    },
-    {
-      name: 'selector',
-      nameZh: '基础选择器'
-    },
-    {
-      name: 'LocationSelector',
-      nameZh: '地址选择器'
-    },
-    {
-      name: 'datepicker',
-      nameZh: '日期选择器'
-    },
-    {
-      name: 'ColorPicker',
-      nameZh: '颜色选择器',
-      package: 'color-picker-g',
-    },
-    {
-      name: 'IconSelector',
-      nameZh: '图标选择器',
-    },
+  {
+    name: 'Input',
+    nameZh: '文本输入框'
+  },
+  {
+    name: 'InputCellPhone',
+    nameZh: '手机号输入框'
+  },
+  {
+    name: 'InputTelephone',
+    nameZh: '电话输入框'
+  },
+  {
+    name: 'InputUrl',
+    nameZh: '链接输入框'
+  },
+  {
+    name: 'InputEmail',
+    nameZh: '邮箱输入框'
+  },
+  {
+    name: 'InputLanguage',
+    nameZh: '多语言文本输入框'
+  },
+  {
+    name: 'InputNumber',
+    nameZh: '数字输入框'
+  },
+  {
+    name: 'InputMoney',
+    nameZh: '金额输入框'
+  },
+  {
+    name: 'selector',
+    nameZh: '基础选择器'
+  },
+  {
+    name: 'LocationSelector',
+    nameZh: '地址选择器'
+  },
+  {
+    name: 'datepicker',
+    nameZh: '日期选择器'
+  },
+  {
+    name: 'ColorPicker',
+    nameZh: '颜色选择器',
+    package: 'color-picker-g',
+  },
+  {
+    name: 'IconSelector',
+    nameZh: '图标选择器',
+  },
   ]
 
   // }, {
@@ -93,7 +93,7 @@ export default [{
     {
       name: 'SchemaForm',
       nameZh: '数据驱动表单',
-      package:'schema-form-g'
+      package: 'schema-form-g'
     },
   ]
 }, {
@@ -131,7 +131,7 @@ export default [{
     name: 'Modal',
     nameZh: '弹窗',
     package: 'auto-modal-g',
-  },{
+  }, {
     name: 'Toolbar',
     nameZh: '工具条',
   }
@@ -152,7 +152,7 @@ export default [{
   children: [{
     name: 'Icon',
     nameZh: '图标'
-  },{
+  }, {
     name: 'AutoReload',
     nameZh: '自动刷新组件',
     package: 'auto-reload-g',
@@ -167,6 +167,9 @@ export default [{
   {
     name: 'Loading',
     nameZh: '载入中'
+  }, {
+    name: 'Style',
+    nameZh: '公共样式类'
   }
     // {
     // 			name: 'TaskBoard',
