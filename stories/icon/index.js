@@ -22,10 +22,10 @@ function BasicUse() {
 
 function CustomizeUse() {
   const PartIcon = Icon.createFromIconfontCN('partIcon', {
-    scriptUrl: '//at.alicdn.com/t/font_687278_5i22ts2wtbx.js'
+    scriptUrl: '//at.alicdn.com/t/font_1252237_yp35yr9jf6.js'
   })
   return (
-    <PartIcon type="icon-msnui-protect"
+    <PartIcon type="icon-list-1"
       style={{
         color: '#FFC000', fontSize: '16px',
         verticalAlign: 'text-bottom', marginRight: '5px', cursor: 'pointer'
@@ -38,11 +38,11 @@ function DyncmicIcon() {
 
   setTimeout(() => {
     Icon.updateFromIconfontCN({
-      scriptUrl: '//at.alicdn.com/t/font_1252237_d3o5b6zp99f.js'
+      scriptUrl: '//at.alicdn.com/t/font_1252237_yp35yr9jf6.js'
     })
   }, 5000)
   return (
-    <Icon type="icon-jiaoseguanli_old" />
+    <Icon type="icon-list-2" />
   )
 }
 

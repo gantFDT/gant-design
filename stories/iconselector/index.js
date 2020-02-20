@@ -3,12 +3,13 @@ import { IconSelector } from '@pkgs/gantd/src';
 import React from 'react';
 import CodeDecorator from '../_util/CodeDecorator';
 import code from './code.js';
+import {message} from 'antd'
 
 
 
 function BasicUse() {
   return (
-    <IconSelector />
+    <IconSelector onChange={(value)=>{message.info(value)}}/>
   )
 }
 
@@ -24,11 +25,11 @@ const config = {
       );
       `
   }),
-  useage: '语义化的矢量图形。',
+  useage: '当业务需要选择一个图标的时候',
   children: [
     {
-      title: '基本用法',
-      describe: '最简单的用法',
+      title: '图标选择器',
+      describe: '可以直接选择Ant自带的icon或者iconfont，如需选择自己项目的iconfont,则需要前置引入',
       cmp: BasicUse
     }
   ]

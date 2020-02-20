@@ -10,6 +10,7 @@ import './index.less';
 // import styles from './index.less'
 // import { tr } from '../formatmessage';
 const tr = a => a
+import _ from 'lodash'
 
 
 const { getOutLine } = Icon
@@ -21,6 +22,7 @@ const iconstyle = {
 }
 const bodyStyle = {
   height: 'calc(100vh - 41px)',
+  padding:10,
   overflow: 'hidden'
 }
 
@@ -29,7 +31,9 @@ enum IconTypes {
   AntIcon = 'AntIcon'
 }
 
-const iconTypes = [ IconTypes.AntIcon,IconTypes.IconFont]
+
+
+
 
 type IconHouseProps = {
   onBlur?: Function,
@@ -50,6 +54,15 @@ const IconHouse: React.FC<IconHouseProps> = ({ inForm, onChange, value, onBlur =
   // 当前icon
   const [currentId, setCurrentId] = useState(value)
   // 当前显示的图标类型
+
+  const iconTypes = useMemo(() => {
+    let iconTypeArr = [IconTypes.AntIcon]
+    if(!_.isEmpty(IDs)){
+      iconTypeArr.push(IconTypes.IconFont)
+    }
+    return iconTypeArr
+  }, [IDs])
+
   const [iconType, seticonType] = useState(iconTypes[0])
 
   const icons = useMemo(() => ({
@@ -57,6 +70,7 @@ const IconHouse: React.FC<IconHouseProps> = ({ inForm, onChange, value, onBlur =
     AntIcon: outline
   }), [IDs])
 
+  
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -155,7 +169,7 @@ const IconHouse: React.FC<IconHouseProps> = ({ inForm, onChange, value, onBlur =
             }
           </Radio.Group>
           <div style={{ flex: 1, marginLeft: 10, }}>
-            <Input edit={EditStatus.EDIT} value={text} onChange={settext} placeholder={tr('只支持图标id搜索')} allowClear />
+            <Input edit={EditStatus.EDIT} value={text} onChange={settext} placeholder={tr('搜索')} allowClear />
           </div>
         </div>
         <div className={classnames(prefixCls + '-scroll')}>

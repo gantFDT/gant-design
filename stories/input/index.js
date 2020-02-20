@@ -24,24 +24,24 @@ ReactDOM.render(
   inline: true,
   children: [
     {
-      title: '基本用法',
+      title: '是否可编辑',
       describe: '在后面展示一个编辑按钮，通过修改allowEdit参数控制是否可以编辑，allowEdit默认true',
       cmp: () => {
-        const [allow, setAllow] = useState(EditStatus.EDIT)
+        const [allow, setAllow] = useState(false)
         return (
           <>
-            <Switch checked={allow} onChange={checked => setAllow(checked)} style={{ marginBottom: 10 }}></Switch>
-            <Input placeholder='基本用法' allowEdit={'SAVE'} />
+            <Switch checked={allow} onChange={checked => setAllow(!allow)} style={{ marginBottom: 10 }} size="small"></Switch>
+            <Input placeholder='基本用法' allowEdit={allow} />
           </>
         )
       }
     },
     {
-      title: '编辑受控',
+      title: '编辑状态受控',
       describe: '受其他组件控制展示的形态',
       cmp: WrapperEdit(({ edit, setEdit }) => (
         <>
-          <Button onClick={() => setEdit(SwitchStatus)} style={{ marginBottom: 5 }}>点击切换</Button>
+          <Button onClick={() => setEdit(SwitchStatus)} style={{ marginBottom: 5 }} size="small">点击切换</Button>
           <Input placeholder='单行输入框' edit={edit} style={{ margin: '5px 0' }} />
           <TextArea placeholder='多行输入框' edit={edit} style={{ margin: '5px 0' }} />
           <Password placeholder='密码输入框' edit={edit} style={{ margin: '5px 0' }} />
@@ -52,10 +52,10 @@ ReactDOM.render(
     {
       title: '可编辑',
       describe: '读模式下通过value传入展示的值,strict属性可以让onChange自动过滤掉特殊字符，只保留数字，汉字和字母',
-      cmp: WrapperValue('哈哈哈')(({ value, setValue }) => <Input value={value} strict onChange={setValue} onSave={onSave} />)
+      cmp: WrapperValue('文本')(({ value, setValue }) => <Input value={value} strict onChange={setValue} onSave={onSave} />)
     },
     {
-      title: '多行编辑',
+      title: '多行文本',
       describe: '',
       cmp: WrapperValue()(({ value, setValue }) => <TextArea placeholder='多行编辑' value={value} onChange={setValue} onSave={onSave} />)
     },
@@ -63,11 +63,6 @@ ReactDOM.render(
       title: '密码输入框',
       describe: '',
       cmp: WrapperValue()(({ value, setValue }) => <Password placeholder='密码输入框' value={value} onChange={setValue} onSave={onSave} />)
-    },
-    {
-      title: '搜索输入框',
-      describe: '',
-      cmp: WrapperValue()(({ value, setValue }) => <Search placeholder='搜索框' value={value} onChange={setValue} onSave={onSave} />)
     },
   ]
 }
