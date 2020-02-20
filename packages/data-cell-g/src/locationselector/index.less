@@ -1,0 +1,15 @@
+@import '../style/theme/index';
+@import '../style/mixin/index';
+@gant-location : ~'@{gant-prefix}-location';
+
+
+.@{gant-location}-cascader{
+    .display-table-cell();
+    width: 100%;
+
+    &:not(:last-child){
+        .ant-cascader-input{
+            .input-group-left();
+        }
+    }
+}

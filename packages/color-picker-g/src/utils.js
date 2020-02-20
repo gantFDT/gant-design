@@ -11,11 +11,6 @@ export const PrimaryColors = Object.entries(presetPalettes)
     }
   });
 
-export const validColorText = _ => {
-  let reg = /^([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$/
-  return reg.test(_);
-}
-
 export const fillText = _ => {
   _.includes('#')&&(_ = _.slice(1));
   _ = _.toUpperCase();

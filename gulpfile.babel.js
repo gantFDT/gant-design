@@ -16,16 +16,18 @@ function clean(cb) {
   cb()
 }
 
-let pkgs = fs.readdirSync(path.join(__dirname, 'packages'),{withFileTypes:true})
-  .filter(item=>item.isDirectory()&&item.name !== 'gantd')
-  .map(item=>item.name);
+// let pkgs = fs.readdirSync(path.join(__dirname, 'packages'),{withFileTypes:true})
+//   .filter(item=>item.isDirectory()&&item.name !== 'gantd')
+//   .map(item=>item.name);
+
+let pkgs = ['data-cell-g','color-picker-g'];
 
 /**
  * 编译非gantd包的js文件
  * @param {*} dirName 文件夹名
  */
 const jstask = function (dirName) {
-  return src([`packages/${dirName}/src/*.jsx`, `packages/${dirName}/src/*.js`])
+  return src([`packages/${dirName}/src/**/*.jsx`, `packages/${dirName}/src/**/*.js`])
     .pipe(babel(babelConfig))
     .pipe(
       // 处理路径等问题
@@ -33,8 +35,6 @@ const jstask = function (dirName) {
         let content = chunk.contents.toString()
         content = content.replace(/\.less/g, '.css')
         content = content.replace(/\.jsx/g, '.js')
-        content = content.replace(/@gantd/g, 'gantd/lib')
-        content = content.replace(/@util-g/g, 'util-g')
         const buf = Buffer.from(content)
         chunk.contents = buf
         this.push(chunk)
@@ -42,27 +42,15 @@ const jstask = function (dirName) {
       })
     )
     .pipe(dest(`packages/${dirName}/lib/`))
-    .pipe(
-      // 复制到gantd文件夹里面的时候处理路径等问题
-      through2.obj(function (chunk, enc, next) {
-        let content = chunk.contents.toString()
-        content = content.replace(/gantd\/lib/g, '..')
-        content = content.replace(/util\-g/g, '../util')
-        const buf = Buffer.from(content)
-        chunk.contents = buf
-        this.push(chunk)
-        next()
-      })
-    )
-    .pipe(dest(`packages/gantd/lib/${dirName.slice(0, -2).replace(/\-/g,'')}/`))
 }
 
 const tstask = function (dirName) {
-  src([`packages/${dirName}/src/*.tsx`, `packages/${dirName}/src/*.ts`])
+  src([`packages/${dirName}/src/**/*.tsx`, `packages/${dirName}/src/**/*.ts`])
     .pipe(
       ts({
         "target": 'es6',
         "sourceMap": true,
+        "declaration": true, // 生成 *.d.ts 文件
         "allowJs": true,
         "jsx": "react",
         "forceConsistentCasingInFileNames": false,
@@ -71,12 +59,14 @@ const tstask = function (dirName) {
         "noImplicitAny": false,
         "noUnusedLocals": false,
         "noUnusedParameters": false,
+        "noEmitOnError": false,
         "strictNullChecks": false,
         "importHelpers": true,
         "suppressImplicitAnyIndexErrors": true,
         "experimentalDecorators": true,
+        "experimentalAsyncFunctions": true,
         "downlevelIteration": true,
-        "allowSyntheticDefaultImports": true,
+        "allowSyntheticDefaultImports": true
       })
     )
     .pipe(babel(babelConfig))
@@ -102,10 +92,10 @@ const jstasks = pkgs.map(pkg => cb => {
 })
 
 const csstasks = pkgs.map(pkg => cb => {
-  src(`packages/${pkg}/src/*.less`)
+  src(`packages/${pkg}/src/**/*.less`)
     .pipe(dest(`packages/${pkg}/lib/`))
 
-  src(`packages/${pkg}/src/*.less`)
+  src(`packages/${pkg}/src/**/*.less`)
     .pipe(less({
       plugins: [
         new LessNpm({ prefix: '~' })
@@ -114,29 +104,6 @@ const csstasks = pkgs.map(pkg => cb => {
     }))
     .pipe(postcss([autoprefixer()]))
     .pipe(dest(`packages/${pkg}/lib/`))
-
-  src(`packages/${pkg}/src/*.less`)
-    .pipe(
-      through2.obj(function (chunk, enc, next) {
-        let content = chunk.contents.toString()
-        content = content.replace(/\.\.\/\.\.\/gantd\/src/g, '..')
-        const buf = Buffer.from(content)
-        chunk.contents = buf
-        this.push(chunk)
-        next()
-      })
-    )
-    .pipe(dest(`packages/gantd/lib/${pkg.slice(0, -2).replace(/\-/g,'')}/`))
-
-  src(`packages/${pkg}/src/*.less`)
-    .pipe(less({
-      plugins: [
-        new LessNpm({ prefix: '~' })
-      ],
-      javascriptEnabled: true,
-    }))
-    .pipe(postcss([autoprefixer()]))
-    .pipe(dest(`packages/gantd/lib/${pkg.slice(0, -2).replace(/\-/g,'')}/`))
 
   cb();
 })
@@ -153,7 +120,6 @@ const compileGantd = (cb) => {
       let content = chunk.contents.toString()
       content = content.replace(/\.less/g, '.css')
       content = content.replace(/\.jsx/g, '.js')
-      content = content.replace(/\.\.\/\.\.\/(\w+)\-((\w+)\-)?((\w+)\-)?g\/src/g, './$1$3$5')
       const buf = Buffer.from(content)
       chunk.contents = buf
       this.push(chunk)
@@ -178,26 +144,28 @@ const compileGantd = (cb) => {
   cb();
 }
 
-const compile = parallel(compileGantd, ...jstasks, ...csstasks)
+// const compile = parallel(compileGantd, ...jstasks, ...csstasks)
+const compile = parallel(...jstasks, ...csstasks)
 
-exports.libHeader = function(cb) {
-  rimraf.sync(path.resolve(__dirname, 'packages/header-g/lib/'))
+// exports.libHeader = function(cb) {
+//   rimraf.sync(path.resolve(__dirname, 'packages/header-g/lib/'))
   
-  tstask('header-g');
-  src(`packages/header-g/src/*.less`)
-    .pipe(dest(`packages/header-g/lib/`))
+//   tstask('header-g');
+//   src(`packages/header-g/src/*.less`)
+//     .pipe(dest(`packages/header-g/lib/`))
 
-  src(`packages/header-g/src/*.less`)
-    .pipe(less({
-      plugins: [
-        new LessNpm({ prefix: '~' })
-      ],
-      javascriptEnabled: true,
-    }))
-    .pipe(postcss([autoprefixer()]))
-    .pipe(dest(`packages/header-g/lib/`))
+//   src(`packages/header-g/src/*.less`)
+//     .pipe(less({
+//       plugins: [
+//         new LessNpm({ prefix: '~' })
+//       ],
+//       javascriptEnabled: true,
+//     }))
+//     .pipe(postcss([autoprefixer()]))
+//     .pipe(dest(`packages/header-g/lib/`))
 
-  cb();
-}
+//   cb();
+// }
 
+exports.compileGantd = series(clean, compileGantd)
 exports.default = series(clean, compile)
