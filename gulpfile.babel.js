@@ -33,6 +33,7 @@ const jstask = function (dirName) {
       // 处理路径等问题
       through2.obj(function (chunk, enc, next) {
         let content = chunk.contents.toString()
+        content = content.replace(/@color\-picker/g, 'color-picker-g')
         content = content.replace(/\.less/g, '.css')
         content = content.replace(/\.jsx/g, '.js')
         const buf = Buffer.from(content)
@@ -74,6 +75,7 @@ const tstask = function (dirName) {
       // 处理路径等问题
       through2.obj(function (chunk, enc, next) {
         let content = chunk.contents.toString()
+        content = content.replace(/@color\-picker/g, 'color-picker-g')
         content = content.replace(/\.less/g, '.css')
         content = content.replace(/\.jsx/g, '.js')
         const buf = Buffer.from(content)

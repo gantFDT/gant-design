@@ -13,6 +13,7 @@
     "jsx": "react",
     "moduleResolution": "node",
     "rootDir": ".",
+    "noEmitOnError": false,
     "forceConsistentCasingInFileNames": false,
     "noImplicitReturns": false,
     "noImplicitThis": false,
@@ -26,14 +27,17 @@
     "downlevelIteration": true,
     "allowSyntheticDefaultImports": true,
     "paths": {
-      "@gantd/*": [
-        "packages/gantd/src/*"
+      "@gantd": [
+        "packages/gantd/src"
       ],
-      "@pkgs/*": [
-        "packages/*"
+      "@pkgs": [
+        "packages"
       ],
-      "@util-g/*": [
-        "packages/util-g/src/*"
+      "@util-g": [
+        "packages/util-g/src"
+      ],
+      "@color-picker": [
+        "packages/util-g/src"
       ],
     }
   },
@@ -41,6 +45,7 @@
     "packages/**/*",
   ],
   "exclude": [
+    "packages/data-cell-g",
     "node_modules",
     "dist",
     "stories"

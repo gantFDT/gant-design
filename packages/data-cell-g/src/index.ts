@@ -15,7 +15,7 @@ export { default as InputMoney } from './inputmoney';
 export { default as InputNumber } from './inputnumber'
 //picker
 export { default as DatePicker, RangePicker } from './datepicker'
-export { default as ColorPicker } from 'color-picker-g';
+export { default as ColorPicker } from '@color-picker';
 //selector
 export { default as Selector } from './selector';
 export { default as LocationSelector } from './locationselector';

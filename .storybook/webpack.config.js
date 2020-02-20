@@ -58,6 +58,7 @@ module.exports = async ({ config, mode }) => {
 				"@pkgs": path.resolve('packages'),
 				"@util-g": path.resolve('packages/util-g/src'),
 				"@gantd": path.resolve('packages/gantd/src'),
+				"@color-picker": path.resolve('packages/color-picker-g/src'),
 			}
 		},
 	})
