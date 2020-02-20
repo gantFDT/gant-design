@@ -1,6 +1,5 @@
-@import '../../gantd/src/style/index.less';
+@gant-prefix: gant;
 @blockheader-prefix-cls: ~'@{gant-prefix}-blockheader';
-
 
 .@{blockheader-prefix-cls} {
   width: 100%;
@@ -28,11 +27,6 @@
     margin-left: 5px;
     font-weight: bold;
     display: inline-block;
-    // flex: 1;
-    // smart功能有界面配置, 不能用overflow
-    // overflow: hidden;
-    // white-space: nowrap;
-    // text-overflow: ellipsis;
     position: relative;
     display: -webkit-box;
     -webkit-line-clamp: 1;
@@ -70,14 +64,6 @@
     border-radius: 3px;
   }
 
-  // &-extra {
-  //   float: right;
-
-  //   &>* {
-  //     margin: 5px;
-  //   }
-  // }
-
   &-beforeExtra {
     float: left;
 
@@ -114,12 +100,6 @@
   }
 
   .@{flex-group}-icon {
-    // width:30px;
-    // min-width:30px;
-    // position: absolute;
-    // top:0px;
-    // right:0px;
     margin-left: 5px;
-    // line-height: 30px;
   }
 }

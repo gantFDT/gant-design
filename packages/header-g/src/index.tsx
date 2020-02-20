@@ -1,11 +1,9 @@
 import './index.less';
-import React, { ReactNode, useRef, useState, useEffect, useMemo, useCallback, useContext } from 'react';
-import { ConfigContext } from '@gantd/config-provider';
+import React, { ReactNode, useRef, useState, useEffect, useMemo, useCallback } from 'react';
 import classnames from 'classnames'
-import { Dropdown, Menu, Button } from 'antd'
-import Icon from '@gantd/icon';
+import { Dropdown, Menu, Button, Icon } from 'antd';
 import ReactResizeDetector from 'react-resize-detector';
-import _ from 'lodash'
+import _ from 'lodash';
 
 export enum headerType {
   icon,
