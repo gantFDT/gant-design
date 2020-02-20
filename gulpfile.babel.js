@@ -66,6 +66,19 @@ const tstask = function (dirName) {
         declaration: true
       })
     )
+    .pipe(babel(babelConfig))
+    .pipe(
+      // 处理路径等问题
+      through2.obj(function (chunk, enc, next) {
+        let content = chunk.contents.toString()
+        content = content.replace(/\.less/g, '.css')
+        content = content.replace(/\.jsx/g, '.js')
+        const buf = Buffer.from(content)
+        chunk.contents = buf
+        this.push(chunk)
+        next()
+      })
+    )
     .pipe(dest(`packages/${dirName}/lib/`))
 
   src([`packages/${dirName}/src/*.tsx`, `packages/${dirName}/src/*.ts`])
@@ -175,5 +188,21 @@ const compileGantd = (cb) => {
 }
 
 const compile = parallel(compileGantd, ...jstasks, ...csstasks)
+
+exports.libHeader = function() {
+  tstask('header-g');
+  src(`packages/header-g/src/*.less`)
+    .pipe(dest(`packages/header-g/lib/`))
+
+  src(`packages/header-g/src/*.less`)
+    .pipe(less({
+      plugins: [
+        new LessNpm({ prefix: '~' })
+      ],
+      javascriptEnabled: true,
+    }))
+    .pipe(postcss([autoprefixer()]))
+    .pipe(dest(`packages/header-g/lib/`))
+}
 
 exports.default = series(clean, compile)
