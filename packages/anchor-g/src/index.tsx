@@ -153,25 +153,21 @@ const GantAnchor = (props) => {
   return (
     <>
       {stateMode == 'vertical' ?
-        <div className={classnames(className,`${prefixCls}-verticallayout`)} style={{...style}}>
-          <Layout>
-            <Layout.Content style={{}}>
-              <div style={{ padding: '0px', minHeight }}>
-                {content}
-              </div>
-            </Layout.Content>
-            <Layout.Sider className='gant-anchor-verticalbox' width={150} style={{ background: 'rgba(128,128,128,0.05)', paddingLeft: '20px', borderLeft: '1px solid rgba(128,128,128,0.1)', paddingTop: '20px' }}>
-              <Anchor className={`${prefixCls}-switcher`} offsetTop={100} onClick={(e) => { e.preventDefault() }}>
-                <Icon type="switcher" onClick={onSwitchClick} style={{ width: '100%', paddingRight: '10px', textAlign: 'right' }} />
-              </Anchor>
-              <Anchor offsetTop={120} onClick={(e) => { e.preventDefault() }} {...nextProps}>
-                {list.map(item => <Anchor.Link key={item.key || item.title} href={`#${item.id || item.title}`} title={<>{item.title}{item.complete ? <Icon type="check-circle" theme="twoTone" twoToneColor="#52c41a" style={{ paddingLeft: "5px" }} /> : null}</>} />)}
-              </Anchor>
-            </Layout.Sider>
-          </Layout>
+        <div className={classnames(className, `${prefixCls}-verticallayout`)} style={{ ...style }}>
+          <div style={{ padding: '0px', minHeight, width: 'calc(100% - 150px)' }}>
+            {content}
+          </div>
+          <div className='gant-anchor-verticalbox' style={{ width: 150, paddingLeft: '10px', paddingTop: '10px' }}>
+            <Anchor className={`${prefixCls}-switcher`} offsetTop={100} onClick={(e) => { e.preventDefault() }}>
+              <Icon type="switcher" onClick={onSwitchClick} style={{ width: '100%', paddingRight: '10px', textAlign: 'right' }} />
+            </Anchor>
+            <Anchor offsetTop={120} onClick={(e) => { e.preventDefault() }} {...nextProps}>
+              {list.map(item => <Anchor.Link key={item.key || item.title} href={`#${item.id || item.title}`} title={<>{item.title}{item.complete ? <Icon type="check-circle" theme="twoTone" twoToneColor="#52c41a" style={{ paddingLeft: "5px" }} /> : null}</>} />)}
+            </Anchor>
+          </div>
         </div>
         :
-        <div className={classnames(className,'gant-card-horizontalanchor')} style={{ padding: '0 0 10px', zIndex: 1, minHeight,...style }}>
+        <div className={classnames(className, 'gant-card-horizontalanchor')} style={{ padding: '0 0 10px', zIndex: 1, minHeight, ...style }}>
           <div className={`${prefixCls}-horAnchorOut`}>
             <div className={`gant-gantanchor`} id='anchorBoxId' style={{ zIndex: 1 }}>
               <Icon type="left" style={{ display: leftArrowsShow ? 'block' : 'none', float: 'left' }} className={`${prefixCls}-iconCss`} onClick={() => handleMobileTabs('left')} />

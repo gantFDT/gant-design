@@ -1,8 +1,3 @@
 body {
     background-color: transparent !important;
 }
-
-.gant-anchor-verticalbox.ant-layout-sider{
-    background:transparent!important;
-    border-left:none!important;
-}
