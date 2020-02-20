@@ -33,11 +33,12 @@ const titleStyle = {
     color: '#202020',
     background: '#fff',
     fontWeight: 'bold',
-    fontSize: '14px',
+    fontSize: '16px',
     borderRadius: '2px 2px 0 0',
 };
 const descriptionStyle = {
-    padding: '10px 24px',
+    padding: '24px 24px',
+    fontSize: '12px',
 };
 const collapseStyle = {
     borderTop: '1px dashed #ebedf0'
@@ -110,7 +111,8 @@ function CodeBox({ title = '标题', describe = '暂无描述', code, children }
                 </div>
                 <div style={metaStyle}>
                     {title && <div style={titleStyle}>{title}</div>}
-                    <div style={descriptionStyle}>{describe}</div>
+                    {/* <div style={descriptionStyle}>{describe}</div> */}
+                    <div style={descriptionStyle} dangerouslySetInnerHTML = {{ __html: describe }} />
                 </div>
                 {code && <Collapse bordered={false} style={collapseStyle} >
                     <Panel header='显示代码' style={{ borderBottom: 0 }} extra={genExtra()}>
