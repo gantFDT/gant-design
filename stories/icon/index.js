@@ -1,5 +1,6 @@
 
 import { Icon } from '@pkgs/gantd/src';
+// import {Icon} from 'antd'
 import React from 'react';
 import CodeDecorator from '../_util/CodeDecorator';
 import code from './code.js';
@@ -7,47 +8,24 @@ import code from './code.js';
 
 
 function BasicUse() {
-  return (
-    <Icon type="star" theme="filled"
-      style={{
-        color: '#333',
-        fontSize: '16px',
-        verticalAlign: 'text-bottom',
-        marginRight: '5px',
-        cursor: 'pointer'
-      }}
-    />
-  )
-}
-
-function CustomizeUse() {
-  const PartIcon = Icon.createFromIconfontCN('partIcon', {
+  Icon.updateFromIconfontCN({
     scriptUrl: '//at.alicdn.com/t/font_1252237_yp35yr9jf6.js'
   })
-  return (
-    <PartIcon type="icon-list-1"
-      style={{
-        color: '#FFC000', fontSize: '16px',
-        verticalAlign: 'text-bottom', marginRight: '5px', cursor: 'pointer'
-      }}
-    />
+  return (<>
+    <div style={{ fontSize: 24 }}>
+      <Icon type="icon-dashboard" />
+    </div>
+    <div style={{ fontSize: 24 }}>
+      <Icon type="home" />
+    </div>
+  </>
   )
 }
 
-function DyncmicIcon() {
-
-  setTimeout(() => {
-    Icon.updateFromIconfontCN({
-      scriptUrl: '//at.alicdn.com/t/font_1252237_yp35yr9jf6.js'
-    })
-  }, 5000)
-  return (
-    <Icon type="icon-list-2" />
-  )
-}
 
 const config = {
   codes: code.map(item => {
+
     return `
       import { Icon } from 'gantd';
       ReactDOM.render(
@@ -56,23 +34,16 @@ const config = {
       );
       `
   }),
-  useage: '语义化的矢量图形。',
+  useage: ` <b> 🙆🏻‍♂️ 默认支持渲染iconfont</b></br>
+    在我们的项目中，由于Ant自带的icon不能满足需求，我们大多数情况是借助iconfont</br>
+    而我们数据统一渲染，不知道后端返回的icon数据是ant的还是iconfont, 我们不可能在业务代码中去判断渲染哪种Icon组件</br>
+    故封装了一层`,
   children: [
     {
-      title: '基本用法',
-      describe: '最简单的用法',
+      title: '支持渲染iconfont',
+      describe: '可以同时支持渲染iconfont或者anticon,减少业务层的逻辑',
       cmp: BasicUse
-    },
-    {
-      title: '自定义用法',
-      describe: '获取自定义图标的方法，key会挂载到Icon上，可以直接通过Icon.Key获取组件',
-      cmp: CustomizeUse
-    },
-    {
-      title: '动态更新图标库',
-      describe: '在使用图标期间，通过updateFromIconfontCN方法更新使用到的图标',
-      cmp: DyncmicIcon
-    },
+    }
   ]
 };
 
