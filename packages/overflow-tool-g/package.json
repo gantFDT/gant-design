@@ -1,6 +1,6 @@
 {
   "name": "overflow-tool-g",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "gantd overflow-tool",
   "main": "overflowtool/index.js",
   "scripts": {},
