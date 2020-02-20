@@ -1,7 +1,7 @@
 import './index.less';
 import React, { ReactNode, useRef, useState, useEffect, useMemo, useCallback } from 'react';
 import classnames from 'classnames'
-import { Dropdown, Menu, Button, Icon } from 'antd'
+import { Dropdown, Menu, Button, Icon } from 'antd';
 import ReactResizeDetector from 'react-resize-detector';
 import _ from 'lodash';
 
