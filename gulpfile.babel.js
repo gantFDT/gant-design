@@ -61,6 +61,7 @@ const tstask = function (dirName) {
   src([`packages/${dirName}/src/*.tsx`, `packages/${dirName}/src/*.ts`])
     .pipe(
       ts({
+        "target": 'es6',
         "sourceMap": true,
         "allowJs": true,
         "jsx": "react",
@@ -179,7 +180,7 @@ const compileGantd = (cb) => {
 
 const compile = parallel(compileGantd, ...jstasks, ...csstasks)
 
-exports.libHeader = function() {
+exports.libHeader = function(cb) {
   rimraf.sync(path.resolve(__dirname, 'packages/header-g/lib/'))
   
   tstask('header-g');
@@ -195,6 +196,8 @@ exports.libHeader = function() {
     }))
     .pipe(postcss([autoprefixer()]))
     .pipe(dest(`packages/header-g/lib/`))
+
+  cb();
 }
 
 exports.default = series(clean, compile)

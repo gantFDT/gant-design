@@ -53,5 +53,6 @@
     "webpack-filter-warnings-plugin": "^1.2.1",
     "webpack-merge": "^4.2.1",
     "webpackbar": "^3.2.0"
-  }
+  },
+  "gitHead": "51919092898c02c86cf7ed262993496e8d5b3652"
 }
