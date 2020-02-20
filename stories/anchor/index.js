@@ -72,11 +72,11 @@ function BasicUse() {
   const style = {
     display: 'flex',
     justifyContent: 'center',
-    alignItems:'center',
+    alignItems: 'center',
     height: 400,
-    fontSize:24,
-    width:'100%',
-    border:'1px solid rgba(128,128,128,0.1)'
+    fontSize: 24,
+    width: '100%',
+    border: '1px solid rgba(128,128,128,0.1)'
   }
   return (
     <>
@@ -98,6 +98,7 @@ function BasicUse() {
 const config = {
   codes: [code],
   useage: '用于给区域加锚点',
+  showAnchor: false,
   children: [
     {
       title: '基本用法',
