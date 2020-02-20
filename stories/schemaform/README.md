@@ -27,7 +27,7 @@ Schema
 | items                | 该对应的属性字段分别对应一个schema结构                         | object                     |              |
 | options              | field-form效验规则文档                                         | object                     |              |
 | props                | field属性上的值                                                | any                        |
-| denpendencies        | 依赖项，当依赖项发生改变的时候，会触发onDependenciesChange回调 | Array<string>              |              |
+| denpendencies        | 依赖项，当依赖项发生改变的时候，会触发onDependenciesChange回调 | string[]                   |              |
 | onDependenciesChange | 依赖项，当依赖项发生改变的时候，会触发onDependenciesChange回调 | (value, props, form)=>void |              |
 
 
