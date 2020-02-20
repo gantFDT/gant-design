@@ -53,17 +53,7 @@ const codePenStyle = {
     border: 0,
     cursor: 'pointer'
 }
-const mainContainer = {
-    position: 'relative',
-    paddingRight: 170
-}
 
-//anchor
-const topAffix = {
-    position: 'absolute',
-    top: 8,
-    right: 20
-}
 const getCodePenStr = (title, description, code) => {
     code = code
         .replace(/import\s?ReactDom\s?from\s?['|"]react-dom['|"];?/, '')

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Input, Button, Radio, Icon, Tooltip, Avatar } from 'antd';
-import {TaskBoard} from '@pkgs/gantd/src';
+import { TaskBoard } from '@pkgs/gantd/src';
 import CodeDecorator from '../_util/CodeDecorator';
 import code from './code';
 import _ from 'lodash';
@@ -95,9 +95,7 @@ function HightLightUse() {
         <div>
             <Search
                 placeholder="输入关键字"
-                onSearch={(value) => {
-                    setKeyWords(value);
-                }}
+                onSearch={(value) => setKeyWords(value)}
                 style={{ width: 600 }}
             />
             <TaskBoard
