@@ -1,14 +1,15 @@
 import 'antd/dist/antd.css';
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { Card, Collapse, Icon, Tooltip, Row, Col } from 'antd';
 import { ConfigProvider } from '@gantd';
+import Anchor from '@pkgs/anchor-g/src';
 import zhCN from '@gantd/locale/zh_CN';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { githubGist } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { version } from '../../package.json';
 const Panel = Collapse.Panel;
-console.log('version', version)
+// console.log('version', version)
 
 const headerStyle = {
     fontSize: 24,
@@ -51,60 +52,71 @@ const codePenStyle = {
     border: 0,
     cursor: 'pointer'
 }
+const mainContainer = {
+    position: 'relative',
+    paddingRight: 170
+}
+
+//anchor
+const topAffix = {
+    position: 'absolute',
+    top: 8,
+    right: 20
+}
 const getCodePenStr = (title, description, code) => {
     code = code
-      .replace(/import\s?ReactDom\s?from\s?['|"]react-dom['|"];?/, '')
-      .replace(/import\s?React\s?from\s?['|"]react['|"];?/, '')
-      .replace(/import\s?{(.*)\}\s?from\s?['|"](\w+)['|"]/g, 'const {$1} = $2')
-      .replace(/import\s?.*\{(.*)\}\s?from\s?['|"]react['|"]/, 'const {$1} = React');
+        .replace(/import\s?ReactDom\s?from\s?['|"]react-dom['|"];?/, '')
+        .replace(/import\s?React\s?from\s?['|"]react['|"];?/, '')
+        .replace(/import\s?{(.*)\}\s?from\s?['|"](\w+)['|"]/g, 'const {$1} = $2')
+        .replace(/import\s?.*\{(.*)\}\s?from\s?['|"]react['|"]/, 'const {$1} = React');
 
     const codePenData = {
-      title: `${title} - Gant Design Demo`,
-      description,
-      html: `<div id="container" style="padding: 24px"></div>\n<script>var mountNode = document.getElementById('container');</script>`,
-      js: code,
-      css: `@import 'antd/dist/antd.css';\n@import 'gantd/dist/gantd.css';`,
-      editors: "001",
-      css_external: `https://unpkg.com/antd/dist/antd.css;https://unpkg.com/gantd@${version}/dist/gantd.css`,
-      js_external: `https://unpkg.com/react@16.x/umd/react.development.js;https://unpkg.com/react-dom@16.x/umd/react-dom.development.js;https://unpkg.com/moment/min/moment-with-locales.js;https://unpkg.com/antd/dist/antd-with-locales.js;https://unpkg.com/react-router-dom/umd/react-router-dom.min.js;https://unpkg.com/react-router@3.x/umd/ReactRouter.min.js;https://unpkg.com/gantd@${version}/dist/gantd.js`,
-      js_pre_processor: "typescript"
+        title: `${title} - Gant Design Demo`,
+        description,
+        html: `<div id="container" style="padding: 24px"></div>\n<script>var mountNode = document.getElementById('container');</script>`,
+        js: code,
+        css: `@import 'antd/dist/antd.css';\n@import 'gantd/dist/gantd.css';`,
+        editors: "001",
+        css_external: `https://unpkg.com/antd/dist/antd.css;https://unpkg.com/gantd@${version}/dist/gantd.css`,
+        js_external: `https://unpkg.com/react@16.x/umd/react.development.js;https://unpkg.com/react-dom@16.x/umd/react-dom.development.js;https://unpkg.com/moment/min/moment-with-locales.js;https://unpkg.com/antd/dist/antd-with-locales.js;https://unpkg.com/react-router-dom/umd/react-router-dom.min.js;https://unpkg.com/react-router@3.x/umd/ReactRouter.min.js;https://unpkg.com/gantd@${version}/dist/gantd.js`,
+        js_pre_processor: "typescript"
     }
 
     return JSON.stringify(codePenData);
 }
-function CodeBox({ title = '标题', describe = '暂无描述', code, children }) {
+function CodeBox({ id, title = '标题', isActive, describe = '暂无描述', code, children }) {
     const [copy, setCopy] = useState(false);
 
     function genExtra() {
         return <>
-          <Tooltip
-              title="在 CodePen 中打开"
-          >
-            <form action="https://codepen.io/pen/define" style={{display: 'inline-block', verticalAlign: 'sub', marginRight: 8}} method="POST" target="_blank">
-              <input type="hidden" name="data" value={getCodePenStr(title, describe, code)}/>
-              <input type="submit" style={codePenStyle}  value="codePen"/>
-            </form>
-          </Tooltip>
-          <CopyToClipboard text={code}
-              onCopy={() => { setCopy(true) }}>
-              <Tooltip
-                  title={copy ? '复制成功' : '复制代码'}
-                  onVisibleChange={(visible) => {
-                      !visible && copy && (setCopy(false))
-                  }}
-              >
-                  <Icon
-                      style={{ color: copy ? '#52c41a' : '#697b8c' }}
-                      type={copy ? 'check' : 'snippets'}
-                      onClick={event => { event.stopPropagation() }}
-                  />
-              </Tooltip>
-          </CopyToClipboard>
+            <Tooltip
+                title="在 CodePen 中打开"
+            >
+                <form action="https://codepen.io/pen/define" style={{ display: 'inline-block', verticalAlign: 'sub', marginRight: 8 }} method="POST" target="_blank">
+                    <input type="hidden" name="data" value={getCodePenStr(title, describe, code)} />
+                    <input type="submit" style={codePenStyle} value="codePen" />
+                </form>
+            </Tooltip>
+            <CopyToClipboard text={code}
+                onCopy={() => { setCopy(true) }}>
+                <Tooltip
+                    title={copy ? '复制成功' : '复制代码'}
+                    onVisibleChange={(visible) => {
+                        !visible && copy && (setCopy(false))
+                    }}
+                >
+                    <Icon
+                        style={{ color: copy ? '#52c41a' : '#697b8c' }}
+                        type={copy ? 'check' : 'snippets'}
+                        onClick={event => { event.stopPropagation() }}
+                    />
+                </Tooltip>
+            </CopyToClipboard>
         </>
     }
     return (
         <>
-            <Card bodyStyle={{ padding: 0 }} style={cardStyle}>
+            <Card id={id} bodyStyle={{ padding: 0 }} style={{ ...cardStyle, border: isActive ? '1px solid #1890ff' : null }}>
                 <div style={wrapperStyle}>
                     {children}
                 </div>
@@ -129,36 +141,55 @@ function CodeBox({ title = '标题', describe = '暂无描述', code, children }
 */
 export default ({ config }) => {
     if (!config) return null;
-    const { useage, inline, codes = [], children } = config;
-    let elements = children.map((item, key) => {
-        const Comp = item.cmp;
-        return < CodeBox
-            key={key}
-            title={item.title}
-            describe={item.describe}
-            code={codes[key]}
-        >
-            <Comp />
-        </CodeBox>
-    });
+
+    const [currentAnchor, setCurrentAnchor] = useState(null);
+    const { useage, inline, codes = [], children, showAnchor = true } = config;
+    let anchors = [];
+
+    const onAnchorClick = useCallback((e, { href }) => {
+        e.stopPropagation();
+        e.preventDefault();
+        href && setCurrentAnchor(href);
+    }, [])
+
+    const elements = useMemo(() => {
+        return children.map(({ title, describe, cmp: Comp }, key) => {
+            let id = `demo_${key}`;
+            anchors.push({ id: id, title });
+            return <CodeBox
+                id={id}
+                key={key}
+                title={title}
+                describe={describe}
+                code={codes[key]}
+                isActive={`#${id}` == currentAnchor}
+            >
+                <Comp />
+            </CodeBox>
+        });
+    }, [codes, children, currentAnchor])
+
+    const demos = useMemo(() => {
+        return <>
+            {inline ? <Row gutter={20}>
+                <Col span={12}>{elements.filter((el, index) => ++index % 2 != 0)}</Col>
+                <Col span={12}>{elements.filter((el, index) => ++index % 2 == 0)}</Col>
+            </Row> : elements}
+        </>
+    }, [inline, elements])
+
     return (
-      <ConfigProvider locale={zhCN}>
-        <>
+        <ConfigProvider locale={zhCN}>
             {useage && <div>
                 <h2 style={headerStyle}>何时使用</h2>
                 <div>{useage}</div>
             </div>}
             <h2 style={headerStyle}>代码演示</h2>
-            {inline ? <Row gutter={20}>
-                <Col span={12}>
-                    {elements.filter((el, index) => { return ++index % 2 != 0 })}
-                </Col>
-                <Col span={12}>
-                    {elements.filter((el, index) => { return ++index % 2 == 0 })}
-                </Col>
-            </Row>
-                : elements}
-        </>
-      </ConfigProvider> 
+            {showAnchor ? <Anchor
+                list={anchors}
+                onClick={onAnchorClick}
+                content={demos}
+            /> : demos}
+        </ConfigProvider>
     )
 }
