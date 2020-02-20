@@ -158,10 +158,10 @@ const GantAnchor = (props) => {
             {content}
           </div>
           <div className='gant-anchor-verticalbox' style={{ width: 150, paddingLeft: '10px', paddingTop: '10px' }}>
-            <Anchor className={`${prefixCls}-switcher`} offsetTop={100} onClick={(e) => { e.preventDefault() }}>
+            <Anchor className={`${prefixCls}-switcher`} offsetTop={10} onClick={(e) => { e.preventDefault() }}>
               <Icon type="switcher" onClick={onSwitchClick} style={{ width: '100%', paddingRight: '10px', textAlign: 'right' }} />
             </Anchor>
-            <Anchor offsetTop={120} onClick={(e) => { e.preventDefault() }} {...nextProps}>
+            <Anchor offsetTop={28} onClick={(e) => { e.preventDefault() }} {...nextProps}>
               {list.map(item => <Anchor.Link key={item.key || item.title} href={`#${item.id || item.title}`} title={<>{item.title}{item.complete ? <Icon type="check-circle" theme="twoTone" twoToneColor="#52c41a" style={{ paddingLeft: "5px" }} /> : null}</>} />)}
             </Anchor>
           </div>
