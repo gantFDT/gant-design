@@ -60,6 +60,8 @@ export default function SchemaForm(props: SchemaFormProps) {
 		const filedEdit = getEdit(edit, pathName)
 		//处理header
 		const titleSchema = getTitle(titleConfig, pathName)
+		const { visible, id: titleSchemaId, ...restTitleSchema } = titleSchema
+
 		const contents = orderKeys.map(itemName => {
 			const item = propertyType[itemName]
 			const itemPathName = pathName ? `${pathName}.${itemName}` : itemName
@@ -71,7 +73,7 @@ export default function SchemaForm(props: SchemaFormProps) {
 		return <div className={classnames(`${prefixCls}-schemaCard`, filedEdit === EditStatus.EDIT && `${prefixCls}-showRequiredMark`)}
 			key={pathName}
 			style={{ padding: padding, backgroundColor: containerColor }}>
-			{(pathName ? titleSchema.visible : title) && <Header title={title} style={{ marginBottom: 16 }} {...titleSchema} id={titleSchema.id ? titleSchema.id : id} />}
+			{(pathName ? visible : title) && <Header title={title} style={{ marginBottom: 16 }} {...restTitleSchema} id={titleSchemaId ? titleSchemaId : id} />}
 			<Row gutter={gutter}>{contents}</Row>
 		</div>
 	}, [schema, edit, titleConfig, uiSchema])

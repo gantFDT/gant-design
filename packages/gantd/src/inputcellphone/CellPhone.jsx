@@ -88,8 +88,9 @@ class CellPhone extends Component {
   }
 
   render() {
+    const { validateValue, onEnter, ...restProps } = this.props
     return (
-      <AntInput {...this.props} onKeyDown={this.onKeyDown} onChange={this.onChange} />
+      <AntInput {...restProps} onKeyDown={this.onKeyDown} onChange={this.onChange} />
     );
   }
 }
