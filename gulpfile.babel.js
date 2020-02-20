@@ -61,9 +61,21 @@ const tstask = function (dirName) {
   src([`packages/${dirName}/src/*.tsx`, `packages/${dirName}/src/*.ts`])
     .pipe(
       ts({
-        allowJs: false,
-        target: 'ES5',
-        declaration: true
+        "sourceMap": true,
+        "allowJs": true,
+        "jsx": "react",
+        "forceConsistentCasingInFileNames": false,
+        "noImplicitReturns": false,
+        "noImplicitThis": false,
+        "noImplicitAny": false,
+        "noUnusedLocals": false,
+        "noUnusedParameters": false,
+        "strictNullChecks": false,
+        "importHelpers": true,
+        "suppressImplicitAnyIndexErrors": true,
+        "experimentalDecorators": true,
+        "downlevelIteration": true,
+        "allowSyntheticDefaultImports": true,
       })
     )
     .pipe(babel(babelConfig))
@@ -80,28 +92,6 @@ const tstask = function (dirName) {
       })
     )
     .pipe(dest(`packages/${dirName}/lib/`))
-
-  src([`packages/${dirName}/src/*.tsx`, `packages/${dirName}/src/*.ts`])
-    .pipe(
-      ts({
-        allowJs: false,
-        target: 'ES5',
-        declaration: true
-      })
-    )
-    .pipe(dest(`packages/${dirName}/lib/`))
-    .pipe(
-      through2.obj(function (chunk, enc, next) {
-        let content = chunk.contents.toString()
-        content = content.replace(/\.\.\/\.\.\/gantd\/src/g, '..')
-        content = content.replace(/\.\.\/\.\.\/util\-g\/src/g, '../util')
-        const buf = Buffer.from(content)
-        chunk.contents = buf
-        this.push(chunk)
-        next()
-      })
-    )
-    .pipe(dest(`packages/gantd/lib/${dirName.slice(0, -2).replace(/\-/g,'')}/`))
 }
 
 const jstasks = pkgs.map(pkg => cb => {
@@ -190,6 +180,8 @@ const compileGantd = (cb) => {
 const compile = parallel(compileGantd, ...jstasks, ...csstasks)
 
 exports.libHeader = function() {
+  rimraf.sync(path.resolve(__dirname, 'packages/header-g/lib/'))
+  
   tstask('header-g');
   src(`packages/header-g/src/*.less`)
     .pipe(dest(`packages/header-g/lib/`))
