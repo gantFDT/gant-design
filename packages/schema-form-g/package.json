@@ -2,7 +2,7 @@
     "name": "schema-form-g",
     "version": "0.0.20",
     "description": "gantd schemaform",
-    "main": "dist/schemaform.js",
+    "main": "lib/index.js",
     "scripts": {},
     "keywords": [
         "React",

@@ -2,7 +2,7 @@
     "name": "modal-g",
     "version": "0.0.17",
     "description": "gantd modal",
-    "main": "dist/modal.js",
+    "main": "lib/index.js",
     "scripts": {},
     "keywords": [
         "React",
@@ -15,6 +15,5 @@
     "dependencies": {
         "antd": "^3.26.5",
         "react": "^16.12.0"
-    },
-    "gitHead": "51919092898c02c86cf7ed262993496e8d5b3652"
+    }
 }

@@ -2,13 +2,12 @@
   "name": "util-g",
   "version": "0.0.17",
   "description": "Gant utilities.",
-  "main": "dist/util.js",
+  "main": "lib/index.js",
   "scripts": {},
   "keywords": [
     "modules",
     "util"
   ],
   "author": "GantFDT",
-  "license": "MIT",
-  "gitHead": "51919092898c02c86cf7ed262993496e8d5b3652"
+  "license": "MIT"
 }
