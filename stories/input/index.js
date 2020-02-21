@@ -45,15 +45,15 @@ ReactDOM.render(
           <Input placeholder='单行输入框' edit={edit} style={{ margin: '5px 0' }} />
           <TextArea placeholder='多行输入框' edit={edit} style={{ margin: '5px 0' }} />
           <Password placeholder='密码输入框' edit={edit} style={{ margin: '5px 0' }} />
-          <Search placeholder='搜索框' edit={edit} style={{ margin: '5px 0' }} />
+          {/* <Search placeholder='搜索框' edit={edit} style={{ margin: '5px 0' }} /> */}
         </>
       ))
     },
-    {
-      title: '可编辑',
-      describe: '读模式下通过value传入展示的值,strict属性可以让onChange自动过滤掉特殊字符，只保留数字，汉字和字母',
-      cmp: WrapperValue('文本')(({ value, setValue }) => <Input value={value} strict onChange={setValue} onSave={onSave} />)
-    },
+    // {
+    //   title: '可编辑',
+    //   describe: '读模式下通过value传入展示的值,strict属性可以让onChange自动过滤掉特殊字符，只保留数字，汉字和字母',
+    //   cmp: WrapperValue('文本')(({ value, setValue }) => <Input value={value} strict onChange={setValue} onSave={onSave} />)
+    // },
     {
       title: '多行文本',
       describe: '',

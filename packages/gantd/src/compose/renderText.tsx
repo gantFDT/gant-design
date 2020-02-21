@@ -8,7 +8,7 @@ import { Icon } from 'antd'
 import './index.less'
 import { ConfigConsumer, ConfigConsumerProps } from '../config-provider'
 import EditStatus from './editstatus'
-
+import classnames from 'classnames'
 
 const emptyText = '暂无'
 
@@ -19,7 +19,7 @@ export type GetText<P> = (p: P) => any
 
 const renderText = <P extends any>(getText: GetText<P>) => (props) => {
 
-  const { setEdit, allowEdit, style, placeholder } = props
+  const { setEdit, allowEdit, style, placeholder, className } = props
 
   const TextNode = React.memo<ConfigConsumerProps>(({ getPrefixCls }) => {
     // let Textextde = null
@@ -56,7 +56,7 @@ const renderText = <P extends any>(getText: GetText<P>) => (props) => {
     <ConfigConsumer>
       {
         ({ getPrefixCls }) => (
-          <div className={getPrefixCls('compose-readWrapper')} style={{ width: get(style, 'width', '100%') }}>
+          <div className={classnames(getPrefixCls('compose-readWrapper'),className)} style={{ ...style,width: get(style, 'width', '100%') }}>
             <TextNode getPrefixCls={getPrefixCls} />
             <Pen getPrefixCls={getPrefixCls} />
           </div>
