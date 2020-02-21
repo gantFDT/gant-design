@@ -58,7 +58,6 @@ export { default as Toolbar } from './toolbar'
 
 
 //废弃
-export { default as OverflowTool } from '@packages/overflow-tool-g/src';
 export { default as VisibleMenu } from './visiblemenu';
 export { default as ProfileCard } from './profilecard'
 export { default as Exception } from './exception';
