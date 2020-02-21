@@ -7,6 +7,8 @@ import { Schema } from './interface'
 import { get, findIndex } from 'lodash'
 import { getFields } from './maps'
 
+const tr = (str) => str;
+
 const SchemaField = (props: Schema) => {
 	const { options, title, props: FiledProps, componentType, name, isRequired, initialValue: defaultValue, required, edit, uiData } = props
 	const { form: { getFieldDecorator, resetFields, validateFieldsAndScroll, }, onSave, data, customFields, emitDependenciesChange, locale, prefixCls } = useContext(FormContext)
@@ -64,7 +66,7 @@ const SchemaField = (props: Schema) => {
 					...options,
 					rules: [{
 						required: typeof required === "boolean" ? required : isRequired,
-						message: `${title}${locale.required}`
+						message: `${title}${tr("不能为空")}`
 					},
 					...optionsRules
 					]
