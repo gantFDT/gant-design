@@ -7,8 +7,6 @@ import _SchemaForm from './SchemaForm'
 import { isEmpty, isEqual } from 'lodash'
 import { Props, Context } from './interface'
 import classnames from 'classnames'
-import defaultLocale from '@gantd/locale/default'
-import { ConfigContext } from '@gantd/config-provider'
 import dependencies, { Inner, findDependencies, refHoc } from './compose'
 import { getNewValue, getDateToForm } from './utils'
 export const FormContext = React.createContext({} as Context)
@@ -62,25 +60,20 @@ class SchemaForm extends React.Component<Props>{
 			backgroundColor,
 			className,
 			emitDependenciesChange,
-			locale: customLocale,
-			prefixCls: customizePrefixCls,
+			prefixCls: customizePrefixCls = 'gant',
 		} = this.props
 
 		if (isEmpty(schema)) {
 			console.warn('schema is null')
 			return null
 		}
-		return <ConfigContext.Consumer>
-			{({ locale: contextLocale = defaultLocale, getPrefixCls }) => {
-				const locale = customLocale || contextLocale.SchemaForm
-				const prefixCls = getPrefixCls('schemaform', customizePrefixCls)
-				return <FormContext.Provider value={{ form, edit, onSave, data, customFields, emitDependenciesChange, locale, prefixCls }} >
-					<div className={classnames(className)} style={{ backgroundColor }} >
-						<_SchemaForm schema={schema} uiSchema={uiSchema} titleConfig={titleConfig} />
-					</div>
-				</FormContext.Provider>
-			}}
-		</ConfigContext.Consumer>
+    const prefixCls = customizePrefixCls + 'schemaform';
+
+    return <FormContext.Provider value={{ form, edit, onSave, data, customFields, emitDependenciesChange, prefixCls }} >
+      <div className={classnames(className)} style={{ backgroundColor }} >
+        <_SchemaForm schema={schema} uiSchema={uiSchema} titleConfig={titleConfig} />
+      </div>
+    </FormContext.Provider>
 	}
 }
 

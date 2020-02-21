@@ -36,7 +36,7 @@ ReactDOM.render(<Demo />, mountNode)`),
     {
       title: '基本使用',
       describe: '固定电话基本格式',
-      cmp: WrapperValue('')(({ value, setValue }) => <InputTelePhone value={value} onChange={(v) => setValue(v)} onSave={onSave} />)
+      cmp: WrapperValue('7897897')(({ value, setValue }) => <InputTelePhone value={value} onChange={(v) => {console.log(v);setValue(v)}} onSave={onSave} />)
     },
     {
       title: '编辑受控',
