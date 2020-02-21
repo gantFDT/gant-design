@@ -2,7 +2,6 @@ import React, { ComponentClass, ReactNode } from 'react'
 import { compose, withHandlers, withState, mapProps } from 'recompose'
 import { Anchor, Layout, } from 'antd'
 import { memoize } from 'lodash'
-
 import { HandlerWithType } from './common'
 
 export interface AnchorType {
