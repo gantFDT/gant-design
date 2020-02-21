@@ -121,3 +121,4 @@ const uiSchema={
 针对不同项目可能出现不同或特定的field组件时，这就需要我们拓展FormSchema。
 
 ###### 使用customFields
+具体用法请查看示例(扩展自定义字段)。

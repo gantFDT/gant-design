@@ -64,28 +64,6 @@ const operateSchema = {
     }
 }
 
-const editStatusSchema = {
-    type: "object",
-    title: "可切换编辑状态的表单",
-    required: ["key_1"],
-    propertyType: {
-        key_1: {
-            title: "普通输入框",
-            type: "string",
-        },
-        key_2: {
-            title: "数字输入框",
-            type: "number",
-            componentType: "InputNumber"
-        },
-        key_3: {
-            title: "金额",
-            type: "string",
-            componentType: "InputMoney"
-        },
-    }
-}
-
 const configSchma = {
     type: "object",
     title: "配置普通表单",
@@ -188,7 +166,6 @@ const customCmpSchema = {
 export {
     schema,
     operateSchema,
-    editStatusSchema,
     configSchma,
     bindDataSchema,
     customCmpSchema

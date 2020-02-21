@@ -81,52 +81,50 @@ ReactDOM.render(<BasicUse/>,mountNode)
 
 const code2 = `
 import React, { useState, useRef } from 'react'
-import { Button, Radio } from 'antd'
+import { Button, Radio, Switch } from 'antd'
 import { FormSchema, EditStatus } from 'gantd'
 
-const schema = {
-    type: "object",
-    title: "可切换编辑状态的表单",
-    required: ["key_1"],
-    propertyType: {
-        key_1: {
-            title: "普通输入框",
-            type: "string",
-        },
-        key_2: {
-            title: "数字输入框",
-            type: "number",
-            componentType: "InputNumber"
-        },
-        key_3: {
-            title: "金额",
-            type: "string",
-            componentType: "InputMoney"
-        },
-    }
-}
-
-const initalUiSchema = {
+const uiSchema = {
     "ui:col": 24,
     "ui:gutter": 10,
     "ui:labelCol": 4,
     "ui:wrapperCol": 20,
-    "ui:labelAlign": "left",
-    "ui:padding": 10,
-    "ui:backgroundColor": "#fff"
 }
 
 function EditStatusUse() {
-    const uiSchema = {
-        "ui:col": 24,
-        "ui:gutter": 10,
-        "ui:labelCol": 4,
-        "ui:wrapperCol": 20,
-    }
+    const [allowEdit, setAllowEdit] = useState(true)
     const [edit, setEdit] = useState(EditStatus.EDIT)
     const [state, setState] = useState({})
     const formRef = useRef(null)
-    const onChange2 = (val, vals) => {
+
+    const schema = useMemo(() => {
+        return {
+            type: "object",
+            title: "可切换编辑状态的表单",
+            required: ["key_1"],
+            propertyType: {
+                key_1: {
+                    title: "普通输入框",
+                    type: "string",
+                    props: { allowEdit: allowEdit }
+                },
+                key_2: {
+                    title: "数字输入框",
+                    type: "number",
+                    componentType: "InputNumber",
+                    props: { allowEdit: allowEdit }
+                },
+                key_3: {
+                    title: "金额",
+                    type: "string",
+                    componentType: "InputMoney",
+                    props: { allowEdit: allowEdit }
+                },
+            }
+        }
+    }, [allowEdit])
+
+    const onChange = (val, vals) => {
         setState(vals)
     }
     const onSubmit = async () => {
@@ -136,10 +134,18 @@ function EditStatusUse() {
     }
     const titleConfig = {
         "title:extra": (
-            <Radio.Group size='small' onChange={(e) => setEdit(e.target.value)} value={edit}>
-                <Radio.Button value={EditStatus.EDIT}>写</Radio.Button>
-                <Radio.Button value={EditStatus.CANCEL}>读</Radio.Button>
-            </Radio.Group>
+            <>
+                <Switch
+                    checkedChildren="可编辑"
+                    unCheckedChildren="不可编辑"
+                    checked={allowEdit}
+                    onChange={(checked) => setAllowEdit(checked)}
+                />
+                <Radio.Group size='small' onChange={(e) => setEdit(e.target.value)} value={edit}>
+                    <Radio.Button value={EditStatus.EDIT}>写状态</Radio.Button>
+                    <Radio.Button value={EditStatus.CANCEL}>读状态</Radio.Button>
+                </Radio.Group>
+            </>
         )
     }
     return <div style={{ margin: 10 }}>
@@ -149,7 +155,7 @@ function EditStatusUse() {
             schema={schema}
             data={state}
             uiSchema={uiSchema}
-            onChange={onChange2}
+            onChange={onChange}
             titleConfig={titleConfig}
         />
         <div style={{ float: 'right' }}>
