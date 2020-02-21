@@ -1,7 +1,7 @@
 
 ##如何使用
 
-指定面板的数据源 dataSource 为一个数组。
+指定面板的数据源 dataSource 为一个包含标题、唯一标识、与子集内容的数组。
 
 ```jsx
 const dataSource = [
@@ -33,12 +33,12 @@ const dataSource = [
 
 | 属性             | 说明                             | 类型                       | 默认值                                                    |
 | ---------------- | -------------------------------- | -------------------------- | --------------------------------------------------------- |
-| dataSource       | 数据数组                         | array                      | []                                                        |
+| dataSource       | 数据数组，必填                   | array                      | []                                                        |
 | className        | taskboard类名                    | string                     | ' '                                                       |
-| idKey            | 数据标识字段                     | string                     | 'id'                                                      |
-| titleKey         | column标题字段                   | string                     | 'title'                                                   |
-| childrenKey      | tasks集合字段                    | string                     | 'name'                                                    |
-| taskNameKey      | task名称字段                     | string                     | 'id'                                                      |
+| idKey            | 数据标识字段Key                  | string                     | 'id'                                                      |
+| titleKey         | column标题字段Key                | string                     | 'title'                                                   |
+| childrenKey      | tasks集合字段Key                 | string                     | 'name'                                                    |
+| taskNameKey      | task名称字段Key                  | string                     | 'id'                                                      |
 | hideQuickAdd     | 是否隐藏快速新增按钮             | boolean                    | `false`                                                   |
 | handleAddBtn     | 点击快速新增按钮的函数回调       | (task) => void             | -                                                         |
 | hightLightWords  | task高亮关键字                   | string                     | ' '                                                       |
