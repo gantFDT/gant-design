@@ -1,7 +1,7 @@
 export default [
   `
   import React, { useState } from 'react';
-  import {InputCellPhone} from 'gantd';
+  import {InputLanguage} from 'gantd';
   
   const Demo = () => {
     const localeList = [
@@ -41,7 +41,7 @@ export default [
   
   `
   import React, { useState } from 'react';
-  import {InputCellPhone, SwitchStatus} from 'gantd';
+  import {InputLanguage, SwitchStatus} from 'gantd';
   
   const Demo = () => {
     const localeList = [
@@ -75,7 +75,7 @@ export default [
   
   `
   import React, { useState } from 'react';
-  import {InputCellPhone} from 'gantd';
+  import {InputLanguage} from 'gantd';
   
   const Demo = () => {
     const localeList = [

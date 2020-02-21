@@ -1,7 +1,7 @@
 export default [
 `
 import React, { useState } from 'react';
-import {InputCellPhone} from 'gantd';
+import {InputEmail} from 'gantd';
 
 const Demo = () => {
   const [value, setValue] = useState('18811012138@qq.com')
@@ -29,7 +29,7 @@ ReactDOM.render(
 
 `
 import React, { useState } from 'react';
-import {InputCellPhone, SwitchStatus} from 'gantd';
+import {InputEmail, SwitchStatus} from 'gantd';
 
 const Demo = () => {
   const [edit, setEdit] = useState('CANCEL')
@@ -50,7 +50,7 @@ ReactDOM.render(
 
 `
 import React, { useState } from 'react';
-import {InputCellPhone} from 'gantd';
+import {InputEmail} from 'gantd';
 
 const Demo = () => {
   const [value, setValue] = useState('18811012138@qq.com')

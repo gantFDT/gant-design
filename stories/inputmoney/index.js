@@ -1,54 +1,67 @@
-import React, { useState } from 'react'
+
+import { InputMoney,SwitchStatus } from '@packages/gantd/src'
+import React, { useState } from 'react';
 import { Button } from 'antd'
-import { InputMoney, SwitchStatus } from '@packages/gantd/src'
-import CodeDecorator from '../_util/CodeDecorator'
-import { WrapperValue, WrapperEdit, onSave } from '../_util/composeUseHooks'
+import codeList from './code'
+import CodeDecorator from '../_util/CodeDecorator';
 
 
-
-const codeList = [
-  `return <InputMoney />`,
-  `const [edit, setEdit] = useState(false)
-  return (
-          <>
-            <Button onClick={() => setEdit(SwitchStatus)} style={{ marginBottom: 10 }}>切换</Button>
-            <InputMoney edit={edit} />
-          </>
-        )`
+const cmps = [
+  () => {
+    const [value, setValue] = useState(99)
+    const onSave = (id, value, cb) => {
+      console.log(id, value);
+      cb()
+    }
+    return <>
+      <InputMoney placeholder='不可编辑' allowEdit={false}  value={99}/>
+      <InputMoney placeholder='可编辑' allowEdit={true} onSave={onSave} value={value} onChange={setValue} />
+    </>
+  },
+  () => {
+    const [edit, setEdit] = useState('CANCEL')
+    const [value, setValue] = useState(99)
+    return <>
+      <Button onClick={() => setEdit(SwitchStatus)} style={{ marginBottom: 5 }} size="small">{!(edit === 'EDIT') ? '进入编辑' : '退出编辑'}</Button>
+      <InputMoney placeholder='请输入' edit={edit} value={value} onChange={setValue} style={{ margin: '5px 0' }} />
+    </>
+  },
+  () => {
+    const [value, setValue] = useState('99')
+    const onSave = (id, value, cb) => {
+      console.log(id, value);
+      cb()
+    }
+    return <>
+      <InputMoney placeholder='请输入' allowEdit={true} value={value} onSave={onSave} onChange={setValue} />
+    </>
+  }
 ]
 
+
 const config = {
+  useage: `<b>🖍 读写分离</b></br>
+    <b>📨 数字校验</b>
+  `,
+  codes: codeList,
   inline: true,
-  codes: codeList.map(code =>
-    `import { Button } from 'antd';
-import { InputMoney, EditStatus, SwitchStatus } from 'gantd';
-import React, { useState } from 'react';
-
-function Demo(){
-  ${code}
-}
-
-ReactDOM.render(<Demo />, mountNode)`),
   children: [
     {
-      title: '基本使用',
-      describe: '',
-      cmp: WrapperValue('')(({ value, setValue }) => <InputMoney value={value} onChange={(v) => setValue(v)} onSave={onSave} />)
+      title: '是否可编辑',
+      describe: '在后面展示一个编辑按钮，通过修改allowEdit参数控制是否可以编辑，allowEdit默认true',
+      cmp: cmps[0]
     },
     {
-      title: '编辑受控',
-      describe: '',
-      cmp: WrapperEdit(({ edit, setEdit }) => {
-        return (
-          <>
-            <Button onClick={() => setEdit(SwitchStatus)} style={{ marginBottom: 10 }}>切换</Button>
-            <InputMoney edit={edit} />
-          </>
-        )
-      })
+      title: '编辑状态受控',
+      describe: '受其他组件控制展示的形态',
+      cmp: cmps[1]
     },
+    {
+      title: '校验',
+      describe: '非数字会被忽略',
+      cmp: cmps[2]
+    }
   ]
 }
-
 
 export default () => <CodeDecorator config={config} />
