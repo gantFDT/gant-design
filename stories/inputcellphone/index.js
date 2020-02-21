@@ -36,9 +36,12 @@ function Demo(){
 ReactDOM.render(<Demo />, mountNode)`
   )),
   inline: true,
+  useage: `<b>🖍 读写分离</b></br>
+    <b>📱 手机号校验</b>
+  `,
   children: [
     {
-      title: '基本用法',
+      title: '手机号校验',
       describe: '手机号码组件-只有正确的手机号码才能点击确认，目前只支持+86',
       cmp: WrapperValue('')(({ value, setValue }) => < InputCellPhone value={value} onChange={setValue} onSave={onSave} />)
     },
@@ -48,7 +51,7 @@ ReactDOM.render(<Demo />, mountNode)`
       cmp: WrapperValue('18811012138')(({ value, setValue }) => < InputCellPhone value={value} onChange={setValue} onSave={onSave} />)
     },
     {
-      title: '只展示',
+      title: '是否可编辑',
       describe: '组件同样支持edit与allowEdit',
       cmp: () => (
         <>
