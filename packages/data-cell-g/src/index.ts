@@ -1,6 +1,6 @@
-export { default as Icon } from './icon'
+export { default as Icon } from './icon';
 //读写分离
-export { default as withEdit } from './compose/withEdit'
+export { default as withEdit } from './compose/withEdit';
 export { default as EditStatus } from './compose/editstatus'
 export { default as SwitchStatus } from './compose/switchstatus'
 //数据单元
