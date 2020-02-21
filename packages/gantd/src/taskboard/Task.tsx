@@ -34,7 +34,7 @@ const Task = (props) => {
                     <div
                         className={prefixCls + '-task-container'}
                         style={{
-                            boxShadow: `${snapshot.isDragging && boxShadowColor}`,
+                            boxShadow: `${snapshot.isDragging ? boxShadowColor : ''}`,
                             opacity: hightLightWords && fn(hightLightWords, task) ? 0.4 : 1
                         }}
                     >
