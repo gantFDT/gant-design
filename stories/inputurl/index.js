@@ -40,7 +40,7 @@ const cmps = [
 
 const config = {
   useage: `<b>🖍 读写分离</b></br>
-    <b>📱 邮箱校验</b>
+    <b>🎈 超链接校验</b>
   `,
   codes: codeList,
   inline: true,
