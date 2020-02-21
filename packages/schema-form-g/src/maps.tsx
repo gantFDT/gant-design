@@ -4,7 +4,7 @@ import {
 	InputUrl as Url, InputEmail as Email, InputLanguage as Language,
 	ColorPicker, DatePicker, RangePicker,
 	Selector, LocationSelector, IconSelector
-} from '@gantd/index'
+} from '@data-cell'
 import { Switch, Checkbox, Radio, AutoComplete } from 'antd'
 const CheckboxGroup = Checkbox.Group
 const RadioGroup = Radio.Group

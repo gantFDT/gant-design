@@ -3,19 +3,7 @@ const path = require('path');
 const webpackMerge = require('webpack-merge');
 const babelConfig = require('../babelConfig');
 
-// Export a function. Accept the base config as the only param.
 module.exports = async ({ config, mode }) => {
-	// `mode` has a value of 'DEVELOPMENT' or 'PRODUCTION'
-	// Return the altered config
-	// config.module.rules.push({
-	// 	test: /\.less$/,
-	// 	use: ['style-loader', 'css-loader', 'less-loader'],
-	// 	include: path.resolve(__dirname, '../components'),
-	// });
-
-	// https://github.com/storybookjs/storybook/issues/6204
-
-
 	return webpackMerge(config, {
 		module: {
 			rules: [
@@ -55,10 +43,12 @@ module.exports = async ({ config, mode }) => {
       
 			extensions: [".js", ".ts", ".json", ".jsx", ".tsx"],
 			alias: {
-				"@pkgs": path.resolve('packages'),
-				"@util-g": path.resolve('packages/util-g/src'),
+				"@packages": path.resolve('packages'),
+				"@util": path.resolve('packages/util-g/src'),
 				"@gantd": path.resolve('packages/gantd/src'),
 				"@color-picker": path.resolve('packages/color-picker-g/src'),
+				"@data-cell": path.resolve('packages/data-cell-g/src'),
+				"@header": path.resolve('packages/header-g/src'),
 			}
 		},
 	})

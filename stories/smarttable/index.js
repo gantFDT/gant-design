@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import SmartTable from '@pkgs/smart-table-g/src'
+import SmartTable from '@packages/smart-table-g/src'
 import CodeDecorator from '../_util/CodeDecorator'
 import code from './code.js'
 

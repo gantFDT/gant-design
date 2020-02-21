@@ -1,7 +1,7 @@
 
 import React from 'react'
 import { Form } from 'antd'
-import { EditStatus } from '@gantd/compose'
+import { EditStatus } from '@data-cell'
 import { compose, withHandlers, renameProp } from 'recompose'
 import _SchemaForm from './SchemaForm'
 import { isEmpty, isEqual } from 'lodash'
@@ -62,6 +62,7 @@ class SchemaForm extends React.Component<Props>{
 			backgroundColor,
 			className,
 			emitDependenciesChange,
+			locale: customLocale,
 			prefixCls: customizePrefixCls,
 		} = this.props
 
@@ -71,8 +72,9 @@ class SchemaForm extends React.Component<Props>{
 		}
 		return <ConfigContext.Consumer>
 			{({ locale: contextLocale = defaultLocale, getPrefixCls }) => {
+				const locale = customLocale || contextLocale.SchemaForm
 				const prefixCls = getPrefixCls('schemaform', customizePrefixCls)
-				return <FormContext.Provider value={{ form, edit, onSave, data, customFields, emitDependenciesChange, prefixCls }} >
+				return <FormContext.Provider value={{ form, edit, onSave, data, customFields, emitDependenciesChange, locale, prefixCls }} >
 					<div className={classnames(className)} style={{ backgroundColor }} >
 						<_SchemaForm schema={schema} uiSchema={uiSchema} titleConfig={titleConfig} />
 					</div>

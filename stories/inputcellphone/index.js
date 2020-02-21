@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import CodeDecorator from '../_util/CodeDecorator';
 import { WrapperEdit, WrapperValue, onSave } from '../_util/composeUseHooks'
-import { InputCellPhone } from '@pkgs/gantd/src'
+import { InputCellPhone } from '@packages/gantd/src'
 
 
 const codeList = [

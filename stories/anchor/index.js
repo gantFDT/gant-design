@@ -1,7 +1,7 @@
 import React from 'react'
 // import {Card,Anchor } from '@'
 // import {Anchor} from '@';
-import Anchor from '@pkgs/anchor-g/src';
+import Anchor from '@packages/anchor-g/src';
 import CodeDecorator from '../_util/CodeDecorator'
 import { Button } from 'antd';
 

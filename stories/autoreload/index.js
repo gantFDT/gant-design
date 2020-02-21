@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import AutoReload from '@pkgs/auto-reload-g/src';
+import AutoReload from '@packages/auto-reload-g/src';
 import CodeDecorator from '../_util/CodeDecorator'
 import code from './code.js';
 

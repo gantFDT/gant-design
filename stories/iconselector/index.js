@@ -1,5 +1,5 @@
 
-import { IconSelector } from '@pkgs/gantd/src';
+import { IconSelector } from '@packages/gantd/src';
 import React from 'react';
 import CodeDecorator from '../_util/CodeDecorator';
 import code from './code.js';

@@ -6,7 +6,7 @@ import { Menu, Badge } from 'antd';
 import { ClickParam } from 'antd/lib/menu';
 import FlipOverFooter from './FlipOverFooter';
 import { ConfigContext } from '@gantd/config-provider';
-import Icon from '@gantd/icon';
+import { Icon } from '@data-cell';
 
 type menuItem = {
   title: string,

@@ -3,7 +3,7 @@ import React, { useCallback, ReactNode } from 'react'
 import { Icon, Tag, Tooltip, Popconfirm, Empty } from 'antd'
 import _ from 'lodash'
 import { UpdateViewProps, ViewType, DefaultView } from './index'
-import BlockHeader from '@pkgs/header-g/src'
+import BlockHeader from '@packages/header-g/src'
 
 interface PanelProps {
   locale: any

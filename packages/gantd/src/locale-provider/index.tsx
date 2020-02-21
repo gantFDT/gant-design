@@ -6,6 +6,7 @@ export interface Locale {
   AutoReload: any;
   SmartTable: any;
   Modal: any;
+  SchemaForm: any;
 }
 
 export interface LocaleProviderProps {

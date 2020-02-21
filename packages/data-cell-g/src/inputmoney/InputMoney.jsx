@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Select } from 'antd';
 import { isNumber, isNil } from 'lodash'
 import numeral from 'numeral'
-import proptypes from 'prop-types'
 import { compose, defaultProps, withProps, withState } from 'recompose'
 
 import { withEdit } from '../compose'

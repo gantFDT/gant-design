@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Button } from 'antd'
-import { InputLanguage, SwitchStatus } from '@pkgs/gantd/src'
+import { InputLanguage, SwitchStatus } from '@packages/gantd/src'
 import CodeDecorator from '../_util/CodeDecorator'
 import { WrapperValue, WrapperEdit, onSave } from '../_util/composeUseHooks'
 

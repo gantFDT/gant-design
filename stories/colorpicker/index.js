@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ColorPicker from '@pkgs/color-picker-g/src';
+import ColorPicker from '@packages/color-picker-g/src';
 import CodeDecorator from '../_util/CodeDecorator'
 import code from './code.js';
 

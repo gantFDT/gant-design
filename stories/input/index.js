@@ -1,6 +1,6 @@
 
+import { Input, TextArea, Password, SwitchStatus } from '@packages/gantd/src'
 import React, { useState } from 'react';
-import { Input, TextArea, Password, SwitchStatus } from '@pkgs/gantd/src'
 import { Button } from 'antd'
 import codeList from './code'
 import CodeDecorator from '../_util/CodeDecorator';

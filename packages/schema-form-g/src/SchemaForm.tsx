@@ -1,5 +1,6 @@
 import React, { useCallback, useContext } from 'react'
-import { Header, EditStatus } from '@gantd/index'
+import Header from '@header'
+import { EditStatus } from '@data-cell'
 import { Form, Row } from 'antd'
 import { Schema, UISchema, TitleSchema } from './interface'
 import { FormContext } from './index'
@@ -16,7 +17,8 @@ interface SchemaFormProps {
 }
 export default function SchemaForm(props: SchemaFormProps) {
 	const { uiSchema, schema, titleConfig } = props
-	const { edit, prefixCls, form: { getFieldDecorator }, data } = useContext(FormContext)
+	const { edit, prefixCls } = useContext(FormContext)
+
 	const renderPropTypeContent: any = useCallback((item: Schema, pathName: string, required: string[]) => {
 		const { type, hide } = item
 		switch (type) {
@@ -42,6 +44,7 @@ export default function SchemaForm(props: SchemaFormProps) {
 					edit={filedEdit} />
 		}
 	}, [uiSchema, schema, edit])
+
 	const renderContent = useCallback((pathName?: string) => {
 		let schemaData = schema
 		if (pathName) {
@@ -50,7 +53,7 @@ export default function SchemaForm(props: SchemaFormProps) {
 			schemaData = get(schema, `propertyType.${getName}`)
 		}
 		const { orders, gutter, backgroundColor, padding } = getUIData(uiSchema, pathName)
-		const { propertyType, required, title, type } = schemaData
+		const { propertyType, required, title } = schemaData
 
 		if (isEmpty(propertyType)) return null
 		const propertyTypeArray = Object.keys(propertyType)

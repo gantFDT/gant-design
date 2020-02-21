@@ -1,8 +1,7 @@
 import React, { Component, forwardRef, useState, useContext, useCallback, useEffect, useMemo } from 'react';
 import classnames from 'classnames'
 import _ from 'lodash'
-import EditStatus from '@gantd/compose/editstatus'
-import SwitchStatus from '@gantd/compose/switchstatus'
+import { EditStatus, SwitchStatus } from '@data-cell'
 import { ConfigConsumer } from '@gantd/config-provider'
 import { DataContext, RowContext } from './context'
 

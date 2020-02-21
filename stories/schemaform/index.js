@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react'
-import { Button, Switch, Radio, Rate } from 'antd'
-import { EditStatus, SwitchStatus } from '@pkgs/gantd/src/index'
-import FormSchema from '@pkgs/schema-form-g/src'
+import React, { useState, useMemo, useRef } from 'react'
+import { Button, Radio, Rate } from 'antd'
+import { EditStatus } from '@packages/gantd/src/index'
+import FormSchema from '@packages/schema-form-g/src'
 import { schema, operateSchema, editStatusSchema, configSchma, bindDataSchema, customCmpSchema } from './schema'
 import CodeDecorator from '../_util/CodeDecorator'
 import code from './code.js'
@@ -48,7 +48,7 @@ function EditStatusUse() {
     const [edit, setEdit] = useState(EditStatus.EDIT)
     const [state, setState] = useState({})
     const formRef = useRef(null)
-    const onChange2 = (val, vals) => {
+    const onChange = (val, vals) => {
         setState(vals)
     }
     const onSubmit = async () => {
@@ -71,7 +71,7 @@ function EditStatusUse() {
             schema={editStatusSchema}
             data={state}
             uiSchema={uiSchema}
-            onChange={onChange2}
+            onChange={onChange}
             titleConfig={titleConfig}
         />
         <div style={{ float: 'right' }}>
@@ -187,7 +187,7 @@ function GridLayout() {
     </div>
 }
 
-function bindData() {
+function BindData() {
     const [data, setData] = useState({ key_1: '1', key_2: '2' })
     const formRef = useRef(null)
 
@@ -213,7 +213,7 @@ function bindData() {
         </div>
     </div>
 }
-function dependenceData() {
+function DependenceData() {
     const dependenceSchema = {
         type: "object",
         title: "依赖关系",
@@ -240,7 +240,7 @@ function dependenceData() {
     </div>
 }
 
-function customCmp() {
+function CustomCmp() {
 
     return <div style={{ margin: 10 }}>
         <FormSchema
@@ -292,17 +292,17 @@ const config = {
         {
             title: '数据双向绑定',
             describe: '',
-            cmp: bindData
+            cmp: BindData
         },
         {
             title: '前置依赖',
             describe: '',
-            cmp: dependenceData
+            cmp: DependenceData
         },
         {
             title: '扩展自定义字段',
             describe: '',
-            cmp: customCmp
+            cmp: CustomCmp
         },
     ]
 };
