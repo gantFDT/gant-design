@@ -1,6 +1,6 @@
 {
   "name": "submenu-g",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "description": "Container component for page-level menu",
   "main": "lib/index.js",
   "scripts": {},
