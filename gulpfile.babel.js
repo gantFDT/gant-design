@@ -16,11 +16,11 @@ function clean(cb) {
   cb()
 }
 
-let pkgs = fs.readdirSync(path.join(__dirname, 'packages'),{withFileTypes:true})
-  .filter(item=>item.isDirectory()&&item.name !== 'gantd')
-  .map(item=>item.name);
+// let pkgs = fs.readdirSync(path.join(__dirname, 'packages'),{withFileTypes:true})
+//   .filter(item=>item.isDirectory()&&item.name !== 'gantd')
+//   .map(item=>item.name);
 
-// let pkgs = ['data-cell-g'];
+let pkgs = ['schema-form-g'];
 
 /**
  * 编译非gantd包的js文件
