@@ -5,19 +5,19 @@ import CodeDecorator from '../_util/CodeDecorator';
 import code from './code';
 import _ from 'lodash';
 
-const kbdStyle = {
-    backgroundColor: '#fafbfc',
-    border: '1px solid #c6cbd1',
-    borderBottomColor: '#959da5',
-    borderRadius: 3,
-    boxShadow: 'inset 0 -1px 0 #959da5',
-    color: ' #444d56',
-    display: 'inline-block',
-    fontSize: '12px',
-    lineHeight: '14px',
-    padding: '3px 5px',
-    marginRight: 5
-};
+// const kbdStyle = {
+//     backgroundColor: '#fafbfc',
+//     border: '1px solid #c6cbd1',
+//     borderBottomColor: '#959da5',
+//     borderRadius: 3,
+//     boxShadow: 'inset 0 -1px 0 #959da5',
+//     color: ' #444d56',
+//     display: 'inline-block',
+//     fontSize: '12px',
+//     lineHeight: '14px',
+//     padding: '3px 5px',
+//     marginRight: 5
+// };
 
 const Search = Input.Search;
 const data = [
@@ -213,7 +213,9 @@ const config = {
         ReactDOM.render(<${item.fnName} />,mountNode);
         `
     }),
-    useage: '暂无',
+    useage: `
+    🦁 提供默认支持面板与任务拖拽排序的功能性面板，支持自定义面板header与task内容、任务高亮、手势操作等功能
+    `,
     children: [
         {
             title: '基本用法',
@@ -227,17 +229,17 @@ const config = {
         },
         {
             title: '拖拽功能',
-            describe: <div>
+            describe: `<div>
                 <p>相关拖拽函数暴露与拖拽禁用</p>
                 <p>支持键盘拖拽操作:</p>
                 <div>
-                    <span style={{ display: 'inline-flex' }}><span style={kbdStyle}>tab</span>切换拖拽项，</span>
-                    <span style={{ display: 'inline-flex' }}><span style={kbdStyle}>(↑ + ↓ + ← + →)</span>移动，</span>
-                    <span style={{ display: 'inline-flex' }}><span style={kbdStyle}>(tab + shift)</span>向后回退，</span>
-                    <span style={{ display: 'inline-flex' }}><span style={kbdStyle}>space</span>放下拖拽项，</span>
-                    <span style={{ display: 'inline-flex' }}><span style={kbdStyle}>esc</span>取消拖动</span>
+                    <span><span style="font-weight:bold;border:1px solid">tab</span>切换拖拽项，</span>
+                    <span><span style="font-weight:bold;border:1px solid">(↑ + ↓ + ← + →)</span>移动，</span>
+                    <span><span style="font-weight:bold;border:1px solid">(tab + shift)</span>向后回退，</span>
+                    <span><span style="font-weight:bold;border:1px solid">space</span>放下拖拽项，</span>
+                    <span><span style="font-weight:bold;border:1px solid">esc</span>取消拖动</span>
                 </div>
-            </div>,
+            </div>`,
             cmp: DragDropUse
         }
     ]
