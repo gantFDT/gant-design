@@ -1,18 +1,17 @@
-const code1 = `
+export default [
+`
 import React, { useState } from 'react';
 import {Input} from 'gantd';
 
 const Demo = () => {
-  const [value1, setValue1] = useState('')
-  const [value2, setValue2] = useState('')
+  const [value, setValue] = useState('')
   const onSave = (id, value, cb) => {
     console.log(id, value);
     cb()
   }
   return <>
     <Input placeholder='不可编辑' allowEdit={false} value='不可编辑' />
-    <Input placeholder='可编辑' allowEdit={true} onSave={onSave} value={value1} onChange={setValue1} />
-    <Input placeholder='不能输入特殊字符' allowEdit={true} strict value={value2} onSave={onSave} onChange={setValue2} />
+    <Input placeholder='可编辑' allowEdit={true} onSave={onSave} value={value} onChange={setValue} />
   </>
 }
 
@@ -20,9 +19,15 @@ ReactDOM.render(
     <Demo />,
     mountNode,
 );
-`
+`,
 
-const code2 = `
+
+
+
+
+
+
+`
 import React, { useState } from 'react';
 import {Input,TextArea, Password, SwitchStatus} from 'gantd';
 
@@ -40,9 +45,33 @@ ReactDOM.render(
     <Demo />,
     mountNode,
 );
-`
+`,
+  
 
-const code3 = `
+
+
+`
+import React, { useState } from 'react';
+import {Input} from 'gantd';
+
+const Demo = () => {
+  const [value, setValue] = useState('')
+  return <>
+     <Input placeholder='不能输入特殊字符' allowEdit={true} strict value={value} onSave={onSave} onChange={setValue} />
+  </>
+}
+
+ReactDOM.render(
+    <Demo />,
+    mountNode,
+);
+`,
+  
+
+
+
+
+`
 import React, { useState } from 'react';
 import {TextArea} from 'gantd';
 
@@ -60,9 +89,12 @@ ReactDOM.render(
     <Demo />,
     mountNode,
 );
-`
+`,
+  
 
-const code4 = `
+
+
+`
 import React, { useState } from 'react';
 import {Password} from 'gantd';
 
@@ -79,13 +111,7 @@ ReactDOM.render(
     <Demo />,
     mountNode,
 );
-`
+`]
 
-const codeList = [
-  code1,
-  code2,
-  code3,
-  code4
-]
 
-export default codeList
+
