@@ -118,6 +118,13 @@ const [list] = useState(data);
 
 const config = {
   inline: true,
+  useage:`<b>⏱ 自带最近选择</b></br>
+    对于同一个业务选择器，常选的业务对象会被记录在下拉列表中，方便用户下次选择。</br>
+    <b>📡 支持远程数据源配置</b></br>
+    可以动态配置远程数据源</br>
+    <b>🎏 支持多选</b></br>
+    快速开启多选</br>
+  `,
   codes: codeList.map(code =>
     `import { Selector } from 'gantd'
 import React, { useState } from 'react'
@@ -129,7 +136,7 @@ function Demo(){
 ReactDOM.render(<Demo />, mountNode)`),
   children: [
     {
-      title: '基本使用',
+      title: '字符数组',
       describe: '通过defaultList传入展示的数据列表',
       cmp: () => {
         const [list] = useState(['Jhon', 'Dan', 'Tom'])
@@ -145,7 +152,7 @@ ReactDOM.render(<Demo />, mountNode)`),
       }
     },
     {
-      title: '使用对象数组',
+      title: '对象数组',
       describe: '需要提供selectorId，valueProp，renderItem，getLabelText',
       cmp: () => {
         const [list] = useState(data);
@@ -157,7 +164,7 @@ ReactDOM.render(<Demo />, mountNode)`),
       }
     },
     {
-      title: '查询数据',
+      title: '远程数据源',
       describe: '使用query方法查询数据',
       cmp: () => {
         const [value, setValue] = useState('j')
