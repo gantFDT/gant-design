@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { DatePicker, RangePicker } from '@packages/gantd/src'
+import { DatePicker, RangePicker } from '@data-cell'
 import CodeDecorator from '../_util/CodeDecorator'
 import { WrapperValue, WrapperEdit, onSave } from '../_util/composeUseHooks'
 

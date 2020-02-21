@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { EditStatus } from '@packages/gantd/src'
+import { EditStatus } from '@data-cell'
 
 export const WrapperValue = defaultValue => Component => props => {
   const [value, setValue] = useState(defaultValue)

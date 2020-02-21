@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useRef } from 'react'
 import { Button, Radio, Rate, Switch } from 'antd'
-import { EditStatus } from '@packages/gantd/src/index'
+import { EditStatus } from '@data-cell'
 import FormSchema from '@packages/schema-form-g/src'
 import { schema, operateSchema, configSchma, bindDataSchema, customCmpSchema } from './schema'
 import CodeDecorator from '../_util/CodeDecorator'

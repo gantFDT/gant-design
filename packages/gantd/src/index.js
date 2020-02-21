@@ -27,33 +27,9 @@ export { default as Loading } from './loading'
 //列表
 export { default as Table } from '@packages/table-g/src';
 
-//读写分离
-export { default as withEdit } from './compose/withEdit'
-export { default as EditStatus } from './compose/editstatus'
-export { default as SwitchStatus } from './compose/switchstatus'
-//数据单元
-  // input
-export { default as Input, TextArea, Search, Group, Password } from './input'
-export { default as InputCellPhone } from './inputcellphone'
-export { default as InputTelePhone } from './inputtelephone';
-export { default as InputUrl } from './inputurl';
-export { default as InputEmail } from './inputemail'
-export { default as InputLanguage } from './inputlanguage';
-export { default as InputMoney } from './inputmoney';
-export { default as InputNumber } from './inputnumber'
-  //picker
-export { default as DatePicker, RangePicker } from './datepicker'
-export { default as ColorPicker } from '@packages/color-picker-g/src';
-  //selector
-export { default as Selector } from './selector';
-export { default as LocationSelector } from './locationselector';
-export { default as IconSelector } from './iconselector';
-
-
 //容器
 export { default as Header } from '@packages/header-g/src';
 export { default as SubMenu } from '@packages/submenu-g/src';
-export { default as withAnchor } from './compose/anchor'
 export { default as Toolbar } from './toolbar'
 
 

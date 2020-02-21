@@ -1,5 +1,5 @@
 
-import { InputMoney,SwitchStatus } from '@packages/gantd/src'
+import { InputMoney,SwitchStatus } from '@data-cell'
 import React, { useState } from 'react';
 import { Button } from 'antd'
 import codeList from './code'

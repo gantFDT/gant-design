@@ -1,5 +1,5 @@
 
-import { Input, EditStatus, SwitchStatus } from '@packages/gantd/src'
+import { Input, EditStatus, SwitchStatus } from '@data-cell'
 import { Alert, Button } from 'antd'
 import React, { useState, useCallback } from 'react';
 import codeList from './code'

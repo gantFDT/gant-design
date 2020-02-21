@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Button } from 'antd'
-import { InputTelePhone, EditStatus, SwitchStatus } from '@packages/gantd/src'
+import { InputTelePhone, SwitchStatus } from '@data-cell'
 import CodeDecorator from '../_util/CodeDecorator'
 import { WrapperValue, WrapperEdit, onSave } from '../_util/composeUseHooks'
 
