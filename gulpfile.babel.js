@@ -16,11 +16,9 @@ function clean(cb) {
   cb()
 }
 
-// let pkgs = fs.readdirSync(path.join(__dirname, 'packages'),{withFileTypes:true})
-//   .filter(item=>item.isDirectory()&&item.name !== 'gantd')
-//   .map(item=>item.name);
-
-let pkgs = ['schema-form-g'];
+let pkgs = fs.readdirSync(path.join(__dirname, 'packages'),{withFileTypes:true})
+  .filter(item=>item.isDirectory()&&item.name !== 'gantd')
+  .map(item=>item.name);
 
 /**
  * 编译非gantd包的js文件
@@ -45,6 +43,11 @@ const jstask = function (dirName) {
         next()
       })
     )
+    .pipe(dest(`packages/${dirName}/lib/`))
+}
+
+const jsontask = function (dirName) {
+  src(`packages/${dirName}/src/**/*.json`)
     .pipe(dest(`packages/${dirName}/lib/`))
 }
 
@@ -91,6 +94,11 @@ const tstask = function (dirName) {
     )
     .pipe(dest(`packages/${dirName}/lib/`))
 }
+
+const jsontasks = pkgs.map(pkg => cb => {
+  jsontask(pkg)
+  cb();
+})
 
 const jstasks = pkgs.map(pkg => cb => {
   jstask(pkg)
@@ -152,7 +160,7 @@ const compileGantd = (cb) => {
 }
 
 // const compile = parallel(compileGantd, ...jstasks, ...csstasks)
-const compile = parallel(...jstasks, ...csstasks)
+const compile = parallel(...jstasks, ...jsontasks, ...csstasks)
 
 exports.compileGantd = series(clean, compileGantd)
 exports.default = series(clean, compile)
