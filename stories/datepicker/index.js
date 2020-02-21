@@ -33,6 +33,8 @@ return (
 
 
 const config = {
+  useage: `<b>🖍 读写分离</b></br>
+  `,
   codes: codeList.map(code => (
     `import { DatePicker } from 'gantd';
 import React, { useState } from 'react';

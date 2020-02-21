@@ -3,13 +3,13 @@ import { IconSelector } from '@packages/gantd/src';
 import React from 'react';
 import CodeDecorator from '../_util/CodeDecorator';
 import code from './code.js';
-import {message} from 'antd'
+import { message } from 'antd'
 
 
 
 function BasicUse() {
   return (
-    <IconSelector onChange={(value)=>{message.info(value)}}/>
+    <IconSelector onChange={(value) => { message.info(value) }} />
   )
 }
 
@@ -25,7 +25,9 @@ const config = {
       );
       `
   }),
-  useage: '当业务需要选择一个图标的时候',
+  useage: `<b>🖍 读写分离</b></br>
+  <b>🎗 Iconfont 选择</b>
+`,
   children: [
     {
       title: '图标选择器',

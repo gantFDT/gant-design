@@ -31,6 +31,10 @@ function Demo(){
 }
 
 ReactDOM.render(<Demo />, mountNode)`),
+  useage: `
+    <b>🌏 全球省市区三级联动</b></br>
+    全球地区信息快速选择
+  `,
   children: [
     {
       title: '基本使用',
