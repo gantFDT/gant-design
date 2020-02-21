@@ -16,11 +16,11 @@ function clean(cb) {
   cb()
 }
 
-// let pkgs = fs.readdirSync(path.join(__dirname, 'packages'),{withFileTypes:true})
-//   .filter(item=>item.isDirectory()&&item.name !== 'gantd')
-//   .map(item=>item.name);
+let pkgs = fs.readdirSync(path.join(__dirname, 'packages'),{withFileTypes:true})
+  .filter(item=>item.isDirectory()&&item.name !== 'gantd')
+  .map(item=>item.name);
 
-let pkgs = ['color-picker-g'];
+// let pkgs = ['data-cell-g'];
 
 /**
  * 编译非gantd包的js文件
@@ -33,6 +33,9 @@ const jstask = function (dirName) {
       // 处理路径等问题
       through2.obj(function (chunk, enc, next) {
         let content = chunk.contents.toString()
+        content = content.replace(/@util/g, 'util-g')
+        content = content.replace(/@header/g, 'header-g')
+        content = content.replace(/@data\-cell/g, 'data-cell-g')
         content = content.replace(/@color\-picker/g, 'color-picker-g')
         content = content.replace(/\.less/g, '.css')
         content = content.replace(/\.jsx/g, '.js')
@@ -65,7 +68,6 @@ const tstask = function (dirName) {
         "importHelpers": true,
         "suppressImplicitAnyIndexErrors": true,
         "experimentalDecorators": true,
-        "experimentalAsyncFunctions": true,
         "downlevelIteration": true,
         "allowSyntheticDefaultImports": true
       })
@@ -75,6 +77,9 @@ const tstask = function (dirName) {
       // 处理路径等问题
       through2.obj(function (chunk, enc, next) {
         let content = chunk.contents.toString()
+        content = content.replace(/@util/g, 'util-g')
+        content = content.replace(/@header/g, 'header-g')
+        content = content.replace(/@data\-cell/g, 'data-cell-g')
         content = content.replace(/@color\-picker/g, 'color-picker-g')
         content = content.replace(/\.less/g, '.css')
         content = content.replace(/\.jsx/g, '.js')
@@ -148,26 +153,6 @@ const compileGantd = (cb) => {
 
 // const compile = parallel(compileGantd, ...jstasks, ...csstasks)
 const compile = parallel(...jstasks, ...csstasks)
-
-// exports.libHeader = function(cb) {
-//   rimraf.sync(path.resolve(__dirname, 'packages/header-g/lib/'))
-  
-//   tstask('header-g');
-//   src(`packages/header-g/src/*.less`)
-//     .pipe(dest(`packages/header-g/lib/`))
-
-//   src(`packages/header-g/src/*.less`)
-//     .pipe(less({
-//       plugins: [
-//         new LessNpm({ prefix: '~' })
-//       ],
-//       javascriptEnabled: true,
-//     }))
-//     .pipe(postcss([autoprefixer()]))
-//     .pipe(dest(`packages/header-g/lib/`))
-
-//   cb();
-// }
 
 exports.compileGantd = series(clean, compileGantd)
 exports.default = series(clean, compile)
