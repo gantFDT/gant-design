@@ -15,6 +15,9 @@ export default {
     submit: 'submit',
     cancel: 'cancel'
   },
+  SchemaForm: {
+    required: 'is required'
+  },
   SmartTable: {
     yes: 'Yes',
     no: 'No',

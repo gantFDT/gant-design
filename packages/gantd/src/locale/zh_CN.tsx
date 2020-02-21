@@ -14,6 +14,9 @@ export default {
     submit: '确认',
     cancel: '取消'
   },
+  SchemaForm: {
+    required: '不能为空'
+  },
   SmartTable: {
     yes: '是',
     no: '否',
