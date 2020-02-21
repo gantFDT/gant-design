@@ -1,5 +1,5 @@
 
-import { Icon } from '@pkgs/gantd/src';
+import { Icon } from '@packages/gantd/src';
 // import {Icon} from 'antd'
 import React from 'react';
 import CodeDecorator from '../_util/CodeDecorator';

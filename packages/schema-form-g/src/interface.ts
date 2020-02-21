@@ -1,5 +1,5 @@
 import { ReactElement, ReactHTML } from 'react'
-import { EditStatus } from '@gantd/compose'
+import { EditStatus } from '@data-cell'
 import { ColProps } from 'antd/lib/grid/col'
 import { WrappedFormUtils, GetFieldDecoratorOptions } from 'antd/lib/form/Form.d'
 import { FormLabelAlign } from 'antd/lib/form/FormItem'

@@ -1,5 +1,5 @@
 import React from 'react';
-import { GantTableListOuterProps } from '@pkgs/table-g/src'
+import { GantTableListOuterProps } from '@packages/table-g/src'
 
 export interface CustomColumnProps<R> {
   fieldName: string,

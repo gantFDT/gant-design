@@ -1,4 +1,4 @@
-
+export { default as Icon } from './icon'
 //读写分离
 export { default as withEdit } from './compose/withEdit'
 export { default as EditStatus } from './compose/editstatus'

@@ -6,7 +6,6 @@ import { get } from 'lodash'
 import { Icon } from 'antd'
 
 import './index.less'
-import { ConfigConsumer, ConfigConsumerProps } from '../config-provider'
 import EditStatus from './editstatus'
 
 
@@ -21,28 +20,20 @@ const renderText = <P extends any>(getText: GetText<P>) => (props) => {
 
   const { setEdit, allowEdit, style, placeholder } = props
 
-  const TextNode = React.memo<ConfigConsumerProps>(({ getPrefixCls }) => {
-    // let Textextde = null
-    // if (emptyTextArray.includes(value)) { // 如果value是空值, 显示placeholder或者默认文本
-    //   TextNode = <span className={getPrefixCls('compose-noContent')}>{placeholder || emptyText}</span>
-    // } else {
-    //   const factory = React.createFactory(getText)
-    //   TextNode = factory({ value })
-    // }
-    // return TextNode
+  const TextNode = React.memo(() => {
     const text = getText(props)
     if (emptyTextArray.includes(text)) {
-      return <span className={getPrefixCls('compose-noContent')}>{placeholder || emptyText}</span>
+      return <span className={'gant-compose-noContent'}>{placeholder || emptyText}</span>
     }
     return text
   })
 
-  const Pen = React.memo<ConfigConsumerProps>(
-    ({ getPrefixCls }) => {
+  const Pen = React.memo(
+    () => {
       let pen = null
       if (allowEdit) {
         pen = (
-          <span className={getPrefixCls('compose-editPen')} onClick={() => setEdit(EditStatus.EDIT)}>
+          <span className={'gant-compose-editPen'} onClick={() => setEdit(EditStatus.EDIT)}>
             <Icon type="edit" />
           </span>
         )
@@ -53,16 +44,10 @@ const renderText = <P extends any>(getText: GetText<P>) => (props) => {
 
 
   return (
-    <ConfigConsumer>
-      {
-        ({ getPrefixCls }) => (
-          <div className={getPrefixCls('compose-readWrapper')} style={{ width: get(style, 'width', '100%') }}>
-            <TextNode getPrefixCls={getPrefixCls} />
-            <Pen getPrefixCls={getPrefixCls} />
-          </div>
-        )
-      }
-    </ConfigConsumer>
+    <div className={'gant-compose-readWrapper'} style={{ width: get(style, 'width', '100%') }}>
+      <TextNode />
+      <Pen />
+    </div>
   )
 
 }

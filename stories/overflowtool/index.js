@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Button, Slider } from 'antd'
 import CodeDecorator from '../_util/CodeDecorator';
 // import { OverflowTool } from '@'
-import OverflowTool from '@pkgs/overflow-tool-g/src';
+import OverflowTool from '@packages/overflow-tool-g/src';
 import codes from './code'
 
 const style = {

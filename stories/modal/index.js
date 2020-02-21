@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Button } from 'antd'
-import Modal, { ResizableModal, ResizableProvider } from '@pkgs/modal-g/src'
+import Modal, { ResizableModal, ResizableProvider } from '@packages/modal-g/src'
 import CodeDecorator from '../_util/CodeDecorator'
 import code from './code.js'
 const ButtonGroup = Button.Group;

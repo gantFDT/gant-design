@@ -3,7 +3,7 @@ import React, { useMemo, useContext, useCallback, useEffect } from 'react'
 import {
 	EditStatus,
 	Input,
-} from '@gantd/index'
+} from '@data-cell'
 import { FormContext } from './index'
 import { Form, Col } from 'antd'
 import { Schema } from './interface'

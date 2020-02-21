@@ -2,7 +2,7 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import CodeDecorator from '../_util/CodeDecorator';
 import code from './code'
-import { Input, textarea, Table, EditStatus, SwitchStatus, Generator } from '@gantd'
+import { Input, textarea, Table, EditStatus, SwitchStatus, Generator } from '@data-cell'
 import { Button, Slider } from 'antd'
 const columns = [
 	{

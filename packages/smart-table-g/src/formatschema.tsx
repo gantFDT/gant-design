@@ -1,9 +1,9 @@
 import React from 'react'
 import { DatePicker, Switch, Input as AntInput } from 'antd'
-import { Input, InputNumber, RangePicker, Selector, InputUrl, LocationSelector, InputTelePhone, InputCellPhone, InputEmail, InputLanguage, InputMoney } from '@gantd/index'
+import { Input, InputNumber, RangePicker, Selector, InputUrl, LocationSelector, InputTelePhone, InputCellPhone, InputEmail, InputLanguage, InputMoney } from '@data-cell'
 import { isEmpty, cloneDeep } from 'lodash'
 import { SchemaProp, PanelConfig, CustomColumnProps } from './interface'
-import { getType } from '@util-g/index'
+import { getType } from '@util'
 
 const DEFAULT_VIEW: PanelConfig = {
   wrap: true,

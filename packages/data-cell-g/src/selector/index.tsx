@@ -8,9 +8,10 @@ import './index.less'
 import { Group } from '../input'
 import { withEdit } from '../compose'
 import { WithEditProps } from '../compose/withEdit'
-import { ConfigConsumer } from '../config-provider'
-import { ProtoExtends } from '../_util/type'
 
+type ProtoExtends<T, U> = U & {
+  [K in Exclude<keyof T, keyof U>]?: NonNullable<T[K]>
+}
 
 const selectorCache = new Map()
 const { Option } = Select
@@ -492,7 +493,7 @@ class BasicSelector<T> extends PureComponent<SelectorInnerProps<T>> {
         loading={loading}
         {...props}
         ref={setSelectRef}
-        className={getPrefixCls('selector')}
+        className={'gant-selector'}
         onSearch={onSearch}
         onSelect={onSelect}
         onChange={onChange}
@@ -510,7 +511,7 @@ class BasicSelector<T> extends PureComponent<SelectorInnerProps<T>> {
     const { addonAfter, style, className } = this.props
     return (
       <Group gant style={style} className={className}>
-        <ConfigConsumer>{this.renderSelect}</ConfigConsumer>
+        {this.renderSelect}
         {addonAfter ? <span className="ant-input-group-addon">{addonAfter}</span> : null}
       </Group>
     )

@@ -2,7 +2,7 @@ import 'antd/dist/antd.css';
 import React, { useState, useMemo, useCallback } from 'react';
 import { Card, Collapse, Icon, Tooltip, Row, Col } from 'antd';
 import { ConfigProvider } from '@gantd';
-import Anchor from '@pkgs/anchor-g/src';
+import Anchor from '@packages/anchor-g/src';
 import zhCN from '@gantd/locale/zh_CN';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import SyntaxHighlighter from 'react-syntax-highlighter';

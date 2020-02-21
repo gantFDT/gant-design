@@ -1,12 +1,11 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
-import { Dropdown, Menu, Layout, Anchor, Icon } from 'antd';
-import { ConfigContext } from '@gantd/config-provider';
+import { Dropdown, Menu, Anchor, Icon } from 'antd';
 import './index.less';
 import classnames from 'classnames'
 
 const GantAnchor = (props) => {
   let {
-    prefixCls: customizePrefixCls,
+    prefixCls: customizePrefixCls = 'gant',
     list = [],
     content,
     fixedTop = 0,
@@ -17,7 +16,6 @@ const GantAnchor = (props) => {
     style,
     ...nextProps
   } = props
-  const { getPrefixCls } = React.useContext(ConfigContext);
   const [stateMode, setStateMode] = useState(layout)
   const [currentId, setId] = useState(list.length ? list[0].id : '') //当前选中id，进入页面默认选中第一
   const [leftArrowsShow, setLeftArrowsShow] = useState(false)   //左侧箭头
@@ -149,7 +147,7 @@ const GantAnchor = (props) => {
   }, [stateMode, setStateMode])
 
 
-  const prefixCls = getPrefixCls('gantanchor', customizePrefixCls);
+  const prefixCls = customizePrefixCls + '-gantanchor';
   return (
     <>
       {stateMode == 'vertical' ?
