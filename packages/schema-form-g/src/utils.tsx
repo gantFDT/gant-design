@@ -1,6 +1,7 @@
 import { UISchema, TitleSchema, Schema } from './interface'
 import { EditStatus } from '@data-cell'
 import { get } from 'lodash'
+
 export function getOrders(orders: string[], targetArray: string[]): string[] {
 	let _sort = false;
 	if (!orders || orders.length <= 0) return targetArray;

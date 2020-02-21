@@ -1,8 +1,8 @@
 import React, { useState, useMemo, useRef } from 'react'
-import { Button, Radio, Rate } from 'antd'
+import { Button, Radio, Rate, Switch } from 'antd'
 import { EditStatus } from '@packages/gantd/src/index'
 import FormSchema from '@packages/schema-form-g/src'
-import { schema, operateSchema, editStatusSchema, configSchma, bindDataSchema, customCmpSchema } from './schema'
+import { schema, operateSchema, configSchma, bindDataSchema, customCmpSchema } from './schema'
 import CodeDecorator from '../_util/CodeDecorator'
 import code from './code.js'
 
@@ -39,15 +39,45 @@ function BasicUse() {
 }
 
 function EditStatusUse() {
+    const [allowEdit, setAllowEdit] = useState(true)
+    const [edit, setEdit] = useState(EditStatus.EDIT)
+    const [state, setState] = useState({})
+    const formRef = useRef(null)
+
     const uiSchema = {
         "ui:col": 24,
         "ui:gutter": 10,
         "ui:labelCol": 4,
         "ui:wrapperCol": 20,
     }
-    const [edit, setEdit] = useState(EditStatus.EDIT)
-    const [state, setState] = useState({})
-    const formRef = useRef(null)
+
+    const schema = useMemo(() => {
+        return {
+            type: "object",
+            title: "可切换编辑状态的表单",
+            required: ["key_1"],
+            propertyType: {
+                key_1: {
+                    title: "普通输入框",
+                    type: "string",
+                    props: { allowEdit: allowEdit }
+                },
+                key_2: {
+                    title: "数字输入框",
+                    type: "number",
+                    componentType: "InputNumber",
+                    props: { allowEdit: allowEdit }
+                },
+                key_3: {
+                    title: "金额",
+                    type: "string",
+                    componentType: "InputMoney",
+                    props: { allowEdit: allowEdit }
+                },
+            }
+        }
+    }, [allowEdit])
+
     const onChange = (val, vals) => {
         setState(vals)
     }
@@ -58,17 +88,25 @@ function EditStatusUse() {
     }
     const titleConfig = {
         "title:extra": (
-            <Radio.Group size='small' onChange={(e) => setEdit(e.target.value)} value={edit}>
-                <Radio.Button value={EditStatus.EDIT}>写</Radio.Button>
-                <Radio.Button value={EditStatus.CANCEL}>读</Radio.Button>
-            </Radio.Group>
+            <>
+                <Switch
+                    checkedChildren="可编辑"
+                    unCheckedChildren="不可编辑"
+                    checked={allowEdit}
+                    onChange={(checked) => setAllowEdit(checked)}
+                />
+                <Radio.Group size='small' onChange={(e) => setEdit(e.target.value)} value={edit}>
+                    <Radio.Button value={EditStatus.EDIT}>写状态</Radio.Button>
+                    <Radio.Button value={EditStatus.CANCEL}>读状态</Radio.Button>
+                </Radio.Group>
+            </>
         )
     }
     return <div style={{ margin: 10 }}>
         <FormSchema
             wrappedComponentRef={formRef}
             edit={edit}
-            schema={editStatusSchema}
+            schema={schema}
             data={state}
             uiSchema={uiSchema}
             onChange={onChange}
@@ -257,51 +295,53 @@ function CustomCmp() {
 const config = {
     codes: code,
     useage: <>
-        <p>表单是业务开发中最常见的业务场景，复杂表单的复杂程度往往需要我们使用大量的代码与时间去构建一个表单业务。FormSchema的需求由此诞生：</p>
+        <p>表单是业务开发中最常见的业务场景，复杂表单的复杂程度往往需要我们使用大量的代码与时间去构建一个表单业务。FormSchema由此诞生：</p>
         <ul>
-            <li>通过json数据快速的构建出复杂表单；</li>
+            <li>通过schema数据快速构建出复杂表单；</li>
+            <li>通过uiSchema的对表单进行快速的样式自定义；</li>
+            <li>同时支持可选的headerConfig配置负责表格标题的表现；</li>
             <li>通过表单的结构，能够快速判断出该json结构的唯一性；</li>
         </ul>
     </>,
     children: [
         {
             title: '基本用法',
-            describe: '',
+            describe: '通过配置schema与uiSchema生成表单',
             cmp: BasicUse
         },
         {
             title: '编辑状态切换',
-            describe: '',
+            describe: '通过控制edit属性进行读写',
             cmp: EditStatusUse
         },
         {
             title: '带操作符后缀',
-            describe: '',
+            describe: '适用于特定业务下对操作符的需求',
             cmp: OperatorUse
         },
         {
             title: '自定义UI配置',
-            describe: '',
+            describe: '可对表单的布局、栅格、padding与背景色进行设置',
             cmp: CustomOptions
         },
         {
-            title: '自适应布局',
-            describe: '',
+            title: '响应式布局',
+            describe: '支持antd所参照的Bootstrap响应式设计，预设六个响应尺寸：xs sm md lg xl  xxl，通过配置uiSchema中的col实现',
             cmp: GridLayout
         },
         {
             title: '数据双向绑定',
-            describe: '',
+            describe: '通过onChange回调事件可进行数据绑定',
             cmp: BindData
         },
         {
             title: '前置依赖',
-            describe: '',
+            describe: '支持字段响应前置依赖字段onChange',
             cmp: DependenceData
         },
         {
             title: '扩展自定义字段',
-            describe: '',
+            describe: '扩展符合业务需求的特定字段组件',
             cmp: CustomCmp
         },
     ]

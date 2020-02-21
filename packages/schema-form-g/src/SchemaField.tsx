@@ -11,7 +11,7 @@ const tr = (str) => str;
 
 const SchemaField = (props: Schema) => {
 	const { options, title, props: FiledProps, componentType, name, isRequired, initialValue: defaultValue, required, edit, uiData } = props
-	const { form: { getFieldDecorator, resetFields, validateFieldsAndScroll, }, onSave, data, customFields, emitDependenciesChange, locale, prefixCls } = useContext(FormContext)
+	const { form: { getFieldDecorator, resetFields, validateFieldsAndScroll }, onSave, data, customFields, emitDependenciesChange, locale, prefixCls } = useContext(FormContext)
 
 	const onCancel = useCallback(() => name && resetFields([name]), [componentType, name])
 
