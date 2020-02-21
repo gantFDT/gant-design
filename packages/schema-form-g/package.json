@@ -1,6 +1,6 @@
 {
     "name": "schema-form-g",
-    "version": "0.0.21",
+    "version": "0.0.22",
     "description": "gantd schemaform",
     "main": "lib/index.js",
     "scripts": {},
@@ -13,13 +13,13 @@
     "author": "GantFDT",
     "license": "MIT",
     "dependencies": {
-      "react": "^16.8.6",
-      "antd": "^3.22.0",
-      "lodash": "^4.17.11",
-      "moment": "^2.24.0",
-      "recompose": "^0.30.0",
-      "data-cell-g": "^0.0.4",
-      "classnames": "^2.2.6",
-      "header-g": "^0.0.20"
+        "antd": "^3.22.0",
+        "classnames": "^2.2.6",
+        "data-cell-g": "^0.0.4",
+        "header-g": "^0.0.20",
+        "lodash": "^4.17.11",
+        "moment": "^2.24.0",
+        "react": "^16.8.6",
+        "recompose": "^0.30.0"
     }
 }
