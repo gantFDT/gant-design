@@ -1,5 +1,6 @@
 import React, { useCallback, useContext } from 'react'
-import { Header, EditStatus } from '@gantd/index'
+import Header from '@header'
+import { EditStatus } from '@data-cell'
 import { Form, Row } from 'antd'
 import { Schema, UISchema, TitleSchema } from './interface'
 import { FormContext } from './index'

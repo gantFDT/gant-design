@@ -8,13 +8,13 @@ import { PaginationConfig as AntPaginationConfig } from 'antd/lib/pagination'
 import { compose } from 'recompose'
 import _ from 'lodash'
 
-import warning from '@util-g/warning'
-import { ProtoExtends, PartRequired } from '@util-g/type'
+import warning from '@util/warning'
+import { ProtoExtends, PartRequired } from '@util/type'
 import VisibleMenu from "@gantd/visiblemenu"
 import { getColumns, renderColumnItem, useRowSelection, getStorageWidth, switchIndex, usePagination, setMainTableBorder, diffList, setStyle, getComputedColIndex, computeIndex } from './_utils'
 import { ConfigConsumer } from '@gantd/config-provider'
-import Header from '@pkgs/header-g/src'
-import EditStatus from '@gantd/compose/editstatus'
+import Header from '@packages/header-g/src'
+import { EditStatus } from '@data-cell'
 
 import TableComponent from './tableRef'
 import BodyCell from './bodycell'

@@ -1,9 +1,5 @@
-/* eslint-disable compat/compat */
-/* eslint-disable no-useless-escape */
-
 import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react'
 import { Drawer, Radio, Empty } from 'antd'
-import { ConfigContext } from '@gantd/config-provider';
 import { Icon, Input, EditStatus } from '../'
 import classnames from 'classnames'
 import './index.less';
@@ -42,8 +38,7 @@ type IconHouseProps = {
 } & Partial<typeof defaultProps>
 
 const IconHouse: React.FC<IconHouseProps> = ({ inForm, onChange, value, onBlur = undefined }) => {
-  const { getPrefixCls } = React.useContext(ConfigContext);
-  const prefixCls = getPrefixCls('icon-selector');
+  const prefixCls = 'gant-icon-selector';
 
   // 图标抽屉
   const [visible, setvisible] = useState(false)

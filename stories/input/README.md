@@ -8,7 +8,8 @@
 | onChange  |      输入框内容变化时的回调      |     function(value)     |        |  是   |
 |  onSave   |        点击对勾按钮的回调        | function(id, value, cb) |        |  是   |
 | onCancel  |        点击取消按钮的回调        |     function(value)     |        |       |
+|  strict   |      可限制不准输入特殊字符      |          false          |        |       |
 
 > onSave函数参数说明:`id`表示通过`getFieldDecorator`标识的id，没有的时候返回undefined。`value`表示当前输入框的值。`cb`是一个回调，通常用于手动关闭编辑状态
 
-其他更多参数[参考](https://ant-design.gitee.io/components/input-cn/)
+其他更多参数[这里](https://ant-design.gitee.io/components/input-cn/)

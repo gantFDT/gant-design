@@ -30,14 +30,35 @@
       "@gantd": [
         "packages/gantd/src"
       ],
-      "@pkgs": [
+      "@packages": [
         "packages"
       ],
-      "@util-g": [
+      "@util": [
         "packages/util-g/src"
       ],
       "@color-picker": [
-        "packages/util-g/src"
+        "packages/color-picker-g/src"
+      ],
+      "@data-cell": [
+        "packages/data-cell-g/src"
+      ],
+      "@header": [
+        "packages/header-g/src"
+      ],
+      "@gantd/*": [
+        "packages/gantd/src"
+      ],
+      "@packages/*": [
+        "packages/*"
+      ],
+      "@util/*": [
+        "packages/util-g/src/*"
+      ],
+      "@color-picker/*": [
+        "packages/color-picker-g/src/*"
+      ],
+      "@data-cell/*": [
+        "packages/data-cell-g/src/*"
       ],
     }
   },
@@ -45,7 +66,6 @@
     "packages/**/*",
   ],
   "exclude": [
-    "packages/data-cell-g",
     "node_modules",
     "dist",
     "stories"

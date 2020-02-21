@@ -3,7 +3,7 @@ import React, { useCallback, useMemo } from 'react'
 import { Checkbox, Icon, Row, Radio, notification, Tooltip } from 'antd'
 import { SortableContainer, SortableElement, SortableHandle, SortEndHandler } from 'react-sortable-hoc'
 import arrayMove from 'array-move'
-import { Icon as GantIcon } from '@gantd/index'
+import { Icon as GantIcon } from '@data-cell'
 
 interface RecordProps {
   dataIndex: string,

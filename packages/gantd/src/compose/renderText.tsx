@@ -32,7 +32,7 @@ const renderText = <P extends any>(getText: GetText<P>) => (props) => {
     // return TextNode
     const text = getText(props)
     if (emptyTextArray.includes(text)) {
-      return <span className={getPrefixCls('compose-noContent')}>{placeholder || emptyText}</span>
+      return <span className={getPrefixCls('compose-noContent')}>{emptyText}</span>
     }
     return text
   })

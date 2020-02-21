@@ -1,12 +1,10 @@
 import React from 'react'
-import propTypes from 'prop-types'
 import { Cascader } from 'antd'
 import json from './district_zh.json'
 
 import { Group } from '../input'
 import { withEdit } from '../compose'
 import { compose, defaultProps } from 'recompose';
-import { ConfigConsumer } from '../config-provider'
 
 
 const transformData = ($code, level = 1) => Object.entries(json[$code]).map(([code, name]) => {
@@ -73,21 +71,15 @@ class Location extends React.Component {
 
     return (
       <Group gant style={{ width }}>
-        <ConfigConsumer>
-          {
-            ({ getPrefixCls }) => (
-              <Cascader
-                {...props}
-                style={style}
-                className={getPrefixCls('location-cascader')}
-                changeOnSelect
-                showSearch={{
-                  filter: (value, paths) => paths.some(option => (option.label).toLowerCase().indexOf(value.toLowerCase()) > -1)
-                }}
-              />
-            )
-          }
-        </ConfigConsumer>
+        <Cascader
+          {...props}
+          style={style}
+          className={'gant-location-cascader'}
+          changeOnSelect
+          showSearch={{
+            filter: (value, paths) => paths.some(option => (option.label).toLowerCase().indexOf(value.toLowerCase()) > -1)
+          }}
+        />
 
         {addonAfter ? <span className="ant-input-group-addon">{addonAfter}</span> : null}
       </Group>

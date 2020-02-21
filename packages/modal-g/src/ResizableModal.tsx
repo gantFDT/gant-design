@@ -5,7 +5,7 @@ import { Modal, Button } from 'antd';
 import classnames from 'classnames';
 import { ConfigContext } from '@gantd/config-provider';
 import defaultLocale from '@gantd/locale/default';
-import Icon from '@gantd/icon';
+import { Icon } from '@data-cell';
 import { useDrag, useResize, usePrev } from './Hooks';
 import { ModalContext } from './Context';
 import { getModalState } from './Reducer';

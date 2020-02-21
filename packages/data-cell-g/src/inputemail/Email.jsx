@@ -2,7 +2,6 @@ import React from 'react'
 import { AutoComplete } from 'antd'
 import { compose, withState, defaultProps, withProps, lifecycle } from 'recompose'
 
-import { ConfigConsumer } from '../config-provider'
 import { Group } from '../input'
 import { withEdit } from '../compose'
 
@@ -54,14 +53,14 @@ class Email extends React.Component {
     return list.map(item => (<AutoComplete.Option key={item} value={item}>{item}</AutoComplete.Option>))
   }
 
-  renderSelect = ({ getPrefixCls }) => {
+  renderSelect = () => {
     const { style: { width, ...style } } = this.props
 
     return (
       <AutoComplete
         {...this.props}
         style={style}
-        className={getPrefixCls('select-email')}
+        className={'gant-select-email'}
         showSearch
         dropdownMatchSelectWidth={false}
         onSearch={this.onSearch}
@@ -75,9 +74,7 @@ class Email extends React.Component {
     const { addonAfter, style: { width }, className } = this.props
     return (
       <Group gant style={{ width }} className={className}>
-        <ConfigConsumer>
-          {this.renderSelect}
-        </ConfigConsumer>
+        {this.renderSelect}
         {addonAfter ? <span className="ant-input-group-addon">{addonAfter}</span> : null}
       </Group>
     )

@@ -1,6 +1,6 @@
 import './index.less'
 import React, { useMemo, useContext, useCallback, useEffect } from 'react'
-import { EditStatus, Input } from '@gantd/index'
+import { EditStatus, Input } from '@data-cell'
 import { FormContext } from './index'
 import { Form, Col } from 'antd'
 import { Schema } from './interface'

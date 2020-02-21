@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import Header from '@pkgs/header-g/src'
+import Header from '@packages/header-g/src'
 import CodeDecorator from '../_util/CodeDecorator'
 import code from './code.js'
 import { message, Icon, Button, Tooltip, Slider } from 'antd';

@@ -2,8 +2,8 @@ import React, { useState, useMemo, useCallback, ReactNode, useEffect, useRef } f
 import { Tooltip, Button } from 'antd'
 import moment from 'moment'
 import { isEmpty } from 'lodash'
-import Table from '@pkgs/table-g/src'
-import BlockHeader from '@pkgs/header-g/src'
+import Table from '@packages/table-g/src'
+import BlockHeader from '@packages/header-g/src'
 import { ConfigContext } from '@gantd/config-provider';
 import defaultLocale from '@gantd/locale/default';
 import ConfigModal from './config'
@@ -13,7 +13,7 @@ import formatSchema from './formatschema'
 import ViewPicker, { DefaultView } from './viewpicker'
 import { useTableConfig, useLocalStorage } from './hooks'
 import { withFocusKeyEvent } from './keyevent'
-import { guid } from '@util-g/index'
+import { guid } from '@util'
 
 const defaultChildrenColumnName: string = 'children';
 const defaultRowKey: string = 'id';

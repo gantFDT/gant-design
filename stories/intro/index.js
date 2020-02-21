@@ -1,5 +1,5 @@
 import React from 'react'
-import {Intro} from '@pkgs/gantd/src';
+import {Intro} from '@packages/gantd/src';
 import CodeDecorator from '../_util/CodeDecorator'
 import code from './code.js'
 

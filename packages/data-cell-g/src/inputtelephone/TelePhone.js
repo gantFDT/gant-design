@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import proptypes from 'prop-types'
 import { Input, Select } from 'antd';
 import { compose, withState, withProps, defaultProps } from 'recompose'
 

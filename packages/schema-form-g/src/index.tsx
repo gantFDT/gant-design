@@ -1,7 +1,7 @@
 
 import React from 'react'
 import { Form } from 'antd'
-import { EditStatus } from '@gantd/compose'
+import { EditStatus } from '@data-cell'
 import { compose, withHandlers, renameProp } from 'recompose'
 import _SchemaForm from './SchemaForm'
 import { isEmpty, isEqual } from 'lodash'

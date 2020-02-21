@@ -6,7 +6,6 @@ import { compose, withState, defaultProps, withPropsOnChange, setStatic, withHan
 
 import renderText, { GetText } from './renderText'
 import inputwrapper from './inputwrapper'
-import { ConfigConsumer } from '../config-provider'
 import EditStatus from './editstatus'
 import { HandlerWithType } from './common'
 
@@ -125,22 +124,15 @@ export default <T extends any>(getText: GetText<T>) => compose(
   ),
   withProps(({ onConfirm, setEdit, selfEdit, addonAfter: propsAddonAfter }) => {
     const addonAfter = (
-      <ConfigConsumer>
-        {
-          ({ getPrefixCls }) => (
-            <React.Fragment>
-              {propsAddonAfter}
-              <Tooltip title='确认'>
-                <Icon type="check" onClick={onConfirm} className={getPrefixCls('compose-success')} />
-              </Tooltip>
-              <Tooltip title='取消'>
-                <Icon type="close" onClick={() => setEdit(EditStatus.CANCEL)} className={getPrefixCls('compose-error')} style={{ marginLeft: 8 }} />
-              </Tooltip>
-            </React.Fragment>
-          )
-        }
-
-      </ConfigConsumer>
+      <React.Fragment>
+        {propsAddonAfter}
+        <Tooltip title='确认'>
+          <Icon type="check" onClick={onConfirm} className={'gant-compose-success'} />
+        </Tooltip>
+        <Tooltip title='取消'>
+          <Icon type="close" onClick={() => setEdit(EditStatus.CANCEL)} className={'gant-compose-error'} style={{ marginLeft: 8 }} />
+        </Tooltip>
+      </React.Fragment>
     )
 
     return {

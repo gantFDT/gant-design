@@ -6,7 +6,6 @@ import { compose, defaultProps, withProps } from 'recompose'
 
 import { Group } from '../input'
 import { withEdit } from '../compose'
-import { ConfigConsumer } from '../config-provider'
 import classnames from 'classnames'
 
 const withInputNumber = compose(
@@ -46,7 +45,7 @@ class InputNumber extends React.Component {
 
     return (
       <Group gant className={className} style={{ width }}>
-        <ConfigConsumer>{({ getPrefixCls }) => <AntInputNumber {...props} style={style} value={this.getValue()} className={classnames(getPrefixCls('input-number'))} />}</ConfigConsumer>
+        <AntInputNumber {...props} style={style} value={this.getValue()} className={classnames('gant-input-number')} />
         {addonAfter ? <span className="ant-input-group-addon">{addonAfter}</span> : null}
       </Group>
     )
