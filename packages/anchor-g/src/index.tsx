@@ -1,6 +1,6 @@
+import './index.less';
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { Dropdown, Menu, Anchor, Icon } from 'antd';
-import './index.less';
 import classnames from 'classnames'
 
 const GantAnchor = (props) => {

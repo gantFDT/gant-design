@@ -1,7 +1,7 @@
 import React from 'react'
 import classnames from 'classnames'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
-import { ConfigContext } from '@gantd/config-provider'
+import { ConfigContext } from '../config-provider'
 import Column from './Column'
 export const TaskBoardContext = React.createContext({} as ContextProps)
 import './index.less'

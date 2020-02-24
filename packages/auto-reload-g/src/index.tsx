@@ -1,7 +1,5 @@
 import './index.less';
 import React, { useCallback, useState, useEffect } from 'react';
-import { ConfigContext } from '@gantd/config-provider';
-import defaultLocale from '@gantd/locale/default';
 import { Tooltip, Divider, Switch, InputNumber, Icon } from 'antd'
 import moment from 'moment';
 import classnames from 'classnames'
@@ -28,17 +26,21 @@ let playFun: any = null;
 
 const AutoReload: React.SFC<Props> = ({ auto = false, interval = 1,  ...props }) => {
   const {
-    locale,
-    prefixCls: customizePrefixCls,
+    locale: autoReloadLocale = {
+      tips: '最新数据更新时间，点击更新数据',
+      close: '关闭自动更新',
+      open: '开启自动更新',
+      set: '设置自动更新触发时间',
+      unit: '单位：分'
+    },
+    prefixCls: customizePrefixCls = 'gant',
     className,
     style,
     time,
     refresh = () => { }
   } = props;
 
-  const { locale: contextLocale = defaultLocale, getPrefixCls } = React.useContext(ConfigContext);
-  const autoReloadLocale = locale || contextLocale.AutoReload;
-  const prefixCls = getPrefixCls('auto-reload', customizePrefixCls);
+  const prefixCls = customizePrefixCls + 'auto-reload';
 
   const clsString = classnames(prefixCls, className);
 

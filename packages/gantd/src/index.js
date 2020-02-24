@@ -16,22 +16,20 @@ if (
 /* @remove-on-es-build-end */
 import './style/index.less'
 export { default as ConfigProvider, ConfigContext, ConfigConsumer, ConfigConsumerProps } from './config-provider';
-// export {default as LocaleProvider} from './locale-provider'
 //其他
 export { default as Intro } from './intro';
 export { default as Icon } from './icon';
-export { default as AutoReload } from '@packages/auto-reload-g/src';
+export { default as AutoReload } from '@auto-reload';
 export { default as TaskBoard } from './taskboard'
 export { default as Loading } from './loading'
 
 //列表
-export { default as Table } from '@packages/table-g/src';
+export { default as Table } from '@table';
 
 //容器
-export { default as Header } from '@packages/header-g/src';
-export { default as SubMenu } from '@packages/submenu-g/src';
+export { default as Header } from '@header';
+export { default as SubMenu } from '@submenu';
 export { default as Toolbar } from './toolbar'
-
 
 //废弃
 export { default as VisibleMenu } from './visiblemenu';

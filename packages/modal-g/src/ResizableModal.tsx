@@ -3,8 +3,6 @@ import './index.less';
 import React, { useContext, useEffect, useMemo, useCallback, memo } from 'react';
 import { Modal, Button } from 'antd';
 import classnames from 'classnames';
-import { ConfigContext } from '@gantd/config-provider';
-import defaultLocale from '@gantd/locale/default';
 import { Icon } from '@data-cell';
 import { useDrag, useResize, usePrev } from './Hooks';
 import { ModalContext } from './Context';
@@ -16,8 +14,11 @@ type Props = ModalInnerProps & Partial<typeof defaultProps>
 
 const ModalInner: React.FC<Props> = function ModalInner(props) {
     const {
-        prefixCls: customizePrefixCls, //自定义class前缀
-        locale,         //自定义国际化
+        prefixCls: customizePrefixCls = 'gant', //自定义class前缀
+        locale: modalLocale = {
+          submit: '确认',
+          cancel: '取消'
+        },         //自定义国际化
         id,             //弹窗唯一标识
         itemState,      //单个弹窗的自定义属性
         visible,        //弹窗标题
@@ -37,9 +38,7 @@ const ModalInner: React.FC<Props> = function ModalInner(props) {
         ...restProps    //弹窗组件接受的其他antd支持的属性值
     } = props;
 
-    const { locale: contextLocale = defaultLocale, getPrefixCls } = React.useContext(ConfigContext);
-    const modalLocale = locale || contextLocale.Modal;
-    const prefixCls = getPrefixCls('modal', customizePrefixCls);
+    const prefixCls = customizePrefixCls + 'modal';
 
     const { dispatch, state } = useContext(ModalContext);
     const modalState = getModalState(state, id);

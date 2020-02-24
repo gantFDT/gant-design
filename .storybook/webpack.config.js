@@ -49,6 +49,13 @@ module.exports = async ({ config, mode }) => {
 				"@color-picker": path.resolve('packages/color-picker-g/src'),
 				"@data-cell": path.resolve('packages/data-cell-g/src'),
 				"@header": path.resolve('packages/header-g/src'),
+				"@modal": path.resolve('packages/modal-g/src'),
+				"@schema-form": path.resolve('packages/schema-form-g/src'),
+				"@auto-reload": path.resolve('packages/auto-reload-g/src'),
+				"@anchor": path.resolve('packages/anchor-g/src'),
+				"@submenu": path.resolve('packages/submenu-g/src'),
+				"@table": path.resolve('packages/table-g/src'),
+				"@smart-table": path.resolve('packages/smart-table-g/src')
 			}
 		},
 	})

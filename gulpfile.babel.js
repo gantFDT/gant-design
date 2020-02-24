@@ -17,7 +17,7 @@ function clean(cb) {
 }
 
 let pkgs = fs.readdirSync(path.join(__dirname, 'packages'),{withFileTypes:true})
-  .filter(item=>item.isDirectory()&&item.name !== 'gantd')
+  .filter(item=>item.isDirectory())
   .map(item=>item.name);
 
 /**
@@ -35,6 +35,13 @@ const jstask = function (dirName) {
         content = content.replace(/@header/g, 'header-g')
         content = content.replace(/@data\-cell/g, 'data-cell-g')
         content = content.replace(/@color\-picker/g, 'color-picker-g')
+        content = content.replace(/@modal/g, 'modal-g')
+				content = content.replace(/@schema\-form/g, 'schema-form-g')
+				content = content.replace(/@auto\-reload/g, 'auto-reload-g')
+				content = content.replace(/@anchor/g, 'anchor-g')
+				content = content.replace(/@submenu/g, 'submenu-g')
+				content = content.replace(/@table/g, 'table-g')
+				content = content.replace(/@smart-table/g, 'smart-table-g')
         content = content.replace(/\.less/g, '.css')
         content = content.replace(/\.jsx/g, '.js')
         const buf = Buffer.from(content)
@@ -84,6 +91,13 @@ const tstask = function (dirName) {
         content = content.replace(/@header/g, 'header-g')
         content = content.replace(/@data\-cell/g, 'data-cell-g')
         content = content.replace(/@color\-picker/g, 'color-picker-g')
+        content = content.replace(/@modal/g, 'modal-g')
+				content = content.replace(/@schema\-form/g, 'schema-form-g')
+				content = content.replace(/@auto\-reload/g, 'auto-reload-g')
+				content = content.replace(/@anchor/g, 'anchor-g')
+				content = content.replace(/@submenu/g, 'submenu-g')
+				content = content.replace(/@table/g, 'table-g')
+				content = content.replace(/@smart-table/g, 'smart-table-g')
         content = content.replace(/\.less/g, '.css')
         content = content.replace(/\.jsx/g, '.js')
         const buf = Buffer.from(content)
@@ -123,44 +137,6 @@ const csstasks = pkgs.map(pkg => cb => {
   cb();
 })
 
-// 编译gantd
-const compileGantd = (cb) => {
-  src([
-    'packages/gantd/src/**/*.js',
-    'packages/gantd/src/**/*.jsx',
-  ])
-  .pipe(babel(babelConfig))
-  .pipe(
-    through2.obj(function (chunk, enc, next) {
-      let content = chunk.contents.toString()
-      content = content.replace(/\.less/g, '.css')
-      content = content.replace(/\.jsx/g, '.js')
-      const buf = Buffer.from(content)
-      chunk.contents = buf
-      this.push(chunk)
-      next()
-    })
-  )
-  .pipe(dest(`packages/gantd/lib/`));
-
-  src(`packages/gantd/src/**/*.less`)
-  .pipe(dest(`packages/gantd/lib/`))
-
-  src(`packages/gantd/src/**/*.less`)
-  .pipe(less({
-    plugins: [
-      new LessNpm({ prefix: '~' })
-    ],
-    javascriptEnabled: true,
-  }))
-  .pipe(postcss([autoprefixer()]))
-  .pipe(dest(`packages/gantd/lib/`));
-
-  cb();
-}
-
-// const compile = parallel(compileGantd, ...jstasks, ...csstasks)
 const compile = parallel(...jstasks, ...jsontasks, ...csstasks)
 
-exports.compileGantd = series(clean, compileGantd)
 exports.default = series(clean, compile)

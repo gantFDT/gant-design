@@ -1,5 +1,11 @@
-@import '../../gantd/src/style/index.less';
+@gant-prefix: gant;
 @component: ~'@{gant-prefix}-auto-reload';
+
+:root {
+  --btn-default-color: rgba(0, 0, 0, 0.5);
+  --btn-default-border-color: rgba(0, 0, 0, 0.2);
+  --primary-color: #1890FF;
+}
 
 .@{component} {
   &-container {
@@ -46,11 +52,9 @@
     width: 44px !important;
     box-shadow: none !important;
 
-
     .ant-input-number-input {
       padding: 0px;
       padding-right: 22px;
-      // text-align: center;
     }
 
     .ant-input-number-handler-wrap {
