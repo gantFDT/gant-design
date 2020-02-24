@@ -1,6 +1,6 @@
 {
   "name": "auto-reload-g",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "description": "auto-reload",
   "main": "lib/index.js",
   "scripts": {},
@@ -14,8 +14,8 @@
   "license": "MIT",
   "dependencies": {
     "antd": "^3.26.5",
-    "react": "^16.12.0",
+    "classnames": "^2.2.6",
     "moment": "^2.24.0",
-    "classnames": "^2.2.6"
+    "react": "^16.12.0"
   }
 }
