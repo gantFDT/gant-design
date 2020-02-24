@@ -7,7 +7,7 @@ import { Icon } from 'antd'
 
 import './index.less'
 import EditStatus from './editstatus'
-
+import classnames from 'classnames'
 
 const emptyText = '暂无'
 
@@ -18,12 +18,12 @@ export type GetText<P> = (p: P) => any
 
 const renderText = <P extends any>(getText: GetText<P>) => (props) => {
 
-  const { setEdit, allowEdit, style, placeholder } = props
+  const { setEdit, allowEdit, style, className, placeholder } = props
 
   const TextNode = React.memo(() => {
     const text = getText(props)
     if (emptyTextArray.includes(text)) {
-      return <span className={'gant-compose-noContent'}>{placeholder || emptyText}</span>
+      return <span className={'gant-compose-noContent'}>{emptyText}</span>
     }
     return text
   })
@@ -44,7 +44,7 @@ const renderText = <P extends any>(getText: GetText<P>) => (props) => {
 
 
   return (
-    <div className={'gant-compose-readWrapper'} style={{ width: get(style, 'width', '100%') }}>
+    <div className={classnames('gant-compose-readWrapper', className)} style={{ ...style, width: get(style, 'width', '100%') }}>
       <TextNode />
       <Pen />
     </div>
