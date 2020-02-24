@@ -1,6 +1,6 @@
 {
   "name": "smart-table-g",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "gantd smart-table-g",
   "main": "lib/index.js",
   "scripts": {},
