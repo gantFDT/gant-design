@@ -2,10 +2,9 @@ import React, { useState, useMemo, useCallback, ReactNode, useEffect, useRef } f
 import { Tooltip, Button } from 'antd'
 import moment from 'moment'
 import { isEmpty } from 'lodash'
-import Table from '@packages/table-g/src'
-import BlockHeader from '@packages/header-g/src'
-import { ConfigContext } from '@gantd/config-provider';
-import defaultLocale from '@gantd/locale/default';
+import Table from '@table'
+import BlockHeader from '@header'
+import defaultLocale from './locale';
 import ConfigModal from './config'
 import CustomExpandIcon from './customexpandicon'
 import { SmartTableProps, ViewConfig, ViewListProps } from './interface'
@@ -19,6 +18,7 @@ const defaultChildrenColumnName: string = 'children';
 const defaultRowKey: string = 'id';
 const defaultBodyMinHeight: number = 600;
 const viewVersionFormat: string = 'YYYY-MM-DD HH:mm:SSSS';
+const getPrefixCls = (cls, customizePrefixCls) => customizePrefixCls || 'gant' + cls;
 
 function SmartTable<R>(props: SmartTableProps<R>) {
   const {
@@ -55,9 +55,7 @@ function SmartTable<R>(props: SmartTableProps<R>) {
     ...restProps
   } = props;
 
-
-  const { locale: contextLocale = defaultLocale, getPrefixCls } = React.useContext(ConfigContext);
-  const tableLocale = locale || contextLocale.SmartTable;
+  const tableLocale = locale || defaultLocale;
   const prefixCls = getPrefixCls('smart-table', customizePrefixCls);
 
   const { columns, systemViews } = useMemo(() => formatSchema(schema), [schema]);

@@ -27,12 +27,6 @@
     "downlevelIteration": true,
     "allowSyntheticDefaultImports": true,
     "paths": {
-      "@gantd": [
-        "packages/gantd/src"
-      ],
-      "@packages": [
-        "packages"
-      ],
       "@util": [
         "packages/util-g/src"
       ],
@@ -45,21 +39,15 @@
       "@header": [
         "packages/header-g/src"
       ],
-      "@gantd/*": [
-        "packages/gantd/src"
+      "@table": [
+        "packages/table-g/src"
       ],
-      "@packages/*": [
-        "packages/*"
+      "@modal": [
+        "packages/modal-g/src"
       ],
       "@util/*": [
         "packages/util-g/src/*"
-      ],
-      "@color-picker/*": [
-        "packages/color-picker-g/src/*"
-      ],
-      "@data-cell/*": [
-        "packages/data-cell-g/src/*"
-      ],
+      ]
     }
   },
   "include": [

@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { Switch, Radio } from 'antd'
-import BlockHeader, { headerType } from '@packages/header-g/src'
+import BlockHeader, { headerType } from '@header'
 import { getType } from '@util'
 import Sortable from '../sortable'
 import formatSchema from '../formatschema'
