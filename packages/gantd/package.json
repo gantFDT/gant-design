@@ -131,7 +131,7 @@
     "react-dom": "^16.8.6",
     "react-sortable-hoc": "^1.9.1",
     "recompose": "^0.30.0",
-    "submenu-g": "^0.0.20",
+    "submenu-g": "^0.0.21",
     "table-g": "^0.0.21"
   },
   "browserslist": [
