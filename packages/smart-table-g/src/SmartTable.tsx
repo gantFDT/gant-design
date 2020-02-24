@@ -13,6 +13,7 @@ import ViewPicker, { DefaultView } from './viewpicker'
 import { useTableConfig, useLocalStorage } from './hooks'
 import { withFocusKeyEvent } from './keyevent'
 import { guid } from '@util'
+import './style.less';
 
 const defaultChildrenColumnName: string = 'children';
 const defaultRowKey: string = 'id';
