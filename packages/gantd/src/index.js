@@ -21,7 +21,7 @@ export { default as Intro } from './intro';
 export { default as Icon } from './icon';
 export { default as AutoReload } from '@auto-reload';
 export { default as TaskBoard } from './taskboard'
-export { default as Loading } from './loading'
+export { default as Loading } from './loading';
 
 //列表
 export { default as Table } from '@table';

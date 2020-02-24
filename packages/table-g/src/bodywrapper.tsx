@@ -1,5 +1,5 @@
-import React, { useState, useContext } from 'react'
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import React, { useContext } from 'react'
+import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
 import { TableBodyWrapperContext } from './context'
 

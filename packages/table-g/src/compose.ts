@@ -1,4 +1,4 @@
-import { compose, withPropsOnChange, withState, withHandlers, withProps } from 'recompose'
+import { compose, withPropsOnChange, withState, withProps } from 'recompose'
 
 
 export const tableWrapperRef = compose(

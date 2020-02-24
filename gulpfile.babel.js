@@ -11,19 +11,25 @@ const through2 = require('through2')
 const LessNpm = require('less-plugin-npm-import')
 const babelConfig = require('./babelConfig.json')
 
+let pkgs = fs.readdirSync(path.join(__dirname, 'packages'),{withFileTypes:true})
+  .filter(item=>item.isDirectory())
+  .map(item=>item.name);
+
+// pkgs = ['table-g'];
+
+function resolvePath(content, rules = []) {
+  rules.forEach((origin) => {
+    content = content.replace(new RegExp('@' + origin+ '/', 'g'), origin + '-g/lib/');
+    content = content.replace(new RegExp('@' + origin, 'g'), origin + '-g');
+  })
+  return content;
+}
+
 function clean(cb) {
   rimraf.sync(path.resolve(__dirname, 'packages/*/lib/'))
   cb()
 }
 
-let pkgs = fs.readdirSync(path.join(__dirname, 'packages'),{withFileTypes:true})
-  .filter(item=>item.isDirectory())
-  .map(item=>item.name);
-
-/**
- * 编译非gantd包的js文件
- * @param {*} dirName 文件夹名
- */
 const jstask = function (dirName) {
   return src([`packages/${dirName}/src/**/*.jsx`, `packages/${dirName}/src/**/*.js`])
     .pipe(babel(babelConfig))
@@ -31,19 +37,7 @@ const jstask = function (dirName) {
       // 处理路径等问题
       through2.obj(function (chunk, enc, next) {
         let content = chunk.contents.toString()
-        content = content.replace(/@util/g, 'util-g')
-        content = content.replace(/@header/g, 'header-g')
-        content = content.replace(/@data\-cell/g, 'data-cell-g')
-        content = content.replace(/@color\-picker/g, 'color-picker-g')
-        content = content.replace(/@modal/g, 'modal-g')
-				content = content.replace(/@schema\-form/g, 'schema-form-g')
-				content = content.replace(/@auto\-reload/g, 'auto-reload-g')
-				content = content.replace(/@anchor/g, 'anchor-g')
-				content = content.replace(/@submenu/g, 'submenu-g')
-				content = content.replace(/@table/g, 'table-g')
-				content = content.replace(/@smart-table/g, 'smart-table-g')
-        content = content.replace(/\.less/g, '.css')
-        content = content.replace(/\.jsx/g, '.js')
+        content = resolvePath(content, ['util', 'header', 'data-cell', 'color-picker', 'modal', 'schema-form', 'auto-reload', 'anchor', 'submenu', 'table', 'smart-table'])
         const buf = Buffer.from(content)
         chunk.contents = buf
         this.push(chunk)
@@ -87,17 +81,7 @@ const tstask = function (dirName) {
       // 处理路径等问题
       through2.obj(function (chunk, enc, next) {
         let content = chunk.contents.toString()
-        content = content.replace(/@util/g, 'util-g')
-        content = content.replace(/@header/g, 'header-g')
-        content = content.replace(/@data\-cell/g, 'data-cell-g')
-        content = content.replace(/@color\-picker/g, 'color-picker-g')
-        content = content.replace(/@modal/g, 'modal-g')
-				content = content.replace(/@schema\-form/g, 'schema-form-g')
-				content = content.replace(/@auto\-reload/g, 'auto-reload-g')
-				content = content.replace(/@anchor/g, 'anchor-g')
-				content = content.replace(/@submenu/g, 'submenu-g')
-				content = content.replace(/@table/g, 'table-g')
-				content = content.replace(/@smart-table/g, 'smart-table-g')
+        content = resolvePath(content, ['util', 'header', 'data-cell', 'color-picker', 'modal', 'schema-form', 'auto-reload', 'anchor', 'submenu', 'table', 'smart-table'])
         content = content.replace(/\.less/g, '.css')
         content = content.replace(/\.jsx/g, '.js')
         const buf = Buffer.from(content)

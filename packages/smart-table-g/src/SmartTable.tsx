@@ -263,7 +263,6 @@ function SmartTable<R>(props: SmartTableProps<R>) {
       {
         renderable && withFocusKeyEvent(<Table
           {...restProps}
-          hideVisibleMenu
           columns={finalColumns}
           dataSource={dataSource}
           resizable={searchTableCellResizable}
