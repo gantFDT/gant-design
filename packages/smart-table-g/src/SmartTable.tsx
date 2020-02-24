@@ -55,7 +55,7 @@ function SmartTable<R>(props: SmartTableProps<R>) {
     ...restProps
   } = props;
 
-  const tableLocale = locale || defaultLocale;
+  const tableLocale: any = locale || defaultLocale;
   const prefixCls = getPrefixCls('smart-table', customizePrefixCls);
 
   const { columns, systemViews } = useMemo(() => formatSchema(schema), [schema]);

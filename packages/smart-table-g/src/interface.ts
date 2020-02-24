@@ -58,6 +58,7 @@ export interface SmartTableProps<T> extends GantTableProps<T> {
   schema: SchemaProp<T> | CustomColumnProps<T>[],
   viewSchema?: any,
   onViewChange?: (viewSchema: any) => void,
+  locale?: any,
 
   bindKeys?: any,
   onReload?: () => void,
