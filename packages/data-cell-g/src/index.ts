@@ -6,6 +6,7 @@ export { default as SwitchStatus } from './compose/switchstatus'
 //数据单元
 //input
 export { default as Input, TextArea, Search, Group, Password } from './input'
+export { default as Select } from './select'
 export { default as InputCellPhone } from './inputcellphone'
 export { default as InputTelePhone } from './inputtelephone';
 export { default as InputUrl } from './inputurl';

@@ -143,7 +143,6 @@ function SmartTable<R>(props: SmartTableProps<R>) {
           break
       }
       saveLoadngFunc && saveLoadngFunc(true)
-      console.log('views', views)
       setCustomViews(views)
       saveLoadngFunc && saveLoadngFunc(false)
       setViewList({
@@ -247,7 +246,7 @@ function SmartTable<R>(props: SmartTableProps<R>) {
   const tableHeight = useMemo(() => isEmpty(dataSource) ? bodyHeight : (panelConfig.heightMode === 'auto' ? 'auto' : bodyHeight), [dataSource, panelConfig.heightMode, bodyHeight])
 
   return (
-    <div>
+    <div className="gant-smart-table-wrapper">
       <BlockHeader
         title={(
           <div ref={titleRef}>

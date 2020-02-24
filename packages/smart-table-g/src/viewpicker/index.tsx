@@ -1,4 +1,5 @@
 import './index.less'
+import './wrapper.less'
 import React, { useMemo, useCallback, useState, ReactNode, CSSProperties } from 'react'
 import { Icon, Popover, Spin, Empty } from 'antd'
 import _ from 'lodash'
@@ -187,6 +188,7 @@ export default function View(props: ViewProps) {
         getPopupContainer={getPopupContainer}
       >
         <div 
+          className="gant-dropbutton"
           style={
             {
               ...styles.dropbutton,
