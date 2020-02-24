@@ -1,6 +1,6 @@
 {
   "name": "smart-table-g",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "gantd smart-table-g",
   "main": "lib/index.js",
   "scripts": {},
@@ -16,15 +16,15 @@
   "license": "MIT",
   "dependencies": {
     "antd": "^3.26.12",
-    "react": "^16.12.0",
-    "util-g": "^0.0.20",
-    "modal-g": "^0.0.20",
-    "header-g": "^0.0.22",
-    "data-cell-g": "^0.0.6",
-    "table-g": "^0.0.21",
-    "react-sortable-hoc": "^1.11.0",
     "array-move": "^2.2.1",
+    "data-cell-g": "^0.0.6",
+    "header-g": "^0.0.22",
     "lodash": "^4.17.15",
-    "moment": "^2.24.0"
+    "modal-g": "^0.0.20",
+    "moment": "^2.24.0",
+    "react": "^16.12.0",
+    "react-sortable-hoc": "^1.11.0",
+    "table-g": "^0.0.21",
+    "util-g": "^0.0.20"
   }
 }
