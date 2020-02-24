@@ -1,13 +1,14 @@
-import React, { Component, forwardRef, useState, useContext, useCallback, useEffect, useMemo } from 'react';
+import React, { useState, useContext, useCallback, useEffect, useMemo } from 'react';
 import classnames from 'classnames'
 import _ from 'lodash'
 import { EditStatus, SwitchStatus } from '@data-cell'
-import { ConfigConsumer } from '@gantd/config-provider'
 import { DataContext, RowContext } from './context'
 
 import { EditConfig, Record } from './index'
 
 const invalidateValue = ['', null, undefined]
+
+const getPrefixCls = (cls) => 'gant' + cls;
 
 interface BodyCellProps<T> {
 	record: T,
@@ -229,7 +230,7 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 	)
 
 	const renderTd = useCallback(
-		({ getPrefixCls }) => {
+		() => {
 			const computedClassName = classnames(
 				className,
 				wrap ? [getPrefixCls('table-editcell-wrap')] : [isSelection ? '' : getPrefixCls('table-editcell-ellipsis')],
@@ -248,7 +249,7 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 		[className, cellPadding, style, wrap, showDirt, valueChanged, element, onClick, onTD, renderChildren, isSelection],
 	)
 
-	return <ConfigConsumer>{renderTd}</ConfigConsumer>
+	return renderTd()
 }
 
 export default BodyCell

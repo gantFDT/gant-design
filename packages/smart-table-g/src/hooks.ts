@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect, useCallback } from 'react'
-import { PaginationConfig } from '@packages/table-g/src'
+import { PaginationConfig } from '@table'
 import { merge } from 'lodash';
 
 // localStorage相关

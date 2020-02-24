@@ -1,11 +1,11 @@
-import React, { useMemo, useContext, useEffect, useCallback, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import classnames from 'classnames'
-import { get } from 'lodash'
 import { Draggable } from "react-beautiful-dnd";
 
-import { ConfigConsumer } from '@gantd/config-provider'
-import { RowContext, TableContext } from './context'
+import { RowContext } from './context'
 import { setStyle } from './_utils'
+
+const getPrefixCls = (cls) => 'gant' + cls;
 
 const BodyRow = ({ isDeleted, rowIndex, className, sortable, children, ...props }) => {
     const rowData = useMemo(() => ({ dataRowKey: props['data-row-key'] }), [props])
@@ -15,18 +15,12 @@ const BodyRow = ({ isDeleted, rowIndex, className, sortable, children, ...props 
         // 非拖动排序
         if (!sortable) {
             return (
-                <ConfigConsumer>
-                    {
-                        ({ getPrefixCls }) => (
-                            <tr
-                                {...props}
-                                className={classnames(className, { [getPrefixCls('table-row-deleted')]: isDeleted })}
-                            >
-                                {children}
-                            </tr>
-                        )
-                    }
-                </ConfigConsumer>
+                <tr
+                    {...props}
+                    className={classnames(className, { [getPrefixCls('table-row-deleted')]: isDeleted })}
+                >
+                    {children}
+                </tr>
             )
         }
         return (
@@ -48,26 +42,20 @@ const BodyRow = ({ isDeleted, rowIndex, className, sortable, children, ...props 
                             })
                         }
                         return (
-                            <ConfigConsumer>
-                                {
-                                    ({ getPrefixCls }) => (
-                                        <tr
-                                            {...props}
-                                            ref={(tr) => {
-                                                provided.innerRef(tr)
-                                                setTrRef(tr)
-                                            }}
-                                            {...provided.draggableProps}
-                                            {...provided.dragHandleProps}
-                                            style={style}
-                                            className={classnames(className, { [getPrefixCls('table-row-deleted')]: isDeleted })}
-                                        >
-                                            {children}
-                                            {provided.placeholder}
-                                        </tr>
-                                    )
-                                }
-                            </ConfigConsumer>
+                            <tr
+                                {...props}
+                                ref={(tr) => {
+                                    provided.innerRef(tr)
+                                    setTrRef(tr)
+                                }}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                                style={style}
+                                className={classnames(className, { [getPrefixCls('table-row-deleted')]: isDeleted })}
+                            >
+                                {children}
+                                {provided.placeholder}
+                            </tr>
                         )
                     }
                 }

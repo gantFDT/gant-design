@@ -1,5 +1,15 @@
-@import '../../../gantd/src/style/index.less';
+@gant-prefix: gant;
 @viewpicker-prefix-cls: ~'@{gant-prefix}-smart-table-viewpicker';
+:root {
+  --border-color-split: hsv(0, 0, 91%);
+  --text-color: fade(#000, 65%);
+  --primary-color: #1890FF;
+  --btn-danger-color: #ff4d4f;
+  --error-8: #a8071a;
+  --item-hover-bg: #e6f7ff;
+  --item-hover-color: fade(#000, 65%);
+  --border-radius-base: 4px;
+}
 .@{viewpicker-prefix-cls}-panel {
   width: 300px;
 

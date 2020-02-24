@@ -1,5 +1,10 @@
-@import '../../../gantd/src/style/index.less';
+@gant-prefix: gant;
 @sortable-prefix-cls: ~'@{gant-prefix}-smart-table-sortable';
+
+:root {
+  --border-color-split: hsv(0, 0, 91%);
+  --border-radius-base: 4px;
+}
 
 .@{sortable-prefix-cls} {
   overflow: hidden;

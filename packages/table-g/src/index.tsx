@@ -10,10 +10,8 @@ import _ from 'lodash'
 
 import warning from '@util/warning'
 import { ProtoExtends, PartRequired } from '@util/type'
-import VisibleMenu from "@gantd/visiblemenu"
-import { getColumns, renderColumnItem, useRowSelection, getStorageWidth, switchIndex, usePagination, setMainTableBorder, diffList, setStyle, getComputedColIndex, computeIndex } from './_utils'
-import { ConfigConsumer } from '@gantd/config-provider'
-import Header from '@packages/header-g/src'
+import { getColumns, renderColumnItem, useRowSelection, getStorageWidth, switchIndex, usePagination, diffList, setStyle, getComputedColIndex, computeIndex } from './_utils'
+import Header from '@header'
 import { EditStatus } from '@data-cell'
 
 import TableComponent from './tableRef'
@@ -40,14 +38,11 @@ const defaultProps = {
     columns: [],
     dataSource: [],
     pagination: null,
-    visibleMenuTitle: "动态列",
-    hideVisibleMenu: false,
     resizable: true,
     headerMarginBottom: 10,
     rowSelection: null,
     isZebra: true, // 斑马纹
     onSorted: (cols: Array<object>) => { }, // 列排序
-    visibleMenuChange: () => { },
     editable: EditStatus.CANCEL,
     wrap: false,
     footerDirection: 'row' as Direction,
@@ -106,9 +101,6 @@ export type OnDragEnd<T> = (list: Array<T>) => void
 // tail
 export type Tail<T> = (currentPageData: Array<T>) => React.ReactNode
 
-//visibleMenuChange
-export type VisibleMenuChange<T> = (item: GColumnProps<T>[], checked: boolean, hiddens: GColumnProps<T>[]) => void
-
 export type PaginationConfig = AntPaginationConfig | null | false
 
 // 定义GantTableProps基础类型
@@ -123,7 +115,6 @@ interface Props<T extends Record> {
     headerLeft: React.ReactElement,
     headerMarginBottom: number,
     headerRight: React.ReactNode,
-    hideVisibleMenu: boolean,
     onDragEnd: OnDragEnd<T>,
     orderList: Array<Order>,
     pagination: PaginationConfig,
@@ -134,8 +125,6 @@ interface Props<T extends Record> {
     tableKey: string,
     tail: Tail<T>,
     title: React.ReactNode,
-    visibleMenuChange: VisibleMenuChange<T>,
-    visibleMenuHiddenRows: Array<string>,
     wheel: Function,
     // deprecated
     resizeCell: boolean,
@@ -663,24 +652,7 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
     );
     //#endregion
 
-    // 动态列
-    //#region
-    const [visibleMenuHiddenRows, setvisibleMenuHiddenRows] = useState(props.visibleMenuHiddenRows || []);
-    const visibleMenuChange = useCallback(
-        (item, checked, hiddens) => {
-            console.log(item)
-            props.visibleMenuChange(item, checked, hiddens)
-            if (props.visibleMenuHiddenRows) return;
-            setvisibleMenuHiddenRows(hiddens)
-        }, []
-    )
-    useEffect(() => {
-        if (props.visibleMenuHiddenRows) setvisibleMenuHiddenRows(props.visibleMenuHiddenRows)
-    }, [props.visibleMenuHiddenRows])
-    //#endregion    
-
-    const tableColumns = useMemo(() => convertColumns(getColumns(columns, visibleMenuHiddenRows)), [columns, visibleMenuHiddenRows, convertColumns, orderList])
-
+    const tableColumns = useMemo(() => convertColumns(getColumns(columns)), [columns, convertColumns, orderList])
     const colSortable = useCallback((from, to) => {
         const cols = [...columns];
         cols.splice(to < 0 ? cols.length + to : to, 0, cols.splice(from, 1)[0])
@@ -752,13 +724,12 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
 
 
     const bodyWrapperContext = useMemo(() => ({ onDragEnd }), [onDragEnd])
-    const renderTable = ({ getPrefixCls, primaryColor }) => {
+    const getPrefixCls = (cls) => 'gant' + cls;
+    const renderTable = () => {
         const {
-            visibleMenuTitle,
             pagination,
             title = '',
             className,
-            hideVisibleMenu,
             headerLeft,
             headerMarginBottom,
             onSorted,
@@ -786,21 +757,6 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
                         extra={
                             <>
                                 {headerRightElement}
-                                {
-                                    !hideVisibleMenu && (
-                                        <div className={tableMenuPrefixCls} style={{ display: 'inline-block' }} >
-                                            <VisibleMenu
-                                                data={columns}
-                                                hiddenRows={visibleMenuHiddenRows}
-                                                keyName="dataIndex"
-                                                labelName='title'
-                                                title={visibleMenuTitle}
-                                                handleCheckbox={visibleMenuChange}
-                                                onSorted={props.onSorted && colSortable}
-                                            />
-                                        </div>
-                                    )
-                                }
                             </>
                         }
                     />
@@ -847,9 +803,7 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
     }
     return (
         <div ref={ref}>
-            <ConfigConsumer>
-                {renderTable}
-            </ConfigConsumer>
+            {renderTable()}
             <div className="cloneHead"></div>
         </div >
     )
@@ -864,10 +818,7 @@ const GTable = compose(
 
 GTable.propTypes = {
     columns: PropTypes.array.isRequired,
-    visibleMenuHiddenRows: PropTypes.array,
-    visibleMenuChange: PropTypes.func,
     resizable: PropTypes.bool,
-    hideVisibleMenu: PropTypes.bool,
     headerLeft: PropTypes.element,
     headerRight: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
     headerMarginBottom: PropTypes.number,

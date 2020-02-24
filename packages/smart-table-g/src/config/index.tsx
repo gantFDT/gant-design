@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { notification, Icon, Button } from 'antd'
-import Modal from '@packages/modal-g/src'
+import Modal from '@modal'
 import { ModalProps } from 'antd/lib/modal'
 import { deepCopy4JSON } from '@util'
 import ViewPicker from '../viewpicker'
