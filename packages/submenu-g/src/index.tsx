@@ -5,7 +5,6 @@ import classnames from 'classnames';
 import { Menu, Badge } from 'antd';
 import { ClickParam } from 'antd/lib/menu';
 import FlipOverFooter from './FlipOverFooter';
-import { ConfigContext } from '@gantd/config-provider';
 import { Icon } from '@data-cell';
 
 type menuItem = {
@@ -211,26 +210,24 @@ export default class SubMenu extends React.Component<any, Partial<CardIF>> {
     </div>
   }
   render() {
-    return <ConfigContext.Consumer>
-      {({ getPrefixCls }) => {
-        const { prefixCls: customizePrefixCls, classname, children, subMinHeight, selectedKey, menuData, showFlipOverFooter } = this.props;
-        this.prefixCls = getPrefixCls('submenu', customizePrefixCls);
-        const isInline = this.state.mode == 'inline';
-        let wrapStyle = { minHeight: subMinHeight };
-        isInline && (wrapStyle['display'] = 'flex');
-        return <div ref={ref => this.warpRef = ref} className={classnames(`${this.prefixCls}-pagewrap`, classname)} style={wrapStyle}>
-          {isInline ? this.renderInlineMenu(this.prefixCls) : this.renderHorMenu(this.prefixCls)}
-          <div className={`${this.prefixCls}-pagecard`}>
-            <>{children}</>
-            {showFlipOverFooter && <FlipOverFooter
-              prefixCls={this.prefixCls}
-              data={menuData}
-              nowKey={selectedKey}
-              onSelectedChange={this.onFooterSelectedChange}
-            />}
-          </div>
-        </div>
-      }}
-    </ConfigContext.Consumer>
+    const getPrefixCls = (cls, customizePrefixCls = '') => customizePrefixCls || 'gant' + cls;
+    const { prefixCls: customizePrefixCls, classname, children, subMinHeight, selectedKey, menuData, showFlipOverFooter } = this.props;
+    this.prefixCls = getPrefixCls('submenu', customizePrefixCls);
+    const isInline = this.state.mode == 'inline';
+    let wrapStyle = { minHeight: subMinHeight };
+    isInline && (wrapStyle['display'] = 'flex');
+
+    return <div ref={ref => this.warpRef = ref} className={classnames(`${this.prefixCls}-pagewrap`, classname)} style={wrapStyle}>
+      {isInline ? this.renderInlineMenu(this.prefixCls) : this.renderHorMenu(this.prefixCls)}
+      <div className={`${this.prefixCls}-pagecard`}>
+        <>{children}</>
+        {showFlipOverFooter && <FlipOverFooter
+          prefixCls={this.prefixCls}
+          data={menuData}
+          nowKey={selectedKey}
+          onSelectedChange={this.onFooterSelectedChange}
+        />}
+      </div>
+    </div>
   }
 }
