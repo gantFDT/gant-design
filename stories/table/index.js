@@ -636,23 +636,28 @@ function LightTable(props) {
 					value={spacing}
 				/>
 			</div>
-			<Table light spacing={spacing} cellPadding='8px 4px' columns={columns} dataSource={dataSource} onDragEnd={setdataSource} pagination={false} flex />
+			<Table light spacing={spacing} cellPadding='8px 4px' columns={columns} dataSource={dataSource} onDragEnd={setdataSource} pagination={false} />
 		</>
 	)
 }
 
 function EmptyTable(props) {
 
-	return <Table columns={columns} dataSource={[]} scroll={{ x: '100%', y: 350 }} pagination={false} flex emptyDescription='这个表格是空的' />
+	return <Table columns={columns} dataSource={[]} scroll={{ x: '100%', y: 350 }} pagination={false} emptyDescription='这个表格是空的' />
 }
 
 const config = {
 	codes: code.map(V => `import React, { useState, useCallback, useEffect, useMemo } from 'react';\n${V}`),
-	useage: `显示table数据，自带拉伸和动态列功能,默认开启斑马条纹，isZebra设置为false关闭`,
+	useage: (
+		`<h2>主要特性</h2>
+		<b>1、可缩放的列</b><br/>
+		<b>2、优化大数据下的滚动</b><br/>
+		<b>3、单元格编辑</b><br/>`
+	),
 	children: [
 		{
 			title: '基本用法',
-			describe: 'isDeleted: true标记该行删除,显示删除线。flex切换列的缩放为弹性缩放。通过wheel参数可以实现无限滚动，不建议无限滚动和拖拽排序一起实现，容易出现拖拽排序失效,fixedTop开启粘性头部',
+			describe: 'isDeleted: true标记该行删除,显示删除线。通过wheel参数可以实现无限滚动，不建议无限滚动和拖拽排序一起实现，容易出现拖拽排序失效,fixedTop开启粘性头部',
 			cmp: BasicTable
 		},
 		{

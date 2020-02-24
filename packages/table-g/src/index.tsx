@@ -766,7 +766,7 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
 
 
     const bodyWrapperContext = useMemo(() => ({ onDragEnd }), [onDragEnd])
-    const getPrefixCls = (cls) => 'gant' + cls;
+    const getPrefixCls = (cls) => 'gant-' + cls;
     const renderTable = () => {
         const {
             pagination,
