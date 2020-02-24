@@ -4,23 +4,8 @@ import _ from 'lodash'
 import { Tooltip, Checkbox } from 'antd'
 import { measureScrollbar } from 'rc-table/es/utils'
 import CSS from 'csstype'
-import { RowSelection, Record, RowKey, GColumnProps } from './index'
+import { RowSelection, Record, RowKey } from './index'
 
-
-
-export function getColumns(columns: GColumnProps<Record>[] = [], hideColumnsRows: string[] = []) {
-  return columns.filter(item => {
-    if (!item) return false
-    const isHide = Array.isArray(hideColumnsRows) && hideColumnsRows.includes(item.dataIndex)
-    return !isHide
-  })
-  // return showColumns.map((item) => ({
-  //   filters: item.showFilter && getfilters(item.codeData),
-  //   onFilter: (value, record) => record[item.dataIndex] === value,
-  //   filterMultiple: false,
-  //   ...item,
-  // }))
-}
 
 function transcode(value, codeData) {
   const index = _.findIndex(codeData, { value });
@@ -291,9 +276,9 @@ export const getStorageWidth = (key) => {
  * 
  * @param {HTMLTbaleElement} table 主table
  */
-export const toggleFixedTable = (table: HTMLTableElement, scrollY: boolean, scrollX: boolean): void => {
+export const toggleFixedTable = (tableParent: HTMLTableElement, scrollY: boolean, scrollX: boolean): void => {
   // 找打content区域
-  const tablecontent = _.get(table, 'parentElement.parentElement.parentElement')
+  const tablecontent = _.get(tableParent, 'parentElement.parentElement')
   if (!tablecontent) return
   const left = tablecontent.querySelector('.ant-table-fixed-left')
   const right = tablecontent.querySelector('.ant-table-fixed-right')
@@ -325,6 +310,7 @@ export const toggleFixedTableScroll = (fix, scrollY, scrollX) => {
     // scrollY --- 设置inner的overflow-x属性为scroll
 
     if (scrollY) {
+      setStyle(inner, `overflow-y: scroll`)
       if (scrollX) {
         // 负值保证主table在拖拽的时候不会卡住
         setStyle(outer, `margin-bottom: -${scrollbarmeasure}px`)
@@ -334,6 +320,7 @@ export const toggleFixedTableScroll = (fix, scrollY, scrollX) => {
         setStyle(inner, `overflow-x: hidden`)
       }
     } else {
+      setStyle(inner, `overflow-y: hidden`)
       if (scrollX) {
         setStyle(outer, `margin-bottom: -${scrollbarmeasure}px`)
         setStyle(inner, `overflow-x: hidden`)
@@ -489,17 +476,90 @@ function computeIndexInner<T>([...list], parent): [Array<T>, number] {
   })
   return [c, start]
 }
-
 /**
  * 给list计算g-index属性
  * @param {Array} list 
  * @param {number} withIndex 
  * @param {number} parent 
  */
-export const computeIndex = function computeIndex<T>([...list]: Array<T>, start = 0): Array<T> {
-  let computedList = []
+export const computeIndex = function computeIndex<T>([...list]: Array<T>, expandRowKeys = [], computedRowKey): [T[], string[], T[]] {
   console.time('计算序号')
-  if (list.length !== 0) computedList = computeIndexInner<T>(list, start)[0]
+  const renderRowKeys: string[] = []
+  const tilingList: T[] = [];
+  const items = []
+  const root = {
+    'g-root': true,
+    children: list
+  }
+  items.push({
+    nestLevel: 0,
+    node: root
+  })
+  let index = 0;
+
+  while (items.length) {
+    const { node, nestLevel, "g-parent-row-key": gprk, "g-parent": gp } = items.shift();
+    let rowKey;
+    if (!node['g-root']) {
+      node["g-index"] = ++index
+      node["g-level"] = nestLevel
+      rowKey = computedRowKey(node, node["g-index"])
+      node["g-row-key"] = rowKey
+      // 关联父级节点
+      if (gprk !== undefined) {
+        node["g-parent-row-key"] = gprk;
+        node["g-parent"] = gp
+      } else {
+        // 根节点
+        node["g-parent-row-key"] = 'root'
+      }
+      renderRowKeys.push(rowKey)
+      tilingList.push(node)
+    }
+    if (node.children !== undefined) {
+      if (_.get(node, "children.length")) {
+        if (node['g-root'] || expandRowKeys.includes(rowKey)) {
+          items.unshift(...node.children.map(child => ({
+            node: child,
+            nestLevel: nestLevel + 1,
+            "g-parent-row-key": rowKey,
+            "g-parent": node
+          })));
+        } else {
+          node.children = []
+        }
+      }
+    }
+  }
   console.timeEnd('计算序号')
-  return computedList
+  return [list, renderRowKeys, tilingList]
+}
+
+
+export const getVirtualList = function getVirtualList<T>(start: number, length: number, renderRowKeys: string[], [...list]: Array<T>): Array<T> {
+  // const keys = renderRowKeys.slice(start, start+length);
+  let result = list.slice(start, start + length);
+  if (!result.length) return result
+  do {
+    const { root = [], ...groups } = _.groupBy(result, 'g-parent-row-key')
+    for (const [key, nodes] of Object.entries(groups).reverse()) {
+      let seted = false;
+      for (const item of root) {
+        if (String(item['g-row-key']) === key) {
+          item.children = nodes
+          seted = true;
+          break;
+        }
+      }
+      // 在root中没有找到父级节点
+      if (!seted) {
+        const gp = nodes[0]["g-parent"]
+        gp.children = nodes;
+        root.unshift(gp)
+      }
+    }
+    result = root
+  } while (!result.every(item => item["g-parent-row-key"] === 'root'))
+
+  return result
 }

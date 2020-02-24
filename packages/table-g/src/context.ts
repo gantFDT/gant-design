@@ -24,7 +24,13 @@ const TableContext = React.createContext({} as {
     tableColumns: GColumnProps<any>[],
     onResize: () => void,
     virtualScroll: boolean,
-    mainHeight: number
+    mainHeight: number,
+    tableGroup: Map<string, HTMLTableElement>,
+    outlineNum: number,
+    thresholdInner: number,
+    renderRowKeys: string[],
+    storageWidth: number | string,
+    scrollY: number | string
 })
 const TableBodyWrapperContext = React.createContext({} as {
     onDragEnd: (result: any) => void

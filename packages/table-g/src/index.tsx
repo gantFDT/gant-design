@@ -10,7 +10,19 @@ import _ from 'lodash'
 
 import warning from '@util/warning'
 import { ProtoExtends, PartRequired } from '@util/type'
-import { getColumns, renderColumnItem, useRowSelection, getStorageWidth, switchIndex, usePagination, diffList, setStyle, getComputedColIndex, computeIndex } from './_utils'
+import {
+    renderColumnItem,
+    useRowSelection,
+    getStorageWidth,
+    switchIndex,
+    usePagination,
+    setMainTableBorder,
+    diffList,
+    setStyle,
+    getComputedColIndex,
+    computeIndex,
+    getVirtualList,
+} from './_utils'
 import Header from '@header'
 import { EditStatus } from '@data-cell'
 
@@ -42,7 +54,6 @@ const defaultProps = {
     headerMarginBottom: 10,
     rowSelection: null,
     isZebra: true, // 斑马纹
-    onSorted: (cols: Array<object>) => { }, // 列排序
     editable: EditStatus.CANCEL,
     wrap: false,
     footerDirection: 'row' as Direction,
@@ -53,8 +64,7 @@ const defaultProps = {
     emptyDescription: '暂无数据',
     withIndex: -1,
     onSave: (list: Array<object>, diffData: Array<Array<object>>) => { },
-    flex: false,
-    threshold: 60, // 触发虚拟滚动的条数
+    threshold: 20, // 触发虚拟滚动的条数
 }
 export type Order = { fieldName: string, orderType: string }
 
@@ -110,7 +120,7 @@ interface Props<T extends Record> {
     columns: GColumnProps<T>[],
     editActions: EditActions<T>,
     emptyDescription: React.ReactNode,
-    fixedTop: React.ReactText,
+    flex?: boolean,
     footerDirection: Direction,
     headerLeft: React.ReactElement,
     headerMarginBottom: number,
@@ -165,13 +175,13 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
         wrap,
         footerDirection,
         flex,
-        fixedTop,
         orderList,
         light,
         spacing,
         cellPadding,
         onSave,
         expandedRowKeys,
+        onExpand,
         onExpandedRowsChange,
         headerRight,
         editActions,
@@ -201,9 +211,16 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
         }
         return Math.random().toString(32).slice(2)
     })
+    const computedRowKey: RowKey<T> = useCallback(
+        (record, index) => {
+            if (!record) return undefined
+            if (record === (emptyRow as Record)) return 'defaultrow'
+            const recordKey = typeof rowKey === 'function' ? rowKey(record, index) : record[rowKey || defaultKey];
+            return recordKey === undefined ? record['g-index'] : recordKey
+        }, [rowKey]
+    )
 
-
-
+    const scrollY = useMemo(() => _.get(scroll, 'y'), [scroll])
     // resizeCell修改为resizable,仍然支持resizeCell
     const resizeCell = useMemo(() => props.resizeCell || props.resizable, [props.resizeCell, props.resizable])
     // 有子节点禁用排序功能
@@ -230,64 +247,67 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
     useEffect(() => {
         setColumns(props.columns)
     }, [props.columns])
+
+    // 展开的expandedRowKeys
+    const [expandRowKeys, setexpandRowKeys] = useState([])
+    useEffect(() => {
+        setexpandRowKeys(expandRowKeys)
+    }, [expandedRowKeys])
     // dataIndex的索引
     const computedColIndex = useMemo(() => getComputedColIndex(columns), [columns])
-    const useGIndex = useMemo(() => computedColIndex.find(item => item === 'g-index'), [computedColIndex])
-    // 虚拟滚动的相关数据
+    const useGIndex = useMemo(() => withIndex >= 0 || computedColIndex.find(item => item === 'g-index'), [withIndex, computedColIndex])
+    /**
+     * 虚拟滚动的相关数据
+     */
     const [outlineNum, setOutLineNum] = useState(0)
-    const lineHeight = useMemo(() => {
+
+    const thresholdInner = useMemo(() => Math.max(threshold, defaultProps.threshold), [threshold])
+    // 总数据、实际要渲染的rowkeys，用这个数据计算实际高度
+    const [renderListAll, renderRowKeys, tilingListAll] = useMemo(() => {
+        const list = _.cloneDeep(editable === EditStatus.EDIT ? cacheDataList : dataSource)
+        // const list = editable === EditStatus.EDIT ? cacheDataList : dataSource
+        if (list.length === 0) return [[], [], []]
+        return computeIndex<T>(list, expandRowKeys, computedRowKey)
+        // if (useGIndex) {
+        //     return computeIndex<T>(list)
+        // }
+        // return list
+    }, [cacheDataList, dataSource, editable, useGIndex, computedRowKey, expandRowKeys])
+
+    const originlineHeight = useMemo(() => {
         // 21 line-height
         // 1 border-bottom
         const padding: number = typeof cellPadding === 'string' ? parseInt(cellPadding) : cellPadding;
-        return 21 + padding * 2 + 1
+        return (21 + padding * 2 + 1)
     }, [cellPadding])
-    // 最少100条
-    const thresholdInner = useMemo(() => Math.max(threshold, defaultProps.threshold), [threshold])
-    const renderListAll = useMemo(() => {
-        const list = editable === EditStatus.EDIT ? cacheDataList : dataSource
-        if (useGIndex) {
-            return computeIndex<T>(list)
-        }
-        return list
-    }, [cacheDataList, dataSource, editable, useGIndex])
+    const rate = useMemo(() => {
+        const virtualHeight = BigInt(renderRowKeys.length * originlineHeight)
+        return Number(virtualHeight / BigInt(3e+07)) + 1
+    }, [renderRowKeys, originlineHeight])
+    // 计算滚动比例
+    const lineHeight = useMemo(() => originlineHeight / rate, [originlineHeight, rate])
     // 是否触发虚拟滚动
-    const virtualScroll = useMemo(() => {
-        const y = _.get(scroll, 'y')
-        if (y && renderListAll.length > thresholdInner) {
-            // 保证了不会出现，数据内容部分底部不会出现留白
-            return thresholdInner * lineHeight > parseInt(y)
-        }
-        return false
-    }, [renderListAll, thresholdInner, scroll, lineHeight])
-    const mainHeight = useMemo(() => renderListAll.length * lineHeight, [renderListAll, lineHeight])
+    const virtualScroll = useMemo(() => !!scrollY, [scrollY])
+    const mainHeight = useMemo(() => renderRowKeys.length * lineHeight, [renderRowKeys, lineHeight])
     // 最终渲染的数据
     const renderList = useMemo(() => {
         let list = renderListAll
         if (virtualScroll) {
-            list = renderListAll.slice(outlineNum, outlineNum + thresholdInner)
+            // list = renderListAll.slice(outlineNum, outlineNum + thresholdInner)
+            list = getVirtualList(outlineNum, thresholdInner, renderRowKeys, tilingListAll) // renderListAll.slice(outlineNum, outlineNum + thresholdInner)
         }
-        // return computeIndex<T>(list, outlineNum)
         return list
-    }, [renderListAll, thresholdInner, virtualScroll, outlineNum])
+    }, [virtualScroll, outlineNum, renderRowKeys, tilingListAll])
 
     //#endredion
-    const minHeight = useMemo(() => renderList.length > 0 ? _.get(scroll, 'y') : undefined, [scroll, renderList])
+    const minHeight = useMemo(() => renderList.length > 0 ? scrollY : undefined, [scrollY, renderList])
 
     const storageWidth = useMemo(() => getStorageWidth(tableKey)['table'] || _.get(scroll, 'x') || '100%', [tableKey])
-    const headerFixed = useMemo(() => !_.isUndefined(_.get(scroll, 'y')), [scroll])
+    const headerFixed = useMemo(() => !_.isUndefined(scrollY), [scrollY])
     const bordered = useMemo(() => light ? false : customBorderd, [light, customBorderd])
     // 当展开项发生变化的时候主动触发table的更新，去重新计算滚动条
     const [emitReCompute, setEmitReCompute] = useState(0)
 
-
-    const computedRowKey: RowKey<T> = useCallback(
-        (record, index) => {
-            if (!record) return undefined
-            if (record === (emptyRow as Record)) return 'defaultrow'
-            const recordKey = typeof rowKey === 'function' ? rowKey(record, index) : record[rowKey || defaultKey];
-            return recordKey === undefined ? index : recordKey
-        }, []
-    )
 
     // 业务层修改editable状态的时候，计算修改前后数据的
     useEffect(() => {
@@ -321,6 +341,7 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
         if (!(dataSource.length && footerselection) && !props.tail && !computedPagination) return null
         return footerCallback
     }, [props.tail, dataSource, computedPagination, footerselection])
+
     //#endregion
     // 滚动加载
     //#region
@@ -355,19 +376,62 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
         e.preventDefault()
     }, 50), [props.wheel, editable])
 
+    // const tableGroup = useMemo(() => {
+    //     if (!tableWraper) return []
+    //     return ([
+    //         tableWraper.querySelector(".ant-table-scroll .scroll--container table"),
+    //         tableWraper.querySelector(".ant-table-fixed-left .scroll--container table"),
+    //         tableWraper.querySelector(".ant-table-fixed-right .scroll--container table"),
+
+    //     ])
+    // }, [tableWraper])
+    const [tableGroup] = useState(new Map<string, HTMLTableElement>())
+    /**
+     * 计算虚拟滚动误差
+     * 平均每滚动多少条要修正误差
+     */
+    const scrollError = useMemo(() => {
+        const height = scrollY
+        if (height) {
+            // 最后一屏之前渲染的条数
+            const leave = renderRowKeys.length - threshold
+            // 最大滚动高度
+            const maxScroll = mainHeight - parseInt(height)
+            // 最多滚动多少条
+            const maxScrollLength = Math.floor(maxScroll / lineHeight)
+            // 偏差条数
+            const error = leave - maxScrollLength
+            if (error > 0) {
+                return Math.floor(maxScrollLength / error)
+            }
+        }
+        return 0
+    }, [mainHeight, scrollY, renderRowKeys, threshold, lineHeight])
     /**
      * 虚拟滚动
      */
     const onVScroll = useCallback((e) => {
-        const bodyTable = e.currentTarget.querySelector('table')
         const { scrollTop } = e.currentTarget
-        const outTopLine = Math.floor(scrollTop / lineHeight);
+        const outTopLinevir = Math.floor(scrollTop / lineHeight); // 用于计算table的位置
+        // 校正移动的条数，修正设置的值，防止在rate不为1的情况下，出现数据遗漏的问题
+        const outTopLine = outTopLinevir + (scrollError > 0 ? Math.floor(outTopLinevir / scrollError) : 0)
         // 设置数据
         setOutLineNum(outTopLine)
-        const outTopHeight = outTopLine * lineHeight
-        setStyle(bodyTable, `transform: translate(0, ${outTopHeight}px)`)
+        // 将要设置的数据条数
+        const len = renderRowKeys.slice(outTopLine, outTopLine + thresholdInner).length
+        // 实际渲染的高度
+        const domHeight = len * lineHeight * rate
+
+        const outTopHeight = outTopLinevir * lineHeight
+        let top = outTopHeight
+        if (outTopHeight + domHeight > mainHeight) {
+            top = mainHeight - domHeight
+        }
+        tableGroup.forEach(table => setStyle(table, `transform: translate(0, ${top}px)`))
+        // const table = tableGroup.get('bodyTable')
+        // setStyle(table, `transform: translate(0, ${top}px)`)
         // e.preventDefault()
-    }, [thresholdInner, lineHeight])
+    }, [thresholdInner, lineHeight, renderRowKeys, rate, mainHeight, tableGroup, scrollError])
 
     // 绑定滚动事件
     const bindScroll = useCallback(
@@ -407,50 +471,6 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
             removeScroll()
         }
     }, [tableWraper, bindScroll, removeScroll])
-
-    // 粘性头部
-    const [io, setio] = useState(null) // 监听器
-    useEffect(() => {
-        if (tableWraper) {
-            const theads = tableWraper.querySelectorAll('.ant-table-thead')
-            const cloneWrapper = tableWraper.querySelector('.cloneHead')
-            if (!_.isUndefined(fixedTop) && !io) {
-                // 开启粘性头部
-                const io = new IntersectionObserver(
-                    entries => {
-                        theads.forEach(thead => {
-                            const { width, top } = thead.getBoundingClientRect()
-                            let cloneThead = null
-                            if (top < fixedTop) {
-                                const html = thead.outerHTML
-                                const parser = new DOMParser()
-                                const doc = parser.parseFromString(`<table>${html}</table>`, 'text/html')
-                                cloneThead = doc.body.children[0];
-                                const { cssText } = cloneThead.style
-                                cloneThead.style.cssText = `${cssText};position:fixed;top:${fixedTop}px;table-layout: fixed;width: ${width}px;z-index: 10000;`
-                                const ths = cloneThead.querySelectorAll('th')
-                                if (bordered) {
-                                    [...ths].forEach(th => th.style.border = `1px solid rgba(126,126,126,0.3)`)
-                                }
-                            }
-                            cloneWrapper.innerHTML = ''
-                            if (cloneThead) {
-                                cloneWrapper.appendChild(cloneThead)
-                            }
-
-                        })
-                    },
-                    {
-                        // root: document.body,
-                        threshold: [1],
-                        rootMargin: `-${fixedTop}px 0px 0px 0px`
-                    }
-                )
-                io.observe(tableWraper)
-                setio(io)
-            }
-        }
-    }, [tableWraper, computedPagination, io])
 
 
     // table header
@@ -505,25 +525,27 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
         (col, record, rowIndex, { hasFixed, originOnCell }) => {
             const { dataIndex, editConfig, fixed } = col
             const cellEditable = _.isPlainObject(editConfig) && !_.isEmpty(editConfig)
+            // 修正rowIndex值
+            const computedRowIndex = rowIndex + outlineNum
             let defaultCellProps = {
                 style: { width: col.width, maxWidth: col.width }, // 防止折行模式下，被内容撑出
                 // 根据是否有固定列，以及是否是虚拟滚动来控制文本是否折行
-                wrap: hasFixed || virtualScroll ? false : wrap,
+                wrap: hasFixed ? false : wrap,
                 light,
                 record: { ...record },
                 sortable,
-                rowIndex,
+                rowIndex: computedRowIndex,
                 dataIndex,
                 cellPadding,
                 editConfig: {},
             }
             if (cellEditable) defaultCellProps.editConfig = editConfig
             if (originOnCell) {
-                return { ...defaultCellProps, ...originOnCell(record, rowIndex) }
+                return { ...defaultCellProps, ...originOnCell(record, computedRowIndex) }
             }
             return defaultCellProps
         },
-        [wrap, light, sortable, tableKey, cellPadding, headerFixed, virtualScroll],
+        [wrap, light, sortable, tableKey, cellPadding, headerFixed, virtualScroll, outlineNum],
     )
 
     const expandIconColumnIndex = useMemo(() => {
@@ -552,7 +574,7 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
                 }
                 col.width = getStorageWidth(tableKey)[col.dataIndex] || width
                 col.onHeaderCell = col => onHeaderCell(col, { hasFixed, hasChildren, index, originOnHeaderCell })
-                col.onCell = (record, rowIndex) => onCell(col, record, rowIndex, { hasFixed, originOnCell })
+                col.onCell = (record, rowIndex) => onCell(col, record, rowIndex + outlineNum, { hasFixed, originOnCell })
                 return col
             })
             if (withIndex >= 0 && !nest) {
@@ -565,7 +587,7 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
             }
             return computedCols
         },
-        [onHeaderCell, onCell, tableKey, withIndex]
+        [onHeaderCell, onCell, tableKey, withIndex, outlineNum]
     )
     //#endregion
 
@@ -581,15 +603,16 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
                 rowIndex: number,
                 sortable: boolean,
             }
+            const rowIndex = index + outlineNum
 
             const defaultRowProps: onRowProps = {
                 isDeleted: record.isDeleted,
-                rowIndex: index,
+                rowIndex,
                 sortable
             }
             let originListener: TableEventListeners = {}
             if (originOnRow) {
-                originListener = originOnRow(record, index)
+                originListener = originOnRow(record, rowIndex)
             }
             if (_.get(rowSelection, 'clickable')) {
                 const getCheckBoxProps = _.get(rowSelection, 'getCheckboxProps')
@@ -615,7 +638,7 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
             }
             return defaultRowProps
         },
-        [sortable, setselectedRowKeys, rowSelection]
+        [sortable, setselectedRowKeys, rowSelection, outlineNum]
     )
 
     // 表格中所有使用的组件
@@ -650,34 +673,47 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
         ),
         [resizeCell, BodyWrapper, sortable, HeaderCell]
     );
+
     //#endregion
-
-    const tableColumns = useMemo(() => convertColumns(getColumns(columns)), [columns, convertColumns, orderList])
-    const colSortable = useCallback((from, to) => {
-        const cols = [...columns];
-        cols.splice(to < 0 ? cols.length + to : to, 0, cols.splice(from, 1)[0])
-        props.onSorted(cols)
-    }, [columns])
-
+    const tableColumns = useMemo(() => convertColumns(columns), [columns, convertColumns, orderList])
 
     // 缺省显示
     const emptyText = useMemo(() => {
         return (
-            <div className="gant-align-center" style={{ height: _.get(scroll, 'y') }}>
+            <div className="gant-align-center" style={{ height: scrollY }}>
                 <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={props.emptyDescription} />
             </div>
         )
-    }, [scroll, props.emptyDescription])
+    }, [scrollY, props.emptyDescription])
 
-    // 展开变化
+    // 展开变化,触发重新计算滚动相关数据
     const expandedRowsChange = useCallback(
         (expandedRowKeys: string[] | number[]) => {
-            if (onExpandedRowsChange) {
-                onExpandedRowsChange(expandedRowKeys)
-            }
             setEmitReCompute(e => e + 1)
         },
         [onExpandedRowsChange],
+    )
+
+    const expand = useCallback(
+        (expanded, record) => {
+            let rowkey = expandRowKeys
+            const key = record["g-row-key"];
+            if (expanded) {
+                rowkey = [...expandRowKeys, key]
+            } else {
+                // row was collapse
+                const expandedRowIndex = expandRowKeys.indexOf(key);
+                if (expandedRowIndex !== -1) rowkey = [...expandRowKeys.slice(0, expandedRowIndex), ...expandRowKeys.slice(expandedRowIndex + 1)]
+            }
+            setexpandRowKeys(rowkey)
+            if (onExpandedRowsChange) {
+                onExpandedRowsChange(rowkey)
+            }
+            if (onExpand) {
+                onExpand(expanded, record)
+            }
+        },
+        [onExpandedRowsChange, onExpand, expandRowKeys],
     )
 
     // 劫持headerRight 
@@ -719,8 +755,14 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
         tableColumns,
         onResize,
         virtualScroll,
-        mainHeight
-    }), [light, spacing, dataSource, emitReCompute, tableColumns, headerFixed, onResize, virtualScroll, renderListAll, cellPadding])
+        mainHeight,
+        tableGroup,
+        outlineNum,
+        thresholdInner,
+        renderRowKeys,
+        storageWidth,
+        scrollY
+    }), [light, spacing, dataSource, emitReCompute, tableColumns, headerFixed, onResize, virtualScroll, mainHeight, tableGroup, outlineNum, thresholdInner, renderRowKeys, storageWidth, scrollY])
 
 
     const bodyWrapperContext = useMemo(() => ({ onDragEnd }), [onDragEnd])
@@ -732,7 +774,6 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
             className,
             headerLeft,
             headerMarginBottom,
-            onSorted,
             bodyStyle,
             scroll = {},
             headerProps,
@@ -745,7 +786,6 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
         const sortablePrefixCls = getPrefixCls('table-sortable');
         const zebraPrefixCls = getPrefixCls('table-zebra');
         const lightPrefixCls = getPrefixCls('table-light');
-        const tableMenuPrefixCls = getPrefixCls('table-menu');
         const tableHeaderPrefixCls = getPrefixCls('table-header');
         return (
             <>
@@ -754,11 +794,7 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
                         title={title}
                         {...headerProps}
                         beforeExtra={headerLeft}
-                        extra={
-                            <>
-                                {headerRightElement}
-                            </>
-                        }
+                        extra={headerRightElement}
                     />
                 )}
                 <DataContext.Provider value={dataContextValue}>
@@ -769,7 +805,9 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
                                 scroll={{ ...scroll, x: storageWidth }}
                                 locale={{ emptyText, ...locale }}
                                 {...tableProps}
+                                expandedRowKeys={expandRowKeys}
                                 onExpandedRowsChange={expandedRowsChange}
+                                onExpand={expand}
                                 bordered={bordered}
                                 dataSource={renderList}
                                 onRow={onRow}
@@ -804,7 +842,6 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
     return (
         <div ref={ref}>
             {renderTable()}
-            <div className="cloneHead"></div>
         </div >
     )
 }
@@ -823,8 +860,6 @@ GTable.propTypes = {
     headerRight: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
     headerMarginBottom: PropTypes.number,
     isZebra: PropTypes.bool,
-    // 列排序
-    onSorted: PropTypes.func,
     tableKey: PropTypes.string,
     editable: PropTypes.oneOf([EditStatus.EDIT, EditStatus.CANCEL, EditStatus.SAVE]),
     editActions: PropTypes.func,
@@ -837,7 +872,6 @@ GTable.propTypes = {
     tail: PropTypes.func,
     // 无限滚动`
     wheel: PropTypes.func,
-    fixedTop: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     light: PropTypes.bool, // 明亮模式开关
     spacing: PropTypes.oneOfType([
         PropTypes.string,

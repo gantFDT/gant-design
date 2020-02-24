@@ -27,7 +27,7 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 	const [value, setValue] = useState()
 	const [activeCell, setActiveCell] = useState(null)
 	const [cacheInitialValue, setCacheInitialValue] = useState()
-	const [element, setElement] = useState()
+	const [element, setElement] = useState<React.ReactElement>()
 	const [edit, setedit] = useState(EditStatus.CANCEL)
 	const { dataSource, setDataSource, isTree, cellPadding, computedRowKey, editable } = useContext(DataContext)
 	const { dataRowKey } = useContext(RowContext)
@@ -37,7 +37,7 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 
 	const getEditValue = useCallback(
 		() => {
-			let value = record[dataIndex]
+			let value = _.get(record, dataIndex)
 			if (editValue) {
 				if (typeof editValue === 'function') {
 					value = editValue(record, rowIndex, dataIndex)
@@ -130,7 +130,8 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 	const onBlur = useCallback(
 		() => {
 			if (element.props.onBlur) {
-				element.props.onBlur(value)
+				// 添加dataSource，保证在不需要切换状态的表格上面可以得到数据，来自行计算
+				element.props.onBlur(value, dataSource, setDataSource)
 			}
 			if (!isTree) {
 				setDataSource(([...list]) => {
@@ -147,7 +148,7 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 			}
 			switchEdit()
 		},
-		[value, element, switchEdit, isTree],
+		[value, element, switchEdit, isTree, dataSource],
 	)
 
 	// 更新树状数据

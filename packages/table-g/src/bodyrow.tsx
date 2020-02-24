@@ -1,8 +1,8 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useState, useContext } from 'react'
 import classnames from 'classnames'
 import { Draggable } from "react-beautiful-dnd";
 
-import { RowContext } from './context'
+import { RowContext, TableContext } from './context'
 import { setStyle } from './_utils'
 
 const getPrefixCls = (cls) => 'gant' + cls;
@@ -10,6 +10,15 @@ const getPrefixCls = (cls) => 'gant' + cls;
 const BodyRow = ({ isDeleted, rowIndex, className, sortable, children, ...props }) => {
     const rowData = useMemo(() => ({ dataRowKey: props['data-row-key'] }), [props])
 
+    const { outlineNum, thresholdInner, renderRowKeys } = useContext(TableContext)
+    const keysRange = renderRowKeys.slice(outlineNum, outlineNum + thresholdInner)
+    const style = useMemo(() => {
+        const s = props.style || {}
+        if (!keysRange.includes(rowData.dataRowKey)) {
+            return { ...s, display: 'none' }
+        }
+        return s
+    }, [props.style, keysRange, rowData])
     const [trRef, setTrRef] = useState(null)
     const row = useMemo(() => {
         // 非拖动排序
@@ -17,6 +26,7 @@ const BodyRow = ({ isDeleted, rowIndex, className, sortable, children, ...props 
             return (
                 <tr
                     {...props}
+                    style={style}
                     className={classnames(className, { [getPrefixCls('table-row-deleted')]: isDeleted })}
                 >
                     {children}
@@ -27,14 +37,14 @@ const BodyRow = ({ isDeleted, rowIndex, className, sortable, children, ...props 
             <Draggable key={rowIndex} draggableId={`dragrow${rowIndex}`} index={rowIndex} >
                 {
                     (provided, snapshot) => {
-                        const style = {
-                            ...(props.style || {}),
+                        const dragStyle = {
+                            ...(style || {}),
                             ...provided.draggableProps.style,
                         }
                         if (snapshot.isDragging) {
-                            style.display = 'table';
-                            style.tableLayout = 'fixed';
-                            style.borderSpacing = 0
+                            dragStyle.display = 'table';
+                            dragStyle.tableLayout = 'fixed';
+                            dragStyle.borderSpacing = 0
                             const table = trRef.parentElement.parentElement;
                             const cols = table.querySelectorAll("colgroup col");
                             ([...trRef.cells]).forEach((td, index) => {
@@ -50,7 +60,7 @@ const BodyRow = ({ isDeleted, rowIndex, className, sortable, children, ...props 
                                 }}
                                 {...provided.draggableProps}
                                 {...provided.dragHandleProps}
-                                style={style}
+                                style={dragStyle}
                                 className={classnames(className, { [getPrefixCls('table-row-deleted')]: isDeleted })}
                             >
                                 {children}
@@ -62,7 +72,7 @@ const BodyRow = ({ isDeleted, rowIndex, className, sortable, children, ...props 
 
             </Draggable>
         )
-    }, [isDeleted, rowIndex, className, sortable, children, trRef])
+    }, [isDeleted, rowIndex, className, sortable, children, trRef, style])
 
     return (
         <RowContext.Provider value={rowData}>{row}</RowContext.Provider>
