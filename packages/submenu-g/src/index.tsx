@@ -50,7 +50,7 @@ export default class SubMenu extends React.Component<any, Partial<CardIF>> {
     menuData: [],
     showMenuMagnet: false,
     showFlipOverFooter: false,
-    style: {}
+    style: {},
   }
 
   warpRef: null | HTMLDivElement
