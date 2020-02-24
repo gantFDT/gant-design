@@ -45,7 +45,7 @@ const Header = (props: HeaderIF) => {
   const dropRef = useRef(null)
   const [hiddenStartIndex, setHiddenStartIndex] = useState(0);
   // const [numberArr, setNumberArr] = useState([])
-  const [toolsHeight, setToolsHeight] = useState()
+  const [toolsHeight, setToolsHeight] = useState(0)
   const [showMore, setShowMore] = useState(false)
 
 
@@ -53,7 +53,7 @@ const Header = (props: HeaderIF) => {
 
   //打平extra
   useEffect(() => {
-    if(_.isEmpty(extra)){return}
+    if (_.isEmpty(extra)) { return }
     let toolsCollection = React.Children.toArray(extra)
     let tools = []
     const interator = (items, parentIndex) => {
@@ -77,8 +77,8 @@ const Header = (props: HeaderIF) => {
 
   //计算隐藏index
   const onResize = useCallback(() => {
-    if(_.isEmpty(extra)){return}
-    const childrenEL = [...outerRef.current.children[0].children,...dropRef.current.children]
+    if (_.isEmpty(extra)) { return }
+    const childrenEL = [...outerRef.current.children[0].children, ...dropRef.current.children]
     const numberArr = []
     let total = 0
     let toolsHeight: number = 0
@@ -178,10 +178,10 @@ const Header = (props: HeaderIF) => {
               overlayStyle={{ zIndex: 1 }}
               overlayClassName={prefixCls + '-dropdown'}
             >
-              <Button icon="ellipsis" className={getPrefixCls('overflow-tool-icon')} style={{ height: toolsHeight,width: toolsHeight}} />
+              <Button icon="ellipsis" className={getPrefixCls('overflow-tool-icon')} style={{ height: toolsHeight, width: toolsHeight }} />
             </Dropdown>}
           </div>
-          <div className={prefixCls + '-menu'} style={{ position: 'fixed', top: 0, left: 0,transform:'translateY(-1000px)' }} ref={(ref) => dropRef.current = ref}>{getDrapContent}</div>
+          <div className={prefixCls + '-menu'} style={{ position: 'fixed', top: 0, left: 0, transform: 'translateY(-1000px)' }} ref={(ref) => dropRef.current = ref}>{getDrapContent}</div>
         </div>
       </div>
     </div>

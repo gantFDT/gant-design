@@ -21,8 +21,8 @@ const GantAnchor = (props) => {
   const [leftArrowsShow, setLeftArrowsShow] = useState(false)   //左侧箭头
   const [rightArrowsShow, setRightArrowsShow] = useState(false) //右侧箭头
   const [menuArrowsShow, setMenuArrowsShow] = useState(true)
-  const [silderIdWidth, setSilderIdWidth] = useState()          //List外层宽度
-  const [contentWidth, setContentWidth] = useState()            //List实际宽度
+  const [silderIdWidth, setSilderIdWidth] = useState(0)          //List外层宽度
+  const [contentWidth, setContentWidth] = useState(0)            //List实际宽度
   const [isClickScroll, setIsClickScroll] = useState(false)     //页面滚动判断是点击后的滚动还是手动的滚动
   let scrollHeight = 0;                                         // 滚动的值
   let m2 = 0;                                                   // 对比时间的值
@@ -36,7 +36,7 @@ const GantAnchor = (props) => {
     }
   }, [isClickScroll, setIsClickScroll])
 
-  //滚动时触发
+  //   //滚动时触发
   const handleScroll = useCallback((e) => {
     const fixedEle = document.getElementById('anchorBoxId');//定位元素
     const fixedEleParent = document.querySelector('.gant-gantanchor-horAnchorOut');//定位元素的父元素
@@ -69,7 +69,7 @@ const GantAnchor = (props) => {
     }
   }, [stateMode, setId, isClickScroll])
 
-  //点击左右箭头
+  //   //点击左右箭头
   const handleMobileTabs = useCallback((e) => {
     const contentId = document.getElementById('contentId');
     const left = contentId.offsetLeft;

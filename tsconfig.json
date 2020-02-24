@@ -4,6 +4,7 @@
     "outDir": "dist",
     "module": "esnext",
     "target": "es5",
+    "strict": false,
     "lib": [
       "esnext",
       "dom"

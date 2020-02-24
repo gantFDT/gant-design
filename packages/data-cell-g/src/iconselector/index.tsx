@@ -18,7 +18,7 @@ const iconstyle = {
 }
 const bodyStyle = {
   height: 'calc(100vh - 41px)',
-  padding:10,
+  padding: 10,
   overflow: 'hidden'
 }
 
@@ -45,14 +45,14 @@ const IconHouse: React.FC<IconHouseProps> = ({ inForm, onChange, value, onBlur =
   // 图标id
   const [IDs, setIDs] = useState([] as string[])
   // 搜索框
-  const [text, settext] = useState()
+  const [text, settext] = useState('')
   // 当前icon
   const [currentId, setCurrentId] = useState(value)
   // 当前显示的图标类型
 
   const iconTypes = useMemo(() => {
     let iconTypeArr = [IconTypes.AntIcon]
-    if(!_.isEmpty(IDs)){
+    if (!_.isEmpty(IDs)) {
       iconTypeArr.push(IconTypes.IconFont)
     }
     return iconTypeArr
@@ -65,7 +65,7 @@ const IconHouse: React.FC<IconHouseProps> = ({ inForm, onChange, value, onBlur =
     AntIcon: outline
   }), [IDs])
 
-  
+
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
