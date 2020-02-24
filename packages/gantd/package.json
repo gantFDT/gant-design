@@ -1,6 +1,6 @@
 {
   "name": "favorinpmtest",
-  "version": "1.0.24",
+  "version": "1.0.25",
   "description": "GantD base on antD",
   "author": "GantFDT",
   "license": "MIT",
@@ -131,7 +131,7 @@
     "react-dom": "^16.8.6",
     "react-sortable-hoc": "^1.9.1",
     "recompose": "^0.30.0",
-    "submenu-g": "^0.0.21",
+    "submenu-g": "^0.0.22",
     "table-g": "^0.0.21"
   },
   "browserslist": [
