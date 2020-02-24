@@ -25,6 +25,37 @@ const dataSource = [
 ]
 
 function BasicUse() {
+  const tableSchema = [
+    {
+        fieldName: 'name',
+        title: '姓名'
+    },
+    {
+        fieldName: 'gender',
+        title: '性别',
+        render: V => V === 'MALE' ? '男' : '女'
+    },
+    {
+        fieldName: 'age',
+        title: '年龄'
+    },
+    {
+        fieldName: 'height',
+        title: '身高'
+    }
+  ]
+  return (
+      <div style={{ margin: 10 }}>
+        <SmartTable
+          tableKey="BasicUse"
+          schema={tableSchema}
+          dataSource={dataSource}
+        />
+      </div>
+  )
+}
+
+function ConfigColumnsUse() {
   const tableSchema = {
     supportColumnFields: [
       {
@@ -56,15 +87,17 @@ function BasicUse() {
           columnFields: [
             {
               fieldName: 'name',
+              align: 'right',
+              fixed: 'left',
+              width: 200
             },
             {
               fieldName: 'gender',
-            },
-            {
-              fieldName: 'age',
+              width: 800
             },
             {
               fieldName: 'height',
+              width: 900
             }
           ]
         }
@@ -74,7 +107,7 @@ function BasicUse() {
   return (
       <div style={{ margin: 10 }}>
         <SmartTable
-          tableKey="BasicUse"
+          tableKey="ConfigViewUse"
           schema={tableSchema}
           dataSource={dataSource}
         />
@@ -109,6 +142,11 @@ const config = {
             title: '基本用法',
             describe: '最简单的用法。',
             cmp: BasicUse
+        },
+        {
+            title: '预定义列视图用法',
+            describe: '配置列属性，包括显示与否、列的排序、固定、对齐方式等。</br>此演示隐藏年龄字段。',
+            cmp: ConfigColumnsUse
         }
     ]
 };

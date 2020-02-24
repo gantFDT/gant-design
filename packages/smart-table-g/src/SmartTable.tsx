@@ -13,6 +13,7 @@ import ViewPicker, { DefaultView } from './viewpicker'
 import { useTableConfig, useLocalStorage } from './hooks'
 import { withFocusKeyEvent } from './keyevent'
 import { guid } from '@util'
+import './style.less';
 
 const defaultChildrenColumnName: string = 'children';
 const defaultRowKey: string = 'id';
@@ -143,7 +144,6 @@ function SmartTable<R>(props: SmartTableProps<R>) {
           break
       }
       saveLoadngFunc && saveLoadngFunc(true)
-      console.log('views', views)
       setCustomViews(views)
       saveLoadngFunc && saveLoadngFunc(false)
       setViewList({
@@ -247,7 +247,7 @@ function SmartTable<R>(props: SmartTableProps<R>) {
   const tableHeight = useMemo(() => isEmpty(dataSource) ? bodyHeight : (panelConfig.heightMode === 'auto' ? 'auto' : bodyHeight), [dataSource, panelConfig.heightMode, bodyHeight])
 
   return (
-    <div>
+    <div className="gant-smart-table-wrapper">
       <BlockHeader
         title={(
           <div ref={titleRef}>

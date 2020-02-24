@@ -3,7 +3,7 @@ import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import CodeDecorator from '../_util/CodeDecorator';
 import code from './code'
 import Table from '@table'
-import { EditStatus, SwitchStatus, Generator } from '@data-cell'
+import { EditStatus, SwitchStatus, Input, InputNumber, Select } from '@data-cell'
 import { Button, Slider } from 'antd'
 const columns = [
 	{
@@ -216,7 +216,7 @@ function EditorTable() {
 			},
 			editConfig: {
 				render: (text, record, index) => {
-					return <Generator type='input' />
+					return <Input />
 				},
 			},
 			key: 'name',
@@ -239,7 +239,7 @@ function EditorTable() {
 			},
 			editConfig: {
 				render: (text, record, index) => {
-					return <Generator type='inputnumber' min={0} />
+					return <InputNumber min={0} />
 				}
 			}
 		},
@@ -262,7 +262,7 @@ function EditorTable() {
 			editConfig: {
 				render: (value, record, index) => {
 					return (
-						<Generator type='select' dataSource={address} />
+						<Select dataSource={address} />
 					)
 				}
 			},

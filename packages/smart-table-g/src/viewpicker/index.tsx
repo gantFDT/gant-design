@@ -1,32 +1,11 @@
 import './index.less'
 import React, { useMemo, useCallback, useState, ReactNode, CSSProperties } from 'react'
 import { Icon, Popover, Spin, Empty } from 'antd'
+import classnames from 'classnames';
 import _ from 'lodash'
 import Panel from './Panel'
 import EditModal from './EditModal'
 import { getActiveDefaultView } from './utils'
-
-const styles = {
-  dropbutton: {
-    fontWeight: 'bold',
-    fontSize: 12,
-    lineHeight: '20px',
-    display: 'inline-block',
-    opacity: 0,
-    cursor: 'pointer',
-    transition: 'all 0.3s'
-  } as CSSProperties,
-
-  DefaultShow: {
-    opacity: 1
-  } as CSSProperties,
-
-  SplitLine: {
-    borderLeft: '1px solid #edebe9',
-    paddingLeft: 10,
-    marginLeft: 10
-  } as CSSProperties
-}
 
 export type ViewType = 'company' | 'system' | 'custom'
 
@@ -187,12 +166,14 @@ export default function View(props: ViewProps) {
         getPopupContainer={getPopupContainer}
       >
         <div 
-          style={
-            {
-              ...styles.dropbutton,
-              ...(!config || showPop) ? styles.DefaultShow : {},
-              ...splitLine ? styles.SplitLine : {},
-            }
+          className={
+            classnames(
+              'gant-dropbutton',
+              {
+                'DefaultShow': !config || showPop,
+                'SplitLine': splitLine
+              }
+            )
           }>
           {viewName || locale.view}
           <Icon type='down' style={{ marginLeft: '5px' }} />
