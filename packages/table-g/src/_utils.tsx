@@ -87,7 +87,7 @@ export const useRowSelection = <T extends Record>(rowSelection: RowSelection<T>,
   )
   // 用户传递的key，所有计算以此为准
   const originSelectedKeys: string[] = useMemo(() => _.get(rowSelection, 'selectedRowKeys', []), [rowSelection])
-  const columnWidth = useMemo(() => _.get(rowSelection, 'columnWidth', defaultColumnWidth), [rowSelection])
+  const columnWidth = useMemo<number>(() => parseInt(String(_.get(rowSelection, 'columnWidth', defaultColumnWidth))), [rowSelection])
   const showFooterSelection = useMemo(() => _.get(rowSelection, 'showFooterSelection', true), [rowSelection])
   const isMultiple = useMemo(() => _.get(rowSelection, 'type', 'checkbox') === 'checkbox', [rowSelection])
   const [selectedRowKeys, setselectedRowKeys] = useState(originSelectedKeys)
@@ -401,8 +401,8 @@ export const diffList = <T extends Record>(oldList: T[], newList: T[], computedR
 
       let [oi, ni] = [oldItem, newItem];
       if (isTree) {
-        oi = _.omit(oldItem, 'children');
-        ni = _.omit(newItem, 'children')
+        oi = _.omit(oldItem, 'children') as T;
+        ni = _.omit(newItem, 'children') as T
         // 比较子树
         const oldChildLength = _.get(oldItem, 'children.length')
         const newChildLength = _.get(newItem, 'children.length')
@@ -536,7 +536,7 @@ export const computeIndex = function computeIndex<T>([...list]: Array<T>, expand
 }
 
 
-export const getVirtualList = function getVirtualList<T>(start: number, length: number, renderRowKeys: string[], [...list]: Array<T>): Array<T> {
+export const getVirtualList = function getVirtualList<T extends Record>(start: number, length: number, renderRowKeys: string[], [...list]: Array<T>): Array<T> {
   // const keys = renderRowKeys.slice(start, start+length);
   let result = list.slice(start, start + length);
   if (!result.length) return result

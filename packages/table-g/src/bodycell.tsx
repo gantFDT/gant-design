@@ -24,9 +24,9 @@ interface BodyCellProps<T> {
 }
 
 const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', rowIndex, editConfig = {} as EditConfig<T>, sortable, wrap, light, children, className, style, ...props }: BodyCellProps<T>) => {
-	const [value, setValue] = useState()
+	const [value, setValue] = useState<string>()
 	const [activeCell, setActiveCell] = useState(null)
-	const [cacheInitialValue, setCacheInitialValue] = useState()
+	const [cacheInitialValue, setCacheInitialValue] = useState<string>()
 	const [element, setElement] = useState<React.ReactElement>()
 	const [edit, setedit] = useState(EditStatus.CANCEL)
 	const { dataSource, setDataSource, isTree, cellPadding, computedRowKey, editable } = useContext(DataContext)
@@ -37,7 +37,7 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 
 	const getEditValue = useCallback(
 		() => {
-			let value = _.get(record, dataIndex)
+			let value: string = _.get(record, dataIndex)
 			if (editValue) {
 				if (typeof editValue === 'function') {
 					value = editValue(record, rowIndex, dataIndex)

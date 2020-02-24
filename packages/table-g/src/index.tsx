@@ -220,7 +220,7 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
         }, [rowKey]
     )
 
-    const scrollY = useMemo(() => _.get(scroll, 'y'), [scroll])
+    const scrollY = useMemo<string|number>(() => _.get(scroll, 'y') as string|number, [scroll])
     // resizeCell修改为resizable,仍然支持resizeCell
     const resizeCell = useMemo(() => props.resizeCell || props.resizable, [props.resizeCell, props.resizable])
     // 有子节点禁用排序功能
@@ -345,7 +345,7 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
     //#endregion
     // 滚动加载
     //#region
-    const onscroll = useCallback(_.debounce((e) => {
+    const onscroll = useCallback(_.debounce<any>((e) => {
         // 编辑状态下不触发whell事件
         if (!props.wheel || editable === EditStatus.EDIT) return
         if (e.type === 'wheel') {
@@ -396,7 +396,7 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
             // 最后一屏之前渲染的条数
             const leave = renderRowKeys.length - threshold
             // 最大滚动高度
-            const maxScroll = mainHeight - parseInt(height)
+            const maxScroll = mainHeight - parseInt(String(height))
             // 最多滚动多少条
             const maxScrollLength = Math.floor(maxScroll / lineHeight)
             // 偏差条数

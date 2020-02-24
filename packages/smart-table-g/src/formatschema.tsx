@@ -2,7 +2,7 @@ import React from 'react'
 import { DatePicker, Switch, Input as AntInput } from 'antd'
 import { Input, InputNumber, RangePicker, Selector, InputUrl, LocationSelector, InputTelePhone, InputCellPhone, InputEmail, InputLanguage, InputMoney } from '@data-cell'
 import { isEmpty, cloneDeep } from 'lodash'
-import { SchemaProp, PanelConfig, CustomColumnProps } from './interface'
+import { SchemaProp, PanelConfig, CustomColumnProps, ColumnConfig } from './interface'
 import { getType } from '@util'
 
 const DEFAULT_VIEW: PanelConfig = {
@@ -113,7 +113,7 @@ export default function formatSchema<R>(schema: SchemaProp<R> | CustomColumnProp
   })
 
   // 默认的列配置数据
-  const columnConfigs = columns.map(C => ({...C, checked: true,align: 'left',lock: false}))
+  const columnConfigs: ColumnConfig[] = columns.map(C => ({...C, checked: true,align: 'left',lock: false}))
 
   // 匹配系统视图
   systemViews.forEach(view=>{
@@ -138,7 +138,7 @@ export default function formatSchema<R>(schema: SchemaProp<R> | CustomColumnProp
       align: 'left',
       lock: false
     }))
-    columnConfigs = [...columnConfigs, ...hiddenColumns];
+    columnConfigs = [...columnConfigs, ...hiddenColumns] as ColumnConfig[];
 
     view.panelConfig = {
       ...DEFAULT_VIEW,
