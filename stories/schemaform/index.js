@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useRef } from 'react'
 import { Button, Radio, Rate, Switch } from 'antd'
 import { EditStatus } from '@data-cell'
-import FormSchema from '@packages/schema-form-g/src'
+import SchemaForm from '@packages/schema-form-g/src'
 import { schema, operateSchema, configSchma, bindDataSchema, customCmpSchema } from './schema'
 import CodeDecorator from '../_util/CodeDecorator'
 import code from './code.js'
@@ -26,7 +26,7 @@ function BasicUse() {
         console.log('formValues', formValues)
     }
     return <div style={{ margin: 10 }}>
-        <FormSchema
+        <SchemaForm
             wrappedComponentRef={formRef}
             edit={edit}
             schema={schema}
@@ -103,7 +103,7 @@ function EditStatusUse() {
         )
     }
     return <div style={{ margin: 10 }}>
-        <FormSchema
+        <SchemaForm
             wrappedComponentRef={formRef}
             edit={edit}
             schema={schema}
@@ -139,7 +139,7 @@ function OperatorUse() {
     }
 
     return <div style={{ margin: 10 }}>
-        <FormSchema
+        <SchemaForm
             wrappedComponentRef={formRef}
             edit={EditStatus.EDIT}
             schema={operateSchema}
@@ -186,13 +186,13 @@ function CustomOptions() {
         <div>
             <div style={{ display: 'flex' }}>
                 <div style={{ flex: 1 }}>
-                    <FormSchema
+                    <SchemaForm
                         schema={schema}
                         uiSchema={uiSchema}
                     />
                 </div>
                 <div style={{ width: 400, marginLeft: 20 }}>
-                    <FormSchema schema={configSchma} uiSchema={configUI} data={data} onChange={onChange} />
+                    <SchemaForm schema={configSchma} uiSchema={configUI} data={data} onChange={onChange} />
                 </div>
             </div>
             <div style={{ float: 'right' }}><Button onClick={Reset}>重置UI</Button></div>
@@ -221,7 +221,7 @@ function GridLayout() {
 
     }
     return <div style={{ margin: 10 }} >
-        <FormSchema uiSchema={uiSchema} schema={schema} />
+        <SchemaForm uiSchema={uiSchema} schema={schema} />
     </div>
 }
 
@@ -240,7 +240,7 @@ function BindData() {
                 <p>key_2：<span>{data.key_2}</span></p>
             </div>
             <div style={{ flex: 1 }}>
-                <FormSchema
+                <SchemaForm
                     wrappedComponentRef={formRef}
                     uiSchema={initalUiSchema}
                     data={data}
@@ -271,7 +271,7 @@ function DependenceData() {
         }
     }
     return <div style={{ margin: 10 }}>
-        <FormSchema
+        <SchemaForm
             uiSchema={initalUiSchema}
             schema={dependenceSchema}
         />
@@ -281,7 +281,7 @@ function DependenceData() {
 function CustomCmp() {
 
     return <div style={{ margin: 10 }}>
-        <FormSchema
+        <SchemaForm
             uiSchema={initalUiSchema}
             schema={customCmpSchema}
             customFields={[{
@@ -295,7 +295,7 @@ function CustomCmp() {
 const config = {
     codes: code,
     useage: <>
-        <p>表单是业务开发中最常见的业务场景，复杂表单的复杂程度往往需要我们使用大量的代码与时间去构建一个表单业务。FormSchema由此诞生：</p>
+        <p>表单是业务开发中最常见的业务场景，复杂表单的复杂程度往往需要我们使用大量的代码与时间去构建一个表单业务。SchemaForm由此诞生：</p>
         <ul>
             <li>通过schema数据快速构建出复杂表单；</li>
             <li>通过uiSchema的对表单进行快速的样式自定义；</li>
