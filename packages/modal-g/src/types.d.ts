@@ -40,12 +40,13 @@ interface ModalLocale {
 
 interface ModalInnerProps {
     prefixCls?: string,
-    locale?: ModalLocale,
     id: string,
     itemState: ModalStateOutter,
     visible: boolean,
     title: string,
     wrapClassName?: string,
     confirmLoading?: boolean,
-    children?: React.ReactNode
+    children?: React.ReactNode,
+    cancelButtonProps?: object,
+    okButtonProps?: object,
 }
