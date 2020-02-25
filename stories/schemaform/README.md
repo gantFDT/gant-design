@@ -1,6 +1,6 @@
 ## API
 
-FormSchema
+SchemaForm
 
 | 属性           | 说明                                                | 类型                | 默认值          |
 | -------------- | --------------------------------------------------- | ------------------- | --------------- |
@@ -68,10 +68,10 @@ ComponentType
 
 ## FAQ
 #### 1.schema中type有多少种类型,分别代表的意义？
-答：type总共6种类型：“object”、“array”、“number”、“string”、“bool”、“date”；对于formSchema来说，其type的类型能决定当前字段渲染结构，例如 object渲染Form，其他则渲染Field。
+答：type总共6种类型：“object”、“array”、“number”、“string”、“bool”、“date”；对于SchemaForm来说，其type的类型能决定当前字段渲染结构，例如 object渲染Form，其他则渲染Field。
 
 #### 2.理解继承关系（uiSchema、headerConfig、edit）？
-答：在FormSchema属性中uiSchema、headerConfig、edit具有继承功能，如果没有指定该字段的其属性，则继承父级属性，父级若没有则继承父级的父级，以此类推。
+答：在SchemaForm属性中uiSchema、headerConfig、edit具有继承功能，如果没有指定该字段的其属性，则继承父级属性，父级若没有则继承父级的父级，以此类推。
 
 列如：
 
@@ -115,10 +115,10 @@ const uiSchema={
 答：双向绑定的方式：利用onChange和data 业务层通过onChange可以获取到修改后的form值然再赋予formshemea的data；data改变的不仅仅是当前form的也会改变form的初始值即使用resetFields方法也不能还原到最开始的数据；
 2).如何做到双向绑定，但不影响的初始状态；
 答；利用setFieldsValue和onChange业务层实现双向绑定；
-双向绑定是业务层中最常规的操作方式，正确利用formschema暴露的方法才能保证不造成内存泄漏；达到最优化。
+双向绑定是业务层中最常规的操作方式，正确利用SchemaForm暴露的方法才能保证不造成内存泄漏；达到最优化。
 
 #### 5.如何拓展自定义组件？
-针对不同项目可能出现不同或特定的field组件时，这就需要我们拓展FormSchema。
+针对不同项目可能出现不同或特定的field组件时，这就需要我们拓展SchemaForm。
 
 ###### 使用customFields
 具体用法请查看示例(扩展自定义字段)。

@@ -1,7 +1,7 @@
 const code1 = `
 import React, { useState, useRef } from 'react'
 import { Button } from 'antd'
-import { FormSchema, EditStatus } from 'gantd'
+import { SchemaForm, EditStatus } from 'gantd'
 
 const schema = {
     type: "object",
@@ -64,7 +64,7 @@ function BasicUse() {
         console.log('formValues', formValues)
     }
     return <div style={{ margin: 10 }}>
-        <FormSchema
+        <SchemaForm
             wrappedComponentRef={formRef}
             edit={edit}
             schema={schema}
@@ -82,7 +82,7 @@ ReactDOM.render(<BasicUse/>,mountNode)
 const code2 = `
 import React, { useState, useRef } from 'react'
 import { Button, Radio, Switch } from 'antd'
-import { FormSchema, EditStatus } from 'gantd'
+import { SchemaForm, EditStatus } from 'gantd'
 
 const uiSchema = {
     "ui:col": 24,
@@ -149,7 +149,7 @@ function EditStatusUse() {
         )
     }
     return <div style={{ margin: 10 }}>
-        <FormSchema
+        <SchemaForm
             wrappedComponentRef={formRef}
             edit={edit}
             schema={schema}
@@ -170,7 +170,7 @@ ReactDOM.render(<EditStatusUse/>,mountNode)
 const code3 = `
 import React, { useState, useRef } from 'react'
 import { Button } from 'antd'
-import { FormSchema, EditStatus } from 'gantd'
+import { SchemaForm, EditStatus } from 'gantd'
 
 const schema = {
     type: "object",
@@ -218,7 +218,7 @@ function OperatorUse() {
     }
 
     return <div style={{ margin: 10 }}>
-        <FormSchema
+        <SchemaForm
             wrappedComponentRef={formRef}
             edit={EditStatus.EDIT}
             schema={operateSchema}
@@ -236,7 +236,7 @@ ReactDOM.render(<OperatorUse/>,mountNode)
 
  const code4 = `
  import React, { useState,useMemo, useRef } from 'react'
- import { FormSchema } from 'gantd'
+ import { SchemaForm } from 'gantd'
  
  const schema = {
     type: "object",
@@ -382,13 +382,13 @@ ReactDOM.render(<OperatorUse/>,mountNode)
         <div>
             <div style={{ display: 'flex' }}>
                 <div style={{ flex: 1 }}>
-                    <FormSchema
+                    <SchemaForm
                         schema={schema}
                         uiSchema={uiSchema}
                     />
                 </div>
                 <div style={{ width: 400, marginLeft: 20 }}>
-                    <FormSchema schema={configSchma} uiSchema={configUI} data={data} onChange={onChange} />
+                    <SchemaForm schema={configSchma} uiSchema={configUI} data={data} onChange={onChange} />
                 </div>
             </div>
             <div style={{ float: 'right' }}><Button onClick={Reset}>重置UI</Button></div>
@@ -401,7 +401,7 @@ ReactDOM.render(<OperatorUse/>,mountNode)
 
 const code5 = `
 import React from 'react'
-import { FormSchema } from 'gantd'
+import { SchemaForm } from 'gantd'
 
 const schema = {
     type: "object",
@@ -466,7 +466,7 @@ const uiSchema = {
 
 function GridLayout() {
     return <div style={{ margin: 10 }} >
-        <FormSchema uiSchema={uiSchema} schema={schema} />
+        <SchemaForm uiSchema={uiSchema} schema={schema} />
     </div>
 }
 
@@ -477,7 +477,7 @@ ReactDOM.render(<GridLayout/>,mountNode)
 
 const code6 = `
 import React, { useState, useRef } from 'react'
-import { FormSchema } from 'gantd'
+import { SchemaForm } from 'gantd'
 
 const schema = {
     type: "object",
@@ -519,7 +519,7 @@ function BindData() {
                 <p>key_2：<span>{data.key_2}</span></p>
             </div>
             <div style={{ flex: 1 }}>
-                <FormSchema
+                <SchemaForm
                     wrappedComponentRef={formRef}
                     uiSchema={uiSchema}
                     data={data}
@@ -536,7 +536,7 @@ ReactDOM.render(<BindData/>,mountNode)
 
 const code7 = `
 import React, { useState } from 'react'
-import { FormSchema } from 'gantd'
+import { SchemaForm } from 'gantd'
 
 const uiSchema = {
     "ui:col": 24,
@@ -568,7 +568,7 @@ function DependenceData() {
         }
     }
     return <div style={{ margin: 10 }}>
-        <FormSchema
+        <SchemaForm
             uiSchema={uiSchema}
             schema={dependenceSchema}
         />
@@ -581,7 +581,7 @@ ReactDOM.render(<DependenceData/>,mountNode)
 const code8 = `
 import React, { useState } from 'react'
 import { Rate } from 'antd'
-import { FormSchema } from 'gantd'
+import { SchemaForm } from 'gantd'
 
 const uiSchema = {
     "ui:col": 24,
@@ -611,7 +611,7 @@ const customCmpSchema = {
 
 function CustomCmp() {
     return <div style={{ margin: 10 }}>
-        <FormSchema
+        <SchemaForm
             uiSchema={uiSchema}
             schema={customCmpSchema}
             customFields={[{

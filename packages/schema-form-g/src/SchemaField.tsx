@@ -10,8 +10,10 @@ import { getFields } from './maps'
 const tr = (str) => str;
 
 const SchemaField = (props: Schema) => {
-	const { options, title, props: FiledProps, componentType, name, isRequired, initialValue: defaultValue, required, edit, uiData } = props
-	const { form: { getFieldDecorator, resetFields, validateFieldsAndScroll }, onSave, data, customFields, emitDependenciesChange, locale, prefixCls } = useContext(FormContext)
+	const { options, title, props: FieldProps, componentType, name, isRequired, required, edit, uiData } = props
+	const { form: { getFieldDecorator, resetFields, validateFieldsAndScroll }, onSave, data, customFields, emitDependenciesChange, prefixCls } = useContext(FormContext)
+
+	const defaultValue = get(FieldProps, 'initialValue', undefined)
 
 	const onCancel = useCallback(() => name && resetFields([name]), [componentType, name])
 
@@ -31,7 +33,7 @@ const SchemaField = (props: Schema) => {
 
 	if (initialValue == undefined && componentType === "ColorPicker") initialValue = "#ffffff"
 
-	const itemEdit = FiledProps && FiledProps.allowEdit === false ? EditStatus.CANCEL : edit
+	const itemEdit = FieldProps && FieldProps.allowEdit === false ? EditStatus.CANCEL : edit
 	const colLayout = typeof col === "number" ? { span: col } : col
 	const labelColLayout = typeof labelCol === "number" ? { span: labelCol } : labelCol
 	const wrapperColayout = typeof wrapperCol === "number" ? { span: wrapperCol } : wrapperCol
@@ -42,9 +44,9 @@ const SchemaField = (props: Schema) => {
 			const customIndex = findIndex(customFields, (item) => item.type === componentType)
 			component = get(customFields, `[${customIndex}].component`, Input)
 		}
-		const { initialValue, ...othterProps } = FiledProps || {}
+		const { initialValue, ...othterProps } = FieldProps || {}
 		return React.createElement(component, { ...othterProps, edit: itemEdit, onCancel, onSave: onItemSave })
-	}, [FiledProps, itemEdit, onCancel, onItemSave, componentType, customFields])
+	}, [FieldProps, itemEdit, onCancel, onItemSave, componentType, customFields])
 
 	useEffect(() => {
 		if (![null, undefined].includes(initialValue)) {
