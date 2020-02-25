@@ -16,8 +16,8 @@ const ModalInner: React.FC<Props> = function ModalInner(props) {
     const {
         prefixCls: customizePrefixCls = 'gant', //自定义class前缀
         locale: modalLocale = {
-          submit: '确认',
-          cancel: '取消'
+            submit: '确认',
+            cancel: '取消'
         },         //自定义国际化
         id,             //弹窗唯一标识
         itemState,      //单个弹窗的自定义属性
@@ -38,7 +38,7 @@ const ModalInner: React.FC<Props> = function ModalInner(props) {
         ...restProps    //弹窗组件接受的其他antd支持的属性值
     } = props;
 
-    const prefixCls = customizePrefixCls + 'modal';
+    const prefixCls = customizePrefixCls + '-modal';
 
     const { dispatch, state } = useContext(ModalContext);
     const modalState = getModalState(state, id);
