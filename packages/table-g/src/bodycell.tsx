@@ -2,13 +2,13 @@ import React, { useState, useContext, useCallback, useEffect, useMemo } from 're
 import classnames from 'classnames'
 import _ from 'lodash'
 import { EditStatus, SwitchStatus } from '@data-cell'
-import { DataContext, RowContext } from './context'
+import { DataContext, RowContext, TableContext } from './context'
 
 import { EditConfig, Record } from './index'
 
 const invalidateValue = ['', null, undefined]
 
-const getPrefixCls = (cls) => 'gant' + cls;
+const getPrefixCls = (cls) => 'gant-' + cls;
 
 interface BodyCellProps<T> {
 	record: T,
@@ -29,8 +29,9 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 	const [cacheInitialValue, setCacheInitialValue] = useState()
 	const [element, setElement] = useState<React.ReactElement>()
 	const [edit, setedit] = useState(EditStatus.CANCEL)
-	const { dataSource, setDataSource, isTree, cellPadding, computedRowKey, editable } = useContext(DataContext)
+	const { dataSource, setDataSource, isTree, cellPadding, computedRowKey, editable, originRowHeight, originLineHeight } = useContext(DataContext)
 	const { dataRowKey } = useContext(RowContext)
+	const { virtualScroll } = useContext(TableContext)
 	const showDirt = useMemo(() => _.get(editConfig, 'showDirt', true), [editConfig])
 	const isSelection = useMemo(() => className.includes('ant-table-selection-column'), [className])
 	const { editValue, render: editRender } = editConfig
@@ -240,6 +241,19 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 						[getPrefixCls('table-editcell-dirt')]: showDirt && valueChanged,
 					} : null,
 			)
+			if (virtualScroll) {
+				const dStyle = { ...style, padding: cellPadding, height: originRowHeight }
+				if (originLineHeight) {
+					dStyle.lineHeight = originLineHeight
+				}
+				return (
+					<td {...props} style={{ padding: 0 }} className={computedClassName} onClick={onClick} ref={onTD}>
+						<div style={dStyle} className={isSelection ? '' : getPrefixCls('table-editcell-ellipsis')} >
+							{renderChildren()}
+						</div>
+					</td>
+				)
+			}
 
 			return (
 				<td {...props} style={{ padding: cellPadding, ...style }} className={computedClassName} onClick={onClick} ref={onTD}>
@@ -247,7 +261,7 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 				</td>
 			)
 		},
-		[className, cellPadding, style, wrap, showDirt, valueChanged, element, onClick, onTD, renderChildren, isSelection],
+		[className, cellPadding, style, wrap, showDirt, valueChanged, element, onClick, onTD, renderChildren, isSelection, originRowHeight, virtualScroll, originLineHeight],
 	)
 
 	return renderTd()

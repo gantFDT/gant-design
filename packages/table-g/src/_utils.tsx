@@ -1,6 +1,6 @@
 import React, { useMemo, useCallback, useState, useEffect } from 'react'
 import moment from 'moment'
-import _ from 'lodash'
+import _, { isNumber } from 'lodash'
 import { Tooltip, Checkbox } from 'antd'
 import { measureScrollbar } from 'rc-table/es/utils'
 import CSS from 'csstype'
@@ -294,6 +294,10 @@ export const setStyle = (dom, text) => {
   })
 }
 
+export function getStyleText(p) {
+  return isNumber(p) ? p + "px" : p
+}
+
 // 在有固定列的情况下，如果主table的宽度小于容器宽度要隐藏滚动条的占位
 /**
  * 
@@ -482,7 +486,7 @@ function computeIndexInner<T>([...list], parent): [Array<T>, number] {
  * @param {number} withIndex 
  * @param {number} parent 
  */
-export const computeIndex = function computeIndex<T>([...list]: Array<T>, expandRowKeys = [], computedRowKey): [T[], string[], T[]] {
+export const computeIndex = function computeIndex<T>([...list]: Array<T>, expandRowKeys = [], computedRowKey, virtualScroll: boolean): [T[], string[], T[]] {
   console.time('计算序号')
   const renderRowKeys: string[] = []
   const tilingList: T[] = [];
@@ -525,7 +529,8 @@ export const computeIndex = function computeIndex<T>([...list]: Array<T>, expand
             "g-parent-row-key": rowKey,
             "g-parent": node
           })));
-        } else {
+        } else if (virtualScroll) {
+          // 虚拟滚动下删除掉children
           node.children = []
         }
       }
@@ -535,10 +540,24 @@ export const computeIndex = function computeIndex<T>([...list]: Array<T>, expand
   return [list, renderRowKeys, tilingList]
 }
 
+/**
+ * 计算虚拟滚动有效数据、防止出现末页数据不足以全部占据table内容区域，而出现底部空白
+ * @param list 
+ * @param start 
+ * @param length 
+ */
+export const getListRange = function getListRange<T>(list: T[], start: number, length: number): T[] {
+  // list.slice(start, start + length);
+  const count = list.length;
+  return list.slice(
+    Math.min(start, count - length),
+    start + length
+  )
+}
 
 export const getVirtualList = function getVirtualList<T>(start: number, length: number, renderRowKeys: string[], [...list]: Array<T>): Array<T> {
   // const keys = renderRowKeys.slice(start, start+length);
-  let result = list.slice(start, start + length);
+  let result = getListRange(list, start, length);
   if (!result.length) return result
   do {
     const { root = [], ...groups } = _.groupBy(result, 'g-parent-row-key')

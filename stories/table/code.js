@@ -1,4 +1,4 @@
-const code1 = `import { Table } from 'gantd';
+const code1 = `import Table from 'table-g';
 
 const columns = [
 	{
@@ -19,27 +19,7 @@ const columns = [
 ];
 
 function BasicTable(props) {
-	const getlist = useCallback(
-		(length) => {
-			const dataSource = new Array(length).fill().map((item, index) => {
-				return {
-					name: "namenamenamenamenamenamename" + index,
-					age: index,
-					address: "123",
-					isDeleted: true
-				}
-			})
-			return dataSource
-		},
-		[],
-	)
-	const [dataSource, setdataSource] = useState(getlist(5))
-
-	return <Table columns={columns} dataSource={dataSource} scroll={{ x: '100%', y: 350 }} fixedTop='20' sortable pagination={false} flex wheel={() => {
-		setdataSource(ori => {
-			return ori.concat(getlist(2)).map((i, index) => ({ ...i, key: index }))
-		})
-	}} />
+	return <Table columns={columns} dataSource={dataSource} />
 }
 ReactDOM.render(<BasicTable/>,mountNode)
 `
