@@ -4,15 +4,17 @@ import moment from 'moment'
 import { isEmpty } from 'lodash'
 import Table from '@table'
 import BlockHeader from '@header'
-import defaultLocale from './locale';
 import ConfigModal from './config'
 import CustomExpandIcon from './customexpandicon'
-import { SmartTableProps, ViewConfig, ViewListProps } from './interface'
+import { LocalWrapperProps, SmartTableProps, ViewConfig, ViewListProps } from './interface'
 import formatSchema from './formatschema'
 import ViewPicker, { DefaultView } from './viewpicker'
 import { useTableConfig, useLocalStorage } from './hooks'
 import { withFocusKeyEvent } from './keyevent'
 import { guid } from '@util'
+import { IntlProvider, useIntl } from 'react-intl'
+import en from './locale/en-US'
+import zh from './locale/zh-CN'
 import './style.less';
 
 const defaultChildrenColumnName: string = 'children';
@@ -51,12 +53,11 @@ function SmartTable<R>(props: SmartTableProps<R>) {
     headerProps = {},
     hasExport,
     onViewChange,
-    locale,
     prefixCls: customizePrefixCls,
     ...restProps
   } = props;
 
-  const tableLocale: any = locale || defaultLocale;
+  const { formatMessage: f } = useIntl();
   const prefixCls = getPrefixCls('smart-table', customizePrefixCls);
 
   const { columns, systemViews } = useMemo(() => formatSchema(schema), [schema]);
@@ -215,7 +216,7 @@ function SmartTable<R>(props: SmartTableProps<R>) {
     <>
       {headerRight}
       {onReload && (
-        <Tooltip title={tableLocale.reload}>
+        <Tooltip title={f({ id: 'reload' })}>
           <Button size="small" icon="reload" className="marginh5" onClick={() => onReload()} />
         </Tooltip>
       )}
@@ -225,7 +226,6 @@ function SmartTable<R>(props: SmartTableProps<R>) {
 
   const TableTitle = useMemo(() => (
     <ViewPicker
-      locale={tableLocale}
       viewName={activeView.name}
       viewId={activeView.viewId}
       customViews={viewList.customViews}
@@ -237,7 +237,7 @@ function SmartTable<R>(props: SmartTableProps<R>) {
       splitLine={false}
       defaultView={defaultView}
       onDefaultViewChange={setDefaultView}
-      config={<Tooltip title={tableLocale.config}>
+      config={<Tooltip title={f({ id: 'config' })}>
         <Button size="small" icon="setting" className="marginh5" onClick={() => setConfigModalVisible(true)} />
       </Tooltip>}
       getPopupContainer={() => titleRef.current || document.body}
@@ -281,11 +281,10 @@ function SmartTable<R>(props: SmartTableProps<R>) {
           scroll={{ y: tableHeight === 'auto' ? undefined : tableHeight, x: bodyWidth }}
           rowKey={rowKey}
           pagination={fakePagination}
-          emptyDescription={emptyDescription || tableLocale.empty}
+          emptyDescription={emptyDescription || f({ id: 'empty' })}
         />, bindKeys)
       }
       <ConfigModal
-        locale={tableLocale}
         visible={configModalVisible}
         originColumns={columns}
         dataSource={activeView}
@@ -301,4 +300,18 @@ function SmartTable<R>(props: SmartTableProps<R>) {
   )
 }
 
-export default SmartTable;
+function LocalWrapper<T>(props: LocalWrapperProps<T>) {
+  const { i18n = navigator.language, locale, ...restProps } = props
+  const langs = {
+    'en-US': en,
+    'zh-CN': zh
+  }
+  let _i18n = Object.keys(langs).find(i => i == i18n)
+  let _locale = _i18n ? _i18n.split('-')[0] : 'en'
+  let messages = langs[i18n] || en
+  if (locale) messages = { ...messages, ...locale }
+  return <IntlProvider locale={_locale} messages={messages}>
+    <SmartTable {...restProps} />
+  </IntlProvider>
+}
+export default LocalWrapper;

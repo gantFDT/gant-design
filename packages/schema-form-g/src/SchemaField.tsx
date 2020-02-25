@@ -6,12 +6,12 @@ import { Form, Col } from 'antd'
 import { Schema } from './interface'
 import { get, findIndex } from 'lodash'
 import { getFields } from './maps'
-
-const tr = (str) => str;
+import { useIntl } from 'react-intl'
 
 const SchemaField = (props: Schema) => {
 	const { options, title, props: FieldProps, componentType, name, isRequired, required, edit, uiData } = props
 	const { form: { getFieldDecorator, resetFields, validateFieldsAndScroll }, onSave, data, customFields, emitDependenciesChange, prefixCls } = useContext(FormContext)
+	const { formatMessage: f } = useIntl()
 
 	const defaultValue = get(FieldProps, 'initialValue', undefined)
 
@@ -68,7 +68,7 @@ const SchemaField = (props: Schema) => {
 					...options,
 					rules: [{
 						required: typeof required === "boolean" ? required : isRequired,
-						message: `${title}${tr("不能为空")}`
+						message: `${title}${f({ id: 'required' })}`
 					},
 					...optionsRules
 					]

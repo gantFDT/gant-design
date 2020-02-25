@@ -128,6 +128,7 @@
     "react-color": "^2.18.0",
     "react-dom": "^16.8.6",
     "react-element-to-jsx-string": "^14.3.1",
+    "react-intl": "^3.12.0",
     "react-resize-detector": "^4.2.1",
     "react-sortable-hoc": "^1.9.1",
     "recompose": "^0.30.0"
