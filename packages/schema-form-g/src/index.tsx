@@ -67,7 +67,7 @@ class SchemaForm extends React.Component<Props>{
 			console.warn('schema is null')
 			return null
 		}
-    const prefixCls = customizePrefixCls + 'schemaform';
+    const prefixCls = customizePrefixCls + '-schemaform';
 
     return <FormContext.Provider value={{ form, edit, onSave, data, customFields, emitDependenciesChange, prefixCls }} >
       <div className={classnames(className)} style={{ backgroundColor }} >
