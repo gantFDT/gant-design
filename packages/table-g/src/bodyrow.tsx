@@ -3,22 +3,25 @@ import classnames from 'classnames'
 import { Draggable } from "react-beautiful-dnd";
 
 import { RowContext, TableContext } from './context'
-import { setStyle } from './_utils'
+import { setStyle, getListRange } from './_utils'
 
-const getPrefixCls = (cls) => 'gant' + cls;
+const getPrefixCls = (cls) => 'gant-' + cls;
 
 const BodyRow = ({ isDeleted, rowIndex, className, sortable, children, ...props }) => {
     const rowData = useMemo(() => ({ dataRowKey: props['data-row-key'] }), [props])
 
-    const { outlineNum, thresholdInner, renderRowKeys } = useContext(TableContext)
-    const keysRange = renderRowKeys.slice(outlineNum, outlineNum + thresholdInner)
+    const { outlineNum, thresholdInner, renderRowKeys, virtualScroll, } = useContext(TableContext)
+
     const style = useMemo(() => {
         const s = props.style || {}
-        if (!keysRange.includes(rowData.dataRowKey)) {
-            return { ...s, display: 'none' }
+        if (virtualScroll) {
+            const keysRange = getListRange(renderRowKeys, outlineNum, thresholdInner)
+            if (!keysRange.includes(rowData.dataRowKey)) {
+                return { ...s, display: 'none' }
+            }
         }
         return s
-    }, [props.style, keysRange, rowData])
+    }, [props.style, rowData])
     const [trRef, setTrRef] = useState(null)
     const row = useMemo(() => {
         // 非拖动排序

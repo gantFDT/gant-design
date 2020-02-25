@@ -17,11 +17,9 @@
 | headerMarginBottom | 否 | number | 10 | table头部与table之间的距离 |
 | headerProps | 否 |  | - | 表格头部参数,作用于blockheader |
 | headerRight | 否 | ReactNode | - | table头部右边内容 |
-| hideVisibleMenu | 否 | boolean | false | 是否隐藏动态列 |
 | isZebra | 否 | boolean | false | 开启斑马条纹 |
 | onDragEnd | 否 | function |  | 行排序回调|
 | onSave | 否 | function(dataSource,[addList,delList, modifyList]) |  | 当表格状态变为SAVE的时候会调用，返回最新的表格数据，以及新增、删除、修改的数据 |
-| onSorted | 否 | function | funciton(sortedList) | 列排序回调 |
 | orderList | 否 | array | - | 列的排序信息，同smartForm |
 | pagination | 否 | object |  | 参考[链接](https://ant-design.gitee.io/components/pagination-cn/) |
 | resizeCell/resizable | 否 | boolean | false | 是否允许动态缩放列宽度 |
@@ -31,9 +29,6 @@
 | tail | 否 | function | funciton(pagedata) | 表格尾部的显示,与分页条,和附加选择框在同一区域 |
 | title | 否 | string、ReactNode | - | table标题 |
 | threshold | 否 | number | 20 | 开启虚拟滚动的最低数据量
-| visibleMenuChange | 否 | function | - | 动态列change事件 |
-| visibleMenuHiddenRows | 否 | array | [] | 隐藏的列 |
-| visibleMenuTitle | 否 | string | - | 动态列提示名称 |
 | wheel | 否 | function | - | 滚动的触发回调 |
 | withIndex | 否 | number |  | 当设置大于0的时候，显示**序号**列到对应的位置，部分情况下，可能内置的序号列不满足情况可以自行添加一列并设置dataIndex为'g-index'，就可以使用计算好的序号 |
 | wrap | 否 | boolean | false | 规定单元格中文字的是否折行显示 |

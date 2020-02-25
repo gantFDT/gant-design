@@ -64,7 +64,6 @@ const defaultProps = {
     emptyDescription: '暂无数据',
     withIndex: -1,
     onSave: (list: Array<object>, diffData: Array<Array<object>>) => { },
-    threshold: 20, // 触发虚拟滚动的条数
 }
 export type Order = { fieldName: string, orderType: string }
 
@@ -113,6 +112,22 @@ export type Tail<T> = (currentPageData: Array<T>) => React.ReactNode
 
 export type PaginationConfig = AntPaginationConfig | null | false
 
+
+export interface RowHeight<T> {
+    (index: number, Record: T): number | string,
+}
+export interface VirtualScroll<T> {
+    threshold: number, // 单页显示的行数
+    rowHeight: number | string, //| RowHeight<T>,
+    center: boolean,
+}
+
+const defaultVirtualScrollConfig: VirtualScroll<any> = {
+    threshold: 20,
+    rowHeight: 24,
+    center: true
+}
+
 // 定义GantTableProps基础类型
 interface Props<T extends Record> {
     cellPadding: React.ReactText,
@@ -138,6 +153,7 @@ interface Props<T extends Record> {
     wheel: Function,
     // deprecated
     resizeCell: boolean,
+    virtualScroll: VirtualScroll<T> | true,
 }
 
 // 定义GantTableProps继承TableProps
@@ -187,7 +203,7 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
         editActions,
         tableWraper,
         withIndex,
-        threshold,
+        virtualScroll: virtualScrollConfig,
     } = props
     /* =======================warning======================= */
     if (process.env.NODE_ENV !== "production") {
@@ -256,52 +272,49 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
     // dataIndex的索引
     const computedColIndex = useMemo(() => getComputedColIndex(columns), [columns])
     const useGIndex = useMemo(() => withIndex >= 0 || computedColIndex.find(item => item === 'g-index'), [withIndex, computedColIndex])
+    // 是否触发虚拟滚动
+    const virtualScroll = useMemo(() => !!(scrollY && virtualScrollConfig), [scrollY, virtualScrollConfig])
+    const virtualScrollConfigInner = useMemo<VirtualScroll<T>>(() => (virtualScroll ? virtualScrollConfig === true ? defaultVirtualScrollConfig : { ...defaultVirtualScrollConfig, ...virtualScrollConfig } : {} as VirtualScroll<T>), [virtualScroll, virtualScrollConfig])
+    // 虚拟滚动的条数
+    const thresholdInner = useMemo(() => virtualScrollConfigInner.threshold, [virtualScrollConfigInner])
     /**
      * 虚拟滚动的相关数据
      */
     const [outlineNum, setOutLineNum] = useState(0)
-
-    const thresholdInner = useMemo(() => Math.max(threshold, defaultProps.threshold), [threshold])
     // 总数据、实际要渲染的rowkeys，用这个数据计算实际高度
     const [renderListAll, renderRowKeys, tilingListAll] = useMemo(() => {
         const list = _.cloneDeep(editable === EditStatus.EDIT ? cacheDataList : dataSource)
-        // const list = editable === EditStatus.EDIT ? cacheDataList : dataSource
         if (list.length === 0) return [[], [], []]
-        return computeIndex<T>(list, expandRowKeys, computedRowKey)
-        // if (useGIndex) {
-        //     return computeIndex<T>(list)
-        // }
-        // return list
+        return computeIndex<T>(list, expandRowKeys, computedRowKey, virtualScroll)
     }, [cacheDataList, dataSource, editable, useGIndex, computedRowKey, expandRowKeys])
 
-    const originlineHeight = useMemo(() => {
-        // 21 line-height
-        // 1 border-bottom
-        const padding: number = typeof cellPadding === 'string' ? parseInt(cellPadding) : cellPadding;
-        return (21 + padding * 2 + 1)
-    }, [cellPadding])
+    // dom高度
+    const originRowHeight = useMemo(() => parseInt(virtualScrollConfigInner.rowHeight as string) || 0, [virtualScrollConfigInner])
+    // 行高
+    const originLineHeight = useMemo(() => {
+        if (virtualScroll && virtualScrollConfigInner.center) {
+            const height = parseInt(virtualScrollConfigInner.rowHeight as string)
+            return (height - 2 * parseInt(cellPadding as string)) + 'px'
+        }
+    }, [virtualScrollConfigInner, cellPadding, virtualScroll])
     const rate = useMemo(() => {
-        const virtualHeight = BigInt(renderRowKeys.length * originlineHeight)
+        const virtualHeight = BigInt(renderRowKeys.length * originRowHeight)
         return Number(virtualHeight / BigInt(3e+07)) + 1
-    }, [renderRowKeys, originlineHeight])
+    }, [renderRowKeys, originRowHeight])
     // 计算滚动比例
-    const lineHeight = useMemo(() => originlineHeight / rate, [originlineHeight, rate])
-    // 是否触发虚拟滚动
-    const virtualScroll = useMemo(() => !!scrollY, [scrollY])
-    const mainHeight = useMemo(() => renderRowKeys.length * lineHeight, [renderRowKeys, lineHeight])
+    const rowHeight = useMemo(() => originRowHeight / rate, [originRowHeight, rate])
+    const mainHeight = useMemo(() => renderRowKeys.length * rowHeight, [renderRowKeys, rowHeight])
     // 最终渲染的数据
     const renderList = useMemo(() => {
         let list = renderListAll
         if (virtualScroll) {
-            // list = renderListAll.slice(outlineNum, outlineNum + thresholdInner)
-            list = getVirtualList(outlineNum, thresholdInner, renderRowKeys, tilingListAll) // renderListAll.slice(outlineNum, outlineNum + thresholdInner)
+            list = getVirtualList(outlineNum, thresholdInner, renderRowKeys, tilingListAll)
         }
         return list
     }, [virtualScroll, outlineNum, renderRowKeys, tilingListAll])
 
     //#endredion
     const minHeight = useMemo(() => renderList.length > 0 ? scrollY : undefined, [scrollY, renderList])
-
     const storageWidth = useMemo(() => getStorageWidth(tableKey)['table'] || _.get(scroll, 'x') || '100%', [tableKey])
     const headerFixed = useMemo(() => !_.isUndefined(scrollY), [scrollY])
     const bordered = useMemo(() => light ? false : customBorderd, [light, customBorderd])
@@ -376,29 +389,19 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
         e.preventDefault()
     }, 50), [props.wheel, editable])
 
-    // const tableGroup = useMemo(() => {
-    //     if (!tableWraper) return []
-    //     return ([
-    //         tableWraper.querySelector(".ant-table-scroll .scroll--container table"),
-    //         tableWraper.querySelector(".ant-table-fixed-left .scroll--container table"),
-    //         tableWraper.querySelector(".ant-table-fixed-right .scroll--container table"),
-
-    //     ])
-    // }, [tableWraper])
     const [tableGroup] = useState(new Map<string, HTMLTableElement>())
     /**
      * 计算虚拟滚动误差
      * 平均每滚动多少条要修正误差
      */
     const scrollError = useMemo(() => {
-        const height = scrollY
-        if (height) {
+        if (scrollY) {
             // 最后一屏之前渲染的条数
-            const leave = renderRowKeys.length - threshold
+            const leave = renderRowKeys.length - thresholdInner
             // 最大滚动高度
-            const maxScroll = mainHeight - parseInt(String(height))
+            const maxScroll = mainHeight - parseInt(scrollY)
             // 最多滚动多少条
-            const maxScrollLength = Math.floor(maxScroll / lineHeight)
+            const maxScrollLength = Math.floor(maxScroll / rowHeight)
             // 偏差条数
             const error = leave - maxScrollLength
             if (error > 0) {
@@ -406,37 +409,34 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
             }
         }
         return 0
-    }, [mainHeight, scrollY, renderRowKeys, threshold, lineHeight])
+    }, [mainHeight, scrollY, renderRowKeys, thresholdInner, rowHeight])
     /**
      * 虚拟滚动
      */
     const onVScroll = useCallback((e) => {
         const { scrollTop } = e.currentTarget
-        const outTopLinevir = Math.floor(scrollTop / lineHeight); // 用于计算table的位置
+        const outTopLinevir = Math.floor(scrollTop / rowHeight); // 用于计算table的位置
         // 校正移动的条数，修正设置的值，防止在rate不为1的情况下，出现数据遗漏的问题
         const outTopLine = outTopLinevir + (scrollError > 0 ? Math.floor(outTopLinevir / scrollError) : 0)
         // 设置数据
         setOutLineNum(outTopLine)
-        // 将要设置的数据条数
-        const len = renderRowKeys.slice(outTopLine, outTopLine + thresholdInner).length
         // 实际渲染的高度
-        const domHeight = len * lineHeight * rate
+        // td有个border-bottom，要加1
+        const domHeight = thresholdInner * (rowHeight + 1) * rate
+        const outTopHeight = outTopLinevir * rowHeight
+        let top = Math.max(0, Math.min(mainHeight - domHeight, outTopHeight))
 
-        const outTopHeight = outTopLinevir * lineHeight
-        let top = outTopHeight
-        if (outTopHeight + domHeight > mainHeight) {
-            top = mainHeight - domHeight
-        }
         tableGroup.forEach(table => setStyle(table, `transform: translate(0, ${top}px)`))
         // const table = tableGroup.get('bodyTable')
         // setStyle(table, `transform: translate(0, ${top}px)`)
         // e.preventDefault()
-    }, [thresholdInner, lineHeight, renderRowKeys, rate, mainHeight, tableGroup, scrollError])
+    }, [thresholdInner, rowHeight, renderRowKeys, rate, mainHeight, tableGroup, scrollError])
 
     // 绑定滚动事件
     const bindScroll = useCallback(
         () => {
-            if (tableWraper && _.isEmpty(computedPagination)) {
+            // if (tableWraper && _.isEmpty(computedPagination)) {
+            if (tableWraper) {
                 const bodyTable: ScrollElement = tableWraper.querySelector('.ant-table-body');
                 bodyTable.scrollTopBackUp = bodyTable.scrollTop || 0
                 bodyTable.addEventListener('wheel', onscroll, false)
@@ -743,8 +743,10 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
         computedRowKey,
         editable, // 用于控制脏标记的显示，如果是save就会清除掉脏标记
         computedColIndex,
-        computedRowSelection
-    }), [isTree, cellPadding, cacheDataList, editable, computedColIndex, computedRowSelection])
+        computedRowSelection,
+        originRowHeight,
+        originLineHeight,
+    }), [isTree, cellPadding, cacheDataList, editable, computedColIndex, computedRowSelection, originRowHeight, originLineHeight])
 
     const tableContextValue = useMemo(() => ({
         light,
@@ -761,12 +763,12 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
         thresholdInner,
         renderRowKeys,
         storageWidth,
-        scrollY
+        scrollY,
     }), [light, spacing, dataSource, emitReCompute, tableColumns, headerFixed, onResize, virtualScroll, mainHeight, tableGroup, outlineNum, thresholdInner, renderRowKeys, storageWidth, scrollY])
 
 
     const bodyWrapperContext = useMemo(() => ({ onDragEnd }), [onDragEnd])
-    const getPrefixCls = (cls) => 'gant' + cls;
+    const getPrefixCls = (cls) => 'gant-' + cls;
     const renderTable = () => {
         const {
             pagination,

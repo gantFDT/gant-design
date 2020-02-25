@@ -31,10 +31,10 @@
     "dist"
   ],
   "peerDependencies": {
+    "antd": "^3.22.0",
     "prop-types": "^15.6.0",
     "react": "^16.0.0",
-    "react-dom": "^16.0.0",
-    "antd": "^3.22.0"
+    "react-dom": "^16.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.4.5",
@@ -93,6 +93,7 @@
     "less-loader": "^5.0.0",
     "less-plugin-npm-import": "^2.1.0",
     "mini-css-extract-plugin": "^0.6.0",
+    "mockjs": "^1.1.0",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "ora": "^4.0.3",
     "path": "^0.12.7",
