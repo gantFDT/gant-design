@@ -210,9 +210,9 @@ export default class SubMenu extends React.Component<any, Partial<CardIF>> {
     </div>
   }
   render() {
-    const getPrefixCls = (cls, customizePrefixCls = '') => customizePrefixCls || 'gant' + cls;
+    const getPrefixCls = (cls, customizePrefixCls) => customizePrefixCls || 'gant' + cls;
     const { prefixCls: customizePrefixCls, classname, children, subMinHeight, selectedKey, menuData, showFlipOverFooter } = this.props;
-    this.prefixCls = getPrefixCls('submenu', customizePrefixCls);
+    this.prefixCls = getPrefixCls('-submenu', customizePrefixCls);
     const isInline = this.state.mode == 'inline';
     let wrapStyle = { minHeight: subMinHeight };
     isInline && (wrapStyle['display'] = 'flex');

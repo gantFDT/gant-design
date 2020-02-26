@@ -4,6 +4,7 @@ import { Checkbox, Icon, Row, Radio, notification, Tooltip } from 'antd'
 import { SortableContainer, SortableElement, SortableHandle, SortEndHandler } from 'react-sortable-hoc'
 import arrayMove from 'array-move'
 import { Icon as GantIcon } from '@data-cell'
+import { useIntl } from 'react-intl'
 
 interface RecordProps {
   dataIndex: string,
@@ -16,19 +17,18 @@ interface RecordProps {
 }
 
 interface SortableProps {
-  locale: any,
   dataSource: RecordProps[],
   onChange: (records:RecordProps[]) => void,
 }
 
 function Sortable(props: SortableProps) {
   const {
-    locale,
     dataSource,
     onChange
   } = props;
 
   if(!dataSource || !dataSource.length) return null;
+  const { formatMessage: f } = useIntl();
 
   const fakeDataSource = useMemo(() => {
     const sliceDataSource = (start: number, end?: number) => dataSource.slice(start, end).map((v, i) => ({ ...v, realIndex: start + i }));
@@ -85,7 +85,7 @@ function Sortable(props: SortableProps) {
       onChange(dataSource)
     } else {
       notification.info({
-        message: locale.onlySide
+        message: f({ id: 'onlySide' })
       })
     }
   }, [dataSource])
@@ -96,7 +96,7 @@ function Sortable(props: SortableProps) {
       onChange(dataSource)
     } else {
       notification.info({
-        message: locale.onlyNearUnlock
+        message: f({ id: 'onlyNearUnlock' })
       })
     }
   }, [dataSource])
@@ -132,11 +132,11 @@ function Sortable(props: SortableProps) {
             {!lock&&<DragHandler />}
             {
               lock?(
-                <Tooltip style={{flex:0}} placement="top" title={locale.setNormalColumn}>
+                <Tooltip style={{flex:0}} placement="top" title={f({ id: 'setNormalColumn' })}>
                   <Icon type="lock" onClick={() => handlerUnlock(realIndex)} className="disabledIcon" />
                 </Tooltip>
               ):(
-                <Tooltip placement="top" title={locale.setFixedColumn}>
+                <Tooltip placement="top" title={f({ id: 'setFixedColumn' })}>
                   <Icon type="unlock" onClick={() => handlerLock(realIndex)} className="disabledIcon" />
                 </Tooltip>
               )
@@ -188,10 +188,10 @@ function Sortable(props: SortableProps) {
           />
         </div>
         <div style={{flexGrow:1}}>
-          {locale.checkAll}（{`${selectedRows.length}/${dataSource.length}`}）
+          {f({ id: 'checkAll' })}（{`${selectedRows.length}/${dataSource.length}`}）
         </div>
         <div style={{flexGrow:1}}>
-          {locale.align}
+          {f({ id: 'align' })}
         </div>
         <div style={{flexGrow:0,width:56}}></div>
       </Row>

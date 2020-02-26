@@ -1,9 +1,9 @@
 import React, { useCallback } from 'react'
 import { Modal, Form, Input } from 'antd'
 import _ from 'lodash'
+import { useIntl } from 'react-intl'
 
 interface EditModalProps {
-  locale: any
   loading: boolean
   showModal: boolean
   setShowModal: Function
@@ -14,7 +14,6 @@ interface EditModalProps {
 
 const EditModal = (props: EditModalProps) => {
   const {
-    locale,
     loading,
     showModal,
     setShowModal,
@@ -22,6 +21,8 @@ const EditModal = (props: EditModalProps) => {
     form: { getFieldDecorator, validateFieldsAndScroll },
     onSubmit
   } = props
+
+  const { formatMessage: f } = useIntl()
 
   const onOk = useCallback((e: any) => {
     e.stopPropagation()
@@ -45,7 +46,9 @@ const EditModal = (props: EditModalProps) => {
       style={{ display: 'inline-block' }}
     >
       <Modal
-        title={locale.setViewName}
+        okText={f({ id: 'ok' })}
+        cancelText={f({ id: 'cancel' })}
+        title={f({ id: 'setViewName' })}
         visible={showModal}
         destroyOnClose
         centered
@@ -60,8 +63,8 @@ const EditModal = (props: EditModalProps) => {
           <Form.Item>
             {getFieldDecorator('name', {
               initialValue: initValue,
-              rules: [{ required: true, message: locale.viewNameRequired }],
-            })(<Input placeholder={locale.viewNamePlaceholder} maxLength={500} />)}
+              rules: [{ required: true, message: f({ id: 'viewNameRequired' }) }],
+            })(<Input placeholder={f({ id: 'viewNamePlaceholder' })} maxLength={500} />)}
           </Form.Item>
         </Form>
       </Modal>

@@ -58,18 +58,28 @@ export interface SmartTableProps<T> extends GantTableProps<T> {
   schema: SchemaProp<T> | CustomColumnProps<T>[],
   viewSchema?: any,
   onViewChange?: (viewSchema: any) => void,
-  locale?: any,
 
   bindKeys?: any,
   onReload?: () => void,
   bodyMinHeight?: number | string,
   bodyHeight?: number | string,
-  bodyWidth?: number | string
+  bodyWidth?: number | string,
 
   pageIndex?: number,
   pageSize?: number,
   pageSizeOptions?: string[],
+  isGantPageMode?: boolean,
   onPageChange?: (pageIndex: number, pageSize?: number) => void,
   totalCount?: number,
   hasExport?: boolean,
+}
+
+export enum langEnum {
+  'zh-CN' = 'zh-CN',
+  'en-US' = 'en-US',
+}
+
+export interface LocalWrapperProps<T> extends SmartTableProps<T> {
+  locale?: any,
+  i18n?: langEnum
 }
