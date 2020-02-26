@@ -1,6 +1,6 @@
 {
   "name": "submenu-g",
-  "version": "0.0.23",
+  "version": "0.0.24",
   "description": "Container component for page-level menu",
   "main": "lib/index.js",
   "scripts": {},
@@ -17,7 +17,7 @@
   "dependencies": {
     "antd": "^3.26.5",
     "classnames": "^2.2.6",
-    "data-cell-g": "^0.0.7",
+    "data-cell-g": "^0.0.8",
     "lodash": "^4.17.11",
     "prop-types": "^15.6.0",
     "react": "^16.12.0"

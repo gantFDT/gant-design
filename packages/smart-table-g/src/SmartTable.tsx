@@ -46,6 +46,7 @@ function SmartTable<R>(props: SmartTableProps<R>) {
     pagination,
     pageIndex = 1,
     pageSize = 50,
+    isGantPageMode = false,
     onPageChange,
     totalCount = 0,
     pageSizeOptions,
@@ -206,6 +207,7 @@ function SmartTable<R>(props: SmartTableProps<R>) {
     pagination,
     pageIndex,
     pageSize,
+    isGantPageMode,
     onPageChange,
     totalCount,
     pageSizeOptions,
@@ -242,7 +244,7 @@ function SmartTable<R>(props: SmartTableProps<R>) {
       </Tooltip>}
       getPopupContainer={() => titleRef.current || document.body}
     />
-  ), [activeView, viewList, renameLoading, updateViewLoading, defaultView, titleRef])
+  ), [activeView, viewList, renameLoading, updateViewLoading, defaultView, titleRef, f])
 
   const tableHeight = useMemo(() => isEmpty(dataSource) ? bodyHeight : (panelConfig.heightMode === 'auto' ? 'auto' : bodyHeight), [dataSource, panelConfig.heightMode, bodyHeight])
 

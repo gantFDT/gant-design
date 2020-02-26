@@ -15,7 +15,7 @@
 | bodyMinHeight | 表格最小高度，若填了bodyHeight，则无效 | number | 600 |
 | onReload | 刷新时触发 | Function() | - |
 | rowSelection | 同Antd的Table组件，允许覆盖 | RowSelectionProps | - |
-| pageIndex | 请求时的 beginIndex 参数，非当前页码 | number | 0 |
+| pageIndex | 当前页码 | number | 1 |
 | pageSize | 每页条数 | number | 50 |
 | onPageChange | 页码，每页条数 改变的回调，参数是改变后的pageIndex及每页条数。<br />若不传则为本地分页。<br />若传了 pagination 属性，此属性失效。 | Function(pageIndex, pageSize) | - |
 | totalCount | 数据总数 | number | 0 |

@@ -1,3 +1,3 @@
 export default {
-    required: '不能为空'
+    required: '不能为空',
 }

@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { Row, Col, Form, Tag, Tooltip, Popover } from 'antd';
 import classnames from 'classnames'
 import { ConfigConsumer } from '../config-provider'
-import Icon from '../icon'
+import { Icon } from '@data-cell'
 
 class Item extends Component {
   render() {

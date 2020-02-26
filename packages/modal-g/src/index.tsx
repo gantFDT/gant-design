@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react';
-import { ResizableModal } from './ResizableModal';
-import { ResizableProvider } from './ResizableProvider';
-import { ModalContext } from './Context';
+import ResizableModal from './ResizableModal';
+import ResizableProvider from './ResizableProvider';
+import ModalContext from './Context';
 const uuid = 'modal-g-uuid';
 
 const ContextContent = ({
@@ -21,6 +21,7 @@ const ContextContent = ({
 
 const Modal = function (props) {
     const {
+        i18n,
         maxZIndex,
         minWidth,
         minHeight,

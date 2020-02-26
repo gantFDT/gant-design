@@ -1,5 +1,5 @@
 
-import { InputCellPhone,SwitchStatus } from '@data-cell'
+import { InputCellPhone, SwitchStatus } from '@data-cell'
 import React, { useState } from 'react';
 import { Button } from 'antd'
 import codeList from './code'
@@ -8,13 +8,13 @@ import CodeDecorator from '../_util/CodeDecorator';
 
 const cmps = [
   () => {
-    const [value, setValue] = useState('18811012138')
+    const [value, setValue] = useState({ phone: "18811012138" })
     const onSave = (id, value, cb) => {
       console.log(id, value);
       cb()
     }
     return <>
-      <InputCellPhone placeholder='不可编辑' allowEdit={false}  value="18811012138"/>
+      <InputCellPhone placeholder='不可编辑' allowEdit={false} value={{ phone: "18811012138" }} />
       <InputCellPhone placeholder='可编辑' allowEdit={true} onSave={onSave} value={value} onChange={setValue} />
     </>
   },
@@ -26,7 +26,7 @@ const cmps = [
     </>
   },
   () => {
-    const [value, setValue] = useState('18811012138')
+    const [value, setValue] = useState({ phone: '18811012138' })
     const onSave = (id, value, cb) => {
       console.log(id, value);
       cb()
@@ -52,12 +52,12 @@ const config = {
     },
     {
       title: '编辑状态受控',
-      describe: '受其他组件控制展示的形态',
+      describe: '由外部控制编辑状态',
       cmp: cmps[1]
     },
     {
       title: '校验',
-      describe: '只接收手机号码格式',
+      describe: '+86的手机号码只接受13|14|15|18开头',
       cmp: cmps[2]
     }
   ]

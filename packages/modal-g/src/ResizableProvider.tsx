@@ -1,10 +1,8 @@
 import _ from 'lodash';
 import React, { useEffect, useReducer } from 'react';
-import { ModalContext } from './Context';
+import ModalContext from './Context';
 import { resizableReducer, ActionTypes } from './Reducer';
-
 /// <reference path='types.d.ts' />
-
 
 const getWindowSize = (): WindowSize => ({
     width: window.innerWidth || 0,
@@ -28,7 +26,7 @@ interface ResizableProviderProps {
     minHeight?: number
 }
 
-export const ResizableProvider: React.FC<ResizableProviderProps> = ({ initalState = {}, maxZIndex = 0, minWidth = 200, minHeight = 200, children }) => {
+const ResizableProvider: React.FC<ResizableProviderProps> = ({ initalState = {}, maxZIndex = 0, minWidth = 200, minHeight = 200, children }) => {
 
     const initialModalsState: ModalsState = {
         modals: {},
@@ -55,3 +53,5 @@ export const ResizableProvider: React.FC<ResizableProviderProps> = ({ initalStat
         </ModalContext.Provider>
     )
 }
+
+export default ResizableProvider
