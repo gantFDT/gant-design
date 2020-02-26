@@ -1,0 +1,54 @@
+.prism-code{
+    background: #d9d9d9;
+    
+}
+.prism-code>.token-line>.keyword{
+    color: #c530a5 !important;
+}
+.prism-code>.token-line>.plain{
+    color:#999 !important;
+}
+
+
+.prism-code>.token-line>.module{
+    color: #008dff !important;
+}
+.prism-code>.token-line>.punctuation{
+    color: #008dff !important;
+}
+.prism-code>.token-line>.string{
+    color: #cf885f !important;
+}
+.prism-code>.token-line>.operator{
+    color: #090d0f !important;
+}
+.prism-code>.token-line>.number{
+    color: #f81b4b !important;
+}
+.prism-code>.token-line>.function{
+    color: #f3fd5f !important;
+}
+.prism-code>.token-line>.function-variable{
+    color: #f3fd5f !important;
+}
+.prism-code>.token-line>.constant{
+    color: #42a5f7 !important;
+}
+.prism-code>.token-line>.tag{
+    color: #c1c8ce !important;
+}
+.prism-code>.token-line>.attr-name{
+    color: #f7df77 !important;
+}
+.prism-code>.token-line>.script{
+    color: #09ff00 !important;
+}
+.prism-code>.token-line>.script-punctuation{
+    color: #00ff00 !important;
+}
+.prism-code>.token-line>.language-javascript{
+    color: #fc0eac !important;
+}
+.prism-code>.token-line>.class-name{
+    color: #33383d !important;
+}

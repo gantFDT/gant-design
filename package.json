@@ -123,6 +123,7 @@
     "lodash": "^4.17.11",
     "moment": "^2.24.0",
     "numeral": "^2.0.6",
+    "prism-react-renderer": "^1.0.2",
     "prop-types": "^15.6.0",
     "react": "^16.8.6",
     "react-beautiful-dnd": "^10.1.1",
@@ -132,6 +133,7 @@
     "react-intl": "^3.12.0",
     "react-resize-detector": "^4.2.1",
     "react-sortable-hoc": "^1.9.1",
+    "react-syntax-highlighter-virtualized-renderer": "^1.1.0",
     "recompose": "^0.30.0"
   },
   "browserslist": [

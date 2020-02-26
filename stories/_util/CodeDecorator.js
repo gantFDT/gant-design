@@ -6,13 +6,16 @@ import Anchor from '@packages/anchor-g/src';
 import zhCN from '@gantd/locale/zh_CN';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import SyntaxHighlighter from 'react-syntax-highlighter';
+import virtualizedRenderer from 'react-syntax-highlighter-virtualized-renderer'; 
 import { githubGist } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { version } from '../../package.json';
 import reactElementToJSXString from 'react-element-to-jsx-string';
 const Panel = Collapse.Panel;
-
+import Highlight, { defaultProps } from "prism-react-renderer";
 // console.log('version', version)
-
+import { CodeDecoratorStyles } from "./CodeDecoratorStyles.js";
+import classnames from 'classnames'
+import styles from './CodeDecoratorStyles.css'
 const headerStyle = {
     fontSize: 24,
     margin: '40px 0 16px'
@@ -120,7 +123,26 @@ function CodeBox({ id, title = '标题', isActive, describe = '暂无描述', co
                 </div>
                 {code && <Collapse bordered={false} style={collapseStyle} >
                     <Panel header='显示代码' style={{ borderBottom: 0 }} extra={genExtra()}>
-                        <SyntaxHighlighter language="javascript" style={githubGist}>{code}</SyntaxHighlighter>
+                        {/* <SyntaxHighlighter language="javascript" style={githubGist}>{code}</SyntaxHighlighter> */}
+                        <Highlight {...defaultProps} code={code} language="js">
+                        {({ className, style, tokens, getLineProps, getTokenProps }) => {
+                            return(
+                                <pre className={classnames(className,styles.gantdPrism)} style={styles}>
+                                    {tokens.map((line, i) => {
+                                        return(
+                                            <div {...getLineProps({ line, key: i })}>
+                                                {line.map((token, key) => {
+                                                    return(
+                                                        <span {...getTokenProps({ token, key })} />
+                                                        )
+                                                })}
+                                            </div>
+                                            )
+                                    })}
+                                </pre>
+                                )
+                        }}
+                        </Highlight>
                     </Panel>
                 </Collapse>}
             </Card>
