@@ -48,7 +48,7 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, 'packages/gantd/dist'),
         filename: '[name].js', // 「入口分块(entry chunk)」的文件名模板（出口分块？）
-        library: pkg.name, // 导出库(exported library)的名称
+        library: 'gantd', // 导出库(exported library)的名称
         libraryTarget: 'umd' // 使用 module.exports 导出
     },
     externals: {

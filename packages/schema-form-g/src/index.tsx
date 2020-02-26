@@ -1,5 +1,5 @@
 
-import React from 'react'
+import React from 'react';
 import { Form } from 'antd'
 import { EditStatus } from '@data-cell'
 import { compose, withHandlers, renameProp } from 'recompose'
