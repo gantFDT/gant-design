@@ -479,7 +479,7 @@ class BasicSelector<T> extends PureComponent<SelectorInnerProps<T>> {
     return value
   }
 
-  renderSelect = ({ getPrefixCls }) => {
+  renderSelect = () => {
     const { onSearch, onSelect, onChange, onopen } = this
     const { multiple, readOnly, dataSource, loading, style, addonAfter, setSelectRef, ...props } = this.props;
     if (readOnly) {
@@ -511,7 +511,7 @@ class BasicSelector<T> extends PureComponent<SelectorInnerProps<T>> {
     const { addonAfter, style, className } = this.props
     return (
       <Group gant style={style} className={className}>
-        {this.renderSelect}
+        {this.renderSelect()}
         {addonAfter ? <span className="ant-input-group-addon">{addonAfter}</span> : null}
       </Group>
     )
