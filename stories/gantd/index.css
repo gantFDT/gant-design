@@ -1,0 +1,22 @@
+.idea{
+  
+  
+}
+
+.img{
+  width:auto;
+  margin-bottom:20px;
+}
+
+.title{
+  margin:10px 0;
+}
+.content{margin-bottom:20px; line-height: 200%; color:rgba(0,0,0,0.9)}
+*{
+  text-decoration: none;
+  list-style: none;
+}
+ul{padding-left:0}
+li{
+  line-height: 30px;
+}
