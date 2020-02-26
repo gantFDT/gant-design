@@ -75,12 +75,6 @@ module.exports = {
             commonjs2: "moment",
             amd: "moment",
             root: "moment"
-        },
-        lodash: { // UMD
-            commonjs: "lodash",
-            commonjs2: "lodash",
-            amd: "lodash",
-            root: "lodash"
         }
     },
     module: {
