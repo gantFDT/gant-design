@@ -24,6 +24,7 @@ function resolvePath(content, rules = []) {
 }
 
 function clean(cb) {
+  rimraf.sync(path.resolve(__dirname, 'packages/gantd/dist/'))
   rimraf.sync(path.resolve(__dirname, 'packages/*/lib/'))
   cb()
 }
