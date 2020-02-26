@@ -74,6 +74,9 @@ const Header = (props: HeaderIF) => {
     setTools(tools)
   }, [extra])
 
+  useEffect(()=>{
+    onResize()
+  },[tools])
 
   //计算隐藏index
   const onResize = useCallback(() => {
@@ -128,19 +131,20 @@ const Header = (props: HeaderIF) => {
 
   //收缩的内容
   const getDrapContent = useMemo(() => {
+    
     return React.Children.map(tools, (item, index) => {
       if (index >= hiddenStartIndex) {
         return <div style={{ margin: '5px' }}>{item}</div>
       }
     })
-  }, [hiddenStartIndex, tools])
+  }, [hiddenStartIndex, tools.length,])
 
   //默认内容
   const getContent = useMemo(() => {
     return React.Children.map(tools, (item, index) => {
       return index < hiddenStartIndex && item
     })
-  }, [hiddenStartIndex, tools])
+  }, [hiddenStartIndex, tools.length])
 
 
   const getPrefixCls = (cls) => 'gant-' + cls
@@ -148,7 +152,7 @@ const Header = (props: HeaderIF) => {
 
   const prefixCls = 'gant-blockheader';
   const clsString = classnames(prefixCls, className);
-
+  
   return (
 
     <div className={clsString} style={{ borderBottom: bottomLine && '1px solid #edebe9', ...style }} {...restProps}>
