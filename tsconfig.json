@@ -67,7 +67,7 @@
     }
   },
   "include": [
-    "packages/**/*", "packages/gantd/webpack.config.js",
+    "packages/**/*"
   ],
   "exclude": [
     "node_modules",
