@@ -112,8 +112,8 @@ export default (props: PanelProps) => {
                         placement="topRight"
                         title={f({ id: 'confirmDelView' })}
                         onConfirm={onDelete.bind(null, item)}
-                        okText={locale.ok}
-                        cancelText={locale.cancel}
+                        okText={f({ id: 'ok' })}
+                        cancelText={f({ id: 'cancel' })}
                       >
                         <Tooltip title={f({ id: 'delete' })}>
                           <Icon
