@@ -8,7 +8,6 @@ import { useDrag, useResize, usePrev } from './Hooks';
 import ModalContext from './Context';
 import { getModalState } from './Reducer';
 import { ActionTypes } from './Reducer';
-import { IntlProvider, useIntl } from 'react-intl';
 const modalStyle = { margin: 0, paddingBottom: 0 };
 
 type Props = ModalInnerProps & Partial<typeof defaultProps>
@@ -38,7 +37,6 @@ const ModalInner: React.FC<Props> = function ModalInner(props) {
     const { dispatch, state } = useContext(ModalContext);
     const modalState = getModalState(state, id);
     const visiblePrev = usePrev(visible);
-    const { formatMessage: f } = useIntl();
 
     useEffect(() => {
         dispatch({ type: ActionTypes.mount, id, itemState })
@@ -113,8 +111,6 @@ const ModalInner: React.FC<Props> = function ModalInner(props) {
         onOk={onOk}
         cancelButtonProps={{ size: 'small' }}
         okButtonProps={{ size: 'small' }}
-        okText={f({ id: 'submit' })}
-        cancelText={f({ id: 'cancel' })}
         {...restProps}
     >
         <div className={`${prefixCls}-resizableModalContent`} onClick={onFocus}>
