@@ -14,7 +14,7 @@ if (
   );
 }
 /* @remove-on-es-build-end */
-import './style/index.less'
+import './style/index.less';
 export { default as ConfigProvider, ConfigContext, ConfigConsumer, ConfigConsumerProps } from './config-provider';
 //其他
 export { default as Intro } from './intro';
