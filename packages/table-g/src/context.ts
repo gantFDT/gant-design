@@ -10,7 +10,9 @@ const DataContext = React.createContext({} as {
     computedRowKey: RowKey<Record>,
     editable: EditStatus,
     computedColIndex: string[],
-    computedRowSelection: RowSelection<Record>
+    computedRowSelection: RowSelection<Record>,
+    originRowHeight: number,
+    originLineHeight: string,
 })
 const RowContext = React.createContext({} as {
     dataRowKey: string

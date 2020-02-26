@@ -9,6 +9,9 @@ import { Props, Context } from './interface'
 import classnames from 'classnames'
 import dependencies, { Inner, findDependencies, refHoc } from './compose'
 import { getNewValue, getDateToForm } from './utils'
+import { IntlProvider } from 'react-intl'
+import en from './locale/en-US'
+import zh from './locale/zh-CN'
 export const FormContext = React.createContext({} as Context)
 export * from './interface'
 export * from './maps'
@@ -49,6 +52,8 @@ class SchemaForm extends React.Component<Props>{
 	}
 	render() {
 		const {
+			i18n = navigator.language,
+			locale,
 			schema,
 			form,
 			edit,
@@ -67,13 +72,23 @@ class SchemaForm extends React.Component<Props>{
 			console.warn('schema is null')
 			return null
 		}
-    const prefixCls = customizePrefixCls + 'schemaform';
+		const prefixCls = customizePrefixCls + '-schemaform';
 
-    return <FormContext.Provider value={{ form, edit, onSave, data, customFields, emitDependenciesChange, prefixCls }} >
-      <div className={classnames(className)} style={{ backgroundColor }} >
-        <_SchemaForm schema={schema} uiSchema={uiSchema} titleConfig={titleConfig} />
-      </div>
-    </FormContext.Provider>
+		const langs = {
+			'en-US': en,
+			'zh-CN': zh
+		}
+		let _i18n = Object.keys(langs).find(i => i == i18n)
+		let _locale = _i18n ? _i18n.split('-')[0] : 'en'
+		let messages = langs[i18n] || en
+		if (locale) messages = { ...messages, ...locale }
+		return <IntlProvider locale={_locale} messages={messages}>
+			<FormContext.Provider value={{ form, edit, onSave, data, customFields, emitDependenciesChange, prefixCls }} >
+				<div className={classnames(className)} style={{ backgroundColor }} >
+					<_SchemaForm schema={schema} uiSchema={uiSchema} titleConfig={titleConfig} />
+				</div>
+			</FormContext.Provider>
+		</IntlProvider >
 	}
 }
 

@@ -6,6 +6,7 @@ import _ from 'lodash'
 import Panel from './Panel'
 import EditModal from './EditModal'
 import { getActiveDefaultView } from './utils'
+import { useIntl } from 'react-intl'
 
 export type ViewType = 'company' | 'system' | 'custom'
 
@@ -22,7 +23,6 @@ export interface DefaultView {
 }
 
 export interface ViewProps {
-  locale: any;
   splitLine?: boolean // 分割线
   viewId: string // 当前视图id
   viewName: string // 视图名称
@@ -45,7 +45,6 @@ export interface ViewProps {
  */
 export default function View(props: ViewProps) {
   const {
-    locale,
     viewId,
     viewName,
     systemViews = [],
@@ -67,6 +66,7 @@ export default function View(props: ViewProps) {
   const [editView, setEditView] = useState({ name: '' })
   const currentLoading = (loading || renameLoading) ? true : false
   const [showPop, setShowPop] = useState(false)
+  const { formatMessage: f } = useIntl()
 
   const switchActiveViewImpl = useCallback((viewType: ViewType, view: any) => {
     view.isSystem = viewType !== 'custom'
@@ -98,7 +98,7 @@ export default function View(props: ViewProps) {
     if (systemViews.length === 0 && customViews.length === 0) {
       return <Empty
         image={Empty.PRESENTED_IMAGE_SIMPLE}
-        description={locale.noView}
+        description={f({ id: 'noView' })}
       >
       </Empty>
     }
@@ -114,8 +114,7 @@ export default function View(props: ViewProps) {
       <div style={{ margin: '-10px' }}>
         <Spin spinning={currentLoading} >
           <Panel
-            locale={locale}
-            title={locale.sysView}
+            title={f({ id: 'sysView' })}
             views={systemViews}
             viewType='system'
             switchActiveView={switchActiveViewImpl.bind(null, 'system')}
@@ -125,8 +124,7 @@ export default function View(props: ViewProps) {
           />
           {companyViews.length > 0 && (
             <Panel
-              locale={locale}
-              title={locale.companyView}
+              title={f({ id: 'companyView' })}
               views={companyViews}
               viewType='company'
               switchActiveView={switchActiveViewImpl.bind(null, 'company')}
@@ -136,9 +134,8 @@ export default function View(props: ViewProps) {
             />
           )}
           <Panel
-            locale={locale}
             viewId={viewId}
-            title={locale.customView}
+            title={f({ id: 'customView' })}
             views={customViews}
             viewType='custom'
             switchActiveView={switchActiveViewImpl.bind(null, 'custom')}
@@ -165,7 +162,7 @@ export default function View(props: ViewProps) {
         onVisibleChange={setShowPop}
         getPopupContainer={getPopupContainer}
       >
-        <div 
+        <div
           className={
             classnames(
               'gant-dropbutton',
@@ -175,12 +172,11 @@ export default function View(props: ViewProps) {
               }
             )
           }>
-          {viewName || locale.view}
+          {viewName || f({ id: 'view' })}
           <Icon type='down' style={{ marginLeft: '5px' }} />
         </div>
       </Popover>
       <EditModal
-        locale={locale}
         loading={renameLoading}
         initValue={editViewName}
         showModal={showModal}

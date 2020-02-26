@@ -1,13 +1,14 @@
 
 import './index.less';
 import React, { useContext, useEffect, useMemo, useCallback, memo } from 'react';
-import { Modal, Button } from 'antd';
+import { Modal } from 'antd';
 import classnames from 'classnames';
 import { Icon } from '@data-cell';
 import { useDrag, useResize, usePrev } from './Hooks';
-import { ModalContext } from './Context';
+import ModalContext from './Context';
 import { getModalState } from './Reducer';
-import { ActionTypes } from './Reducer'
+import { ActionTypes } from './Reducer';
+import { IntlProvider, useIntl } from 'react-intl';
 const modalStyle = { margin: 0, paddingBottom: 0 };
 
 type Props = ModalInnerProps & Partial<typeof defaultProps>
@@ -15,34 +16,29 @@ type Props = ModalInnerProps & Partial<typeof defaultProps>
 const ModalInner: React.FC<Props> = function ModalInner(props) {
     const {
         prefixCls: customizePrefixCls = 'gant', //自定义class前缀
-        locale: modalLocale = {
-          submit: '确认',
-          cancel: '取消'
-        },         //自定义国际化
-        id,             //弹窗唯一标识
-        itemState,      //单个弹窗的自定义属性
-        visible,        //弹窗标题
-        title,          //弹窗标题
-        style,          //弹窗额外样式
-        wrapClassName,  //弹窗层自定义class
-        canMaximize,    //是否可以最大化
-        canResize,      //是否可以拖动
-        confirmLoading, //弹窗加载状态
-        isModalDialog,  //是否为模态窗口
-        footerLeftExtra,//默认的footer左侧插槽
-        footerRightExtra,//默认的footer右侧插槽
-        disabled,       //提交按钮是否禁用
-        onCancel,       //取消按钮回调
-        onOk,           //提交按钮回调
-        children,       //自定义弹窗内容
-        ...restProps    //弹窗组件接受的其他antd支持的属性值
+        id,                 //弹窗唯一标识
+        itemState,          //单个弹窗的自定义属性
+        visible,            //弹窗标题
+        title,              //弹窗标题
+        style,              //弹窗额外样式
+        wrapClassName,      //弹窗层自定义class
+        canMaximize,        //是否可以最大化
+        canResize,          //是否可以拖动
+        isModalDialog,      //是否为模态窗口
+        onCancel,           //取消按钮回调
+        onOk,               //提交按钮回调
+        cancelButtonProps,  //antd-按钮属性
+        okButtonProps,      //antd-按钮属性
+        children,           //自定义弹窗内容
+        ...restProps        //弹窗组件接受的其他antd支持的属性值
     } = props;
 
-    const prefixCls = customizePrefixCls + 'modal';
+    const prefixCls = customizePrefixCls + '-modal';
 
     const { dispatch, state } = useContext(ModalContext);
     const modalState = getModalState(state, id);
-    const visiblePrev = usePrev(visible)
+    const visiblePrev = usePrev(visible);
+    const { formatMessage: f } = useIntl();
 
     useEffect(() => {
         dispatch({ type: ActionTypes.mount, id, itemState })
@@ -114,21 +110,11 @@ const ModalInner: React.FC<Props> = function ModalInner(props) {
         maskClosable={isModalDialog}
         destroyOnClose
         onCancel={onCancel}
-
-        footer={<div className={footerLeftExtra ? `${prefixCls}-defaultFooterContent` : null}>
-            {footerLeftExtra && <div>{footerLeftExtra}</div>}
-            <div>
-                {footerRightExtra}
-                <Button size="small" onClick={onCancel}>{modalLocale.cancel}</Button>
-                <Button
-                    size="small"
-                    type='primary'
-                    loading={confirmLoading}
-                    disabled={disabled}
-                    onClick={onOk}
-                >{modalLocale.submit}</Button>
-            </div>
-        </div>}
+        onOk={onOk}
+        cancelButtonProps={{ size: 'small' }}
+        okButtonProps={{ size: 'small' }}
+        okText={f({ id: 'submit' })}
+        cancelText={f({ id: 'cancel' })}
         {...restProps}
     >
         <div className={`${prefixCls}-resizableModalContent`} onClick={onFocus}>
@@ -147,12 +133,10 @@ const defaultProps = {
     canMaximize: true,
     canResize: true,
     isModalDialog: false,
-    footerLeftExtra: null,
-    footerRightExtra: null,
-    disabled: false,
     onCancel: () => { },
     onOk: () => { },
 }
 ModalInner.defaultProps = defaultProps
 
-export const ResizableModal = memo<Props>(ModalInner);
+const ResizableModal = memo<Props>(ModalInner);
+export default ResizableModal;

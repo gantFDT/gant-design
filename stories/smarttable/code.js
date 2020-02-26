@@ -1,5 +1,5 @@
 const codeGenerator = (code) =>
-`import React, { useState } from 'react'
+  `import React, { useState } from 'react'
 import { Button, Tag, Divider } from 'antd'
 import SmartTable from 'smart-table-g'
 
@@ -82,7 +82,7 @@ ReactDOM.render(
 )`;
 
 const code1 =
-`
+  `
 function TableUse() {
   return (
       <div style={{ margin: 10 }}>
@@ -96,7 +96,7 @@ function TableUse() {
 }`
 
 const code2 =
-`
+  `
 function TableUse() {
   const tableSchema = {
     supportColumnFields: tableColumns,
@@ -140,7 +140,7 @@ function TableUse() {
 }`
 
 const code3 =
-`
+  `
 function TableUse() {
   const tableSchema = {
     supportColumnFields: tableColumns,
@@ -173,7 +173,7 @@ function TableUse() {
 }`
 
 const code4 =
-`
+  `
 function TableUse() {
   const tableSchema = {
     supportColumnFields: tableColumns,
@@ -238,5 +238,34 @@ function TableUse() {
       </div>
   )
 }`
+const code5 = `function LocalUse() {
+  const initalLocale = {
+    sysView: '自定义-System view',
+    companyView: '自定义-Company view',
+    customView: '自定义-Custom view',
+  }
+  const [i18n, setI18n] = useState('en-US')
+  const [customLocale, setCustomLocale] = useState(false)
+  return (
+    <div style={{ margin: 10 }}>
+      <div style={{ marginBottom: 10 }}>
+        <p><span>自定义local：</span><Switch checked={customLocale} onChange={(checked) => { setCustomLocale(checked) }} /></p>
+        <Radio.Group size='small' onChange={(e) => setI18n(e.target.value)} value={i18n}>
+          <Radio.Button value={'en-US'}>英文</Radio.Button>
+          <Radio.Button value={'zh-CN'}>中文</Radio.Button>
+        </Radio.Group>
+      </div>
+      <SmartTable
+        i18n={i18n}
+        locale={customLocale ? initalLocale : null}
+        onReload={() => { }}
+        tableKey="BasicUse"
+        schema={tableColumns}
+        dataSource={dataSource}
+      />
+    </div>
+  )
+}
+`
 
-export default [codeGenerator(code1), codeGenerator(code2), codeGenerator(code3), codeGenerator(code4)];
+export default [codeGenerator(code1), codeGenerator(code2), codeGenerator(code3), codeGenerator(code4), codeGenerator(code5)];

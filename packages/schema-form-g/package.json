@@ -20,6 +20,7 @@
         "lodash": "^4.17.11",
         "moment": "^2.24.0",
         "react": "^16.8.6",
-        "recompose": "^0.30.0"
+        "recompose": "^0.30.0",
+        "react-intl": "^3.12.0"
     }
 }

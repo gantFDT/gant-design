@@ -4,9 +4,9 @@ import { Icon, Tag, Tooltip, Popconfirm, Empty } from 'antd'
 import _ from 'lodash'
 import { UpdateViewProps, ViewType, DefaultView } from './index'
 import BlockHeader from '@header'
+import { useIntl } from 'react-intl'
 
 interface PanelProps {
-  locale: any
   viewId?: string // 当前视图id
   viewType: ViewType// 视图类型
   title: string // 标题
@@ -24,7 +24,6 @@ interface PanelProps {
 
 export default (props: PanelProps) => {
   const {
-    locale,
     viewId,
     title,
     views,
@@ -38,6 +37,8 @@ export default (props: PanelProps) => {
     onDefaultViewChange,
     extra
   } = props
+
+  const { formatMessage: f } = useIntl()
 
   const onViewChange = useCallback((item: any) => {
     switchActiveView && switchActiveView(item)
@@ -78,7 +79,7 @@ export default (props: PanelProps) => {
       <ul className="content">
         {views.length === 0 && (<Empty
           image={Empty.PRESENTED_IMAGE_SIMPLE}
-          description={locale.noView}
+          description={f({ id: 'noView' })}
         >
         </Empty>)}
         {views.map((item) => {
@@ -88,18 +89,18 @@ export default (props: PanelProps) => {
               <div className="leftContent" onClick={onViewChange.bind(null, item)}>
                 <span>{name}</span>
                 {id === defaultViewId && (
-                  <Tag className="tag">&nbsp;{locale.default}</Tag>
+                  <Tag className="tag">&nbsp;{f({ id: 'default' })}</Tag>
                 )}
               </div>
               <div className="operates">
                 {id !== defaultViewId && (
                   <span
                     className="operate"
-                    onClick={onSetDefault.bind(null, viewType, id)}>{locale.setDefault}</span>
+                    onClick={onSetDefault.bind(null, viewType, id)}>{f({ id: 'setDefault' })}</span>
                 )}
                 {viewType === 'custom' && (
                   <>
-                    <Tooltip title={locale.rename}>
+                    <Tooltip title={f({ id: 'rename' })}>
                       <Icon
                         className={`marginh5 operate`}
                         type='edit'
@@ -109,12 +110,12 @@ export default (props: PanelProps) => {
                     {viewId !== id && (
                       <Popconfirm
                         placement="topRight"
-                        title={locale.confirmDelView}
+                        title={f({ id: 'confirmDelView' })}
                         onConfirm={onDelete.bind(null, item)}
                         okText={locale.ok}
                         cancelText={locale.cancel}
                       >
-                        <Tooltip title={locale.delete}>
+                        <Tooltip title={f({ id: 'delete' })}>
                           <Icon
                             className={`operate delete`}
                             type='delete'

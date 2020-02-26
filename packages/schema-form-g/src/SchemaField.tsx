@@ -6,12 +6,14 @@ import { Form, Col } from 'antd'
 import { Schema } from './interface'
 import { get, findIndex } from 'lodash'
 import { getFields } from './maps'
-
-const tr = (str) => str;
+import { useIntl } from 'react-intl'
 
 const SchemaField = (props: Schema) => {
-	const { options, title, props: FiledProps, componentType, name, isRequired, initialValue: defaultValue, required, edit, uiData } = props
-	const { form: { getFieldDecorator, resetFields, validateFieldsAndScroll }, onSave, data, customFields, emitDependenciesChange, locale, prefixCls } = useContext(FormContext)
+	const { options, title, props: FieldProps, componentType, name, isRequired, required, edit, uiData } = props
+	const { form: { getFieldDecorator, resetFields, validateFieldsAndScroll }, onSave, data, customFields, emitDependenciesChange, prefixCls } = useContext(FormContext)
+	const { formatMessage: f } = useIntl()
+
+	const defaultValue = get(FieldProps, 'initialValue', undefined)
 
 	const onCancel = useCallback(() => name && resetFields([name]), [componentType, name])
 
@@ -31,7 +33,7 @@ const SchemaField = (props: Schema) => {
 
 	if (initialValue == undefined && componentType === "ColorPicker") initialValue = "#ffffff"
 
-	const itemEdit = FiledProps && FiledProps.allowEdit === false ? EditStatus.CANCEL : edit
+	const itemEdit = FieldProps && FieldProps.allowEdit === false ? EditStatus.CANCEL : edit
 	const colLayout = typeof col === "number" ? { span: col } : col
 	const labelColLayout = typeof labelCol === "number" ? { span: labelCol } : labelCol
 	const wrapperColayout = typeof wrapperCol === "number" ? { span: wrapperCol } : wrapperCol
@@ -42,9 +44,9 @@ const SchemaField = (props: Schema) => {
 			const customIndex = findIndex(customFields, (item) => item.type === componentType)
 			component = get(customFields, `[${customIndex}].component`, Input)
 		}
-		const { initialValue, ...othterProps } = FiledProps || {}
+		const { initialValue, ...othterProps } = FieldProps || {}
 		return React.createElement(component, { ...othterProps, edit: itemEdit, onCancel, onSave: onItemSave })
-	}, [FiledProps, itemEdit, onCancel, onItemSave, componentType, customFields])
+	}, [FieldProps, itemEdit, onCancel, onItemSave, componentType, customFields])
 
 	useEffect(() => {
 		if (![null, undefined].includes(initialValue)) {
@@ -66,7 +68,7 @@ const SchemaField = (props: Schema) => {
 					...options,
 					rules: [{
 						required: typeof required === "boolean" ? required : isRequired,
-						message: `${title}${tr("不能为空")}`
+						message: `${title}${f({ id: 'required' })}`
 					},
 					...optionsRules
 					]

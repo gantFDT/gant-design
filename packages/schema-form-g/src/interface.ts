@@ -22,7 +22,6 @@ export interface Context {
 	edit?: EditStatus | EditObject,
 	emitDependenciesChange: (key: string, value: any) => void,
 	prefixCls?: string,
-	locale?: locale,
 }
 export interface Schema {
 	name?: string,
@@ -48,9 +47,6 @@ export interface CustomFields {
 interface EditObject {
 	[propname: string]: EditStatus | EditObject
 }
-export interface locale {
-	required: string
-}
 export interface OptionalProps {
 	schema: Schema,
 	onSchemaChange?: (schema: Schema) => void,
@@ -66,9 +62,17 @@ export interface OptionalProps {
 	className?: any,
 	ref?: any | ReactElement | ReactHTML | HTMLDivElement
 }
+export enum langEnum {
+	'zh-CN' = 'zh-CN',
+	'en-US' = 'en-US',
+}
+export interface LocaleProps {
+	required: string
+}
 export interface Props extends OptionalProps {
+	i18n?: langEnum,
+	locale?: LocaleProps,
 	prefixCls?: string,
-	locale?: locale,
 	onSave: (id: any, value: any, cb: any) => any,
 	form: WrappedFormUtils,
 	emitDependenciesChange: (key: string, value: any) => void,

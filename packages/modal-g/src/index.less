@@ -1,9 +1,9 @@
-@import '../../gantd/src/style/theme/index.less';
-@profilecard-prefix-cls: ~'@{gant-prefix}-modal';
+@gant-prefix: gant;
+@component: ~'@{gant-prefix}-modal';
 
 @activeIconColor: var(--modal-header-icon-hover-color);
 
-.@{profilecard-prefix-cls} {
+.@{component} {
 
     &-resizableModalDefault {
         pointer-events: none;
@@ -56,18 +56,18 @@
             overflow-y: auto;
         }
 
-        .@{profilecard-prefix-cls}-resizableModalTitle {
+        .@{component}-resizableModalTitle {
             cursor: move;
             text-overflow: ellipsis;
             white-space: nowrap;
             overflow: hidden;
         }
 
-        .@{profilecard-prefix-cls}-resizableModalContent {
+        .@{component}-resizableModalContent {
             height: 100%;
         }
 
-        .@{profilecard-prefix-cls}-maximizeAnchor {
+        .@{component}-maximizeAnchor {
             right: 40px;
             width: 40px;
             top: 0;
@@ -93,7 +93,7 @@
             }
         }
 
-        .@{profilecard-prefix-cls}-resizeAnchor {
+        .@{component}-resizeAnchor {
             right: -10px;
             width: 30px;
             bottom: -10px;
@@ -130,10 +130,5 @@
         .ant-modal-content {
             border-radius: 0;
         }
-    }
-
-    &-defaultFooterContent {
-        display: flex;
-        justify-content: space-between;
     }
 }

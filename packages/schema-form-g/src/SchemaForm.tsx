@@ -9,6 +9,7 @@ import classnames from 'classnames'
 import { get, isEmpty } from 'lodash'
 import { getOrders, getUIData, getEdit, getTitle, getBackgroundColor } from './utils'
 import allOperators from './operators'
+import { useIntl } from 'react-intl'
 
 interface SchemaFormProps {
 	schema: Schema,
@@ -18,6 +19,7 @@ interface SchemaFormProps {
 export default function SchemaForm(props: SchemaFormProps) {
 	const { uiSchema, schema, titleConfig } = props
 	const { edit, prefixCls } = useContext(FormContext)
+	const { formatMessage: f } = useIntl()
 
 	const renderPropTypeContent: any = useCallback((item: Schema, pathName: string, required: string[]) => {
 		const { type, hide } = item
@@ -33,6 +35,7 @@ export default function SchemaForm(props: SchemaFormProps) {
 				const operatorObj = allOperators[item.operator]
 				const hasOperator = !isEmpty(operatorObj)
 				const filedTitle = hasOperator ? `${item.title}(${operatorObj.name})` : item.title
+				// const filedTitle = hasOperator ? `${item.title}(${f({ id: operatorObj.name })})` : item.title
 				const filedEdit = getEdit(edit, pathName)
 				const { orders, gutter, ...itemUiData } = getUIData(uiSchema, pathName)
 				return <SchemaField

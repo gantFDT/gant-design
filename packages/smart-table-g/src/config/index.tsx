@@ -6,9 +6,9 @@ import { deepCopy4JSON } from '@util'
 import ViewPicker from '../viewpicker'
 import SaveAsModal from './SaveAsModal'
 import UIContent from './UIContent'
+import { useIntl } from 'react-intl'
 
 interface ConfigModalProps extends ModalProps {
-  locale: any;
   dataSource: any,
   originColumns: any,
   views:any,
@@ -22,7 +22,6 @@ interface ConfigModalProps extends ModalProps {
 
 function ConfigModal(props: ConfigModalProps) {
   const {
-    locale,
     visible,
     originColumns,
     dataSource,
@@ -40,6 +39,7 @@ function ConfigModal(props: ConfigModalProps) {
 
   const [fakeView, setFakeView] = useState(deepCopy4JSON(dataSource));
   const { panelConfig } = fakeView;
+  const { formatMessage: f } = useIntl();
 
   useEffect(() => {
     const view = deepCopy4JSON(dataSource);
@@ -53,7 +53,7 @@ function ConfigModal(props: ConfigModalProps) {
 
   const handlerSave = useCallback(() => {
     if(!panelConfig.columnFields.filter((record: any)=>record.checked).length) return notification.info({
-      message: locale.saveMessage
+      message: f({ id: 'saveMessage' })
     })
     onOk && onOk(fakeView)
   }, [fakeView])
@@ -90,9 +90,8 @@ function ConfigModal(props: ConfigModalProps) {
         title={
           <>
             <Icon type="setting"/>
-            <span style={{margin:'0 8px'}}>{locale.config}</span>
+            <span style={{margin:'0 8px'}}>{f({ id: 'config' })}</span>
             <ViewPicker
-              locale={locale}
               viewName={fakeView.name}
               viewId={fakeView.viewId}
               customViews={views.customViews}
@@ -111,29 +110,27 @@ function ConfigModal(props: ConfigModalProps) {
             <Button size="small"  
               icon='close-circle'
               onClick={handlerClose}
-            >{locale.cancel}</Button>
+            >{f({ id: 'cancel' })}</Button>
             <Button size="small"  
               icon='diff'
               onClick={() => { setTitleModalVisible(true) }}
-            >{locale.saveAs}</Button>
+            >{f({ id: 'saveAs' })}</Button>
             <Button size="small"  
               type='primary'
               icon='save'
               onClick={handlerSave}
               disabled={isSystem}
-            >{locale.save}</Button>
+            >{f({ id: 'save' })}</Button>
           </div>
         }
         {...restProps}
       >
         <UIContent
-          locale={locale}
           viewConfig={fakeView.panelConfig}
           onChange={handlerChangeConfig}
         />
       </Modal>
       <SaveAsModal
-        locale={locale}
         visible={titleModalVisible}
         onSubmit={handleSaveAs}
         onCancel={() => { setTitleModalVisible(false) }}
