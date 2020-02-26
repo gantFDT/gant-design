@@ -5,8 +5,6 @@ import { addParameters, addDecorator } from '@storybook/react';
 import * as themes from './themes';
 // import { themes } from '@storybook/theming'; // 自带主题
 import CenterDecorator from '../stories/_util/CenterDecorator';
-import { withConsole } from '@storybook/addon-console';
-import { withTests } from '@storybook/addon-jest';
 
 const NODE_ENV = process.env.NODE_ENV;
 
@@ -59,7 +57,7 @@ addDecorator(CenterDecorator)
 // });
 
 // 控制台
-addDecorator((storyFn, context) => withConsole()(storyFn)(context));
+// addDecorator((storyFn, context) => withConsole()(storyFn)(context));
 
 // 全局上下文
 // addDecorator(withContexts(contexts));

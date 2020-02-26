@@ -82,12 +82,13 @@
 .omitdisplay {
   word-break: break-all;
   text-overflow: ellipsis;
+  /*! autoprefixer: ignore next */
   display: box;
+  /*! autoprefixer: ignore next */
   display: -webkit-box;
   -webkit-line-clamp: 1;
-  /*! autoprefixer: off */
+  /*! autoprefixer: ignore next */
   -webkit-box-orient: vertical;
-  /* autoprefixer: on */
   overflow: hidden;
   word-break: break-all;
 }
