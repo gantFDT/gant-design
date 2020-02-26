@@ -1,16 +1,16 @@
 import { create } from '@storybook/theming';
-import gantDLogo from '../assests/images/gantd.png'
+import gantDLogo from '../assests/images/logo.png'
 export const light =  create({
   base: 'light',
 
-  // colorPrimary: '#457D37',
-  // colorSecondary: '#457D37',
+  colorPrimary: '#24247A',
+  colorSecondary: '#18184E',
 
   // // UI
   appBg: '#fff',//整体背景
   appContentBg: '#fafafa',//组件容器背景
   // appBorderColor: 'grey',//整体边框
-  appBorderRadius: 5,//整体圆角
+  appBorderRadius: 0,//整体圆角
 
   // // Typography
   // fontBase: '"Open Sans", sans-serif',
@@ -32,7 +32,7 @@ export const light =  create({
   // inputBorderRadius: 4,//表单边框
 
   brandTitle: '甘棠软件',
-  brandUrl: 'https://example.com',
+  brandUrl: 'http://favori.gitee.io/gantd-landing/',
   brandImage: gantDLogo,
 });
 
@@ -68,6 +68,6 @@ export const dark =  create({
   // inputBorderRadius: 4,//表单边框
 
   brandTitle: '甘棠软件',
-  brandUrl: 'https://example.com',
+  brandUrl: 'http://favori.gitee.io/gantd-landing/',
   brandImage: gantDLogo,
 });
