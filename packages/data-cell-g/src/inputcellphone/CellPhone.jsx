@@ -28,21 +28,15 @@ const withPhoneCode = compose(
   withProps(({ onChange, value: oPhone, code: oCode }) => {
     return {
       onCodeChange(code) {
-        console.log(code, oPhone)
         if (!onChange) return
         // 验证中国大陆电话
-        if (code === "86") {
-          if (oPhone.length <= 11 && reg.test(oPhone)) {
-            onChange({
-              code, phone: oPhone
-            })
-          }
-        } else {
-          onChange({
-            code, phone: oPhone
-          })
+        let phone = oPhone
+        if (code === "86" && !(oPhone.length <= 11 && reg.test(oPhone))) {
+          phone = ''
         }
-
+        onChange({
+          code, phone
+        })
       },
       onPhoneChange(phone) {
         if (!onChange) return
