@@ -39,8 +39,8 @@ export const light =  create({
 export const dark =  create({
   base: 'dark',
 
-  // colorPrimary: '#457D37',
-  // colorSecondary: '#457D37',
+  colorPrimary: '#24247A',
+  colorSecondary: '#18184E',
 
   // // UI
   // appBg: '#333',//整体背景
