@@ -41,7 +41,7 @@
         "@babel/plugin-proposal-function-bind",
         [
             "prismjs", {
-                "languages": ["javascript", "css", "markup", "tsx"],
+                "languages": ["javascript", "css", "markup", "tsx", "bash"],
                 "plugins": ["line-numbers"],
                 "theme": "okaidia",
                 "css": true

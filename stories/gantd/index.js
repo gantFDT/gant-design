@@ -12,7 +12,6 @@ Prism.highlightAll()
 
 
 export default () => {
-  Prism.highlightAll()
   return <div className="idea">
 
     <img src={Img} className="img" />
@@ -34,16 +33,24 @@ export default () => {
 
     <div className="content">
       我们推荐使用 npm 或 yarn 的方式进行开发，不仅可在开发环境轻松调试，也可放心地在生产环境打包部署使用，享受整个生态圈和工具链带来的诸多好处。
+
+<pre className="language-bash">
+        <code>
+          <div dangerouslySetInnerHTML={{
+            __html: Prism.highlight(`npm install gantd --save
+`, Prism.languages.bash, 'bash')
+          }} ></div>
+        </code >
+      </pre >
       <pre className="language-bash">
-        <code >
-          $ npm install gantd --save
-      </code>
-      </pre>
-      <pre className="language-bash">
-        <code >
-          $ yarn add gantd --save
-      </code>
-      </pre>
+        <code>
+          <div dangerouslySetInnerHTML={{
+            __html: Prism.highlight(`yarn add gantd --save
+`, Prism.languages.bash, 'bash')
+          }} ></div>
+        </code >
+      </pre >
+
     </div>
 
     <h2 className="title">示例</h2>
