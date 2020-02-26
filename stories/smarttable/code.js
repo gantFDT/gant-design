@@ -1,7 +1,7 @@
 const codeGenerator = (code) =>
   `import React, { useState } from 'react'
 import { Button, Tag, Divider } from 'antd'
-import SmartTable from 'smart-table-g'
+import { SmartTable } from 'gantd'
 
 const dataSource = [
   {

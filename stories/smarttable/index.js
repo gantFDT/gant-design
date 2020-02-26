@@ -264,6 +264,21 @@ function LocalUse() {
   )
 }
 
+function EditInlineUse() {
+  return (
+    <div style={{ margin: 10 }}>
+      <SmartTable
+        i18n={i18n}
+        locale={customLocale ? initalLocale : null}
+        onReload={() => { }}
+        tableKey="BasicUse"
+        schema={tableColumns}
+        dataSource={dataSource}
+      />
+    </div>
+  )
+}
+
 const config = {
   codes: code,
   useage: `

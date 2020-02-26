@@ -24,7 +24,8 @@
     "dev": "start-storybook -p 60004",
     "build-storybook": "build-storybook",
     "compile": "gulp",
-    "build": "node ./scripts/build"
+    "build": "gulp && webpack",
+    "pub": "gulp && webpack && lerna publish"
   },
   "files": [
     "lib",
