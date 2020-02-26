@@ -10,43 +10,43 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const FilterWarningsPlugin = require('webpack-filter-warnings-plugin');
-const babelConfig = require('../../babelConfig.json');
+const babelConfig = require('./babelConfig.json');
 
 function resolve(moduleName) {
     return require.resolve(moduleName);
 }
 
-const pkg = require(path.join(process.cwd(), './package.json'));
+const pkg = require(path.join(process.cwd(), './packages/gantd/package.json'));
 
 module.exports = {
     mode: 'production', // "production" | "development" | "none"
     entry: {
-        [pkg.name]: path.resolve(__dirname, "src/index.ts")
+        [pkg.name]: path.resolve(__dirname, "packages/gantd/src/index.ts")
     },
     resolve: {
         // 解析模块请求的选项
         // （不适用于对 loader 解析）
         modules: [
             'node_modules',
-            path.resolve(__dirname, "..")
+            path.resolve(__dirname, "packages")
         ],// 用于查找模块的目录
         extensions: [".js", ".ts", ".tsx", ".json", ".jsx", ".css"],// 使用的扩展名
         alias: {// 模块别名列表
-            "@anchor": path.resolve(__dirname, '../anchor-g/src'),
-            "@auto-reload": path.resolve(__dirname, '../auto-reload-g/src'),
-            "@data-cell": path.resolve(__dirname, '../data-cell-g/src'),
-            "@color-picker": path.resolve(__dirname, '../color-picker-g/src'),
-            "@header": path.resolve(__dirname, '../header-g/src'),
-            "@modal": path.resolve(__dirname, '../modal-g/src'),
-            "@schema-form": path.resolve(__dirname, '../schema-form-g/src'),
-            "@smart-table": path.resolve(__dirname, '../smart-table-g/src'),
-            "@submenu": path.resolve(__dirname, '../submenu-g/src'),
-            "@table": path.resolve(__dirname, '../table-g/src'),
-            "@util": path.resolve(__dirname, '../util-g/src')
+            "@anchor": path.resolve(__dirname, 'packages/anchor-g/src'),
+            "@auto-reload": path.resolve(__dirname, 'packages/auto-reload-g/src'),
+            "@data-cell": path.resolve(__dirname, 'packages/data-cell-g/src'),
+            "@color-picker": path.resolve(__dirname, 'packages/color-picker-g/src'),
+            "@header": path.resolve(__dirname, 'packages/header-g/src'),
+            "@modal": path.resolve(__dirname, 'packages/modal-g/src'),
+            "@schema-form": path.resolve(__dirname, 'packages/schema-form-g/src'),
+            "@smart-table": path.resolve(__dirname, 'packages/smart-table-g/src'),
+            "@submenu": path.resolve(__dirname, 'packages/submenu-g/src'),
+            "@table": path.resolve(__dirname, 'packages/table-g/src'),
+            "@util": path.resolve(__dirname, 'packages/util-g/src')
         },
     },
     output: {
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, 'packages/gantd/dist'),
         filename: '[name].js', // 「入口分块(entry chunk)」的文件名模板（出口分块？）
         library: pkg.name, // 导出库(exported library)的名称
         libraryTarget: 'umd' // 使用 module.exports 导出
@@ -69,13 +69,29 @@ module.exports = {
             commonjs2: "antd",
             amd: "antd",
             root: "antd"
+        },
+        moment: { // UMD
+            commonjs: "moment",
+            commonjs2: "moment",
+            amd: "moment",
+            root: "moment"
+        },
+        lodash: { // UMD
+            commonjs: "lodash",
+            commonjs2: "lodash",
+            amd: "lodash",
+            root: "lodash"
         }
     },
     module: {
         rules: [{
             test: /\.(jsx|js)?$/,
             include: [
-                path.resolve(__dirname, "../../"),
+                path.resolve(__dirname, "packages"),
+                // path.resolve(__dirname, "node_modules"),
+            ],
+            exclude: [
+                path.resolve(__dirname, "node_modules")
             ],
             // exclude: [
             //     path.resolve(__dirname, "node_modules")
@@ -96,7 +112,11 @@ module.exports = {
         }, {
             test: /\.(tsx|ts)?$/,
             include: [
-                path.resolve(__dirname, "..")
+              path.resolve(__dirname, "packages"),
+              // path.resolve(__dirname, "node_modules"),
+            ],
+            exclude: [
+                path.resolve(__dirname, "node_modules")
             ],
             // exclude: [
             //     path.resolve(__dirname, "node_modules")
