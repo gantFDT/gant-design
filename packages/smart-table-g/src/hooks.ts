@@ -30,6 +30,7 @@ interface usePaginationProps {
   pagination?: PaginationConfig;
   pageIndex?: number;
   pageSize?: number;
+  isGantPageMode?: boolean;
   onPageChange?: (pageIndex: number, pageSize?: number) => void;
   totalCount?: number;
   pageSizeOptions?: string[];
@@ -40,6 +41,7 @@ export const usePagination = (props: usePaginationProps): PaginationConfig | und
     pageIndex = 1,
     pageSize = 50,
     onPageChange,
+    isGantPageMode,
     totalCount = 0,
     pageSizeOptions = ['50', '100', '150', '200'],
   } = props;
@@ -54,13 +56,13 @@ export const usePagination = (props: usePaginationProps): PaginationConfig | und
     if (!onPageChange) return undefined;
     return {
       total: totalCount,
-      current: getPageFromIndex(pageIndex, pageSize),
+      current: isGantPageMode ? getPageFromIndex(pageIndex, pageSize) : pageIndex,
       pageSize: pageSize,
       onChange: handlerPageChange,
       onShowSizeChange: handlerPageChange,
       pageSizeOptions
     }
-  }, [pagination, pageIndex, pageSize, onPageChange, totalCount])
+  }, [pagination, pageIndex, pageSize, onPageChange, isGantPageMode, totalCount])
 }
 
 // 表格配置相关
