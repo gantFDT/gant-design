@@ -150,12 +150,21 @@ function ConfigDisplayUse() {
       }
     ]
   }
+  const [rowKeys, setRowKeys] = useState([])
   return (
       <div style={{ margin: 10 }}>
         <SmartTable
           tableKey="ConfigDisplayUse"
           schema={tableSchema}
           dataSource={dataSource}
+          rowSelection={
+            {
+              selectedRowKeys: rowKeys,
+              onChange: (selectedRowKeys, selectedRows) => {
+                setRowKeys(selectedRowKeys)
+              }
+            }
+          }
         />
       </div>
   )

@@ -111,6 +111,8 @@ export default (props: PanelProps) => {
                         placement="topRight"
                         title={locale.confirmDelView}
                         onConfirm={onDelete.bind(null, item)}
+                        okText={locale.ok}
+                        cancelText={locale.cancel}
                       >
                         <Tooltip title={locale.delete}>
                           <Icon

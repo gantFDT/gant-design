@@ -46,6 +46,8 @@ const EditModal = (props: EditModalProps) => {
     >
       <Modal
         title={locale.setViewName}
+        okText={locale.ok}
+        cancelText={locale.cancel}
         visible={showModal}
         destroyOnClose
         centered
