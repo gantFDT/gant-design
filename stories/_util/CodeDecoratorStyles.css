@@ -11,7 +11,7 @@
 
 
 .prism-code>.token-line>.module{
-    color: #008dff !important;
+    color: #db2495 !important;
 }
 .prism-code>.token-line>.punctuation{
     color: #008dff !important;
@@ -20,7 +20,7 @@
     color: #cf885f !important;
 }
 .prism-code>.token-line>.operator{
-    color: #090d0f !important;
+    color: #1ef13a !important;
 }
 .prism-code>.token-line>.number{
     color: #f81b4b !important;
@@ -50,5 +50,5 @@
     color: #fc0eac !important;
 }
 .prism-code>.token-line>.class-name{
-    color: #33383d !important;
+    color: #fadd5d !important;
 }
