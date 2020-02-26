@@ -244,7 +244,7 @@ function SmartTable<R>(props: SmartTableProps<R>) {
       </Tooltip>}
       getPopupContainer={() => titleRef.current || document.body}
     />
-  ), [activeView, viewList, renameLoading, updateViewLoading, defaultView, titleRef])
+  ), [activeView, viewList, renameLoading, updateViewLoading, defaultView, titleRef, f])
 
   const tableHeight = useMemo(() => isEmpty(dataSource) ? bodyHeight : (panelConfig.heightMode === 'auto' ? 'auto' : bodyHeight), [dataSource, panelConfig.heightMode, bodyHeight])
 

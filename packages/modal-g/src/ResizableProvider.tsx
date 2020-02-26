@@ -2,12 +2,7 @@ import _ from 'lodash';
 import React, { useEffect, useReducer } from 'react';
 import ModalContext from './Context';
 import { resizableReducer, ActionTypes } from './Reducer';
-import { IntlProvider } from 'react-intl';
-import en from './locale/en-US';
-import zh from './locale/zh-CN';
-
 /// <reference path='types.d.ts' />
-
 
 const getWindowSize = (): WindowSize => ({
     width: window.innerWidth || 0,
@@ -59,16 +54,4 @@ const ResizableProvider: React.FC<ResizableProviderProps> = ({ initalState = {},
     )
 }
 
-const LocalWrapper = (props: any) => {
-    const { i18n = navigator.language, ...restProps } = props
-    const langs = {
-        'en-US': en,
-        'zh-CN': zh
-    }
-    let _i18n = Object.keys(langs).find(i => i == i18n)
-    let _locale = _i18n ? _i18n.split('-')[0] : 'en'
-    return <IntlProvider locale={_locale} messages={langs[i18n] || en}>
-        <ResizableProvider {...restProps} />
-    </IntlProvider>
-}
-export default LocalWrapper
+export default ResizableProvider
