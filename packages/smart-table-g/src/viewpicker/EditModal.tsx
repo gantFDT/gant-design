@@ -46,6 +46,8 @@ const EditModal = (props: EditModalProps) => {
       style={{ display: 'inline-block' }}
     >
       <Modal
+        okText={f({ id: 'ok' })}
+        cancelText={f({ id: 'cancel' })}
         title={f({ id: 'setViewName' })}
         visible={showModal}
         destroyOnClose
