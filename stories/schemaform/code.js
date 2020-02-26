@@ -59,7 +59,7 @@ function BasicUse() {
     const formRef = useRef(null)
 
     const onSubmit = async () => {
-        if (!formRef.current) return;
+        if (!formRef.current) return
         const { errors, values: formValues } = await formRef.current.validateForm()
         console.log('formValues', formValues)
     }
@@ -128,7 +128,7 @@ function EditStatusUse() {
         setState(vals)
     }
     const onSubmit = async () => {
-        if (!formRef.current) return;
+        if (!formRef.current) return
         const { errors, values: formValues } = await formRef.current.validateForm()
         console.log('formValues', formValues)
     }
@@ -167,74 +167,9 @@ function EditStatusUse() {
 ReactDOM.render(<EditStatusUse/>,mountNode)
  `
 
+
+
 const code3 = `
-import React, { useState, useRef } from 'react'
-import { Button } from 'antd'
-import { SchemaForm, EditStatus } from 'gantd'
-
-const schema = {
-    type: "object",
-    title: "带操作符的高级搜索",
-    required: ["key_1"],
-    propertyType: {
-        key_1: {
-            title: "名字",
-            type: "string",
-            operator: 'LIKE'
-        },
-        key_2: {
-            title: "年纪",
-            type: "string",
-            componentType: "InputNumber",
-            operator: 'LT_EQ'
-        },
-        key_3: {
-            title: "成绩",
-            type: "string",
-            componentType: "InputNumber",
-            operator: 'GT'
-        },
-    }
-}
-
-const uiSchema = {
-    "ui:col": 8,
-    "ui:gutter": 10,
-    "ui:labelCol": 8,
-    "ui:wrapperCol": 16,
-}
-
-function OperatorUse() {
-    const formRef = useRef(null)
-
-    const onSearch = async () => {
-        if (!formRef.current) return;
-        const { errors, values: formValues } = await formRef.current.validateForm()
-        console.log('formValues', formValues)
-    }
-    const onReset = () => {
-        if (!formRef.current) return;
-        formRef.current.resetFields()
-    }
-
-    return <div style={{ margin: 10 }}>
-        <SchemaForm
-            wrappedComponentRef={formRef}
-            edit={EditStatus.EDIT}
-            schema={operateSchema}
-            uiSchema={uiSchema}
-        />
-        <div style={{ float: 'right' }}>
-            <Button type='primary' onClick={onSearch}>搜索</Button>
-            <Button onClick={onReset} style={{ marginLeft: 5 }}>重置</Button>
-        </div>
-    </div>
-}
-
-ReactDOM.render(<OperatorUse/>,mountNode)
- `
-
- const code4 = `
  import React, { useState,useMemo, useRef } from 'react'
  import { SchemaForm } from 'gantd'
  
@@ -363,7 +298,7 @@ ReactDOM.render(<OperatorUse/>,mountNode)
     const data = useMemo(() => {
         const newData = {}
         Object.keys(uiSchema).map(keyname => {
-            const name = keyname.replace('ui:', "");
+            const name = keyname.replace('ui:', "")
             newData[name] = uiSchema[keyname]
         })
         return newData
@@ -373,7 +308,7 @@ ReactDOM.render(<OperatorUse/>,mountNode)
         const newData = {}
         Object.keys(val).map(keyname => {
             newData['ui:'+ keyname] = val[keyname]
-        });
+        })
         setUiSchema(uiSchema => ({ ...uiSchema, ...newData }))
     }
     const Reset = () => setUiSchema(initalUiSchema)
@@ -399,7 +334,7 @@ ReactDOM.render(<OperatorUse/>,mountNode)
  ReactDOM.render(<CustomOptions/>,mountNode)
   `
 
-const code5 = `
+const code4 = `
 import React from 'react'
 import { SchemaForm } from 'gantd'
 
@@ -473,9 +408,110 @@ function GridLayout() {
 ReactDOM.render(<GridLayout/>,mountNode)
  `
 
+const code5 = `
+ import React, { useState, useRef } from 'react'
+ import { Button } from 'antd'
+ import { SchemaForm, EditStatus } from 'gantd'
+ 
+ const uiSchema = {
+    "ui:col": 8,
+    "ui:gutter": 10,
+    "ui:labelCol": 4,
+    "ui:wrapperCol": 20,
+}
+function SearchUse(){
+    const [expand, setExpand] = useState(false)
+
+    const schema = useMemo(() => {
+        const count = expand ? 10 : 7
+        let propertyType = {}
+        for (let i = 1; i < count; i++) {
+            propertyType['key_' + i] = {
+                title: 'field_' + i,
+                type: "string",
+            }
+        }
+        return {
+            type: "object",
+            propertyType
+        }
+    }, [expand])
+
+    const formRef = useRef(null)
+    const onSearch = async () => {
+        if (!formRef.current) return
+        const { errors, values: formValues } = await formRef.current.validateForm()
+        console.log('formValues', formValues)
+    }
+    const onReset = () => {
+        if (!formRef.current) return
+        formRef.current.resetFields()
+    }
+
+    return <div style={{ margin: 10 }}>
+        <SchemaForm
+            wrappedComponentRef={formRef}
+            edit={EditStatus.EDIT}
+            schema={schema}
+            uiSchema={uiSchema}
+        />
+        <div style={{ float: 'right' }}>
+            <Button type='primary' onClick={onSearch}>搜索</Button>
+            <Button onClick={onReset} style={{ marginLeft: 5 }}>重置</Button>
+            <a style={{ marginLeft: 5 }} onClick={() => { setExpand(expand => !expand) }}>Collapse <Icon type={expand ? 'up' : 'down'} /></a>
+        </div>
+    </div>
+ }
+ ReactDOM.render(<SearchUse/>,mountNode)
+  `
+
+const code6 = `import React, { useState } from 'react'
+import { Rate } from 'antd'
+import { SchemaForm } from 'gantd'
+
+const uiSchema = {
+    "ui:col": 24,
+    "ui:gutter": 10,
+    "ui:labelCol": 4,
+    "ui:wrapperCol": 20,
+    "ui:labelAlign": "left",
+    "ui:padding": 10,
+    "ui:backgroundColor": "#fff"
+}
+
+const customCmpSchema = {
+    type: "object",
+    title: "扩展自定义组件",
+    propertyType: {
+        key_1: {
+            title: "普通输入框_1",
+            type: "string",
+        },
+        key_2: {
+            title: "自定义组件",
+            type: "string",
+            componentType: 'CustomComponent'
+        },
+    }
+}
+
+function CustomCmp() {
+    return <div style={{ margin: 10 }}>
+        <SchemaForm
+            uiSchema={uiSchema}
+            schema={customCmpSchema}
+            customFields={[{
+                type: "CustomComponent",
+                component: Rate
+            }]}
+        />
+    </div>
+}
+
+ReactDOM.render(<CustomCmp/>,mountNode)`
 
 
-const code6 = `
+const code7 = `
 import React, { useState, useRef } from 'react'
 import { SchemaForm } from 'gantd'
 
@@ -534,7 +570,7 @@ function BindData() {
 ReactDOM.render(<BindData/>,mountNode)
  `
 
-const code7 = `
+const code8 = `
 import React, { useState } from 'react'
 import { SchemaForm } from 'gantd'
 
@@ -578,51 +614,69 @@ function DependenceData() {
 ReactDOM.render(<DependenceData/>,mountNode)
  `
 
-const code8 = `
-import React, { useState } from 'react'
-import { Rate } from 'antd'
+const code9 = `import React from 'react'
 import { SchemaForm } from 'gantd'
 
-const uiSchema = {
-    "ui:col": 24,
-    "ui:gutter": 10,
-    "ui:labelCol": 4,
-    "ui:wrapperCol": 20,
-    "ui:labelAlign": "left",
-    "ui:padding": 10,
-    "ui:backgroundColor": "#fff"
-}
-
-const customCmpSchema = {
+const schema = {
+    title: "嵌套表单—— parent",
     type: "object",
-    title: "扩展自定义组件",
     propertyType: {
-        key_1: {
-            title: "普通输入框_1",
-            type: "string",
+        input: {
+            title: "input 组件",
+            type: "string"
         },
-        key_2: {
-            title: "自定义组件",
-            type: "string",
-            componentType: 'CustomComponent'
+        inputNumber: {
+            title: "inputNumber 组件",
+            type: "number",
+            componentType: "InputNumber"
         },
+        children: {
+            type: "object",
+            title: "嵌套表单—— children",
+            propertyType: {
+                inputMoney: {
+                    title: "InputMoney 组件",
+                    type: "string",
+                    componentType: "InputMoney"
+                },
+                url: {
+                    title: "Url 组件",
+                    type: "string",
+                    componentType: "Url"
+                },
+                grandson: {
+                    type: "object",
+                    title: "嵌套表单—— grandson",
+                    propertyType: {
+                        telePhone: {
+                            title: "TelePhone 组件",
+                            type: "string",
+                            componentType: "InputNumber"
+                        },
+                        datePicker: {
+                            title: "DatePicker 组件",
+                            type: "date",
+                            componentType: "DatePicker"
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
-function CustomCmp() {
-    return <div style={{ margin: 10 }}>
-        <SchemaForm
-            uiSchema={uiSchema}
-            schema={customCmpSchema}
-            customFields={[{
-                type: "CustomComponent",
-                component: Rate
-            }]}
-        />
+const uiSchema = {
+    "ui:col": 12,
+    "ui:labelCol": 6,
+    "ui:wrapperCol": 18
+}
+
+function NestUse() {
+    return <div style={{ margin: 10 }} >
+        <SchemaForm uiSchema={uiSchema} schema={nestSchema} />
     </div>
 }
 
-ReactDOM.render(<CustomCmp/>,mountNode)
- `
+ReactDOM.render(<NestUse/>,mountNode) `
 
-export default [code1, code2, code3, code4, code5, code6, code7, code8]
+export default [code1, code2, code3, code4, code5, code6, code7, code8, code9]

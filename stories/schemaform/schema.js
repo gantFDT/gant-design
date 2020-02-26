@@ -39,31 +39,6 @@ const schema = {
     }
 }
 
-const operateSchema = {
-    type: "object",
-    title: "带操作符的高级搜索",
-    required: ["key_1"],
-    propertyType: {
-        key_1: {
-            title: "名字",
-            type: "string",
-            operator: 'LIKE'
-        },
-        key_2: {
-            title: "年纪",
-            type: "string",
-            componentType: "InputNumber",
-            operator: 'LT_EQ'
-        },
-        key_3: {
-            title: "成绩",
-            type: "string",
-            componentType: "InputNumber",
-            operator: 'GT'
-        },
-    }
-}
-
 const configSchma = {
     type: "object",
     title: "配置普通表单",
@@ -133,6 +108,55 @@ const configSchma = {
     }
 }
 
+const nestSchema = {
+    title: "嵌套表单—— parent",
+    type: "object",
+    propertyType: {
+        input: {
+            title: "input 组件",
+            type: "string"
+        },
+        inputNumber: {
+            title: "inputNumber 组件",
+            type: "number",
+            componentType: "InputNumber"
+        },
+        children: {
+            type: "object",
+            title: "嵌套表单—— children",
+            propertyType: {
+                inputMoney: {
+                    title: "InputMoney 组件",
+                    type: "string",
+                    componentType: "InputMoney"
+                },
+                url: {
+                    title: "Url 组件",
+                    type: "string",
+                    componentType: "Url"
+                },
+                grandson: {
+                    type: "object",
+                    title: "嵌套表单—— grandson",
+                    propertyType: {
+                        telePhone: {
+                            title: "TelePhone 组件",
+                            type: "string",
+                            componentType: "InputNumber"
+                        },
+                        datePicker: {
+                            title: "DatePicker 组件",
+                            type: "date",
+                            componentType: "DatePicker"
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+}
+
 const bindDataSchema = {
     type: "object",
     title: "支持双向绑定的表单",
@@ -165,8 +189,8 @@ const customCmpSchema = {
 }
 export {
     schema,
-    operateSchema,
     configSchma,
+    nestSchema,
     bindDataSchema,
     customCmpSchema
 }
