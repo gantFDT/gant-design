@@ -15,8 +15,6 @@ let pkgs = fs.readdirSync(path.join(__dirname, 'packages'),{withFileTypes:true})
   .filter(item=>item.isDirectory())
   .map(item=>item.name);
 
-pkgs = ['schema-form-g'];
-
 function resolvePath(content, rules = []) {
   rules.forEach((origin) => {
     content = content.replace(new RegExp('@' + origin+ '/', 'g'), origin + '-g/lib/');
@@ -77,7 +75,6 @@ const tstask = function (dirName) {
         "allowSyntheticDefaultImports": true
       })
     )
-    // .pipe(babel(babelConfig))
     .pipe(
       // 处理路径等问题
       through2.obj(function (chunk, enc, next) {
