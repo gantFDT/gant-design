@@ -55,7 +55,6 @@ class Email extends React.Component {
 
   renderSelect = () => {
     const { style: { width, ...style } } = this.props
-
     return (
       <AutoComplete
         {...this.props}
@@ -74,7 +73,7 @@ class Email extends React.Component {
     const { addonAfter, style: { width }, className } = this.props
     return (
       <Group gant style={{ width }} className={className}>
-        {this.renderSelect}
+        {this.renderSelect()}
         {addonAfter ? <span className="ant-input-group-addon">{addonAfter}</span> : null}
       </Group>
     )
