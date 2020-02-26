@@ -24,11 +24,11 @@
 | pagination | 否 | object |  | 参考[链接](https://ant-design.gitee.io/components/pagination-cn/) |
 | resizeCell/resizable | 否 | boolean | false | 是否允许动态缩放列宽度 |
 | rowSelection | 否 | object |  | 行选择功能，其他参数参考[链接]() |
-| scrollKey | 否 | string |  | 设置滚动到指定行的key |
+| scrollKey | 否 | string |  |、设置滚动到指定行的key |
 | tableKey | 否 | string | - | 用于标识唯一table |
 | tail | 否 | function | funciton(pagedata) | 表格尾部的显示,与分页条,和附加选择框在同一区域 |
 | title | 否 | string、ReactNode | - | table标题 |
-| threshold | 否 | number | 20 | 开启虚拟滚动的最低数据量
+| virtualScroll | 否 | object、true | - | 虚拟滚动相关属性
 | wheel | 否 | function | - | 滚动的触发回调 |
 | withIndex | 否 | number |  | 当设置大于0的时候，显示**序号**列到对应的位置，部分情况下，可能内置的序号列不满足情况可以自行添加一列并设置dataIndex为'g-index'，就可以使用计算好的序号 |
 | wrap | 否 | boolean | false | 规定单元格中文字的是否折行显示 |
@@ -60,6 +60,16 @@
 | selectedRowKeys | 否 | Array<string> |  | 已选中的key，根据rowKey计算 |
 | showFooterSelection | 否 | boolean | false | 是否显示底部的勾选框，多选模式下生效，单选模式下默认不显示 |
 | type | 否 | string | checkbox | 选择类型,'checkbox'为多选，'radio'为单选 |
+
+### virtualScroll API
+
+可以通过指定virtualScroll为true简单的开启虚拟滚动，建议在表格高度教高的情况下指定一个较大的threshold值
+
+| 属性 | 是否必传 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| threshold | 否 | number | 20 | 虚拟滚动下单页显示的条数 |
+| rowHeight | 否 | number、string| 24 | 每一行的高度 | 
+| center | 否 | boolean | true | 行内容是否居中
 
 
 ## 表格编辑功能重要说明

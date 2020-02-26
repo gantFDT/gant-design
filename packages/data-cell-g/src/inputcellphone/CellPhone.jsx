@@ -1,36 +1,71 @@
 import React, { Component } from 'react';
 import { Input as AntInput, Select } from 'antd';
 import { compose, withProps, defaultProps, withState, mapProps, lifecycle, withHandlers, withPropsOnChange } from 'recompose'
+import classnames from 'classnames'
+import { get } from 'lodash'
 
 import { withEdit } from '../compose'
-
-const codeTypes = [
-  '+86'
-]
+import codeTypes from './codes.json'
+// import './index.less'
 
 const reg = /^1$|^(13|14|15|18)$|^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{0,8}$/
-// const reg = /^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$/
 
 // 格式化电话号码
 const phoneFormatter = phone => Array.from(phone).map((num, index) => index % 4 == 3 ? `-${num}` : num).join('')
 
-
 const withPhoneCode = compose(
-  withState('code', 'setCode', codeTypes[0]),
+  withProps(({ value = {} }) => {
+    const { code = "86", phone } = value
+    return {
+      code,
+      value: phone
+    }
+  }),
   defaultProps({
     placeholder: '请输入手机号码', // withEdit中用做空值的展示
     allowClear: true,
   }),
-  withProps(({ code, setCode }) => ({
+  withProps(({ onChange, value: oPhone, code: oCode }) => {
+    return {
+      onCodeChange(code) {
+        console.log(code, oPhone)
+        if (!onChange) return
+        // 验证中国大陆电话
+        if (code === "86") {
+          if (oPhone.length <= 11 && reg.test(oPhone)) {
+            onChange({
+              code, phone: oPhone
+            })
+          }
+        } else {
+          onChange({
+            code, phone: oPhone
+          })
+        }
+
+      },
+      onPhoneChange(phone) {
+        if (!onChange) return
+        onChange({
+          code: oCode, phone
+        })
+      },
+      filterOption(inputValue, option) {
+        const { key } = option
+        return key.includes(inputValue)
+      }
+    }
+  }),
+  withProps(({ code, onCodeChange, filterOption }) => ({
     addonBefore: (
-      <Select style={{ width: 75 }} value={code} onChange={setCode} disabled>
+      <Select style={{ width: 86 }} value={code} onChange={onCodeChange} filterOption={filterOption} showSearch>
         {
-          codeTypes.map(code => <Select.Option key={code} value={code}>{code}</Select.Option>)
+          codeTypes.map(code => <Select.Option key={code} value={code}>+{code}</Select.Option>)
         }
       </Select>
     )
   })),
-  mapProps(({ setCode, ...props }) => props)
+  mapProps(({ onCodeChange, searchCode, codeList, filterOption, ...props }) => props)
 )
 
 const withValidate = compose(
@@ -45,9 +80,9 @@ const withValidate = compose(
   ),
   lifecycle({
     componentDidMount() {
-      const { validateValue, onChange } = this.props
+      const { validateValue, onPhoneChange } = this.props
       if (!validateValue()) {
-        onChange('')
+        onPhoneChange('')
       }
     }
   })
@@ -56,9 +91,13 @@ const withValidate = compose(
 @compose(
   withPhoneCode,
   withValidate,
-  withEdit(({ code, value }) => value ? `${code} ${phoneFormatter(value)}` : ''),
+  withEdit(({ code, value }) => value ? `+${code} ${phoneFormatter(value)}` : ''),
 )
 class CellPhone extends Component {
+
+  state = {
+    value: ''
+  }
 
   constructor(props) {
     super(props);
@@ -67,15 +106,23 @@ class CellPhone extends Component {
   }
 
   onChange(e) {
-    const { onChange } = this.props
+    const { onPhoneChange, code } = this.props
     const { value } = e.target
     if (value) {
-      if (value.length <= 11 && reg.test(value)) {
-        onChange(value)
+      if (code === "86") {
+        if (value.length <= 11 && reg.test(value)) {
+          onPhoneChange(value)
+          this.setState({ value })
+        }
+      }
+      else {
+        onPhoneChange(value)
+        this.setState({ value })
       }
     }
     else {
-      onChange('')
+      onPhoneChange('')
+      this.setState({ value: '' })
     }
   }
 
@@ -87,8 +134,15 @@ class CellPhone extends Component {
   }
 
   render() {
+    const { onPhoneChange, validateValue, onEnter, className, ...props } = this.props
+    const { value } = this.state
+    let computedValue = get(props, 'value', value)
+    const classNames = classnames(
+      className,
+      'gant-phone'
+    )
     return (
-      <AntInput {...this.props} onKeyDown={this.onKeyDown} onChange={this.onChange} />
+      <AntInput {...props} value={computedValue} className={classNames} onKeyDown={this.onKeyDown} onChange={this.onChange} />
     );
   }
 }
