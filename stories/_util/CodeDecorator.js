@@ -6,7 +6,7 @@ import Anchor from '@packages/anchor-g/src';
 import zhCN from '@gantd/locale/zh_CN';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import SyntaxHighlighter from 'react-syntax-highlighter';
-import virtualizedRenderer from 'react-syntax-highlighter-virtualized-renderer'; 
+import virtualizedRenderer from 'react-syntax-highlighter-virtualized-renderer';
 import { githubGist } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { version, name } from '../../packages/gantd/package.json';
 import reactElementToJSXString from 'react-element-to-jsx-string';
@@ -15,6 +15,7 @@ import Highlight, { defaultProps } from "prism-react-renderer";
 // console.log('version', version)
 import { CodeDecoratorStyles } from "./CodeDecoratorStyles.js";
 import classnames from 'classnames'
+import Prism from 'prismjs'
 import styles from './CodeDecoratorStyles.css'
 const headerStyle = {
     fontSize: 24,
@@ -124,25 +125,33 @@ function CodeBox({ id, title = '标题', isActive, describe = '暂无描述', co
                 {code && <Collapse bordered={false} style={collapseStyle} >
                     <Panel header='显示代码' style={{ borderBottom: 0 }} extra={genExtra()}>
                         {/* <SyntaxHighlighter language="javascript" style={githubGist}>{code}</SyntaxHighlighter> */}
-                        <Highlight {...defaultProps} code={code} language="js">
+                        {/* <Highlight {...defaultProps} code={code} language="js">
+                        
                         {({ className, style, tokens, getLineProps, getTokenProps }) => {
-                            return(
-                                <pre className={classnames(className,styles.gantdPrism)} style={styles}>
+                            return (
+                                <pre className={classnames(className, styles.gantdPrism)} style={styles}>
                                     {tokens.map((line, i) => {
-                                        return(
+                                        return (
                                             <div {...getLineProps({ line, key: i })}>
                                                 {line.map((token, key) => {
-                                                    return(
+                                                    return (
                                                         <span {...getTokenProps({ token, key })} />
-                                                        )
+                                                    )
                                                 })}
                                             </div>
-                                            )
+                                        )
                                     })}
                                 </pre>
-                                )
+                            )
                         }}
-                        </Highlight>
+                        </Highlight> */}
+                        <pre className="language-tsx">
+                            <code>
+                                <div dangerouslySetInnerHTML={{
+                                    __html: Prism.highlight(code, Prism.languages.tsx, 'tsx')
+                                }} ></div>
+                            </code >
+                        </pre >
                     </Panel>
                 </Collapse>}
             </Card>
@@ -174,7 +183,7 @@ export default ({ config }) => {
             let id = `demo_${key}`;
             anchors.push({ id: id, title });
             let thisCode = code ? code : codes[key];
-            if(React.isValidElement(Comp)){
+            if (React.isValidElement(Comp)) {
                 thisCode = reactElementToJSXString(Comp)
             }
             return <CodeBox
