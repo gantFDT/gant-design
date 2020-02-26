@@ -1,4 +1,4 @@
-const code1 = `import Table from 'table-g';
+const code1 = `import { Table } from 'gantd';
 
 const columns = [
 	{
@@ -17,6 +17,17 @@ const columns = [
 		key: 'address',
 	},
 ];
+
+let dataArray = new Array(10), dataSource = [];
+  dataArray = dataArray.fill()
+  dataArray.map((item, index) => {
+    dataSource.push({
+      name: "namenamenamenamenamenamename",
+      age: index,
+      address: "table的宽度需要是各列宽度的总和，如果没有设置列宽，将平分table的宽度,table默认600px，如果不太清楚table的布局策略，最好table宽度和所有列都加上宽度",
+      key: index,
+    })
+  })
 
 function BasicTable(props) {
 	return <Table columns={columns} dataSource={dataSource} />

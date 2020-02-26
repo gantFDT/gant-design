@@ -38,7 +38,6 @@ const Modal = function (props) {
     } = props;
 
     return <ResizableProvider
-        i18n={i18n}
         maxZIndex={maxZIndex}
         minWidth={minWidth}
         minHeight={minHeight}

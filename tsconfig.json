@@ -34,14 +34,29 @@
       "@color-picker": [
         "packages/color-picker-g/src"
       ],
+      "@auto-reload": [
+        "packages/auto-reload-g/src"
+      ],
       "@data-cell": [
         "packages/data-cell-g/src"
       ],
       "@header": [
         "packages/header-g/src"
       ],
+      "@submenu": [
+        "packages/submenu-g/src"
+      ],
       "@table": [
         "packages/table-g/src"
+      ],
+      "@schema-form": [
+        "packages/schema-form-g/src"
+      ],
+      "@anchor": [
+        "packages/anchor-g/src"
+      ],
+      "@smart-table": [
+        "packages/smart-table-g/src"
       ],
       "@modal": [
         "packages/modal-g/src"
@@ -52,7 +67,7 @@
     }
   },
   "include": [
-    "packages/**/*",
+    "packages/**/*"
   ],
   "exclude": [
     "node_modules",

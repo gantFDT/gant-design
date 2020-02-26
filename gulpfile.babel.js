@@ -15,8 +15,6 @@ let pkgs = fs.readdirSync(path.join(__dirname, 'packages'),{withFileTypes:true})
   .filter(item=>item.isDirectory())
   .map(item=>item.name);
 
-// pkgs = ['table-g'];
-
 function resolvePath(content, rules = []) {
   rules.forEach((origin) => {
     content = content.replace(new RegExp('@' + origin+ '/', 'g'), origin + '-g/lib/');
@@ -56,8 +54,9 @@ const tstask = function (dirName) {
   src([`packages/${dirName}/src/**/*.tsx`, `packages/${dirName}/src/**/*.ts`])
     .pipe(
       ts({
-        "target": 'es6',
+        "target": 'es5',
         "sourceMap": true,
+        "module": "esnext",
         "declaration": true, // 生成 *.d.ts 文件
         "allowJs": true,
         "jsx": "react",
@@ -76,7 +75,6 @@ const tstask = function (dirName) {
         "allowSyntheticDefaultImports": true
       })
     )
-    .pipe(babel(babelConfig))
     .pipe(
       // 处理路径等问题
       through2.obj(function (chunk, enc, next) {
