@@ -6,7 +6,6 @@ import { get } from 'lodash'
 
 import { withEdit } from '../compose'
 import codeTypes from './codes.json'
-// import './index.less'
 
 const reg = /^1$|^(13|14|15|18)$|^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{0,8}$/
 
@@ -128,15 +127,11 @@ class CellPhone extends Component {
   }
 
   render() {
-    const { onPhoneChange, validateValue, onEnter, className, ...props } = this.props
+    const { onPhoneChange, validateValue, onEnter, ...props } = this.props
     const { value } = this.state
     let computedValue = get(props, 'value', value)
-    const classNames = classnames(
-      className,
-      'gant-phone'
-    )
     return (
-      <AntInput {...props} value={computedValue} className={classNames} onKeyDown={this.onKeyDown} onChange={this.onChange} />
+      <AntInput {...props} value={computedValue} onKeyDown={this.onKeyDown} onChange={this.onChange} />
     );
   }
 }
