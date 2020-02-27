@@ -6,13 +6,17 @@ import Anchor from '@packages/anchor-g/src';
 import zhCN from '@gantd/locale/zh_CN';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import SyntaxHighlighter from 'react-syntax-highlighter';
+import virtualizedRenderer from 'react-syntax-highlighter-virtualized-renderer';
 import { githubGist } from 'react-syntax-highlighter/dist/esm/styles/hljs';
-import { version } from '../../package.json';
+import { version, name } from '../../packages/gantd/package.json';
 import reactElementToJSXString from 'react-element-to-jsx-string';
 const Panel = Collapse.Panel;
-
+import Highlight, { defaultProps } from "prism-react-renderer";
 // console.log('version', version)
-
+import { CodeDecoratorStyles } from "./CodeDecoratorStyles.js";
+import classnames from 'classnames'
+import Prism from 'prismjs'
+import styles from './CodeDecoratorStyles.css'
 const headerStyle = {
     fontSize: 24,
     margin: '40px 0 16px'
@@ -68,10 +72,10 @@ const getCodePenStr = (title, description, code) => {
         description,
         html: `<div id="container" style="padding: 24px"></div>\n<script>var mountNode = document.getElementById('container');</script>`,
         js: code,
-        css: `@import 'antd/dist/antd.css';\n@import 'gantd/dist/gantd.css';`,
+        css: `@import 'antd/dist/antd.css';\n@import '${name}/dist/${name}.css';`,
         editors: "001",
-        css_external: `https://unpkg.com/antd/dist/antd.css;https://unpkg.com/gantd@${version}/dist/gantd.css`,
-        js_external: `https://unpkg.com/react@16.x/umd/react.development.js;https://unpkg.com/react-dom@16.x/umd/react-dom.development.js;https://unpkg.com/moment/min/moment-with-locales.js;https://unpkg.com/antd/dist/antd-with-locales.js;https://unpkg.com/react-router-dom/umd/react-router-dom.min.js;https://unpkg.com/react-router@3.x/umd/ReactRouter.min.js;https://unpkg.com/gantd@${version}/dist/gantd.js`,
+        css_external: `https://unpkg.com/antd/dist/antd.css;https://unpkg.com/${name}@${version}/dist/${name}.css`,
+        js_external: `https://unpkg.com/react@16.x/umd/react.development.js;https://unpkg.com/react-dom@16.x/umd/react-dom.development.js;https://unpkg.com/moment/min/moment-with-locales.js;https://unpkg.com/antd/dist/antd-with-locales.js;https://unpkg.com/react-router-dom/umd/react-router-dom.min.js;https://unpkg.com/react-router@3.x/umd/ReactRouter.min.js;https://unpkg.com/${name}@${version}/dist/${name}.js`,
         js_pre_processor: "typescript"
     }
 
@@ -120,7 +124,34 @@ function CodeBox({ id, title = '标题', isActive, describe = '暂无描述', co
                 </div>
                 {code && <Collapse bordered={false} style={collapseStyle} >
                     <Panel header='显示代码' style={{ borderBottom: 0 }} extra={genExtra()}>
-                        <SyntaxHighlighter language="javascript" style={githubGist}>{code}</SyntaxHighlighter>
+                        {/* <SyntaxHighlighter language="javascript" style={githubGist}>{code}</SyntaxHighlighter> */}
+                        {/* <Highlight {...defaultProps} code={code} language="js">
+                        
+                        {({ className, style, tokens, getLineProps, getTokenProps }) => {
+                            return (
+                                <pre className={classnames(className, styles.gantdPrism)} style={styles}>
+                                    {tokens.map((line, i) => {
+                                        return (
+                                            <div {...getLineProps({ line, key: i })}>
+                                                {line.map((token, key) => {
+                                                    return (
+                                                        <span {...getTokenProps({ token, key })} />
+                                                    )
+                                                })}
+                                            </div>
+                                        )
+                                    })}
+                                </pre>
+                            )
+                        }}
+                        </Highlight> */}
+                        <pre className="language-tsx">
+                            <code>
+                                <div dangerouslySetInnerHTML={{
+                                    __html: Prism.highlight(code, Prism.languages.tsx, 'tsx')
+                                }} ></div>
+                            </code >
+                        </pre >
                     </Panel>
                 </Collapse>}
             </Card>
@@ -152,7 +183,7 @@ export default ({ config }) => {
             let id = `demo_${key}`;
             anchors.push({ id: id, title });
             let thisCode = code ? code : codes[key];
-            if(React.isValidElement(Comp)){
+            if (React.isValidElement(Comp)) {
                 thisCode = reactElementToJSXString(Comp)
             }
             return <CodeBox

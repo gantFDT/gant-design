@@ -1,5 +1,5 @@
 
-import { InputMoney,SwitchStatus } from '@data-cell'
+import { InputMoney, SwitchStatus, EditStatus } from '@data-cell'
 import React, { useState } from 'react';
 import { Button } from 'antd'
 import codeList from './code'
@@ -8,14 +8,13 @@ import CodeDecorator from '../_util/CodeDecorator';
 
 const cmps = [
   () => {
-    const [value, setValue] = useState(99)
+    const [value, setValue] = useState('99')
     const onSave = (id, value, cb) => {
-      console.log(id, value);
       cb()
     }
     return <>
-      <InputMoney placeholder='不可编辑' allowEdit={false}  value={99}/>
-      <InputMoney placeholder='可编辑' allowEdit={true} onSave={onSave} value={value} onChange={setValue} />
+      <InputMoney placeholder='不可编辑' allowEdit={false} value={99} />
+      <InputMoney placeholder='可编辑' onSave={onSave} value={value} onChange={setValue} />
     </>
   },
   () => {

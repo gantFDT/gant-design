@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
-import { Button } from 'antd'
+import { Button, ConfigProvider } from 'antd'
 import Modal, { ResizableModal, ResizableProvider } from '@packages/modal-g/src'
+import zhCN from 'antd/es/locale/zh_CN';
 import CodeDecorator from '../_util/CodeDecorator'
 import code from './code.js'
 const ButtonGroup = Button.Group;
@@ -12,13 +13,15 @@ function BasicUse() {
             <div style={{ marginBottom: 10 }}>
                 <Button size="small" onClick={() => { setVisible(true) }}>触发弹窗</Button>
             </div>
-            <Modal
-                title='默认弹窗'
-                visible={visible}
-                onCancel={() => { setVisible(false) }}
-            >
-                默认宽高520
+            <ConfigProvider locale={zhCN}>
+                <Modal
+                    title='默认弹窗'
+                    visible={visible}
+                    onCancel={() => { setVisible(false) }}
+                >
+                    默认宽高520
             </Modal>
+            </ConfigProvider>
         </div>
     )
 }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Input, Select } from 'antd';
-import { compose, withState, withProps, defaultProps, mapProps } from 'recompose'
+import { compose, withState, withProps, defaultProps, mapProps, withPropsOnChange } from 'recompose'
 
 import { withEdit } from '../compose'
 import codesList from './codes.json'
@@ -12,13 +12,13 @@ const withCode = compose(
     const { code = "010", phone } = value
     return {
       code,
-      value: phone
+      phone
     }
   }),
   defaultProps({
     placeholder: '请输入电话号码'
   }),
-  withProps(({ onChange, code: oCode, value: oPhone }) => {
+  withProps(({ onChange, code: oCode, phone: oPhone }) => {
     return {
       filterOption(text, option) {
         const { key, props: { label } } = option
@@ -60,11 +60,14 @@ const withCode = compose(
       </Select>
     )
   })),
+  withPropsOnChange(['value'], ({ value }) => ({
+    confirmable: isPhone.test(String(value))
+  })),
   mapProps(({ filterOption, ...props }) => props)
 )
 
 
-const getValue = ({ code, value }) => value ? `${code} - ${value}` : ''
+const getValue = ({ code, phone }) => phone ? `${code} - ${phone}` : ''
 @compose(
   withCode,
   withEdit(getValue)
@@ -87,10 +90,10 @@ class TelePhone extends Component {
   }
 
   render() {
-    const { onEnter, onPhoneChange, ...props } = this.props
+    const { onEnter, onPhoneChange, phone, ...props } = this.props
 
     return (
-      <Input {...props} onKeyDown={this.onKeyDown} onChange={this.onChange} />
+      <Input {...props} value={phone} onKeyDown={this.onKeyDown} onChange={this.onChange} />
     );
   }
 }

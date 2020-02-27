@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Divider, Tag, Radio, Switch } from 'antd'
+import { Divider, Tag, Radio, Switch, Button, EditStatus } from 'antd'
 import SmartTable from '@packages/smart-table-g/src'
 import CodeDecorator from '../_util/CodeDecorator'
 import code from './code.js'
@@ -263,6 +263,74 @@ function LocalUse() {
     </div>
   )
 }
+
+// function EditInlineUse() {
+//   const tr = str => str;
+//   return (
+//     <div style={{ margin: 10 }}>
+//       <SmartTable
+//         tableKey="EditInlineUse"
+//         rowKey="id"
+//         schema={getSchema}
+//         dataSource={stateData}
+//         editable={editing}
+//         bodyHeight={bodyHeight}
+//         onSave={onSave}
+//         headerRight={<>
+//           <Button
+//             icon={editing === EditStatus.EDIT ? "roolback" : "edit"}
+//             className="marginh5"
+//             size="small"
+//             onClick={() => { if (editing === EditStatus.CANCEL) { message.info(tr('请单击单元格进行编辑')) } setEditing(SwitchStatus) }}
+//           >
+//             {editing === EditStatus.EDIT ? tr("结束") : tr("进入")}{tr('编辑')}
+//           </Button>
+//           {editing === EditStatus.EDIT && <Button
+//             icon="save"
+//             className="marginh5"
+//             size="small"
+//             type="primary"
+//             onClick={handleSave}
+//             loading={updateLoading}
+//           >
+//             {tr('保存')}
+//           </Button>}
+
+//           {editing != EditStatus.EDIT && <>
+//             <Dropdown
+//               disabled={_.isEmpty(selectedRows)}
+//               overlay={
+//                 <Menu>
+//                   <Menu.Item onClick={() => handleShowCreate('normal')}>{tr('创建普通单位')}</Menu.Item>
+//                   <Menu.Item onClick={() => handleShowCreate('operation')}>{tr('创建运算单位')}</Menu.Item>
+//                 </Menu>
+//               }
+//               placement="bottomCenter"
+//             >
+//               <Button
+//                 size="small"
+//                 icon="plus"
+//                 className="marginh5"
+//               />
+//             </Dropdown>
+
+//             <Tooltip title={tr("删除")}>
+//               <Button
+//                 size="small"
+//                 icon="delete"
+//                 type="danger"
+//                 className="marginh5"
+//                 disabled={_.isEmpty(selectedRows)}
+//                 onClick={handleremove}
+//               />
+//             </Tooltip>
+//           </>
+//           }
+//         </>}
+//       />
+//     </div>
+//   )
+// }
 
 const config = {
   codes: code,

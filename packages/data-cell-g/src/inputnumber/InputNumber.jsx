@@ -2,7 +2,7 @@ import React from 'react'
 import { isNil, isNumber } from 'lodash'
 import { InputNumber as AntInputNumber } from 'antd'
 import numeral from 'numeral'
-import { compose, defaultProps, withProps } from 'recompose'
+import { compose, defaultProps, withProps, toClass } from 'recompose'
 
 import { Group } from '../input'
 import { withEdit } from '../compose'
@@ -31,6 +31,7 @@ const withInputNumber = compose(
 )
 
 @compose(
+  toClass,
   withInputNumber,
   withEdit(({ value }) => value)
 )

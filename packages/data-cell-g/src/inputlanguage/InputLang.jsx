@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Input, Select } from 'antd';
 import { zipWith, get, map, pick, isUndefined } from 'lodash'
-import { compose, defaultProps, withState, withProps, withHandlers, mapProps, withPropsOnChange } from 'recompose'
+import { compose, defaultProps, withState, withProps, withHandlers, mapProps, withPropsOnChange, toClass } from 'recompose'
 
 import { withEdit } from '../compose'
 
@@ -47,6 +47,7 @@ const withLangSelect = compose(
 
 
 @compose(
+  toClass,
   withLangSelect,
   withEdit(({ value, locale, cacheMap }) => isUndefined(value.value) ? cacheMap.get(locale) : value.value),
   withProps(props => {

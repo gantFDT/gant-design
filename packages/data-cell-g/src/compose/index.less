@@ -2,6 +2,7 @@
 
 @compose-prefix-cls: ~'@{gant-prefix}-compose';
 @input-prefix-cls: ~'@{gant-prefix}-input';
+@gant-input-inner : ~'@{input-prefix-cls}-inner';
 
 .@{compose-prefix-cls}-readWrapper {
   padding-right: 15px;
@@ -35,6 +36,10 @@
 .@{input-prefix-cls} {
   display: flex;
   align-items: center;
+
+  &.@{gant-input-inner}{
+    flex: 1
+  }
 
   &::after {
     content: 'clear';

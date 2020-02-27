@@ -24,7 +24,8 @@
     "dev": "start-storybook -p 60004",
     "build-storybook": "build-storybook",
     "compile": "gulp",
-    "build": "node ./scripts/build"
+    "build": "gulp && webpack",
+    "pub": "gulp && webpack && lerna publish"
   },
   "files": [
     "lib",
@@ -74,6 +75,7 @@
     "autoprefixer": "^9.6.0",
     "babel-loader": "^8.0.0",
     "babel-plugin-import": "^1.11.2",
+    "babel-plugin-prismjs": "^2.0.1",
     "babel-plugin-transform-remove-console": "^6.9.4",
     "case-sensitive-paths-webpack-plugin": "^2.2.0",
     "chalk": "^3.0.0",
@@ -106,7 +108,7 @@
     "storybook-dark-mode": "^0.1.3",
     "style-loader": "^0.23.1",
     "through2": "^3.0.1",
-    "uglifyjs-webpack-plugin": "^2.1.3",
+    "uglifyjs-webpack-plugin": "^1.3.0",
     "webpack": "^4.32.2",
     "webpack-cli": "^3.2.1",
     "webpack-filter-warnings-plugin": "^1.2.1",
@@ -123,6 +125,8 @@
     "lodash": "^4.17.11",
     "moment": "^2.24.0",
     "numeral": "^2.0.6",
+    "prism-react-renderer": "^1.0.2",
+    "prismjs": "^1.19.0",
     "prop-types": "^15.6.0",
     "react": "^16.8.6",
     "react-beautiful-dnd": "^10.1.1",
@@ -132,6 +136,7 @@
     "react-intl": "^3.12.0",
     "react-resize-detector": "^4.2.1",
     "react-sortable-hoc": "^1.9.1",
+    "react-syntax-highlighter-virtualized-renderer": "^1.1.0",
     "recompose": "^0.30.0"
   },
   "browserslist": [

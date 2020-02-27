@@ -1,8 +1,9 @@
 export default [{
-  name: "GantD|介绍",
+  name: "GantD|开始",
   children: [{
-    name: 'Idea',
-    nameZh: '理念'
+    name: 'gantd',
+    nameZh: '开始使用',
+    home:true
   }]
 }, {
   name: "组件|数据单元",
@@ -170,6 +171,9 @@ export default [{
   }, {
     name: 'Style',
     nameZh: '公共样式类'
+  }, {
+    name: 'Utils',
+    nameZh: '公共工具类'
   }
     // {
     // 			name: 'TaskBoard',
