@@ -51,8 +51,8 @@ UiSchema
 | field:labelCol     | field中Label布局方式                      | ColProps       | 24     |
 | field:wrapperCol   | field中Component布局方式                  | ColProps       | 24     |
 | field:labelAlign   | label对齐方式                             | 'left'/'right' | 'left' |
-| field:style        | Form style样式                            | CSS            | {}     |
-| field:className    | Form className                            | string         | ''     |
+| field:style        | field style样式                            | CSS            | {}     |
+| field:className    | field className                            | string         | ''     |
 
 
 TitleConfig  
