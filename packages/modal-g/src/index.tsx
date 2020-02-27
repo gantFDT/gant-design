@@ -2,9 +2,15 @@ import React, { useContext, useEffect } from 'react'
 import ResizableModal from './ResizableModal'
 import ResizableProvider from './ResizableProvider'
 import ModalContext from './Context'
-/// <reference path='types.d.ts' />
-
+import { InnerModalProps } from './interface'
 const uuid = 'modal-g-uuid'
+
+export interface ModalProps extends InnerModalProps {
+    maxZIndex?: number,
+    minWidth?: number,
+    minHeight?: number,
+    onSizeChange?: (width: number, height: number) => void
+}
 
 const ContextContent = ({ id, onSizeChange, children }) => {
     const { state: { modals } } = useContext(ModalContext)
@@ -17,7 +23,7 @@ const ContextContent = ({ id, onSizeChange, children }) => {
     return <>{children}</>
 }
 
-const Modal = function (props) {
+const Modal = function (props: ModalProps) {
     const {
         maxZIndex,
         minWidth,
