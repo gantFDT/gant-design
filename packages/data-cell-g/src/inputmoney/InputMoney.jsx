@@ -2,64 +2,114 @@ import React, { Component } from 'react';
 import { Select } from 'antd';
 import { isNumber, isNil } from 'lodash'
 import numeral from 'numeral'
-import { compose, defaultProps, withProps, withState } from 'recompose'
+import { compose, defaultProps, withProps, withState, toClass } from 'recompose'
+import { InputNumber, EditStatus } from '@data-cell';
 
 import { withEdit } from '../compose'
-import Money from './Money'
 import symbols from './symbol.json'
-
-const types = Object.keys(symbols)
-
-const getValue = ({ value, type }) => {
-  if (isNil(value)) return null
-  const num = numeral(value).value()
-  if (isNumber(num)) {
-    return `${symbols[type]} ${value}`
-  }
-}
 
 
 
 const withMoneyType = compose(
-  withState('type', 'setType', types[0]),
+  toClass,
   defaultProps({
     allowClear: true,
+    precision: 2,
+    onEnter: () => { },
   }),
-  withProps(({ type, setType }) => {
+  withProps(({ precision }) => {
+    const pre = Math.max(0, precision);
+    return {
+      precision: pre,
+      format: '0,0.' + '0'.repeat(pre),
+      step: 1 / Math.pow(10, pre),
+      reg: new RegExp(`[1-9](?:[0-9]+)?(?:\.[0-9]{0,${pre}})?|0.[0-9]{0,${pre}}`)
+    }
+  }),
+  withProps(({ value = {}, format, onChange }) => {
+    const { currency = symbols[0], money } = value
+    let obj = {
+      currency,
+      money,
+    }
+    if (money) {
+      // 去掉超过精度的部分
+      const m = Number(numeral(money).format(format))
+      if (money !== m) {
+        // 改写money
+        obj.money = m;
+        onChange(obj) // 可以不用调
+      }
+
+    }
+    return obj
+  }),
+  withProps(({ onChange, currency: oCurrency, money: oMoney }) => {
+    return {
+      onCurrencyChange(currency) {
+        onChange({
+          currency, money: oMoney
+        })
+      },
+      onMoneyChange(money) {
+        onChange({
+          currency: oCurrency, money
+        })
+      }
+    }
+  }),
+  withProps(({ currency, onCurrencyChange }) => {
     return ({
       addonBefore: (
-        <Select style={{ width: 75 }} value={type} onChange={setType}>
+        <Select style={{ width: 75 }} value={currency} onChange={onCurrencyChange}>
           {
-            types.map(type => <Select.Option key={type} value={type}>{type}</Select.Option>)
+            symbols.map(type => <Select.Option key={type} value={type}>{type}</Select.Option>)
           }
         </Select>
-      )
+      ),
+
     })
   }),
 )
 
 @compose(
   withMoneyType,
-  withEdit(getValue)
+  withEdit(({ currency, money, format }) => {
+    if (!isNumber(money)) return null
+    const num = numeral(money).format(format)
+    return `${currency} ${num}`
+  })
 )
 class InputMoney extends Component {
 
-  onKeyDown = (e) => {
-    const { value, onEnter, onChange } = this.props
+  state = {
+    value: undefined
+  }
 
-    if (e.keyCode === 13 && e.key === 'Enter') {
-      const num = numeral(value).format('0,0.00')
-      onChange(num)
+  constructor(props) {
+    super(props);
+    this.onChange = this.onChange.bind(this)
+  }
+
+  onChange(v) {
+    const { reg, onMoneyChange } = this.props
+    let value = String(numeral(v).value()) // 通过numeral去掉非数字
+    const match = value.match(reg) // 最多两位小数
+    if (match && match[0]) {
+      value = match[0]
     }
-    onEnter(e)
+    value = numeral(value).value() // 转化成数字
+    this.setState({
+      value
+    })
+    onMoneyChange(value)
   }
 
   render() {
-    const { setType, onEnter, ...props } = this.props
-
-    // if (!isNumber(this.props.value)) return null
+    const { setType, onEnter, onValueChange, precision, format, reg, ...props } = this.props
+    const { value } = this.state
     return (
-      <Money {...props} onKeyDown={onEnter} />
+      <InputNumber {...props} isInner value={props.money || value} min={0} edit={EditStatus.EDIT} onPressEnter={onEnter} onChange={this.onChange} />
     );
   }
 }

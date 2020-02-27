@@ -1,7 +1,6 @@
-import _ from 'lodash';
-import React, { useEffect, useReducer } from 'react';
-import ModalContext from './Context';
-import { resizableReducer, ActionTypes } from './Reducer';
+import React, { useEffect, useReducer } from 'react'
+import ModalContext from './Context'
+import { resizableReducer, ActionTypes } from './Reducer'
 /// <reference path='types.d.ts' />
 
 const getWindowSize = (): WindowSize => ({
@@ -9,7 +8,7 @@ const getWindowSize = (): WindowSize => ({
     height: window.innerHeight || 0,
 })
 
-const initialModalState: ModalStateOutter = {
+const initial: ModalStateOutter = {
     x: 0,
     y: 0,
     width: 520,
@@ -26,7 +25,7 @@ interface ResizableProviderProps {
     minHeight?: number
 }
 
-const ResizableProvider: React.FC<ResizableProviderProps> = ({ initalState = {}, maxZIndex = 0, minWidth = 200, minHeight = 200, children }) => {
+const ResizableProvider: React.FC<ResizableProviderProps> = ({ initalState, maxZIndex, minWidth, minHeight, children }) => {
 
     const initialModalsState: ModalsState = {
         modals: {},
@@ -34,13 +33,13 @@ const ResizableProvider: React.FC<ResizableProviderProps> = ({ initalState = {},
         minWidth,
         minHeight,
         windowSize: getWindowSize(),
-        initialModalState: _.assign({ ...initialModalState }, initalState)
-    };
+        initialModalState: { ...initial, ...initalState }
+    }
 
     const [state, dispatch] = useReducer(resizableReducer, initialModalsState)
 
     useEffect(() => {
-        if (typeof window !== 'object') return;
+        if (typeof window !== 'object') return
         const onResize = () => dispatch({ type: ActionTypes.windowResize, size: getWindowSize() })
         window.addEventListener('resize', onResize)
         onResize()
@@ -54,4 +53,10 @@ const ResizableProvider: React.FC<ResizableProviderProps> = ({ initalState = {},
     )
 }
 
+ResizableProvider.defaultProps = {
+    initalState: {},
+    maxZIndex: 0,
+    minWidth: 200,
+    minHeight: 200,
+}
 export default ResizableProvider

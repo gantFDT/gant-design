@@ -1,42 +1,40 @@
 
-import './index.less';
-import React, { useContext, useEffect, useMemo, useCallback, memo } from 'react';
-import { Modal } from 'antd';
-import classnames from 'classnames';
-import { Icon } from '@data-cell';
-import { useDrag, useResize, usePrev } from './Hooks';
-import ModalContext from './Context';
-import { getModalState } from './Reducer';
-import { ActionTypes } from './Reducer';
-const modalStyle = { margin: 0, paddingBottom: 0 };
+import './index.less'
+import React, { useContext, useEffect, useMemo, useCallback, memo } from 'react'
+import classnames from 'classnames'
+import { Modal } from 'antd'
+import { Icon } from '@data-cell'
+import ModalContext from './Context'
+import { getModalState, ActionTypes } from './Reducer'
+import { useDrag, useResize, usePrev } from './Hooks'
+const modalStyle = { margin: 0, paddingBottom: 0 }
 
 type Props = ModalInnerProps & Partial<typeof defaultProps>
 
 const ModalInner: React.FC<Props> = function ModalInner(props) {
     const {
         prefixCls: customizePrefixCls = 'gant', //自定义class前缀
-        id,                 //弹窗唯一标识
-        itemState,          //单个弹窗的自定义属性
-        visible,            //弹窗标题
-        title,              //弹窗标题
-        style,              //弹窗额外样式
-        wrapClassName,      //弹窗层自定义class
-        canMaximize,        //是否可以最大化
-        canResize,          //是否可以拖动
-        isModalDialog,      //是否为模态窗口
-        onCancel,           //取消按钮回调
-        onOk,               //提交按钮回调
-        cancelButtonProps,  //antd-按钮属性
-        okButtonProps,      //antd-按钮属性
-        children,           //自定义弹窗内容
-        ...restProps        //弹窗组件接受的其他antd支持的属性值
-    } = props;
+        id,                                     //弹窗唯一标识
+        itemState,                              //单个弹窗的自定义属性
+        visible,                                //弹窗标题
+        title,                                  //弹窗标题
+        style,                                  //弹窗额外样式
+        wrapClassName,                          //弹窗层自定义class
+        canMaximize,                            //是否可以最大化
+        canResize,                              //是否可以拖动
+        isModalDialog,                          //是否为模态窗口
+        onCancel,                               //取消按钮回调
+        onOk,                                   //提交按钮回调
+        cancelButtonProps,                      //antd-按钮属性
+        okButtonProps,                          //antd-按钮属性
+        children,                               //自定义弹窗内容
+        ...restProps                            //弹窗组件接受的其他antd支持的属性值
+    } = props
 
-    const prefixCls = customizePrefixCls + '-modal';
-
-    const { dispatch, state } = useContext(ModalContext);
-    const modalState = getModalState(state, id);
-    const visiblePrev = usePrev(visible);
+    const prefixCls = customizePrefixCls + '-modal'
+    const { dispatch, state } = useContext(ModalContext)
+    const modalState = getModalState(state, id)
+    const visiblePrev = usePrev(visible)
 
     useEffect(() => {
         dispatch({ type: ActionTypes.mount, id, itemState })
@@ -45,11 +43,7 @@ const ModalInner: React.FC<Props> = function ModalInner(props) {
 
     useEffect(() => {
         if (visible !== visiblePrev) {
-            if (visible) {
-                dispatch({ type: ActionTypes.show, id })
-            } else {
-                dispatch({ type: ActionTypes.hide, id })
-            }
+            dispatch({ type: visible ? ActionTypes.show : ActionTypes.hide, id })
         }
     }, [visible, visiblePrev, id])
 
@@ -70,7 +64,7 @@ const ModalInner: React.FC<Props> = function ModalInner(props) {
     }), [id])
 
     const toggleMaximize = useCallback(() => {
-        if (!canMaximize) return;
+        if (!canMaximize) return
         dispatch({ type: maximize ? ActionTypes.reset : ActionTypes.max, id })
     }, [id, maximize, canMaximize])
 
@@ -79,7 +73,7 @@ const ModalInner: React.FC<Props> = function ModalInner(props) {
     const titleElement = useMemo(() => (
         <div
             className={`${prefixCls}-resizableModalTitle`}
-            style={canMaximize ? { marginRight: 88 } : { marginRight: 32 }}
+            style={{ marginRight: canMaximize ? 70 : 30 }}
             onMouseDown={onMouseDrag}
             onClick={onFocus}
             onDoubleClick={toggleMaximize}
@@ -99,7 +93,7 @@ const ModalInner: React.FC<Props> = function ModalInner(props) {
 
     return <Modal
         wrapClassName={combineWrapClassName}
-        title={titleElement}
+        title={title && titleElement}
         width={width}
         visible={visible}
         zIndex={zIndex}
@@ -134,5 +128,5 @@ const defaultProps = {
 }
 ModalInner.defaultProps = defaultProps
 
-const ResizableModal = memo<Props>(ModalInner);
-export default ResizableModal;
+const ResizableModal = memo<Props>(ModalInner)
+export default ResizableModal

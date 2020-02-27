@@ -9,7 +9,7 @@ Modal - 属性如下
 | itemState     | 窗自定义默认参数                                            | object       | {x: 0,y: 0,width: 520,height: 520,maximized: false} |
 | visible       | 是否可见                                                    | bool         | false                                               |
 | isModalDialog | 是否为模态窗口                                              | bool         | false                                               |
-| maxZIndex     | 当前最大堆叠等级                                            | number       |                                                     |
+| maxZIndex     | 当前最大堆叠等级                                            | number       | 1000                                                |
 | children      | 自定义弹窗内容                                              | reactElement |                                                     |
 | onSizeChange  | 宽高改变的回调                                              | function     | (width,height)=>{...}                               |
 | canMaximize   | 控制最大化、小屏化按钮功能的显隐+双击header切换该状态的功能 | bool         | true                                                |

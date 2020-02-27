@@ -94,12 +94,16 @@ export const useTableConfig = (props: useTableConfigProps) => {
   // 列渲染
   const fakeColumns = useMemo(() => columnFields
     .filter((item: any) => item.checked)
-    .map((ck: any) => ({
-      width: ck.fixed ? 120 : undefined,
-      ...columns.find((oc: any) => oc.dataIndex === ck.dataIndex),
-      fixed: ck.fixed,
-      align: ck.align,
-    }))
+    .map((ck: any) => {
+      let columnItem = columns.find((oc: any) => oc.fieldName === ck.fieldName);
+      let finalWidth = columnItem.width || ck.width;
+      return {
+        ...columnItem,
+        width: finalWidth || (ck.fixed ? 120 : undefined),
+        fixed: ck.fixed,
+        align: ck.align,
+      }
+    })
     , [columnFields, columns])
   // 分页
   const fakePagination = usePagination(paginationProps);

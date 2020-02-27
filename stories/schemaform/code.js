@@ -465,7 +465,107 @@ function SearchUse(){
  ReactDOM.render(<SearchUse/>,mountNode)
   `
 
-const code6 = `import React, { useState } from 'react'
+  const code6 = `
+  import React, { useState, useRef } from 'react'
+  import { SchemaForm } from 'gantd'
+  
+  const schema = {
+      type: "object",
+      title: "支持双向绑定的表单",
+      propertyType: {
+          key_1: {
+              title: "普通输入框_1",
+              type: "string",
+          },
+          key_2: {
+              title: "普通输入框_2",
+              type: "string",
+          },
+      }
+  }
+  
+  const uiSchema = {
+      "ui:col": 24,
+      "ui:gutter": 10,
+      "ui:labelCol": 4,
+      "ui:wrapperCol": 20,
+      "ui:labelAlign": "left",
+      "ui:padding": 10,
+      "ui:backgroundColor": "#fff"
+  }
+  
+  function BindData() {
+      const [data, setData] = useState({ key_1: '1', key_2: '2' })
+      const formRef = useRef(null)
+  
+      const onChange = (val, vals) => {
+          setData(vals)
+      }
+  
+      return <div style={{ margin: 10 }} >
+          <div style={{ display: 'flex' }}>
+              <div style={{ width: 300 }}>
+                  <p>key_1：<span>{data.key_1}</span></p>
+                  <p>key_2：<span>{data.key_2}</span></p>
+              </div>
+              <div style={{ flex: 1 }}>
+                  <SchemaForm
+                      wrappedComponentRef={formRef}
+                      uiSchema={uiSchema}
+                      data={data}
+                      onChange={onChange}
+                      schema={schema}
+                  />
+              </div>
+          </div>
+      </div>
+  }
+  
+ReactDOM.render(<BindData/>,mountNode)`
+
+const code7 = `import React, { useState } from 'react'
+import { SchemaForm } from 'gantd'
+
+const uiSchema = {
+    "ui:col": 24,
+    "ui:gutter": 10,
+    "ui:labelCol": 4,
+    "ui:wrapperCol": 20,
+    "ui:labelAlign": "left",
+    "ui:padding": 10,
+    "ui:backgroundColor": "#fff"
+}
+
+function DependenceData() {
+    const dependenceSchema = {
+        type: "object",
+        title: "依赖关系",
+        propertyType: {
+            "key_1": {
+                title: "姓氏",
+                type: "string",
+            },
+            "key_2": {
+                title: "全名",
+                type: "string",
+                dependencies: ["key_1"],
+                onDependenciesChange: (value, props, form) => {
+                    form && form.setFieldsValue({ key_2: value })
+                }
+            },
+        }
+    }
+    return <div style={{ margin: 10 }}>
+        <SchemaForm
+            uiSchema={uiSchema}
+            schema={dependenceSchema}
+        />
+    </div>
+}
+
+ReactDOM.render(<DependenceData/>,mountNode)`
+
+const code8 = `import React, { useState } from 'react'
 import { Rate } from 'antd'
 import { SchemaForm } from 'gantd'
 
@@ -508,111 +608,7 @@ function CustomCmp() {
     </div>
 }
 
-ReactDOM.render(<CustomCmp/>,mountNode)`
-
-
-const code7 = `
-import React, { useState, useRef } from 'react'
-import { SchemaForm } from 'gantd'
-
-const schema = {
-    type: "object",
-    title: "支持双向绑定的表单",
-    propertyType: {
-        key_1: {
-            title: "普通输入框_1",
-            type: "string",
-        },
-        key_2: {
-            title: "普通输入框_2",
-            type: "string",
-        },
-    }
-}
-
-const uiSchema = {
-    "ui:col": 24,
-    "ui:gutter": 10,
-    "ui:labelCol": 4,
-    "ui:wrapperCol": 20,
-    "ui:labelAlign": "left",
-    "ui:padding": 10,
-    "ui:backgroundColor": "#fff"
-}
-
-function BindData() {
-    const [data, setData] = useState({ key_1: '1', key_2: '2' })
-    const formRef = useRef(null)
-
-    const onChange = (val, vals) => {
-        setData(vals)
-    }
-
-    return <div style={{ margin: 10 }} >
-        <div style={{ display: 'flex' }}>
-            <div style={{ width: 300 }}>
-                <p>key_1：<span>{data.key_1}</span></p>
-                <p>key_2：<span>{data.key_2}</span></p>
-            </div>
-            <div style={{ flex: 1 }}>
-                <SchemaForm
-                    wrappedComponentRef={formRef}
-                    uiSchema={uiSchema}
-                    data={data}
-                    onChange={onChange}
-                    schema={schema}
-                />
-            </div>
-        </div>
-    </div>
-}
-
-ReactDOM.render(<BindData/>,mountNode)
- `
-
-const code8 = `
-import React, { useState } from 'react'
-import { SchemaForm } from 'gantd'
-
-const uiSchema = {
-    "ui:col": 24,
-    "ui:gutter": 10,
-    "ui:labelCol": 4,
-    "ui:wrapperCol": 20,
-    "ui:labelAlign": "left",
-    "ui:padding": 10,
-    "ui:backgroundColor": "#fff"
-}
-
-function DependenceData() {
-    const dependenceSchema = {
-        type: "object",
-        title: "依赖关系",
-        propertyType: {
-            "key_1": {
-                title: "姓氏",
-                type: "string",
-            },
-            "key_2": {
-                title: "全名",
-                type: "string",
-                dependencies: ["key_1"],
-                onDependenciesChange: (value, props, form) => {
-                    form && form.setFieldsValue({ key_2: value })
-                }
-            },
-        }
-    }
-    return <div style={{ margin: 10 }}>
-        <SchemaForm
-            uiSchema={uiSchema}
-            schema={dependenceSchema}
-        />
-    </div>
-}
-
-ReactDOM.render(<DependenceData/>,mountNode)
- `
+ReactDOM.render(<CustomCmp/>,mountNode) `
 
 const code9 = `import React from 'react'
 import { SchemaForm } from 'gantd'
