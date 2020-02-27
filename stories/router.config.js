@@ -44,7 +44,7 @@ export default [{
     nameZh: '金额输入框'
   },
   {
-    name: 'selector',
+    name: 'Selector',
     nameZh: '基础选择器'
   },
   {
@@ -52,7 +52,7 @@ export default [{
     nameZh: '地址选择器'
   },
   {
-    name: 'datepicker',
+    name: 'Datepicker',
     nameZh: '日期选择器'
   },
   {
