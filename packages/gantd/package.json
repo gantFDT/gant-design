@@ -132,7 +132,9 @@
     "react-sortable-hoc": "^1.9.1",
     "recompose": "^0.30.0",
     "submenu-g": "^0.0.26",
-    "table-g": "^0.0.26"
+    "table-g": "^0.0.26",
+    "smart-table-g": "^0.0.12",
+    "schema-form-g": "^0.0.31"
   },
   "browserslist": [
     "last 2 version",
