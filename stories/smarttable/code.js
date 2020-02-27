@@ -268,4 +268,241 @@ const code5 = `function LocalUse() {
 }
 `
 
-export default [codeGenerator(code1), codeGenerator(code2), codeGenerator(code3), codeGenerator(code4), codeGenerator(code5)];
+const code6 =
+`import React, { useState, useCallback, useMemo } from 'react'
+import { Button, message } from 'antd'
+import { SmartTable, Input, InputNumber, DatePicker, InputUrl, LocationSelector, InputCellPhone, InputEmail, InputLanguage, InputMoney, EditStatus, SwitchStatus } from 'gantd'
+
+function EditInlineUse() {
+  const smartTableSchema = [
+    {
+      fieldName: 'name',
+      title: '姓名'
+    },
+    {
+      fieldName: 'age',
+      title: '年龄',
+      componentType: 'InputNumber'
+    },
+    {
+      fieldName: 'cellPhone',
+      title: '手机号',
+      componentType: 'InputCellPhone'
+    },
+    {
+      fieldName: 'domain',
+      title: '个人主页',
+      componentType: 'InputUrl'
+    },
+    {
+      fieldName: 'email',
+      title: '邮箱',
+      componentType: 'InputEmail'
+    },
+    {
+      fieldName: 'bio',
+      title: '简介',
+      componentType: 'InputLanguage',
+      props: {
+        localeList: [
+          { locale: 'zh-CN', label: '中文' },
+          { locale: 'en-US', label: '英文' },
+        ]
+      }
+    },
+    {
+      fieldName: 'price',
+      title: '挂号费',
+      componentType: 'InputMoney'
+    },
+    {
+      fieldName: 'address',
+      title: '地址',
+      componentType: 'LocationSelector'
+    },
+    {
+      fieldName: 'birth',
+      title: '生日',
+      componentType: 'DataPicker'
+    }
+  ]
+
+  const data = [
+    {
+      name: '王医生',
+      age: 55,
+      cellPhone: { phone: "18010032938" },
+      domain: 'https://www.baidu.com/',
+      email: 'doc_wang@qq.com',
+      bio: { locale: 'zh-CN', value: '华西口腔主任医师。' },
+      price: { money: 29.9 },
+      address: ["CHN", "510000", "510100"],
+      birth: '1965-04-24',
+    },
+    {
+      name: '张医生',
+      age: 42,
+      cellPhone: { phone: "13583384957" },
+      domain: 'https://www.google.com/',
+      email: 'doc_zhang@163.com',
+      bio: { locale: 'zh-CN', value: '北京协和泌尿科主任医师。' },
+      price: { money: 19.9 },
+      address: ["CHN", "110000", "110101"],
+      birth: '1977-01-04',
+    },
+    {
+      name: '李医生',
+      age: 35,
+      cellPhone: { phone: "13777574848" },
+      domain: 'https://www.souhu.com/',
+      email: 'doc_li@souhu.com',
+      bio: { locale: 'zh-CN', value: '上海第一人民医院妇产科主治医师。' },
+      price: { money: 9.9 },
+      address: ["CHN", "310000", "310104"],
+      birth: '1986-02-14',
+    }
+  ]
+
+  const [stateData, setStateData] = useState(data)
+  const [editing, setEditing] = useState(EditStatus.CANCEL);
+  const getDifference = useCallback(
+    (current, old) => {
+      const result = []
+      for (let i = 0, len = current.length; i < len; i++) {
+        const { children = [], ...currentItem } = current[i]
+        const { children: oldChildren = [], ...oldItem } = old[i]
+        if (!_.isEqual(currentItem, oldItem)) {
+          result.push(currentItem)
+        }
+        if (children.length && oldChildren.length && !_.isEqual(children, oldChildren)) {
+          const diff = getDifference(children, oldChildren)
+          result.push.apply(result, diff)
+        }
+      }
+      return result
+    },
+    [],
+  )
+  const onSave = useCallback(
+    (newStateData) => {
+      const diff = getDifference(newStateData, stateData)
+      setStateData(newStateData)
+      console.log('差异数据：', diff)
+    },
+    [stateData],
+  )
+  const handleSave = useCallback(() => {
+    setEditing(EditStatus.SAVE)
+  }, [])
+  const getSchema = useMemo(() => {
+    return smartTableSchema.map(item => {
+      switch (item.fieldName) {
+        case 'name':
+          item['editConfig'] = {
+            render: (value, record, index) => {
+              return <Input type='input' />
+            },
+          };
+          break;
+        case 'age':
+          item['editConfig'] = {
+            render: (value, record, index) => {
+              return <InputNumber />
+            },
+          };
+          break;
+        case 'cellPhone':
+          item['editConfig'] = {
+            render: (value, record, index) => {
+              return <InputCellPhone />
+            },
+          };
+          break;
+        case 'domain':
+          item['editConfig'] = {
+            render: (value, record, index) => {
+              return <InputUrl/>
+            },
+          };
+          break;
+        case 'email':
+          item['editConfig'] = {
+            render: (value, record, index) => {
+              return <InputEmail/>
+            },
+          };
+          break;
+        case 'bio':
+          item['editConfig'] = {
+            render: (value, record, index) => {
+              return <InputLanguage/>
+            },
+          };
+          break;
+        case 'price':
+          item['editConfig'] = {
+            render: (value, record, index) => {
+              return <InputMoney/>
+            },
+          };
+          break;
+        case 'address':
+          item['editConfig'] = {
+            render: (value, record, index) => {
+              return <LocationSelector/>
+            },
+          };
+          break;
+        case 'birth':
+          item['editConfig'] = {
+            render: (value, record, index) => {
+              return <DatePicker/>
+            },
+          };
+          break;
+        default:
+          break;
+      }
+      return item
+    })
+  }, [])
+  return (
+    <div style={{ margin: 10 }}>
+      <SmartTable
+        tableKey="EditInlineUse"
+        rowKey="id"
+        schema={getSchema}
+        dataSource={stateData}
+        editable={editing}
+        bodyHeight={300}
+        onSave={onSave}
+        headerRight={<>
+          <Button
+            icon={editing === EditStatus.EDIT ? "roolback" : "edit"}
+            className="marginh5"
+            size="small"
+            onClick={() => { if (editing === EditStatus.CANCEL) { message.info('请单击单元格进行编辑') };setEditing(SwitchStatus) }}
+          >
+            {editing === EditStatus.EDIT ? "结束" : "进入"}编辑
+          </Button>
+          {editing === EditStatus.EDIT && <Button
+            icon="save"
+            className="marginh5"
+            size="small"
+            type="primary"
+            onClick={handleSave}
+          >
+            保存
+          </Button>}
+        </>}
+      />
+    </div>
+  )
+}
+
+ReactDOM.render(
+  <EditInlineUse />,
+  mountNode,
+)`
+
+export default [codeGenerator(code1), codeGenerator(code2), codeGenerator(code3), codeGenerator(code4), codeGenerator(code5), code6];

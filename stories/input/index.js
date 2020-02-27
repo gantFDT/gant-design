@@ -10,12 +10,11 @@ const cmps = [
   () => {
     const [value, setValue] = useState('')
     const onSave = (id, value, cb) => {
-      console.log(id, value);
       cb()
     }
     return <>
       <Input placeholder='不可编辑' allowEdit={false} value='不可编辑' />
-      <Input placeholder='可编辑' allowEdit={true} onSave={onSave} value={value} onChange={setValue} />
+      <Input placeholder='可编辑' onSave={onSave} value={value} onChange={setValue} />
     </>
   },
   () => {

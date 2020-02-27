@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import { Input as AntInput, Select } from 'antd';
-import { compose, withProps, defaultProps, withState, mapProps, lifecycle, withHandlers, withPropsOnChange } from 'recompose'
+import { compose, withProps, defaultProps, toClass, mapProps, lifecycle, withHandlers, withPropsOnChange } from 'recompose'
 import classnames from 'classnames'
 import { get } from 'lodash'
 
 import { withEdit } from '../compose'
 import codeTypes from './codes.json'
-// import './index.less'
 
 const reg = /^1$|^(13|14|15|18)$|^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{0,8}$/
 
@@ -14,18 +13,19 @@ const reg = /^1$|^(13|14|15|18)$|^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|
 const phoneFormatter = phone => Array.from(phone).map((num, index) => index % 4 == 3 ? `-${num}` : num).join('')
 
 const withPhoneCode = compose(
+  toClass,
   withProps(({ value = {} }) => {
     const { code = "86", phone } = value
     return {
       code,
-      value: phone
+      phone
     }
   }),
   defaultProps({
     placeholder: '请输入手机号码', // withEdit中用做空值的展示
     allowClear: true,
   }),
-  withProps(({ onChange, value: oPhone, code: oCode }) => {
+  withProps(({ onChange, phone: oPhone, code: oCode }) => {
     return {
       onCodeChange(code) {
         if (!onChange) return
@@ -64,10 +64,10 @@ const withPhoneCode = compose(
 
 const withValidate = compose(
   withHandlers({
-    validateValue: ({ value }) => () => !value || (value.length === 11 && reg.test(value))
+    validateValue: ({ phone }) => () => !phone || (phone.length === 11 && reg.test(phone))
   }),
   withPropsOnChange( // 监听value的变化，并修改是否可以提交的状态
-    ['value'],
+    ['phone'],
     ({ validateValue }) => ({
       confirmable: validateValue()
     })
@@ -85,7 +85,7 @@ const withValidate = compose(
 @compose(
   withPhoneCode,
   withValidate,
-  withEdit(({ code, value }) => value ? `+${code} ${phoneFormatter(value)}` : ''),
+  withEdit(({ code, phone }) => phone ? `+${code} ${phone}` : ''),
 )
 class CellPhone extends Component {
 
@@ -128,15 +128,11 @@ class CellPhone extends Component {
   }
 
   render() {
-    const { onPhoneChange, validateValue, onEnter, className, ...props } = this.props
+    const { onPhoneChange, validateValue, onEnter, ...props } = this.props
     const { value } = this.state
-    let computedValue = get(props, 'value', value)
-    const classNames = classnames(
-      className,
-      'gant-phone'
-    )
+    let computedValue = get(props, 'phone', value)
     return (
-      <AntInput {...props} value={computedValue} className={classNames} onKeyDown={this.onKeyDown} onChange={this.onChange} />
+      <AntInput {...props} value={computedValue} onKeyDown={this.onKeyDown} onChange={this.onChange} />
     );
   }
 }

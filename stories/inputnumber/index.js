@@ -1,7 +1,6 @@
 
-import { InputNumber,SwitchStatus } from '@data-cell'
+import { InputNumber, SwitchStatus, EditStatus } from '@data-cell'
 import React, { useState } from 'react';
-import { Button } from 'antd'
 import codeList from './code'
 import CodeDecorator from '../_util/CodeDecorator';
 
@@ -10,32 +9,26 @@ const cmps = [
   () => {
     const [value, setValue] = useState(99)
     const onSave = (id, value, cb) => {
-      console.log(id, value);
       cb()
     }
     return <>
-      <InputNumber placeholder='不可编辑' allowEdit={false}  value={99}/>
-      <InputNumber placeholder='可编辑' allowEdit={true} onSave={onSave} value={value} onChange={setValue} />
+      <InputNumber placeholder='可编辑' onSave={onSave} value={value} onChange={setValue} />
     </>
   },
   () => {
-    const [edit, setEdit] = useState('CANCEL')
-    const [value, setValue] = useState(99)
     return <>
-      <Button onClick={() => setEdit(SwitchStatus)} style={{ marginBottom: 5 }} size="small">{!(edit === 'EDIT') ? '进入编辑' : '退出编辑'}</Button>
-      <InputNumber placeholder='请输入' edit={edit} value={value} onChange={setValue} style={{ margin: '5px 0' }} />
+      <InputNumber placeholder='被忽略的值' value="123" />
     </>
   },
   () => {
-    const [value, setValue] = useState('99')
-    const onSave = (id, value, cb) => {
-      console.log(id, value);
-      cb()
-    }
+    const [value, setValue] = useState(0)
+    const addonBefore = (
+      <>RMB</>
+    )
     return <>
-      <InputNumber placeholder='请输入' allowEdit={true} value={value} onSave={onSave} onChange={setValue} />
+      <InputNumber placeholder='金额' edit={EditStatus.EDIT} value={value} onChange={setValue} onSave={(id, value, cb) => cb()} addonBefore={addonBefore} />
     </>
-  }
+  },
 ]
 
 
@@ -47,20 +40,20 @@ const config = {
   inline: true,
   children: [
     {
-      title: '是否可编辑',
+      title: '基本使用',
       describe: '在后面展示一个编辑按钮，通过修改allowEdit参数控制是否可以编辑，allowEdit默认true',
       cmp: cmps[0]
     },
     {
-      title: '编辑状态受控',
-      describe: '受其他组件控制展示的形态',
+      title: '忽略不是数字的值',
+      describe: '',
       cmp: cmps[1]
     },
     {
-      title: '校验',
-      describe: '非数字会被忽略',
+      title: '编辑模式下的前置组件',
+      describe: '',
       cmp: cmps[2]
-    }
+    },
   ]
 }
 

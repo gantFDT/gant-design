@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-import { Button, ConfigProvider } from 'antd'
+import { Button, ConfigProvider, Modal as AntModal } from 'antd'
 import Modal, { ResizableModal, ResizableProvider } from '@packages/modal-g/src'
-import zhCN from 'antd/es/locale/zh_CN';
+import zhCN from 'antd/es/locale/zh_CN'
 import CodeDecorator from '../_util/CodeDecorator'
 import code from './code.js'
-const ButtonGroup = Button.Group;
+const ButtonGroup = Button.Group
 
 function BasicUse() {
     const [visible, setVisible] = useState(false)
@@ -26,8 +26,8 @@ function BasicUse() {
     )
 }
 function CustomUse() {
-    const [visible, setVisible] = useState(false);
-    const [widthAndHei, setWidthAndHei] = useState([400, 400]);
+    const [visible, setVisible] = useState(false)
+    const [widthAndHei, setWidthAndHei] = useState([400, 400])
     const onSizeChange = (width, height) => {
         setWidthAndHei([width, height])
     }
@@ -167,6 +167,6 @@ const config = {
             cmp: multipleModalsUse
         },
     ]
-};
+}
 
 export default () => <CodeDecorator config={config} />

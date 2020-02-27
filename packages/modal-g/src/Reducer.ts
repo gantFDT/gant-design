@@ -1,6 +1,4 @@
-import React from 'react';
-import _ from 'lodash';
-
+import React from 'react'
 /// <reference path='types.d.ts' />
 
 export enum ActionTypes {
@@ -14,47 +12,47 @@ export enum ActionTypes {
     resize = 'resize',
     drag = 'drag',
     windowResize = 'windowResize',
-
 }
 
 export type Action = { type: ActionTypes, [key: string]: any }
 
-export const getModalState = (state: ModalsState, id: string): any => state.modals[id] || state.initialModalState;
+export const getModalState = (state: ModalsState, id: string): any => state.modals[id] || state.initialModalState
 
-const clamp = (min: number, max: number, value: number) => Math.max(min, Math.min(max, value));
+const clamp = (min: number, max: number, value: number) => Math.max(min, Math.min(max, value))
 
 const mapObject = <R, K extends keyof R>(obj: R, fn: (v: R[K]) => R[K]): R => Object.assign({}, ...Object.keys(obj).map(key => ({ [key]: fn(obj[key]) })))
 
 const getNextZIndex = (state: ModalsState, id: string) => {
-    const { modals, maxZIndex } = state;
-    if (Object.keys(modals).length === 1) return maxZIndex;
-    let modalState = getModalState(state, id);
-    return modalState.zIndex === maxZIndex ? maxZIndex : maxZIndex + 1;
+    const { modals, maxZIndex } = state
+    if (Object.keys(modals).length === 1) return maxZIndex
+    let modalState = getModalState(state, id)
+    return modalState.zIndex === maxZIndex ? maxZIndex : maxZIndex + 1
 }
 
 const clampDrag = (windowWidth: number, windowHeight: number, x: number, y: number, width: number, height: number): { x: number, y: number } => {
-    const maxX = windowWidth - width;
-    const maxY = windowHeight - height;
+    const maxX = windowWidth - width
+    const maxY = windowHeight - height
     const clampedX = clamp(0, maxX, x)
     const clampedY = clamp(0, maxY, y)
     return { x: clampedX, y: clampedY }
 }
 
 const clampResize = (minWidth: number, minHeight: number, windowWidth: number, windowHeight: number, x: number, y: number, width: number, height: number): { width: number, height: number } => {
-    const maxWidth = windowWidth - x;
-    const maxHeight = windowHeight - y;
+    const maxWidth = windowWidth - x
+    const maxHeight = windowHeight - y
     const clampedWidth = clamp(minWidth, maxWidth, width)
     const clampedHeight = clamp(minHeight, maxHeight, height)
     return { width: clampedWidth, height: clampedHeight }
 }
 
 export const resizableReducer: React.Reducer<ModalsState, Action> = (state, action) => {
-    const { minWidth, minHeight, initialModalState } = state;
-    const needIncrease = Object.keys(state.modals).length != 1;
+    const { minWidth, minHeight, initialModalState } = state
+    const needIncrease = Object.keys(state.modals).length != 1
     switch (action.type) {
         case ActionTypes.mount:
-            let combineState = _.assign(initialModalState, action.itemState || {});
-            let inital = { width: combineState.width, height: combineState.height };
+            let itemState = action.itemState || {}
+            let combineState = { ...initialModalState, ...itemState }
+            let inital = { width: combineState.width, height: combineState.height }
             return {
                 ...state,
                 maxZIndex: state.maxZIndex + 1,
@@ -92,7 +90,7 @@ export const resizableReducer: React.Reducer<ModalsState, Action> = (state, acti
             }
         case ActionTypes.show: {
             const modalState = state.modals[action.id]
-            const maximized = modalState.maximized;
+            const maximized = modalState.maximized
             const maxZIndex = needIncrease ? state.maxZIndex + 1 : state.maxZIndex
             const centerX = (state.windowSize.width - modalState.width) / 2
             const centerY = (state.windowSize.height - modalState.height) / 2
@@ -167,7 +165,7 @@ export const resizableReducer: React.Reducer<ModalsState, Action> = (state, acti
         }
         case ActionTypes.reset: {
             const modalState = state.modals[action.id]
-            const inital = modalState.inital;
+            const inital = modalState.inital
             const centerX = (state.windowSize.width - inital.width) / 2
             const centerY = (state.windowSize.height - inital.height) / 2
             const position = clampDrag(

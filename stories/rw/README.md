@@ -1,4 +1,16 @@
 
+
+## 可读写组件公共API
+
+|   参数    |               说明               |          类型           | 默认值 | 必须  |
+| :-------: | :------------------------------: | :---------------------: | :----: | :---: |
+| allowEdit |         是否允许自身编辑         |         boolean         |  true  |  是   |
+|   edit    | 组件的编辑状态(是否处于编辑模式) |         boolean         | false  |  是   |
+|  onSave   |        点击对勾按钮的回调        | function(id, value, cb) |        |  是   |
+| onCancel  |        点击取消按钮的回调        |     function(value)     |        |       |
+
+> onSave函数参数说明:`id`表示通过`getFieldDecorator`标识的id，没有的时候返回undefined。`value`表示当前输入框的值。`cb`是一个回调，通常用于手动关闭编辑状态
+
 ## EditStatus说明
 
 EditStatus状态如下所示：
@@ -44,3 +56,9 @@ setEdit(status => {
 ```
 
 为了简化在切换状态时候的操作，建立了一个SwitchStatus方法，用于简便的对编辑状态进行操作
+
+e.g
+
+```js
+setEdit(SwitchStatus)
+```
