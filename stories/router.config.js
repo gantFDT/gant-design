@@ -171,6 +171,9 @@ export default [{
   }, {
     name: 'Style',
     nameZh: '公共样式类'
+  }, {
+    name: 'Utils',
+    nameZh: '公共工具类'
   }
     // {
     // 			name: 'TaskBoard',
