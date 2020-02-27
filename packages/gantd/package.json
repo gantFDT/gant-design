@@ -1,6 +1,6 @@
 {
   "name": "favorinpmtest",
-  "version": "1.0.33",
+  "version": "1.0.34",
   "description": "GantD base on antD",
   "author": "GantFDT",
   "license": "MIT",
@@ -117,10 +117,10 @@
     "@ant-design/colors": "^3.1.0",
     "@ant-design/icons": "2.1.1",
     "antd": "^3.22.0",
-    "auto-reload-g": "^0.0.21",
+    "auto-reload-g": "^0.0.22",
     "classnames": "^2.2.6",
     "create-react-context": "^0.2.3",
-    "header-g": "^0.0.24",
+    "header-g": "^0.0.25",
     "lodash": "^4.17.11",
     "moment": "^2.24.0",
     "numeral": "^2.0.6",
@@ -131,8 +131,8 @@
     "react-dom": "^16.8.6",
     "react-sortable-hoc": "^1.9.1",
     "recompose": "^0.30.0",
-    "submenu-g": "^0.0.26",
-    "table-g": "^0.0.26"
+    "submenu-g": "^0.0.27",
+    "table-g": "^0.0.27"
   },
   "browserslist": [
     "last 2 version",
