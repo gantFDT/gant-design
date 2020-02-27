@@ -1,16 +1,16 @@
 import React, { useState } from 'react'
+import moment from 'moment'
 import { DatePicker, RangePicker } from '@data-cell'
 import CodeDecorator from '../_util/CodeDecorator'
 import { WrapperValue, WrapperEdit, onSave } from '../_util/composeUseHooks'
+
+const offset = moment().utcOffset() / 60
 
 const codeList = [
   `const [value, setValue] = useState();
 return (
   <>
     <DatePicker value={value} onChange={setValue} onSave={onSave} />
-    <div style={{marginTop: 10}}>
-      <DatePicker edit />
-    </div>
   </>
 )`,
   `const [value, setValue] = useState('2019-06-05 11:01:29');
@@ -30,6 +30,11 @@ return (
     <RangePicker showTime value={value} onChange={setValue} onSave={onSave} />
   )`,
 ]
+
+
+const C1 = WrapperValue('2019-06-05 11:01:29')(({ value, setValue }) => <DatePicker format='YYYY-MM-DD HH:mm:ss' value={value} onChange={setValue} onSave={onSave} />)
+const C2 = WrapperValue('2019-06-05 11:01:29')(({ value, setValue }) => <DatePicker style={{ margin: "10px 0" }} value={value} onChange={setValue} onSave={onSave} />)
+const C3 = WrapperValue('06-05-19 11:01:29')(({ value, setValue }) => <DatePicker format='MM-DD-YY' value={value} onChange={setValue} onSave={onSave} />)
 
 
 const config = {
@@ -54,10 +59,7 @@ ReactDOM.render(<Demo />, mountNode)`
       describe: '接受一个时间字符串或者一个moment对象.如果是字符串,默认当作东八区时间处理',
       cmp: WrapperValue('')(({ value, setValue }) => (
         <>
-          <DatePicker value={value} onChange={v => setValue(v)} onSave={onSave} />
-          <div style={{ marginTop: 10 }}>
-            <DatePicker edit />
-          </div>
+          <DatePicker value={value} onChange={setValue} onSave={onSave} />
         </>
       ))
     },
@@ -66,20 +68,21 @@ ReactDOM.render(<Demo />, mountNode)`
       describe: '不带时区信息,默认当作东八区时间处理, 通过format指定格式，format默认`YYYY-MM-DD`',
       cmp: () => (
         <>
-
-          {WrapperValue('2019-06-05 11:01:29')(({ value, setValue }) => <DatePicker format='YYYY-MM-DD HH:mm:ss' value={value} onChange={setValue} onSave={onSave} />)()}
-
-          <div style={{ margin: `10px 0` }}>
-            {WrapperValue('2019-06-05 11:01:29')(({ value, setValue }) => <DatePicker value={value} onChange={setValue} onSave={onSave} />)()}
-          </div>
-          {WrapperValue('06-05-19 11:01:29')(({ value, setValue }) => <DatePicker format='MM-DD-YY' value={value} onChange={setValue} onSave={onSave} />)()}
+          <C1 />
+          <C2 />
+          <C3 />
         </>
       )
     },
     {
       title: '指定一个带时区的时间字符串',
       describe: '将指定时区时间转换到当前时区, 通过指定showTime增加时间选择的功能',
-      cmp: WrapperValue('2019-06-01 00:00+0100')(({ value, setValue }) => <DatePicker format='YYYY-MM-DD HH:mm:ss' showTime value={value} onChange={setValue} onSave={onSave} />)
+      cmp: WrapperValue('2019-06-01 00:00+0100')(({ value, setValue }) => (
+        <>
+          东1区的时间 2019-06-01 00:00 在{offset > 0 ? `东` : '西'}{offset}区是
+          <DatePicker format='YYYY-MM-DD HH:mm:ss' showTime allowEdit={false} value={value} onChange={setValue} onSave={onSave} />
+        </>
+      ))
     },
     {
       title: '时间范围选择器',

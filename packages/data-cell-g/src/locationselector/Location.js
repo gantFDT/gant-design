@@ -90,7 +90,7 @@ export default Location
 
 Location.getLocationName = locationList => {
   const nameList = getLocationNameList(locationList)
-  return nameList.slice(-1)[0]
+  return nameList
 }
 
 

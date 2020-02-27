@@ -5,5 +5,8 @@
 .@{input-prefix-cls}{
   .@{input-prefix-cls}-group.ant-input-group {
     display: table;
+    &>*{
+      .display-table-cell();
+    }
   }
 }

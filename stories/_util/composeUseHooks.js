@@ -3,7 +3,8 @@ import { EditStatus } from '@data-cell'
 
 export const WrapperValue = defaultValue => Component => props => {
   const [value, setValue] = useState(defaultValue)
-  return React.createElement(Component, { value, setValue })
+  const factory = React.createFactory(Component)
+  return factory({ value, setValue })
 }
 
 export const onSave = (id, value, cb) => {
