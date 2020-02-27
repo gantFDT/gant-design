@@ -55,7 +55,7 @@ const tstask = function (dirName) {
   src([`packages/${dirName}/src/**/*.tsx`, `packages/${dirName}/src/**/*.ts`])
     .pipe(
       ts({
-        "target": 'es5',
+        "target": 'es6',
         "sourceMap": true,
         "module": "esnext",
         "declaration": true, // 生成 *.d.ts 文件
@@ -76,6 +76,8 @@ const tstask = function (dirName) {
         "allowSyntheticDefaultImports": true
       })
     )
+    .pipe(dest(`packages/${dirName}/lib/`))
+    .pipe(babel(babelConfig))
     .pipe(
       // 处理路径等问题
       through2.obj(function (chunk, enc, next) {

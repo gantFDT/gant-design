@@ -274,7 +274,7 @@ import { Button, message } from 'antd'
 import { SmartTable, Input, InputNumber, DatePicker, InputUrl, LocationSelector, InputCellPhone, InputEmail, InputLanguage, InputMoney, EditStatus, SwitchStatus } from 'gantd'
 
 function EditInlineUse() {
-  const smartTableSchema = [
+  const tableColumns = [
     {
       fieldName: 'name',
       title: '姓名'
@@ -326,6 +326,58 @@ function EditInlineUse() {
       componentType: 'DataPicker'
     }
   ]
+
+  const tableSchema = {
+    supportColumnFields: tableColumns,
+    systemViews: [
+      {
+        viewId: 'systemView',
+        name: "系统视图",
+        version: '2020-02-20 02:20:02',
+        panelConfig: {
+          wrap: false,
+          columnFields: [
+            {
+              fieldName: 'name',
+              width: 80
+            },
+            {
+              fieldName: 'age',
+              width: 70
+            },
+            {
+              fieldName: 'cellPhone',
+              width: 230
+            },
+            {
+              fieldName: 'domain',
+              width: 200
+            },
+            {
+              fieldName: 'email',
+              width: 170
+            },
+            {
+              fieldName: 'bio',
+              width: 375
+            },
+            {
+              fieldName: 'price',
+              width: 150
+            },
+            {
+              fieldName: 'address',
+              width: 195
+            },
+            {
+              fieldName: 'birth',
+              width: 160
+            }
+          ]
+        }
+      }
+    ]
+  }
 
   const data = [
     {
@@ -394,87 +446,16 @@ function EditInlineUse() {
   const handleSave = useCallback(() => {
     setEditing(EditStatus.SAVE)
   }, [])
-  const getSchema = useMemo(() => {
-    return smartTableSchema.map(item => {
-      switch (item.fieldName) {
-        case 'name':
-          item['editConfig'] = {
-            render: (value, record, index) => {
-              return <Input type='input' />
-            },
-          };
-          break;
-        case 'age':
-          item['editConfig'] = {
-            render: (value, record, index) => {
-              return <InputNumber />
-            },
-          };
-          break;
-        case 'cellPhone':
-          item['editConfig'] = {
-            render: (value, record, index) => {
-              return <InputCellPhone />
-            },
-          };
-          break;
-        case 'domain':
-          item['editConfig'] = {
-            render: (value, record, index) => {
-              return <InputUrl/>
-            },
-          };
-          break;
-        case 'email':
-          item['editConfig'] = {
-            render: (value, record, index) => {
-              return <InputEmail/>
-            },
-          };
-          break;
-        case 'bio':
-          item['editConfig'] = {
-            render: (value, record, index) => {
-              return <InputLanguage/>
-            },
-          };
-          break;
-        case 'price':
-          item['editConfig'] = {
-            render: (value, record, index) => {
-              return <InputMoney/>
-            },
-          };
-          break;
-        case 'address':
-          item['editConfig'] = {
-            render: (value, record, index) => {
-              return <LocationSelector/>
-            },
-          };
-          break;
-        case 'birth':
-          item['editConfig'] = {
-            render: (value, record, index) => {
-              return <DatePicker/>
-            },
-          };
-          break;
-        default:
-          break;
-      }
-      return item
-    })
-  }, [])
   return (
     <div style={{ margin: 10 }}>
       <SmartTable
         tableKey="EditInlineUse"
         rowKey="id"
-        schema={getSchema}
+        schema={tableSchema}
         dataSource={stateData}
         editable={editing}
         bodyHeight={300}
+        bodyWidth={1630}
         onSave={onSave}
         headerRight={<>
           <Button

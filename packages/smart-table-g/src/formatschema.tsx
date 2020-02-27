@@ -39,7 +39,10 @@ const mapComponents = (ComponentName: string, props: any) => {
   }
 };
 
-function formatColumn<R>(schema: CustomColumnProps<R>) {
+interface FormatColumnProps<R> extends CustomColumnProps<R> {
+  editConfig?: {render?: (text: any, record: R, index: number) => React.ReactNode;}
+}
+function formatColumn<R>(schema: FormatColumnProps<R>) {
   let fakeColumn = { dataIndex: schema.fieldName, ...schema };
   if (!schema.render) {
     switch (schema.componentType) {
@@ -66,6 +69,11 @@ function formatColumn<R>(schema: CustomColumnProps<R>) {
           value: text,
           allowEdit: false
         })
+        fakeColumn.editConfig = {
+          render: () => {
+            return mapComponents(schema.componentType, {...schema.props})
+          },
+        }
         break;
       default:
         break;
