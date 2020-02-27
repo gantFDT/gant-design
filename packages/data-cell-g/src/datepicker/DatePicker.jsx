@@ -2,6 +2,7 @@ import React from 'react'
 import { omit } from 'lodash'
 import { DatePicker as AntDatePicker } from 'antd'
 import { compose, defaultProps, toClass } from 'recompose'
+import classnames from 'classnames'
 
 import { Group } from '../input'
 import { withEdit } from '../compose'
@@ -33,16 +34,17 @@ class DatePicker extends React.Component {
   }
 
   render() {
-    const { addonAfter, value, className, ...props } = this.props
+    const { addonAfter, value, ...props } = this.props
+    const className = classnames('gant-calendar-picker', props.className)
     if (addonAfter) {
       return (
-        <Group gant className={className}>
-          <AntDatePicker {...props} value={getCurTime(value, props.format)} className={'gant-calendar-picker'} onChange={this.onChange} />
+        <Group gant>
+          <AntDatePicker {...props} value={getCurTime(value, props.format)} className={className} onChange={this.onChange} />
           {addonAfter ? <span className="ant-input-group-addon">{addonAfter}</span> : null}
         </Group>
       )
     }
-    return <AntDatePicker {...props} value={getCurTime(value, props.format)} className={'gant-calendar-picker'} onChange={this.onChange} />
+    return <AntDatePicker {...props} value={getCurTime(value, props.format)} className={className} onChange={this.onChange} />
   }
 }
 

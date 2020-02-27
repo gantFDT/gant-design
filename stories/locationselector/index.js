@@ -1,28 +1,21 @@
 import React, { useState } from 'react'
 import { Button } from 'antd'
-import { LocationSelector,  SwitchStatus } from '@data-cell'
+import { LocationSelector, SwitchStatus } from '@data-cell'
 import CodeDecorator from '../_util/CodeDecorator'
 import { WrapperValue, WrapperEdit, onSave } from '../_util/composeUseHooks'
 
 
 
 const codeList = [
-  `const [value, setValue] = useState()
+  `const [value, setValue] = useState(["CHN", "510000", "510100"])
   return <LocationSelector value={value} onChange={setValue} />`,
-  `const [edit, setEdit] = useState(EditStatus.CANCEL)
-  return (
-          <>
-            <Button onClick={() => setEdit(SwitchStatus)} style={{ marginBottom: 10 }}>切换</Button>
-            <LocationSelector edit={edit} />
-          </>
-        )`,
-  `return LocationSelector.getLocationName(["CHN", "120000", "120102"])`
+  `return LocationSelector.getLocationName(["CHN", "120000", "120102"]).join('、')`
 ]
 
 const config = {
   inline: true,
   codes: codeList.map(code =>
-    `import { LocationSelector, EditStatus, SwitchStatus } from 'gantd';
+    `import { LocationSelector, EditStatus, SwitchStatus } from '@data-cell';
 import { Button } from 'antd';
 import React, { useState } from 'react';
 
@@ -38,29 +31,17 @@ ReactDOM.render(<Demo />, mountNode)`),
   children: [
     {
       title: '基本使用',
-      describe: '得到选择地域的数组',
-      cmp: WrapperValue('')(({ value, setValue }) => <LocationSelector value={value} onChange={(v) => setValue(v)} onSave={onSave} />)
-    },
-    {
-      title: '编辑受控',
-      describe: '基本使用',
-      cmp: WrapperEdit(({ edit, setEdit }) => {
-        return (
-          <>
-            <Button onClick={() => setEdit(SwitchStatus)} style={{ marginBottom: 10 }}>切换</Button>
-            <LocationSelector edit={edit} />
-          </>
-        )
-      })
+      describe: '以数组形式传递编码',
+      cmp: WrapperValue(["CHN", "510000", "510100"])(({ value, setValue }) => <LocationSelector value={value} onChange={setValue} onSave={onSave} />)
     },
     {
       title: '根据代码获取地址的名称',
-      describe: '根据代码获取地址的名称',
+      describe: '调用静态方法LocationSelector.getLocationName，根据代码获取地址的名称',
       cmp: WrapperEdit(({ edit, setEdit }) => {
         return (
           <>
             {
-              LocationSelector.getLocationName(["CHN", "120000", "120102"])
+              LocationSelector.getLocationName(["CHN", "120000", "120102"]).join('、')
             }
           </>
         )
