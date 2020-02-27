@@ -14,17 +14,37 @@ const withMoneyType = compose(
   toClass,
   defaultProps({
     allowClear: true,
-    precision: 4,
+    precision: 2,
     onEnter: () => { },
   }),
-  withProps(({ value = {} }) => {
-    const { currency = symbols[0], money } = value
+  withProps(({ precision }) => {
+    const pre = Math.max(0, precision);
     return {
+      precision: pre,
+      format: '0,0.' + '0'.repeat(pre),
+      step: 1 / Math.pow(10, pre),
+      reg: new RegExp(`[1-9](?:[0-9]+)?(?:\.[0-9]{0,${pre}})?|0.[0-9]{0,${pre}}`)
+    }
+  }),
+  withProps(({ value = {}, format, onChange }) => {
+    const { currency = symbols[0], money } = value
+    let obj = {
       currency,
       money,
     }
+    if (money) {
+      // 去掉超过精度的部分
+      const m = Number(numeral(money).format(format))
+      if (money !== m) {
+        // 改写money
+        obj.money = m;
+        onChange(obj) // 可以不用调
+      }
+
+    }
+    return obj
   }),
-  withProps(({ onChange, currenty: oCurrency, money: oMoney }) => {
+  withProps(({ onChange, currency: oCurrency, money: oMoney }) => {
     return {
       onCurrencyChange(currency) {
         onChange({
@@ -38,18 +58,16 @@ const withMoneyType = compose(
       }
     }
   }),
-  withProps(({ currency, setType, precision }) => {
+  withProps(({ currency, onCurrencyChange }) => {
     return ({
       addonBefore: (
-        <Select style={{ width: 75 }} value={currency} onChange={setType}>
+        <Select style={{ width: 75 }} value={currency} onChange={onCurrencyChange}>
           {
             symbols.map(type => <Select.Option key={type} value={type}>{type}</Select.Option>)
           }
         </Select>
       ),
-      format: '0,0.' + '0'.repeat(precision),
-      step: 1 / Math.pow(10, precision),
-      reg: new RegExp(`[1-9](?:[0-9]+)?(?:\.[0-9]{1,${precision}})?|0.[0-9]{1,${precision}}`)
+
     })
   }),
 )
@@ -65,7 +83,7 @@ const withMoneyType = compose(
 class InputMoney extends Component {
 
   state = {
-    value: 0
+    value: undefined
   }
 
   constructor(props) {
@@ -88,7 +106,7 @@ class InputMoney extends Component {
   }
 
   render() {
-    const { setType, onEnter, onValueChange, precision, ...props } = this.props
+    const { setType, onEnter, onValueChange, precision, format, reg, ...props } = this.props
     const { value } = this.state
     return (
       <InputNumber {...props} isInner value={props.money || value} min={0} edit={EditStatus.EDIT} onPressEnter={onEnter} onChange={this.onChange} />

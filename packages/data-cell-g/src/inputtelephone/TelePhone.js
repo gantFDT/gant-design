@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Input, Select } from 'antd';
-import { compose, withState, withProps, defaultProps, mapProps, withPropsOnChange } from 'recompose'
+import { compose, toClass, withProps, defaultProps, mapProps, withPropsOnChange } from 'recompose'
 
 import { withEdit } from '../compose'
 import codesList from './codes.json'
@@ -8,6 +8,7 @@ import codesList from './codes.json'
 const isPhone = /^\d{7,8}$/
 const reg = /^\d{0,8}$/
 const withCode = compose(
+  toClass,
   withProps(({ value = {} }) => {
     const { code = "010", phone } = value
     return {

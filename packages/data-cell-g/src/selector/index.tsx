@@ -508,9 +508,9 @@ class BasicSelector<T> extends PureComponent<SelectorInnerProps<T>> {
   }
 
   render() {
-    const { addonAfter, style, className } = this.props
+    const { addonAfter, className } = this.props
     return (
-      <Group gant style={style} className={className}>
+      <Group gant className={className}>
         {this.renderSelect()}
         {addonAfter ? <span className="ant-input-group-addon">{addonAfter}</span> : null}
       </Group>
