@@ -31,7 +31,7 @@ export default function SchemaForm(props: SchemaFormProps) {
 				const isRequired = required && required.indexOf(itemName) >= 0
 				const filedTitle = item.title
 				const filedEdit = getEdit(edit, pathName)
-				const { orders, gutter, ...itemUiData } = getUIData(uiSchema, pathName)
+				const { orders, gutter, ...itemUiData } = getUIData(uiSchema, "field", pathName)
 				return <SchemaField
 					key={pathName} {...item}
 					title={filedTitle}
@@ -49,7 +49,7 @@ export default function SchemaForm(props: SchemaFormProps) {
 			const getName = nameArray.join('.propertyType.')
 			schemaData = get(schema, `propertyType.${getName}`)
 		}
-		const { orders, gutter, backgroundColor, padding } = getUIData(uiSchema, pathName)
+		const { orders, gutter, backgroundColor, padding, style, className } = getUIData(uiSchema, "form", pathName)
 		const { propertyType, required, title } = schemaData
 
 		if (isEmpty(propertyType)) return null
@@ -70,9 +70,9 @@ export default function SchemaForm(props: SchemaFormProps) {
 		const pathNameArray = pathName ? pathName.split('.') : []
 		const id = pathNameArray[pathNameArray.length - 1]
 		const containerColor = getBackgroundColor(backgroundColor, pathNameArray.length)
-		return <div className={classnames(`${prefixCls}-schemaCard`, filedEdit === EditStatus.EDIT && `${prefixCls}-showRequiredMark`)}
+		return <div className={classnames(`${prefixCls}-schemaCard`, filedEdit === EditStatus.EDIT && `${prefixCls}-showRequiredMark`, className)}
 			key={pathName}
-			style={{ padding: padding, backgroundColor: containerColor }}>
+			style={{ padding: padding, backgroundColor: containerColor, ...style }}>
 			{(pathName ? visible : title) && <Header title={title} style={{ marginBottom: 16 }} {...restTitleSchema} id={titleSchemaId ? titleSchemaId : id} />}
 			<Row gutter={gutter}>{contents}</Row>
 		</div>

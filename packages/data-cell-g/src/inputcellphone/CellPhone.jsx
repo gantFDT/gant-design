@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Input as AntInput, Select } from 'antd';
-import { compose, withProps, defaultProps, withState, mapProps, lifecycle, withHandlers, withPropsOnChange } from 'recompose'
+import { compose, withProps, defaultProps, toClass, mapProps, lifecycle, withHandlers, withPropsOnChange } from 'recompose'
 import classnames from 'classnames'
 import { get } from 'lodash'
 
@@ -13,8 +13,9 @@ const reg = /^1$|^(13|14|15|18)$|^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|
 const phoneFormatter = phone => Array.from(phone).map((num, index) => index % 4 == 3 ? `-${num}` : num).join('')
 
 const withPhoneCode = compose(
+  toClass,
   withProps(({ value = {} }) => {
-    const { code = "86", phone } = value
+    const { key: code = "86", value: phone } = value
     return {
       code,
       phone
@@ -34,13 +35,13 @@ const withPhoneCode = compose(
           phone = ''
         }
         onChange({
-          code, phone
+          key: code, value: phone
         })
       },
       onPhoneChange(phone) {
         if (!onChange) return
         onChange({
-          code: oCode, phone
+          key: oCode, value: phone
         })
       },
       filterOption(inputValue, option) {

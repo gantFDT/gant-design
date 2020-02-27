@@ -1,46 +1,77 @@
 import React, { Component } from 'react';
 import { Input, Select } from 'antd';
-import { zipWith, get, map, pick, isUndefined } from 'lodash'
+import { mergeWith, get, map, pick, isUndefined } from 'lodash'
 import { compose, defaultProps, withState, withProps, withHandlers, mapProps, withPropsOnChange, toClass } from 'recompose'
 
 import { withEdit } from '../compose'
 
+const defaultLocaleList = [
+  {
+    locale: 'zh-CN',
+    label: '中文',
+  },
+  {
+    locale: 'en-US',
+    label: 'English',
+  }
+]
+
+const getMergeLocale = (list) => {
+  if (list.length) {
+    const entries = [...defaultLocaleList, ...list].map(item => [item.locale, item.label]);
+    const map = new Map(entries)
+    const localeList = []
+    for (const [locale, label] of map.entries()) {
+      localeList.push({
+        label, locale
+      })
+    }
+  }
+  return defaultLocaleList
+}
+
 const withLangSelect = compose(
-  // withState('cacheMap', 'setCacheMap', new Map()),
-  mapProps(({ localeList = [], ...props }) => {
-    return {
-      ...props,
-      localeList,
-      language: map(localeList, item => pick(item, ['locale', 'label'])),
-    }
-  }),
-  withPropsOnChange(['cacheId', 'localeList'], ({ localeList }) => {
-    const cacheEntries = map(localeList, item => ([item.locale, item.value]))
-    return {
-      cacheMap: new Map(cacheEntries)
-    }
-  }),
   defaultProps({
     allowClear: true,
     placeholder: '请输入文本',
     onChange: () => { },
-    value: {},
+    value: [],
+    localeList: [],
   }),
-  withHandlers({
-    onLocaleChange: ({ cacheMap, onChange }) => (locale) => {
-      const value = cacheMap.get(locale)
-      onChange({ value, locale })
+  withState('cacheMap', 'setCacheMap', ({ value }) => {
+    if (Array.isArray(value) && value.length) {
+      const cacheEntries = map(value, item => ([item.locale, item.value]))
+      return new Map(cacheEntries)
+    }
+    return new Map()
+
+  }),
+  withProps(({ localeList, cacheMap, onChange }) => {
+    return {
+      language: map(getMergeLocale(defaultLocaleList, localeList), item => pick(item, ['locale', 'label'])),
+      onChange() {
+        const newValue = []
+        for (const [locale, value] of cacheMap.entries()) {
+          newValue.push({ locale, value })
+        }
+        onChange(newValue)
+      }
     }
   }),
-  withProps(({ onLocaleChange, language, cacheMap, onSave, ...props }) => {
-    const currentLocale = get(props, 'value.locale', get(props, 'language[0].locale'))
+  withState("currentLocale", "setCurrentLocale", ({ value, language }) => (value[0] || language[0]).locale),
+  withHandlers({
+    onLocaleChange: ({ setCurrentLocale }) => (locale) => {
+      setCurrentLocale(locale)
+    }
+  }),
+  withProps(({ onLocaleChange, language, cacheMap, currentLocale }) => {
     return {
       addonBefore: (
         <Select style={{ width: 75 }} value={currentLocale} onChange={onLocaleChange}>
           {language.map(item => <Select.Option value={item.locale} key={item.locale}>{item.label}</Select.Option>)}
         </Select>
       ),
-      locale: currentLocale,
+      currentValue: cacheMap.get(currentLocale)
     }
   })
 )
@@ -49,35 +80,21 @@ const withLangSelect = compose(
 @compose(
   toClass,
   withLangSelect,
-  withEdit(({ value, locale, cacheMap }) => isUndefined(value.value) ? cacheMap.get(locale) : value.value),
-  withProps(props => {
-    return {
-      value: isUndefined(props.value.value) ? props.cacheMap.get(props.locale) : props.value.value,
-    }
-  })
+  withEdit(({ currentLocale, cacheMap }) => cacheMap.get(currentLocale))
 )
 class InputLang extends Component {
 
-  componentDidMount() {
-    const { value, locale, cacheMap } = this.props
-    cacheMap.set(locale, value)
-  }
-
   onInputChange = (e) => {
     const { value } = e.target;
-    const { locale, onChange, cacheMap } = this.props
-    cacheMap.set(locale, value)
-    // 回调给调用层
-    onChange({
-      value,
-      locale
-    })
+    const { currentLocale, onChange, cacheMap } = this.props
+    cacheMap.set(currentLocale, value)
+    onChange()
   }
 
   render() {
-    const { onEnter, setlocale, cacheId, cacheMap, localeList, onLocaleChange, ...props } = this.props
+    const { onEnter, setlocale, cacheId, cacheMap, localeList, onLocaleChange, currentValue, setCacheMap, ...props } = this.props
     return (
-      <Input {...props} onKeyDown={onEnter} onChange={this.onInputChange} />
+      <Input {...props} value={currentValue} onKeyDown={onEnter} onChange={this.onInputChange} />
     );
   }
 }

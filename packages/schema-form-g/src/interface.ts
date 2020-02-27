@@ -1,5 +1,6 @@
 import { ReactElement, ReactHTML } from 'react'
 import { EditStatus } from '@data-cell'
+import { Gutter } from 'antd/lib/grid/row'
 import { ColProps } from 'antd/lib/grid/col'
 import { WrappedFormUtils, GetFieldDecoratorOptions } from 'antd/lib/form/Form.d'
 import { FormLabelAlign } from 'antd/lib/form/FormItem'
@@ -38,7 +39,7 @@ export interface Schema {
 	dependencies?: Array<string>,
 	onDependenciesChange?: (value: any, props: any, form: WrappedFormUtils) => any
 	props?: any,
-	[propName: string]: any;
+	hide?: boolean
 }
 export interface CustomFields {
 	type: string,
@@ -83,10 +84,20 @@ export interface UISchema {
 	"ui:extra"?: string,
 	"ui:labelCol"?: ColProps | number,
 	"ui:wrapperCol"?: ColProps | number,
-	"ui:gutter"?: number | object,
+	"ui:gutter"?: Gutter | [Gutter, Gutter],
 	"ui:labelAlign"?: FormLabelAlign,
+	"ui:padding"?: string | number,
 	"ui:backgroundColor"?: string,
-	[propName: string]: any
+	"form:orders"?: string[],
+	"form:style"?: React.CSSProperties,
+	"form:className"?: string,
+	"form:gutter"?: Gutter | [Gutter, Gutter],
+	"field:col"?: ColProps | number,
+	"field:extra"?: string,
+	"field:labelCol"?: ColProps | number,
+	"field:wrapperCol"?: ColProps | number,
+	"field:labelAlign"?: FormLabelAlign,
+	[propName: string]: ColProps | number | string | string[] | Gutter | [Gutter, Gutter] | FormLabelAlign | React.CSSProperties | UISchema
 }
 export interface TitleSchema {
 	"title:visible"?: boolean,
@@ -99,5 +110,6 @@ export interface TitleSchema {
 	"title:color"?: string,
 	"title:bottomLine"?: boolean,
 	"title:canWrap"?: boolean,
-	[propName: string]: any
+	[propName: string]: boolean | string | Element | number | TitleSchema
 }
+

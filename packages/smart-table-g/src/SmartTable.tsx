@@ -236,7 +236,7 @@ function SmartTable<R>(props: SmartTableProps<R>) {
       updateView={handlerSaveViews}
       renameLoading={renameLoading}
       loading={updateViewLoading}
-      splitLine={false}
+      splitLine={!!title}
       defaultView={defaultView}
       onDefaultViewChange={setDefaultView}
       config={<Tooltip title={f({ id: 'config' })}>
@@ -244,7 +244,7 @@ function SmartTable<R>(props: SmartTableProps<R>) {
       </Tooltip>}
       getPopupContainer={() => titleRef.current || document.body}
     />
-  ), [activeView, viewList, renameLoading, updateViewLoading, defaultView, titleRef, f])
+  ), [activeView, viewList, renameLoading, updateViewLoading, defaultView, titleRef, title, f])
 
   const tableHeight = useMemo(() => isEmpty(dataSource) ? bodyHeight : (panelConfig.heightMode === 'auto' ? 'auto' : bodyHeight), [dataSource, panelConfig.heightMode, bodyHeight])
 

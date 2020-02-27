@@ -4,7 +4,7 @@ import json from './district_zh.json'
 
 import { Group } from '../input'
 import { withEdit } from '../compose'
-import { compose, defaultProps } from 'recompose';
+import { compose, defaultProps, toClass } from 'recompose';
 
 
 const transformData = ($code, level = 1) => Object.entries(json[$code]).map(([code, name]) => {
@@ -51,6 +51,7 @@ const getValue = ({ value }) => {
 
 
 const withLocation = compose(
+  toClass,
   defaultProps({
     style: {},
     options: transformData('COUNTRIES'),
@@ -67,13 +68,12 @@ class Location extends React.Component {
 
   render() {
 
-    const { addonAfter, style: { width, ...style }, onEnter, ...props } = this.props
+    const { addonAfter, onEnter, ...props } = this.props
 
     return (
-      <Group gant style={{ width }}>
+      <Group gant>
         <Cascader
           {...props}
-          style={style}
           className={'gant-location-cascader'}
           changeOnSelect
           showSearch={{
@@ -90,7 +90,7 @@ export default Location
 
 Location.getLocationName = locationList => {
   const nameList = getLocationNameList(locationList)
-  return nameList.slice(-1)[0]
+  return nameList
 }
 
 

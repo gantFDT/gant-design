@@ -1,6 +1,6 @@
 import React from 'react'
-import { DatePicker, Switch, Input as AntInput } from 'antd'
-import { Input, InputNumber, RangePicker, Selector, InputUrl, LocationSelector, InputTelePhone, InputCellPhone, InputEmail, InputLanguage, InputMoney } from '@data-cell'
+import { Switch, Input as AntInput } from 'antd'
+import { Input, InputNumber, DatePicker, Selector, InputUrl, LocationSelector, InputTelePhone, InputCellPhone, InputEmail, InputLanguage, InputMoney } from '@data-cell'
 import { isEmpty, cloneDeep } from 'lodash'
 import { SchemaProp, PanelConfig, CustomColumnProps, ColumnConfig } from './interface'
 import { getType } from '@util'
@@ -21,43 +21,59 @@ const mapComponents = (ComponentName: string, props: any) => {
     return ComponentName;
   }
   switch (ComponentName) {
-    case 'DatePicker': return <DatePicker {...props} />
-    case 'Input': return <AntInput {...props} />
     case 'Switch': return <Switch {...props} />
     case 'TextArea': return <AntInput.TextArea {...props} />
     // Gant
-    case 'Number': return <InputNumber  {...props} />;
-    case 'DateRange': return <RangePicker {...props} />;
+    case 'Input': return <Input {...props} />
+    case 'InputNumber': return <InputNumber  {...props} />;
+    case 'DatePicker': return <DatePicker {...props} />;
     case 'Selector': return <Selector {...props} />;
     case 'InputUrl': return <InputUrl {...props} />;
     case 'LocationSelector': return <LocationSelector  {...props} />;
     case 'InputTelePhone': return <InputTelePhone {...props} />;
     case 'InputCellPhone': return <InputCellPhone {...props} />;
     case 'InputEmail': return <InputEmail {...props} />;
-    case 'InputLang': return <InputLanguage {...props} />;
+    case 'InputLanguage': return <InputLanguage {...props} />;
     case 'InputMoney': return <InputMoney {...props} />;
     default: return <Input {...props} />
   }
 };
 
-function formatColumn<R>(schema: CustomColumnProps<R>) {
+interface FormatColumnProps<R> extends CustomColumnProps<R> {
+  editConfig?: {render?: (text: any, record: R, index: number) => React.ReactNode;}
+}
+function formatColumn<R>(schema: FormatColumnProps<R>) {
   let fakeColumn = { dataIndex: schema.fieldName, ...schema };
   if (!schema.render) {
     switch (schema.componentType) {
-      case 'CodeList':
-      case 'GroupSelector':
-      case 'UserSelector':
-        fakeColumn.render = (text) => mapComponents('UserSelector', {
+      case 'Switch':
+      case 'TextArea':
+        fakeColumn.render = (text) => mapComponents(schema.componentType, {
+          ...schema.props,
+          value: text
+        })
+        break;
+      case 'Input':
+      case 'InputNumber':
+      case 'DatePicker':
+      case 'Selector':
+      case 'InputUrl':
+      case 'LocationSelector':
+      case 'InputTelePhone':
+      case 'InputCellPhone':
+      case 'InputEmail':
+      case 'InputLanguage':
+      case 'InputMoney':
+        fakeColumn.render = (text) => mapComponents(schema.componentType, {
           ...schema.props,
           value: text,
           allowEdit: false
         })
-        break;
-      case 'Switch':
-        fakeColumn.render = (text) => text ? '是' : '否'
-        break;
-      case 'UserColumn':
-        fakeColumn.render = (text) => mapComponents('UserColumn', { id: text })
+        fakeColumn.editConfig = {
+          render: () => {
+            return mapComponents(schema.componentType, {...schema.props})
+          },
+        }
         break;
       default:
         break;

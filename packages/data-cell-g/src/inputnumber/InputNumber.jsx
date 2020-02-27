@@ -11,7 +11,6 @@ import "./index.less"
 
 const withInputNumber = compose(
   defaultProps({
-    style: {},
     onChange: () => { },
   }),
   withProps(({ value, onChange }) => {
@@ -38,12 +37,12 @@ const withInputNumber = compose(
 class InputNumber extends React.Component {
 
   render() {
-    const { addonAfter, addonBefore, style: { width, ...style }, className, ...props } = this.props
+    const { addonAfter, addonBefore, className, ...props } = this.props
 
     return (
-      <Group gant className={className} style={{ width }}>
+      <Group gant className={className}>
         {addonBefore ? <span className="ant-input-group-addon">{addonBefore}</span> : null}
-        <AntInputNumber {...props} style={style} className={classnames('gant-input-number')} />
+        <AntInputNumber {...props} className={classnames('gant-input-number')} />
         {addonAfter ? <span className="ant-input-group-addon">{addonAfter}</span> : null}
       </Group>
     )

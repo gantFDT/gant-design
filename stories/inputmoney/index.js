@@ -1,38 +1,20 @@
 
-import { InputMoney, SwitchStatus, EditStatus } from '@data-cell'
+import { InputMoney, SwitchStatus, EditStatus, InputNumber } from '@data-cell'
 import React, { useState } from 'react';
-import { Button } from 'antd'
 import codeList from './code'
 import CodeDecorator from '../_util/CodeDecorator';
 
 
 const cmps = [
   () => {
-    const [value, setValue] = useState('99')
+    const [value, setValue] = useState({ key: "USD", value: 123.123 })
+    const [precision, setprecision] = useState(2)
     const onSave = (id, value, cb) => {
       cb()
     }
     return <>
-      <InputMoney placeholder='不可编辑' allowEdit={false} value={99} />
-      <InputMoney placeholder='可编辑' onSave={onSave} value={value} onChange={setValue} />
-    </>
-  },
-  () => {
-    const [edit, setEdit] = useState('CANCEL')
-    const [value, setValue] = useState(99)
-    return <>
-      <Button onClick={() => setEdit(SwitchStatus)} style={{ marginBottom: 5 }} size="small">{!(edit === 'EDIT') ? '进入编辑' : '退出编辑'}</Button>
-      <InputMoney placeholder='请输入' edit={edit} value={value} onChange={setValue} style={{ margin: '5px 0' }} />
-    </>
-  },
-  () => {
-    const [value, setValue] = useState('99')
-    const onSave = (id, value, cb) => {
-      console.log(id, value);
-      cb()
-    }
-    return <>
-      <InputMoney placeholder='请输入' allowEdit={true} value={value} onSave={onSave} onChange={setValue} />
+      小数点后位数: <InputNumber style={{ width: 80, display: 'inline-block' }} min={0} edit={EditStatus.EDIT} value={precision} onChange={setprecision} />
+      <InputMoney placeholder='可编辑' style={{ marginTop: 8 }} precision={precision} onSave={onSave} value={value} onChange={setValue} />
     </>
   }
 ]
@@ -40,26 +22,17 @@ const cmps = [
 
 const config = {
   useage: `<b>🖍 读写分离</b></br>
-    <b>📨 数字校验</b>
+    <b>📨 数字校验</b></br>
+    <b>📨 可选常用货币单位</b>
   `,
   codes: codeList,
   inline: true,
   children: [
     {
-      title: '是否可编辑',
-      describe: '在后面展示一个编辑按钮，通过修改allowEdit参数控制是否可以编辑，allowEdit默认true',
+      title: '精度控制',
+      describe: 'precision可以控制显示在小数点后的位数',
       cmp: cmps[0]
     },
-    {
-      title: '编辑状态受控',
-      describe: '受其他组件控制展示的形态',
-      cmp: cmps[1]
-    },
-    {
-      title: '校验',
-      describe: '非数字会被忽略',
-      cmp: cmps[2]
-    }
   ]
 }
 

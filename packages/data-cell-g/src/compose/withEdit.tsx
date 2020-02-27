@@ -50,7 +50,8 @@ export interface WithEditProps<T> {
   onCancel: Function,
   onConfirm: Function,
   onEnter: Function,
-  edit: EditStatus
+  edit: EditStatus,
+  isInner: boolean
 }
 
 interface WithEditInnerProps {

@@ -33,16 +33,19 @@ Schema
 
 UiSchema
 
-| 属性               | 说明                       | 类型           | 默认值 |
-| ------------------ | -------------------------- | -------------- | ------ |
-| ui:orders          | 字段排序，仅对form结构生效 | object         | {}     |
-| ui:col             | form中field布局方式        | ColProps       | 24     |
-| ui:labelCol        | field中Label布局方式       | ColProps       | 24     |
-| ui:wrapperCol      | field中Component布局方式   | ColProps       | 24     |
-| ui:padding         | form的padding值            | number         | 10     |
-| ui:gutter          | Form中filed之间的间隙      | RowProps       | 10     |
-| ui:labelAlign      | label对齐方式              | 'left'/'right' | 'left' |
-| ui:backgroundColor | 背景颜色                   | colorString    | '#fff' |
+| 属性               | 说明                                      | 类型           | 默认值 |
+| ------------------ | ----------------------------------------- | -------------- | ------ |
+| form:orders        | 字段排序，仅对form结构生效                | object         | {}     |
+| form:gutter        | Form中filed之间的间隙                     | RowProps       | 10     |
+| form:style         | Form style样式                            | CSS            | {}     |
+| form:className     | Form className                            | string         | ''     |
+| field:col          | form中field布局方式                       | ColProps       | 24     |
+| field:labelCol     | field中Label布局方式                      | ColProps       | 24     |
+| field:wrapperCol   | field中Component布局方式                  | ColProps       | 24     |
+| field:labelAlign   | label对齐方式                             | 'left'/'right' | 'left' |
+| field:style        | field style样式                            | CSS            | {}     |
+| field:className    | field className                            | string         | ''     |
+
 
 TitleConfig  
 

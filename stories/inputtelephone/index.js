@@ -1,13 +1,12 @@
-import React, { useState } from 'react'
-import { Button } from 'antd'
-import { InputTelePhone, SwitchStatus } from '@data-cell'
+import React from 'react'
+import { InputTelePhone } from '@data-cell'
 import CodeDecorator from '../_util/CodeDecorator'
-import { WrapperValue, WrapperEdit, onSave } from '../_util/composeUseHooks'
+import { WrapperValue, onSave } from '../_util/composeUseHooks'
 
 
 
 const codeList = [
-  `const [value, setValue] = useState({ code: "0832", phone: "4300698" })
+  `const [value, setValue] = useState({ key: "0832", value: "4300698" })
   return <InputTelePhone value={value} onChange={setValue} />`,
 ]
 
@@ -27,7 +26,7 @@ ReactDOM.render(<Demo />, mountNode)`),
     {
       title: '基本使用',
       describe: '固定电话基本格式，可以指定区号。国内座机号最多8位',
-      cmp: WrapperValue({ code: '0832', phone: '4300698' })(({ value, setValue }) => <InputTelePhone value={value} onChange={setValue} onSave={onSave} />)
+      cmp: WrapperValue({ key: '0832', value: '4300698' })(({ value, setValue }) => <InputTelePhone value={value} onChange={setValue} onSave={onSave} />)
     },
   ]
 }

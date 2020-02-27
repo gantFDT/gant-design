@@ -16,6 +16,7 @@
 
 |参数|说明|类型|默认值|
 |:-:|:-:|:-:|:-:|
+|value| 时间值| moment、string| -
 |format|时间格式|string|YYYY-MM-DD
 |showTime|是否显示时间选择器|boolean|false
 |onChange|选择时间回调|funciton|function(timestr)

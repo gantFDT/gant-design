@@ -1,7 +1,80 @@
 import { UISchema, TitleSchema, Schema } from './interface'
 import { EditStatus } from '@data-cell'
-import { get } from 'lodash'
-
+import { get } from 'lodash';
+interface UIArrayItem {
+	alias: string,
+	belong: "field" | "form" | string[],
+	name: string | string[],
+	defaultValue?: any
+}
+const uiArray = [
+	{
+		alias: "className",
+		belong: ["field", "form"],
+		name: ["ui:className", "form:className", "field:className"],
+		defaultValue: undefined
+	},
+	{
+		alias: "style",
+		belong: ["field", "form"],
+		name: ["ui:style", "form:style", "field:style"],
+		defaultValue: {
+			padding: 10
+		}
+	},
+	{
+		alias: "orders",
+		belong: "form",
+		name: ["ui:orders", "form:orders"],
+		defaultValue: []
+	}, {
+		alias: "gutter",
+		belong: "form",
+		name: ["ui:gutter", "form:gutter"],
+		defaultValue: 10
+	},
+	{
+		alias: "extra",
+		belong: "field",
+		name: ["ui:extra", "field:extra"],
+		defaultValue: undefined
+	},
+	{
+		alias: "labelAlign",
+		belong: "field",
+		name: ["ui:extra", "field:labelAlign"],
+		defaultValue: undefined
+	}, {
+		alias: "labelCol",
+		belong: "field",
+		name: ["ui:labelCol", "field:labelCol"],
+		defaultValue: undefined
+	},
+	{
+		alias: "wrapperCol",
+		belong: "field",
+		name: ["ui:wrapperCol", "field:wrapperCol"],
+		defaultValue: undefined
+	},
+	{
+		alias: "col",
+		belong: "field",
+		name: ["ui:col", "field:col"],
+		defaultValue: 24
+	},
+	{
+		alias: "padding",
+		belong: "form",
+		name: "ui:padding",
+		defaultValue: 10,
+	},
+	{
+		alias: "backgroundColor",
+		belong: "form",
+		name: "ui:backgroundColor",
+		defaultValue: undefined,
+	}
+];
 export function getOrders(orders: string[], targetArray: string[]): string[] {
 	let _sort = false;
 	if (!orders || orders.length <= 0) return targetArray;
@@ -26,54 +99,8 @@ export function getOrders(orders: string[], targetArray: string[]): string[] {
 	return targetArray
 }
 
-export function getUIData(uiSchema: UISchema, pathName?: string): any {
-	const uiArray = [{
-		alias: "orders",
-		name: 'ui:orders',
-		defaultValue: []
-	}, {
-		alias: "gutter",
-		name: 'ui:gutter',
-		defaultValue: 10
-	},
-	{
-		alias: "extra",
-		name: "ui:extra",
-		defaultValue: ""
-	},
-	{
-		alias: "labelAlign",
-		name: "ui:labelAlign",
-		defaultValue: "left"
-	}, {
-		alias: "labelCol",
-		name: "ui:labelCol",
-		defaultValue: null
-	},
-	{
-		alias: "wrapperCol",
-		name: "ui:wrapperCol",
-		defaultValue: null
-	},
-	{
-		alias: "padding",
-		name: "ui:padding",
-		defaultValue: 10
-	},
-	{
-		alias: "backgroundColor",
-		name: "ui:backgroundColor",
-		defaultValue: null
-	},
-	{
-		alias: "col",
-		name: "ui:col",
-		defaultValue: {
-			span: 24
-		}
-	}];
+export function getUIData(uiSchema: UISchema, type: "field" | "form", pathName?: string): any {
 	let uiData = {}, uiSchemaData = pathName ? get(uiSchema, pathName) : uiSchema;
-
 	if (uiSchemaData === undefined && pathName) {
 		const arr = pathName.split('.');
 		let index = arr.length - 1;
@@ -83,9 +110,21 @@ export function getUIData(uiSchema: UISchema, pathName?: string): any {
 		}
 	}
 	if (uiSchemaData == undefined) uiSchemaData = uiSchema;
-	uiSchemaData = { ...uiSchema, ...uiSchemaData };
 	uiArray.map(item => {
-		uiData[item.alias] = get(uiSchemaData, item.name, item.defaultValue)
+		if (item.belong === type || item.belong.indexOf(type) >= 0) {
+			if (typeof item.name === "string") {
+				uiData[item.alias] = get(uiSchemaData, item.name, item.defaultValue)
+			} else {
+				let itemName = "";
+				item.name.map(keyName => {
+					if (uiSchemaData[keyName] || typeof uiSchemaData[keyName] === 'number') {
+						itemName = keyName
+					}
+				})
+				itemName = itemName ? itemName : item.name[0];
+				uiData[item.alias] = get(uiSchemaData, itemName, item.defaultValue)
+			}
+		}
 	})
 	return uiData;
 }
@@ -225,3 +264,7 @@ export function getDateToForm(data: any, schema: Schema) {
 	})
 	return newVals
 }
+
+export function getKey(): string {
+	return Math.random().toString(32).slice(2)
+  }

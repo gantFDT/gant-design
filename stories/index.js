@@ -44,7 +44,7 @@ pages.map(page => {
 				display: 'flex',
 				alignItems: 'center'
 			}}>
-				<div style={{ fontSize: '30px', color: '#000' }}>{title}</div>
+				<div style={{ fontSize: '30px', color: '#000',fontWeight:'bold' }}>{title}</div>
 				{item.package && <Tag color="#108ee9" style={{ marginLeft: '10px' }}>可使用独立包</Tag>}
 				{item.package && <Tag style={{ marginLeft: '10px' }}>npm i {item.package} -S</Tag>}
 			</div>}

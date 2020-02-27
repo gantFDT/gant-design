@@ -8,14 +8,13 @@ import CodeDecorator from '../_util/CodeDecorator';
 
 const cmps = [
   () => {
-    const [value, setValue] = useState({ phone: "18811012138" })
+    const [value, setValue] = useState({ value: "18811012138" })
     const onSave = (id, value, cb) => {
       console.log(id, value);
       cb()
     }
     return <>
-      <InputCellPhone placeholder='不可编辑' allowEdit={false} value={{ phone: "18811012138" }} />
-      <InputCellPhone placeholder='可编辑' allowEdit={true} onSave={onSave} value={value} onChange={setValue} />
+      <InputCellPhone placeholder='可编辑' onSave={onSave} value={value} onChange={setValue} />
     </>
   },
   () => {
@@ -26,7 +25,7 @@ const cmps = [
     </>
   },
   () => {
-    const [value, setValue] = useState({ phone: '18811012138' })
+    const [value, setValue] = useState({ value: '18811012138' })
     const onSave = (id, value, cb) => {
       console.log(id, value);
       cb()
@@ -46,8 +45,8 @@ const config = {
   inline: true,
   children: [
     {
-      title: '是否可编辑',
-      describe: '在后面展示一个编辑按钮，通过修改allowEdit参数控制是否可以编辑，allowEdit默认true',
+      title: '基本使用',
+      describe: 'value已对象的形式传递，key表示区号，默认86，value表示电话号码',
       cmp: cmps[0]
     },
     {
