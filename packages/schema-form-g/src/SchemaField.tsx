@@ -1,5 +1,6 @@
 import './index.less'
 import React, { useMemo, useContext, useCallback, useEffect } from 'react'
+import classnames from 'classnames'
 import { EditStatus, Input } from '@data-cell'
 import { FormContext } from './index'
 import { Form, Col } from 'antd'
@@ -52,7 +53,7 @@ const SchemaField = (props: SchemaField) => {
 	return <Col {...colLayout}>
 		<Form.Item
 			label={title}
-			className={className}
+			className={classnames(className)}
 			style={style}
 			wrapperCol={wrapperColayout}
 			labelAlign={labelAlign}

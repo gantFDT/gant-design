@@ -35,14 +35,6 @@ UiSchema
 
 | 属性               | 说明                                      | 类型           | 默认值 |
 | ------------------ | ----------------------------------------- | -------------- | ------ |
-| ui:orders          | 字段排序，仅对form结构生效 (下个版本移除) | object         | {}     |
-| ui:col             | form中field布局方式 (下个版本移除)        | ColProps       | 24     |
-| ui:labelCol        | field中Label布局方式 (下个版本移除)       | ColProps       | 24     |
-| ui:wrapperCol      | field中Component布局方式 (下个版本移除)   | ColProps       | 24     |
-| ui:padding         | form的padding值   (下个版本移除)          | number         | 10     |
-| ui:gutter          | Form中filed之间的间隙 (下个版本移除)      | RowProps       | 10     |
-| ui:labelAlign      | label对齐方式     (下个版本移除)          | 'left'/'right' | 'left' |
-| ui:backgroundColor | 背景颜色     (下个版本移除)               | colorString    | '#fff' |
 | form:orders        | 字段排序，仅对form结构生效                | object         | {}     |
 | form:gutter        | Form中filed之间的间隙                     | RowProps       | 10     |
 | form:style         | Form style样式                            | CSS            | {}     |
