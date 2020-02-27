@@ -27,7 +27,8 @@ const withMoneyType = compose(
     }
   }),
   withProps(({ value = {}, format, onChange }) => {
-    const { currency = symbols[0], money } = value
+    console.log(value)
+    const { key: currency = symbols[0], value: money } = value
     let obj = {
       currency,
       money,
@@ -38,7 +39,10 @@ const withMoneyType = compose(
       if (money !== m) {
         // 改写money
         obj.money = m;
-        onChange(obj) // 可以不用调
+        onChange({
+          key: obj.currency,
+          value: m
+        }) // 可以不用调
       }
 
     }
@@ -48,12 +52,12 @@ const withMoneyType = compose(
     return {
       onCurrencyChange(currency) {
         onChange({
-          currency, money: oMoney
+          key: currency, value: oMoney
         })
       },
       onMoneyChange(money) {
         onChange({
-          currency: oCurrency, money
+          key: oCurrency, value: money
         })
       }
     }

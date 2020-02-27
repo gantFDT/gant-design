@@ -10,7 +10,7 @@ const reg = /^\d{0,8}$/
 const withCode = compose(
   toClass,
   withProps(({ value = {} }) => {
-    const { code = "010", phone } = value
+    const { key: code = "010", value: phone } = value
     return {
       code,
       phone
@@ -27,12 +27,12 @@ const withCode = compose(
       },
       onCodeChange(code) {
         onChange({
-          code, phone: oPhone
+          key: code, value: oPhone
         })
       },
       onPhoneChange(phone) {
         onChange({
-          code: oCode, phone
+          key: oCode, value: phone
         })
       }
     }
@@ -61,8 +61,8 @@ const withCode = compose(
       </Select>
     )
   })),
-  withPropsOnChange(['value'], ({ value }) => ({
-    confirmable: isPhone.test(String(value))
+  withPropsOnChange(['phone'], ({ phone }) => ({
+    confirmable: isPhone.test(String(phone))
   })),
   mapProps(({ filterOption, ...props }) => props)
 )
@@ -91,7 +91,7 @@ class TelePhone extends Component {
   }
 
   render() {
-    const { onEnter, onPhoneChange, phone, ...props } = this.props
+    const { onEnter, onPhoneChange, onCodeChange, phone, ...props } = this.props
 
     return (
       <Input {...props} value={phone} onKeyDown={this.onKeyDown} onChange={this.onChange} />
