@@ -1,8 +1,237 @@
-import React, { useState } from 'react'
-import { Divider, Tag, Radio, Switch, Button, EditStatus } from 'antd'
+import React, { useState, useCallback, useMemo } from 'react'
+import { Divider, Tag, Radio, Switch, Button, message } from 'antd'
 import SmartTable from '@packages/smart-table-g/src'
+import { Input, InputNumber, DatePicker, InputUrl, LocationSelector, InputCellPhone, InputEmail, InputLanguage, InputMoney, EditStatus, SwitchStatus } from '@packages/data-cell-g/src'
+import _ from 'lodash'
 import CodeDecorator from '../_util/CodeDecorator'
 import code from './code.js'
+
+function EditInlineUse() {
+  const smartTableSchema = [
+    {
+      fieldName: 'name',
+      title: '姓名'
+    },
+    {
+      fieldName: 'age',
+      title: '年龄',
+      componentType: 'InputNumber'
+    },
+    {
+      fieldName: 'cellPhone',
+      title: '手机号',
+      componentType: 'InputCellPhone'
+    },
+    {
+      fieldName: 'domain',
+      title: '个人主页',
+      componentType: 'InputUrl'
+    },
+    {
+      fieldName: 'email',
+      title: '邮箱',
+      componentType: 'InputEmail'
+    },
+    {
+      fieldName: 'bio',
+      title: '简介',
+      componentType: 'InputLanguage',
+      props: {
+        localeList: [
+          { locale: 'zh-CN', label: '中文' },
+          { locale: 'en-US', label: '英文' },
+        ]
+      }
+    },
+    {
+      fieldName: 'price',
+      title: '挂号费',
+      componentType: 'InputMoney'
+    },
+    {
+      fieldName: 'address',
+      title: '地址',
+      componentType: 'LocationSelector'
+    },
+    {
+      fieldName: 'birth',
+      title: '生日',
+      componentType: 'DataPicker'
+    }
+  ]
+
+  const data = [
+    {
+      name: '王医生',
+      age: 55,
+      cellPhone: { phone: "18010032938" },
+      domain: 'https://www.baidu.com/',
+      email: 'doc_wang@qq.com',
+      bio: { locale: 'zh-CN', value: '华西口腔主任医师。' },
+      price: { money: 29.9 },
+      address: ["CHN", "510000", "510100"],
+      birth: '1965-04-24',
+    },
+    {
+      name: '张医生',
+      age: 42,
+      cellPhone: { phone: "13583384957" },
+      domain: 'https://www.google.com/',
+      email: 'doc_zhang@163.com',
+      bio: { locale: 'zh-CN', value: '北京协和泌尿科主任医师。' },
+      price: { money: 19.9 },
+      address: ["CHN", "110000", "110101"],
+      birth: '1977-01-04',
+    },
+    {
+      name: '李医生',
+      age: 35,
+      cellPhone: { phone: "13777574848" },
+      domain: 'https://www.souhu.com/',
+      email: 'doc_li@souhu.com',
+      bio: { locale: 'zh-CN', value: '上海第一人民医院妇产科主治医师。' },
+      price: { money: 9.9 },
+      address: ["CHN", "310000", "310104"],
+      birth: '1986-02-14',
+    }
+  ]
+
+  const [stateData, setStateData] = useState(data)
+  const [editing, setEditing] = useState(EditStatus.CANCEL);
+  const getDifference = useCallback(
+    (current, old) => {
+      const result = []
+      for (let i = 0, len = current.length; i < len; i++) {
+        const { children = [], ...currentItem } = current[i]
+        const { children: oldChildren = [], ...oldItem } = old[i]
+        if (!_.isEqual(currentItem, oldItem)) {
+          result.push(currentItem)
+        }
+        if (children.length && oldChildren.length && !_.isEqual(children, oldChildren)) {
+          const diff = getDifference(children, oldChildren)
+          result.push.apply(result, diff)
+        }
+      }
+      return result
+    },
+    [],
+  )
+  const onSave = useCallback(
+    (newStateData) => {
+      const diff = getDifference(newStateData, stateData)
+      setStateData(newStateData)
+      console.log('差异数据：', diff)
+    },
+    [stateData],
+  )
+  const handleSave = useCallback(() => {
+    setEditing(EditStatus.SAVE)
+  }, [])
+  const getSchema = useMemo(() => {
+    return smartTableSchema.map(item => {
+      switch (item.fieldName) {
+        case 'name':
+          item['editConfig'] = {
+            render: (value, record, index) => {
+              return <Input type='input' />
+            },
+          };
+          break;
+        case 'age':
+          item['editConfig'] = {
+            render: (value, record, index) => {
+              return <InputNumber />
+            },
+          };
+          break;
+        case 'cellPhone':
+          item['editConfig'] = {
+            render: (value, record, index) => {
+              return <InputCellPhone />
+            },
+          };
+          break;
+        case 'domain':
+          item['editConfig'] = {
+            render: (value, record, index) => {
+              return <InputUrl/>
+            },
+          };
+          break;
+        case 'email':
+          item['editConfig'] = {
+            render: (value, record, index) => {
+              return <InputEmail/>
+            },
+          };
+          break;
+        case 'bio':
+          item['editConfig'] = {
+            render: (value, record, index) => {
+              return <InputLanguage/>
+            },
+          };
+          break;
+        case 'price':
+          item['editConfig'] = {
+            render: (value, record, index) => {
+              return <InputMoney/>
+            },
+          };
+          break;
+        case 'address':
+          item['editConfig'] = {
+            render: (value, record, index) => {
+              return <LocationSelector/>
+            },
+          };
+          break;
+        case 'birth':
+          item['editConfig'] = {
+            render: (value, record, index) => {
+              return <DatePicker/>
+            },
+          };
+          break;
+        default:
+          break;
+      }
+      return item
+    })
+  }, [])
+  return (
+    <div style={{ margin: 10 }}>
+      <SmartTable
+        tableKey="EditInlineUse"
+        rowKey="id"
+        schema={getSchema}
+        dataSource={stateData}
+        editable={editing}
+        bodyHeight={300}
+        onSave={onSave}
+        headerRight={<>
+          <Button
+            icon={editing === EditStatus.EDIT ? "roolback" : "edit"}
+            className="marginh5"
+            size="small"
+            onClick={() => { if (editing === EditStatus.CANCEL) { message.info('请单击单元格进行编辑') };setEditing(SwitchStatus) }}
+          >
+            {editing === EditStatus.EDIT ? "结束" : "进入"}编辑
+          </Button>
+          {editing === EditStatus.EDIT && <Button
+            icon="save"
+            className="marginh5"
+            size="small"
+            type="primary"
+            onClick={handleSave}
+          >
+            保存
+          </Button>}
+        </>}
+      />
+    </div>
+  )
+}
 
 const dataSource = [
   {
@@ -264,73 +493,6 @@ function LocalUse() {
   )
 }
 
-// function EditInlineUse() {
-//   const tr = str => str;
-//   return (
-//     <div style={{ margin: 10 }}>
-//       <SmartTable
-//         tableKey="EditInlineUse"
-//         rowKey="id"
-//         schema={getSchema}
-//         dataSource={stateData}
-//         editable={editing}
-//         bodyHeight={bodyHeight}
-//         onSave={onSave}
-//         headerRight={<>
-//           <Button
-//             icon={editing === EditStatus.EDIT ? "roolback" : "edit"}
-//             className="marginh5"
-//             size="small"
-//             onClick={() => { if (editing === EditStatus.CANCEL) { message.info(tr('请单击单元格进行编辑')) } setEditing(SwitchStatus) }}
-//           >
-//             {editing === EditStatus.EDIT ? tr("结束") : tr("进入")}{tr('编辑')}
-//           </Button>
-//           {editing === EditStatus.EDIT && <Button
-//             icon="save"
-//             className="marginh5"
-//             size="small"
-//             type="primary"
-//             onClick={handleSave}
-//             loading={updateLoading}
-//           >
-//             {tr('保存')}
-//           </Button>}
-
-//           {editing != EditStatus.EDIT && <>
-//             <Dropdown
-//               disabled={_.isEmpty(selectedRows)}
-//               overlay={
-//                 <Menu>
-//                   <Menu.Item onClick={() => handleShowCreate('normal')}>{tr('创建普通单位')}</Menu.Item>
-//                   <Menu.Item onClick={() => handleShowCreate('operation')}>{tr('创建运算单位')}</Menu.Item>
-//                 </Menu>
-//               }
-//               placement="bottomCenter"
-//             >
-//               <Button
-//                 size="small"
-//                 icon="plus"
-//                 className="marginh5"
-//               />
-//             </Dropdown>
-
-//             <Tooltip title={tr("删除")}>
-//               <Button
-//                 size="small"
-//                 icon="delete"
-//                 type="danger"
-//                 className="marginh5"
-//                 disabled={_.isEmpty(selectedRows)}
-//                 onClick={handleremove}
-//               />
-//             </Tooltip>
-//           </>
-//           }
-//         </>}
-//       />
-//     </div>
-//   )
-// }
 
 const config = {
   codes: code,
@@ -366,9 +528,14 @@ const config = {
       cmp: MultiViewUse
     },
     {
-      title: '支持国际化',
+      title: '国际化用法',
       describe: '可进行语言的切换，同时支持自定义',
       cmp: LocalUse
+    },
+    {
+      title: '行内编辑用法',
+      describe: '可进行编辑状态的切换，一键进入编辑模式',
+      cmp: EditInlineUse
     }
   ]
 };
