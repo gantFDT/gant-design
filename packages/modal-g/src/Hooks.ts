@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 
 function useDrag(x: number, y: number, onDrag = (c: { x: number, y: number }) => { }) {
-    const [dragging, setDragging] = useState(false);
+    const [dragging, setDragging] = useState(false)
     const [initialDragState, setInitialDragState] = useState({
         initX: 0,
         initY: 0,
         mouseDownX: 0,
         mouseDownY: 0,
-    });
+    })
 
     const onMouseDown = useCallback((e: React.MouseEvent) => {
         e.preventDefault()
@@ -109,7 +109,7 @@ function useResize(x: number, y: number, width: number, height: number, onResize
 }
 
 function usePrev(value: boolean) {
-    const ref = useRef(value);
+    const ref = useRef(value)
     useEffect(() => { ref.current = value })
     return ref.current
 }
