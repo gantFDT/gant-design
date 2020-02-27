@@ -23,10 +23,13 @@ const cmps = [
   () => {
     const [value, setValue] = useState(0)
     const addonBefore = (
-      <>RMB</>
+      <>重量</>
+    )
+    const addonAfter = (
+      <>KG</>
     )
     return <>
-      <InputNumber placeholder='金额' edit={EditStatus.EDIT} value={value} onChange={setValue} onSave={(id, value, cb) => cb()} addonBefore={addonBefore} />
+      <InputNumber placeholder='金额' edit={EditStatus.EDIT} value={value} onChange={setValue} onSave={(id, value, cb) => cb()} addonBefore={addonBefore} addonAfter={addonAfter} />
     </>
   },
 ]
@@ -50,7 +53,7 @@ const config = {
       cmp: cmps[1]
     },
     {
-      title: '编辑模式下的前置组件',
+      title: '前后置组件',
       describe: '',
       cmp: cmps[2]
     },
