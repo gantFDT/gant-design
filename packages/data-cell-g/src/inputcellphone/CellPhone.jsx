@@ -17,14 +17,14 @@ const withPhoneCode = compose(
     const { code = "86", phone } = value
     return {
       code,
-      value: phone
+      phone
     }
   }),
   defaultProps({
     placeholder: '请输入手机号码', // withEdit中用做空值的展示
     allowClear: true,
   }),
-  withProps(({ onChange, value: oPhone, code: oCode }) => {
+  withProps(({ onChange, phone: oPhone, code: oCode }) => {
     return {
       onCodeChange(code) {
         if (!onChange) return
@@ -63,10 +63,10 @@ const withPhoneCode = compose(
 
 const withValidate = compose(
   withHandlers({
-    validateValue: ({ value }) => () => !value || (value.length === 11 && reg.test(value))
+    validateValue: ({ phone }) => () => !phone || (phone.length === 11 && reg.test(phone))
   }),
   withPropsOnChange( // 监听value的变化，并修改是否可以提交的状态
-    ['value'],
+    ['phone'],
     ({ validateValue }) => ({
       confirmable: validateValue()
     })
@@ -84,7 +84,7 @@ const withValidate = compose(
 @compose(
   withPhoneCode,
   withValidate,
-  withEdit(({ code, value }) => value ? `+${code} ${phoneFormatter(value)}` : ''),
+  withEdit(({ code, phone }) => phone ? `+${code} ${phone}` : ''),
 )
 class CellPhone extends Component {
 
@@ -129,7 +129,7 @@ class CellPhone extends Component {
   render() {
     const { onPhoneChange, validateValue, onEnter, ...props } = this.props
     const { value } = this.state
-    let computedValue = get(props, 'value', value)
+    let computedValue = get(props, 'phone', value)
     return (
       <AntInput {...props} value={computedValue} onKeyDown={this.onKeyDown} onChange={this.onChange} />
     );
