@@ -184,6 +184,7 @@ function EditInlineUse() {
       <SmartTable
         tableKey="EditInlineUse"
         rowKey="id"
+        title="行内编辑"
         schema={tableSchema}
         dataSource={stateData}
         editable={editing}
