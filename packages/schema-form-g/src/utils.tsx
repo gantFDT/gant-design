@@ -264,3 +264,7 @@ export function getDateToForm(data: any, schema: Schema) {
 	})
 	return newVals
 }
+
+export function getKey(): string {
+	return Math.random().toString(32).slice(2)
+  }

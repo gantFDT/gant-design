@@ -2,7 +2,7 @@ import React from 'react'
 import { WrappedFormUtils } from 'antd/es/form/Form'
 import { get, isEqual, isPlainObject, intersection, set, cloneDeep } from 'lodash'
 import moment from 'moment'
-
+import { getKey } from './utils'
 import { compose, renameProp, withPropsOnChange, withStateHandlers } from 'recompose'
 import { Props, Schema, Types } from './interface'
 
@@ -112,6 +112,7 @@ export const refHoc = compose(
 )
 
 export default compose(
+    withPropsOnChange(['schema'], (props: Inner) => ({ key: getKey() })),
     withStateHandlers(
         ({ schema }: Props) => ({ schemaState: schema }),
         {
