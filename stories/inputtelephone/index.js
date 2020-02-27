@@ -7,17 +7,8 @@ import { WrapperValue, WrapperEdit, onSave } from '../_util/composeUseHooks'
 
 
 const codeList = [
-  `const [value, setValue] = useState()
-  return <InputTelePhone value={value} onChange={(v) => setValue(v)} />`,
-  `
-  const [edit, setEdit] = useState(EditStatus.CANCEL)
-return (
-  <>
-    <Button onClick={() => setEdit(SwitchStatus)} style={{ marginBottom: 10 }}>切换</Button>
-    <InputTelePhone edit={edit} />
-  </>
-)
-  `
+  `const [value, setValue] = useState({ code: "0832", phone: "4300698" })
+  return <InputTelePhone value={value} onChange={setValue} />`,
 ]
 
 const config = {
@@ -35,20 +26,8 @@ ReactDOM.render(<Demo />, mountNode)`),
   children: [
     {
       title: '基本使用',
-      describe: '固定电话基本格式',
-      cmp: WrapperValue('7897897')(({ value, setValue }) => <InputTelePhone value={value} onChange={(v) => {console.log(v);setValue(v)}} onSave={onSave} />)
-    },
-    {
-      title: '编辑受控',
-      describe: '基本使用',
-      cmp: WrapperEdit(({ edit, setEdit }) => {
-        return (
-          <>
-            <Button onClick={() => setEdit(SwitchStatus)} style={{ marginBottom: 10 }}>切换</Button>
-            <InputTelePhone edit={edit} />
-          </>
-        )
-      })
+      describe: '固定电话基本格式，可以指定区号。国内座机号最多8位',
+      cmp: WrapperValue({ code: '0832', phone: '4300698' })(({ value, setValue }) => <InputTelePhone value={value} onChange={setValue} onSave={onSave} />)
     },
   ]
 }

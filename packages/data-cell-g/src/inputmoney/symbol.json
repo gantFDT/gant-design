@@ -1,3 +1,10 @@
-{
-    "RMB": "￥"
-}
+[
+    "CNY",
+    "JPY",
+    "SGD",
+    "INR",
+    "AUD",
+    "EUR",
+    "SUR",
+    "USD"
+]
