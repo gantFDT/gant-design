@@ -34,11 +34,11 @@ import {InputNumber, EditStatus} from '@data-cell';
 
 const Demo = () => {
   const [value, setValue] = useState(0)
-  const addonBefore = (
-    <>RMB</>
+  const addonAfter = (
+    <>KG</>
   )
   return <>
-    <InputNumber placeholder='金额' edit={EditStatus.EDIT} value={value} onChange={setValue} onSave={(id, value, cb) => cb()} addonBefore={addonBefore} />
+  <InputNumber placeholder='金额' edit={EditStatus.EDIT} value={value} onChange={setValue} onSave={(id, value, cb) => cb()} addonAfter={addonAfter} />
   </>
 }
 
