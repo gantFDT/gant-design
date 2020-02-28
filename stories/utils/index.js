@@ -27,13 +27,21 @@ function getTypeFun(props) {
     </div>)
 }
 function deepCopy4JSONFun(props) {
+  const obj1 = {
+    "name":'sune',
+    "age":18
+  }
+
+  const obj2 = deepCopy4JSON(obj1);
+  
   return (<div>JSON深拷贝
-    {/* {`{name:"sune"}`}:{deepCopy4JSON({name:"sune"})} */}
+  {/* {JSON.stringify(obj1)}<br/> */}
+    {/* obj2 : {obj2} */}
     </div>)
 }
 function JSONisEqualFun(props) {
-  return (<div>JSON数据相等
-    {/* {`{age:30}  {age:18}`}:{JSONisEqual({},{})} */}
+  return (<div>JSON数据{JSON.stringify({age:30})} 和 {JSON.stringify({age:18})} 是否相等
+    :{JSONisEqual({age:30},{age:18}) ? '是' : '否'}
     </div>)
 }
 function getIEVersion(props) {
@@ -44,7 +52,7 @@ function getIsIE(props) {
 }
 function getCookieFun(props) {
   return (<div>获取token的cookie:
-    {/* {getCookie('token')} */}
+    {/* {getCookie('token')?getCookie('token'):'暂无相关的cookie'} */}
     </div>)
 }
 function delCookieFun(props) {
@@ -53,33 +61,33 @@ function delCookieFun(props) {
     </div>)
 }
 function setCookieFun(props) {
-  return (<div>设置token的cookie:
-    {/* {setCookie('token')} */}
+  return (<div>设置token的cookie
+    {setCookie('token','sune123456789')}
     </div>)
 }
 function throttleFun(props) {
-  return (<div>节流函数:
+  return (<div>节流函数
     {/* {throttle(300)} */}
     </div>)
 }
 function getKeyFun(props) {
   return (<div>获取一个随机Key:
-    {/* {getKey()} */}
+    {getKey()}
     </div>)
 }
 function generateUuidFun(props) {
   return (<div>生成uuid:
-    {/* {generateUuid()} */}
+    {generateUuid(32)}
     </div>)
 }
 function randomStringFun(props) {
   return (<div>生成随机字符串:
-    {/* {randomString(6)} */}
+    {randomString(6)}
     </div>)
 }
 function isParamsEmptyFun(props) {
-  return (<div>判断参数是不是空的:
-    {/* {isParamsEmpty('token')} */}
+  return (<div>判断参数{JSON.stringify({age:30})}是不是空的,参数必须为object:
+    {isParamsEmpty({}) ? '是' : '否'}
     </div>)
 }
 function getFileUnitFun(props) {
@@ -93,16 +101,18 @@ function getIconNameByFileNameFun(props) {
     </div>)
 }
 function spanCalculateFun(props) {
-  return (<div>根据width换算栅格占位格数:{spanCalculate()}</div>)
+  return (<div>根据width换算栅格占位格数:
+    {/* {spanCalculate()} */}
+    </div>)
 }
 function cssVar2camelFun(props) {
-  return (<div>将css变量格式装换成小驼峰:
-    {/* {cssVar2camel('token-styles')} */}
+  return (<div>将css变量格式'--primary-color:blue;--sider-menu-bg:red'装换成小驼峰:
+    {/* {cssVar2camel('primary-color:blue','-')} */}
     </div>)
 }
 function camel2cssVarFun(props) {
   return (<div>将小驼峰转换成css变量格式:
-    {/* {camel2cssVar('tokenStyles')} */}
+    {/* {camel2cssVar({primaryColor:'blue',siderMenuBg:'red'})} */}
     </div>)
 }
 function resolveLocationQueryFun(props) {

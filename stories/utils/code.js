@@ -41,24 +41,32 @@ ReactDOM.render(
 const deepCopy4JSON = `
 import { deepCopy4JSON } from 'util-g';
 
-const [deepCopy4JSON,setDeepCopy4JSON] = useState()
+const obj1 = {
+  arr:[
+    {
+      name:'sune',
+      age:18
+    }
+  ],
+  fun:() => {console.log(55)}
+}
 
-useEffect = (() => setDeepCopy4JSON(deepCopy4JSON()),[])
+const obj2 = deepCopy4JSON(obj1);
 
 ReactDOM.render(
-  <div>JSON深拷贝：{deepCopy4JSON()}</div>,
+  <div>JSON深拷贝{JSON.stringify(obj1)}<br/>
+    obj2 : {obj2}
+    </div>,
   mountNode
 )
 `
 const JSONisEqual = `
 import { JSONisEqual } from 'util-g';
 
-const [JSONisEqual,setJSONisEqual] = useState()
-
-useEffect = (() => setJSONisEqual(JSONisEqual()),[])
-
 ReactDOM.render(
-  <div>JSON数据相等:{JSONisEqual}</div>,
+  <div>JSON数据{JSON.stringify({age:30})} 和 {JSON.stringify({age:18})} 是否相等
+    :{JSONisEqual({age:30},{age:18})}
+    </div>,
   mountNode
 )
 `
@@ -90,10 +98,6 @@ ReactDOM.render(
 const getCookie = `
 import { getCookie } from 'util-g';
 
-const [getCookie,setGetCookie] = useState()
-
-useEffect = (() => setGetCookie(getCookie()),[])
-
 ReactDOM.render(
   <div>获取cookie:{getCookie('token')}</div>,
   mountNode
@@ -101,10 +105,6 @@ ReactDOM.render(
 `
 const delCookie = `
 import { delCookie } from 'util-g';
-
-const [delCookie,setDelCookie] = useState()
-
-useEffect = (() => setDelCookie(delCookie()),[])
 
 ReactDOM.render(
   <div>删除cookie{delCookie('token')}</div>,
@@ -114,72 +114,52 @@ ReactDOM.render(
 const setCookie = `
 import { setCookie } from 'util-g';
 
-const [myCookie,setMyCookie] = useState()
-
-useEffect = (() => setMyCookie(setCookie('token','sune123456789hash')),[])
 
 ReactDOM.render(
-  <div>设置cookie:{myCookie}</div>,
+  <div>设置cookie:{setCookie('token','sune123456789')}</div>,
   mountNode
 )
 `
 const throttle = `
 import { throttle } from 'util-g';
 
-const [throttle,setThrottle] = useState()
-
-useEffect = (() => setThrottle(throttle),[])
 
 ReactDOM.render(
-  <div>节流函数:{throttle}</div>,
+  <div>节流函数</div>,
   mountNode
 )
 `
 const getKey = `
 import { getKey } from 'util-g';
 
-const [getKey,setGetKey] = useState()
-
-useEffect = (() => setGetKey(getKey()),[])
 
 ReactDOM.render(
-  <div>获取一个随机Key:{getKey}</div>,
+  <div>获取一个随机Key:{getKey()}</div>,
   mountNode
 )
 `
 const generateUuid = `
 import { generateUuid } from 'util-g';
 
-const [generateUuid,setGenerateUuid] = useState()
-
-useEffect = (() => setGenerateUuid(generateUuid()),[])
-
 ReactDOM.render(
-  <div>生成uuid为：{generateUuid}</div>,
+  <div>生成uuid为：{generateUuid(32)}</div>,
   mountNode
 )
 `
 const randomString = `
 import { randomString } from 'util-g';
 
-const [randomString,setrandomString] = useState()
-
-useEffect = (() => setrandomString(randomString(6)),[])
-
 ReactDOM.render(
-  <div>生成随机字符串:{randomString}</div>,
+  <div>生成随机字符串:{randomString(6)}</div>,
   mountNode
 )
 `
 const isParamsEmpty = `
 import { isParamsEmpty } from 'util-g';
 
-const [isParamsEmpty,setisParamsEmpty] = useState()
-
-useEffect = (() => setisParamsEmpty(isParamsEmpty()),[])
-
-ReactDOM.render(
-  <div>判断参数是不是空的:{isParamsEmpty}</div>,
+ReactDOM.render(<div>判断参数{JSON.stringify({age:30})}是不是空的,参数必须为object:
+  {isParamsEmpty({age:30}) ? '是' : '否'}
+  </div>,
   mountNode
 )
 `
