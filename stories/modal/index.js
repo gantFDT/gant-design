@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, ConfigProvider, Modal as AntModal } from 'antd'
+import { Button, ConfigProvider } from 'antd'
 import Modal, { ResizableModal, ResizableProvider } from '@packages/modal-g/src'
 import zhCN from 'antd/es/locale/zh_CN'
 import CodeDecorator from '../_util/CodeDecorator'
@@ -45,7 +45,7 @@ function CustomUse() {
                 onSizeChange={onSizeChange}
             >
                 <div>
-                    <h4>动态宽高获取:</h4>
+                    <h4>动态宽高获取（包含header+footer）:</h4>
                     <div>{`width:${widthAndHei[0]}px`}</div>
                     <div>{`height:${widthAndHei[1]}px`}</div>
                 </div>
@@ -82,7 +82,7 @@ function MaximizeUse() {
             </div>
             <Modal
                 title='最大化弹窗'
-                itemState={{ maximized: true }}
+                itemState={{ maximize: true }}
                 visible={visible}
                 onCancel={() => { setVisible(false) }}
             >
@@ -110,6 +110,26 @@ function ForbiddenUse() {
     )
 }
 
+function KeepState() {
+    const [visible, setVisible] = useState(false)
+    return (
+        <div style={{ margin: 10 }}>
+            <div style={{ marginBottom: 10 }}>
+                <Button size="small" onClick={() => { setVisible(true) }}>触发弹窗</Button>
+            </div>
+            <ConfigProvider locale={zhCN}>
+                <Modal
+                    title='默认弹窗'
+                    visible={visible}
+                    itemState={{ keepStateOnClose: true }}
+                    onCancel={() => { setVisible(false) }}
+                >
+                    挂载期-存储弹窗状态（宽高、定位、最大化）
+            </Modal>
+            </ConfigProvider>
+        </div>
+    )
+}
 
 function multipleModalsUse() {
     const [visible, setVisible] = useState(false)
@@ -145,33 +165,13 @@ function multipleModalsUse() {
     )
 }
 
-function KeepState() {
-    const [visible, setVisible] = useState(false)
-    return (
-        <div style={{ margin: 10 }}>
-            <div style={{ marginBottom: 10 }}>
-                <Button size="small" onClick={() => { setVisible(true) }}>触发弹窗</Button>
-            </div>
-            <ConfigProvider locale={zhCN}>
-                <Modal
-                    title='默认弹窗'
-                    visible={visible}
-                    itemState={{ keepModalStateOnClose: true }}
-                    onCancel={() => { setVisible(false) }}
-                >
-                    挂载期-存储弹窗状态（宽高、定位）
-            </Modal>
-            </ConfigProvider>
-        </div>
-    )
-}
-
 const config = {
     codes: code,
     useage: `
   <b>支持拖拽移动和大小伸缩</b></br>
   <b>窗口化和全屏化状态的切换</b></br>
   <b>实时响应浏览器窗口变化</b></br>
+  <b>支持挂载期弹窗状态留存</b></br>
   <b>可支持非模态窗口模式等功能，并支持同屏展示多个弹出框</b></br>
   `,
     inline: true,
@@ -202,14 +202,14 @@ const config = {
             cmp: ForbiddenUse
         },
         {
-            title: '同屏多弹窗模式',
-            describe: '支持同屏多非模态型的弹窗，可通过点击改变当前选中弹窗层级',
-            cmp: multipleModalsUse
-        },
-        {
             title: '状态存储',
             describe: '支持在组件挂载期存储弹窗关闭前的定位与尺寸信息',
             cmp: KeepState
+        },
+        {
+            title: '同屏多弹窗模式',
+            describe: '支持同屏多非模态型的弹窗，可通过点击改变当前选中弹窗层级',
+            cmp: multipleModalsUse
         },
     ]
 }

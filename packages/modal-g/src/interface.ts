@@ -17,12 +17,12 @@ export interface ModalStateProps {
     height?: number,
     zIndex?: number,
     visible?: boolean,
-    maximized?: boolean, // 默认窗口是否最大化
-    keepModalStateOnClose?: boolean //是否在组件挂载期保留弹窗关闭前的定位与尺寸信息
+    maximize?: boolean, // 默认窗口是否最大化
+    keepStateOnClose?: boolean //是否在组件挂载期保留弹窗关闭前的定位与尺寸信息
 }
 
 export interface PrivateModalStateProps extends ModalStateProps {
-    maximize?: boolean,  // 内部记录当前弹窗的状态
+    isMaximized?: boolean,  // 内部记录当前弹窗的状态
     inital?: PositionSizeProps, //存储用户传递的弹窗信息
     history?: PositionSizeProps //存储最大化切换时小窗口的定位与尺寸信息
 }
