@@ -1,263 +1,367 @@
 const hex2hsl = `
-import { hex2hsl } from 'util-g';
+/**
+ * 将十六进制颜色值转变为HSL颜色值
+ * @param {string} hexColor 十六进制颜色值
+ * @returns {(string | number|string[])} HSL颜色值
+ */
+export const hex2hsl = (hexColor: string): string | number|string[] => {
+  let sColor = hexColor.toLowerCase();
+  //十六进制颜色值的正则表达式
+  const reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/;
+  // 如果是16进制颜色
+  if (sColor && reg.test(sColor)) {
+      if (sColor.length === 4) {
+          let sColorNew = "#";
+          for (let i=1; i<4; i+=1) {
+              sColorNew += sColor.slice(i, i+1).concat(sColor.slice(i, i+1));    
+          }
+          sColor = sColorNew;
+      }
+      //处理六位的颜色值
+      const sColorChange = [];
+      for (let i=1; i<7; i+=2) {
+          sColorChange.push(parseInt("0x"+sColor.slice(i, i+2)));    
+      }
 
-const [myHex2hsl,setMyHex2hsl] = useState()
+      let [r, g, b] = sColorChange;
+      r /= 255, g /= 255, b /= 255;
+      const max = Math.max(r, g, b), min = Math.min(r, g, b);
+      let h, s, l = (max + min) / 2;
 
-useEffect = (() => setMyHex2hsl(hex2hsl('#CCFFFF')),[])
+      if (max == min){ 
+          h = s = 0; // achromatic
+      } else {
+          const d = max - min;
+          s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+          switch(max) {
+              case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+              case g: h = (b - r) / d + 2; break;
+              case b: h = (r - g) / d + 4; break;
+          }
+          h /= 6;
+      }
 
-ReactDOM.render(
-  <div>十六进制颜色值"#CCFFFF"转变为HSL颜色值为：{myHex2hsl}</div>,
-  mountNode
-)
+      return [h, s, l];
+  }
+  return sColor;
+};
 `
 const guid = `
-import { guid } from 'util-g';
-
-const [myGuid,setMyGuid] = useState()
-
-useEffect = (() => setMyGuid(guid()),[])
-
-ReactDOM.render(
-  <div>生成uuid为：{myGuid}</div>,
-  mountNode
-)
+/**
+ * 生成uuid
+ */
+export function guid() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    var r = Math.random() * 16 | 0,
+      v = c == 'x' ? r : (r & 0x3 | 0x8)
+    return v.toString(16)
+  })
+}
 `
 const getType = `
-import { getType } from 'util-g';
+/**
+ * 判断类型
+ */
+export const getType = (obj: any) => Object.prototype.toString.call(obj).slice(8, -1);
 
-const [a,setA] = useState(1);
-const [b,setB] = useState("abc");
-const [c,setC] = useState({"age":24});
-
-ReactDOM.render(
-  <div>判断{a},{b},{JSON.stringify(c)}的类型<br/> 
-    a : {getType(a)}<br/>
-    b : {getType(b)}<br/>
-    c : {getType(c)}
-    </div>
-  mountNode
-)
 `
 const deepCopy4JSON = `
-import { deepCopy4JSON } from 'util-g';
+/**
+ * JSON深拷贝
+ */
+export const deepCopy4JSON: <T>(data: T) => T = (obj) => JSON.parse(JSON.stringify(obj));
 
-const obj1 = {
-  arr:[
-    {
-      name:'sune',
-      age:18
-    }
-  ],
-  fun:() => {console.log(55)}
-}
-
-const obj2 = deepCopy4JSON(obj1);
-
-ReactDOM.render(
-  <div>JSON深拷贝{JSON.stringify(obj1)}<br/>
-    obj2 : {obj2}
-    </div>,
-  mountNode
-)
 `
 const JSONisEqual = `
-import { JSONisEqual } from 'util-g';
 
-ReactDOM.render(
-  <div>JSON数据{JSON.stringify({age:30})} 和 {JSON.stringify({age:18})} 是否相等
-    :{JSONisEqual({age:30},{age:18})}
-    </div>,
-  mountNode
-)
+/**
+ * JSON数据相等
+ */
+export const JSONisEqual = (a: object , b: object) => JSON.stringify(a) === JSON.stringify(b);
+
 `
 
 const IEVersion = `
-import { IEVersion } from 'util-g';
 
-const [ieVersion,setIeVersion] = useState()
+/**
+ * 判断ie版本
+ */
+export function IEVersion() {
+  const { userAgent } = navigator; // 取得浏览器的userAgent字符串
+  const isIE = userAgent.indexOf("compatible") > -1 && userAgent.indexOf("MSIE") > -1; // 判断是否IE<11浏览器
+  const isEdge = userAgent.indexOf("Edge") > -1 && !isIE; // 判断是否IE的Edge浏览器
+  const isIE11 = userAgent.indexOf('Trident') > -1 && userAgent.indexOf("rv:11.0") > -1;
+  if (isIE) {
+    const reIE = new RegExp("MSIE (\\d+\\.\\d+);");
+    reIE.test(userAgent);
+    const fIEVersion = parseFloat(RegExp.$1);
+    if (fIEVersion == 7) {
+      return 7;
+    } if (fIEVersion == 8) {
+      return 8;
+    } if (fIEVersion == 9) {
+      return 9;
+    } if (fIEVersion == 10) {
+      return 10;
+    }
+    return 6; // IE版本<=7
 
-useEffect = (() => setIeVersion(IEVersion()),[])
+  } if (isEdge) {
+    return 'edge'; // edge
+  } if (isIE11) {
+    return 11; // IE11
+  }
+  return -1; // 不是ie浏览器
 
-ReactDOM.render(
-  <div>当前IE版本为：{ieVersion}</div>,
-  mountNode
-)
+}
 `
 const isIE = `
-import { isIE } from 'util-g';
-
-const [isIE,setIsIE] = useState()
-
-useEffect = (() => setIsIE(isIE()),[])
-
-ReactDOM.render(
-  <div>当前是否为ie浏览器：{isIE}</div>,
-  mountNode
-)
+/**
+ * 判断是否为ie浏览器
+ */
+export function isIE() {
+  let ieVersion = IEVersion()
+  return ieVersion !== -1 && ieVersion !== 'edge'
+}
 `
 const getCookie = `
-import { getCookie } from 'util-g';
-
-ReactDOM.render(
-  <div>获取cookie:{getCookie('token')}</div>,
-  mountNode
-)
+// 获取cookie、
+export function getCookie(name: string): string | null {
+  var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+  if (arr = document.cookie.match(reg)) {
+    return unescape(arr[2]);
+  } else {
+    return null;
+  }
+}
 `
 const delCookie = `
-import { delCookie } from 'util-g';
-
-ReactDOM.render(
-  <div>删除cookie{delCookie('token')}</div>,
-  mountNode
-)
+// 删除cookie
+export function delCookie(name: string): void {
+  var exp = new Date();
+  exp.setTime(exp.getTime() - 1000000);
+  // 这里需要判断一下cookie是否存在
+  var c = getCookie(name);
+  if (c != null) {
+    document.cookie = name + "=" + c + ";expires=" + exp.toUTCString() + ";path=/";
+  }
+}
 `
 const setCookie = `
-import { setCookie } from 'util-g';
-
-
-ReactDOM.render(
-  <div>设置cookie:{setCookie('token','sune123456789')}</div>,
-  mountNode
-)
+// 设置cookie,增加到实例方便全局调用
+export function setCookie(name: string, value: string, time: any = '', path: string = ''): void {
+  if (time && path) {
+    var strsec = time * 1000;
+    var exp = new Date();
+    exp.setTime(exp.getTime() + strsec * 1);
+    document.cookie = name + "=" + escape(value) + ";expires=" + exp.toUTCString() + ";path=" + path;
+  } else if (time) {
+    var strsec = time * 1000;
+    var exp = new Date();
+    exp.setTime(exp.getTime() + strsec * 1);
+    document.cookie = name + "=" + escape(value) + ";expires=" + exp.toUTCString();
+  } else if (path) {
+    document.cookie = name + "=" + escape(value) + ";path=" + path;
+  } else {
+    document.cookie = name + "=" + escape(value)
+  }
+}
 `
 const throttle = `
-import { throttle } from 'util-g';
+/**
+ * 节流函数
+ * 只能用于普通函数，不能再class中的方法上使用
+ * @param {timestamp} time 延迟毫秒数
+ * @returns function wrapper
+ */
+export function throttle(time: number): (fn: any) => any {
+  return function wrapper(fn) {
+    let timer: any = null;
+    /**
+     * @returns 返回替代函数
+     */
+    return function wrapperInner(this: any, ...params: any) {
 
-
-ReactDOM.render(
-  <div>节流函数</div>,
-  mountNode
-)
+      // 不精确，可以改进
+      if (!timer) {
+        timer = setTimeout(() => {
+          timer = null;
+          fn.apply(this, params);
+        }, time);
+      }
+    };
+  };
+}
 `
 const getKey = `
-import { getKey } from 'util-g';
-
-
-ReactDOM.render(
-  <div>获取一个随机Key:{getKey()}</div>,
-  mountNode
-)
+/**
+ * 获取一个随机Key
+ */
+export function getKey(): string {
+  return Math.random().toString(32).slice(2)
+}
 `
 const generateUuid = `
-import { generateUuid } from 'util-g';
 
-ReactDOM.render(
-  <div>生成uuid为：{generateUuid(32)}</div>,
-  mountNode
-)
+/*
+生成uuid
+len:number  长度
+radix:number  进制
+*/
+export function generateUuid(len: number = 32, radix: number = 10): string {
+  const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
+  const uuid = []; let i;
+  radix = radix || chars.length;
+
+  if (len) {
+    // Compact form
+    for (i = 0; i < len; i++) uuid[i] = chars[0 | Math.random() * radix];
+  } else {
+    // rfc4122, version 4 form
+    let r;
+
+    // rfc4122 requires these characters
+    uuid[8] = uuid[13] = uuid[18] = uuid[23] = '-';
+    uuid[14] = '4';
+
+    // Fill in random data.  At i==19 set the high bits of clock sequence as
+    // per rfc4122, sec. 4.1.5
+    for (i = 0; i < 36; i++) {
+      if (!uuid[i]) {
+        r = 0 | Math.random() * 16;
+        uuid[i] = chars[(i == 19) ? (r & 0x3) | 0x8 : r];
+      }
+    }
+  }
+
+  return uuid.join('');
+}
 `
 const randomString = `
-import { randomString } from 'util-g';
 
-ReactDOM.render(
-  <div>生成随机字符串:{randomString(6)}</div>,
-  mountNode
-)
+/*
+生成随机字符串
+len:number  长度
+*/
+export function randomString(len: number = 48) {
+  const chars = 'abcdefhijkmnprstwxyz2345678';
+  let pwd = '', i, maxPos = chars.length;
+  for (i = 0; i < len; i++) {
+    pwd += chars.charAt(Math.floor(Math.random() * maxPos));
+  }
+  return pwd;
+}
+
 `
 const isParamsEmpty = `
-import { isParamsEmpty } from 'util-g';
 
-ReactDOM.render(<div>判断参数{JSON.stringify({age:30})}是不是空的,参数必须为object:
-  {isParamsEmpty({age:30}) ? '是' : '否'}
-  </div>,
-  mountNode
-)
+/**
+ * 判断参数是不是空的 // {xxxx:undefined} => 空的
+ */
+export const isParamsEmpty = (value: object) => {
+  if (getType(value) !== 'Object') throw '只能判断Object类型';
+  const entries = Object.entries(value);
+  return !entries.length || Object.entries(value).every(([key, value]) => value === undefined)
+};
+
+
 `
-const getFileUnit = `
-import { getFileUnit } from 'util-g';
 
-const [getFileUnit,setgetFileUnit] = useState()
-
-useEffect = (() => setgetFileUnit(getFileUnit()),[])
-
-ReactDOM.render(
-  <div>根据文件获取大小获取对应带单位的字符串:{getFileUnit}</div>,
-  mountNode
-)
-`
-const getIconNameByFileName = `
-import { getIconNameByFileName } from 'util-g';
-
-const [getIconNameByFileName,setgetIconNameByFileName] = useState()
-
-useEffect = (() => setgetIconNameByFileName(getIconNameByFileName()),[])
-
-ReactDOM.render(
-  <div>根据文件后缀名获取对应的图标名称:{getIconNameByFileName}</div>,
-  mountNode
-)
-`
 const spanCalculate = `
-import { spanCalculate } from 'util-g';
+// 根据width换算栅格占位格数
+export function spanCalculate(width: number): number {
+  if (width < 576) {
+    return 24
+  } if (width < 768) {
+    return 12
+  } if (width < 992) {
+    return 8
+  } if (width < 1200) {
+    return 8
+  } if (width < 1600) {
+    return 6
+  }
+  return 6
 
-const [spanCalculate,setspanCalculate] = useState()
+};
 
-useEffect = (() => setspanCalculate(spanCalculate()),[])
-
-ReactDOM.render(
-  <div>根据width换算栅格占位格数:{spanCalculate}</div>,
-  mountNode
-)
 `
-const cssVar2camel = `
-import { cssVar2camel } from 'util-g';
 
-const [cssVar2camel,setcssVar2camel] = useState()
-
-useEffect = (() => setcssVar2camel(cssVar2camel()),[])
-
-ReactDOM.render(
-  <div>将css变量格式装换成小驼峰:{cssVar2camel}</div>,
-  mountNode
-)
-`
-const camel2cssVar = `
-import { camel2cssVar } from 'util-g';
-
-const [camel2cssVar,setcamel2cssVar] = useState()
-
-useEffect = (() => setcamel2cssVar(camel2cssVar()),[])
-
-ReactDOM.render(
-  <div>将小驼峰转换成css变量格式:{camel2cssVar}</div>,
-  mountNode
-)
-`
 const resolveLocationQuery = `
-import { resolveLocationQuery } from 'util-g';
+/**
+ * 解析路由的查询参数query
+ * @param {Object} query
+ */
+export function resolveLocationQuery(query: any): any {
+  const res = {}
+  if (typeof query !== 'object') {
+    return res
+  }
+  Object.keys(query).forEach((key) => {
+    let tempValue = ''
+    const value = query[key]
+    try {
+      tempValue = JSON.parse(value)
+    } catch (error) {
+      tempValue = value
+    }
+    res[key] = tempValue
+  })
+  return res
+}
 
-const [resolveLocationQuery,setresolveLocationQuery] = useState()
-
-useEffect = (() => setresolveLocationQuery(resolveLocationQuery()),[])
-
-ReactDOM.render(
-  <div>解析路由的查询参数query:{resolveLocationQuery}</div>,
-  mountNode
-)
 `
 const findDomParentNode = `
-import { findDomParentNode } from 'util-g';
-
-const [findDomParentNode,setfindDomParentNode] = useState()
-
-useEffect = (() => setfindDomParentNode(findDomParentNode()),[])
-
-ReactDOM.render(
-  <div>向上递归冒泡找节点:{findDomParentNode}</div>,
-  mountNode
-)
+/**
+*向上递归冒泡找节点
+*
+* @param {object} target    //当前节点
+* @param {string} className //节点class
+* @returns  //找到的节点
+*/
+export const findDomParentNode = (target: object, className: string) => {
+  let result = null;
+  const bubble = (_target: object) => {
+    if (!_target) { return }
+    if (typeof _target['className'] !== 'object' && _target['className'].indexOf(className) >= 0) {
+      result = _target
+    } else {
+      _target = _target['parentElement'];
+      bubble(_target);
+    }
+  }
+  bubble(target);
+  return result;
+}
 `
 const getPerformanceTiming = `
-import { getPerformanceTiming } from 'util-g';
-
-const [getPerformanceTiming,setgetPerformanceTiming] = useState()
-
-useEffect = (() => setgetPerformanceTiming(getPerformanceTiming()),[])
-
-ReactDOM.render(
-  <div>前端性能分析:{getPerformanceTiming}</div>,
-  mountNode
-)
+/**
+*
+*前端性能分析
+* @returns 计算后的分析数据
+*/
+export const getPerformanceTiming = () => {
+  var performance = window.performance; if (!performance) { console.log('您的浏览器不支持performance属性'); return; }
+  var t = performance.timing;
+  var obj = {};
+  // 重定向耗时
+  obj['redirectTime'] = t.redirectEnd - t.redirectStart;
+  // DNS查询耗时
+  obj['lookupDomainTime'] = t.domainLookupEnd - t.domainLookupStart;
+  // TCP链接耗时
+  obj['connectTime'] = t.connectEnd - t.connectStart;
+  // HTTP请求耗时
+  obj['requestTime'] = t.responseEnd - t.responseStart;
+  // 解析dom树耗时
+  obj['domReadyTime'] = t.domComplete - t.domInteractive;
+  // 白屏时间耗时
+  obj['whiteTime'] = t.responseStart - t.navigationStart;
+  // DOMready时间
+  obj['domLoadTime'] = t.domContentLoadedEventEnd - t.navigationStart;
+  // 页面加载完成的时间 即：onload时间
+  obj['loadTime'] = t.loadEventEnd - t.navigationStart;
+  return obj;
+}
 `
 
-export default [hex2hsl,guid,getType,deepCopy4JSON,JSONisEqual, IEVersion,isIE, getCookie, delCookie, setCookie, throttle, getKey, generateUuid, randomString, isParamsEmpty, getFileUnit, getIconNameByFileName, spanCalculate, cssVar2camel, camel2cssVar, resolveLocationQuery, findDomParentNode, getPerformanceTiming]
+export default [hex2hsl,guid,getType,deepCopy4JSON,JSONisEqual, IEVersion,isIE, getCookie, delCookie, setCookie, throttle, getKey, generateUuid, randomString, isParamsEmpty, spanCalculate,resolveLocationQuery, findDomParentNode, getPerformanceTiming]
