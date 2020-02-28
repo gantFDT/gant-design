@@ -50,7 +50,7 @@ const ModalInner: React.FC<Props> = function ModalInner(props) {
         }
     }, [visible, visiblePrev, id])
 
-    const { zIndex, x, y, width, height, maximize } = modalState
+    const { zIndex, x, y, width, height, isMaximized } = modalState
 
     const _style = useMemo(() => ({ ...style, ...modalStyle, top: y, left: x, height }), [y, x, height])
 
@@ -68,14 +68,14 @@ const ModalInner: React.FC<Props> = function ModalInner(props) {
 
     const toggleMaximize = useCallback(() => {
         if (!canMaximize) return
-        dispatch({ type: maximize ? ActionTypes.reset : ActionTypes.max, id })
-    }, [id, maximize, canMaximize])
+        dispatch({ type: isMaximized ? ActionTypes.reset : ActionTypes.max, id })
+    }, [id, isMaximized, canMaximize])
 
     const onMouseDrag = useDrag(x, y, onDrag)
     const onMouseResize = useResize(x, y, width, height, onResize)
     const titleElement = useMemo(() => (
         <div
-            className={classnames(`${prefixCls}-resizableModalTitle`, maximize ? '' : `${prefixCls}-canDrag`)}
+            className={classnames(`${prefixCls}-resizableModalTitle`, isMaximized ? '' : `${prefixCls}-canDrag`)}
             style={{ marginRight: canMaximize ? 70 : 30 }}
             onMouseDown={onMouseDrag}
             onClick={onFocus}
@@ -83,16 +83,16 @@ const ModalInner: React.FC<Props> = function ModalInner(props) {
         >
             {title}
         </div>
-    ), [onMouseDrag, onFocus, toggleMaximize, title, maximize, canMaximize],
+    ), [onMouseDrag, onFocus, toggleMaximize, title, isMaximized, canMaximize],
     )
     const combineWrapClassName = useMemo(() => {
         return classnames(
             `${prefixCls}-resizableModalWrapper`,
             isModalDialog ? `${prefixCls}-resizableModalDialog` : `${prefixCls}-resizableModalDefault`,
-            maximize && `${prefixCls}-maximize`,
+            isMaximized && `${prefixCls}-maximize`,
             wrapClassName
         )
-    }, [maximize, isModalDialog])
+    }, [isMaximized, isModalDialog])
 
     return <Modal
         wrapClassName={combineWrapClassName}
@@ -114,9 +114,9 @@ const ModalInner: React.FC<Props> = function ModalInner(props) {
             {children}
         </div>
         {canMaximize && <div className={`${prefixCls}-maximizeAnchor`} onClick={toggleMaximize}>
-            <Icon type={maximize ? 'switcher' : 'border'} />
+            <Icon type={isMaximized ? 'switcher' : 'border'} />
         </div>}
-        {canResize && !maximize && <div className={`${prefixCls}-resizeAnchor`} onMouseDown={onMouseResize}><i></i></div>}
+        {canResize && !isMaximized && <div className={`${prefixCls}-resizeAnchor`} onMouseDown={onMouseResize}><i></i></div>}
     </Modal>
 }
 
