@@ -7,7 +7,7 @@ import CodeDecorator from '../_util/CodeDecorator';
 
 const cmps = [
   () => {
-    const [value, setValue] = useState({ currency: "USD", money: 123.123 })
+    const [value, setValue] = useState({ key: "USD", value: 123.123 })
     const [precision, setprecision] = useState(2)
     const onSave = (id, value, cb) => {
       cb()

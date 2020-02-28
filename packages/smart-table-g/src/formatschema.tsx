@@ -21,10 +21,10 @@ const mapComponents = (ComponentName: string, props: any) => {
     return ComponentName;
   }
   switch (ComponentName) {
-    case 'Input': return <AntInput {...props} />
     case 'Switch': return <Switch {...props} />
     case 'TextArea': return <AntInput.TextArea {...props} />
     // Gant
+    case 'Input': return <Input {...props} />
     case 'InputNumber': return <InputNumber  {...props} />;
     case 'DatePicker': return <DatePicker {...props} />;
     case 'Selector': return <Selector {...props} />;
@@ -46,7 +46,6 @@ function formatColumn<R>(schema: FormatColumnProps<R>) {
   let fakeColumn = { dataIndex: schema.fieldName, ...schema };
   if (!schema.render) {
     switch (schema.componentType) {
-      case 'Input':
       case 'Switch':
       case 'TextArea':
         fakeColumn.render = (text) => mapComponents(schema.componentType, {
@@ -54,6 +53,7 @@ function formatColumn<R>(schema: FormatColumnProps<R>) {
           value: text
         })
         break;
+      case 'Input':
       case 'InputNumber':
       case 'DatePicker':
       case 'Selector':

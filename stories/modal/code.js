@@ -22,10 +22,7 @@ function BasicUse() {
   )
 }
 
-ReactDOM.render(
-    <BasicUse/>,
-    mountNode,
-)
+ReactDOM.render(<BasicUse/>,mountNode)
 `
 
 const code1 =
@@ -63,12 +60,36 @@ const code1 =
     )
   }
   
-  ReactDOM.render(
-      <CustomUse/>,
-      mountNode,
-  )
+  ReactDOM.render(<CustomUse/>,mountNode)
 `
 const code2 =
+  `import React, { useState } from 'react'
+  import { Button } from 'antd'
+  import { Modal } from 'gantd'
+  
+  function PositionUse() {
+    const [visible, setVisible] = useState(false)
+    return (
+        <div style={{ margin: 10 }}>
+            <div style={{ marginBottom: 10 }}>
+                <Button size="small" onClick={() => { setVisible(true) }}>触发弹窗</Button>
+            </div>
+            <Modal
+                title='默认弹窗'
+                itemState={{ x: 0, y: 0, width: 400, height: 400 }}
+                visible={visible}
+                onCancel={() => { setVisible(false) }}
+            >
+                从指定的x:0,y:0位置进行弹出
+            </Modal>
+        </div>
+    )
+}
+  
+  ReactDOM.render(<PositionUse/>,mountNode)
+`
+
+const code3 =
   `import React, { useState } from 'react'
   import { Button } from 'antd'
   import { Modal } from 'gantd'
@@ -92,12 +113,9 @@ const code2 =
     )
   }
   
-  ReactDOM.render(
-      <MaximizeUse/>,
-      mountNode,
-  )
+  ReactDOM.render(<MaximizeUse/>,mountNode)
 `
-const code3 =
+const code4 =
   `import React, { useState } from 'react'
   import { Button } from 'antd'
   import { Modal } from 'gantd'
@@ -122,12 +140,9 @@ const code3 =
     )
   }
   
-  ReactDOM.render(
-      <ForbiddenUse/>,
-      mountNode,
-  )
+  ReactDOM.render(<ForbiddenUse/>,mountNode)
 `
-const code4 =
+const code5 =
   `import React, { useState } from 'react'
   import { Button } from 'antd'
   import { ResizableModal, ResizableProvider } from 'gantd'
@@ -167,9 +182,35 @@ const code4 =
     )
   }
   
-  ReactDOM.render(
-      <multipleModalsUse/>,
-      mountNode,
-  )
+  ReactDOM.render(<multipleModalsUse/>,mountNode)
 `
-export default [code, code1, code2, code3, code4];
+
+const code6 =
+  `import React, { useState } from 'react'
+  import { Button } from 'antd'
+  import { ResizableModal, ResizableProvider } from 'gantd'
+  
+  function KeepState() {
+    const [visible, setVisible] = useState(false)
+    return (
+        <div style={{ margin: 10 }}>
+            <div style={{ marginBottom: 10 }}>
+                <Button size="small" onClick={() => { setVisible(true) }}>触发弹窗</Button>
+            </div>
+            <ConfigProvider locale={zhCN}>
+                <Modal
+                    title='默认弹窗'
+                    visible={visible}
+                    itemState={{ keepModalStateOnClose: true }}
+                    onCancel={() => { setVisible(false) }}
+                >
+                    挂载期-存储弹窗状态（宽高、定位）
+            </Modal>
+            </ConfigProvider>
+        </div>
+    )
+}
+  
+  ReactDOM.render(<KeepState/>,mountNode)
+`
+export default [code, code1, code2, code3, code4, code5, code6];

@@ -7,13 +7,15 @@ import CodeDecorator from '../_util/CodeDecorator'
 import code from './code.js'
 
 const initalUiSchema = {
-    "ui:col": 24,
-    "ui:gutter": 10,
-    "ui:labelCol": 4,
-    "ui:wrapperCol": 20,
-    "ui:labelAlign": "left",
-    "ui:padding": 10,
-    "ui:backgroundColor": "#fff"
+    "form:gutter":10,
+    "field:col":12,
+    "field:style":{
+        padding:0
+    },
+    "field:labelAlign":'left',
+    "field:labelCol":6,
+    "field:wrapperCol":18
+
 }
 
 function BasicUse() {

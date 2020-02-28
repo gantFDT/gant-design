@@ -7,9 +7,12 @@ import { Icon } from '@data-cell'
 import ModalContext from './Context'
 import { getModalState, ActionTypes } from './Reducer'
 import { useDrag, useResize, usePrev } from './Hooks'
+import { InnerModalProps } from './interface'
 const modalStyle = { margin: 0, paddingBottom: 0 }
 
-type Props = ModalInnerProps & Partial<typeof defaultProps>
+interface Props extends InnerModalProps {
+    id: string,
+}
 
 const ModalInner: React.FC<Props> = function ModalInner(props) {
     const {
@@ -72,7 +75,7 @@ const ModalInner: React.FC<Props> = function ModalInner(props) {
     const onMouseResize = useResize(x, y, width, height, onResize)
     const titleElement = useMemo(() => (
         <div
-            className={`${prefixCls}-resizableModalTitle`}
+            className={classnames(`${prefixCls}-resizableModalTitle`, maximize ? '' : `${prefixCls}-canDrag`)}
             style={{ marginRight: canMaximize ? 70 : 30 }}
             onMouseDown={onMouseDrag}
             onClick={onFocus}
@@ -80,7 +83,7 @@ const ModalInner: React.FC<Props> = function ModalInner(props) {
         >
             {title}
         </div>
-    ), [onMouseDrag, onFocus, toggleMaximize, title, canMaximize],
+    ), [onMouseDrag, onFocus, toggleMaximize, title, maximize, canMaximize],
     )
     const combineWrapClassName = useMemo(() => {
         return classnames(
@@ -118,7 +121,7 @@ const ModalInner: React.FC<Props> = function ModalInner(props) {
 }
 
 const defaultProps = {
-    itemState: {} as ModalStateOutter,
+    itemState: {},
     style: {},
     canMaximize: true,
     canResize: true,

@@ -1,7 +1,7 @@
 export default [
-`
+  `
 import React, { useState } from 'react';
-import {InputCellPhone} from 'gantd';
+import {InputCellPhone} from '@data-cell';
 
 const Demo = () => {
   const [value, setValue] = useState('18811012138')
@@ -10,7 +10,6 @@ const Demo = () => {
       cb()
     }
     return <>
-      <InputCellPhone placeholder='不可编辑' allowEdit={false}  value="18811012138"/>
       <InputCellPhone placeholder='可编辑' allowEdit={true} onSave={onSave} value={value} onChange={setValue} />
     </>
 }
@@ -27,7 +26,7 @@ ReactDOM.render(
 
 
 
-`
+  `
 import React, { useState } from 'react';
 import {InputCellPhone, SwitchStatus} from 'gantd';
 
@@ -44,11 +43,11 @@ ReactDOM.render(
     mountNode,
 );
 `,
-  
 
 
 
-`
+
+  `
 import React, { useState } from 'react';
 import {InputCellPhone} from 'gantd';
 
@@ -68,7 +67,7 @@ ReactDOM.render(
     mountNode,
 );
 `,
-  
+
 
 
 ]

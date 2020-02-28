@@ -15,7 +15,7 @@ const phoneFormatter = phone => Array.from(phone).map((num, index) => index % 4 
 const withPhoneCode = compose(
   toClass,
   withProps(({ value = {} }) => {
-    const { code = "86", phone } = value
+    const { key: code = "86", value: phone } = value
     return {
       code,
       phone
@@ -35,13 +35,13 @@ const withPhoneCode = compose(
           phone = ''
         }
         onChange({
-          code, phone
+          key: code, value: phone
         })
       },
       onPhoneChange(phone) {
         if (!onChange) return
         onChange({
-          code: oCode, phone
+          key: oCode, value: phone
         })
       },
       filterOption(inputValue, option) {

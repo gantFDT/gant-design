@@ -273,147 +273,149 @@ const code6 =
 import { Button, message } from 'antd'
 import { SmartTable, Input, InputNumber, DatePicker, InputUrl, LocationSelector, InputCellPhone, InputEmail, InputLanguage, InputMoney, EditStatus, SwitchStatus } from 'gantd'
 
-function EditInlineUse() {
-  const tableColumns = [
+const tableColumns = [
+  {
+    fieldName: 'name',
+    title: '姓名',
+    componentType: 'Input'
+  },
+  {
+    fieldName: 'age',
+    title: '年龄',
+    componentType: 'InputNumber'
+  },
+  {
+    fieldName: 'cellPhone',
+    title: '手机号',
+    componentType: 'InputCellPhone'
+  },
+  {
+    fieldName: 'domain',
+    title: '个人主页',
+    componentType: 'InputUrl'
+  },
+  {
+    fieldName: 'email',
+    title: '邮箱',
+    componentType: 'InputEmail'
+  },
+  {
+    fieldName: 'bio',
+    title: '简介',
+    componentType: 'InputLanguage',
+    props: {
+      localeList: [
+        { locale: 'zh-CN', label: '中文' },
+        { locale: 'en-US', label: '英文' },
+      ]
+    }
+  },
+  {
+    fieldName: 'price',
+    title: '挂号费',
+    componentType: 'InputMoney'
+  },
+  {
+    fieldName: 'address',
+    title: '地址',
+    componentType: 'LocationSelector'
+  },
+  {
+    fieldName: 'birth',
+    title: '生日',
+    componentType: 'DataPicker'
+  }
+]
+
+const tableSchema = {
+  supportColumnFields: tableColumns,
+  systemViews: [
     {
-      fieldName: 'name',
-      title: '姓名'
-    },
-    {
-      fieldName: 'age',
-      title: '年龄',
-      componentType: 'InputNumber'
-    },
-    {
-      fieldName: 'cellPhone',
-      title: '手机号',
-      componentType: 'InputCellPhone'
-    },
-    {
-      fieldName: 'domain',
-      title: '个人主页',
-      componentType: 'InputUrl'
-    },
-    {
-      fieldName: 'email',
-      title: '邮箱',
-      componentType: 'InputEmail'
-    },
-    {
-      fieldName: 'bio',
-      title: '简介',
-      componentType: 'InputLanguage',
-      props: {
-        localeList: [
-          { locale: 'zh-CN', label: '中文' },
-          { locale: 'en-US', label: '英文' },
+      viewId: 'systemView',
+      name: "系统视图",
+      version: '2020-02-20 02:20:02',
+      panelConfig: {
+        wrap: false,
+        columnFields: [
+          {
+            fieldName: 'name',
+            width: 80
+          },
+          {
+            fieldName: 'age',
+            width: 70
+          },
+          {
+            fieldName: 'cellPhone',
+            width: 230
+          },
+          {
+            fieldName: 'domain',
+            width: 200
+          },
+          {
+            fieldName: 'email',
+            width: 170
+          },
+          {
+            fieldName: 'bio',
+            width: 375
+          },
+          {
+            fieldName: 'price',
+            width: 150
+          },
+          {
+            fieldName: 'address',
+            width: 195
+          },
+          {
+            fieldName: 'birth',
+            width: 160
+          }
         ]
       }
-    },
-    {
-      fieldName: 'price',
-      title: '挂号费',
-      componentType: 'InputMoney'
-    },
-    {
-      fieldName: 'address',
-      title: '地址',
-      componentType: 'LocationSelector'
-    },
-    {
-      fieldName: 'birth',
-      title: '生日',
-      componentType: 'DataPicker'
     }
   ]
+}
 
-  const tableSchema = {
-    supportColumnFields: tableColumns,
-    systemViews: [
-      {
-        viewId: 'systemView',
-        name: "系统视图",
-        version: '2020-02-20 02:20:02',
-        panelConfig: {
-          wrap: false,
-          columnFields: [
-            {
-              fieldName: 'name',
-              width: 80
-            },
-            {
-              fieldName: 'age',
-              width: 70
-            },
-            {
-              fieldName: 'cellPhone',
-              width: 230
-            },
-            {
-              fieldName: 'domain',
-              width: 200
-            },
-            {
-              fieldName: 'email',
-              width: 170
-            },
-            {
-              fieldName: 'bio',
-              width: 375
-            },
-            {
-              fieldName: 'price',
-              width: 150
-            },
-            {
-              fieldName: 'address',
-              width: 195
-            },
-            {
-              fieldName: 'birth',
-              width: 160
-            }
-          ]
-        }
-      }
-    ]
+const data = [
+  {
+    name: '王医生',
+    age: 55,
+    cellPhone: { phone: "18010032938" },
+    domain: 'https://www.baidu.com/',
+    email: 'doc_wang@qq.com',
+    bio: { locale: 'zh-CN', value: '华西口腔主任医师。' },
+    price: { money: 29.9 },
+    address: ["CHN", "510000", "510100"],
+    birth: '1965-04-24',
+  },
+  {
+    name: '张医生',
+    age: 42,
+    cellPhone: { phone: "13583384957" },
+    domain: 'https://www.google.com/',
+    email: 'doc_zhang@163.com',
+    bio: { locale: 'zh-CN', value: '北京协和泌尿科主任医师。' },
+    price: { money: 19.9 },
+    address: ["CHN", "110000", "110101"],
+    birth: '1977-01-04',
+  },
+  {
+    name: '李医生',
+    age: 35,
+    cellPhone: { phone: "13777574848" },
+    domain: 'https://www.souhu.com/',
+    email: 'doc_li@souhu.com',
+    bio: { locale: 'zh-CN', value: '上海第一人民医院妇产科主治医师。' },
+    price: { money: 9.9 },
+    address: ["CHN", "310000", "310104"],
+    birth: '1986-02-14',
   }
+]
 
-  const data = [
-    {
-      name: '王医生',
-      age: 55,
-      cellPhone: { phone: "18010032938" },
-      domain: 'https://www.baidu.com/',
-      email: 'doc_wang@qq.com',
-      bio: { locale: 'zh-CN', value: '华西口腔主任医师。' },
-      price: { money: 29.9 },
-      address: ["CHN", "510000", "510100"],
-      birth: '1965-04-24',
-    },
-    {
-      name: '张医生',
-      age: 42,
-      cellPhone: { phone: "13583384957" },
-      domain: 'https://www.google.com/',
-      email: 'doc_zhang@163.com',
-      bio: { locale: 'zh-CN', value: '北京协和泌尿科主任医师。' },
-      price: { money: 19.9 },
-      address: ["CHN", "110000", "110101"],
-      birth: '1977-01-04',
-    },
-    {
-      name: '李医生',
-      age: 35,
-      cellPhone: { phone: "13777574848" },
-      domain: 'https://www.souhu.com/',
-      email: 'doc_li@souhu.com',
-      bio: { locale: 'zh-CN', value: '上海第一人民医院妇产科主治医师。' },
-      price: { money: 9.9 },
-      address: ["CHN", "310000", "310104"],
-      birth: '1986-02-14',
-    }
-  ]
+function EditInlineUse() {
 
   const [stateData, setStateData] = useState(data)
   const [editing, setEditing] = useState(EditStatus.CANCEL);
