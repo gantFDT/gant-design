@@ -8,7 +8,10 @@ import CodeDecorator from '../_util/CodeDecorator';
 
 const cmps = [
   () => {
-    const [value, setValue] = useState({ value: "18811012138" })
+    const [value, setValue] = useState({
+      key: '236',
+      value: '13945689732'
+    })
     const onSave = (id, value, cb) => {
       console.log(id, value);
       cb()
