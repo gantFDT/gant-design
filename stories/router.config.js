@@ -131,7 +131,7 @@ export default [{
   {
     name: 'Modal',
     nameZh: '弹窗',
-    package: 'auto-modal-g',
+    package: 'modal-g',
   }, {
     name: 'Toolbar',
     nameZh: '工具条',
