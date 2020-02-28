@@ -47,7 +47,7 @@ class SchemaForm extends React.Component<Props>{
 		return getFieldsValue(names)
 	}
 	setFieldsValue = (data: object) => {
-		const { form: { setFieldsValue } } = this.props
+		const { form: { setFieldsValue } } = this.props;
 		setFieldsValue(data)
 	}
 	render() {

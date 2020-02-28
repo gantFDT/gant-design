@@ -16,8 +16,13 @@ const uiArray = [
 	},
 	{
 		alias: "style",
-		belong: ["field", "form"],
-		name: ["ui:style", "form:style", "field:style"],
+		belong: "field",
+		name: "field:style",
+		defaultValue: undefined
+	}, {
+		alias: "style",
+		belong: "form",
+		name: "form:style",
 		defaultValue: {
 			padding: 10
 		}
@@ -267,4 +272,4 @@ export function getDateToForm(data: any, schema: Schema) {
 
 export function getKey(): string {
 	return Math.random().toString(32).slice(2)
-  }
+}
