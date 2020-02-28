@@ -29,12 +29,12 @@ Modal - 属性如下
 
 ResizableProvider - 属性如下
 
-| 属性        | 说明                   | 类型   | 默认值    |
-| ----------- | ---------------------- | ------ | --------- |
-| maxZIndex   | 当前最大堆叠等级       | number | 0         |
-| minWidth    | 拖动伸缩最小宽度限制   | number | 200       |
-| minHeight   | 拖动伸缩最小高度限制   | number | 200       |
-| initalState | 通用初始化弹窗默认参数 | object | ItemState |
+| 属性        | 说明                   | 类型      | 默认值    |
+| ----------- | ---------------------- | --------- | --------- |
+| maxZIndex   | 当前最大堆叠等级       | number    | 0         |
+| minWidth    | 拖动伸缩最小宽度限制   | number    | 200       |
+| minHeight   | 拖动伸缩最小高度限制   | number    | 200       |
+| initalState | 通用初始化弹窗默认参数 | ItemState | ItemState |
 
 ResizableModal - 属性如下
 

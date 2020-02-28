@@ -45,7 +45,7 @@ function CustomUse() {
                 onSizeChange={onSizeChange}
             >
                 <div>
-                    <h4>动态宽高获取:</h4>
+                    <h4>动态宽高获取（包含header+footer）:</h4>
                     <div>{`width:${widthAndHei[0]}px`}</div>
                     <div>{`height:${widthAndHei[1]}px`}</div>
                 </div>
@@ -124,7 +124,7 @@ function KeepState() {
                     itemState={{ keepStateOnClose: true }}
                     onCancel={() => { setVisible(false) }}
                 >
-                    挂载期-存储弹窗状态（宽高、定位）
+                    挂载期-存储弹窗状态（宽高、定位、最大化）
             </Modal>
             </ConfigProvider>
         </div>
@@ -171,6 +171,7 @@ const config = {
   <b>支持拖拽移动和大小伸缩</b></br>
   <b>窗口化和全屏化状态的切换</b></br>
   <b>实时响应浏览器窗口变化</b></br>
+  <b>支持挂载期弹窗状态留存</b></br>
   <b>可支持非模态窗口模式等功能，并支持同屏展示多个弹出框</b></br>
   `,
     inline: true,
