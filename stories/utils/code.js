@@ -1,36 +1,40 @@
 const hex2hsl = `
 import { hex2hsl } from 'util-g';
 
-const [hex2hsl,setHex2hsl] = useState()
+const [myHex2hsl,setMyHex2hsl] = useState()
 
-useEffect = (() => setHex2hsl(hex2hsl()),[])
+useEffect = (() => setMyHex2hsl(hex2hsl('#CCFFFF')),[])
 
 ReactDOM.render(
-  <div>十六进制颜色值#CCFFFF转变为HSL颜色值为：{hex2hsl('#CCFFFF')}</div>,
+  <div>十六进制颜色值"#CCFFFF"转变为HSL颜色值为：{myHex2hsl}</div>,
   mountNode
 )
 `
 const guid = `
 import { guid } from 'util-g';
 
-const [guid,setGuid] = useState()
+const [myGuid,setMyGuid] = useState()
 
-useEffect = (() => setGuid(guid()),[])
+useEffect = (() => setMyGuid(guid()),[])
 
 ReactDOM.render(
-  <div>生成uuid为：{guid()}</div>,
+  <div>生成uuid为：{myGuid}</div>,
   mountNode
 )
 `
 const getType = `
 import { getType } from 'util-g';
 
-const [getType,setGetType] = useState()
-
-useEffect = (() => setGetType(getType()),[])
+const [a,setA] = useState(1);
+const [b,setB] = useState("abc");
+const [c,setC] = useState({"age":24});
 
 ReactDOM.render(
-  <div>当前类型：{getType('token')}</div>,
+  <div>判断{a},{b},{JSON.stringify(c)}的类型<br/> 
+    a : {getType(a)}<br/>
+    b : {getType(b)}<br/>
+    c : {getType(c)}
+    </div>
   mountNode
 )
 `

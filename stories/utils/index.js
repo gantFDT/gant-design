@@ -6,18 +6,24 @@ import reactElementToJSXString from 'react-element-to-jsx-string';
 import code from './code'
 
 function hex2hslFun(props) {
-  return (<div>将十六进制颜色值转变为HSL颜色值:
-    {/* {hex2hsl('#CCFFFF')} */}
+  return (<div>将十六进制颜色"#CCFFFF"值转变为HSL颜色值:
+    {hex2hsl('#CCFFFF')}
     </div>)
 }
 function guidFun(props) {
   return (<div>生成uuid:
-    {/* {guid()} */}
+    {guid()}
     </div>)
 }
 function getTypeFun(props) {
-  return (<div>判断类型 
-    {/* {`string`}:{getType('string')} */}
+  const a = 1;
+  const b = 'abc';
+  const c = {"age":24};
+  
+  return (<div>判断 {a} , '{b}' , {JSON.stringify(c)} 的类型<br/> 
+    a : {getType(a)}<br/>
+    b : {getType(b)}<br/>
+    c : {getType(c)}
     </div>)
 }
 function deepCopy4JSONFun(props) {
