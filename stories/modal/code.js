@@ -147,6 +147,35 @@ const code5 =
   import { Button } from 'antd'
   import { ResizableModal, ResizableProvider } from 'gantd'
   
+  function KeepState() {
+    const [visible, setVisible] = useState(false)
+    return (
+        <div style={{ margin: 10 }}>
+            <div style={{ marginBottom: 10 }}>
+                <Button size="small" onClick={() => { setVisible(true) }}>触发弹窗</Button>
+            </div>
+            <ConfigProvider locale={zhCN}>
+                <Modal
+                    title='默认弹窗'
+                    visible={visible}
+                    itemState={{ keepStateOnClose: true }}
+                    onCancel={() => { setVisible(false) }}
+                >
+                    挂载期-存储弹窗状态（宽高、定位）
+            </Modal>
+            </ConfigProvider>
+        </div>
+    )
+}
+  
+  ReactDOM.render(<KeepState/>,mountNode)
+`
+
+const code6 =
+  `import React, { useState } from 'react'
+  import { Button } from 'antd'
+  import { ResizableModal, ResizableProvider } from 'gantd'
+  
   function multipleModalsUse() {
     const [visible, setVisible] = useState(false)
     const [visible2, setVisible2] = useState(false)
@@ -183,34 +212,5 @@ const code5 =
   }
   
   ReactDOM.render(<multipleModalsUse/>,mountNode)
-`
-
-const code6 =
-  `import React, { useState } from 'react'
-  import { Button } from 'antd'
-  import { ResizableModal, ResizableProvider } from 'gantd'
-  
-  function KeepState() {
-    const [visible, setVisible] = useState(false)
-    return (
-        <div style={{ margin: 10 }}>
-            <div style={{ marginBottom: 10 }}>
-                <Button size="small" onClick={() => { setVisible(true) }}>触发弹窗</Button>
-            </div>
-            <ConfigProvider locale={zhCN}>
-                <Modal
-                    title='默认弹窗'
-                    visible={visible}
-                    itemState={{ keepModalStateOnClose: true }}
-                    onCancel={() => { setVisible(false) }}
-                >
-                    挂载期-存储弹窗状态（宽高、定位）
-            </Modal>
-            </ConfigProvider>
-        </div>
-    )
-}
-  
-  ReactDOM.render(<KeepState/>,mountNode)
 `
 export default [code, code1, code2, code3, code4, code5, code6];

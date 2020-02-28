@@ -13,7 +13,8 @@ const initial: ModalStateProps = {
     height: 520,
     zIndex: 0,
     visible: false,
-    maximized: false,
+    maximize: false,
+    keepStateOnClose: false,
 }
 
 const ResizableProvider: React.FC<ResizableProviderProps> = ({ initalState, maxZIndex, minWidth, minHeight, children }) => {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, ConfigProvider, Modal as AntModal } from 'antd'
+import { Button, ConfigProvider } from 'antd'
 import Modal, { ResizableModal, ResizableProvider } from '@packages/modal-g/src'
 import zhCN from 'antd/es/locale/zh_CN'
 import CodeDecorator from '../_util/CodeDecorator'
@@ -82,7 +82,7 @@ function MaximizeUse() {
             </div>
             <Modal
                 title='最大化弹窗'
-                itemState={{ maximized: true }}
+                itemState={{ maximize: true }}
                 visible={visible}
                 onCancel={() => { setVisible(false) }}
             >
@@ -110,6 +110,26 @@ function ForbiddenUse() {
     )
 }
 
+function KeepState() {
+    const [visible, setVisible] = useState(false)
+    return (
+        <div style={{ margin: 10 }}>
+            <div style={{ marginBottom: 10 }}>
+                <Button size="small" onClick={() => { setVisible(true) }}>触发弹窗</Button>
+            </div>
+            <ConfigProvider locale={zhCN}>
+                <Modal
+                    title='默认弹窗'
+                    visible={visible}
+                    itemState={{ keepStateOnClose: true }}
+                    onCancel={() => { setVisible(false) }}
+                >
+                    挂载期-存储弹窗状态（宽高、定位）
+            </Modal>
+            </ConfigProvider>
+        </div>
+    )
+}
 
 function multipleModalsUse() {
     const [visible, setVisible] = useState(false)
@@ -142,27 +162,6 @@ function multipleModalsUse() {
                 第二个弹窗-content
             </ResizableModal>
         </ResizableProvider>
-    )
-}
-
-function KeepState() {
-    const [visible, setVisible] = useState(false)
-    return (
-        <div style={{ margin: 10 }}>
-            <div style={{ marginBottom: 10 }}>
-                <Button size="small" onClick={() => { setVisible(true) }}>触发弹窗</Button>
-            </div>
-            <ConfigProvider locale={zhCN}>
-                <Modal
-                    title='默认弹窗'
-                    visible={visible}
-                    itemState={{ keepModalStateOnClose: true }}
-                    onCancel={() => { setVisible(false) }}
-                >
-                    挂载期-存储弹窗状态（宽高、定位）
-            </Modal>
-            </ConfigProvider>
-        </div>
     )
 }
 
@@ -202,14 +201,14 @@ const config = {
             cmp: ForbiddenUse
         },
         {
-            title: '同屏多弹窗模式',
-            describe: '支持同屏多非模态型的弹窗，可通过点击改变当前选中弹窗层级',
-            cmp: multipleModalsUse
-        },
-        {
             title: '状态存储',
             describe: '支持在组件挂载期存储弹窗关闭前的定位与尺寸信息',
             cmp: KeepState
+        },
+        {
+            title: '同屏多弹窗模式',
+            describe: '支持同屏多非模态型的弹窗，可通过点击改变当前选中弹窗层级',
+            cmp: multipleModalsUse
         },
     ]
 }
