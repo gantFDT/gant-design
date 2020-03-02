@@ -176,6 +176,9 @@ export default [{
     }, {
       name: 'Utils',
       nameZh: '公共工具类'
+    }, {
+      name: 'NodeUtils',
+      nameZh: '公共工具类'
     }
     // {
     // 			name: 'TaskBoard',

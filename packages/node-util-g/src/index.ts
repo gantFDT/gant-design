@@ -1,34 +1,23 @@
-const sleep = `
-/**
- * sleep函数 暂停几秒
- * @params time 时长
-*/
-function sleep(time){
-    yield new Promise((resolve, reject) => {
-        setTimeout(() => {
-        resolve()
-        }, time)
-    })
-}`
+const fs = require('fs');
+const path = require('path');
+const exec = require('child_process').exec;
 
-const formatJSON2String = `
-/**
- * formatJSON2String函数 JSON对象转换为字符串
- * @params jsonObj JSON对象
-*/
-function formatJSON2String(jsonObj) {
+const utils = {
+  *sleep(time) {
+    yield new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve()
+      }, time)
+    })
+  },
+
+  formatJSON2String(jsonObj) {
     let str = JSON.stringify(jsonObj, "", "\t")
     // let str = JSON.stringify(jsonObj,null,"\t")
     return str
-  }
-`
-
-const delDir = `
-/**
- * 同步删除文件夹
- * @params path 文件夹路径
- * */
-function  delDir(path) {
+  },
+  //同步删除文件夹
+  delDir(path) {
     let files = [];
     if (fs.existsSync(path)) {
       files = fs.readdirSync(path);
@@ -43,32 +32,19 @@ function  delDir(path) {
       fs.rmdirSync(path);
     }
   },
-`
 
-const fileReplace = `
-/**
- * 文件替换内容
- * @params path string 文件路径
- * @params regexp  替换规则
- * @params content 替换内容
-*/
-function fileReplace(path, regexp, content) {
+  //文件替换内容
+  fileReplace(path, regexp, content) {
     fs.readFile(path, 'utf8', (err, files) => {
       var result = files.replace(regexp, content);
       fs.writeFile(path, result, 'utf8', (err) => {
         if (err) return console.log(err);
       });
     })
-  }
-`
-const dirReplace = `
-/**
- * 文件夹替换内容
- * @params path string 文件夹路径
- * @params regexp  替换规则
- * @params content 替换内容
-*/
-function dirReplace(dirpath, regexp, content) {
+  },
+
+  //文件夹替换内容
+  dirReplace(dirpath, regexp, content) {
     let fileList = fs.readdirSync(dirpath);
     fileList.forEach(x => {
       let p = path.resolve(dirpath, x);
@@ -79,14 +55,11 @@ function dirReplace(dirpath, regexp, content) {
         utils.dirReplace(p, regexp, content);
       }
     });
-  }
-`
-const mkdirsSync = `
-/**
- * 递归创建目录 同步方法
- * @params dirname目录名
-*/
-function mkdirsSync(dirname) {
+    // fs.rmdirSync(dirpath);
+  },
+
+  //递归创建目录 同步方法  
+  mkdirsSync(dirname) {
     if (fs.existsSync(dirname)) {
       return true;
     } else {
@@ -95,11 +68,10 @@ function mkdirsSync(dirname) {
         return true;
       }
     }
-  }
-`
-const copySync= `
-//同步复制
-function copySync(src, dist) {
+  },
+
+  //同步复制
+  _copy(src, dist) {
     var paths = fs.readdirSync(src)
     paths.forEach((p) => {
       var _src = src + '/' + p;
@@ -111,47 +83,36 @@ function copySync(src, dist) {
         utils.copyDir(_src, _dist)// 当是目录是，递归复制
       }
     })
-  }
-`
-const copyDir = `
+  },
 
-//同步复制文件夹
-function  copyDir(src, dist) {
+  //同步复制文件夹
+  copyDir(src, dist) {
     var b = fs.existsSync(dist)
     if (!b) {
       utils.mkdirsSync(dist);//创建目录
     }
-    utils.copySync(src, dist);
-}
-  
-`
-const execCmd = `
+    utils._copy(src, dist);
+  },
 
-function execCmd(shell, successCb = () => { }, errorCb = () => {}) {
-        return new Promise((resolve, reject) => {
-        exec(shell, {
-            encoding: 'utf8'
-        }, (error, statusbar) => {
-            if (error) {
-            errorCb(error)
-            resolve(false);
-            }
-            successCb()
-            resolve(true);
-        });
-        });
-    }
+  execCmd(shell, successCb = () => { }, errorCb = () => {}) {
+    return new Promise((resolve, reject) => {
+      exec(shell, {
+        encoding: 'utf8'
+      }, (error, statusbar) => {
+        if (error) {
+          errorCb(error)
+          resolve(false);
+        }
+        successCb()
+        resolve(true);
+      });
+    });
+  }
 }
 
-`
-export default [
-    sleep,
-    formatJSON2String,
-    delDir,
-    fileReplace,
-    dirReplace,
-    mkdirsSync,
-    copySync,
-    copyDir,
-    execCmd
-]
+module.exports = utils
+
+
+
+
+

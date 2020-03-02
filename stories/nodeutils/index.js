@@ -5,23 +5,65 @@ import reactElementToJSXString from 'react-element-to-jsx-string';
 import code from './code'
 
 function demo(props) {
-  return (<div>demo</div>)
+  return (<div></div>)
 }
 
 
 const config = {
-  codes: code.map(V => `import React, { useState, useCallback, useEffect, useMemo } from 'react';\n${V}`),
+  codes: code.map(V => `const fs = require('fs');\n
+const path = require('path');\n
+const exec = require('child_process').exec;\n
+const utils = require('node-util-g')\n${V}`),
   inline: true,
   useage: `
     一些常用的nodejs工具类
     `,
   children: [
     {
-      title: '',
+      title: 'sleep | 暂停函数',
+      describe: '',
+      cmp: demo,
+    },
+    {
+      title: 'formatJSON2String | JSON对象转换为字符串',
+      describe: '',
+      cmp: demo,
+    },
+    {
+      title: 'delDir | 同步删除文件夹',
+      describe: '',
+      cmp: demo,
+    },
+    {
+      title: 'fileReplace | 文件替换内容',
+      describe: '',
+      cmp: demo,
+    },
+    {
+      title: 'dirReplace | 文件夹替换内容',
+      describe: '',
+      cmp: demo,
+    },
+    {
+      title: 'mkdirsSync | 递归创建目录 同步方法',
+      describe: '',
+      cmp: demo,
+    },
+    {
+      title: 'copySync | 同步复制',
+      describe: '',
+      cmp: demo,
+    },
+    {
+      title: 'copyDir | 同步复制文件夹',
+      describe: '',
+      cmp: demo,
+    },
+    {
+      title: 'execCmd | 递归创建目录 同步方法',
       describe: '',
       cmp: demo,
     }
-
   ]
 };
 export default () => <CodeDecorator config={config} />
