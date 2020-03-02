@@ -1,10 +1,10 @@
 import {
 	Input, Password, TextArea, InputMoney, InputNumber,
-	InputCellPhone as CellPhone, InputTelePhone as TelePhone,
-	InputUrl as Url, InputEmail as Email, InputLanguage as Language,
+	InputCellPhone, InputTelePhone,
+	InputUrl, InputEmail, InputLanguage,
 	ColorPicker, DatePicker, RangePicker,
 	Selector, LocationSelector, IconSelector
-	} from '@data-cell'
+} from '@data-cell'
 import { Switch, Checkbox, Radio, AutoComplete } from 'antd'
 const CheckboxGroup = Checkbox.Group
 const RadioGroup = Radio.Group
@@ -14,11 +14,11 @@ export enum Fields {
 	Password = "Password",
 	InputNumber = "InputNumber",
 	InputMoney = "InputMoney",
-	Url = "Url",
-	Email = "Email",
-	Language = "Language",
-	CellPhone = "CellPhone",
-	TelePhone = "TelePhone",
+	InputUrl = "InputUrl",
+	InputEmail = "InputEmail",
+	InputLanguage = "InputLanguage",
+	InputCellPhone = "InputCellPhone",
+	InputTelePhone = "InputTelePhone",
 	TextArea = "TextArea",
 	DatePicker = "DatePicker",
 	RangePicker = "RangePicker",
@@ -33,17 +33,40 @@ export enum Fields {
 	RadioGroup = "RadioGroup",
 	AutoComplete = "AutoComplete"
 }
+export type FieldsType =
+	"Input"
+	| "Password"
+	| "InputNumber"
+	| "InputMoney"
+	| "InputUrl"
+	| "InputEmail"
+	| "InputLanguage"
+	| "InputCellPhone"
+	| "InputTelePhone"
+	| "TextArea"
+	| "DatePicker"
+	| "RangePicker"
+	| "ColorPicker"
+	| "Selector"
+	| "IconSelector"
+	| "LocationSelector"
+	| "Switch"
+	| "Checkbox"
+	| "CheckboxGroup"
+	| "Radio"
+	| "RadioGroup"
+	| "AutoComplete"
 
 let fields = {
 	[Fields.Input]: Input,
 	[Fields.Password]: Password,
 	[Fields.InputNumber]: InputNumber,
 	[Fields.InputMoney]: InputMoney,
-	[Fields.Url]: Url,
-	[Fields.Email]: Email,
-	[Fields.Language]: Language,
-	[Fields.TelePhone]: TelePhone,
-	[Fields.CellPhone]: CellPhone,
+	[Fields.InputUrl]: InputUrl,
+	[Fields.InputEmail]: InputEmail,
+	[Fields.InputLanguage]: InputLanguage,
+	[Fields.InputTelePhone]: InputTelePhone,
+	[Fields.InputCellPhone]: InputCellPhone,
 	[Fields.TextArea]: TextArea,
 	[Fields.DatePicker]: DatePicker,
 	[Fields.RangePicker]: RangePicker,
