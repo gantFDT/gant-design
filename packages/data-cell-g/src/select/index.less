@@ -1,7 +1,8 @@
 @import '../style/index.less';
 @gant-select: ~'gant-select';
 
-.@{gant-select}.ant-select{
+:global{
+  .@{gant-select}.ant-select{
     .display-table-cell();
     width: 100%;
 
@@ -10,4 +11,5 @@
             .input-group-left();
         }
     }
+  }
 }

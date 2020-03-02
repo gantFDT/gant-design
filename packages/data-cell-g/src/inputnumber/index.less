@@ -1,6 +1,7 @@
 @import '../style/index.less';
 
-.gant-input-number.ant-input-number{
+:global {
+  .gant-input-number.ant-input-number {
     .display-table-cell();
     width: 100%;
 
@@ -10,4 +11,5 @@
     &:not(:first-child){
         .input-group-right();
     }
+  }
 }

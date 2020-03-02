@@ -5,38 +5,39 @@
 @table-menu-prefix-cls: ~'@{gant-prefix}-table-menu';
 @table-header-prefix-cls: ~'@{gant-prefix}-table-header';
 
-.@{table-header-prefix-cls} {
+:global {
+  .@{table-header-prefix-cls} {
     justify-content: space-between;
     background-color: #ffffff;
     align-items: center;
-}
-.nowrap(){
+  }
+  .nowrap(){
     white-space: nowrap;
-}
-.hover(){
+  }
+  .hover(){
     background-color: @primary-1;
-}
-// 文本溢出样式
-.ellipsis(){
+  }
+  // 文本溢出样式
+  .ellipsis(){
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-}
-// 文本折行
-.overflowwrap{
+  }
+  // 文本折行
+  .overflowwrap{
     overflow-wrap: break-word;
     // word-wrap: break-word;
-}
-.layoutfixed{
+  }
+  .layoutfixed{
     min-width: auto;
     width: auto; 
     table-layout: fixed;
-}
-.isZebra(@opacity: .006){
+  }
+  .isZebra(@opacity: .006){
     background-color: rgba(0,0,0, @opacity);
-}
+  }
 
-.@{table-prefix-cls} {    
+  .@{table-prefix-cls} {    
     
     .ant-table{
         // 边框处理
@@ -62,12 +63,12 @@
                     // 文本溢出格式
                     // 选择框不添加文本溢出格式
                     &.@{table-prefix-cls}-editcell-ellipsis:not(.ant-table-selection-column){
-                       .ellipsis();
-                   }
-                   &.@{table-prefix-cls}-editcell-wrap{
-                       .overflowwrap();
-                   }
-                   .table-cell-editing {
+                      .ellipsis();
+                  }
+                  &.@{table-prefix-cls}-editcell-wrap{
+                      .overflowwrap();
+                  }
+                  .table-cell-editing {
                     margin: -5px !important;                  
                     .ant-input-group {
                       width: 100%;
@@ -82,8 +83,8 @@
                     }
                   }
                 }
-               
-               .ant-table-thead th> {
+              
+              .ant-table-thead th> {
                     position: relative;
                     .gantd-table-header-sort{
                         position: absolute;
@@ -351,8 +352,9 @@
             
         }
     }
-}
+  }
 
-.@{table-menu-prefix-cls} {
+  .@{table-menu-prefix-cls} {
     margin-left: 5px;
+  }
 }
