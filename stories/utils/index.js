@@ -10,7 +10,7 @@ function codeFun(props) {
  
 const config = {
   codes: code.map(V => V),
-  inline: true,
+  // inline: true,
   useage: `
     🤡 项目中经常会用到的一些公共方法
     `,
