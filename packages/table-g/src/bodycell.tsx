@@ -210,6 +210,7 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 						maxHeight: clientHeight,
 						minWidth: clientWidth,
 						minHeight: clientHeight,
+						margin: (cellPadding as number) * -1,
 						...element.props.style,
 					},
 					onChange,
@@ -220,7 +221,7 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 
 			}
 		},
-		[edit, value, element, children, sortable, record, activeCell],
+		[edit, value, element, children, sortable, record, activeCell, cellPadding],
 	)
 
 	const valueChanged = useMemo(

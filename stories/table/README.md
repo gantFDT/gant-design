@@ -22,7 +22,7 @@
 | onSave | 否 | function(dataSource,[addList,delList, modifyList]) |  | 当表格状态变为SAVE的时候会调用，返回最新的表格数据，以及新增、删除、修改的数据 |
 | orderList | 否 | array | - | 列的排序信息，同smartForm |
 | pagination | 否 | object |  | 参考[链接](https://ant-design.gitee.io/components/pagination-cn/) |
-| resizeCell/resizable | 否 | boolean | false | 是否允许动态缩放列宽度 |
+| resizable | 否 | boolean | false | 是否允许动态缩放列宽度 |
 | rowSelection | 否 | object |  | 行选择功能，其他参数参考[链接]() |
 | scrollKey | 否 | string |  |、设置滚动到指定行的key |
 | tableKey | 否 | string | - | 用于标识唯一table |

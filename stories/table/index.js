@@ -3,7 +3,7 @@ import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import CodeDecorator from '../_util/CodeDecorator';
 import code from './code'
 import Table from '@table'
-import { EditStatus, SwitchStatus, Input, InputNumber, Select } from '@data-cell'
+import { EditStatus, SwitchStatus, Input, InputNumber, Selector } from '@data-cell'
 import { Button, Slider } from 'antd'
 
 import { getList } from './mock'
@@ -29,14 +29,14 @@ const columns = [
 
 function BasicTable(props) {
 
-  const dataSource = getList()
+  const dataSource = useMemo(() => getList(), [])
   const [resizable, setresizable] = useState(true)
 
   const toggleResizable = useCallback(
     () => {
-      setresizable(!resizable)
+      setresizable(r => !r)
     },
-    [resizable],
+    [],
   )
 
   const headerRight = useMemo(() => {
@@ -45,7 +45,7 @@ function BasicTable(props) {
         <Button onClick={toggleResizable} >切换可缩放列</Button>
       </>
     )
-  }, [toggleResizable])
+  }, [])
 
   return <Table
     columns={columns}
@@ -261,7 +261,7 @@ function EditorTable() {
       editConfig: {
         render: (value, record, index) => {
           return (
-            <Select dataSource={address} />
+            <Selector defaultList={address} />
           )
         }
       },
