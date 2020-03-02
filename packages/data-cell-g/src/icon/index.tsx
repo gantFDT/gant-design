@@ -52,7 +52,7 @@ type IconHouseProps<T> = BasicProps & WithEditOutProps<T>
 type IconSelectorProps<T> = PropExtend<WithEditInProps<T>, BasicProps>
 
 
-const IconHouse: React.FC<IconHouseProps<string>> = ({ onChange, value, onBlur = undefined, addonAfter, ...props }) => {
+const IconHouse: React.FC<IconHouseProps<string>> = ({ onChange, value, onBlur = undefined, addonAfter, allowEdit, onEnter, ...props }) => {
   const prefixCls = 'gant-icon-selector';
 
   // 图标抽屉
@@ -201,7 +201,7 @@ interface IconSelectorCmp {
 const IconSelector = compose(
   toClass,
   defaultProps(defaultprops),
-  withEdit(({ value, ...props }) => value ? <Icon type={value} {...props} /> : undefined)
+  withEdit(({ value, style, theme, spin, rotate, component, twoToneColor }) => value ? <Icon type={value} style={style} theme={theme} spin={spin} rotate={rotate} component={component} twoToneColor={twoToneColor} /> : undefined)
 )(IconHouse) as IconSelectorCmp
 
 IconSelector.updateFromIconfontCN = updateFromIconfontCN
