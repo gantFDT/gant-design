@@ -1,80 +1,214 @@
-import React, { useState, useEffect, useMemo } from 'react'
-import { Icon } from 'antd'
-import * as allIcons from '@ant-design/icons/lib/dist';
-import { IconComponent, IconProps } from 'antd/es/icon'
+import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react'
+import { Drawer, Radio, Empty } from 'antd'
+import classnames from 'classnames'
+import _ from 'lodash'
+import { compose, defaultProps, toClass, setStatic } from 'recompose'
 
-let dynamicIcon: IconComponent<IconProps> = Icon
+import './index.less';
+import { Input, EditStatus, Group } from '..'
+import Icon, { IconComponent, IconProps } from './Icon'
+import { withEdit } from '../compose'
+import { WithEditInProps, WithEditOutProps } from '../compose/withEdit'
 
-// 所有icon的更新函数列表，实际是setState函数
-const chain = new Map()
-const GantIcon = props => {
-    const [RenderIcon, setRenderIcon] = useState(() => dynamicIcon)
-    useEffect(() => {
-        chain.set(props.type, setRenderIcon)
-        return () => {
-            chain.delete(props.type)
-        };
-    }, [RenderIcon, props.type])
-    const icon = useMemo(() => {
-        if (typeof props.type === 'string') {
-            if (props.type.startsWith('http')) {
-                return (
-                    <Icon component={() => (<img src={props.type} alt="icon" className="ant-pro-sider-menu-icon" />)} />
-                );
-            }
-            if (props.type.startsWith('icon-')) {
-                return <RenderIcon {...props} type={props.type} />;
-            }
-            return <Icon {...props} type={props.type} />;
+
+const tr = a => a
+
+const { getOutLine, updateFromIconfontCN, Ant } = Icon
+const outline = getOutLine()
+
+const bodyStyle = {
+  height: 'calc(100vh - 41px)',
+  padding: 10,
+  overflow: 'hidden'
+}
+
+enum IconTypes {
+  IconFont = 'IconFont',
+  AntIcon = 'AntIcon'
+}
+
+
+const defaultprops = {
+  allowEdit: false,
+  perfix: 'icon-'
+  // onChange(icon: string) { },
+  // value: '',
+}
+
+type PropExtend<T, U> = U & {
+  [K in Exclude<keyof T, keyof U>]?: T[K]
+}
+
+type BasicProps = PropExtend<
+  IconProps,
+  PropExtend<typeof defaultprops, {
+    onBlur?: Function,
+    [key: string]: any,
+  }>
+>
+
+type IconHouseProps<T> = BasicProps & WithEditOutProps<T>
+
+type IconSelectorProps<T> = PropExtend<WithEditInProps<T>, BasicProps>
+
+
+const IconHouse: React.FC<IconHouseProps<string>> = ({ onChange, value, onBlur = undefined, addonAfter, ...props }) => {
+  const prefixCls = 'gant-icon-selector';
+
+  // 图标抽屉
+  const [visible, setvisible] = useState(false)
+  // 图标id
+  const [IDs, setIDs] = useState([] as string[])
+  // 搜索框
+  const [text, settext] = useState('')
+  // 当前icon
+  const [currentId, setCurrentId] = useState(value)
+  // 当前显示的图标类型
+
+  const iconTypes = useMemo(() => {
+    let iconTypeArr = [IconTypes.AntIcon]
+    if (!_.isEmpty(IDs)) {
+      iconTypeArr.push(IconTypes.IconFont)
+    }
+    return iconTypeArr
+  }, [IDs])
+
+  const [iconType, seticonType] = useState(iconTypes[0])
+
+  const icons = useMemo(() => ({
+    IconFont: IDs,
+    AntIcon: outline
+  }), [IDs])
+
+
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const click = (e: MouseEvent) => {
+      if (ref.current) {
+        // 点击了其他区域
+        if (!ref.current.contains(e.target as Node)) {
+          if (onBlur && typeof onBlur === 'function') {
+            onBlur()
+          }
         }
-        return props.type;
-    }, [props.type, RenderIcon])
-    return icon
-}
+      }
 
-// 添加图标库,并更新
-GantIcon.updateFromIconfontCN = config => {
-    const Iconfont = Icon.createFromIconfontCN(config)
-    // 记忆最新icon
-    dynamicIcon = Iconfont as IconComponent<IconProps>
-    // // 更新操作
-    for (const setFn of chain.values()) {
-        setFn(() => Iconfont)
     }
-}
+    window.addEventListener('click', click, false)
+    return () => {
+      window.removeEventListener('click', click)
+    };
+  }, [ref, onBlur])
 
-// 在Icon上追加组件
-const iconmap = new Map()
-GantIcon.createFromIconfontCN = (key, config) => {
-    const computedKey = key.slice(0, 1).toUpperCase() + key.slice(1)
-    if (iconmap.has(computedKey)) {
-        return iconmap.get(computedKey)
-    } else if (config) {
-        const Iconfont = Icon.createFromIconfontCN(config)
-        iconmap.set(computedKey, Iconfont)
-        GantIcon[computedKey] = Iconfont
-        return Iconfont
-    }
-    return dynamicIcon
-}
-GantIcon.Ant = Icon
+  useEffect(() => {
+    setCurrentId(value)
+  }, [value])
 
-type Theme = 'fill' | 'outline' | 'twotone'
-const excludeIcons = ['interation', 'colum-height']
-function getIconsByTheme(theme: Theme): Array<string> {
-    const types = []
-    for (const icon of Object.values(allIcons)) {
-        if (icon.theme === theme) {
-            if (!excludeIcons.includes(icon.name)) {
-                types.push(icon.name)
+  const toggleVisible = useCallback(
+    () => {
+      if (!visible) { // 打开
+        settext('')
+      }
+      setvisible(!visible)
+    },
+    [visible],
+  )
+
+  const onSelectIcon = useCallback((id: string) => {
+    setCurrentId(id)
+    if (onChange) onChange(id)
+    toggleVisible()
+  }, [])
+
+  // 获取图标id
+  useState(() => {
+    // const tag = queryIconHouse(iconWareHouse)
+    const tag = document.querySelector('svg');
+    if (!tag) return
+    const iconIds = [].slice.call(tag.querySelectorAll('symbol')).map((symbol: Element) => symbol.id)
+    setIDs(iconIds)
+  })
+
+  // 切换图标
+  const handleTypeChange = useCallback(
+    (e) => {
+      seticonType(e.target.value)
+    },
+    [],
+  )
+
+  const iconsWithFilter = useMemo(() => (
+    icons[iconType].filter(id => {
+      return id.includes(text)
+    })
+  ), [icons, iconType, text])
+
+  return (
+    <div ref={ref} className="gant-icon-selector-wrapper">
+      <Group gant>
+        <div className="gant-icon-select" onClick={toggleVisible}>
+          {
+            currentId ? <Icon type={currentId} title={tr('点击切换')} {...props} /> : <span className={prefixCls + 'select-btn'}>{tr('点击选择')}</span>
+          }
+        </div>
+        {addonAfter ? <span className="ant-input-group-addon">{addonAfter}</span> : undefined}
+      </Group>
+      <Drawer
+        width={visible ? 500 : 0}
+        title={tr("请选择图标")}
+        destroyOnClose
+        placement='right'
+        onClose={toggleVisible}
+        visible={visible}
+        bodyStyle={bodyStyle}
+        getContainer={ref.current as HTMLElement}
+      >
+        <div className={classnames(prefixCls + '-search')}>
+          <Radio.Group value={iconType} onChange={handleTypeChange}>
+            {
+              iconTypes.map(type => <Radio.Button key={type} value={type}>{type}</Radio.Button>)
             }
-        }
-    }
-    return types
+          </Radio.Group>
+          <div style={{ flex: 1, marginLeft: 10, }}>
+            <Input edit={EditStatus.EDIT} value={text} onChange={settext} placeholder={tr('搜索')} allowClear />
+          </div>
+        </div>
+        <div className={classnames(prefixCls + '-scroll')}>
+          {iconsWithFilter.length ? null : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={tr('没有匹配图标')} style={{ margin: '30px auto 0' }} />}
+          <div className={classnames(prefixCls + '-content')}>
+            {
+              iconsWithFilter.map(id => (
+                <div className={prefixCls + '-content-item'} title={id} key={id} onClick={() => onSelectIcon(id)}>
+                  <Icon type={id} className={prefixCls + '-content-item-iconitem'} />
+                  <div style={{ width: '100%' }}>{id}</div>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </Drawer>
+    </div>
+  )
 }
 
-GantIcon.getOutLine = () => getIconsByTheme('outline')
-GantIcon.getFill = () => getIconsByTheme('fill')
-GantIcon.getTwoTone = () => getIconsByTheme('twotone')
+interface IconSelectorCmp {
+  (props: IconSelectorProps<string>): React.ReactElement,
+  updateFromIconfontCN: typeof updateFromIconfontCN,
+  Ant: IconComponent<IconProps>
+}
 
-export default GantIcon
+const IconSelector = compose(
+  toClass,
+  defaultProps(defaultprops),
+  withEdit(({ value, ...props }) => value ? <Icon type={value} {...props} /> : undefined)
+)(IconHouse) as IconSelectorCmp
+
+IconSelector.updateFromIconfontCN = updateFromIconfontCN
+IconSelector.Ant = Ant
+
+export default IconSelector;
+
+export {
+  IconSelector
+}

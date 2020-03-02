@@ -2,22 +2,19 @@
 
 @gant-select: ~'gant-select';
 
-:global{
-  .gant-input .gant-input-group{
-      .@{gant-select}-email.ant-select{
-          .display-table-cell();
-          width: 100%;
-          &:not(:last-child){
-              .ant-select-selection[role='combobox']{
-                  .ant-input{
-                      .input-group-left();
-                      height: 32.5px;
-                  }
-              }
-          }
-          .ant-input{
-              float: none !important;
-          }
-      }    
-  }
+.gant-input .gant-input-group{
+    .@{gant-select}-email.ant-select{
+        width: 100%;
+        &:not(:last-child){
+            .ant-select-selection[role='combobox']{
+                .ant-input{
+                    .input-group-left();
+                    height: 32.5px;
+                }
+            }
+        }
+        .ant-input{
+            float: none !important;
+        }
+    }    
 }

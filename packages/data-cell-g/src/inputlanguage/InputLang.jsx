@@ -92,7 +92,7 @@ class InputLang extends Component {
   }
 
   render() {
-    const { onEnter, setlocale, cacheId, cacheMap, localeList, onLocaleChange, currentValue, setCacheMap, ...props } = this.props
+    const { onEnter, setlocale, cacheId, cacheMap, localeList, onLocaleChange, currentValue, setCacheMap, currentLocale, ...props } = this.props
     return (
       <Input {...props} value={currentValue} onKeyDown={onEnter} onChange={this.onInputChange} />
     );

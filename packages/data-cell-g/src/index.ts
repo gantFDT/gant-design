@@ -1,4 +1,4 @@
-export { default as Icon } from './icon';
+
 //读写分离
 export { default as withEdit } from './compose/withEdit';
 export { default as EditStatus } from './compose/editstatus';
@@ -13,11 +13,11 @@ export { default as InputUrl } from './inputurl';
 export { default as InputEmail } from './inputemail'
 export { default as InputLanguage } from './inputlanguage';
 export { default as InputMoney } from './inputmoney';
-export { default as InputNumber } from './inputnumber'
+export { default as InputNumber } from './inputnumber';
 //picker
 export { default as DatePicker, RangePicker } from './datepicker'
 export { default as ColorPicker } from './colorpicker';
 //selector
 export { default as Selector } from './selector';
 export { default as LocationSelector } from './locationselector';
-export { default as IconSelector } from './iconselector';
+export { default as Icon, IconSelector } from './icon';

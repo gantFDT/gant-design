@@ -3,7 +3,7 @@ export default [{
   children: [{
     name: 'gantd',
     nameZh: '开始使用',
-    home:true
+    home: true
   }]
 }, {
   name: "组件|数据单元",
@@ -61,7 +61,7 @@ export default [{
     package: 'color-picker-g',
   },
   {
-    name: 'IconSelector',
+    name: 'Icon',
     nameZh: '图标选择器',
   },
   ]
@@ -150,36 +150,33 @@ export default [{
   ]
 }, {
   name: '组件|其他',
-  children: [{
-    name: 'Icon',
-    nameZh: '图标'
-  }, {
-    name: 'AutoReload',
-    nameZh: '自动刷新组件',
-    package: 'auto-reload-g',
-  }, {
-    name: 'Intro',
-    nameZh: '简介'
-  },
-  {
-    name: 'TaskBoard',
-    nameZh: '任务面板'
-  },
-  {
-    name: 'Loading',
-    nameZh: '载入中'
-  }, {
-    name: 'Style',
-    nameZh: '公共样式类'
-  }, {
-    name: 'Utils',
-    nameZh: '公共工具类',
-    package:'util-g'
-  },{
-    name: 'NodeUtils',
-    nameZh: '公共工具类',
-    package:'node-util-g'
-  }
+  children: [
+    //   {
+    //   name: 'Icon',
+    //   nameZh: '图标'
+    // },
+    {
+      name: 'AutoReload',
+      nameZh: '自动刷新组件',
+      package: 'auto-reload-g',
+    }, {
+      name: 'Intro',
+      nameZh: '简介'
+    },
+    {
+      name: 'TaskBoard',
+      nameZh: '任务面板'
+    },
+    {
+      name: 'Loading',
+      nameZh: '载入中'
+    }, {
+      name: 'Style',
+      nameZh: '公共样式类'
+    }, {
+      name: 'Utils',
+      nameZh: '公共工具类'
+    }
     // {
     // 			name: 'TaskBoard',
     // 			nameZh: '任务面板'

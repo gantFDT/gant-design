@@ -6,9 +6,9 @@ import CodeDecorator from '../_util/CodeDecorator'
 import code from './code.js'
 import _ from 'lodash'
 
-const SubmenuIcon = Icon.createFromIconfontCN('SubmenuIcon', {
-  scriptUrl: '//at.alicdn.com/t/font_687278_5i22ts2wtbx.js'
-})
+// const SubmenuIcon = Icon.createFromIconfontCN('SubmenuIcon', {
+//   scriptUrl: '//at.alicdn.com/t/font_687278_5i22ts2wtbx.js'
+// })
 
 function BasicUse() {
   const menuData = [
