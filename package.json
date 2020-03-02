@@ -21,10 +21,10 @@
   "main": "lib/index.js",
   "module": "lib/index.js",
   "scripts": {
-    "dev": "start-storybook -p 60004",
+    "dev": "start-storybook -p 60004 -s public",
     "build-storybook": "build-storybook",
     "compile": "gulp",
-    "build": "gulp && webpack",
+    "build": "gulp && webpack -s public",
     "pub": "gulp && webpack && lerna publish"
   },
   "files": [
