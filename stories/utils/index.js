@@ -21,11 +21,6 @@ const config = {
       cmp: codeFun,
     },
     {
-      title: 'guid | 生成uuid',
-      describe: '',
-      cmp: codeFun,
-    },
-    {
       title: 'getType | 判断类型',
       describe: '',
       cmp: codeFun,
@@ -36,12 +31,12 @@ const config = {
       cmp: codeFun,
     },
     {
-      title: 'JSONisEqual | JSON数据相等',
+      title: 'judgeJSONisEqual | 判断JSON数据相等',
       describe: '',
       cmp: codeFun,
     },
     {
-      title: 'IEVersion | 判断ie版本',
+      title: 'getIEVersion | 获取ie版本',
       describe: '',
       cmp: codeFun,
     },
@@ -71,17 +66,7 @@ const config = {
       cmp: codeFun,
     },
     {
-      title: 'getKey | 获取一个随机Key',
-      describe: '',
-      cmp: codeFun,
-    },
-    {
       title: 'generateUuid | 生成uuid',
-      describe: '',
-      cmp: codeFun,
-    },
-    {
-      title: 'randomString | 生成随机字符串',
       describe: '',
       cmp: codeFun,
     },

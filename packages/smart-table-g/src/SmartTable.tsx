@@ -11,7 +11,7 @@ import formatSchema from './formatschema'
 import ViewPicker, { DefaultView } from './viewpicker'
 import { useTableConfig, useLocalStorage } from './hooks'
 import { withFocusKeyEvent } from './keyevent'
-import { guid } from '@util'
+import { generateUuid } from '@util'
 import { IntlProvider, useIntl } from 'react-intl'
 import en from './locale/en-US'
 import zh from './locale/zh-CN'
@@ -174,7 +174,7 @@ function SmartTable<R>(props: SmartTableProps<R>) {
     let newCustomViews = []
     const { name, panelConfig } = vals;
     const newView: ViewConfig = {
-      viewId: guid(),
+      viewId: generateUuid(12),
       name,
       version: moment().format(viewVersionFormat),
       panelConfig,
