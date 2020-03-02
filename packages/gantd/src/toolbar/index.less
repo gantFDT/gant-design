@@ -1,91 +1,52 @@
-// @import '~antd/lib/style/themes/default.less';
-
-
 @import '../style/theme/index';
 @footertoolbar-prefix-cls: ~'@{gant-prefix}-toolbar';
 
-.@{footertoolbar-prefix-cls} {
-  width: 100%;
-  background: #fff;
-  padding: 5px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+:global {
+  .@{footertoolbar-prefix-cls} {
+    width: 100%;
+    background: #fff;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
-  &:after {
-    content: '';
-    display: block;
-    clear: both;
-  }
-
-  &-left {
-    float: left;
-    button {
-      margin-right: 10px;
+    &:after {
+      content: '';
+      display: block;
+      clear: both;
     }
-  }
 
-  &-right {
-    float: right;
-    button {
-      margin-left: 10px;
+    &-left {
+      float: left;
+      button {
+        margin-right: 10px;
+      }
     }
-  }
 
-  &-space {
-    -webkit-box-flex: 1;
-    flex: auto;
-    margin: 0 !important;
-    padding: 0 !important;
-    border: 0 !important;
-    height: 1px;
-  }
+    &-right {
+      float: right;
+      button {
+        margin-left: 10px;
+      }
+    }
 
-  &-fixed{
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    box-shadow: 0 -1px 2px rgba(128, 128, 128, 0.03);
-    border-top: 1px solid rgba(128,128,128,0.1);
-    z-index: 9;
-  }
+    &-space {
+      -webkit-box-flex: 1;
+      flex: auto;
+      margin: 0 !important;
+      padding: 0 !important;
+      border: 0 !important;
+      height: 1px;
+    }
 
+    &-fixed{
+      position: fixed;
+      bottom: 0;
+      right: 0;
+      box-shadow: 0 -1px 2px rgba(128, 128, 128, 0.03);
+      border-top: 1px solid rgba(128,128,128,0.1);
+      z-index: 9;
+    }
+
+  }
 }
-
-
-// @flex-group: ~'@{gant-prefix}-overflow-tool';
-
-// .@{flex-group}-outer {
-//   position: relative;
-//   flex: 1;
-//   width: 0;
-
-//   .@{flex-group}-inner {
-//     display: flex;
-
-//     .@{flex-group}-space {
-//       -webkit-box-flex: 1;
-//       flex: auto;
-//       margin: 0 !important;
-//       padding: 0 !important;
-//       border: 0 !important;
-//       height: 1px;
-//     }
-
-//     &>* {
-//       flex-grow: 0;
-//       flex-shrink: 0;
-//       margin:0 5px;
-//     }
-//   }
-
-//   .@{flex-group}-icon {
-//     // width:30px;
-//     // min-width:30px;
-//     // position: absolute;
-//     // top:0px;
-//     // right:0px;
-//     margin-left: 5px;
-//     // line-height: 30px;
-//   }
-// }

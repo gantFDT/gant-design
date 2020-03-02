@@ -1,6 +1,7 @@
 const schema = {
     type: "object",
     title: "普通表单",
+    required:['key_1'],
     propertyType: {
         key_1: {
             title: "普通输入框",
@@ -100,11 +101,11 @@ const configSchma = {
             type: 'string',
             componentType: "InputNumber",
         },
-        "backgroundColor": {
-            title: "backgroundColor",
-            type: "string",
-            componentType: "ColorPicker",
-        }
+        // "backgroundColor": {
+        //     title: "backgroundColor",
+        //     type: "string",
+        //     componentType: "ColorPicker",
+        // }
     }
 }
 

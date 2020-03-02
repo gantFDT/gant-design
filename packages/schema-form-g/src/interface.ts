@@ -4,7 +4,7 @@ import { Gutter } from 'antd/lib/grid/row'
 import { ColProps } from 'antd/lib/grid/col'
 import { WrappedFormUtils, GetFieldDecoratorOptions } from 'antd/lib/form/Form.d'
 import { FormLabelAlign } from 'antd/lib/form/FormItem'
-
+import { FieldsType } from './maps'
 export type Type = "object" | "array" | "number" | "string" | "boolean" | "date"
 export enum Types {
 	object = "object",
@@ -29,7 +29,7 @@ export interface Schema {
 	title?: string,
 	operator?: string,
 	type?: Type | string,
-	componentType?: string,
+	componentType?: string | FieldsType,
 	propertyType?: {
 		[propsname: string]: Schema
 	},

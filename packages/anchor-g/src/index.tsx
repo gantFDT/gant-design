@@ -1,6 +1,6 @@
 import './index.less';
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
-import { Dropdown, Menu, Anchor, Icon } from 'antd';
+import { Dropdown, Menu, Anchor, Icon,Tooltip } from 'antd';
 import classnames from 'classnames'
 
 const GantAnchor = (props) => {
@@ -160,7 +160,10 @@ const GantAnchor = (props) => {
               <Icon type="switcher" onClick={onSwitchClick} style={{ width: '100%', paddingRight: '10px', textAlign: 'right' }} />
             </Anchor>
             <Anchor offsetTop={28} onClick={(e) => { e.preventDefault() }} {...nextProps}>
-              {list.map(item => <Anchor.Link key={item.key || item.title} href={`#${item.id || item.title}`} title={<>{item.title}{item.complete ? <Icon type="check-circle" theme="twoTone" twoToneColor="#52c41a" style={{ paddingLeft: "5px" }} /> : null}</>} />)}
+              {list.map(item => <Anchor.Link key={item.key || item.title} href={`#${item.id || item.title}`} title={<>
+                <Tooltip title={item.title}>{item.title}</Tooltip>
+                {item.complete ? <Icon type="check-circle" theme="twoTone" twoToneColor="#52c41a" style={{ paddingLeft: "5px" }} /> : null}
+              </>} />)}
             </Anchor>
           </div>
         </div>

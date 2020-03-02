@@ -35,16 +35,16 @@ UiSchema
 
 | 属性               | 说明                                      | 类型           | 默认值 |
 | ------------------ | ----------------------------------------- | -------------- | ------ |
-| form:orders        | 字段排序，仅对form结构生效                | object         | {}     |
+| form:orders        | 字段排序，仅对form结构生效                | string[]         | []     |
 | form:gutter        | Form中filed之间的间隙                     | RowProps       | 10     |
-| form:style         | Form style样式                            | CSS            | {}     |
+| form:style         | Form style样式                            | CSS            | {padding:0}     |
 | form:className     | Form className                            | string         | ''     |
 | field:col          | form中field布局方式                       | ColProps       | 24     |
 | field:labelCol     | field中Label布局方式                      | ColProps       | 24     |
 | field:wrapperCol   | field中Component布局方式                  | ColProps       | 24     |
 | field:labelAlign   | label对齐方式                             | 'left'/'right' | 'left' |
-| field:style        | field style样式                            | CSS            | {}     |
-| field:className    | field className                            | string         | ''     |
+| field:style        | field style样式                            | CSS            |      |
+| field:className    | field className                            | string         | '     |
 
 
 TitleConfig  
@@ -59,11 +59,11 @@ ComponentType
 | Password    | 密码输入框   | Selector         | 普通选择器     |
 | InputNumber | 数字输入框   | IconSelector     | 图标选择器     |
 | InputMoney  | 金额输入框   | LocationSelector | 地址选择器     |
-| Url         | 链接输入框   | Switch           | 开关           |
-| Email       | 邮箱输入框   | Checkbox         | 勾选框         |
-| Language    | 多语言输入框 | CheckboxGroup    | 勾选框组       |
-| CellPhone   | 手机号输入框 | Radio            | 单选           |
-| TelePhone   | 电话输入框   | RadioGroup       | 单选组         |
+| InputUrl         | 链接输入框   | Switch           | 开关           |
+| InputEmail       | 邮箱输入框   | Checkbox         | 勾选框         |
+| InputLanguage    | 多语言输入框 | CheckboxGroup    | 勾选框组       |
+| InputCellPhone   | 手机号输入框 | Radio            | 单选           |
+| InputTelePhone   | 电话输入框   | RadioGroup       | 单选组         |
 | TextArea    | 多行输入框   | AutoComplete     | 自动完成       |
 | DatePicker  | 日期选择器   | RangePicker      | 日期区间选择器 |
  

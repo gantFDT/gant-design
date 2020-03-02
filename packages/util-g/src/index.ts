@@ -45,16 +45,7 @@ export const hex2hsl = (hexColor: string): string | number|string[] => {
   return sColor;
 };
 
-/**
- * 生成uuid
- */
-export function guid() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-    var r = Math.random() * 16 | 0,
-      v = c == 'x' ? r : (r & 0x3 | 0x8)
-    return v.toString(16)
-  })
-}
+
 
 /**
  * 判断类型
@@ -69,13 +60,13 @@ export const deepCopy4JSON: <T>(data: T) => T = (obj) => JSON.parse(JSON.stringi
 /**
  * JSON数据相等
  */
-export const JSONisEqual = (a: object , b: object) => JSON.stringify(a) === JSON.stringify(b);
+export const judgeJSONisEqual = (a: object , b: object) => JSON.stringify(a) === JSON.stringify(b);
 
 
 /**
  * 判断ie版本
  */
-export function IEVersion() {
+export function getIEVersion() {
   const { userAgent } = navigator; // 取得浏览器的userAgent字符串
   const isIE = userAgent.indexOf("compatible") > -1 && userAgent.indexOf("MSIE") > -1; // 判断是否IE<11浏览器
   const isEdge = userAgent.indexOf("Edge") > -1 && !isIE; // 判断是否IE的Edge浏览器
@@ -107,7 +98,7 @@ export function IEVersion() {
  * 判断是否为ie浏览器
  */
 export function isIE() {
-  let ieVersion = IEVersion()
+  let ieVersion = getIEVersion()
   return ieVersion !== -1 && ieVersion !== 'edge'
 }
 
@@ -178,12 +169,7 @@ export function throttle(time: number): (fn: any) => any {
 }
 
 
-/**
- * 获取一个随机Key
- */
-export function getKey(): string {
-  return Math.random().toString(32).slice(2)
-}
+ 
 
 /*
 生成uuid
@@ -219,18 +205,7 @@ export function generateUuid(len: number = 32, radix: number = 10): string {
   return uuid.join('');
 }
 
-/*
-生成随机字符串
-len:number  长度
-*/
-export function randomString(len: number = 48) {
-  const chars = 'abcdefhijkmnprstwxyz2345678';
-  let pwd = '', i, maxPos = chars.length;
-  for (i = 0; i < len; i++) {
-    pwd += chars.charAt(Math.floor(Math.random() * maxPos));
-  }
-  return pwd;
-}
+ 
 
 /**
  * 判断参数是不是空的 // {xxxx:undefined} => 空的
@@ -240,70 +215,6 @@ export const isParamsEmpty = (value: object) => {
   const entries = Object.entries(value);
   return !entries.length || Object.entries(value).every(([key, value]) => value === undefined)
 };
-
-
-/**
- * 根据文件获取大小获取对应带单位的字符串
- * @param {number |} num 文件size
- */
-export function getFileUnit(size: number | string): string {
-  const num = parseInt(`${size}`, 10)
-  const B = 1024
-  const KB = B ** 2
-  const MB = B ** 3
-  const GB = B ** 4
-  let res: string | number = 0
-  let unit = ''
-  if (num < B) {
-    res = num
-    unit = 'B'
-  } else if (num >= B && num < KB) {
-    res = num / B
-    unit = 'KB'
-  } else if (num >= KB && num < MB) {
-    res = num / KB
-    unit = 'M'
-  } else if (num >= MB && num < GB) {
-    res = num / MB
-    unit = 'G'
-  }
-  res = parseInt(res.toString(), 10) === res ? res : res.toFixed(2)
-  return `${res} ${unit}`
-}
-
-
-/**
- * 根据文件后缀名获取对应的图标名称
- * @param {string} fileName 文件名称
- */
-export function getIconNameByFileName(fileName: string) {
-  const suffix = fileName.slice(fileName.lastIndexOf('.') + 1).toLowerCase()
-  const map = {
-    'file-text': ['txt', 'html', 'htm', 'css', 'js'],
-    'file-image': ['bmp', 'jpg', 'jpeg', 'png', 'gif', 'svg'],
-    // 'file-audio': ['wav', 'aif', 'aiff', 'au', 'mp3', 'ra', 'rm', 'ram', 'mid', 'rmi', 'aac', 'flac', 'ape'],
-    // 'file-video': ['mp4', 'wmv', 'asf', 'asx', '3gp', 'rm', 'rmvb', 'mov', 'm4v', 'avi', 'dat', 'mkv', 'flv', 'vob'],
-    'file': ['wav', 'aif', 'aiff', 'au', 'mp3', 'ra', 'rm', 'ram', 'mid', 'rmi', 'aac', 'flac', 'ape', 'mp4', 'wmv', 'asf', 'asx', '3gp', 'rm', 'rmvb', 'mov', 'm4v', 'avi', 'dat', 'mkv', 'flv', 'vob'],
-    'file-word': ['doc', 'docx', 'docm', 'dotx', 'dotx'],
-    'file-excel': ['xls', 'xlsx', 'xlsm', 'xltx', 'xltm', 'xlsb', 'xlam'],
-    'file-ppt': ['ppt', 'pptx', 'pptm', 'ppsx', 'potx', 'potm', 'ppam'],
-    'file-pdf': ['pdf'],
-    'file-zip': ['zip', 'gzip', '7z', 'rar', 'cab', 'ace', 'tar', 'jar', 'gz', 'lzh', 'iso', 'uue', 'arj', 'bz2'],
-    'file-md': ['md']
-  }
-
-  let iconName = 'file-unknown'
-
-  Object.keys(map).some(key => {
-    const isMatch = map[key].indexOf(suffix) !== -1
-    if (isMatch) {
-      iconName = key
-    }
-    return isMatch
-  })
-
-  return iconName
-}
 
 
 // 根据width换算栅格占位格数
@@ -323,54 +234,6 @@ export function spanCalculate(width: number): number {
 
 };
 
-// 将css变量格式装换成小驼峰 `--primary-color:blue;--sider-menu-bg:red` => `{primaryColor:'blue',siderMenuBg:'red'}`
-export function cssVar2camel(styles: string, keys2format: string[]) {
-  function formatCamel(str: string) {
-    return str.slice(2).split('-').map((V, I) => (I ? V[0].toUpperCase() : V[0]) + V.slice(1)).join('')
-  }
-  return Object.entries(styles)
-    .filter(([key]) => key.startsWith('--') && keys2format.includes(formatCamel(key)))
-    .reduce((prev, curt) => {
-      const [key, value] = curt;
-      const camelKey = formatCamel(key);
-      return {
-        ...prev,
-        [camelKey]: value,
-      }
-    }, {})
-}
-
-// 将小驼峰转换成css变量格式 `{primaryColor:'blue',siderMenuBg:'red'}` => `--primary-color:blue;--sider-menu-bg:red`
-export function camel2cssVar(config: object, keys2format: string[]) {
-  return Object.entries(config)
-    .filter(([key]) => keys2format.includes(key))
-    .reduce((prev, curt) => {
-      const [key, value] = curt;
-      const cssVar = `--${key.replace(/([A-Z])/g, "-$1").toLowerCase()}`;
-      return {
-        ...prev,
-        [cssVar]: value,
-      }
-    }, {})
-}
-
-// 获取两个时间的间隔描述
-// export function getTimeInterval(startTimeStr: string, endTimeStr: string): string {
-//   const startTime: any = new Date(startTimeStr); // 开始时间
-//   const endTime: any = new Date(endTimeStr); // 结束时间
-//   let seconds: number | string = Math.floor((endTime - startTime) / 1000); // 秒数
-//   let minutes: number | string = Math.floor((endTime - startTime) / 1000 / 60); // 分钟
-//   let hours: number | string = Math.floor((endTime - startTime) / 1000 / 60 / 60); // 小时
-//   let days: number | string = Math.floor((endTime - startTime) / 1000 / 60 / 60 / 24); // 天数
-//   if (seconds < 60) {
-//     return `<1${tr('分钟')}`
-//   }
-//   days = days ? (days + tr('天')) : ''
-//   hours = hours ? (hours + tr('时')) : ''
-//   minutes = minutes ? (minutes + tr('分')) : ''
-//   seconds = seconds ? (seconds + tr('秒')) : ''
-//   return days + hours + minutes + seconds
-// }
 
 /**
  * 解析路由的查询参数query

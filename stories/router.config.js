@@ -131,7 +131,7 @@ export default [{
   {
     name: 'Modal',
     nameZh: '弹窗',
-    package: 'auto-modal-g',
+    package: 'modal-g',
   }, {
     name: 'Toolbar',
     nameZh: '工具条',
@@ -202,10 +202,12 @@ export default [{
     //   nameZh: '复制行数据'
     // }
   ]
-}, {
-  name: '组件|废弃',
-  children: [{
-    name: 'VisibleMenu',
-    nameZh: '动态列'
-  }]
-}]
+}, 
+// {
+//   name: '组件|废弃',
+//   children: [{
+//     name: 'VisibleMenu',
+//     nameZh: '动态列'
+//   }]
+// }
+]

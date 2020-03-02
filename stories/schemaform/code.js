@@ -550,7 +550,7 @@ function DependenceData() {
                 type: "string",
                 dependencies: ["key_1"],
                 onDependenciesChange: (value, props, form) => {
-                    form && form.setFieldsValue({ key_2: value })
+                    // form && form.setFieldsValue({ key_2: value })
                 }
             },
         }
