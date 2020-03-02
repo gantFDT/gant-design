@@ -5,6 +5,7 @@
 :global{
   .gant-color-picker {
     &-mainwrap{
+      box-sizing: content-box;
       display: flex;
       flex-wrap: wrap;
       position: relative;
@@ -38,7 +39,7 @@
     }
 
     &-onlypreview{
-      display: flex;
+      display: inline-flex;
       justify-content: center;
       align-items: center;
       color: #fff;
@@ -94,6 +95,19 @@
 
     &-chromepicker{
       background: var(--component-background),
+    }
+  }
+  .gant-input-group {
+    .gant-color-picker {
+      &-mainwrap{
+        box-shadow: none;
+        border: 1px solid #d9d9d9;
+        border-radius: 4px 0 0 4px;
+      }
+      &-preview{
+        margin: -1px 0 -1px -1px;
+        height: calc(100% + 2px);
+      }
     }
   }
 }
