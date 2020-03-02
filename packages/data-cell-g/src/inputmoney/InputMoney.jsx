@@ -27,7 +27,6 @@ const withMoneyType = compose(
     }
   }),
   withProps(({ value = {}, format, onChange }) => {
-    console.log(value)
     const { key: currency = symbols[0], value: money } = value
     let obj = {
       currency,

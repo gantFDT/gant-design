@@ -17,7 +17,8 @@ const withCode = compose(
     }
   }),
   defaultProps({
-    placeholder: '请输入电话号码'
+    placeholder: '请输入电话号码',
+    allowClear: true,
   }),
   withProps(({ onChange, code: oCode, phone: oPhone }) => {
     return {

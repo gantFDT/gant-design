@@ -29,7 +29,7 @@ const cmps = [
       <>KG</>
     )
     return <>
-      <InputNumber placeholder='金额' edit={EditStatus.EDIT} value={value} onChange={setValue} onSave={(id, value, cb) => cb()} addonBefore={addonBefore} addonAfter={addonAfter} />
+      <InputNumber placeholder='金额' edit={EditStatus.CANCEL} value={value} onChange={setValue} onSave={(id, value, cb) => cb()} addonBefore={addonBefore} addonAfter={addonAfter} />
     </>
   },
 ]
