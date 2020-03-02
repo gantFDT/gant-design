@@ -11,17 +11,6 @@ function sleep(time){
     })
 }`
 
-const formatJSON2String = `
-/**
- * formatJSON2String函数 JSON对象转换为字符串
- * @params jsonObj JSON对象
-*/
-function formatJSON2String(jsonObj) {
-    let str = JSON.stringify(jsonObj, "", "\t")
-    // let str = JSON.stringify(jsonObj,null,"\t")
-    return str
-  }
-`
 
 const delDir = `
 /**
@@ -125,33 +114,13 @@ function  copyDir(src, dist) {
 }
   
 `
-const execCmd = `
 
-function execCmd(shell, successCb = () => { }, errorCb = () => {}) {
-        return new Promise((resolve, reject) => {
-        exec(shell, {
-            encoding: 'utf8'
-        }, (error, statusbar) => {
-            if (error) {
-            errorCb(error)
-            resolve(false);
-            }
-            successCb()
-            resolve(true);
-        });
-        });
-    }
-}
-
-`
 export default [
     sleep,
-    formatJSON2String,
     delDir,
     fileReplace,
     dirReplace,
     mkdirsSync,
     copySync,
-    copyDir,
-    execCmd
+    copyDir
 ]

@@ -25,11 +25,6 @@ const utils = require('node-util-g')\n${V}`),
       cmp: demo,
     },
     {
-      title: 'formatJSON2String | JSON对象转换为字符串',
-      describe: '',
-      cmp: demo,
-    },
-    {
       title: 'delDir | 同步删除文件夹',
       describe: '',
       cmp: demo,
@@ -56,11 +51,6 @@ const utils = require('node-util-g')\n${V}`),
     },
     {
       title: 'copyDir | 同步复制文件夹',
-      describe: '',
-      cmp: demo,
-    },
-    {
-      title: 'execCmd | 递归创建目录 同步方法',
       describe: '',
       cmp: demo,
     }

@@ -11,11 +11,7 @@ const utils = {
     })
   },
 
-  formatJSON2String(jsonObj) {
-    let str = JSON.stringify(jsonObj, "", "\t")
-    // let str = JSON.stringify(jsonObj,null,"\t")
-    return str
-  },
+
   //同步删除文件夹
   delDir(path) {
     let files = [];
@@ -94,20 +90,6 @@ const utils = {
     utils._copy(src, dist);
   },
 
-  execCmd(shell, successCb = () => { }, errorCb = () => {}) {
-    return new Promise((resolve, reject) => {
-      exec(shell, {
-        encoding: 'utf8'
-      }, (error, statusbar) => {
-        if (error) {
-          errorCb(error)
-          resolve(false);
-        }
-        successCb()
-        resolve(true);
-      });
-    });
-  }
 }
 
 module.exports = utils
