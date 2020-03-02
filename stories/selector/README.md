@@ -14,3 +14,4 @@
 |useCache|是否开启选择器内置的任务缓存,建议在外部查询条件不会改变的情况下才开启，否则一定要设置为false|boolean|true|
 |useStorage|是否开启最近选择|boolean|true|
 |readOnly|只读模式|boolean|false|
+|blurOnSelect|是否在选中一个项的时候失焦|boolean|true|

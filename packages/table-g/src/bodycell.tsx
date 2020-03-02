@@ -202,14 +202,19 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 					edit: EditStatus.EDIT,
 					autoFocus: true,
 					...element.props,
-					className: classnames(element.props.className, 'table-cell-editing'),
+					// className: classnames(element.props.className, 'table-cell-editing'),
+					wrapperClassName: 'table-cell-editing',
 					style: {
-						width: clientWidth,
-						height: clientHeight,
-						maxWidth: clientWidth,
-						maxHeight: clientHeight,
-						minWidth: clientWidth,
-						minHeight: clientHeight,
+						width: parseInt(clientWidth) + 2,
+						height: parseInt(clientHeight) + 2,
+						// maxWidth: clientWidth,
+						// maxHeight: clientHeight,
+						// minWidth: clientWidth,
+						// minHeight: clientHeight,
+						// margin: (cellPadding as number) * -1,
+						position: 'absolute',
+						top: -1,
+						left: -1,
 						...element.props.style,
 					},
 					onChange,
@@ -220,7 +225,7 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 
 			}
 		},
-		[edit, value, element, children, sortable, record, activeCell],
+		[edit, value, element, children, sortable, record, activeCell, cellPadding],
 	)
 
 	const valueChanged = useMemo(

@@ -31,12 +31,17 @@ function BottomUse() {
 
 function ReadOnlyUse() {
   const [color, setColor] = useState('#EB2F96');
+  const onSave = (id, value, cb) => {
+    console.log(id, value);
+    cb()
+  }
 
   return <>
-    <h3 style={{ color }}>颜色选择器(只读)</h3>
-    <ColorPicker
+    <h3 style={{ color }}>颜色选择器（读写分离）</h3>
+    <DataCellColorPicker
       edit={false}
       value={color}
+      onSave={onSave}
       onChange={setColor.bind(null)}
     />
   </>
@@ -46,9 +51,9 @@ function DisabledUse() {
   const [color, setColor] = useState('#EB2F96');
 
   return <>
-    <h3 style={{ color }}>颜色选择器(禁用)</h3>
-    <ColorPicker
-      disabled
+    <h3 style={{ color }}>颜色选择器（只读）</h3>
+    <DataCellColorPicker
+      allowEdit={false}
       value={color}
       onChange={setColor.bind(null)}
     />
@@ -73,8 +78,8 @@ const config = {
       cmp: BottomUse
     },
     {
-      title: '只读',
-      describe: '只读的用法',
+      title: '读写分离',
+      describe: '读写分离的用法',
       cmp: ReadOnlyUse
     },
     {
