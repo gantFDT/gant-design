@@ -15,15 +15,14 @@ const withColorPicker = compose(
 @compose(
   toClass,
   withColorPicker,
-  withEdit(({ value }) => value)
+  withEdit(({ value }) => value ? <GantColorPicker value={value} edit={false}/> : undefined)
 )
 class ColorPicker extends React.Component<any> {
   render() {
-    const { addonBefore, addonAfter, className, ...props } = this.props
+    const { addonAfter, className, ...props } = this.props
 
     return (
       <Group gant className={className}>
-        {addonBefore ? <span className="ant-input-group-addon">{addonBefore}</span> : null}
         <GantColorPicker {...props}/>
         {addonAfter ? <span className="ant-input-group-addon">{addonAfter}</span> : null}
       </Group>
