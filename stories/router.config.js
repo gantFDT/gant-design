@@ -173,7 +173,12 @@ export default [{
     nameZh: '公共样式类'
   }, {
     name: 'Utils',
-    nameZh: '公共工具类'
+    nameZh: '公共工具类',
+    package:'util-g'
+  },{
+    name: 'NodeUtils',
+    nameZh: '公共工具类',
+    package:'node-util-g'
   }
     // {
     // 			name: 'TaskBoard',
@@ -200,10 +205,12 @@ export default [{
     //   nameZh: '复制行数据'
     // }
   ]
-}, {
-  name: '组件|废弃',
-  children: [{
-    name: 'VisibleMenu',
-    nameZh: '动态列'
-  }]
-}]
+}, 
+// {
+//   name: '组件|废弃',
+//   children: [{
+//     name: 'VisibleMenu',
+//     nameZh: '动态列'
+//   }]
+// }
+]

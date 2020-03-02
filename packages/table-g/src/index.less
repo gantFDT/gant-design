@@ -68,7 +68,17 @@
                        .overflowwrap();
                    }
                    .table-cell-editing {
-                    margin: -5px !important;                  
+                    margin: -5px !important;   
+                    *{
+                        box-shadow: none!important;
+                        border-radius: 0!important;
+                        &:hover{
+                            box-shadow: none!important;
+                        }
+                        &:active{
+                            box-shadow: none!important;
+                        }
+                    }               
                     .ant-input-group {
                       width: 100%;
                       height: 100%;                  
