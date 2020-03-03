@@ -57,7 +57,8 @@ const codePenStyle = {
     textIndent: -9999,
     background: 'transparent url(https://gw.alipayobjects.com/zos/rmsportal/OtZslpOjYXijshDERXwc.svg) center / 14px no-repeat',
     border: 0,
-    cursor: 'pointer'
+    cursor: 'pointer',
+    marginTop: 5
 }
 
 const codeShowExtra = {
