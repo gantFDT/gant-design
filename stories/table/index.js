@@ -3,7 +3,7 @@ import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import CodeDecorator from '../_util/CodeDecorator';
 import code from './code'
 import Table from '@table'
-import { EditStatus, SwitchStatus, Input, InputNumber, Selector } from '@data-cell'
+import { EditStatus, SwitchStatus, Input, InputNumber, Selector, InputTelePhone, InputLanguage } from '@data-cell'
 import { Button, Slider } from 'antd'
 
 import { getList, getEditList } from './mock'
@@ -226,6 +226,31 @@ function WidthTable(props) {
   })
 
   return <Table columns={columns} dataSource={dataSource} scroll={{ x: 1050 }} />
+}
+
+
+function ScrollTable() {
+
+  const [dataSource, setdataSource] = useState(() => getList(5))
+
+  const onWheel = useCallback(
+    () => {
+      setdataSource(list => ([
+        ...list,
+        ...getList(5),
+      ]))
+    },
+    [],
+  )
+
+  return (
+    <Table
+      columns={columns}
+      dataSource={dataSource}
+      scroll={{ y: 300 }}
+      wheel={onWheel}
+    />
+  )
 }
 
 function TitleUse(props) {
@@ -615,7 +640,7 @@ const config = {
   ),
   children: [
     {
-      title: '基本用法',
+      title: '可缩放列',
       describe: '通过columns指定显示的列，通过dataSource显示数据，缩放列的功能默认开启，通过设置resizable来修改配置',
       cmp: BasicTable
     },
@@ -636,8 +661,13 @@ const config = {
     },
     {
       title: '嵌套表头',
-      describe: 'table的宽度需要是各列宽度的总和，如果没有设置列宽，将平分table的宽度,table默认600px，如果不太清楚table的布局策略，最好table宽度和所有列都加上宽度',
+      describe: '',
       cmp: WidthTable
+    },
+    {
+      title: '滚动加载',
+      describe: 'wheel指定滚动回调',
+      cmp: ScrollTable
     },
     {
       title: '宽表格',

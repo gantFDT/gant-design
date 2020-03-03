@@ -126,7 +126,11 @@ function VirtualScrollTable() {
 		scroll={{ y: 300 }}
 	  />
 	)
-  }`
+  }
+ReactDOM.render(
+	<WidthTable/>,
+	mountNode
+  )`
 
 
 const WidthTable = `import { Table } from 'table-g';
@@ -173,6 +177,39 @@ ReactDOM.render(
   <WidthTable/>,
   mountNode
 )`
+
+const ScrollTable = `import { Table } from 'table-g';
+
+function ScrollTable() {
+
+	const [dataSource, setdataSource] = useState(() => getList(5))
+  
+	const onWheel = useCallback(
+	  () => {
+		setdataSource(list => ([
+		  ...list,
+		  ...getList(5),
+		]))
+	  },
+	  [],
+	)
+  
+	return (
+	  <Table
+		columns={columns}
+		dataSource={dataSource}
+		scroll={{ y: 300 }}
+		wheel={onWheel}
+	  />
+	)
+  }
+ReactDOM.render(
+  <ScrollTable/>,
+  mountNode
+)`
+
+
+
 
 const code2 = `import {Table} from 'gantd';
 import { Button } from 'antd';
@@ -642,4 +679,4 @@ ReactDOM.render(
 
 
 
-export default [code1, EditTable, VirtualScroll, WidthTable, code2, wideTable, TreeTable, code6, code7, empty]
+export default [code1, EditTable, VirtualScroll, WidthTable, ScrollTable, code2, wideTable, TreeTable, code6, code7, empty]
