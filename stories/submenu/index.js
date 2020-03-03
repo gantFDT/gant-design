@@ -6,7 +6,7 @@ import CodeDecorator from '../_util/CodeDecorator'
 import code from './code.js'
 import _ from 'lodash'
 
-// const SubmenuIcon = Icon.createFromIconfontCN('SubmenuIcon', {
+// const Icon = Icon.createFromIconfontCN('Icon', {
 //   scriptUrl: '//at.alicdn.com/t/font_687278_5i22ts2wtbx.js'
 // })
 
@@ -14,36 +14,36 @@ function BasicUse() {
   const menuData = [
     {
       title: '个人设置',
-      icon: <SubmenuIcon type='icon-xingming' />,
+      icon: <Icon type='icon-xingming' />,
       path: 'personal',
       count: 10
     },
     {
       title: '语言偏好',
-      icon: <SubmenuIcon type='icon-yuyan' />,
+      icon: <Icon type='icon-yuyan' />,
       path: 'preferences',
     },
     {
       title: '修改密码',
-      icon: <SubmenuIcon type='icon-iconbi' />,
+      icon: <Icon type='icon-iconbi' />,
       path: 'editpwd',
       count: 10
     },
     {
       title: '关注领域',
-      icon: <SubmenuIcon type='icon-mubiao' />,
+      icon: <Icon type='icon-mubiao' />,
       path: 'focus',
       count: 10
     },
     {
       title: '历史消息',
-      icon: <SubmenuIcon type='icon-lishi' />,
+      icon: <Icon type='icon-lishi' />,
       path: 'historymsg',
       count: 10
     },
     {
       title: '账号绑定',
-      icon: <SubmenuIcon type='icon-bangding' />,
+      icon: <Icon type='icon-bangding' />,
       path: 'accountbind',
       count: 10
     }
@@ -90,37 +90,37 @@ function TopLayout() {
   const menuData = [
     {
       title: '个人设置',
-      icon: <SubmenuIcon type='icon-xingming' />,
+      icon: <Icon type='icon-xingming' />,
       path: 'personal',
       count: 100
     },
     {
       title: '语言偏好',
-      icon: <SubmenuIcon type='icon-yuyan' />,
+      icon: <Icon type='icon-yuyan' />,
       path: 'preferences',
       count: 100
     },
     {
       title: '修改密码',
-      icon: <SubmenuIcon type='icon-iconbi' />,
+      icon: <Icon type='icon-iconbi' />,
       path: 'editpwd',
       count: 100
     },
     {
       title: '关注领域',
-      icon: <SubmenuIcon type='icon-mubiao' />,
+      icon: <Icon type='icon-mubiao' />,
       path: 'focus',
       count: 100
     },
     {
       title: '历史消息',
-      icon: <SubmenuIcon type='icon-lishi' />,
+      icon: <Icon type='icon-lishi' />,
       path: 'historymsg',
       count: 100
     },
     {
       title: '账号绑定',
-      icon: <SubmenuIcon type='icon-bangding' />,
+      icon: <Icon type='icon-bangding' />,
       path: 'accountbind',
       count: 100
     }
@@ -149,37 +149,37 @@ function ExtraUse() {
   const menuData = [
     {
       title: '个人设置',
-      icon: <SubmenuIcon type='icon-xingming' />,
+      icon: <Icon type='icon-xingming' />,
       path: 'personal',
       count: 200
     },
     {
       title: '语言偏好',
-      icon: <SubmenuIcon type='icon-yuyan' />,
+      icon: <Icon type='icon-yuyan' />,
       path: 'preferences',
       count: 200
     },
     {
       title: '修改密码',
-      icon: <SubmenuIcon type='icon-iconbi' />,
+      icon: <Icon type='icon-iconbi' />,
       path: 'editpwd',
       count: 200
     },
     {
       title: '关注领域',
-      icon: <SubmenuIcon type='icon-mubiao' />,
+      icon: <Icon type='icon-mubiao' />,
       path: 'focus',
       count: 200
     },
     {
       title: '历史消息',
-      icon: <SubmenuIcon type='icon-lishi' />,
+      icon: <Icon type='icon-lishi' />,
       path: 'historymsg',
       count: 200
     },
     {
       title: '账号绑定',
-      icon: <SubmenuIcon type='icon-bangding' />,
+      icon: <Icon type='icon-bangding' />,
       path: 'accountbind',
       count: 200
     },
