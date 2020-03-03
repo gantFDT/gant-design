@@ -2,13 +2,15 @@
 
 @gant-select: ~'@{gant-prefix}-calendar';
 
-.@{gant-select}-picker{
-    .display-table-cell();
-    width: 100%;
+:global{
+  .@{gant-select}-picker{
+      .display-table-cell();
+      width: 100%;
 
-    &:not(:last-child){
-        .ant-calendar-picker-input{
-            .input-group-left();
-        }
-    }
+      &:not(:last-child){
+          .ant-calendar-picker-input{
+              .input-group-left();
+          }
+      }
+  }
 }

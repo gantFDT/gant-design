@@ -62,3 +62,38 @@ e.g
 ```js
 setEdit(SwitchStatus)
 ```
+
+## 如何使用WithEdit高阶函数实现一个读写分离的输入组件
+
+```js
+import { withEdit } from 'data-cell-g'
+```
+
+withEdit接受一个方法作为参数，返回值就是读模式下显示的文本
+
+```js
+const enhancer = withEdit(props => props.value)
+```
+
+实现目标组件
+
+```js
+// 建议使用Group组件做布局
+import { Group } from 'data-cell-g'
+
+// 用ant的类ant-input-group-addon控制样式
+class TargetCmp extends React.Component{
+
+    render(){
+        const { addonAfter } = this.props
+        (
+            <Group>
+                <input placeholder='实体组件' />
+                {addonAfter ? <span className='ant-input-group-addon'>{addonAfter}</span>: null}
+            </Group>
+        )
+    }
+}
+
+export default enhancer(TargetCmp)
+```

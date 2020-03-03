@@ -11,7 +11,6 @@ export {
   Icon,
   withEdit, EditStatus, SwitchStatus, // 读写分离
   Input, TextArea, Search, Group, Password, // Input
-  Select,
   InputCellPhone,
   InputTelePhone,
   InputUrl,
@@ -21,7 +20,7 @@ export {
   InputNumber,
   DatePicker, RangePicker, //Picker
   ColorPicker,
-  Selector, //selector
+  Selector,
   LocationSelector,
   IconSelector
 } from '@data-cell';

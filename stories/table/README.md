@@ -22,7 +22,7 @@
 | onSave | 否 | function(dataSource,[addList,delList, modifyList]) |  | 当表格状态变为SAVE的时候会调用，返回最新的表格数据，以及新增、删除、修改的数据 |
 | orderList | 否 | array | - | 列的排序信息，同smartForm |
 | pagination | 否 | object |  | 参考[链接](https://ant-design.gitee.io/components/pagination-cn/) |
-| resizeCell/resizable | 否 | boolean | false | 是否允许动态缩放列宽度 |
+| resizable | 否 | boolean | false | 是否允许动态缩放列宽度 |
 | rowSelection | 否 | object |  | 行选择功能，其他参数参考[链接]() |
 | scrollKey | 否 | string |  |、设置滚动到指定行的key |
 | tableKey | 否 | string | - | 用于标识唯一table |
@@ -94,5 +94,13 @@ c、用户编辑输入框中的数据，组件自动更新**clone**的数据。
 d、修改editable参数为EditStatus.SAVE，调用onSave回调，将更新后的数据返回。业务层手动更改数据
 #### 为什么编辑状态下要clone一份数据
 用户在修改数据的过程中需要及时修改表格中数据的呈现，为减少业务层的工作量，就需要在组件中由组件自身来完成数据的更新，而这一步骤自然不能使用原始数据去做修改，否则在业务层的其他操作都可能影响到编辑后的数据。所以需要clone一份，并在保存的时候以回调的方式返回给业务层，由业务层决定如何处理这些更改
+
+### 实现一个自定义的单元格编辑组件的注意事项
+
+- 要求实现的组件是一个受控组件。并且保证传递的value，与onChange获得的参数是同种数据类型，最好是基础数据类型
+
+- 组件应在适当的时候调用props.onBlur方法，当进入编辑状态，组件被单元格渲染的时候，会被注入onBlur，onBlur是表格数据的关键，无论是否是输入框型组件，只要适时调用onBlur都可以达到编辑的功能。
+
+- 建议实现的组件用`data-cell-g`中的withEdit高阶函数作用一下，关于如何使用withEdit，请参考读写分离。
 
 

@@ -2,96 +2,112 @@
   --component-background: #fff;
 }
 
-.gant-color-picker {
-  &-mainwrap{
-    display: flex;
-    flex-wrap: wrap;
-    position: relative;
-    background: var(--component-background);
-    box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 4px;
-    border-radius: 4px;
-    padding: 3px 0 0px 83px;
-  }
-
-  &-preview{
-    position: absolute;
-    left: 0;
-    top: 0;
-    display: flex;
-    align-items: stretch;
-    text-align: center;
-    line-height: 32px;
-    color: #fff;
-    width: 80px;
-    height: 100%;
-    font-size: 13px;
-    border-radius: 4px 0 0 4px;
-
-    &-text{
-      width: 100%;
+:global{
+  .gant-color-picker {
+    &-mainwrap{
+      box-sizing: content-box;
       display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: not-allowed;
+      flex-wrap: wrap;
+      position: relative;
+      background: var(--component-background);
+      box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 4px;
+      border-radius: 4px;
+      padding: 3px 0 0px 83px;
     }
-  }
 
-  &-onlypreview{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #fff;
-    width: 80px;
-    height: 32px;
-    font-size: 13px;
-    border-radius: 4px;
-    box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 4px;
-  }
-
-  &-itemwrap{
-    position: relative;
-  }
-
-  &-mainitem{
-    height: 26px;
-    width: 26px;
-    margin: 0 3px 3px 0;
-    border-radius: 3px;
-  }
-
-  &-picker{
-    position: absolute;
-    left: -3px;
-    z-index: 9;
-  }
-
-  &-inputlabel{
-    width: 20px;
-    height: 100%;
-    position: relative;
-    z-index: 9;
-
-    span{
+    &-preview{
+      position: absolute;
+      left: 0;
+      top: 0;
       display: flex;
+      align-items: stretch;
+      text-align: center;
+      line-height: 32px;
+      color: #fff;
+      width: 80px;
       height: 100%;
+      font-size: 13px;
+      border-radius: 4px 0 0 4px;
+
+      &-text{
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: not-allowed;
+      }
+    }
+
+    &-onlypreview{
+      display: inline-flex;
+      justify-content: center;
       align-items: center;
-      justify-content: flex-end;
+      color: #fff;
+      width: 80px;
+      height: 32px;
+      font-size: 13px;
+      border-radius: 4px;
+      box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 4px;
+    }
+
+    &-itemwrap{
+      position: relative;
+    }
+
+    &-mainitem{
+      height: 26px;
+      width: 26px;
+      margin: 0 3px 3px 0;
+      border-radius: 3px;
+    }
+
+    &-picker{
+      position: absolute;
+      left: -3px;
+      z-index: 9;
+    }
+
+    &-inputlabel{
+      width: 20px;
+      height: 100%;
+      position: relative;
+      z-index: 9;
+
+      span{
+        display: flex;
+        height: 100%;
+        align-items: center;
+        justify-content: flex-end;
+      }
+    }
+
+    &-input{
+      flex: 1;
+      font-size: 14px;
+      border: none;
+      outline: none;
+      height: 24px;
+    }
+
+    &-subpicker{
+      background: var(--component-background),
+    }
+
+    &-chromepicker{
+      background: var(--component-background),
     }
   }
-
-  &-input{
-    flex: 1;
-    font-size: 14px;
-    border: none;
-    outline: none;
-    height: 24px;
-  }
-
-  &-subpicker{
-    background: var(--component-background),
-  }
-
-  &-chromepicker{
-    background: var(--component-background),
+  .gant-input-group {
+    .gant-color-picker {
+      &-mainwrap{
+        box-shadow: none;
+        border: 1px solid #d9d9d9;
+        border-radius: 4px 0 0 4px;
+      }
+      &-preview{
+        margin: -1px 0 -1px -1px;
+        height: calc(100% + 2px);
+      }
+    }
   }
 }

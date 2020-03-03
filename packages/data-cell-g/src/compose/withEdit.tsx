@@ -54,6 +54,25 @@ export interface WithEditProps<T> {
   isInner: boolean
 }
 
+// 通过withEdit高阶函数包裹的组件可以接受的参数
+export interface WithEditInProps<T> {
+  value: T,
+  allowEdit: boolean,
+  confirmable: boolean,
+  onChange: (v: T) => void,
+  onSave: OnSave,
+  onCancel: Function,
+  edit: EditStatus,
+  isInner: boolean
+}
+
+// 通过withEdit高阶函数包裹的组件获得的新参数
+export interface WithEditOutProps<T> {
+  value: T,
+  onChange: (v: T) => any,
+  addonAfter: React.ReactElement
+}
+
 interface WithEditInnerProps {
   selfEdit: EditStatus,
   setEdit: HandlerWithType<EditStatus>,
@@ -126,7 +145,11 @@ export default <T extends any>(getText: GetText<T>) => compose(
   withProps(({ onConfirm, setEdit, selfEdit, addonAfter: propsAddonAfter }) => {
     const addonAfter = (
       <React.Fragment>
-        {propsAddonAfter}
+        {propsAddonAfter ? (
+          <div className="gant-compose-extra">
+            {propsAddonAfter}
+          </div>
+        ) : undefined}
         <Tooltip title='确认'>
           <Icon type="check" onClick={onConfirm} className={'gant-compose-success'} />
         </Tooltip>

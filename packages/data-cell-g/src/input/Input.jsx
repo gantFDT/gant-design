@@ -17,7 +17,7 @@ class Input extends React.Component {
   }
 
   render() {
-    const { onEnter, ...props } = this.props
+    const { onEnter, strict, ...props } = this.props
     return (
       <AntInput
         {...props}

@@ -49,19 +49,7 @@ const withPhoneCode = compose(
         return key.includes(inputValue)
       }
     }
-  }),
-  withProps(({ code, onCodeChange, filterOption, getPopupContainer }) => {
-    return ({
-      addonBefore: (
-        <Select getPopupContainer={getPopupContainer} style={{ width: 86 }} value={code} onChange={onCodeChange} filterOption={filterOption} showSearch>
-          {
-            codeTypes.map(code => <Select.Option key={code} value={code}>+{code}</Select.Option>)
-          }
-        </Select>
-      )
-    })
-  }),
-  mapProps(({ onCodeChange, searchCode, codeList, filterOption, ...props }) => props)
+  })
 )
 
 const withValidate = compose(
@@ -77,6 +65,7 @@ const withValidate = compose(
   lifecycle({
     componentDidMount() {
       const { validateValue, onPhoneChange } = this.props
+      // console.log(this.props)
       if (!validateValue()) {
         onPhoneChange('')
       }
@@ -85,9 +74,21 @@ const withValidate = compose(
 )
 
 @compose(
-  withEdit(({ code, phone }) => phone ? `+${code} ${phone}` : ''),
   withPhoneCode,
   withValidate,
+  withEdit(({ code, phone }) => phone ? `+${code} ${phone}` : ''),
+  withProps(({ code, onCodeChange, filterOption, getPopupContainer }) => {
+    return ({
+      addonBefore: (
+        <Select getPopupContainer={getPopupContainer} style={{ width: 86 }} value={code} onChange={onCodeChange} filterOption={filterOption} showSearch>
+          {
+            codeTypes.map(code => <Select.Option key={code} value={code}>+{code}</Select.Option>)
+          }
+        </Select>
+      )
+    })
+  }),
+  mapProps(({ onCodeChange, searchCode, codeList, filterOption, getPopupContainer, ...props }) => props)
 )
 class CellPhone extends Component {
 
@@ -130,11 +131,13 @@ class CellPhone extends Component {
   }
 
   render() {
-    const { onPhoneChange, validateValue,getPopupContainer, onEnter, ...props } = this.props
+    const { onPhoneChange, validateValue, onEnter, ...props } = this.props
     const { value } = this.state
     let computedValue = get(props, 'phone', value)
+    console.log("props", props)
     return (
       <AntInput {...props} value={computedValue}
+        onBlur={() => { }}
         onKeyDown={this.onKeyDown} onChange={this.onChange} />
     );
   }

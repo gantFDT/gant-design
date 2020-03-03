@@ -40,9 +40,9 @@ class InputNumber extends React.Component {
     const { addonAfter, addonBefore, className, ...props } = this.props
 
     return (
-      <Group gant className={className}>
+      <Group gant>
         {addonBefore ? <span className="ant-input-group-addon">{addonBefore}</span> : null}
-        <AntInputNumber {...props} className={classnames('gant-input-number')} />
+        <AntInputNumber {...props} className={classnames('gant-input-number', className)} />
         {addonAfter ? <span className="ant-input-group-addon">{addonAfter}</span> : null}
       </Group>
     )

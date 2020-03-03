@@ -45,16 +45,7 @@ export const hex2hsl = (hexColor: string): string | number|string[] => {
   return sColor;
 };
 
-/**
- * 生成uuid
- */
-export function guid() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-    var r = Math.random() * 16 | 0,
-      v = c == 'x' ? r : (r & 0x3 | 0x8)
-    return v.toString(16)
-  })
-}
+
 
 /**
  * 判断类型
@@ -69,13 +60,13 @@ export const deepCopy4JSON: <T>(data: T) => T = (obj) => JSON.parse(JSON.stringi
 /**
  * JSON数据相等
  */
-export const JSONisEqual = (a: object , b: object) => JSON.stringify(a) === JSON.stringify(b);
+export const judgeJSONisEqual = (a: object , b: object) => JSON.stringify(a) === JSON.stringify(b);
 
 
 /**
  * 判断ie版本
  */
-export function IEVersion() {
+export function getIEVersion() {
   const { userAgent } = navigator; // 取得浏览器的userAgent字符串
   const isIE = userAgent.indexOf("compatible") > -1 && userAgent.indexOf("MSIE") > -1; // 判断是否IE<11浏览器
   const isEdge = userAgent.indexOf("Edge") > -1 && !isIE; // 判断是否IE的Edge浏览器
@@ -107,7 +98,7 @@ export function IEVersion() {
  * 判断是否为ie浏览器
  */
 export function isIE() {
-  let ieVersion = IEVersion()
+  let ieVersion = getIEVersion()
   return ieVersion !== -1 && ieVersion !== 'edge'
 }
 
@@ -178,12 +169,7 @@ export function throttle(time: number): (fn: any) => any {
 }
 
 
-/**
- * 获取一个随机Key
- */
-export function getKey(): string {
-  return Math.random().toString(32).slice(2)
-}
+ 
 
 /*
 生成uuid
@@ -219,18 +205,7 @@ export function generateUuid(len: number = 32, radix: number = 10): string {
   return uuid.join('');
 }
 
-/*
-生成随机字符串
-len:number  长度
-*/
-export function randomString(len: number = 48) {
-  const chars = 'abcdefhijkmnprstwxyz2345678';
-  let pwd = '', i, maxPos = chars.length;
-  for (i = 0; i < len; i++) {
-    pwd += chars.charAt(Math.floor(Math.random() * maxPos));
-  }
-  return pwd;
-}
+ 
 
 /**
  * 判断参数是不是空的 // {xxxx:undefined} => 空的

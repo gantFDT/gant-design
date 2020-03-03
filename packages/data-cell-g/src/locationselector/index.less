@@ -2,8 +2,8 @@
 @gant-location : ~'gant-location';
 
 
-.@{gant-location}-cascader{
-    .display-table-cell();
+:global{
+  .@{gant-location}-cascader{
     width: 100%;
 
     &:not(:last-child){
@@ -11,4 +11,5 @@
             .input-group-left();
         }
     }
+  }
 }

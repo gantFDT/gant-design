@@ -17,7 +17,8 @@ const withCode = compose(
     }
   }),
   defaultProps({
-    placeholder: '请输入电话号码'
+    placeholder: '请输入电话号码',
+    allowClear: true,
   }),
   withProps(({ onChange, code: oCode, phone: oPhone }) => {
     return {
@@ -36,18 +37,16 @@ const withCode = compose(
         })
       }
     }
-  }),
-
-  withPropsOnChange(['phone'], ({ phone }) => ({
-    confirmable: isPhone.test(String(phone))
-  })),
-  mapProps(({ filterOption, ...props }) => props)
+  })
 )
 
 
 const getValue = ({ code, phone }) => phone ? `${code} - ${phone}` : ''
 @compose(
   withCode,
+  withPropsOnChange(['phone'], ({ phone }) => ({
+    confirmable: !phone || isPhone.test(String(phone))
+  })),
   withEdit(getValue),
   withProps(({ code, onCodeChange, filterOption, getPopupContainer }) => ({
     addonBefore: (
@@ -73,6 +72,7 @@ const getValue = ({ code, phone }) => phone ? `${code} - ${phone}` : ''
       </Select>
     )
   })),
+  mapProps(({ filterOption,...props }) => props),
 
 )
 class TelePhone extends Component {

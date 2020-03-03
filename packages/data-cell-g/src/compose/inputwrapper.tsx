@@ -2,13 +2,14 @@ import React, { useRef, useCallback, useEffect } from 'react'
 import classnames from 'classnames';
 
 
-export default WrapperedComponent => React.forwardRef<HTMLDivElement, any>(({ isInner, style, onBlur, ...props }, ref) => {
+export default WrapperedComponent => React.forwardRef<HTMLDivElement, any>(({ isInner, style,wrapperClassName, onBlur, ...props }, ref) => {
   const factory = React.createFactory(WrapperedComponent)
   const className = classnames(
     'gant-input-wrapper',
     {
       "gant-input-inner": isInner
-    }
+    },
+    wrapperClassName
   )
   const divRef = useRef<HTMLDivElement>(null)
   const getPopupContainer = useCallback(() => {

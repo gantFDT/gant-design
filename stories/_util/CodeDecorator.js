@@ -1,5 +1,5 @@
 import 'antd/dist/antd.css';
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { Card, Collapse, Icon, Tooltip, Row, Col } from 'antd';
 import { ConfigProvider } from '@gantd';
 import Anchor from '@packages/anchor-g/src';
@@ -57,9 +57,13 @@ const codePenStyle = {
     textIndent: -9999,
     background: 'transparent url(https://gw.alipayobjects.com/zos/rmsportal/OtZslpOjYXijshDERXwc.svg) center / 14px no-repeat',
     border: 0,
-    cursor: 'pointer'
+    cursor: 'pointer',
+    marginTop: 5
 }
 
+const codeShowExtra = {
+    marginLeft: 10
+}
 const getCodePenStr = (title, description, code) => {
     code = code
         .replace(/import\s?ReactDom\s?from\s?['|"]react-dom['|"];?/, '')
@@ -81,7 +85,8 @@ const getCodePenStr = (title, description, code) => {
 
     return JSON.stringify(codePenData);
 }
-function CodeBox({ id, title = '标题', isActive, describe = '暂无描述', code, children }) {
+function CodeBox(props) {
+    const { id, title = '标题', describe = '暂无描述', code, children, isActive, isCollapsed, handleCollapse } = props;
     const [copy, setCopy] = useState(false);
 
     function genExtra() {
@@ -122,8 +127,8 @@ function CodeBox({ id, title = '标题', isActive, describe = '暂无描述', co
                     {/* <div style={descriptionStyle}>{describe}</div> */}
                     <div style={descriptionStyle} dangerouslySetInnerHTML={{ __html: describe }} />
                 </div>
-                {code && <Collapse bordered={false} style={collapseStyle} >
-                    <Panel header='显示代码' style={{ borderBottom: 0 }} extra={genExtra()}>
+                {code && <Collapse activeKey={isCollapsed ? null : id} bordered={false} style={collapseStyle} onChange={handleCollapse.bind(null, id)}>
+                    <Panel key={id} header='显示代码' style={{ borderBottom: 0 }} extra={genExtra()}>
                         {/* <SyntaxHighlighter language="javascript" style={githubGist}>{code}</SyntaxHighlighter> */}
                         {/* <Highlight {...defaultProps} code={code} language="js">
                         
@@ -168,15 +173,44 @@ function CodeBox({ id, title = '标题', isActive, describe = '暂无描述', co
 export default ({ config }) => {
     if (!config) return null;
 
+    const [codeExpends, setCodeExpends] = useState([]);
+    const [showAllCode, setShowAllCode] = useState(false);
     const [currentAnchor, setCurrentAnchor] = useState(null);
     const { useage, inline, codes = [], children, showAnchor = true } = config;
     let anchors = [];
+
+    useEffect(() => {
+        showAllCodes(showAllCode)
+    }, [showAllCode]);
+
+    const allExpends = useMemo(() => {
+        let arr = []
+        for (let i = 0; i < children.length; i++) {
+            arr.push(`demo_${i}`)
+        }
+        return arr
+    }, [children.length])
+
+    const showAllCodes = useCallback((show) => {
+        setCodeExpends(show ? allExpends : [])
+    }, [allExpends])
 
     const onAnchorClick = useCallback((e, { href }) => {
         e.stopPropagation();
         e.preventDefault();
         href && setCurrentAnchor(href);
     }, [])
+
+    const handleCollapse = useCallback((id) => {
+        let pos = codeExpends.indexOf(id);
+        if (pos < 0) {
+            setCodeExpends(expends => [...expends, id])
+        } else {
+            let newExpends = [...codeExpends]
+            newExpends.splice(pos, 1)
+            setCodeExpends(newExpends)
+        }
+    }, [codeExpends])
 
     const elements = useMemo(() => {
         return children.map(({ title, describe, cmp: Comp, code }, key) => {
@@ -193,11 +227,13 @@ export default ({ config }) => {
                 describe={describe}
                 code={thisCode}
                 isActive={`#${id}` == currentAnchor}
+                isCollapsed={!codeExpends.includes(id)}
+                handleCollapse={handleCollapse}
             >
                 {React.isValidElement(Comp) ? Comp : <Comp />}
             </CodeBox>
         });
-    }, [codes, children, currentAnchor])
+    }, [codes, children, currentAnchor, codeExpends, handleCollapse])
 
     const demos = useMemo(() => {
         return <>
@@ -217,7 +253,14 @@ export default ({ config }) => {
                     <div style={{ fontSize: 14 }} dangerouslySetInnerHTML={{ __html: useage }} />
                 }
             </div>}
-            <h2 style={headerStyle}>代码演示</h2>
+            <h2 style={headerStyle}>
+                代码演示
+          <span style={codeShowExtra}>
+                    <Tooltip title={showAllCode ? '收起全部代码' : '展开全部代码'}>
+                        <Icon type='code' theme={showAllCode ? 'filled' : 'outlined'} onClick={() => setShowAllCode(show => !show)} />
+                    </Tooltip>
+                </span>
+            </h2>
             {showAnchor ? <Anchor
                 list={anchors}
                 onClick={onAnchorClick}
