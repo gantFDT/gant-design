@@ -4,12 +4,147 @@
 @border: 1px solid rgba(0, 0, 0, 0.05);
 @standard: 40px;
 
-
 :global {
   .@{profilecard-prefix-cls} {
 
-    div {
-      background: #f00
+    &.ant-menu-inline-collapsed {
+      width: @standard;
     }
+
+    height:100%;
+    border-right:none !important;
+
+    &-collapsed.ant-menu-item-selected::after {
+      opacity: 0;
+    }
+
+    &-collapsed>.anticon+span {
+      display: inline-block;
+      max-width: 0;
+      opacity: 0;
+    }
+
+    .ant-menu-item {
+      margin: 0;
+
+      .anticon+span {
+        transition: opacity 0s
+      }
+    }
+
+    &-collapsebtn {
+      display: inline-block;
+      transition: all 0.15s cubic-bezier(0.645, 0.045, 0.355, 1);
+
+      i {
+        cursor: pointer;
+        line-height: @standard;
+        width: @standard;
+        float: right;
+      }
+    }
+
+    &-pagewrap {
+      box-shadow: 0 0px 8px 0 rgba(0, 0, 0, 0.06), 0 1px 0px 0 rgba(0, 0, 0, 0.02);
+      border-radius: 3px;
+      overflow: hidden;
+
+      .ant-menu-inline-collapsed>.ant-menu-item {
+        left: 0;
+        text-overflow: clip;
+        padding: 0 12px !important;
+      }
+
+      .ant-menu-vertical .ant-menu-item {
+        margin: 0;
+      }
+    }
+
+    &-pagecard {
+      overflow: hidden;
+      flex: 1;
+      transition: all 0.15s;
+    }
+
+    &-menuboxinline {
+      border-right: 1px solid rgba(126, 126, 126, 0.3);
+      // box-sizing: initial !important;
+    }
+
+    &-gantd-contextmenu-submenu-fixed {
+      position: fixed !important;
+      z-index: 999;
+    }
+
+    &-menuinternal {
+      display: flex;
+      width: 100%;
+      border: @border;
+      border-bottom: none;
+    }
+
+    &-menuleft {
+      width: calc(100% - @standard);
+    }
+
+    &-menuright {
+      width: @standard;
+      height: @standard - 1;
+      border-left: @border;
+      border-bottom: @border;
+    }
+
+    &-horIcon {
+      width: 100%;
+      height: @standard - 1 !important;
+      line-height: @standard - 1 !important;
+      display: flex !important;
+      justify-content: center;
+      align-items: center;
+    }
+
+    &-horMenu {
+      display: block;
+      max-width: 100%;
+
+      .ant-menu-horizontal {
+        line-height: @standard - 2;
+      }
+    }
+
+    &-item-count {
+      float: right;
+      padding-left: 20px;
+    }
+
+    &-contextfooter {
+      width: 100%;
+      height: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(128, 128, 128, 0.1);
+    }
+
+    &-footerdiv {
+      cursor: pointer;
+      flex: 1;
+      padding: 0 10px;
+      user-select: none;
+    }
+
+
+    &-fixed {
+      position: fixed;
+      z-index: 1;
+      background: #fff;
+      -webkit-transform: translateZ(0);
+    }
+
+    &-boxShow {
+      box-shadow: 0 2px 3px rgba(125, 125, 125, 0.1);
+
+    }
+
   }
 }

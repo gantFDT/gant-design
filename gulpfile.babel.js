@@ -11,27 +11,12 @@ const through2 = require('through2')
 const LessNpm = require('less-plugin-npm-import')
 const babelConfig = require('./babelConfig.json')
 const lernaConfig = require('./lerna.json')
-const tsConfig = {
-  "target": 'es6',
-  "sourceMap": true,
-  "module": "esnext",
-  "declaration": true, // 生成 *.d.ts 文件
-  "allowJs": true,
-  "jsx": "react",
-  "forceConsistentCasingInFileNames": false,
-  "noImplicitReturns": false,
-  "noImplicitThis": false,
-  "noImplicitAny": false,
-  "noUnusedLocals": false,
-  "noUnusedParameters": false,
-  "noEmitOnError": false,
-  "strictNullChecks": false,
-  "importHelpers": true,
-  "suppressImplicitAnyIndexErrors": true,
-  "experimentalDecorators": true,
-  "downlevelIteration": true,
-  "allowSyntheticDefaultImports": true
-}
+const tsProject = ts.createProject('tsconfig.json', {
+  "target": 'ES6',
+  "module": "ES6",
+  "skipLibCheck": true, // 忽略所有的声明文件（ *.d.ts）的类型检查。
+});
+const tsConfig = tsProject();
 
 let { all: packageNames } = lernaConfig;
 
@@ -59,7 +44,7 @@ function scriptTask(dirName, level) {
   const pathReg = level === 3 ? '/*/*' : level === 2 ? '/*' : '/**/*';
   const targetDirName = level ? 'link' : 'lib';
   return src([`${dirName}/src${pathReg}.tsx`, `${dirName}/src${pathReg}.ts`]) // ts文件转换
-    .pipe(ts(tsConfig))
+    .pipe(tsConfig)
     .pipe(dest(`${dirName}/${targetDirName}/`))
     .pipe(src([`${dirName}/src${pathReg}.jsx`, `${dirName}/src${pathReg}.js`])) // es6文件转换babel
     .pipe(babel(babelConfig))
