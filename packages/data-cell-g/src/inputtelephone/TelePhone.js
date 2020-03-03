@@ -63,7 +63,7 @@ const withCode = compose(
     )
   })),
   withPropsOnChange(['phone'], ({ phone }) => ({
-    confirmable: isPhone.test(String(phone))
+    confirmable: !phone || isPhone.test(String(phone))
   })),
   mapProps(({ filterOption, ...props }) => props)
 )

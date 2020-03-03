@@ -6,7 +6,7 @@ import Table from '@table'
 import { EditStatus, SwitchStatus, Input, InputNumber, Selector } from '@data-cell'
 import { Button, Slider } from 'antd'
 
-import { getList } from './mock'
+import { getList, getEditList } from './mock'
 
 const columns = [
   {
@@ -30,7 +30,7 @@ const columns = [
 function BasicTable(props) {
 
   const dataSource = useMemo(() => getList(), [])
-  const [resizable, setresizable] = useState(true)
+  const [resizable, setresizable] = useState(false)
 
   const toggleResizable = useCallback(
     () => {
@@ -41,19 +41,119 @@ function BasicTable(props) {
 
   const headerRight = useMemo(() => {
     return (
-      <>
-        <Button onClick={toggleResizable} >切换可缩放列</Button>
-      </>
+      <Button onClick={toggleResizable} key='1' >{resizable ? "禁止缩放" : "允许缩放"}</Button>
     )
-  }, [])
+  }, [resizable])
+
+  const headerLeft = useMemo(() => {
+    return <>{resizable ? '当前可缩放' : '当前不可缩放'}</>
+  }, [resizable])
 
   return <Table
     columns={columns}
     dataSource={dataSource}
     resizable={resizable}
     headerRight={headerRight}
+    headerLeft={headerLeft}
   />
 }
+
+// 可编辑表格
+function EditorTable() {
+
+  const [editing, setEditing] = useState(EditStatus.CANCEL);
+  const [address] = useState([{ value: '1', label: '地址1' }, { value: '2', label: '地址2' }])
+  const getKey = useCallback(() => Math.random().toString('16').slice(2), [])
+
+  const [dataSource, setDataSource] = useState(() => getEditList(10))
+  const editorColumns = [
+    {
+      title: '姓名',
+      dataIndex: 'name',
+      editConfig: {
+        render: (text, record, index) => {
+          return <Input />
+        },
+      },
+      key: 'name',
+    },
+    {
+      title: '年龄',
+      dataIndex: 'age',
+      key: 'age',
+      align: 'center',
+      editConfig: {
+        render: (text, record, index) => {
+          return <InputNumber min={0} />
+        }
+      }
+    },
+    {
+      title: '住址',
+      dataIndex: 'address',
+      key: 'address',
+      render: (a, record, index) => {
+        if (!a) return null
+        const item = address.find(item => item.value === a)
+        const text = item ? item.label : '未知地址'
+        return text
+      },
+      editConfig: {
+        render: (value, record, index) => {
+          return (
+            <Selector defaultList={address} />
+          )
+        }
+      },
+    }
+  ]
+
+  const actions = ([editDataList, setEditDataList], selectedRowKeys) => {
+    return (
+      <>
+        <Button onClick={() => { setEditDataList((list) => [{ key: getKey() }, ...list]) }}>添加到第一行</Button>
+        <Button onClick={() => { setEditDataList(([first, ...list]) => list) }}>删除第一行</Button>
+      </>
+    )
+  }
+  return <Table
+    columns={editorColumns}
+    dataSource={dataSource}
+    headerRight={
+      <>
+        <Button onClick={() => { setEditing(SwitchStatus) }}>{editing === EditStatus.EDIT ? "退出" : "进入"}编辑</Button>
+        <Button onClick={() => { setEditing(EditStatus.SAVE) }}>保存</Button>
+      </>
+    }
+    editable={editing}
+    editActions={actions}
+    onSave={setDataSource}
+    scroll={{ y: 400 }}
+  />
+}
+
+
+// 虚拟滚动
+function VirtualScrollTable() {
+
+  const dataSource = useMemo(() => getList(100), [])
+
+  return (
+    <Table
+      withIndex={0}
+      columns={columns}
+      dataSource={dataSource}
+      virtualScroll
+      // 或者
+      // virtualScroll={{
+      //   threshold: 15,
+      //   rowHeight: 30,
+      // }}
+      scroll={{ y: 300 }}
+    />
+  )
+}
+
 
 function WidthTable(props) {
 
@@ -128,36 +228,6 @@ function WidthTable(props) {
   return <Table columns={columns} dataSource={dataSource} scroll={{ x: 1050 }} />
 }
 
-function DisabledResizeTable(props) {
-
-  const [column, setcolumn] = useState(columns)
-  let dataArray = new Array(10), dataSource = [];
-  dataArray = dataArray.fill()
-  dataArray.map((item, index) => {
-    dataSource.push({
-      name: "namenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamename" + index,
-      age: '',
-      address: "住址住址住址住址",
-      key: index
-    })
-  })
-
-  const onSorted = useCallback(
-    (cols) => {
-      setcolumn(cols)
-    }
-  )
-
-  return <Table
-    columns={column}
-    headerLeft={<Button>left</Button>}
-    headerRight={<Button>right</Button>}
-    dataSource={dataSource}
-    resizable={false}
-    onSorted={onSorted}
-  />
-}
-
 function TitleUse(props) {
   let dataArray = new Array(10), dataSource = [];
   dataArray = dataArray.fill()
@@ -178,121 +248,6 @@ function TitleUse(props) {
   />
 }
 
-
-function EditorTable() {
-
-  const [editing, setEditing] = useState(EditStatus.CANCEL);
-  const [address] = useState([{ value: '1', label: '地址1' }, { value: '2', label: '地址2' }])
-  const getKey = useCallback(() => Math.random().toString('16').slice(2), [])
-
-
-  let dataArray = new Array(10), dataSource = [];
-  dataArray = dataArray.fill()
-  dataArray.map((item, index) => {
-    dataSource.push({
-      name: "name" + index,
-      age: index,
-      address: "1",
-      key: getKey()
-    })
-  })
-
-  const [data, setdata] = useState(dataSource)
-  const editorColumns = [
-    {
-      title: '姓名姓名姓名',
-      dataIndex: 'name',
-      render: (text, record, index) => {
-        if (index === 0) {
-          return {
-            children: text,
-            props: {
-              colSpan: 3
-            }
-          }
-        }
-        return text
-      },
-      editConfig: {
-        render: (text, record, index) => {
-          return <Input />
-        },
-      },
-      key: 'name',
-    },
-    {
-      title: '年龄年龄年龄',
-      dataIndex: 'age',
-      key: 'age',
-      align: 'center',
-      render: (text, record, index) => {
-        if (index === 0) {
-          return {
-            children: text,
-            props: {
-              colSpan: 0
-            }
-          }
-        }
-        return text
-      },
-      editConfig: {
-        render: (text, record, index) => {
-          return <InputNumber min={0} />
-        }
-      }
-    },
-    {
-      title: '住址住址住址',
-      dataIndex: 'address',
-      key: 'address',
-      render: (a, record, index) => {
-        const text = address.find(item => item.value === a) ? address.find(item => item.value === a).label : '未知地址'
-        if (index === 0) {
-          return {
-            children: text,
-            props: {
-              colSpan: 0
-            }
-          }
-        }
-        return text
-      },
-      editConfig: {
-        render: (value, record, index) => {
-          return (
-            <Selector defaultList={address} />
-          )
-        }
-      },
-    }
-  ]
-
-  const actions = ([editDataList, setEditDataList], selectedRowKeys) => {
-    return (
-      <>
-        <Button onClick={() => { setEditDataList((list) => [{ key: getKey() }, ...list]) }}>添加到第一行</Button>
-        <Button onClick={() => { setEditDataList(([first, ...list]) => list) }}>删除第一行</Button>
-      </>
-    )
-  }
-  return <Table
-    columns={editorColumns}
-    dataSource={data}
-    hideVisibleMenu
-    onDragEnd={setdata}
-    headerRight={
-      <>
-        <Button onClick={() => { setEditing(SwitchStatus) }}>{editing === EditStatus.EDIT ? "退出" : "进入"}编辑</Button>
-        <Button onClick={() => { setEditing(EditStatus.SAVE) }}>保存</Button>
-      </>
-    }
-    editable={editing}
-    editActions={actions}
-    onSave={data => setdata(data)}
-    scroll={{ y: 400 }}
-  />
-}
 
 function WideTable() {
 
@@ -651,39 +606,38 @@ const config = {
     `在已有的表格基本功能以后，还有其他以下功能以增强表格在不同场景下的应用
 		<h2>主要特性</h2>
 		<b>1、可缩放的列</b><br/>
-		<b>2、优化大数据下的滚动</b><br/>
-		<b>3、单元格编辑</b><br/>
+		<b>2、单元格编辑</b><br/>
+		<b>3、优化大数据下的滚动(虚拟滚动)</b><br/>
 
 		<h2>其他特性</h2>
 		<b>1、滚动加载</b><br/>
-		<b>2、拖动排序</b><br/>
-		<b>3、滚动加载</b><br/>`
+		<b>2、拖动排序</b><br/>`
   ),
   children: [
     {
       title: '基本用法',
-      describe: '通过columns指定显示的列，通过dataSource显示数据，缩放列的功能默认开启，通过设置resizable来控制是否开启',
+      describe: '通过columns指定显示的列，通过dataSource显示数据，缩放列的功能默认开启，通过设置resizable来修改配置',
       cmp: BasicTable
     },
-    // {
-    //   title: '基本用法2',
-    //   describe: 'isDeleted: true标记该行删除,显示删除线。通过wheel参数可以实现无限滚动，不建议无限滚动和拖拽排序一起实现，容易出现拖拽排序失效,fixedTop开启粘性头部',
-    //   cmp: BasicTable
-    // },
     {
-      title: '给table添加宽度',
+      title: '可编辑表格',
+      describe: `单元格编辑功能，
+      通过editable属性，控制表格可否编辑.
+      editActions用于渲染在编辑状态下的额外组件。
+      在column数据上添加editConfig表示开启该列的可编辑状态。
+      onSave会返回当editable状态修改为EditStatus.SAVE状态时的整个表格数据。
+      除了data-cell-g中的组件，如何实现自定义的用于表格编辑的组件请参看NOTES`,
+      cmp: EditorTable
+    },
+    {
+      title: '虚拟滚动',
+      describe: '通过virtualScroll开启，必须指定scroll.y控制高度，设置virtualScroll为true，可以使用内置的参数。一般情况下也不需要修改',
+      cmp: VirtualScrollTable
+    },
+    {
+      title: '嵌套表头',
       describe: 'table的宽度需要是各列宽度的总和，如果没有设置列宽，将平分table的宽度,table默认600px，如果不太清楚table的布局策略，最好table宽度和所有列都加上宽度',
       cmp: WidthTable
-    },
-    {
-      title: '添加头部按钮',
-      describe: '可在table的头部左右定义按钮',
-      cmp: DisabledResizeTable
-    },
-    {
-      title: '可编辑表单',
-      describe: '单元格编辑功能，editValue用于得到编辑组件的value，默认是record.dataIndex。默认情况下会自动注入组件中去。onCancel用于取消编辑的回调，onChange回调的三个参数分别是value值，关闭编辑状态的回调callback，设置表格数据的set方法',
-      cmp: EditorTable
     },
     {
       title: '宽表格',

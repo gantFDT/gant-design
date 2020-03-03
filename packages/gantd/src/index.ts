@@ -8,21 +8,33 @@ export { default as Loading } from './loading';
 
 //数据单元
 export {
-  Icon,
-  withEdit, EditStatus, SwitchStatus, // 读写分离
-  Input, TextArea, Search, Group, Password, // Input
-  InputCellPhone,
-  InputTelePhone,
-  InputUrl,
-  InputEmail,
-  InputLanguage,
-  InputMoney,
-  InputNumber,
-  DatePicker, RangePicker, //Picker
-  ColorPicker,
-  Selector,
-  LocationSelector,
-  IconSelector
+  default as Icon,
+  
+  default as withEdit, 
+  default as EditStatus, 
+  default as SwitchStatus, // 读写分离
+
+  default as Input, 
+  default as TextArea, 
+  default as Search, 
+  default as Group, 
+  default as Password, // Input
+  default as InputCellPhone,
+  default as InputTelePhone,
+  default as InputUrl,
+  default as InputEmail,
+  default as InputLanguage,
+  default as InputMoney,
+  default as InputNumber,
+
+  default as DatePicker, 
+  default as RangePicker, //Picker
+  default as ColorPicker,
+
+  default as Selector,
+  default as LocationSelector,
+  default as IconSelector
+
 } from '@data-cell';
 
 //表单
