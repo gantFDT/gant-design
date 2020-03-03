@@ -223,29 +223,29 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 		() => {
 			const computedClassName = classnames(
 				className,
-				wrap ? [getPrefixCls('table-editcell-wrap')] : [isSelection ? '' : getPrefixCls('table-editcell-ellipsis')],
+				// wrap ? [getPrefixCls('table-editcell-wrap')] : [isSelection ? '' : getPrefixCls('table-editcell-ellipsis')],
 				element ?
 					{
 						[getPrefixCls('table-editcell-dirt')]: showDirt && valueChanged,
 					} : null,
 			)
+			const innerClassName = classnames(
+				(virtualScroll || !wrap) ? [isSelection ? '' : getPrefixCls('table-editcell-ellipsis')] : [getPrefixCls('table-editcell-wrap')]
+			)
+
+			const dStyle = style || {}
+			dStyle.padding = cellPadding
 			if (virtualScroll) {
-				const dStyle = { ...style, padding: cellPadding, height: originRowHeight }
+				dStyle.height = originRowHeight
 				if (originLineHeight) {
 					dStyle.lineHeight = originLineHeight
 				}
-				return (
-					<td {...props} style={{ padding: 0 }} className={computedClassName} onClick={onClick} ref={onTD}>
-						<div style={dStyle} className={isSelection ? '' : getPrefixCls('table-editcell-ellipsis')} >
-							{renderChildren()}
-						</div>
-					</td>
-				)
 			}
-
 			return (
-				<td {...props} style={{ padding: cellPadding, ...style }} className={computedClassName} onClick={onClick} ref={onTD}>
-					{renderChildren()}
+				<td {...props} style={{ padding: 0 }} className={computedClassName} onClick={onClick} ref={onTD}>
+					<div style={dStyle} className={innerClassName} >
+						{renderChildren()}
+					</div>
 				</td>
 			)
 		},
