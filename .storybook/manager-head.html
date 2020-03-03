@@ -1,0 +1,13 @@
+<script>
+    var observer = new MutationObserver(function (mutations) {
+        if (document.title.match(/Storybook$/)) {
+            document.title = "GantD | 专注于数据密集型业务场景React组件库";
+        }
+    }).observe(document.querySelector("title"), {
+        childList: true,
+        subtree: true,
+        characterData: true
+    });
+</script>
+
+<link rel="shortcut icon" href="/favicon.ico">
