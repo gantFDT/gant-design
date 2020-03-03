@@ -15,7 +15,7 @@ const phoneFormatter = phone => Array.from(phone).map((num, index) => index % 4 
 const withPhoneCode = compose(
   toClass,
   withProps(({ value = {} }) => {
-    const { key: code = "86", value: phone } = value
+    const { key: code = "86", value: phone } = value;
     return {
       code,
       phone
@@ -49,17 +49,7 @@ const withPhoneCode = compose(
         return key.includes(inputValue)
       }
     }
-  }),
-  withProps(({ code, onCodeChange, filterOption }) => ({
-    addonBefore: (
-      <Select style={{ width: 86 }} value={code} onChange={onCodeChange} filterOption={filterOption} showSearch>
-        {
-          codeTypes.map(code => <Select.Option key={code} value={code}>+{code}</Select.Option>)
-        }
-      </Select>
-    )
-  })),
-  mapProps(({ onCodeChange, searchCode, codeList, filterOption, ...props }) => props)
+  })
 )
 
 const withValidate = compose(
@@ -75,6 +65,7 @@ const withValidate = compose(
   lifecycle({
     componentDidMount() {
       const { validateValue, onPhoneChange } = this.props
+      // console.log(this.props)
       if (!validateValue()) {
         onPhoneChange('')
       }
@@ -86,6 +77,18 @@ const withValidate = compose(
   withPhoneCode,
   withValidate,
   withEdit(({ code, phone }) => phone ? `+${code} ${phone}` : ''),
+  withProps(({ code, onCodeChange, filterOption, getPopupContainer }) => {
+    return ({
+      addonBefore: (
+        <Select getPopupContainer={getPopupContainer} style={{ width: 86 }} value={code} onChange={onCodeChange} filterOption={filterOption} showSearch>
+          {
+            codeTypes.map(code => <Select.Option key={code} value={code}>+{code}</Select.Option>)
+          }
+        </Select>
+      )
+    })
+  }),
+  mapProps(({ onCodeChange, searchCode, codeList, filterOption, getPopupContainer, ...props }) => props)
 )
 class CellPhone extends Component {
 
@@ -101,7 +104,7 @@ class CellPhone extends Component {
 
   onChange(e) {
     const { onPhoneChange, code } = this.props
-    const { value } = e.target
+    const { value } = e.target;
     if (value) {
       if (code === "86") {
         if (value.length <= 11 && reg.test(value)) {
@@ -131,8 +134,11 @@ class CellPhone extends Component {
     const { onPhoneChange, validateValue, onEnter, ...props } = this.props
     const { value } = this.state
     let computedValue = get(props, 'phone', value)
+    console.log("props", props)
     return (
-      <AntInput {...props} value={computedValue} onKeyDown={this.onKeyDown} onChange={this.onChange} />
+      <AntInput {...props} value={computedValue}
+        onBlur={() => { }}
+        onKeyDown={this.onKeyDown} onChange={this.onChange} />
     );
   }
 }

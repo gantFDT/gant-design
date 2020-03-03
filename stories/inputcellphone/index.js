@@ -1,6 +1,6 @@
 
 import { InputCellPhone, SwitchStatus } from '@data-cell'
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Button } from 'antd'
 import codeList from './code'
 import CodeDecorator from '../_util/CodeDecorator';
@@ -16,8 +16,9 @@ const cmps = [
       console.log(id, value);
       cb()
     }
+    const cellRef = useRef(null)
     return <>
-      <InputCellPhone placeholder='可编辑' onSave={onSave} value={value} onChange={setValue} />
+      <InputCellPhone placeholder='可编辑' ref={cellRef} onSave={onSave} value={value} onChange={setValue} />
     </>
   },
   () => {

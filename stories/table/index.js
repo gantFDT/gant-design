@@ -262,7 +262,7 @@ function TitleUse(props) {
       age: index,
       address: "123",
       key: index
-    })
+    }) 
   })
   return <Table
     columns={columns}
