@@ -128,85 +128,79 @@ function DisabledResizeTable(props) {
 }
 ReactDOM.render(<DisabledResizeTable/>,mountNode)`
 
-const code3 = `import { Table, Generator, EditStatus, SwitchStatus } from 'gantd';
+const EditTable = `import { Table, Generator, EditStatus, SwitchStatus } from 'gantd';
 import { Input, TextArea, Button } from 'antd';
 function EditorTable() {
 
 	const [editing, setEditing] = useState(EditStatus.CANCEL);
-	const [address] = useState([{ value: '1', label: '地址1' }, { value: '2', label: '地址2' }])
-	const getKey = useCallback(() => Math.random().toString('16').slice(2), [])
-	
-	let dataArray = new Array(10), dataSource = [];
-	dataArray = dataArray.fill()
-	dataArray.map((item, index) => {
-		dataSource.push({
-			name: "name" + index,
-			age: index,
-			address: "1",
-			key: index
-		})
-	})
+  const [address] = useState([{ value: '1', label: '地址1' }, { value: '2', label: '地址2' }])
+  const getKey = useCallback(() => Math.random().toString('16').slice(2), [])
 
-	const [data, setdata] = useState(dataSource)
-	const editorColumns = [
-		{
-			title: '姓名姓名姓名',
-			dataIndex: 'name',
-			editConfig: {
-				render: (text, record, index) => {
-					return <Generator type='input' />
-				},
-			},
-			key: 'name',
-		},
-		{
-			title: '年龄年龄年龄',
-			dataIndex: 'age',
-			key: 'age',
-			editConfig: {
-				render: (text, record, index) => {
-					return <Generator type='inputnumber' min='0' />
-				}
-			}
-		},
-		{
-			title: '住址住址住址',
-			dataIndex: 'address',
-			editConfig: {
-				render: (text, record, index) => {
-					return <Generator type='select' dataSource={address} />
-				}
-			},
-			render: a => address.find(item => item.value === a) ? address.find(item => item.value === a).label : '未知地址',
-			key: 'address',
-		}
-	]
+  const [dataSource, setDataSource] = useState(() => getEditList(10))
+  const editorColumns = [
+    {
+      title: '姓名',
+      dataIndex: 'name',
+      editConfig: {
+        render: (text, record, index) => {
+          return <Input />
+        },
+      },
+      key: 'name',
+    },
+    {
+      title: '年龄',
+      dataIndex: 'age',
+      key: 'age',
+      align: 'center',
+      editConfig: {
+        render: (text, record, index) => {
+          return <InputNumber min={0} />
+        }
+      }
+    },
+    {
+      title: '住址',
+      dataIndex: 'address',
+      key: 'address',
+      render: (a, record, index) => {
+        if (!a) return null
+        const item = address.find(item => item.value === a)
+        const text = item ? item.label : '未知地址'
+        return text
+      },
+      editConfig: {
+        render: (value, record, index) => {
+          return (
+            <Selector defaultList={address} />
+          )
+        }
+      },
+    }
+  ]
 
-	const actions = ([editDataList, setEditDataList]) => {
-		return (
-			<>
-				<Button onClick={() => { setEditDataList((list) => [{ key: getKey() }, ...list]) }}>添加到第一行</Button>
-				<Button onClick={() => { setEditDataList(([first, ...list]) => list) }}>删除第一行</Button>
-			</>
-		)
-	}
-
-	return (
-		<Table
-			columns={editorColumns}
-			dataSource={data}
-			hideVisibleMenu
-			headerRight={
-				<>
-					<Button onClick={() => { setEditing(SwitchStatus) }}>{editing === EditStatus.EDIT ? "退出" : "进入"}编辑</Button>
-					<Button onClick={() => { setEditing(EditStatus.SAVE) }}>保存</Button>
-				</>
-			}
-			editable={editing}
-			editActions={actions}
-			onSave={setdata}
-		/>
-	)
+  const actions = ([editDataList, setEditDataList], selectedRowKeys) => {
+    return (
+      <>
+        <Button onClick={() => { setEditDataList((list) => [{ key: getKey() }, ...list]) }}>添加到第一行</Button>
+        <Button onClick={() => { setEditDataList(([first, ...list]) => list) }}>删除第一行</Button>
+      </>
+    )
+  }
+  return <Table
+    columns={editorColumns}
+    dataSource={dataSource}
+    headerRight={
+      <>
+        <Button onClick={() => { setEditing(SwitchStatus) }}>{editing === EditStatus.EDIT ? "退出" : "进入"}编辑</Button>
+        <Button onClick={() => { setEditing(EditStatus.SAVE) }}>保存</Button>
+      </>
+    }
+    editable={editing}
+    editActions={actions}
+    onSave={setDataSource}
+    scroll={{ y: 400 }}
+  />
 }
 ReactDOM.render(<EditorTable/>,mountNode)
 `
@@ -300,51 +294,6 @@ function WideTable() {
 
 ReactDOM.render(
   <WideTable/>,
-  mountNode
-)`;
-
-
-const code4 = `import { Table } from 'gantd';
-import { Button } from 'antd';
-const columns = [
-	{
-		title: '姓名',
-		dataIndex: 'name',
-		key: 'name',
-	},
-	{
-		title: '年龄',
-		dataIndex: 'age',
-		key: 'age',
-	},
-	{
-		title: '住址',
-		dataIndex: 'address',
-		key: 'address',
-	},
-];
-
-function DisabledResizeTable(props) {
-	let dataArray = new Array(10), dataSource = [];
-	dataArray = dataArray.fill()
-	dataArray.map((item, index) => {
-		dataSource.push({
-			name: "name" + index,
-			age: index,
-			address: "123",
-			key: index
-		})
-	})
-	return <Table
-		columns={columns}
-		title="标题"
-		headerRight={<Button className="gant-margin-5">right</Button>}
-		dataSource={dataSource} resizeCell={false}
-	/>
-}
-
-ReactDOM.render(
-  <DisabledResizeTable/>,
   mountNode
 )`;
 
@@ -669,4 +618,4 @@ ReactDOM.render(
 
 
 
-export default [code1, WidthTable, code2, code3, wideTable, code4, TreeTable, code6, code7, empty]
+export default [code1, EditTable, WidthTable, code2, wideTable, TreeTable, code6, code7, empty]
