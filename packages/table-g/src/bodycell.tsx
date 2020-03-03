@@ -230,10 +230,11 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 					} : null,
 			)
 			const innerClassName = classnames(
+				getPrefixCls('table-cell-inner'), // 设置after撑高td
 				(virtualScroll || !wrap) ? [isSelection ? '' : getPrefixCls('table-editcell-ellipsis')] : [getPrefixCls('table-editcell-wrap')]
 			)
-
-			const dStyle = style || {}
+			//fix Cannot assign to read only property
+			const dStyle = { ...(style || {}) }
 			dStyle.padding = cellPadding
 			if (virtualScroll) {
 				dStyle.height = originRowHeight
