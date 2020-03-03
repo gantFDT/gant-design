@@ -133,6 +133,26 @@ function EditorTable() {
 }
 
 
+// 虚拟滚动
+function VirtualScrollTable() {
+
+  const dataSource = useMemo(() => getList(100), [])
+
+  return (
+    <Table
+      withIndex={0}
+      columns={columns}
+      dataSource={dataSource}
+      virtualScroll
+      // 或者
+      // virtualScroll={{
+      //   threshold: 15,
+      //   rowHeight: 30,
+      // }}
+      scroll={{ y: 300 }}
+    />
+  )
+}
 
 
 function WidthTable(props) {
@@ -587,7 +607,7 @@ const config = {
 		<h2>主要特性</h2>
 		<b>1、可缩放的列</b><br/>
 		<b>2、单元格编辑</b><br/>
-		<b>3、优化大数据下的滚动</b><br/>
+		<b>3、优化大数据下的滚动(虚拟滚动)</b><br/>
 
 		<h2>其他特性</h2>
 		<b>1、滚动加载</b><br/>
@@ -608,6 +628,11 @@ const config = {
       onSave会返回当editable状态修改为EditStatus.SAVE状态时的整个表格数据。
       除了data-cell-g中的组件，如何实现自定义的用于表格编辑的组件请参看NOTES`,
       cmp: EditorTable
+    },
+    {
+      title: '虚拟滚动',
+      describe: '通过virtualScroll开启，必须指定scroll.y控制高度，设置virtualScroll为true，可以使用内置的参数。一般情况下也不需要修改',
+      cmp: VirtualScrollTable
     },
     {
       title: '嵌套表头',
