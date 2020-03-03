@@ -60,19 +60,7 @@ const withMoneyType = compose(
         })
       }
     }
-  }),
-  withProps(({ currency, onCurrencyChange }) => {
-    return ({
-      addonBefore: (
-        <Select style={{ width: 75 }} value={currency} onChange={onCurrencyChange}>
-          {
-            symbols.map(type => <Select.Option key={type} value={type}>{type}</Select.Option>)
-          }
-        </Select>
-      ),
-
-    })
-  }),
+  })
 )
 
 @compose(
@@ -81,7 +69,19 @@ const withMoneyType = compose(
     if (!isNumber(money)) return null
     const num = numeral(money).format(format)
     return `${currency} ${num}`
-  })
+  }),
+  withProps(({ currency, onCurrencyChange, getPopupContainer }) => {
+    return ({
+      addonBefore: (
+        <Select getPopupContainer={getPopupContainer} style={{ width: 75 }} value={currency} onChange={onCurrencyChange}>
+          {
+            symbols.map(type => <Select.Option key={type} value={type}>{type}</Select.Option>)
+          }
+        </Select>
+      ),
+
+    })
+  }),
 )
 class InputMoney extends Component {
 
@@ -109,7 +109,7 @@ class InputMoney extends Component {
   }
 
   render() {
-    const { setType, onEnter, onValueChange, precision, format, reg, ...props } = this.props
+    const { setType, onEnter, onValueChange, getPopupContainer, precision, format, reg, ...props } = this.props
     const { value } = this.state
     return (
       <InputNumber {...props} isInner value={props.money || value} min={0} edit={EditStatus.EDIT} onPressEnter={onEnter} onChange={this.onChange} />
