@@ -7,10 +7,10 @@ export { default as SwitchStatus } from './compose/switchstatus'
 //input
 export {
   default as Input,
-  default as TextArea,
-  default as Search,
-  default as Group,
-  default as Password
+  TextArea,
+  Search,
+  Group,
+  Password
 } from './input'
 // export { default as Select } from './select'
 export { default as InputCellPhone } from './inputcellphone'
