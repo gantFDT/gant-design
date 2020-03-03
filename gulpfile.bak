@@ -1,4 +1,4 @@
-const { src, dest, series, parallel, task } = require('gulp')
+const { src, dest, series, parallel } = require('gulp')
 const babel = require('gulp-babel')
 const fs = require('fs')
 const rimraf = require('rimraf')
@@ -14,6 +14,8 @@ const babelConfig = require('./babelConfig.json')
 let pkgs = fs.readdirSync(path.join(__dirname, 'packages'),{withFileTypes:true})
   .filter(item=>item.isDirectory())
   .map(item=>item.name);
+
+// pkgs = ['smart-table-g']
 
 function resolvePath(content, rules = [], level) {
   rules.forEach((origin) => {
@@ -229,23 +231,6 @@ const linktasks = pkgs.map(pkg => cb => {
   cb();
 })
 
-const csstask = pkg => {
-  src(`packages/${pkg}/src/**/*.less`)
-    .pipe(dest(`packages/${pkg}/lib/`))
-    .pipe(dest(`packages/${pkg}/link/`))
-
-  src(`packages/${pkg}/src/**/*.less`)
-    .pipe(less({
-      plugins: [
-        new LessNpm({ prefix: '~' })
-      ],
-      javascriptEnabled: true,
-    }))
-    .pipe(postcss([autoprefixer()]))
-    .pipe(dest(`packages/${pkg}/lib/`))
-    .pipe(dest(`packages/${pkg}/link/`))
-}
-
 const csstasks = pkgs.map(pkg => cb => {
   src(`packages/${pkg}/src/**/*.less`)
     .pipe(dest(`packages/${pkg}/lib/`))
@@ -272,32 +257,6 @@ const cleanLink = (cb) => {
   cb()
 }
 
-pkgs.forEach(dirName => {
-  task(`link:${dirName}`, series(
-    function clean(cb){
-      rimraf.sync(path.resolve(__dirname, `packages/${dirName}/link/`))
-      cb()
-    },
-    parallel(
-      function scriptTask(cb){
-        linktask(dirName)
-        cb()
-      },
-      function jsonTask(cb){
-        jsontask(dirName)
-        cb()
-      },
-      function cssTask(cb){
-        csstask(dirName)
-        cb()
-      }
-    )
-  ))
-})
-
-
-exports.link = series(cleanLink, parallel(...linktasks, ...jsontasks, ...csstasks))
-
-exports.lib = series(clean, compile)
+exports.compileLink = series(cleanLink, parallel(...linktasks, ...jsontasks, ...csstasks))
 
 exports.default = series(clean, compile)
