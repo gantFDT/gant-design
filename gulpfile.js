@@ -1,4 +1,4 @@
-const { src, dest, series, parallel, task } = require('gulp')
+const { src, dest, series, task } = require('gulp')
 const babel = require('gulp-babel')
 const rimraf = require('rimraf')
 const path = require('path')
@@ -121,7 +121,7 @@ function linkScriptTask(dirName) {
 }
 
 function libScriptTask(dirName) {
-  return parallel(
+  return series(
     function compileJs(){
       return src([`packages/${dirName}/src/**/*.jsx`, `packages/${dirName}/src/**/*.js`])
         .pipe(babel(babelConfig))
@@ -193,25 +193,11 @@ packageNames.forEach(packageName => {
 })
 
 task('lib', series(
-  function cleanLibs(cb) {
-    rimraf.sync(path.resolve(__dirname, `packages/*/lib/`));
-    cb();
-  },
-  ...packageNames.map(packageName => {
-    const dirName = packageName.slice(9);
-    return libScriptTask(dirName)
-  })
+  ...packageNames.map(packageName => `lib:${packageName.slice(9)}`)
 ))
 
 task('link', series(
-  function cleanLinks(cb) {
-    rimraf.sync(path.resolve(__dirname, `packages/*/link/`));
-    cb();
-  },
-  ...packageNames.map(packageName => {
-    const dirName = packageName.slice(9);
-    return linkScriptTask(dirName)
-  })
+  ...packageNames.map(packageName => `link:${packageName.slice(9)}`)
 ))
 
 task('default', series(
@@ -221,9 +207,5 @@ task('default', series(
     rimraf.sync(path.resolve(__dirname, `packages/gantd/dist/`));
     cb();
   },
-  ...packageNames.map(async packageName => {
-    const dirName = packageName.slice(9);
-    await libScriptTask(dirName);
-    return linkScriptTask(dirName);
-  })
+  'lib', 'link'
 ))
