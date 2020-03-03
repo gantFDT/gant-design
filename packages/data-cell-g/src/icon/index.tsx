@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react'
 import { Drawer, Radio, Empty } from 'antd'
+import { CustomIconOptions } from 'antd/lib/icon/IconFont'
 import classnames from 'classnames'
 import _ from 'lodash'
 import { compose, defaultProps, toClass, setStatic } from 'recompose'
@@ -194,7 +195,7 @@ const IconHouse: React.FC<IconHouseProps<string>> = ({ onChange, value, onBlur =
 
 interface IconSelectorCmp {
   (props: IconSelectorProps<string>): React.ReactElement,
-  updateFromIconfontCN: typeof updateFromIconfontCN,
+  updateFromIconfontCN: (config: CustomIconOptions) => void,
   Ant: IconComponent<IconProps>
 }
 
