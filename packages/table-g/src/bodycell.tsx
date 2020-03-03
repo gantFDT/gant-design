@@ -25,7 +25,6 @@ interface BodyCellProps<T> {
 
 const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', rowIndex, editConfig = {} as EditConfig<T>, sortable, wrap, light, children, className, style, ...props }: BodyCellProps<T>) => {
 	const [value, setValue] = useState<string>()
-	const [activeCell, setActiveCell] = useState(null)
 	const [cacheInitialValue, setCacheInitialValue] = useState<string>()
 	const [element, setElement] = useState<React.ReactElement>()
 	const [edit, setedit] = useState(EditStatus.CANCEL)
@@ -97,7 +96,6 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 				// 用于拖拽时候的比对
 				td.dataIndex = dataIndex
 				td.rowIndex = rowIndex
-				setActiveCell(td)
 			}
 		},
 		[dataIndex, rowIndex],
@@ -195,28 +193,13 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 			if (sortable && record.placeholder) return
 			if (edit !== EditStatus.EDIT) return children
 			if (element) {
-				const { clientWidth, clientHeight } = activeCell
 				const elementProps = {
 					value,
 					allowEdit: false,
 					edit: EditStatus.EDIT,
 					autoFocus: true,
 					...element.props,
-					// className: classnames(element.props.className, 'table-cell-editing'),
 					wrapperClassName: 'table-cell-editing',
-					style: {
-						width: parseInt(clientWidth) + 2,
-						height: parseInt(clientHeight) + 2,
-						// maxWidth: clientWidth,
-						// maxHeight: clientHeight,
-						// minWidth: clientWidth,
-						// minHeight: clientHeight,
-						// margin: (cellPadding as number) * -1,
-						position: 'absolute',
-						top: -1,
-						left: -1,
-						...element.props.style,
-					},
 					onChange,
 					onBlur,
 
@@ -225,7 +208,7 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 
 			}
 		},
-		[edit, value, element, children, sortable, record, activeCell, cellPadding],
+		[edit, value, element, children, sortable, record, cellPadding],
 	)
 
 	const valueChanged = useMemo(
@@ -240,29 +223,29 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 		() => {
 			const computedClassName = classnames(
 				className,
-				wrap ? [getPrefixCls('table-editcell-wrap')] : [isSelection ? '' : getPrefixCls('table-editcell-ellipsis')],
+				// wrap ? [getPrefixCls('table-editcell-wrap')] : [isSelection ? '' : getPrefixCls('table-editcell-ellipsis')],
 				element ?
 					{
 						[getPrefixCls('table-editcell-dirt')]: showDirt && valueChanged,
 					} : null,
 			)
+			const innerClassName = classnames(
+				(virtualScroll || !wrap) ? [isSelection ? '' : getPrefixCls('table-editcell-ellipsis')] : [getPrefixCls('table-editcell-wrap')]
+			)
+
+			const dStyle = style || {}
+			dStyle.padding = cellPadding
 			if (virtualScroll) {
-				const dStyle = { ...style, padding: cellPadding, height: originRowHeight }
+				dStyle.height = originRowHeight
 				if (originLineHeight) {
 					dStyle.lineHeight = originLineHeight
 				}
-				return (
-					<td {...props} style={{ padding: 0 }} className={computedClassName} onClick={onClick} ref={onTD}>
-						<div style={dStyle} className={isSelection ? '' : getPrefixCls('table-editcell-ellipsis')} >
-							{renderChildren()}
-						</div>
-					</td>
-				)
 			}
-
 			return (
-				<td {...props} style={{ padding: cellPadding, ...style }} className={computedClassName} onClick={onClick} ref={onTD}>
-					{renderChildren()}
+				<td {...props} style={{ padding: 0 }} className={computedClassName} onClick={onClick} ref={onTD}>
+					<div style={dStyle} className={innerClassName} >
+						{renderChildren()}
+					</div>
 				</td>
 			)
 		},

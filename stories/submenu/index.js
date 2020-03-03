@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react'
-import { Icon } from '@data-cell'
+import { Icon } from 'antd'
 import SubMenu from '@packages/submenu-g/src'
 import { Avatar } from 'antd'
 import CodeDecorator from '../_util/CodeDecorator'
@@ -14,36 +14,37 @@ function BasicUse() {
   const menuData = [
     {
       title: '个人设置',
-      icon: <Icon type='icon-xingming' />,
+      icon: <Icon type='idcard' />,
       path: 'personal',
       count: 10
     },
     {
       title: '语言偏好',
-      icon: <Icon type='icon-yuyan' />,
+      icon: <Icon type='global' />,
       path: 'preferences',
+      count: 10
     },
     {
       title: '修改密码',
-      icon: <Icon type='icon-iconbi' />,
+      icon: <Icon type='lock' />,
       path: 'editpwd',
       count: 10
     },
     {
       title: '关注领域',
-      icon: <Icon type='icon-mubiao' />,
+      icon: <Icon type='alert' />,
       path: 'focus',
       count: 10
     },
     {
       title: '历史消息',
-      icon: <Icon type='icon-lishi' />,
+      icon: <Icon type='history' />,
       path: 'historymsg',
       count: 10
     },
     {
       title: '账号绑定',
-      icon: <Icon type='icon-bangding' />,
+      icon: <Icon type='user' />,
       path: 'accountbind',
       count: 10
     }
@@ -90,39 +91,63 @@ function TopLayout() {
   const menuData = [
     {
       title: '个人设置',
+<<<<<<< HEAD
       icon: <Icon type='icon-xingming' />,
+=======
+      icon: <Icon type='idcard' />,
+>>>>>>> 4bf8fc2278911dd6fd822c371ce4b7c813f57b64
       path: 'personal',
-      count: 100
+      count: 10
     },
     {
       title: '语言偏好',
+<<<<<<< HEAD
       icon: <Icon type='icon-yuyan' />,
+=======
+      icon: <Icon type='global' />,
+>>>>>>> 4bf8fc2278911dd6fd822c371ce4b7c813f57b64
       path: 'preferences',
-      count: 100
+      count: 10
     },
     {
       title: '修改密码',
+<<<<<<< HEAD
       icon: <Icon type='icon-iconbi' />,
+=======
+      icon: <Icon type='lock' />,
+>>>>>>> 4bf8fc2278911dd6fd822c371ce4b7c813f57b64
       path: 'editpwd',
-      count: 100
+      count: 10
     },
     {
       title: '关注领域',
+<<<<<<< HEAD
       icon: <Icon type='icon-mubiao' />,
+=======
+      icon: <Icon type='alert' />,
+>>>>>>> 4bf8fc2278911dd6fd822c371ce4b7c813f57b64
       path: 'focus',
-      count: 100
+      count: 10
     },
     {
       title: '历史消息',
+<<<<<<< HEAD
       icon: <Icon type='icon-lishi' />,
+=======
+      icon: <Icon type='history' />,
+>>>>>>> 4bf8fc2278911dd6fd822c371ce4b7c813f57b64
       path: 'historymsg',
-      count: 100
+      count: 10
     },
     {
       title: '账号绑定',
+<<<<<<< HEAD
       icon: <Icon type='icon-bangding' />,
+=======
+      icon: <Icon type='user' />,
+>>>>>>> 4bf8fc2278911dd6fd822c371ce4b7c813f57b64
       path: 'accountbind',
-      count: 100
+      count: 10
     }
   ].map(item => ({ ...item, key: item.path }));
 
@@ -149,40 +174,64 @@ function ExtraUse() {
   const menuData = [
     {
       title: '个人设置',
+<<<<<<< HEAD
       icon: <Icon type='icon-xingming' />,
+=======
+      icon: <Icon type='idcard' />,
+>>>>>>> 4bf8fc2278911dd6fd822c371ce4b7c813f57b64
       path: 'personal',
-      count: 200
+      count: 10
     },
     {
       title: '语言偏好',
+<<<<<<< HEAD
       icon: <Icon type='icon-yuyan' />,
+=======
+      icon: <Icon type='global' />,
+>>>>>>> 4bf8fc2278911dd6fd822c371ce4b7c813f57b64
       path: 'preferences',
-      count: 200
+      count: 10
     },
     {
       title: '修改密码',
+<<<<<<< HEAD
       icon: <Icon type='icon-iconbi' />,
+=======
+      icon: <Icon type='lock' />,
+>>>>>>> 4bf8fc2278911dd6fd822c371ce4b7c813f57b64
       path: 'editpwd',
-      count: 200
+      count: 10
     },
     {
       title: '关注领域',
+<<<<<<< HEAD
       icon: <Icon type='icon-mubiao' />,
+=======
+      icon: <Icon type='alert' />,
+>>>>>>> 4bf8fc2278911dd6fd822c371ce4b7c813f57b64
       path: 'focus',
-      count: 200
+      count: 10
     },
     {
       title: '历史消息',
+<<<<<<< HEAD
       icon: <Icon type='icon-lishi' />,
+=======
+      icon: <Icon type='history' />,
+>>>>>>> 4bf8fc2278911dd6fd822c371ce4b7c813f57b64
       path: 'historymsg',
-      count: 200
+      count: 10
     },
     {
       title: '账号绑定',
+<<<<<<< HEAD
       icon: <Icon type='icon-bangding' />,
+=======
+      icon: <Icon type='user' />,
+>>>>>>> 4bf8fc2278911dd6fd822c371ce4b7c813f57b64
       path: 'accountbind',
-      count: 200
-    },
+      count: 10
+    }
   ].map(item => ({ ...item, key: item.path }));
 
   const [selectedKey, setSelectedKey] = useState(menuData[0].path);
