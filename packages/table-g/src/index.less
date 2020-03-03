@@ -70,6 +70,11 @@
                    } 
                    position: relative;
                    .table-cell-editing {
+                     position: absolute;
+                     width: calc(100% + 2px);
+                     height: calc(100% + 2px);
+                     top: -1px;
+                     left: -1px;
                     .full(){
                       height: 100%;
                     }
@@ -101,7 +106,9 @@
                         // 选择器
                         .gant-selector, 
                         .gant-selector .ant-select-selection, 
-                        .gant-selector .ant-select-selection, .ant-select-selection__rendered{
+                        .gant-selector .ant-select-selection, .ant-select-selection__rendered,
+                        // 邮箱选择器
+                        .gant-select-email .ant-select-selection{
                           .full();
                         }
                         .gant-selector .ant-select-selection, .ant-select-selection__rendered{
@@ -113,14 +120,8 @@
                         }
                         // 邮箱
                         .gant-select-email ul{
+                          width: 100%;
                           .full();
-                          .ant-select-search__field__wrap{                            
-                            font-size: initial;
-                            line-height: 1;
-                            input{
-                              font-size: 14px;
-                            }
-                          }
                         }
                         .ant-input-affix-wrapper {
                           height: 100%;
