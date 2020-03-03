@@ -55,14 +55,14 @@ const Header = (props: HeaderIF) => {
   useEffect(() => {
     if (_.isEmpty(extra)) { return }
     let toolsCollection = React.Children.toArray(extra)
-    let tools = []
+    let toolsArr = []
     const interator = (items, parentIndex) => {
       React.Children.map(items, (item, index) => {
         if (item && item.type && item.type.toString() === 'Symbol(react.fragment)') {
           interator([item.props.children], index)
         } else {
-          if (React.isValidElement(item)) {
-            tools.push(
+          if (React.isValidElement(item) || typeof (item) == 'string') {
+            toolsArr.push(
               item
             )
           }
@@ -71,12 +71,12 @@ const Header = (props: HeaderIF) => {
     }
     //过滤掉fragment
     interator(toolsCollection, 0)
-    setTools(tools)
+    setTools(toolsArr)
   }, [extra])
 
-  useEffect(()=>{
+  useEffect(() => {
     onResize()
-  },[tools])
+  }, [tools])
 
   //计算隐藏index
   const onResize = useCallback(() => {
@@ -131,20 +131,20 @@ const Header = (props: HeaderIF) => {
 
   //收缩的内容
   const getDrapContent = useMemo(() => {
-    
+
     return React.Children.map(tools, (item, index) => {
       if (index >= hiddenStartIndex) {
         return <div style={{ margin: '5px' }}>{item}</div>
       }
     })
-  }, [hiddenStartIndex, tools.length,])
+  }, [hiddenStartIndex, tools, extra])
 
   //默认内容
   const getContent = useMemo(() => {
     return React.Children.map(tools, (item, index) => {
       return index < hiddenStartIndex && item
     })
-  }, [hiddenStartIndex, tools.length])
+  }, [hiddenStartIndex, tools, extra])
 
 
   const getPrefixCls = (cls) => 'gant-' + cls
@@ -152,7 +152,7 @@ const Header = (props: HeaderIF) => {
 
   const prefixCls = 'gant-blockheader';
   const clsString = classnames(prefixCls, className);
-  
+
   return (
 
     <div className={clsString} style={{ borderBottom: bottomLine && '1px solid #edebe9', ...style }} {...restProps}>

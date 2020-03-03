@@ -1,7 +1,7 @@
 const code =
   `import React, { useState } from 'react';
-import { Avatar } from 'antd';
-import { SubMenu, Icon } from 'gantd';
+import { Avatar ,Icon} from 'antd';
+import { SubMenu  } from 'gantd';
 
 // 设置菜单自定义 font 图标
 const SubMenuIcon = Icon.createFromIconfontCN('SubMenuIcon', {
@@ -12,36 +12,37 @@ function BasicUse() {
   const menuData = [
     {
       title: '个人设置',
-      icon: <Icon.Submenuicon type='icon-xingming' />,
+      icon: <Icon type='idcard' />,
       path: 'personal',
       count: 10
     },
     {
       title: '语言偏好',
-      icon: <Icon.Submenuicon type='icon-yuyan' />,
+      icon: <Icon type='global' />,
       path: 'preferences',
+      count: 10
     },
     {
       title: '修改密码',
-      icon: <Icon.Submenuicon type='icon-iconbi' />,
+      icon: <Icon type='lock' />,
       path: 'editpwd',
       count: 10
     },
     {
       title: '关注领域',
-      icon: <Icon.Submenuicon type='icon-mubiao' />,
+      icon: <Icon type='alert' />,
       path: 'focus',
       count: 10
     },
     {
       title: '历史消息',
-      icon: <Icon.Submenuicon type='icon-lishi' />,
+      icon: <Icon type='history' />,
       path: 'historymsg',
       count: 10
     },
     {
       title: '账号绑定',
-      icon: <Icon.Submenuicon type='icon-bangding' />,
+      icon: <Icon type='user' />,
       path: 'accountbind',
       count: 10
     }
@@ -92,8 +93,8 @@ ReactDOM.render(
 
 const code1 =
   `import React, { useState } from 'react';
-import { Avatar } from 'antd';
-import { SubMenu, Icon } from 'gantd';
+import { Avatar,Icon } from 'antd';
+import { SubMenu  } from 'gantd';
 
 // 设置菜单自定义 font 图标
 const SubMenuIcon = Icon.createFromIconfontCN('SubMenuIcon', {
@@ -104,39 +105,39 @@ function TopLayout() {
   const menuData = [
     {
       title: '个人设置',
-      icon: <SubMenuIcon type='icon-xingming' />,
+      icon: <Icon type='idcard' />,
       path: 'personal',
-      count: 100
+      count: 10
     },
     {
       title: '语言偏好',
-      icon: <SubMenuIcon type='icon-yuyan' />,
+      icon: <Icon type='global' />,
       path: 'preferences',
-      count: 100
+      count: 10
     },
     {
       title: '修改密码',
-      icon: <SubMenuIcon type='icon-iconbi' />,
+      icon: <Icon type='lock' />,
       path: 'editpwd',
-      count: 100
+      count: 10
     },
     {
       title: '关注领域',
-      icon: <SubMenuIcon type='icon-mubiao' />,
+      icon: <Icon type='alert' />,
       path: 'focus',
-      count: 100
+      count: 10
     },
     {
       title: '历史消息',
-      icon: <SubMenuIcon type='icon-lishi' />,
+      icon: <Icon type='history' />,
       path: 'historymsg',
-      count: 100
+      count: 10
     },
     {
       title: '账号绑定',
-      icon: <SubMenuIcon type='icon-bangding' />,
+      icon: <Icon type='user' />,
       path: 'accountbind',
-      count: 100
+      count: 10
     }
   ].map(item => ({ ...item, key: item.path }));
 
@@ -167,8 +168,8 @@ ReactDOM.render(
 `
 const code2 =
   `import React, { useState } from 'react';
-import { Avatar } from 'antd';
-import { SubMenu, Icon } from 'gantd';
+import { Avatar ,Icon} from 'antd';
+import { SubMenu  } from 'gantd';
 
 // 设置菜单自定义 font 图标
 const SubMenuIcon = Icon.createFromIconfontCN('SubMenuIcon', {
@@ -179,40 +180,40 @@ function ExtraUse() {
   const menuData = [
     {
       title: '个人设置',
-      icon: <SubMenuIcon type='icon-xingming' />,
+      icon: <Icon type='idcard' />,
       path: 'personal',
-      count: 200
+      count: 10
     },
     {
       title: '语言偏好',
-      icon: <SubMenuIcon type='icon-yuyan' />,
+      icon: <Icon type='global' />,
       path: 'preferences',
-      count: 200
+      count: 10
     },
     {
       title: '修改密码',
-      icon: <SubMenuIcon type='icon-iconbi' />,
+      icon: <Icon type='lock' />,
       path: 'editpwd',
-      count: 200
+      count: 10
     },
     {
       title: '关注领域',
-      icon: <SubMenuIcon type='icon-mubiao' />,
+      icon: <Icon type='alert' />,
       path: 'focus',
-      count: 200
+      count: 10
     },
     {
       title: '历史消息',
-      icon: <SubMenuIcon type='icon-lishi' />,
+      icon: <Icon type='history' />,
       path: 'historymsg',
-      count: 200
+      count: 10
     },
     {
       title: '账号绑定',
-      icon: <SubMenuIcon type='icon-bangding' />,
+      icon: <Icon type='user' />,
       path: 'accountbind',
-      count: 200
-    },
+      count: 10
+    }
   ].map(item => ({ ...item, key: item.path }));
 
   const [selectedKey, setSelectedKey] = useState(menuData[0].path);
@@ -238,4 +239,4 @@ ReactDOM.render(
     mountNode,
 );
 `
-export default [code, code1,code2];
+export default [code, code1, code2];
