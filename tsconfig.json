@@ -2,10 +2,6 @@
   "compilerOptions": {
     "baseUrl": ".",
     "strict": false,
-    "lib": [
-      "esnext",
-      "dom"
-    ],
     "sourceMap": true,
     "moduleResolution": "node",
     "rootDir": ".",
