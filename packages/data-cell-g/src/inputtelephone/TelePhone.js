@@ -37,9 +37,21 @@ const withCode = compose(
       }
     }
   }),
-  withProps(({ code, onCodeChange, filterOption }) => ({
+
+  withPropsOnChange(['phone'], ({ phone }) => ({
+    confirmable: isPhone.test(String(phone))
+  })),
+  mapProps(({ filterOption, ...props }) => props)
+)
+
+
+const getValue = ({ code, phone }) => phone ? `${code} - ${phone}` : ''
+@compose(
+  withCode,
+  withEdit(getValue),
+  withProps(({ code, onCodeChange, filterOption, getPopupContainer }) => ({
     addonBefore: (
-      <Select style={{ width: 130 }} value={code} onChange={onCodeChange} showSearch filterOption={filterOption}>
+      <Select style={{ width: 130 }} getPopupContainer={getPopupContainer} value={code} onChange={onCodeChange} showSearch filterOption={filterOption}>
         {
           codesList.map((citys, index) => {
             let renderCitys = citys
@@ -61,17 +73,7 @@ const withCode = compose(
       </Select>
     )
   })),
-  withPropsOnChange(['phone'], ({ phone }) => ({
-    confirmable: isPhone.test(String(phone))
-  })),
-  mapProps(({ filterOption, ...props }) => props)
-)
 
-
-const getValue = ({ code, phone }) => phone ? `${code} - ${phone}` : ''
-@compose(
-  withCode,
-  withEdit(getValue)
 )
 class TelePhone extends Component {
 
@@ -91,7 +93,7 @@ class TelePhone extends Component {
   }
 
   render() {
-    const { onEnter, onPhoneChange, onCodeChange, phone, ...props } = this.props
+    const { onEnter, onPhoneChange, onCodeChange, phone, getPopupContainer, ...props } = this.props
 
     return (
       <Input {...props} value={phone} onKeyDown={this.onKeyDown} onChange={this.onChange} />

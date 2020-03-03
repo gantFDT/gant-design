@@ -130,7 +130,7 @@ class CellPhone extends Component {
   }
 
   render() {
-    const { onPhoneChange, validateValue, onEnter, ...props } = this.props
+    const { onPhoneChange, validateValue,getPopupContainer, onEnter, ...props } = this.props
     const { value } = this.state
     let computedValue = get(props, 'phone', value)
     return (

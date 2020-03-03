@@ -3,7 +3,7 @@ import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import CodeDecorator from '../_util/CodeDecorator';
 import code from './code'
 import Table from '@table'
-import { EditStatus, SwitchStatus, Input, InputNumber, Select, InputCellPhone } from '@data-cell'
+import { EditStatus, SwitchStatus, Input, InputNumber, Select, InputCellPhone, InputLanguage, InputMoeny } from '@data-cell'
 import { Button, Slider } from 'antd'
 
 import { getList } from './mock'
@@ -238,7 +238,7 @@ function EditorTable() {
       },
       editConfig: {
         render: (text, record, index) => {
-          return <InputCellPhone />
+          return <InputLanguage />
         }
       }
     },

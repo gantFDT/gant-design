@@ -63,16 +63,6 @@ const withLangSelect = compose(
     onLocaleChange: ({ setCurrentLocale }) => (locale) => {
       setCurrentLocale(locale)
     }
-  }),
-  withProps(({ onLocaleChange, language, cacheMap, currentLocale }) => {
-    return {
-      addonBefore: (
-        <Select style={{ width: 75 }} value={currentLocale} onChange={onLocaleChange}>
-          {language.map(item => <Select.Option value={item.locale} key={item.locale}>{item.label}</Select.Option>)}
-        </Select>
-      ),
-      currentValue: cacheMap.get(currentLocale)
-    }
   })
 )
 
@@ -80,7 +70,17 @@ const withLangSelect = compose(
 @compose(
   toClass,
   withLangSelect,
-  withEdit(({ currentLocale, cacheMap }) => cacheMap.get(currentLocale))
+  withEdit(({ currentLocale, cacheMap }) => cacheMap.get(currentLocale)),
+  withProps(({ onLocaleChange, language, cacheMap, currentLocale, getPopupContainer }) => {
+    return {
+      addonBefore: (
+        <Select getPopupContainer={getPopupContainer} style={{ width: 75 }} value={currentLocale} onChange={onLocaleChange}>
+          {language.map(item => <Select.Option value={item.locale} key={item.locale}>{item.label}</Select.Option>)}
+        </Select>
+      ),
+      currentValue: cacheMap.get(currentLocale)
+    }
+  })
 )
 class InputLang extends Component {
 
@@ -92,7 +92,7 @@ class InputLang extends Component {
   }
 
   render() {
-    const { onEnter, setlocale, cacheId, cacheMap, localeList, onLocaleChange, currentValue, setCacheMap, ...props } = this.props
+    const { onEnter, setlocale, cacheId, cacheMap, localeList, onLocaleChange, currentValue, setCacheMap,getPopupContainer, ...props } = this.props
     return (
       <Input {...props} value={currentValue} onKeyDown={onEnter} onChange={this.onInputChange} />
     );
