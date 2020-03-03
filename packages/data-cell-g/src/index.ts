@@ -5,7 +5,13 @@ export { default as EditStatus } from './compose/editstatus';
 export { default as SwitchStatus } from './compose/switchstatus'
 //数据单元
 //input
-export { default as Input, TextArea, Search, Group, Password } from './input'
+export {
+  default as Input,
+  default as TextArea,
+  default as Search,
+  default as Group,
+  default as Password
+} from './input'
 // export { default as Select } from './select'
 export { default as InputCellPhone } from './inputcellphone'
 export { default as InputTelePhone } from './inputtelephone';
