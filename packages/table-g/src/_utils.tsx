@@ -376,7 +376,7 @@ const setTableBorderBottom = (table, show) => {
 export const diffList = <T extends Record>(oldList: T[], newList: T[], computedRowKey: RowKey<T>, isTree = false, addList = [], delList = [], modifyList = []) => {
 
   // 2、计算新增节点
-  console.time('计算新增节点')
+  // console.time('计算新增节点')
   newList.reduce((list, item) => {
     const isAdd = oldList.every(oldItem => computedRowKey(oldItem) !== computedRowKey(item))
     if (isAdd) {
@@ -387,10 +387,10 @@ export const diffList = <T extends Record>(oldList: T[], newList: T[], computedR
     }
     return list
   }, addList)
-  console.timeEnd('计算新增节点')
+  // console.timeEnd('计算新增节点')
   // 3、计算删除节点
   // 4、计算修改节点
-  console.time('计算删改节点')
+  // console.time('计算删改节点')
   oldList.reduce((result, oldItem) => {
     const isDelete = newList.every(newItem => computedRowKey(oldItem) !== computedRowKey(newItem))
     if (isDelete) {
@@ -430,7 +430,7 @@ export const diffList = <T extends Record>(oldList: T[], newList: T[], computedR
     }
     return result
   }, [delList, modifyList])
-  console.timeEnd('计算删改节点')
+  // console.timeEnd('计算删改节点')
   // 5、
   return [addList, delList, modifyList]
 }
@@ -450,7 +450,7 @@ const pushChildrenToList = (list, sub) => {
  * @param {*} cols 列数据
  */
 export const getComputedColIndex = (cols): string[] => {
-  console.time('计算columnIndex')
+  // console.time('计算columnIndex')
   const colIndexs = []
   const inner = (subCols) => {
     subCols.forEach((subCol) => {
@@ -463,7 +463,7 @@ export const getComputedColIndex = (cols): string[] => {
     })
   }
   inner(cols)
-  console.timeEnd('计算columnIndex')
+  // console.timeEnd('计算columnIndex')
   return colIndexs
 }
 
@@ -487,7 +487,7 @@ function computeIndexInner<T>([...list], parent): [Array<T>, number] {
  * @param {number} parent 
  */
 export const computeIndex = function computeIndex<T>([...list]: Array<T>, expandRowKeys = [], computedRowKey, virtualScroll: boolean): [T[], string[], T[]] {
-  console.time('计算序号')
+  // console.time('计算序号')
   const renderRowKeys: string[] = []
   const tilingList: T[] = [];
   const items = []
@@ -536,7 +536,7 @@ export const computeIndex = function computeIndex<T>([...list]: Array<T>, expand
       }
     }
   }
-  console.timeEnd('计算序号')
+  // console.timeEnd('计算序号')
   return [list, renderRowKeys, tilingList]
 }
 

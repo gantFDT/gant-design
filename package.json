@@ -18,13 +18,13 @@
     "type": "git",
     "url": "git+https://github.com/gantFDT/GantD.git"
   },
-  "main": "lib/index.js",
-  "module": "lib/index.js",
+  "main": "packages/gantd/link/index.js",
+  "module": "packages/gantd/link/index.js",
   "scripts": {
-    "dev": "start-storybook -p 60004",
+    "dev": "start-storybook -p 60004 -s public",
     "build-storybook": "build-storybook",
     "compile": "gulp",
-    "build": "gulp && webpack",
+    "build": "gulp && webpack -s public",
     "pub": "gulp && webpack && lerna publish"
   },
   "files": [

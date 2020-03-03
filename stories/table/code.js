@@ -1,37 +1,32 @@
-const code1 = `import { Table } from 'gantd';
+const code1 = `import Table from 'table-g';
 
-const columns = [
-	{
-		title: '姓名',
-		dataIndex: 'name',
-		key: 'name',
-	},
-	{
-		title: '年龄',
-		dataIndex: 'age',
-		key: 'age',
-	},
-	{
-		title: '住址',
-		dataIndex: 'address',
-		key: 'address',
-	},
-];
+const BasicTable = (props) =>{
+	const dataSource = useMemo(() => getList(), [])
+  const [resizable, setresizable] = useState(true)
 
-let dataArray = new Array(10), dataSource = [];
-  dataArray = dataArray.fill()
-  dataArray.map((item, index) => {
-    dataSource.push({
-      name: "namenamenamenamenamenamename",
-      age: index,
-      address: "table的宽度需要是各列宽度的总和，如果没有设置列宽，将平分table的宽度,table默认600px，如果不太清楚table的布局策略，最好table宽度和所有列都加上宽度",
-      key: index,
-    })
-  })
+  const toggleResizable = useCallback(
+    () => {
+    setresizable(!resizable)
+    },
+    [resizable],
+  )
 
-function BasicTable(props) {
-	return <Table columns={columns} dataSource={dataSource} />
+  const headerRight = useMemo(() => {
+    return (
+    <>
+      <Button onClick={toggleResizable} >切换可缩放列</Button>
+    </>
+    )
+  }, [toggleResizable])
+
+  return <Table
+    columns={columns}
+    dataSource={dataSource}
+    resizable={resizable}
+    headerRight={headerRight}
+  />
 }
+
 ReactDOM.render(<BasicTable/>,mountNode)
 `
 

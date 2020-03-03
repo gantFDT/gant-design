@@ -7,7 +7,7 @@ import { compose, defaultProps, withProps, withPropsOnChange, withState, mapProp
 import './index.less'
 import { Group } from '../input'
 import { withEdit } from '../compose'
-import { WithEditProps } from '../compose/withEdit'
+import { WithEditInProps, WithEditOutProps } from '../compose/withEdit'
 
 type ProtoExtends<T, U> = U & {
   [K in Exclude<keyof T, keyof U>]?: NonNullable<T[K]>
@@ -39,6 +39,7 @@ const defaultprop = {
   onDropdownVisibleChange: _ => _,
   // 由外部组件来实现的获取label的方法, 一般在初始化的时候调用
   getLabelText: (value, setLabel) => setLabel(value),
+  blurOnSelect: true,
 }
 
 type NArray<T> = T | T[];
@@ -60,19 +61,15 @@ type DefaultProps<R> = ProtoExtends<typeof defaultprop, {
   getLabelText: GetLabelText,
   multiple: boolean,
   onSelect: (k: string, item: R) => void,
-}>
-
-// 重写部分Props
-interface SelectorOuterProps<R> extends DefaultProps<R> {
   selectorId: string,
   onChange: (key: SelectValue) => void,
-}
+}>
 
-export type SelectorProps<T, V = SelectValue> = Partial<
-  ProtoExtends<SelectProps<V>, ProtoExtends<WithEditProps<V>, SelectorOuterProps<T>>>
->
+type BasicSelectorProps<T, R> = ProtoExtends<SelectProps<T>, DefaultProps<R>>
 
-interface SelectorInnerProps<R> extends SelectorProps<R> {
+export type SelectorProps<T, R> = ProtoExtends<WithEditInProps<T>, BasicSelectorProps<T, R>>
+
+type SelectorInnerProps<T, R> = ProtoExtends<BasicSelectorProps<T, R>, {
   setFilter: (v: string) => void,
   getData(): void,
   label: Label,
@@ -89,7 +86,7 @@ interface SelectorInnerProps<R> extends SelectorProps<R> {
   reg: RegExp,
   addonAfter: React.ReactElement,
   dataSource: React.ReactElement[]
-}
+}>
 
 
 const withLocalStorage = compose(
@@ -320,10 +317,6 @@ const withSelector = compose(
       }
     }
   ),
-  //#endregion
-  // 获取初始化label
-  //#region
-  // lifecycle<SelectorInnerProps<any>, any>({
   lifecycle({
     componentDidMount() {
       this.props.getData()
@@ -376,7 +369,7 @@ const withChange = withPropsOnChange( // 外部value到内部value对象形式�
   }
 )
 
-class BasicSelector<T> extends PureComponent<SelectorInnerProps<T>> {
+class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
 
   constructor(props) {
     super(props)
@@ -429,7 +422,7 @@ class BasicSelector<T> extends PureComponent<SelectorInnerProps<T>> {
   }
 
   onSelect(select, option) {
-    const { onSelect, dataList, storageList, selectorId, getValue, updateStorage, selectRef, multiple, mode, query, filter, setFilter } = this.props
+    const { onSelect, dataList, storageList, selectorId, getValue, updateStorage, selectRef, multiple, mode, query, filter, setFilter, blurOnSelect } = this.props
 
     const key = this.storageToReal(select.key) // 获取真实的key值
     const originItem = dataList.find(item => getValue(item) === key)
@@ -443,7 +436,7 @@ class BasicSelector<T> extends PureComponent<SelectorInnerProps<T>> {
       onSelect(key, item)
     }
 
-    if (!multiple && !['multiple', 'tags'].includes(mode)) { // 单选的情况下、选中失焦
+    if (blurOnSelect && !multiple && !['multiple', 'tags'].includes(mode)) { // 单选的情况下、选中失焦
       setTimeout(() => {
         selectRef.blur()
       }, 0)
@@ -522,11 +515,11 @@ const SelectorComponent = compose(
   toClass,
   withLocalStorage,
   withSelector,
-  withEdit<SelectorInnerProps<any>>(({ label }) => label),
+  withEdit<SelectorInnerProps<any, any>>(({ label }) => label),
   withChange, // 单独将value的处理放到withEdit后面，
 )(BasicSelector)
 
-export default class Selector<T> extends Component<SelectorProps<T>>{
+export default class Selector<T, R> extends Component<SelectorProps<T, R>>{
   render() {
     return <SelectorComponent {...this.props} />
   }

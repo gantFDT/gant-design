@@ -152,7 +152,7 @@ interface Props<T extends Record> {
     title: React.ReactNode,
     wheel: Function,
     // deprecated
-    resizeCell: boolean,
+    // resizeCell: boolean,
     virtualScroll: VirtualScroll<T> | true,
 }
 
@@ -204,6 +204,7 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
         tableWraper,
         withIndex,
         virtualScroll: virtualScrollConfig,
+        resizable: resizeCell
     } = props
     /* =======================warning======================= */
     if (process.env.NODE_ENV !== "production") {
@@ -237,8 +238,6 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
     )
 
     const scrollY = useMemo<string | number>(() => _.get(scroll, 'y') as string | number, [scroll])
-    // resizeCell修改为resizable,仍然支持resizeCell
-    const resizeCell = useMemo(() => props.resizeCell || props.resizable, [props.resizeCell, props.resizable])
     // 有子节点禁用排序功能
     //#region
     // 是否是树形结构
