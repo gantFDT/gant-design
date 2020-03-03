@@ -42,6 +42,8 @@ function linkScriptTask(dirName) {
           through2.obj(function (chunk, enc, next) {
             let content = chunk.contents.toString()
             content = resolvePath(content, 2)
+            content = content.replace(/\.less/g, '.css')
+            content = content.replace(/\.jsx/g, '.js')
             const buf = Buffer.from(content)
             chunk.contents = buf
             this.push(chunk)
@@ -58,6 +60,8 @@ function linkScriptTask(dirName) {
           through2.obj(function (chunk, enc, next) {
             let content = chunk.contents.toString()
             content = resolvePath(content, 3)
+            content = content.replace(/\.less/g, '.css')
+            content = content.replace(/\.jsx/g, '.js')
             const buf = Buffer.from(content)
             chunk.contents = buf
             this.push(chunk)
@@ -130,6 +134,8 @@ function libScriptTask(dirName) {
           through2.obj(function (chunk, enc, next) {
             let content = chunk.contents.toString()
             content = resolvePath(content)
+            content = content.replace(/\.less/g, '.css')
+            content = content.replace(/\.jsx/g, '.js')
             const buf = Buffer.from(content)
             chunk.contents = buf
             this.push(chunk)
