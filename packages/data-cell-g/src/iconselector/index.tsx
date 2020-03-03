@@ -78,7 +78,6 @@ const IconHouse: React.FC<IconHouseProps> = ({ inForm, onChange, value, onBlur =
           }
         }
       }
-
     }
     window.addEventListener('click', click, false)
     return () => {

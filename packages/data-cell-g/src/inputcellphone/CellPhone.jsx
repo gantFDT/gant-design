@@ -15,7 +15,7 @@ const phoneFormatter = phone => Array.from(phone).map((num, index) => index % 4 
 const withPhoneCode = compose(
   toClass,
   withProps(({ value = {} }) => {
-    const { key: code = "86", value: phone } = value
+    const { key: code = "86", value: phone } = value;
     return {
       code,
       phone
@@ -50,15 +50,17 @@ const withPhoneCode = compose(
       }
     }
   }),
-  withProps(({ code, onCodeChange, filterOption }) => ({
-    addonBefore: (
-      <Select style={{ width: 86 }} value={code} onChange={onCodeChange} filterOption={filterOption} showSearch>
-        {
-          codeTypes.map(code => <Select.Option key={code} value={code}>+{code}</Select.Option>)
-        }
-      </Select>
-    )
-  })),
+  withProps(({ code, onCodeChange, filterOption, getPopupContainer }) => {
+    return ({
+      addonBefore: (
+        <Select getPopupContainer={getPopupContainer} style={{ width: 86 }} value={code} onChange={onCodeChange} filterOption={filterOption} showSearch>
+          {
+            codeTypes.map(code => <Select.Option key={code} value={code}>+{code}</Select.Option>)
+          }
+        </Select>
+      )
+    })
+  }),
   mapProps(({ onCodeChange, searchCode, codeList, filterOption, ...props }) => props)
 )
 
@@ -83,9 +85,9 @@ const withValidate = compose(
 )
 
 @compose(
+  withEdit(({ code, phone }) => phone ? `+${code} ${phone}` : ''),
   withPhoneCode,
   withValidate,
-  withEdit(({ code, phone }) => phone ? `+${code} ${phone}` : ''),
 )
 class CellPhone extends Component {
 
@@ -101,7 +103,7 @@ class CellPhone extends Component {
 
   onChange(e) {
     const { onPhoneChange, code } = this.props
-    const { value } = e.target
+    const { value } = e.target;
     if (value) {
       if (code === "86") {
         if (value.length <= 11 && reg.test(value)) {
@@ -132,7 +134,8 @@ class CellPhone extends Component {
     const { value } = this.state
     let computedValue = get(props, 'phone', value)
     return (
-      <AntInput {...props} value={computedValue} onKeyDown={this.onKeyDown} onChange={this.onChange} />
+      <AntInput {...props} value={computedValue}
+        onKeyDown={this.onKeyDown} onChange={this.onChange} />
     );
   }
 }

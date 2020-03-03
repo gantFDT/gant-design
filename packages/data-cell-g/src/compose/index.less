@@ -1,63 +1,59 @@
 @import '../style/index.less';
-
 @compose-prefix-cls: ~'@{gant-prefix}-compose';
 @input-prefix-cls: ~'@{gant-prefix}-input';
 @gant-input-wrapper: ~'@{input-prefix-cls}-wrapper';
-@gant-input-inner : ~'@{input-prefix-cls}-inner';
-
+@gant-input-inner :~'@{input-prefix-cls}-inner';
 .@{compose-prefix-cls}-readWrapper {
-  padding-right: 15px;
-  position: relative;
-  text-align: left;
-
-  // white-space: nowrap;
-  // overflow: hidden;
-  // text-overflow: ellipsis;
-  word-break: break-all;
-
-  .@{compose-prefix-cls}-noContent {
-    color: @grab;
-  }
-
-  .@{compose-prefix-cls}-editPen {
-    position: absolute;
-    top: 0;
-    right: 999em;
-    float: right;
-    cursor: pointer;
-  }
-
-  &:hover {
-    .@{compose-prefix-cls}-editPen {
-      right: 0
+    padding-right: 15px;
+    position: relative;
+    text-align: left; // white-space: nowrap;
+    // overflow: hidden;
+    // text-overflow: ellipsis;
+    word-break: break-all;
+    .@{compose-prefix-cls}-noContent {
+        color: @grab;
     }
-  }
+    .@{compose-prefix-cls}-editPen {
+        position: absolute;
+        top: 0;
+        right: 999em;
+        float: right;
+        cursor: pointer;
+    }
+    &:hover {
+        .@{compose-prefix-cls}-editPen {
+            right: 0
+        }
+    }
 }
 
 // 作为嵌套表单使用的时候
-.@{gant-input-wrapper}.@{gant-input-inner}{
-  flex: 1
+.@{gant-input-wrapper} {
+    outline: none;
+}
+
+.@{gant-input-wrapper}.@{gant-input-inner} {
+    flex: 1;
 }
 
 .@{input-prefix-cls} {
-  display: flex;
-  align-items: center; 
-
-  &::after {
-    content: 'clear';
-    display: inline-block;
-    width: 0;
-    overflow: hidden;
-    white-space: nowrap;
-  }
-
-  .@{compose-prefix-cls}-success { // 确认按钮
-    color: @green;
-    cursor: pointer;
-  }
-
-  .@{compose-prefix-cls}-error { // 取消按钮
-    color: @close;
-    cursor: pointer;
-  }
+    display: flex;
+    align-items: center;
+    &::after {
+        content: 'clear';
+        display: inline-block;
+        width: 0;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+    .@{compose-prefix-cls}-success {
+        // 确认按钮
+        color: @green;
+        cursor: pointer;
+    }
+    .@{compose-prefix-cls}-error {
+        // 取消按钮
+        color: @close;
+        cursor: pointer;
+    }
 }
