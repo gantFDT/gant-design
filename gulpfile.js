@@ -13,6 +13,7 @@ const babelConfig = require('./babelConfig.json')
 const lernaConfig = require('./lerna.json')
 const { all: packageNames } = lernaConfig;
 const tsProject = ts.createProject('./tsconfig.json', {
+  declaration: true,
   target: 'ES6',
 });
 

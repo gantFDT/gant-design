@@ -81,22 +81,11 @@ module.exports = {
         rules: [{
             test: /\.(jsx|js)?$/,
             include: [
-                path.resolve(__dirname, "packages"),
-                // path.resolve(__dirname, "node_modules"),
+                path.resolve(__dirname, "packages")
             ],
             exclude: [
                 path.resolve(__dirname, "node_modules")
             ],
-            // exclude: [
-            //     path.resolve(__dirname, "node_modules")
-            // ],
-            // 这里是匹配条件，每个选项都接收一个正则表达式或字符串
-            // test 和 include 具有相同的作用，都是必须匹配选项
-            // exclude 是必不匹配选项（优先于 test 和 include）
-            // 最佳实践：
-            // - 只在 test 和 文件名匹配 中使用正则表达式
-            // - 在 include 和 exclude 中使用绝对路径数组
-            // - 尽量避免 exclude，更倾向于使用 include
             use: [
               {
                 loader: 'babel-loader',
@@ -107,18 +96,13 @@ module.exports = {
             test: /\.(tsx|ts)?$/,
             include: [
               path.resolve(__dirname, "packages"),
-              // path.resolve(__dirname, "node_modules"),
             ],
             exclude: [
                 path.resolve(__dirname, "node_modules")
             ],
-            // exclude: [
-            //     path.resolve(__dirname, "node_modules")
-            // ],
             use: [
               {
-                loader: 'ts-loader',
-                options: {}
+                loader: 'ts-loader'
               }
             ]
         }, {
