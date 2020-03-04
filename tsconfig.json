@@ -8,8 +8,8 @@
     "downlevelIteration": true,
     "target": "ES5", // 指定ECMAScript目标版本 "ES3"（默认）， "ES5"， "ES6"/ "ES2015"， "ES2016"， "ES2017"或 "ESNext"
     "module": "esnext", // 指定生成哪个模块系统代码
-    "declaration": true, // 生成（ *.d.ts）文件
-    "allowJs": true, // 允许编译 javascript 文件
+    "declaration": false, // 生成（ *.d.ts）文件
+    "allowJs": false, // 允许编译 javascript 文件
     "jsx": "react", // 在 .tsx文件里支持JSX： "React"或 "Preserve"
     "locale": "zh-CN",
     "forceConsistentCasingInFileNames": false, // 禁止对同一个文件的不一致的引用
@@ -64,12 +64,11 @@
     }
   },
   "include": [
-    "packages/**/*"
+    "packages/*/src",
   ],
   "exclude": [
     "node_modules",
     "dist",
-    "stories",
     "packages/node-util-g"
   ]
 }
