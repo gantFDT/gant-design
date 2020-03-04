@@ -155,7 +155,7 @@ function VirtualScrollTable() {
 }
 
 
-function WidthTable(props) {
+function NestTable(props) {
 
   const [columns, setcolumns] = useState([
     {
@@ -213,17 +213,7 @@ function WidthTable(props) {
     }
   ])
 
-  let dataArray = new Array(10), dataSource = [];
-  dataArray = dataArray.fill()
-  dataArray.map((item, index) => {
-    dataSource.push({
-      name: "namenamenamenamenamenamename",
-      age: index,
-      address: "table的宽度需要是各列宽度的总和，如果没有设置列宽，将平分table的宽度,table默认600px，如果不太清楚table的布局策略，最好table宽度和所有列都加上宽度",
-      key: index,
-      age1: 'aoiduoaisudbaopisdjbpaisjdba;osdbapoisdbna[osidnaosdna[oisda[sidaoibs'
-    })
-  })
+  const dataSource = useMemo(() => getList(15), [])
 
   return <Table columns={columns} dataSource={dataSource} scroll={{ x: 1050 }} />
 }
@@ -232,13 +222,21 @@ function WidthTable(props) {
 function ScrollTable() {
 
   const [dataSource, setdataSource] = useState(() => getList(5))
+  const [loading, setloading] = useState(false)
+
+  useEffect(() => {
+    setloading(false)
+  }, [dataSource])
 
   const onWheel = useCallback(
     () => {
-      setdataSource(list => ([
-        ...list,
-        ...getList(5),
-      ]))
+      setloading(true)
+      setTimeout(() => {
+        setdataSource(list => ([
+          ...list,
+          ...getList(5),
+        ]))
+      }, 1000)
     },
     [],
   )
@@ -248,28 +246,22 @@ function ScrollTable() {
       columns={columns}
       dataSource={dataSource}
       scroll={{ y: 300 }}
-      wheel={onWheel}
+      onScroll={onWheel}
+      loading={loading}
     />
   )
 }
 
-function TitleUse(props) {
-  let dataArray = new Array(10), dataSource = [];
-  dataArray = dataArray.fill()
-  dataArray.map((item, index) => {
-    dataSource.push({
-      name: "name" + index,
-      age: index,
-      address: "123",
-      key: index
-    }) 
-  })
+// 拖动排序
+function DragTable(props) {
+  const [dataSource, setdataSource] = useState(() => getList(20))
+
+
   return <Table
     columns={columns}
-    title="标题"
-    headerRight={<Button size='small'>right</Button>}
     dataSource={dataSource}
-    resizable={false}
+    onDragEnd={setdataSource}
+    scroll={{ y: 300 }}
   />
 }
 
@@ -540,19 +532,7 @@ function PaginationTable(props) {
 
   const [pagenumber, setpagenumber] = useState(1)
   const [size, setsize] = useState(50)
-
-  const [dataSource, setdataSource] = useState(() => {
-    const dataSource = new Array(78).fill().map((item, index) => {
-      return {
-        name: "name",
-        age: index,
-        address: "123",
-        key: index,
-        isDeleted: true
-      }
-    })
-    return dataSource
-  })
+  const dataSource = useMemo(() => getList(120), [])
 
   const list = useMemo(() => {
     return dataSource.slice((pagenumber - 1) * size, pagenumber * size)
@@ -567,12 +547,6 @@ function PaginationTable(props) {
   )
 
   const [scrollKey, setscrollKey] = useState(null)
-
-  // useEffect(() => {
-  // 	setTimeout(() => {
-  // 		setscrollKey('30')
-  // 	}, 10000)
-  // }, [])
 
   return <Table
     columns={columns}
@@ -636,7 +610,8 @@ const config = {
 
 		<h2>其他特性</h2>
 		<b>1、滚动加载</b><br/>
-		<b>2、拖动排序</b><br/>`
+		<b>2、拖动排序</b><br/>
+		<b>3、级联选择</b><br/>`
   ),
   children: [
     {
@@ -656,13 +631,13 @@ const config = {
     },
     {
       title: '虚拟滚动',
-      describe: '通过virtualScroll开启，必须指定scroll.y控制高度，设置virtualScroll为true，可以使用内置的参数。一般情况下也不需要修改',
+      describe: '通过virtualScroll开启，必须指定scroll.y控制高度。也可以仅设置virtualScroll为true，使用内置的参数。一般情况下也不需要修改',
       cmp: VirtualScrollTable
     },
     {
       title: '嵌套表头',
       describe: '',
-      cmp: WidthTable
+      cmp: NestTable
     },
     {
       title: '滚动加载',
@@ -670,15 +645,15 @@ const config = {
       cmp: ScrollTable
     },
     {
-      title: '宽表格',
-      describe: '在小屏幕上出现滚动条,设置fixed的列必须设置宽度，试试缩小屏幕。同时，因为有固定列，所以wrap使文本折行的属性不能生效',
-      cmp: WideTable
+      title: '拖动排序',
+      describe: '',
+      cmp: DragTable
     },
-    {
-      title: '带标题',
-      describe: '标题展示',
-      cmp: TitleUse
-    },
+    // {
+    //   title: '宽表格',
+    //   describe: '在小屏幕上出现滚动条,设置fixed的列必须设置宽度，试试缩小屏幕。同时，因为有固定列，所以wrap使文本折行的属性不能生效',
+    //   cmp: WideTable
+    // },
     {
       title: '树形表格',
       describe: '树形表格,级联选择, 与antd组件相比，多选情况下onSelect第一个参数修改为了数组。datasource中有children属性自动开启树形结构, rowSelection为对象开启选择，增强选择的时候判断是否有子节点并一起选中,clickable: false用于关闭行选功能',
