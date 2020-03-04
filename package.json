@@ -31,6 +31,12 @@
     "lib",
     "dist"
   ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
   "peerDependencies": {
     "antd": "^3.22.0",
     "prop-types": "^15.6.0",
@@ -152,11 +158,6 @@
     "ie >= 9",
     "iOS >= 8",
     "Android >= 4"
-  ],
-  "husky": {
-    "hooks": {
-      "pre-commit": "pretty-quick --staged",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
-  }
+  ]
+  
 }
