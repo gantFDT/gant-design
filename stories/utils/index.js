@@ -7,7 +7,7 @@ import code from './code'
 function codeFun(props) {
   return (<div></div>)
 }
-const a = 2;
+const a = 3;
 const config = {
   codes: code.map(V => V),
   useage: `

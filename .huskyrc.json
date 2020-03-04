@@ -1,0 +1,8 @@
+{
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run dev",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  }
+}
