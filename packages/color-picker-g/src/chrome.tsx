@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { CSSProperties } from 'react'
 import { Hue, Saturation, Checkboard, ColorWrap } from 'react-color/lib/components/common'
 
 const Chrome = (props) => {
@@ -12,7 +12,7 @@ const Chrome = (props) => {
     prefixCls,
   } = props;
 
-  const styles = {
+  const styles: {[clsName: string]: CSSProperties} = {
     picker: {
       width,
       display: 'flex',
@@ -30,7 +30,7 @@ const Chrome = (props) => {
       overflow: 'hidden',
     },
     Saturation: {
-      radius: '2px 2px 0 0',
+      borderRadius: '2px 2px 0 0',
     },
     body: {
       padding: '16px 16px 12px',
@@ -50,11 +50,10 @@ const Chrome = (props) => {
       overflow: 'hidden',
     },
     active: {
-      absolute: '0px 0px 0px 0px',
       borderRadius: '8px',
       boxShadow: 'inset 0 0 0 1px rgba(0,0,0,.1)',
       background: `rgba(${ rgb.r }, ${ rgb.g }, ${ rgb.b }, ${ rgb.a })`,
-      zIndex: '2',
+      zIndex: 2
     },
     toggles: {
       flex: '1',
@@ -65,14 +64,14 @@ const Chrome = (props) => {
       marginBottom: '0px',
     },
     Hue: {
-      radius: '2px',
+      borderRadius: '2px',
     },
     alpha: {
       height: '10px',
       position: 'relative',
     },
     Alpha: {
-      radius: '2px',
+      borderRadius: '2px',
     },
     triangle: {
       width: '0px',

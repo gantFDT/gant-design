@@ -13,12 +13,12 @@ export const PrimaryColors = Object.entries(presetPalettes)
     }
   });
 
-export const validColorText = _ => {
+export const validColorText = (_: string): boolean => {
   let reg = /^([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$/
   return reg.test(_);
 }
   
-export const fillText = _ => {
+export const fillText = (_: string): string => {
   _.includes('#') && (_ = _.slice(1));
   _ = _.toUpperCase();
   if (validColorText(_)) {

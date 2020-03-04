@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { CSSProperties } from 'react';
 import { Swatch } from 'react-color/lib/components/common';
 
-const styles = {
+const styles: {[clsName: string]: CSSProperties} = {
   card: {
     border: '0 solid rgba(0,0,0,0.25)',
     boxShadow: '0 1px 4px rgba(0,0,0,0.25)',
