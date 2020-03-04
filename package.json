@@ -33,7 +33,7 @@
   ],
   "husky": {
     "hooks": {
-      "pre-commit": "pretty-quick --staged",
+      "pre-commit": "npm dev",
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   },
@@ -159,5 +159,5 @@
     "iOS >= 8",
     "Android >= 4"
   ]
-  
+
 }
