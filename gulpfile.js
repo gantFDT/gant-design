@@ -6,12 +6,15 @@ const less = require('gulp-less')
 const postcss = require('gulp-postcss')
 const autoprefixer = require('autoprefixer')
 const ts = require('gulp-typescript')
+const filter = require('gulp-filter');
 const through2 = require('through2')
 const LessNpm = require('less-plugin-npm-import')
 const babelConfig = require('./babelConfig.json')
 const lernaConfig = require('./lerna.json')
 const { all: packageNames } = lernaConfig;
-const tsProject = ts.createProject('./tsconfig.json', {});
+const tsProject = ts.createProject('./tsconfig.json', {
+  target: 'ES6',
+});
 
 /**
  * 解析包引用路径
@@ -73,6 +76,9 @@ function linkScriptTask(dirName) {
     function compileTsLevelOne() {
       return src([`packages/${dirName}/src/*.tsx`, `packages/${dirName}/src/*.ts`])
         .pipe(tsProject())
+        .pipe(dest(`packages/${dirName}/link/`))
+        .pipe(filter(file => !file.path.endsWith('.d.ts')))
+        .pipe(babel(babelConfig))
         .pipe(
           // 处理路径等问题
           through2.obj(function (chunk, enc, next) {
@@ -91,6 +97,9 @@ function linkScriptTask(dirName) {
     function compileTsLevelTwo() {
       return src([`packages/${dirName}/src/*/*.tsx`, `packages/${dirName}/src/*/*.ts`])
         .pipe(tsProject())
+        .pipe(dest(`packages/${dirName}/link/`))
+        .pipe(filter(file => !file.path.endsWith('.d.ts')))
+        .pipe(babel(babelConfig))
         .pipe(
           // 处理路径等问题
           through2.obj(function (chunk, enc, next) {
@@ -147,6 +156,9 @@ function libScriptTask(dirName) {
     function compileTs() {
       return src([`packages/${dirName}/src/**/*.tsx`, `packages/${dirName}/src/**/*.ts`])
         .pipe(tsProject())
+        .pipe(dest(`packages/${dirName}/lib/`))
+        .pipe(filter(file => !file.path.endsWith('.d.ts')))
+        .pipe(babel(babelConfig))
         .pipe(
           // 处理路径等问题
           through2.obj(function (chunk, enc, next) {

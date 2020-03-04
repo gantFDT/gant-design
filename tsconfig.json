@@ -64,12 +64,11 @@
     }
   },
   "include": [
-    "packages/**/*"
+    "packages/*/src",
   ],
   "exclude": [
     "node_modules",
     "dist",
-    "stories",
     "packages/node-util-g"
   ]
 }
