@@ -7,10 +7,9 @@ import code from './code'
 function codeFun(props) {
   return (<div></div>)
 }
- 
+const a = 1;
 const config = {
   codes: code.map(V => V),
-
   useage: `
     🤡 项目中经常会用到的一些公共方法
     `,
