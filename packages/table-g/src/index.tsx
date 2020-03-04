@@ -150,7 +150,7 @@ interface Props<T extends Record> {
     tableKey: string,
     tail: Tail<T>,
     title: React.ReactNode,
-    wheel: Function,
+    onScroll: Function,
     // deprecated
     // resizeCell: boolean,
     virtualScroll: VirtualScroll<T> | true,
@@ -170,7 +170,7 @@ type GantTableListProps<T> = GantTableListOuterProps<T> & {
 };
 
 // 滚动元素类型
-type ScrollElement = Element & {
+export type ScrollElement = HTMLElement & {
     scrollTopBackUp: number,
     scrollloaded: boolean
 }
@@ -204,7 +204,8 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
         tableWraper,
         withIndex,
         virtualScroll: virtualScrollConfig,
-        resizable: resizeCell
+        resizable: resizeCell,
+        onScroll,
     } = props
     /* =======================warning======================= */
     if (process.env.NODE_ENV !== "production") {
@@ -359,11 +360,11 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
     //#region
     const onscroll = useCallback(_.debounce<any>((e) => {
         // 编辑状态下不触发whell事件
-        if (!props.wheel || editable === EditStatus.EDIT) return
+        if (!onScroll || editable === EditStatus.EDIT) return
         if (e.type === 'wheel') {
             // 向下滚动，视图上移
             if (e.deltaY > 0) {
-                props.wheel()
+                onScroll()
             }
             // 向上滚动，视图下移
             else { }
@@ -375,7 +376,7 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
                 if (lef <= bodyTable.scrollHeight * 0.01) { // 滚动到临界点
                     if (!bodyTable.scrollloaded) {
                         bodyTable.scrollloaded = true
-                        props.wheel()
+                        onScroll()
                         bodyTable.scrollloaded = false
                     }
                 } else {
@@ -386,7 +387,7 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
             bodyTable.scrollTopBackUp = bodyTable.scrollTop
         }
         e.preventDefault()
-    }, 50), [props.wheel, editable])
+    }, 50), [onScroll, editable])
 
     const [tableGroup] = useState(new Map<string, HTMLTableElement>())
     /**
@@ -787,7 +788,6 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
         const sortablePrefixCls = getPrefixCls('table-sortable');
         const zebraPrefixCls = getPrefixCls('table-zebra');
         const lightPrefixCls = getPrefixCls('table-light');
-        const tableHeaderPrefixCls = getPrefixCls('table-header');
         return (
             <>
                 {(title || headerRightElement.length || headerLeft) && (
@@ -872,7 +872,7 @@ GTable.propTypes = {
     wrap: PropTypes.bool,
     tail: PropTypes.func,
     // 无限滚动`
-    wheel: PropTypes.func,
+    onScroll: PropTypes.func,
     light: PropTypes.bool, // 明亮模式开关
     spacing: PropTypes.oneOfType([
         PropTypes.string,

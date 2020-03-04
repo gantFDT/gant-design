@@ -261,7 +261,8 @@
                         display: flex;
                     }
                     .height{
-                        @height: @footerHeight - 9px;
+                        @height: @footerHeight - 8px;
+                        line-height: @height;
                         height: @height;
                         max-height: @height;
                         min-height: @height;
@@ -270,6 +271,9 @@
                     .gant-table-footer-tail{
                         .height;
                         .flex;
+                        .ant-pagination-options{
+                            line-height: 24px;
+                        }
                     }
                 }
             }
