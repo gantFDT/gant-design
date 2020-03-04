@@ -3,7 +3,7 @@ import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import CodeDecorator from '../_util/CodeDecorator';
 import code from './code'
 import Table from '@table'
-import { EditStatus, SwitchStatus, Input, InputNumber, Selector, InputTelePhone, InputLanguage } from '@data-cell'
+import { EditStatus, SwitchStatus, Input, InputNumber, Selector, InputCellPhone, InputUrl, InputEmail, InputMoney, DatePicker, RangePicker, ColorPicker, LocationSelector, Icon, InputTelePhone, InputLanguage } from '@data-cell'
 import { Button, Slider } from 'antd'
 
 import { getList, getEditList } from './mock'
@@ -85,7 +85,7 @@ function EditorTable() {
       editConfig: {
         render: (text, record, index) => {
           return <InputNumber min={0} />
-        }
+        },
       }
     },
     {
@@ -655,13 +655,13 @@ const config = {
     //   cmp: WideTable
     // },
     {
-      title: '树形表格',
+      title: '树形表格、级联选择',
       describe: '树形表格,级联选择, 与antd组件相比，多选情况下onSelect第一个参数修改为了数组。datasource中有children属性自动开启树形结构, rowSelection为对象开启选择，增强选择的时候判断是否有子节点并一起选中,clickable: false用于关闭行选功能',
       cmp: TreeTable
     },
     {
       title: '带分页组件的table',
-      describe: 'footerDirection=row-reverse控制分页和tail的顺序，延迟5秒滚动第31行数据到视图，再延迟5秒滚动第4行到视图',
+      describe: 'footerDirection=row-reverse控制分页和tail的顺序',
       cmp: PaginationTable
     },
     {
