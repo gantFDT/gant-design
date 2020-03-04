@@ -3,26 +3,6 @@ import { storiesOf } from '@storybook/react';
 import pages from './router.config.js'
 import { Tag } from 'antd'
 import './index.css'
-// import favicon from '../assests/images/favicon.ico'
-
-// const updateFavicon = (img) => {
-// 	var link = document.createElement('link');
-// 	link.type = 'image/x-icon';
-// 	link.rel = 'shortcut icon';
-// 	link.href = img;
-// 	document.getElementsByTagName('head')[0].appendChild(link);
-// }
-// const updateTitle = (title) => {
-// 	document.title = title
-// }
-
-// setTimeout(() => {
-// 	const updateTitle = (title) => {
-// 		document.title = title
-// 	}
-// 	updateFavicon(favicon)
-// 	updateTitle('GantD | 专注于数据密集型业务场景React组件库')
-// }, 200)
 
 pages.map(page => {
 	const storiresPage = storiesOf(page.name, module)
