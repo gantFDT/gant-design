@@ -40,7 +40,7 @@
   .@{table-prefix-cls} {    
     
     .ant-table{
-        line-height: 16px;
+        // line-height: 16px;
         // 边框处理
         &.ant-table-bordered .ant-table-content{
             .ant-table-scroll{
@@ -88,6 +88,11 @@
                            .full(){
                              height: 100%;
                            }
+                           // 缩小input，使其再较小行高下自适应
+                           .small-input(){
+                            padding-top: 2px;
+                            padding-bottom: 2px;
+                           }
                            .gant-input{
                              .full();
                              .gant-input-inner,
@@ -103,6 +108,9 @@
                                .full();
                                >div{
                                  .full()
+                               }
+                               .ant-calendar-picker-input{
+                                   .full();                                  
                                }
                              }
                              .ant-input-group {
@@ -132,14 +140,19 @@
                                .gant-select-email ul{
                                  width: 100%;
                                  .full();
+                                 li.ant-select-search{
+                                     line-height: 1;
+                                     .ant-select-search__field{
+                                         .small-input()
+                                     }
+                                 }
                                }
                                .ant-input-affix-wrapper {
                                  height: 100%;
                                  margin: 0px !important;                  
                                  .ant-input {
                                    height: 100%;
-                                   padding-top: 2px;
-                                   padding-bottom: 2px;
+                                   .small-input()
                                  }
                                }
                              }
