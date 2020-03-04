@@ -14,10 +14,6 @@
     "npm",
     "antd"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/gantFDT/GantD.git"
-  },
   "main": "packages/gantd/link/index.js",
   "module": "packages/gantd/link/index.js",
   "scripts": {
@@ -27,10 +23,6 @@
     "build": "gulp && webpack -s public",
     "pub": "gulp && webpack && lerna publish"
   },
-  "files": [
-    "lib",
-    "dist"
-  ],
   "husky": {
     "hooks": {
       "pre-commit": "npm dev",

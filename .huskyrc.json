@@ -1,7 +1,0 @@
-{
-  "hooks": {
-    "commit-msg": "npm run dev",
-    "pre-commit": "exit 1",
-    "pre-push": "exit 1"
-  }
-}
