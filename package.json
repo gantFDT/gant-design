@@ -22,7 +22,7 @@
   "module": "packages/gantd/link/index.js",
   "scripts": {
     "dev": "start-storybook -p 60004 -s public",
-    "build-storybook": "build-storybook",
+    "build-storybook": "build-storybook -o docs",
     "compile": "gulp",
     "build": "gulp && webpack -s public",
     "pub": "gulp && webpack && lerna publish"
