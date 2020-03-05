@@ -9,7 +9,7 @@ import code from './code.js';
 function BasicUse() {
   return (
     <>
-      <Icon value='api' /> /api/get
+      <Icon type='api' /> /api/get
     </>
   )
 }
@@ -32,13 +32,13 @@ ${item}`
 `,
   children: [
     {
-      title: '显示Ant图标',
-      describe: '默认支持ant图标，通过updateFromIconfontCN静态方法添加iconfont的图标，达到全局更新Icon作用范围的作用',
+      title: '仅显示图标',
+      describe: '默认支持ant图标，通过updateFromIconfontCN静态方法添加iconfont的图标，达到全局更新Icon作用范围的作用。通过type属性，使其成为一个行内组件，用于和文字排布',
       cmp: BasicUse
     },
     {
-      title: '修改图标',
-      describe: '通过设置allowEdit: true，点击图标可以唤起选择图标的抽屉,这个时候需要指定onChange使其成为受控组件',
+      title: '图标选择器',
+      describe: '传递value、onChange使组件成为受控组件，一般用于表单中进行修改。通过设置allowEdit: true，点击图标可以唤起选择图标的抽屉',
       cmp: IconSelector
     },
   ]
