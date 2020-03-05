@@ -1,7 +1,7 @@
 const BasicUse = `function BasicUse() {
     return (
       <>
-        <Icon value='api' /> /api/get
+        <Icon type='api' /> /api/get
       </>
     )
   }

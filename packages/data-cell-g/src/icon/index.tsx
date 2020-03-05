@@ -30,10 +30,9 @@ enum IconTypes {
 
 
 const defaultprops = {
-  allowEdit: false,
-  perfix: 'icon-'
+  perfix: 'icon-',
   // onChange(icon: string) { },
-  // value: '',
+  value: '',
 }
 
 type PropExtend<T, U> = U & {
@@ -202,14 +201,27 @@ interface IconSelectorCmp {
 const IconSelector = compose(
   toClass,
   defaultProps(defaultprops),
-  withProps(({ allowEdit, edit, style }) => {
-    if (!allowEdit && EditStatus.EDIT !== edit) {
-      return {
-        style: { ...style, display: "inline-block" }
-      }
+  withProps(({ allowEdit, edit, style = {}, type, value, onChange }) => {
+    const cStyle: React.CSSProperties = { ...style }
+    // 根据是否有value和onChange来确定是否受控
+    const controlMode = !(_.isUndefined(value) || _.isUndefined(onChange))
+    if (!controlMode) {
+      cStyle.display = "inline-block"
+    }
+    return {
+      style: cStyle,
+      value: value || type,
+      allowEdit: controlMode ? allowEdit : false,
+      edit: controlMode ? edit : EditStatus.CANCEL
     }
   }),
-  withEdit(({ value, style, theme, spin, rotate, component, twoToneColor }) => value ? <Icon type={value} style={style} theme={theme} spin={spin} rotate={rotate} component={component} twoToneColor={twoToneColor} /> : undefined)
+  withEdit(({ value, style, theme, spin, rotate, component, twoToneColor, controlMode }) => {
+    const element = <Icon type={value} style={style} theme={theme} spin={spin} rotate={rotate} component={component} twoToneColor={twoToneColor} />
+    if (!controlMode) {
+      return element
+    }
+    return value ? element : undefined
+  })
 )(IconHouse) as IconSelectorCmp
 
 IconSelector.updateFromIconfontCN = updateFromIconfontCN
