@@ -631,7 +631,7 @@ const config = {
     },
     {
       title: '虚拟滚动',
-      describe: '通过virtualScroll开启，必须指定scroll.y控制高度。也可以仅设置virtualScroll为true，使用内置的参数。一般情况下也不需要修改',
+      describe: '虚拟滚动模式下，并不会直接渲染所有数据。通过virtualScroll开启，必须指定scroll.y控制高度。也可以仅设置virtualScroll为true，使用内置的参数。一般情况下也不需要修改',
       cmp: VirtualScrollTable
     },
     {
