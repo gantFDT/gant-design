@@ -8,7 +8,9 @@ import code from './code.js';
 
 function BasicUse() {
   return (
-    <Icon value='api' />
+    <>
+      <Icon value='api' /> /api/get
+    </>
   )
 }
 function IconSelector() {
@@ -22,13 +24,8 @@ function IconSelector() {
 
 const config = {
   codes: code.map(item => {
-    return `
-      import { IconSelector } from 'gantd';
-      ReactDOM.render(
-          ${item},
-          mountNode,
-      );
-      `
+    return `import { Icon } from 'data-cell-g';
+${item}`
   }),
   useage: `<b>🖍 读写分离</b></br>
   <b>🎗 Iconfont 选择</b>

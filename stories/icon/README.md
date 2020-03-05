@@ -8,7 +8,7 @@
 | onBlur   | 失焦回调                                  | Function                     | 'line' |
 | value    | 值，AntIcon的type 或者iconfont的className | string                       |        |
 | onChange | 选择回调                                  | Function(icon: string): void |        |
-| perfix | 指定iconfont图标中的公共前缀 | string | `icon-` |
+| perfix | 指定iconfont图标中的公共前缀，可以根据具体的iconfont项目来进行更改 | string | `icon-` |
 
 
 ### 静态方法

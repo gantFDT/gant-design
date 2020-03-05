@@ -18,7 +18,7 @@ export type GetText<P> = (p: P) => any
 
 const renderText = <P extends any>(getText: GetText<P>) => (props) => {
 
-  const { setEdit, allowEdit, style, className, placeholder } = props
+  const { setEdit, allowEdit, className } = props
 
   const TextNode = React.memo(() => {
     const text = getText(props)
@@ -42,9 +42,15 @@ const renderText = <P extends any>(getText: GetText<P>) => (props) => {
     }
   )
 
+  const style: React.CSSProperties = {
+    width: "100%"
+  }
+  if (allowEdit) {
+    style.paddingRight = 15
+  }
 
   return (
-    <div className={classnames('gant-compose-readWrapper', className)} style={{ ...style, width: get(style, 'width', '100%') }}>
+    <div className={classnames('gant-compose-readWrapper', className)} style={style}>
       <TextNode />
       <Pen />
     </div>

@@ -3,7 +3,7 @@ import { Drawer, Radio, Empty } from 'antd'
 import { CustomIconOptions } from 'antd/lib/icon/IconFont'
 import classnames from 'classnames'
 import _ from 'lodash'
-import { compose, defaultProps, toClass, setStatic } from 'recompose'
+import { compose, defaultProps, toClass, withProps } from 'recompose'
 
 import './index.less';
 import { Input, EditStatus, Group } from '..'
@@ -202,6 +202,13 @@ interface IconSelectorCmp {
 const IconSelector = compose(
   toClass,
   defaultProps(defaultprops),
+  withProps(({ allowEdit, edit, style }) => {
+    if (!allowEdit && EditStatus.EDIT !== edit) {
+      return {
+        style: { ...style, display: "inline-block" }
+      }
+    }
+  }),
   withEdit(({ value, style, theme, spin, rotate, component, twoToneColor }) => value ? <Icon type={value} style={style} theme={theme} spin={spin} rotate={rotate} component={component} twoToneColor={twoToneColor} /> : undefined)
 )(IconHouse) as IconSelectorCmp
 
