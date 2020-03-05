@@ -22,8 +22,7 @@
     "compile": "gulp",
     "build": "gulp && webpack -s public",
     "pub": "gulp && webpack && lerna publish",
-    "lint-staged": "lint-staged",
-    "commitlint": "commitlint"
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md"
   },
   "peerDependencies": {
     "antd": "^3.22.0",
