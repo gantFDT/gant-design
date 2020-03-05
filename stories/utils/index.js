@@ -1,16 +1,15 @@
-import React, { useState } from 'react'
-import Header from '@packages/header-g/src'
-import CodeDecorator from '../_util/CodeDecorator'
+import React, { useState } from 'react';
+import Header from '@packages/header-g/src';
+import CodeDecorator from '../_util/CodeDecorator';
 import reactElementToJSXString from 'react-element-to-jsx-string';
-import code from './code'
+import code from './code';
 
 function codeFun(props) {
-  return (<div></div>)
+  return <div></div>;
 }
- 
+
 const config = {
   codes: code.map(V => V),
-
   useage: `
     🤡 项目中经常会用到的一些公共方法
     `,
@@ -95,7 +94,6 @@ const config = {
       describe: '',
       cmp: codeFun,
     },
-
-  ]
+  ],
 };
-export default () => <CodeDecorator config={config} />
+export default () => <CodeDecorator config={config} />;

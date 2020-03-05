@@ -14,10 +14,6 @@
     "npm",
     "antd"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/gantFDT/GantD.git"
-  },
   "main": "packages/gantd/link/index.js",
   "module": "packages/gantd/link/index.js",
   "scripts": {
@@ -25,12 +21,9 @@
     "build-storybook": "build-storybook -o docs",
     "compile": "gulp",
     "build": "gulp && webpack -s public",
-    "pub": "gulp && webpack && lerna publish"
+    "pub": "gulp && webpack && lerna publish",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md"
   },
-  "files": [
-    "lib",
-    "dist"
-  ],
   "peerDependencies": {
     "antd": "^3.22.0",
     "prop-types": "^15.6.0",

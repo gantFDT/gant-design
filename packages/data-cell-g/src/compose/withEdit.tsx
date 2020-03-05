@@ -92,7 +92,7 @@ export default <T extends any>(getText: GetText<T>) => compose(
       if (computedEditStatus(edit, selfEdit)) { // 进入编辑状态
         setCacheValue(value)
       } else {  // 退出编辑  这个时候可能的取值状态有3种[false, false]、[false, 0]、[0, false]，必须知道变化路径才能确定是否要回溯缓存
-        const map = [
+        const map= [
           [prevEdit, edit],
           [prevSelfEdit, selfEdit]
         ]
