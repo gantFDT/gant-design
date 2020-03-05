@@ -3,8 +3,6 @@
  * @param {string} hexColor 十六进制颜色值
  * @returns {(string | number|string[])} HSL颜色值
  */
-const a = 1;
-
 export const hex2hsl = (hexColor: string): string | number | string[] => {
   let sColor = hexColor.toLowerCase();
   //十六进制颜色值的正则表达式
