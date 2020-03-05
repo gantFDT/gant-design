@@ -11,7 +11,7 @@ const uiArray = [
 	{
 		alias: "className",
 		belong: ["field", "form"],
-		name: ["ui:className", "form:className", "field:className"],
+		name: ["form:className", "field:className"],
 		defaultValue: undefined
 	},
 	{
