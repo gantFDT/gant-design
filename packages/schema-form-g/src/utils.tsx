@@ -114,7 +114,7 @@ export function getUIData(uiSchema: UISchema, type: "field" | "form", pathName?:
 			uiSchemaData = get(uiSchema, arr.slice(0, index + 1))
 		}
 	}
-	if (uiSchemaData == undefined) uiSchemaData = uiSchema;
+	if (uiSchemaData == undefined) uiSchemaData = { ...uiSchema };
 	uiArray.map(item => {
 		if (item.belong === type || item.belong.indexOf(type) >= 0) {
 			if (typeof item.name === "string") {
