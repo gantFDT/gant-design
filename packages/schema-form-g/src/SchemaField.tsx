@@ -1,18 +1,19 @@
 import './index.less';
-import React, { useMemo, useContext, useCallback, useEffect } from 'react';
+import React, { useMemo, useContext, useCallback, useEffect, Fragment } from 'react';
 import classnames from 'classnames';
 import { EditStatus, Input } from '@data-cell';
 import { FormContext } from './index';
 import { Form, Col } from 'antd';
 import { Schema } from './interface';
-import { get, findIndex, isEmpty } from 'lodash';
+import { get, findIndex } from 'lodash';
 import { getFields } from './maps';
-import { FormattedMessage } from 'react-intl';
+import { injectIntl } from 'react-intl';
 
 interface SchemaField extends Schema {
   isRequired?: boolean;
   edit: any;
   uiData: any;
+  intl: any;
 }
 const SchemaField = (props: SchemaField) => {
   const {
@@ -25,6 +26,7 @@ const SchemaField = (props: SchemaField) => {
     required,
     edit,
     uiData,
+    intl,
   } = props;
   const {
     form: { getFieldDecorator, resetFields, validateFieldsAndScroll },
@@ -32,9 +34,8 @@ const SchemaField = (props: SchemaField) => {
     data,
     customFields,
     emitDependenciesChange,
-    prefixCls,
   } = useContext(FormContext);
-  const f = ({ id }) => <FormattedMessage id={id} />;
+  const f = ({ id }) => intl.formatMessage({ id });
   const onCancel = useCallback(() => name && resetFields([name]), [componentType, name]);
   const onItemSave = useCallback(
     (id, value, cb) => {
@@ -104,4 +105,4 @@ const SchemaField = (props: SchemaField) => {
     </Col>
   );
 };
-export default SchemaField;
+export default injectIntl(SchemaField);
