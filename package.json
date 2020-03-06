@@ -145,11 +145,5 @@
     "ie >= 9",
     "iOS >= 8",
     "Android >= 4"
-  ],
-  "husky": {
-    "hooks": {
-      "pre-commit": "pretty-quick --staged",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
-  }
+  ]
 }
