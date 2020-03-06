@@ -1,8 +1,8 @@
 {
-  "name": "favorinpmtest",
-  "version": "1.0.34",
+  "name": "gantd",
+  "version": "1.0.67",
   "description": "GantD base on antD",
-  "author": "GantFDT",
+  "author": "Gant FDT",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/gantFDT/GantD/issues"
