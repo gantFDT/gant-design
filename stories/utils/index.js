@@ -2,97 +2,125 @@ import React, { useState } from 'react';
 import Header from '@packages/header-g/src';
 import CodeDecorator from '../_util/CodeDecorator';
 import reactElementToJSXString from 'react-element-to-jsx-string';
-import code from './code';
+import Code from './code';
 
 function codeFun(props) {
   return <div></div>;
 }
 
 const config = {
-  codes: code.map(V => V),
+  // codes: code.map(V => V),
   useage: `
     🤡 项目中经常会用到的一些公共方法
     `,
   children: [
     {
-      title: 'hex2hsl | 将十六进制颜色值转变为HSL颜色值',
+      title: 'IEVersion | 判断IE版本',
       describe: '',
       cmp: codeFun,
-    },
-    {
-      title: 'getType | 判断类型',
-      describe: '',
-      cmp: codeFun,
-    },
-    {
-      title: 'deepCopy4JSON | JSON深拷贝',
-      describe: '',
-      cmp: codeFun,
-    },
-    {
-      title: 'judgeJSONisEqual | 判断JSON数据相等',
-      describe: '',
-      cmp: codeFun,
-    },
-    {
-      title: 'getIEVersion | 获取ie版本',
-      describe: '',
-      cmp: codeFun,
-    },
-    {
-      title: 'isIE | 判断是否为ie浏览器',
-      describe: '',
-      cmp: codeFun,
+      code: Code['IEVersion'],
     },
     {
       title: 'getCookie | 获取cookie',
       describe: '',
       cmp: codeFun,
+      code: Code['getCookie'],
     },
     {
       title: 'delCookie | 删除cookie',
       describe: '',
       cmp: codeFun,
+      code: Code['delCookie'],
     },
     {
       title: 'setCookie | 设置cookie',
       describe: '',
       cmp: codeFun,
+      code: Code['setCookie'],
     },
     {
-      title: 'throttle | 节流函数',
+      title: 'generateUuid | 生成UUID',
       describe: '',
       cmp: codeFun,
+      code: Code['generateUuid'],
     },
+    // {
+    //   title: 'getType | 判断类型',
+    //   describe: '',
+    //   cmp: codeFun,
+    //   code:Code['getType']
+    // },
+    // {
+    //   title: 'deepCopy4JSON | JSON深拷贝',
+    //   describe: '',
+    //   cmp: codeFun,
+    //   code:Code['deepCopy4JSON']
+    // },
+    // {
+    //   title: 'JSONisEqual | 判断JSON相等',
+    //   describe: '',
+    //   cmp: codeFun,
+    //   code:Code['JSONisEqual']
+    // },
+    // {
+    //   title: 'isParamsEmpty | 判断参数是否为空',
+    //   describe: '',
+    //   cmp: codeFun,
+    //   code:Code['isParamsEmpty']
+    // },
     {
-      title: 'generateUuid | 生成uuid',
+      title: 'getTreeNode | 获取树节点',
       describe: '',
       cmp: codeFun,
+      code: Code['getTreeNode'],
     },
     {
-      title: 'isParamsEmpty | 判断参数是不是空的',
+      title: 'array2Tree | 平铺树形数组转树',
       describe: '',
       cmp: codeFun,
+      code: Code['array2Tree'],
     },
     {
-      title: 'spanCalculate | 根据width换算栅格占位格数',
+      title: 'tree2Array | 树形结构打平',
       describe: ' ',
       cmp: codeFun,
+      code: Code['tree2Array'],
     },
     {
-      title: 'resolveLocationQuery | 解析路由的查询参数query',
+      title: 'getIdsFormTree | 获取树节点所有id',
       describe: '',
       cmp: codeFun,
+      code: Code['getIdsFormTree'],
     },
     {
-      title: 'findDomParentNode | 向上递归冒泡找节点',
+      title: 'getFileUnit | 格式化文件大小显示',
       describe: '',
       cmp: codeFun,
+      code: Code['getFileUnit'],
     },
     {
-      title: 'getPerformanceTiming | 前端性能分析',
+      title: 'getTimeInterval | 获取两个时间的间隔',
       describe: '',
       cmp: codeFun,
+      code: Code['getTimeInterval'],
+    },
+    {
+      title: 'findDomParentNode | 向上获取dom节点',
+      describe: '',
+      cmp: codeFun,
+      code: Code['findDomParentNode'],
+    },
+    {
+      title: 'getPerformanceTiming | 首屏性能分析',
+      describe: '',
+      cmp: codeFun,
+      code: Code['getPerformanceTiming'],
+    },
+    {
+      title: 'hexToRgba | 16进制色值转rgb',
+      describe: '',
+      cmp: codeFun,
+      code: Code['hexToRgba'],
     },
   ],
 };

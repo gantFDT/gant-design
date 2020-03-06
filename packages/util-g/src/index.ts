@@ -1,78 +1,10 @@
-/**
- * 将十六进制颜色值转变为HSL颜色值
- * @param {string} hexColor 十六进制颜色值
- * @returns {(string | number|string[])} HSL颜色值
- */
-export const hex2hsl = (hexColor: string): string | number | string[] => {
-  let sColor = hexColor.toLowerCase();
-  //十六进制颜色值的正则表达式
-  const reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/;
-  // 如果是16进制颜色
-  if (sColor && reg.test(sColor)) {
-    if (sColor.length === 4) {
-      let sColorNew = '#';
-      for (let i = 1; i < 4; i += 1) {
-        sColorNew += sColor.slice(i, i + 1).concat(sColor.slice(i, i + 1));
-      }
-      sColor = sColorNew;
-    }
-    //处理六位的颜色值
-    const sColorChange = [];
-    for (let i = 1; i < 7; i += 2) {
-      sColorChange.push(parseInt('0x' + sColor.slice(i, i + 2)));
-    }
-
-    let [r, g, b] = sColorChange;
-    (r /= 255), (g /= 255), (b /= 255);
-    const max = Math.max(r, g, b),
-      min = Math.min(r, g, b);
-    let h,
-      s,
-      l = (max + min) / 2;
-
-    if (max == min) {
-      h = s = 0; // achromatic
-    } else {
-      const d = max - min;
-      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-      switch (max) {
-        case r:
-          h = (g - b) / d + (g < b ? 6 : 0);
-          break;
-        case g:
-          h = (b - r) / d + 2;
-          break;
-        case b:
-          h = (r - g) / d + 4;
-          break;
-      }
-      h /= 6;
-    }
-
-    return [h, s, l];
-  }
-  return sColor;
-};
-
-/**
- * 判断类型
- */
-export const getType = (obj: any) => Object.prototype.toString.call(obj).slice(8, -1);
-
-/**
- * JSON深拷贝
- */
-export const deepCopy4JSON: <T>(data: T) => T = obj => JSON.parse(JSON.stringify(obj));
-
-/**
- * JSON数据相等
- */
-export const judgeJSONisEqual = (a: object, b: object) => JSON.stringify(a) === JSON.stringify(b);
-
+import { get as _get } from 'lodash';
+import _ from 'lodash';
+//不包含业务信息的公共utils
 /**
  * 判断ie版本
  */
-export function getIEVersion() {
+export function IEVersion() {
   const { userAgent } = navigator; // 取得浏览器的userAgent字符串
   const isIE = userAgent.indexOf('compatible') > -1 && userAgent.indexOf('MSIE') > -1; // 判断是否IE<11浏览器
   const isEdge = userAgent.indexOf('Edge') > -1 && !isIE; // 判断是否IE的Edge浏览器
@@ -102,13 +34,6 @@ export function getIEVersion() {
     return 11; // IE11
   }
   return -1; // 不是ie浏览器
-}
-/**
- * 判断是否为ie浏览器
- */
-export function isIE() {
-  let ieVersion = getIEVersion();
-  return ieVersion !== -1 && ieVersion !== 'edge';
 }
 
 // 获取cookie、
@@ -153,30 +78,6 @@ export function setCookie(name: string, value: string, time: any = '', path: str
   }
 }
 
-/**
- * 节流函数
- * 只能用于普通函数，不能再class中的方法上使用
- * @param {timestamp} time 延迟毫秒数
- * @returns function wrapper
- */
-export function throttle(time: number): (fn: any) => any {
-  return function wrapper(fn) {
-    let timer: any = null;
-    /**
-     * @returns 返回替代函数
-     */
-    return function wrapperInner(this: any, ...params: any) {
-      // 不精确，可以改进
-      if (!timer) {
-        timer = setTimeout(() => {
-          timer = null;
-          fn.apply(this, params);
-        }, time);
-      }
-    };
-  };
-}
-
 /*
 生成uuid
 len:number  长度
@@ -213,6 +114,21 @@ export function generateUuid(len: number = 32, radix: number = 10): string {
 }
 
 /**
+ * 判断类型
+ */
+export const getType = (obj: any) => Object.prototype.toString.call(obj).slice(8, -1);
+
+/**
+ * JSON深拷贝
+ */
+export const deepCopy4JSON: <T>(data: T) => T = obj => JSON.parse(JSON.stringify(obj));
+
+/**
+ * JSON数据相等
+ */
+export const JSONisEqual = (a: object, b: object) => JSON.stringify(a) === JSON.stringify(b);
+
+/**
  * 判断参数是不是空的 // {xxxx:undefined} => 空的
  */
 export const isParamsEmpty = (value: object) => {
@@ -221,46 +137,137 @@ export const isParamsEmpty = (value: object) => {
   return !entries.length || Object.entries(value).every(([key, value]) => value === undefined);
 };
 
-// 根据width换算栅格占位格数
-export function spanCalculate(width: number): number {
-  if (width < 576) {
-    return 24;
+export const compose: <T extends (param: K) => K, K>(...args: Array<T>) => T = (...func: any[]) =>
+  func
+    .filter(fun => typeof fun === 'function')
+    .reduce(
+      (a, b) => (...args: any[]) => a(b(...args)),
+      (args: any) => args,
+    );
+
+// 通过key,value查找树节点
+export function getTreeNode(Data: any[], childrenKey: string, key: string, value: any): any {
+  if (_.isEmpty(Data)) {
+    return;
   }
-  if (width < 768) {
-    return 12;
+  let Deep;
+  let T;
+  let F;
+  for (F = Data.length; F; ) {
+    T = Data[--F];
+    if (value === T[key]) {
+      return T;
+    }
+    if (T[childrenKey]) {
+      Deep = getTreeNode(T[childrenKey], childrenKey, key, value);
+      if (Deep) return Deep;
+    }
   }
-  if (width < 992) {
-    return 8;
+}
+
+// 取树形数据所有节点的id,返回一个id数组
+export function getIdsFormTree(
+  Data: any[],
+  childrenKey: string = 'children',
+  field: string = 'id',
+): any[] {
+  let V;
+  let L;
+  let IDs = [];
+  for (L = Data.length; L; ) {
+    V = Data[--L];
+    IDs.push(V[field]);
+    if (V[childrenKey] && V[childrenKey].length) {
+      IDs = [...IDs, ...getIdsFormTree(V[childrenKey], childrenKey, field)];
+    }
   }
-  if (width < 1200) {
-    return 8;
+  return IDs;
+}
+
+// arr转树形结构数据
+export function array2Tree(
+  data: any[],
+  parentId: string | undefined = undefined,
+  keyName: string = 'key',
+): any[] {
+  const itemArr = [];
+  for (let i = 0; i < data.length; i++) {
+    const node = data[i];
+    if (node.parentId === parentId) {
+      const children = array2Tree(data, node.id, keyName);
+      const newNode = {
+        ...node,
+        [keyName]: node.id,
+        children,
+      };
+      if (children.length == 0) {
+        delete newNode.children;
+      }
+      itemArr.push(newNode);
+    }
   }
-  if (width < 1600) {
-    return 6;
-  }
-  return 6;
+  return itemArr;
+}
+//树形数据扁平化
+export function tree2Array(dataSource: any[], childrenKey: string = 'children') {
+  let arr: any[] = [];
+  const expanded = (data: any[]) => {
+    if (data && data.length > 0) {
+      data.forEach(item => {
+        arr.push(item);
+        expanded(item[childrenKey]);
+      });
+    }
+  };
+  expanded(dataSource);
+  return arr;
 }
 
 /**
- * 解析路由的查询参数query
- * @param {Object} query
+ * 根据文件获取大小获取对应带单位的字符串
+ * @param {number |} num 文件size
  */
-export function resolveLocationQuery(query: any): any {
-  const res = {};
-  if (typeof query !== 'object') {
-    return res;
+export function getFileUnit(size: number | string): string {
+  const num = parseInt(`${size}`, 10);
+  const B = 1024;
+  const KB = B ** 2;
+  const MB = B ** 3;
+  const GB = B ** 4;
+  let res: string | number = 0;
+  let unit = '';
+  if (num < B) {
+    res = num;
+    unit = 'B';
+  } else if (num >= B && num < KB) {
+    res = num / B;
+    unit = 'KB';
+  } else if (num >= KB && num < MB) {
+    res = num / KB;
+    unit = 'M';
+  } else if (num >= MB && num < GB) {
+    res = num / MB;
+    unit = 'G';
   }
-  Object.keys(query).forEach(key => {
-    let tempValue = '';
-    const value = query[key];
-    try {
-      tempValue = JSON.parse(value);
-    } catch (error) {
-      tempValue = value;
-    }
-    res[key] = tempValue;
-  });
-  return res;
+  res = parseInt(res.toString(), 10) === res ? res : res.toFixed(2);
+  return `${res} ${unit}`;
+}
+
+// 获取两个时间的间隔描述
+export function getTimeInterval(startTimeStr: string, endTimeStr: string): string {
+  const startTime: any = new Date(startTimeStr); // 开始时间
+  const endTime: any = new Date(endTimeStr); // 结束时间
+  let seconds: number | string = Math.floor((endTime - startTime) / 1000); // 秒数
+  let minutes: number | string = Math.floor((endTime - startTime) / 1000 / 60); // 分钟
+  let hours: number | string = Math.floor((endTime - startTime) / 1000 / 60 / 60); // 小时
+  let days: number | string = Math.floor((endTime - startTime) / 1000 / 60 / 60 / 24); // 天数
+  if (seconds < 60) {
+    return `<1分钟)}`;
+  }
+  days = days ? days + '天' : '';
+  hours = hours ? hours + '时' : '';
+  minutes = minutes ? minutes + '分' : '';
+  seconds = seconds ? seconds + '秒' : '';
+  return days + hours + minutes + seconds;
 }
 
 /**
@@ -270,7 +277,7 @@ export function resolveLocationQuery(query: any): any {
  * @param {string} className //节点class
  * @returns  //找到的节点
  */
-export const findDomParentNode = (target: object, className: string) => {
+export function findDomParentNode(target: object, className: string) {
   let result = null;
   const bubble = (_target: object) => {
     if (!_target) {
@@ -285,7 +292,7 @@ export const findDomParentNode = (target: object, className: string) => {
   };
   bubble(target);
   return result;
-};
+}
 
 /**
  *
@@ -319,8 +326,22 @@ export const getPerformanceTiming = () => {
   return obj;
 };
 
-// 类型继承
-export type ProtoExtends<T, U> = U &
-  {
-    [K in Exclude<keyof T, keyof U>]: T[K];
-  };
+/*
+ * @param hex 例如:"#23ff45"
+ * @param opacity 透明度
+ * @returns {string}
+ */
+export function hexToRgba(hex: any, opacity: number): string {
+  const convertHex = hex
+    .slice(1)
+    .replace(/[0-9a-fA-F]/g, (match: string, index: number, string: string) =>
+      string.length <= 3 ? match.repeat(2) : match,
+    )
+    .padEnd(6, '0')
+    .slice(0, 6)
+    .match(/[0-9a-fA-F]{1,2}/g)
+    .map((n: any) => parseInt(n, 16))
+    .join();
+
+  return `rgba(${convertHex},${opacity})`;
+}
