@@ -61,6 +61,7 @@ const IconHouse: React.FC<IconHouseProps<string>> = ({
   allowEdit,
   onEnter,
   perfix,
+  getPopupContainer,
   ...props
 }) => {
   const prefixCls = 'gant-icon-selector';
@@ -92,25 +93,6 @@ const IconHouse: React.FC<IconHouseProps<string>> = ({
     }),
     [IDs],
   );
-
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const click = (e: MouseEvent) => {
-      if (ref.current) {
-        // 点击了其他区域
-        if (!ref.current.contains(e.target as Node)) {
-          if (onBlur && typeof onBlur === 'function') {
-            onBlur();
-          }
-        }
-      }
-    };
-    window.addEventListener('click', click, false);
-    return () => {
-      window.removeEventListener('click', click);
-    };
-  }, [ref, onBlur]);
 
   useEffect(() => {
     setCurrentId(value);
@@ -155,17 +137,12 @@ const IconHouse: React.FC<IconHouseProps<string>> = ({
   );
 
   return (
-    <div ref={ref} className="gant-icon-selector-wrapper">
-      <Group gant>
-        <div className="gant-icon-select" onClick={toggleVisible}>
-          {currentId ? (
-            <Icon type={currentId} perfix={perfix} title={tr('点击切换')} {...props} />
-          ) : (
-            <span className={prefixCls + 'select-btn'}>{tr('点击选择')}</span>
-          )}
-        </div>
-        {addonAfter ? <span className="ant-input-group-addon">{addonAfter}</span> : undefined}
-      </Group>
+    <>
+      <div className="gant-icon-select" onClick={toggleVisible}>
+        {
+          currentId ? <Icon type={currentId} title={tr('点击切换')} {...props} /> : <span className={prefixCls + 'select-btn'}>{tr('点击选择')}</span>
+        }
+      </div>
       <Drawer
         width={visible ? 500 : 0}
         title={tr('请选择图标')}
@@ -174,7 +151,7 @@ const IconHouse: React.FC<IconHouseProps<string>> = ({
         onClose={toggleVisible}
         visible={visible}
         bodyStyle={bodyStyle}
-        getContainer={ref.current as HTMLElement}
+        getContainer={getPopupContainer}
       >
         <div className={classnames(prefixCls + '-search')}>
           <Radio.Group value={iconType} onChange={handleTypeChange}>
@@ -217,9 +194,9 @@ const IconHouse: React.FC<IconHouseProps<string>> = ({
           </div>
         </div>
       </Drawer>
-    </div>
-  );
-};
+    </>
+  )
+}
 
 interface IconSelectorCmp {
   (props: IconSelectorProps<string>): React.ReactElement;
