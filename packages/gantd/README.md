@@ -19,3 +19,5 @@ yarn add gantd --save
 import {Input} from 'gantd';
 ReactDOM.render(<Input />, mountNode);
 ```
+
+如果并不想使用全部gantd,其中有一些独立包可以独立安装使用
