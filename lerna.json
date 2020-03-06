@@ -6,7 +6,7 @@
     }
   },
   "packages": [
-    "packages/*"
+    "packages/anchor-g"
   ],
   "all": [
     "packages/anchor-g",
