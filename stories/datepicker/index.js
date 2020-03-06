@@ -1,10 +1,8 @@
 import React, { useState } from 'react'
-import moment from 'moment'
 import { DatePicker, RangePicker } from '@data-cell'
 import CodeDecorator from '../_util/CodeDecorator'
 import { WrapperValue, WrapperEdit, onSave } from '../_util/composeUseHooks'
 
-const offset = moment().utcOffset() / 60
 
 const codeList = [
   `const [value, setValue] = useState();
@@ -23,7 +21,10 @@ return (
 )`,
   `const [value, setValue] = useState('2019-06-01 00:00+0100');
 return (
-  <DatePicker format='YYYY-MM-DD HH:mm:ss' showTime value={value} onChange={setValue} onSave={onSave} />
+  <>
+    东1区的时间 2019-06-01 00:00 在当前时区是
+    <DatePicker format='YYYY-MM-DD HH:mm:ss' showTime value={value} onChange={setValue} onSave={onSave} />
+  </>
 )`,
   `const [value, setValue] = useState(['2019-06-01 00:00+0100', '2019-06-05 05:00+0100']);
   return (
@@ -79,7 +80,7 @@ ReactDOM.render(<Demo />, mountNode)`
       describe: '将指定时区时间转换到当前时区, 通过指定showTime增加时间选择的功能',
       cmp: WrapperValue('2019-06-01 00:00+0100')(({ value, setValue }) => (
         <>
-          东1区的时间 2019-06-01 00:00 在{offset > 0 ? `东` : '西'}{offset}区是
+          东1区的时间 2019-06-01 00:00 在当前时区是
           <DatePicker format='YYYY-MM-DD HH:mm:ss' showTime allowEdit={false} value={value} onChange={setValue} onSave={onSave} />
         </>
       ))

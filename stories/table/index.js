@@ -6,7 +6,7 @@ import Table from '@table'
 import { EditStatus, SwitchStatus, Input, InputNumber, Selector, InputCellPhone, InputUrl, InputEmail, InputMoney, DatePicker, RangePicker, ColorPicker, LocationSelector, Icon, InputTelePhone, InputLanguage } from '@data-cell'
 import { Button, Slider } from 'antd'
 
-import { getList, getEditList } from './mock'
+import { getList, getEditList, getNestList } from './mock'
 
 const columns = [
   {
@@ -162,7 +162,6 @@ function NestTable(props) {
       title: '姓名',
       dataIndex: 'name',
       key: 'name',
-      render: text => text + 1,
       width: 150,
     },
     {
@@ -172,48 +171,56 @@ function NestTable(props) {
       width: 200
     },
     {
-      title: '住址住址住址住址住址住址住址住址住址',
+      title: '住址',
       dataIndex: 'address',
       key: 'address',
       width: 200
     },
     {
-      title: '嵌套',
+      title: '公司',
       dataIndex: 'nest',
-      width: 600,
       children: [
         {
-          title: '123123123123123123123',
-          dataIndex: 'age1',
-          key: 'age1',
+          title: '公司名称',
+          dataIndex: 'cName',
+          key: 'cName',
+          width: 160
         },
         {
-          title: 'Age',
-          dataIndex: 'age2',
-          key: 'age2',
+          title: '创始人',
+          dataIndex: 'boss',
+          key: 'boss',
+          width: 120
+        },
+        {
+          title: '成立时间',
+          dataIndex: 'createDate',
+          key: 'createDate',
+          width: 120
+        },
+        {
+          title: '公司地址',
+          dataIndex: 'cAddress',
+          key: 'cAddress',
+          width: 320,
           children: [
             {
-              title: 'Age',
-              dataIndex: 'age3',
-              key: 'age3',
+              title: "街道",
+              dataIndex: 'street',
+              width: 200
             },
             {
-              title: 'Age',
-              dataIndex: 'age4',
-              key: 'age4',
-            },
+              title: "邮编",
+              dataIndex: 'email',
+              width: 80
+            }
           ]
-        },
-        {
-          title: 'Age',
-          dataIndex: 'age5',
-          key: 'age5',
         },
       ]
     }
   ])
 
-  const dataSource = useMemo(() => getList(15), [])
+  const dataSource = useMemo(() => getNestList(), [])
 
   return <Table columns={columns} dataSource={dataSource} scroll={{ x: 1050 }} />
 }
@@ -513,9 +520,8 @@ const TreeTable = () => {
   return <Table
     columns={columns}
     dataSource={dataSource}
-    hideVisibleMenu={true}
     isZebra={false}
-    tail={list => `当前页有${list.length}条数据`}
+    tail={list => keys && keys.length ? `已选中${keys.length}条数据` : "没有选中数据"}
     rowSelection={{
       type: 'checkbox',
       selectedRowKeys: keys,
