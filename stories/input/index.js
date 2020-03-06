@@ -68,26 +68,26 @@ const config = {
       describe: '在后面展示一个编辑按钮，通过修改allowEdit参数控制是否可以编辑，allowEdit默认true',
       cmp: cmps[0]
     },
-    {
-      title: '编辑状态受控',
-      describe: '受其他组件控制展示的形态',
-      cmp: cmps[1]
-    },
-    {
-      title: '校验',
-      describe: '开启strict特殊字符会被过滤',
-      cmp: cmps[2]
-    },
-    {
-      title: '多行文本',
-      describe: '',
-      cmp: cmps[3]
-    },
-    {
-      title: '密码输入框',
-      describe: '',
-      cmp: cmps[4]
-    },
+    // {
+    //   title: '编辑状态受控',
+    //   describe: '受其他组件控制展示的形态',
+    //   cmp: cmps[1]
+    // },
+    // {
+    //   title: '校验',
+    //   describe: '开启strict特殊字符会被过滤',
+    //   cmp: cmps[2]
+    // },
+    // {
+    //   title: '多行文本',
+    //   describe: '',
+    //   cmp: cmps[3]
+    // },
+    // {
+    //   title: '密码输入框',
+    //   describe: '',
+    //   cmp: cmps[4]
+    // },
   ]
 }
 
