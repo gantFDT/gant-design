@@ -6,8 +6,7 @@
     }
   },
   "packages": [
-    "packages/data-cell-g",
-    "packages/smart-table-g"
+    "packages/*"
   ],
   "all": [
     "packages/anchor-g",
