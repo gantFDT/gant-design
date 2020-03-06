@@ -2,15 +2,12 @@
   "version": "independent",
   "command": {
     "publish": {
-      "ignoreChanges": [
-        "example/**",
-        "test/**"
-      ]
+      "ignoreChanges": ["example/**", "test/**"]
     }
   },
   "packages": [
     "packages/data-cell-g",
-    "packages/schema-form-g"
+    "packages/smart-table-g"
   ],
   "all": [
     "packages/anchor-g",

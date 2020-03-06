@@ -12,6 +12,7 @@ export {
   Group,
   Password
 } from './input'
+
 // export { default as Select } from './select'
 export { default as InputCellPhone } from './inputcellphone'
 export { default as InputTelePhone } from './inputtelephone';
@@ -20,6 +21,7 @@ export { default as InputEmail } from './inputemail'
 export { default as InputLanguage } from './inputlanguage';
 export { default as InputMoney } from './inputmoney';
 export { default as InputNumber } from './inputnumber';
+
 //picker
 export { default as DatePicker, RangePicker } from './datepicker'
 export { default as ColorPicker } from './colorpicker';
