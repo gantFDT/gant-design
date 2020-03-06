@@ -1,6 +1,6 @@
 {
   "name": "gantd",
-  "version": "1.0.66",
+  "version": "1.0.67",
   "description": "GantD base on antD",
   "author": "Gant FDT",
   "license": "MIT",
@@ -116,9 +116,9 @@
   "dependencies": {
     "@ant-design/colors": "^3.1.0",
     "@ant-design/icons": "2.1.1",
+    "anchor-g": "^0.0.23",
     "antd": "^3.22.0",
     "auto-reload-g": "^0.0.23",
-    "anchor-g":"^0.0.23",
     "classnames": "^2.2.6",
     "create-react-context": "^0.2.3",
     "header-g": "^0.0.26",
@@ -133,7 +133,7 @@
     "react-sortable-hoc": "^1.9.1",
     "recompose": "^0.30.0",
     "schema-form-g": "^0.0.31",
-    "smart-table-g": "^0.0.13",
+    "smart-table-g": "^0.0.14",
     "submenu-g": "^0.0.28",
     "table-g": "^0.0.28"
   },
