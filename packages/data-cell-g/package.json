@@ -2,7 +2,7 @@
   "name": "data-cell-g",
   "version": "0.0.14",
   "description": "gantd data-cell-g",
-  "main": "link/index.js",
+  "main": "lib/index.js",
   "scripts": {},
   "keywords": [
     "React",
