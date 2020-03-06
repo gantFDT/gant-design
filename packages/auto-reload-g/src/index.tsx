@@ -75,6 +75,7 @@ const AutoReload: React.SFC<Props> = ({ auto = false, interval = 1, intl, ...pro
       clearInterval(playFun);
       playFun = null
     }
+    
     return () => {
       if (playFun) clearInterval(playFun);
     }
