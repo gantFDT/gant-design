@@ -47,10 +47,10 @@ const getValue = ({ code, phone }) => phone ? `${code} - ${phone}` : ''
   withPropsOnChange(['phone'], ({ phone }) => ({
     confirmable: !phone || isPhone.test(String(phone))
   })),
-  withEdit(getValue),
-  withProps(({ code, onCodeChange, filterOption, getPopupContainer }) => ({
+  withEdit(getValue, "gantd-input-telphone-addonBefore"),
+  withProps(({ code, onCodeChange, filterOption }) => ({
     addonBefore: (
-      <Select style={{ width: 130 }} getPopupContainer={getPopupContainer} value={code} onChange={onCodeChange} showSearch filterOption={filterOption}>
+      <Select dropdownClassName="gantd-input-telphone-addonBefore" style={{ width: 130 }}  value={code} onChange={onCodeChange} showSearch filterOption={filterOption}>
         {
           codesList.map((citys, index) => {
             let renderCitys = citys
@@ -72,7 +72,7 @@ const getValue = ({ code, phone }) => phone ? `${code} - ${phone}` : ''
       </Select>
     )
   })),
-  mapProps(({ filterOption,...props }) => props),
+  mapProps(({ filterOption, ...props }) => props),
 
 )
 class TelePhone extends Component {
@@ -93,7 +93,7 @@ class TelePhone extends Component {
   }
 
   render() {
-    const { onEnter, onPhoneChange, onCodeChange, phone, getPopupContainer, ...props } = this.props
+    const { onEnter, onPhoneChange, onCodeChange, phone, ...props } = this.props
 
     return (
       <Input {...props} value={phone} onKeyDown={this.onKeyDown} onChange={this.onChange} />

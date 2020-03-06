@@ -54,7 +54,7 @@ class Email extends React.Component {
   }
 
   renderSelect = () => {
-    const { getPopupContainer, ...props } = this.props;
+    const {...props } = this.props;
     return (
       <AutoComplete
         {...props}

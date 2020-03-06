@@ -12,7 +12,7 @@ class Search extends React.Component {
     style: {}
   }
   render() {
-    const {  onChange, onEnter, style, getPopupContainer, ...props } = this.props
+    const {  onChange, onEnter, style, ...props } = this.props
     return (<Input.Search {...props} onChange={e => onChange(e.target.value)} onKeyDown={onEnter} />
     )
   }

@@ -13,7 +13,7 @@ class TextArea extends React.Component {
   }
 
   render() {
-    const { onChange, onEnter, getPopupContainer, ...props } = this.props
+    const { onChange, onEnter, ...props } = this.props
     return (
       <Input.TextArea {...props} onChange={e => onChange(e.target.value)} onKeyDown={onEnter} />
     )

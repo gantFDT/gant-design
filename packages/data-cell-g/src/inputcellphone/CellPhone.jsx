@@ -75,11 +75,11 @@ const withValidate = compose(
 @compose(
   withPhoneCode,
   withValidate,
-  withEdit(({ code, phone }) => phone ? `+${code} ${phone}` : ''),
-  withProps(({ code, onCodeChange, filterOption, getPopupContainer }) => {
+  withEdit(({ code, phone }) => phone ? `+${code} ${phone}` : '', "gantd-input-cellphone-addonBefore"),
+  withProps(({ code, onCodeChange, filterOption }) => {
     return ({
       addonBefore: (
-        <Select getPopupContainer={getPopupContainer} style={{ width: 86 }} value={code} onChange={onCodeChange} filterOption={filterOption} showSearch>
+        <Select  dropdownClassName="gantd-input-cellphone-addonBefore" style={{ width: 86 }} value={code} onChange={onCodeChange} filterOption={filterOption} showSearch>
           {
             codeTypes.map(code => <Select.Option key={code} value={code}>+{code}</Select.Option>)
           }
@@ -87,7 +87,7 @@ const withValidate = compose(
       )
     })
   }),
-  mapProps(({ onCodeChange, searchCode, codeList, filterOption, getPopupContainer, ...props }) => props)
+  mapProps(({ onCodeChange, searchCode, codeList, filterOption, ...props }) => props)
 )
 class CellPhone extends Component {
 

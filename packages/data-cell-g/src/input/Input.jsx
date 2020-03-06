@@ -17,7 +17,7 @@ class Input extends React.Component {
     return (
       <DataCell renderText={() => this.props.value} {...props} onChange={this.onChange}  >
         {
-          ({ onEnter, getPopupContainer, ...childProps }) => <AntInput
+          ({ onEnter, ...childProps }) => <AntInput
             {...childProps}
             onKeyDown={onEnter}
             ref={inputDOM => { this.inputDOM = inputDOM }}

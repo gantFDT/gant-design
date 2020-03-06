@@ -52,7 +52,7 @@ type BasicProps = PropExtend<
 type IconHouseProps<T> = BasicProps & WithEditOutProps<T>;
 
 type IconSelectorProps<T> = PropExtend<WithEditInProps<T>, BasicProps>;
-
+const drawerClassname = "gant-icon-selector-drawer-wrapper"
 const IconHouse: React.FC<IconHouseProps<string>> = ({
   onChange,
   value,
@@ -61,7 +61,6 @@ const IconHouse: React.FC<IconHouseProps<string>> = ({
   allowEdit,
   onEnter,
   perfix,
-  getPopupContainer,
   ...props
 }) => {
   const prefixCls = 'gant-icon-selector';
@@ -97,7 +96,6 @@ const IconHouse: React.FC<IconHouseProps<string>> = ({
   useEffect(() => {
     setCurrentId(value);
   }, [value]);
-
   const toggleVisible = useCallback(() => {
     if (!visible) {
       // 打开
@@ -151,7 +149,7 @@ const IconHouse: React.FC<IconHouseProps<string>> = ({
         onClose={toggleVisible}
         visible={visible}
         bodyStyle={bodyStyle}
-        getContainer={getPopupContainer}
+        className={drawerClassname}
       >
         <div className={classnames(prefixCls + '-search')}>
           <Radio.Group value={iconType} onChange={handleTypeChange}>
@@ -240,7 +238,7 @@ const IconSelector = compose(
         return element;
       }
       return value ? element : undefined;
-    },
+    }, drawerClassname
   ),
 )(IconHouse) as IconSelectorCmp;
 
