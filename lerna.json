@@ -5,7 +5,10 @@
       "ignoreChanges": ["example/**", "test/**"]
     }
   },
-  "packages": ["packages/*"],
+  "packages": [
+    "packages/data-cell-g",
+    "packages/smart-table-g"
+  ],
   "all": [
     "packages/anchor-g",
     "packages/auto-reload-g",
