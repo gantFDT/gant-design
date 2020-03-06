@@ -20,6 +20,7 @@
     "dev": "start-storybook -p 60004 -s public",
     "build-storybook": "build-storybook -o docs",
     "compile": "gulp",
+    "compile:link": "gulp link",
     "build": "gulp && webpack -s public",
     "pub": "gulp && webpack && lerna publish",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md"
