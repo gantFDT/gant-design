@@ -24,7 +24,7 @@ function CustomExpandIcon(props: ExpandIconProps<object>, isTree?: boolean) {
         prefix && <span className={"ant-table-row-expand-icon ant-table-row-" + prefix} />
       }
       <Icon
-        className="marginh5"
+        className=""
         type={type}
         theme="filled"
       />

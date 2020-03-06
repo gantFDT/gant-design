@@ -65,6 +65,9 @@
                     // 文本溢出格式
                     // 选择框不添加文本溢出格式
                     .@{table-prefix-cls}-cell-inner{
+                        >*{
+                            display: inline-block;
+                        }
                         &.@{table-prefix-cls}-editcell-ellipsis{
                             .ellipsis();
                         }

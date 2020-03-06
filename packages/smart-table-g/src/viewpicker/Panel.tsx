@@ -105,7 +105,7 @@ export default (props: PanelProps) => {
                   <>
                     <Tooltip title={f({ id: 'rename' })}>
                       <Icon
-                        className={`marginh5 operate`}
+                        className={`operate`}
                         type="edit"
                         onClick={onEditView.bind(null, item)}
                       />
