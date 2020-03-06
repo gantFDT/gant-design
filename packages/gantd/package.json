@@ -135,7 +135,7 @@
     "react-dom": "^16.8.6",
     "react-sortable-hoc": "^1.9.1",
     "recompose": "^0.30.0",
-    "schema-form-g": "^0.0.31",
+    "schema-form-g": "^0.0.36",
     "smart-table-g": "^0.0.16",
     "submenu-g": "^0.0.28",
     "table-g": "^0.0.28",
