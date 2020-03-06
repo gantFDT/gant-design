@@ -118,6 +118,7 @@
     "@ant-design/icons": "2.1.1",
     "antd": "^3.22.0",
     "auto-reload-g": "^0.0.23",
+    "anchor-g":"^0.0.23",
     "classnames": "^2.2.6",
     "create-react-context": "^0.2.3",
     "header-g": "^0.0.26",
