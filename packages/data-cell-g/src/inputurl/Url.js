@@ -26,7 +26,7 @@ const getValue = ({ value }) => {
 class Url extends React.Component {
 
   render() {
-    const { onEnter,onChange, ...props } = this.props
+    const { onEnter,onChange, getPopupContainer,...props } = this.props
     return <Input onKeyDown={onEnter} onChange={e => onChange(e.target.value)} {...props} />
   }
 

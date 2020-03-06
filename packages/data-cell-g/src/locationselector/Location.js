@@ -68,11 +68,10 @@ class Location extends React.Component {
 
   render() {
 
-    const { addonAfter, onEnter, ...props } = this.props
+    const { onEnter, ...props } = this.props
 
     return (
-      <Group gant>
-        <Cascader
+      <Cascader
           {...props}
           className={'gant-location-cascader'}
           changeOnSelect
@@ -80,8 +79,6 @@ class Location extends React.Component {
             filter: (value, paths) => paths.some(option => (option.label).toLowerCase().indexOf(value.toLowerCase()) > -1)
           }}
         />
-        {addonAfter ? <span className="ant-input-group-addon">{addonAfter}</span> : null}
-      </Group>
     )
   }
 }

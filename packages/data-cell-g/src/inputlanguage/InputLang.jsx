@@ -35,10 +35,9 @@ const withLangSelect = compose(
     allowClear: true,
     placeholder: '请输入文本',
     onChange: () => { },
-    value: [],
     localeList: [],
   }),
-  withState('cacheMap', 'setCacheMap', ({ value }) => {
+  withState('cacheMap', 'setCacheMap', ({ value = [] }) => {
     if (Array.isArray(value) && value.length) {
       const cacheEntries = map(value, item => ([item.locale, item.value]))
       return new Map(cacheEntries)
@@ -58,7 +57,7 @@ const withLangSelect = compose(
       }
     }
   }),
-  withState("currentLocale", "setCurrentLocale", ({ value, language }) => (value[0] || language[0]).locale),
+  withState("currentLocale", "setCurrentLocale", ({ value = [], language }) => (value[0] || language[0]).locale),
   withHandlers({
     onLocaleChange: ({ setCurrentLocale }) => (locale) => {
       setCurrentLocale(locale)
@@ -83,7 +82,6 @@ const withLangSelect = compose(
   })
 )
 class InputLang extends Component {
-
   onInputChange = (e) => {
     const { value } = e.target;
     const { currentLocale, onChange, cacheMap } = this.props
@@ -92,7 +90,7 @@ class InputLang extends Component {
   }
 
   render() {
-    const { onEnter, setlocale, cacheId, cacheMap, localeList, onLocaleChange, currentValue, setCacheMap,currentLocale,getPopupContainer, ...props } = this.props
+    const { onEnter, setlocale, cacheId, cacheMap, localeList, setCurrentLocale, onLocaleChange, currentValue, setCacheMap, currentLocale, getPopupContainer, ...props } = this.props
     return (
       <Input {...props} value={currentValue} onKeyDown={onEnter} onChange={this.onInputChange} />
     );

@@ -65,7 +65,6 @@ const withValidate = compose(
   lifecycle({
     componentDidMount() {
       const { validateValue, onPhoneChange } = this.props
-      // console.log(this.props)
       if (!validateValue()) {
         onPhoneChange('')
       }
@@ -101,7 +100,6 @@ class CellPhone extends Component {
     this.onChange = this.onChange.bind(this)
     this.onKeyDown = this.onKeyDown.bind(this)
   }
-
   onChange(e) {
     const { onPhoneChange, code } = this.props
     const { value } = e.target;
@@ -134,7 +132,6 @@ class CellPhone extends Component {
     const { onPhoneChange, validateValue, onEnter, ...props } = this.props
     const { value } = this.state
     let computedValue = get(props, 'phone', value)
-    console.log("props", props)
     return (
       <AntInput {...props} value={computedValue}
         onBlur={() => { }}
