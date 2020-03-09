@@ -4,6 +4,8 @@ import CodeDecorator from '../_util/CodeDecorator'
 
 const code = `
 import { Anchor } from 'gantd';
+// import { Anchor } from 'anchor-g';//与gantd中引入效果相同
+
 function BasicUse() {
   const list = [
     {
