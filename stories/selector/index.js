@@ -1,124 +1,15 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import { Button } from 'antd'
 import { Selector, EditStatus, SwitchStatus } from '@data-cell'
 import CodeDecorator from '../_util/CodeDecorator'
 
+import codeList from './code'
+import { useCallback } from 'react'
 
-const data = [
-  {
-    key: 'j',
-    label: 'Jhon'
-  },
-  {
-    key: 'd',
-    label: 'Dan'
-  },
-  {
-    key: 't',
-    label: 'Tom'
-  },
-]
-
-const codeList = [
-  `const [list] = useState(['Jhon', 'Dan', 'Tom'])
-  const [value, setValue] = useState('Jhon')
-
-  return (
-    <>
-      <Selector defaultList={list} value={value} onChange={setValue} onSave={(id, value, cb) => cb()} />
-      <Selector defaultList={list} edit />
-    </>
-  )`,
-  `const data = [
-  {
-    key: 'j',
-    label: 'Jhon'
-  },
-  {
-    key: 'd',
-    label: 'Dan'
-  },
-  {
-    key: 't',
-    label: 'Tom'
-  },
-]
-const [list] = useState(data);
-  const [value, setValue] = useState('j')
-  // getLabelText用于获取显示初始化的label, 可能是异步获取数据
-  const getLabelText = (value, setLabel) => data.forEach(item => item.key === value ? setLabel(item.label) : null)
-
-  return <Selector selectorId='objselect' valueProp='key' defaultList={list} value={value} onChange={setValue} onSave={(id, value, cb) => cb()}/>`,
-  `const data = [
-  {
-    key: 'j',
-    label: 'Jhon'
-  },
-  {
-    key: 'd',
-    label: 'Dan'
-  },
-  {
-    key: 't',
-    label: 'Tom'
-  },
-]
-  const [value, setValue] = useState('j')
-  const getLabelText = (value, setLabel) => data.forEach(item => item.key === value ? setLabel(item.label) : null)
-  const query = function (filter) {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        resolve(data)
-      }, 10000)
-    })
-  }
-
-  return <Selector selectorId='objselect' valueProp='key' query={query} value={value} onChange={setValue} onSave={(id, value, cb) => cb()} />`,
-  `const [list] = useState(['a', 'b', 'j']);
-  const [value, setValue] = useState('j')
-  return <Selector useStorage={false} selectorId='objselect2' edit defaultList={list} value={value} onChange={setValue} onSave={(id, value, cb) => cb()} />
-  `,
-  `const [list] = useState(['a', 'b', 'j']);
-  const [value, setValue] = useState('j')
-
-  useState(() => {
-    setTimeout(() => {
-      setValue('a')
-    }, 5000)
-  })
-
-  return <Selector multiple selectorId='objselect2' defaultList={list} value={value} onChange={setValue} onSave={(id, value, cb) => cb()} />`,
-  `   const data = [
-      {
-        key: 'j',
-        label: 'Jhon'
-      },
-      {
-        key: 'd',
-        label: 'Dan'
-      },
-      {
-        key: 't',
-        label: 'Tom'
-      },
-    ]
-    const [list] = useState(data);
-    const [optionLabel, setoptionLabel] = useState('')
-    const [value, setValue] = useState('j')
-
-    // 模拟选择不存在list当中的项
-    setTimeout(() => {
-      setValue('jj')
-      setoptionLabel('jjj')
-    }, 5000)
-
-    return <Selector selectorId='objselect3' optionLabel={optionLabel} valueProp='key' defaultList={list} value={value} onChange={setValue} onSave={(id, value, cb) => cb()} />
-  `
-]
 
 const config = {
   inline: true,
-  useage:`<b>⏱ 自带最近选择</b></br>
+  useage: `<b>⏱ 自带最近选择</b></br>
     对于同一个业务选择器，常选的业务对象会被记录在下拉列表中，方便用户下次选择。</br>
     <b>📡 支持远程数据源配置</b></br>
     可以动态配置远程数据源</br>
@@ -136,59 +27,147 @@ function Demo(){
 ReactDOM.render(<Demo />, mountNode)`),
   children: [
     {
-      title: '字符数组',
-      describe: '通过defaultList传入展示的数据列表',
+      title: '基础用法',
+      describe: '通过dataSource传递选项数组',
       cmp: () => {
-        const [list] = useState(['Jhon', 'Dan', 'Tom'])
+        const dataSource = useMemo(() => ['Jhon', 'Dan', 'Tom'], []);
         const [value, setValue] = useState('Jhon')
-        const [edit, setedit] = useState(EditStatus.CANCEL)
+
+        const dataSource2 = useMemo(() => [
+          {
+            label: 'JavaScript',
+            value: 'js',
+          },
+          {
+            label: 'Java',
+            value: 'java',
+          },
+          {
+            label: 'C',
+            value: 'c',
+          },
+          {
+            label: 'PHP',
+            value: 'php',
+            disabled: true,
+          },
+        ], []);
+        const [value2, setValue2] = useState('c')
+        const [edit2, setedit2] = useState(EditStatus.CANCEL)
+
         return (
           <>
-            <Button onClick={() => { setedit(SwitchStatus) }}>切换编辑</Button>
-            <Selector defaultList={list} edit={edit} style={{ margin: '5px 0' }} value={value} onChange={setValue} onSave={(id, value, cb) => cb()} />
-            <Selector defaultList={list} edit={edit} style={{ marginTop: 10 }} />
+            1、传递字符串数组作为选项列表<br />
+            <Selector dataSource={dataSource} style={{ margin: '5px 0' }} value={value} onChange={setValue} onSave={(id, value, cb) => cb()} />
+            2、传递对象作为选项列表<br />
+            <>
+              <Button onClick={() => { setedit2(SwitchStatus) }}>编辑</Button>
+              <Button onClick={() => { setedit2(SwitchStatus) }}>取消</Button>
+              <Button onClick={() => { setedit2(EditStatus.SAVE) }}>保存</Button>
+            </>
+
+            <Selector dataSource={dataSource2} selectorId='language' edit={edit2} style={{ margin: '5px 0' }} value={value2} onChange={setValue2} onSave={(id, value, cb) => cb()} />
           </>
         )
       }
     },
     {
-      title: '对象数组',
-      describe: '需要提供selectorId，valueProp，renderItem，getLabelText',
+      title: '数据分组',
+      describe: '在dataSource中设置group实现数据分组',
       cmp: () => {
-        const [list] = useState(data);
-        const [value, setValue] = useState('j')
-        // getLabelText用于获取显示初始化的label
-        const getLabelText = (value, cb) => data.forEach(item => item.key === value ? cb(item.label) : null)
+        const dataSource = useMemo(() => [
+          {
+            label: '任务一',
+            value: 'task1',
+            group: '已完成'
+          },
+          {
+            label: '任务二',
+            value: 'task2',
+            group: '计划中'
+          },
+          {
+            label: '任务三',
+            value: 'task3',
+            group: '已完成'
+          },
+          {
+            label: '任务四',
+            value: 'task4',
+            group: '准备中'
+          },
+        ], [])
+        const [value, setValue] = useState('task1')
 
-        return <Selector selectorId='objselect' valueProp='key' getLabelText={getLabelText} defaultList={list} value={value} onChange={setValue} onSave={(id, value, cb) => cb()} />
+        return <Selector selectorId='tasks' edit={EditStatus.EDIT} dataSource={dataSource} value={value} onChange={setValue} onSave={(id, value, cb) => cb()} />
+      }
+    },
+    {
+      title: '自定义value、label',
+      describe: 'valueProp、labelProp可以修改datasource中作为value、label的字段。往往在获取远程数据的时候需要调整',
+      cmp: () => {
+        const dataSource = useMemo(() => [
+          {
+            type: '圆',
+            code: 'cycle',
+          },
+          {
+            type: '矩形',
+            code: 'rect',
+          },
+          {
+            type: '菱形',
+            code: 'diamond',
+          },
+          {
+            type: '梯形',
+            code: 'Trapezoid',
+          },
+        ], [])
+        const [value, setValue] = useState("cycle")
+
+        return <Selector selectorId='graphical' valueProp='code' labelProp='type' dataSource={dataSource} value={value} onChange={setValue} onSave={(id, value, cb) => cb()} />
       }
     },
     {
       title: '远程数据源',
       describe: '使用query方法查询数据',
       cmp: () => {
-        const [value, setValue] = useState('j')
-        // getLabelText用于获取显示初始化的label
-        const getLabelText = (value, cb) => data.forEach(item => item.key === value ? cb(item.label) : null)
-        const query = function (filter) {
+        const [value, setValue] = useState('home')
+        const data = [
+          {
+            id: 'home',
+            name: '主页'
+          },
+          {
+            id: 'cate',
+            name: '分类'
+          },
+          {
+            id: 'mine',
+            name: '我的'
+          },
+        ]
+
+        const query = useCallback(function (filter) {
           return new Promise(resolve => {
             setTimeout(() => {
               resolve(data)
             }, 10000)
           })
-        }
+        }, [])
 
-        return <Selector selectorId='objselect' valueProp='key' getLabelText={getLabelText} query={query} value={value} onChange={setValue} onSave={(id, value, cb) => cb()} />
+        return <Selector selectorId='objselect' valueProp='id' labelProp='name' query={query} value={value} onChange={setValue} onSave={(id, value, cb) => cb()} />
       }
     },
     {
-      title: '禁用最近选择',
-      describe: "useStorage默认为true表示开启，设置为false禁用之后，将不会展示最近选择选项，也不会记录到storage里面",
+      title: '不显示最近选择',
+      describe: "设置useStorage为false之后，将不会展示最近选择选项，也不会记录到storage里面",
       cmp: () => {
         const [list] = useState(['a', 'b', 'j']);
         const [value, setValue] = useState('j')
 
-        return <Selector useStorage={false} selectorId='objselect2' edit defaultList={list} value={value} onChange={setValue} onSave={(id, value, cb) => cb()} />
+        return <Selector useStorage={false} selectorId='objselect2' edit={EditStatus.EDIT} dataSource={list} value={value} onChange={setValue} />
       }
     },
     {
@@ -207,24 +186,40 @@ ReactDOM.render(<Demo />, mountNode)`),
         ]);
         const [value, setValue] = useState()
 
-        return <Selector multiple selectorId='objselect2' defaultList={list} value={value} onChange={setValue} onSave={(id, value, cb) => cb()} />
+        return <Selector multiple selectorId='multiple' dataSource={list} value={value} onChange={setValue} onSave={(id, value, cb) => cb()} />
       }
     },
     {
       title: '通过外部指定选项的lable显示',
       describe: "设置optionLabel",
       cmp: () => {
-        const [list] = useState(data);
+        const dataSource = useMemo(() => [
+          {
+            value: 'a1',
+            label: 'a1'
+          },
+          {
+            value: 'b2',
+            label: 'b2'
+          },
+          {
+            value: 'c3',
+            label: 'c3'
+          },
+        ], [])
         const [optionLabel, setoptionLabel] = useState('')
-        const [value, setValue] = useState('j')
+        const [value, setValue] = useState('a1')
+        const setNew = useCallback(() => {
+          setValue('d4')
+          setoptionLabel('新设置的d4')
+        }, [])
 
-        // 模拟选择不存在list当中的项
-        setTimeout(() => {
-          setValue('jj')
-          setoptionLabel('jjj')
-        }, 5000)
-
-        return <Selector selectorId='objselect3' optionLabel={optionLabel} valueProp='key' defaultList={list} value={value} onChange={setValue} onSave={(id, value, cb) => cb()} />
+        return (
+          <>
+            <Button onClick={setNew}>点击设置一个不存在列表中的值</Button>
+            <Selector selectorId='optionLabel' optionLabel={optionLabel} style={{ marginTop: 8 }} dataSource={dataSource} value={value} onChange={setValue} onSave={(id, value, cb) => cb()} />
+          </>
+        )
       }
     },
   ]
