@@ -1,5 +1,5 @@
 {
-  "name": "gantd-2",
+  "name": "gantd-docs",
   "version": "0.0.2",
   "description": "GantD base on antD",
   "author": "GantFDT",
@@ -14,23 +14,17 @@
     "npm",
     "antd"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/gantFDT/GantD.git"
-  },
   "main": "packages/gantd/link/index.js",
   "module": "packages/gantd/link/index.js",
   "scripts": {
     "dev": "start-storybook -p 60004 -s public",
-    "build-storybook": "build-storybook",
+    "build-storybook": "build-storybook -o docs",
     "compile": "gulp",
+    "compile:link": "gulp link",
     "build": "gulp && webpack -s public",
-    "pub": "gulp && webpack && lerna publish"
+    "pub": "gulp && webpack && lerna publish",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md"
   },
-  "files": [
-    "lib",
-    "dist"
-  ],
   "peerDependencies": {
     "antd": "^3.22.0",
     "prop-types": "^15.6.0",
@@ -60,6 +54,8 @@
     "@babel/preset-react": "^7.0.0",
     "@babel/preset-typescript": "^7.3.3",
     "@babel/register": "^7.4.4",
+    "@commitlint/cli": "^8.3.5",
+    "@commitlint/config-conventional": "^8.3.4",
     "@storybook/addon-actions": "^5.0.11",
     "@storybook/addon-backgrounds": "^5.0.11",
     "@storybook/addon-console": "^1.1.0",
@@ -87,9 +83,11 @@
     "glob": "^7.1.4",
     "gulp": "^4.0.2",
     "gulp-babel": "^8.0.0",
+    "gulp-filter": "^6.0.0",
     "gulp-less": "^4.0.1",
     "gulp-postcss": "^8.0.0",
     "gulp-typescript": "^5.0.1",
+    "husky": "^4.2.3",
     "jest": "^24.8.0",
     "less": "^3.9.0",
     "less-loader": "^5.0.0",
@@ -100,6 +98,8 @@
     "ora": "^4.0.3",
     "path": "^0.12.7",
     "postcss-loader": "^3.0.0",
+    "prettier": "1.19.1",
+    "pretty-quick": "^2.0.1",
     "react-copy-to-clipboard": "^5.0.1",
     "react-css-modules": "^4.7.11",
     "react-syntax-highlighter": "^10.3.0",

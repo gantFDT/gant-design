@@ -13,17 +13,9 @@ class TextArea extends React.Component {
   }
 
   render() {
-    const { addonAfter, onChange, onEnter, style, ...props } = this.props
-    if (addonAfter) {
-      return (
-        <Group gant style={style}>
-          <Input.TextArea {...props} onChange={e => onChange(e.target.value)} onKeyDown={onEnter} />
-          <span className="ant-input-group-addon">{addonAfter}</span>
-        </Group>
-      )
-    }
+    const { onChange, onEnter, ...props } = this.props
     return (
-      <Input.TextArea style={style} {...props} onChange={e => onChange(e.target.value)} onKeyDown={onEnter} />
+      <Input.TextArea {...props} onChange={e => onChange(e.target.value)} onKeyDown={onEnter} />
     )
   }
 

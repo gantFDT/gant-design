@@ -1,30 +1,32 @@
-const code1 = `import Table from 'gantd';
-//import Table from 'table-g';//与gantd中引入效果相同
+const BasicTable = `import Table from 'table-g';
 
 const BasicTable = (props) =>{
-	const dataSource = useMemo(() => getList(), [])
-  const [resizable, setresizable] = useState(true)
+  const dataSource = useMemo(() => getList(), [])
+  const [resizable, setresizable] = useState(false)
 
   const toggleResizable = useCallback(
     () => {
-    setresizable(!resizable)
+      setresizable(r => !r)
     },
-    [resizable],
+    [],
   )
 
   const headerRight = useMemo(() => {
     return (
-    <>
-      <Button onClick={toggleResizable} >切换可缩放列</Button>
-    </>
+      <Button onClick={toggleResizable} key='1' >{resizable ? "禁止缩放" : "允许缩放"}</Button>
     )
-  }, [toggleResizable])
+  }, [resizable])
+
+  const headerLeft = useMemo(() => {
+    return <>{resizable ? '当前可缩放' : '当前不可缩放'}</>
+  }, [resizable])
 
   return <Table
     columns={columns}
     dataSource={dataSource}
     resizable={resizable}
     headerRight={headerRight}
+    headerLeft={headerLeft}
   />
 }
 
@@ -129,206 +131,139 @@ function VirtualScrollTable() {
 		scroll={{ y: 300 }}
 	  />
 	)
-  }`
+  }
+ReactDOM.render(
+	<VirtualScrollTable/>,
+	mountNode
+  )`
 
 
-const WidthTable = `import Table from 'gantd';
-//import { Table } from 'table-g';//与gantd中引入效果相同
+const NestTable = `import { Table } from 'table-g';
 
-const WidthTable = () => {
+const NestTable = () => {
 
-  const [columns, setcolumns] = useState([
-    {
-      title: '姓名',
-      dataIndex: 'name',
-      key: 'name',
-      render: text => text + 1,
-      width: 150
-    },
-    {
-      title: '年龄',
-      dataIndex: 'age',
-      key: 'age',
-      width: 200
-    },
-    {
-      title: '住址',
-      dataIndex: 'address',
-      key: 'address',
-      width: 200
-    },
-  ])
-
-  let dataArray = new Array(10), dataSource = [];
-  dataArray = dataArray.fill()
-  dataArray.map((item, index) => {
-    dataSource.push({
-      name: "namenamenamenamenamenamename",
-      age: index,
-      address: "table的宽度需要是各列宽度的总和，如果没有设置列宽，将平分table的宽度,table默认600px，如果不太清楚table的布局策略，最好table宽度和所有列都加上宽度",
-      key: index,
-    })
-  })
-
-  return <Table columns={columns} dataSource={dataSource} />;
+	const [columns, setcolumns] = useState([
+		{
+		  title: '姓名',
+		  dataIndex: 'name',
+		  key: 'name',
+		  width: 150,
+		},
+		{
+		  title: '年龄',
+		  dataIndex: 'age',
+		  key: 'age',
+		  width: 200
+		},
+		{
+		  title: '住址',
+		  dataIndex: 'address',
+		  key: 'address',
+		  width: 200
+		},
+		{
+		  title: '公司',
+		  dataIndex: 'nest',
+		  children: [
+			{
+			  title: '公司名称',
+			  dataIndex: 'cName',
+			  key: 'cName',
+			  width: 160
+			},
+			{
+			  title: '创始人',
+			  dataIndex: 'boss',
+			  key: 'boss',
+			  width: 120
+			},
+			{
+			  title: '成立时间',
+			  dataIndex: 'createDate',
+			  key: 'createDate',
+			  width: 120
+			},
+			{
+			  title: '公司地址',
+			  dataIndex: 'cAddress',
+			  key: 'cAddress',
+			  width: 320,
+			  children: [
+				{
+				  title: "街道",
+				  dataIndex: 'street',
+				  width: 200
+				},
+				{
+				  title: "邮编",
+				  dataIndex: 'email',
+				  width: 80
+				}
+			  ]
+			},
+		  ]
+		}
+	  ])
+	
+	  const dataSource = useMemo(() => getNestList(), [])
+	
+	  return <Table columns={columns} dataSource={dataSource} scroll={{ x: 1050 }} />
 }
 
 ReactDOM.render(
-  <WidthTable/>,
+  <NestTable/>,
   mountNode
 )`
 
-const code2 = `import {Table} from 'gantd';
-//import { Table } from 'table-g';//与gantd中引入效果相同
-import { Button } from 'antd';
-const columns = [
-	{
-		title: '姓名',
-		dataIndex: 'name',
-		key: 'name',
-	},
-	{
-		title: '年龄',
-		dataIndex: 'age',
-		key: 'age',
-	},
-	{
-		title: '住址',
-		dataIndex: 'address',
-		key: 'address',
-	},
-];
+const ScrollTable = `import { Table } from 'table-g';
 
-function DisabledResizeTable(props) {
-	const [column, setcolumn] = useState(columns)
-	let dataArray = new Array(10), dataSource = [];
-	dataArray = dataArray.fill()
-	dataArray.map((item, index) => {
-		dataSource.push({
-			name: "namenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamename" + index,
-			age: '',
-			address: "住址住址住址住址",
-			key: index
-		})
-	})
+function ScrollTable() {
 
-	const onSorted = useCallback(
-		(from, to) => {
-			setcolumn(([...cols]) => {
-				cols.splice(to < 0 ? cols.length + to : to, 0, cols.splice(from, 1)[0])
-				return cols
-			})
-		}
+	const [dataSource, setdataSource] = useState(() => getList(5))
+  
+	const onWheel = useCallback(
+	  () => {
+		setdataSource(list => ([
+		  ...list,
+		  ...getList(5),
+		]))
+	  },
+	  [],
 	)
-
-	return <Table
-		columns={column}
-		headerLeft={<Button>left</Button>}
-		headerRight={<Button>right</Button>}
+  
+	return (
+	  <Table
+		columns={columns}
 		dataSource={dataSource}
-		resizeCell={false}
-		onSorted={onSorted}
-	/>
-}
-ReactDOM.render(<DisabledResizeTable/>,mountNode)`
-
-
-
-const wideTable = `import { Input, TextArea, Table } from 'gantd';
-//import { Table } from 'table-g';//与gantd中引入效果相同
-function WideTable() {
-	const [editingKey, setEditingKey] = useState(null);
-	let dataArray = new Array(10), dataSource = [];
-	dataArray = dataArray.fill()
-	dataArray.map((item, index) => {
-		dataSource.push({
-			name: "namenamenamenamenamenamenamename" + index,
-			age: index,
-			address: "123",
-			key: index
-		})
-	})
-	const editorColumns = [
-		{
-			title: '姓名姓名姓名',
-			dataIndex: 'name',
-			key: 'name',
-			fixed: true,
-			width: 150,
-		},
-		{
-			title: '年龄年龄年龄',
-			dataIndex: 'age',
-			key: 'age',
-		},
-		{
-			title: '住址住址住址',
-			dataIndex: 'address',
-			key: 'address',
-		},
-		{
-			title: '姓名姓名姓名',
-			dataIndex: 'name1',
-			editConfig: {
-				fieldType: "input",
-			},
-			key: 'name1',
-		},
-		{
-			title: '年龄年龄年龄',
-			dataIndex: 'age1',
-			key: 'age1',
-		},
-		{
-			title: '住址住址住址',
-			dataIndex: 'address1',
-			editConfig: {
-				fieldType: "textarea",
-			},
-			key: 'address1',
-		},
-		{
-			title: '姓名姓名姓名',
-			dataIndex: 'name2',
-			editConfig: {
-				fieldType: "input",
-			},
-			key: 'name2',
-		},
-		{
-			title: '年龄年龄年龄',
-			dataIndex: 'age2',
-			key: 'age2',
-			width: 200,
-			fixed: 'right'
-		},
-		{
-			title: '住址住址住址',
-			dataIndex: 'address2',
-			editConfig: {
-				fieldType: "textarea",
-			},
-			key: 'address2',
-			width: 200,
-			fixed: 'right'
-		},
-	]
-	return <Table
-		wrap
-		columns={editorColumns}
-		dataSource={dataSource}
-		hideVisibleMenu
-		scroll={{ x: 2000, y: 300 }}
-	/>
-}
-
+		scroll={{ y: 300 }}
+		wheel={onWheel}
+	  />
+	)
+  }
 ReactDOM.render(
-  <WideTable/>,
+  <ScrollTable/>,
   mountNode
-)`;
+)`
 
-const TreeTable = `import { Table } from 'gantd';
-//import { Table } from 'table-g';//与gantd中引入效果相同
+
+const DragTable = `import Table from 'table-g'
+function DragTable(props) {
+	const [dataSource, setdataSource] = useState(() => getList(20))
+  
+  
+	return <Table
+	  columns={columns}
+	  dataSource={dataSource}
+	  onDragEnd={setdataSource}
+	  scroll={{ y: 300 }}
+	/>
+  }
+  ReactDOM.render(
+	<DragTable/>,
+	mountNode
+  )`
+
+const TreeTable = `import Table from 'table-g';
 const dataSource = [
   {
     key: 1,
@@ -457,9 +392,8 @@ const TreeTable = ()=>{
   return <Table
     columns={columns}
     dataSource={dataSource}
-    hideVisibleMenu={true}
     isZebra={false}
-    tail={list => '当前页有' + list.length + '条数据'}
+    tail={list => keys && keys.length ? \`已选中\${ keys.length }条数据\` : "没有选中数据"}
     rowSelection={{
       type: 'checkbox',
       selectedRowKeys: keys,
@@ -476,8 +410,8 @@ ReactDOM.render(
   mountNode
 )`;
 
-const code6 = `import { Table } from 'gantd';
-//import { Table } from 'table-g';//与gantd中引入效果相同
+const PaginationTable = `import Table from 'table-g';
+
 const columns = [
 	{
 		title: '姓名',
@@ -500,67 +434,40 @@ function PaginationTable(props) {
 
 	const [pagenumber, setpagenumber] = useState(1)
 	const [size, setsize] = useState(50)
-
-	const [dataSource, setdataSource] = useState(() => {
-		const dataSource = new Array(78).fill().map((item, index) => {
-			return {
-				name: "name",
-				age: index,
-				address: "123",
-				key: index,
-				isDeleted: true
-			}
-		})
-		return dataSource
-	})
-
+	const dataSource = useMemo(() => getList(120), [])
+  
 	const list = useMemo(() => {
-		return dataSource.slice((pagenumber - 1) * size, pagenumber * size)
+	  return dataSource.slice((pagenumber - 1) * size, pagenumber * size)
 	}, [pagenumber, size])
-
+  
 	const onChange = useCallback(
-		(page, size) => {
-			setpagenumber(page)
-			setsize(size)
-		},
-		[],
+	  (page, size) => {
+		setpagenumber(page)
+		setsize(size)
+	  },
+	  [],
 	)
+  
 	const [scrollKey, setscrollKey] = useState(null)
-
-	useEffect(() => {
-		setTimeout(() => {
-			setscrollKey('30')
-			setTimeout(() => {
-				setscrollKey('3')
-			}, 5000)
-		}, 5000)
-	}, [])
-
-  return <Table
-	columns={[
-		{
-			dataIndex: "index",
-			title: "序号",
-			render: (t, r, index) => index + 1
-		},
-		...columns
-	]}
-	dataSource={list}
-	scrollKey={scrollKey}
-    scroll={{ x: '100%', y: 350 }}
-    pagination={{ total: 78, current: pagenumber, pageSize: size, onChange }}
-    tail={list => '当前页有' + list.length + '条数据'}
-    footerDirection='row-reverse'
-  />
-}
+  
+	return <Table
+	  columns={columns}
+	  withIndex={0}
+	  dataSource={list}
+	  scrollKey={scrollKey}
+	  scroll={{ x: '100%', y: 350 }}
+	  pagination={{ total: 78, current: pagenumber, pageSize: size, onChange }}
+	  tail={list => \`当前页有\${list.length}条数据\`}
+	  footerDirection='row-reverse'
+	/>
+  }
 
 ReactDOM.render(
   <PaginationTable/>,
   mountNode
 )`
 
-const code7 = `import { Table } from 'gantd';
-//import { Table } from 'table-g';//与gantd中引入效果相同
+const LightTable = `import Table from 'table-g';
 import { Slider } from 'antd';
 const columns = [
 	{
@@ -618,8 +525,8 @@ ReactDOM.render(
   mountNode
 )`
 
-const empty = `import { Table } from 'gantd';
-//import { Table } from 'table-g';//与gantd中引入效果相同
+const empty = `import Table from 'table-g';
+
 const columns = [
 	{
 		title: '姓名',
@@ -639,7 +546,7 @@ const columns = [
 ];
 
 const EmptyTable = () => {
-  return <Table columns={columns} dataSource={[]} scroll={{ x: '100%', y: 350 }} pagination={false} flex emptyDescription='这个表格是空的' />
+  return <Table columns={columns} dataSource={[]} scroll={{ x: '100%', y: 350 }} pagination={false} emptyDescription='这个表格是空的' />
 }
 
 ReactDOM.render(
@@ -650,4 +557,4 @@ ReactDOM.render(
 
 
 
-export default [code1, EditTable, VirtualScroll, WidthTable, code2, wideTable, TreeTable, code6, code7, empty]
+export default [BasicTable, EditTable, VirtualScroll, NestTable, ScrollTable, DragTable, TreeTable, PaginationTable, LightTable, empty]

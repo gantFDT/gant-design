@@ -6,6 +6,7 @@ import { compose, withState, defaultProps, withPropsOnChange, setStatic, withHan
 
 import renderText, { GetText } from './renderText'
 import inputwrapper from './inputwrapper'
+import editwrapper from './editwrapper'
 import EditStatus from './editstatus'
 import { HandlerWithType } from './common'
 
@@ -56,14 +57,14 @@ export interface WithEditProps<T> {
 
 // 通过withEdit高阶函数包裹的组件可以接受的参数
 export interface WithEditInProps<T> {
-  value: T,
-  allowEdit: boolean,
-  confirmable: boolean,
+  value?: T,
+  allowEdit?: boolean,
+  confirmable?: boolean,
   onChange: (v: T) => void,
-  onSave: OnSave,
-  onCancel: Function,
-  edit: EditStatus,
-  isInner: boolean
+  onSave?: OnSave,
+  onCancel?: Function,
+  edit?: EditStatus,
+  isInner?: boolean
 }
 
 // 通过withEdit高阶函数包裹的组件获得的新参数
@@ -81,8 +82,8 @@ interface WithEditInnerProps {
 }
 
 
-export default <T extends any>(getText: GetText<T>) => compose(
-  inputwrapper,
+export const widthBasic = (popupClassName?: string) => compose(
+  inputwrapper(popupClassName),
   defaultProps(defaultComProps),
   setStatic('propsTypes', proptypes),
   withState('selfEdit', 'setEdit', EditStatus.CANCEL),
@@ -126,8 +127,6 @@ export default <T extends any>(getText: GetText<T>) => compose(
     (prevProps, { edit, selfEdit, computedCache, setEdit }) => {
       const prevComputedEdit = computedEditStatus(prevProps.edit, prevProps.selfEdit)
       const computedEdit = computedEditStatus(edit, selfEdit)
-
-
       const shouldUpdate = prevComputedEdit !== computedEdit
       if (shouldUpdate) {
         computedCache(prevProps.edit, prevProps.selfEdit)
@@ -142,7 +141,7 @@ export default <T extends any>(getText: GetText<T>) => compose(
     },
     ({ edit, selfEdit }) => ({ computedEdit: computedEditStatus(edit, selfEdit) })
   ),
-  withProps(({ onConfirm, setEdit, selfEdit, addonAfter: propsAddonAfter }) => {
+  withProps(({ onConfirm, setEdit, selfEdit, addonAfter: propsAddonAfter, onChange }) => {
     const addonAfter = (
       <React.Fragment>
         {propsAddonAfter ? (
@@ -158,15 +157,20 @@ export default <T extends any>(getText: GetText<T>) => compose(
         </Tooltip>
       </React.Fragment>
     )
-
     return {
       addonAfter: selfEdit === EditStatus.EDIT && addonAfter || propsAddonAfter
     }
-  }),
+  }))
+
+export default <T extends any>(getText: GetText<T>, popupClassName?: string) => compose(
+  widthBasic(popupClassName),
   branch(
     props => !props.computedEdit,   // 读模式
-    () => renderText(getText)
+    () => {
+      return renderText(getText)
+    }
   ),
+  editwrapper,
   mapProps(({
     edit,
     allowEdit,
@@ -178,6 +182,7 @@ export default <T extends any>(getText: GetText<T>) => compose(
     onCancel,
     onSave,
     confirmable,
+    setPopupClassName,
     ...props
   }) => (props))
 );

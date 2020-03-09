@@ -464,7 +464,6 @@ function EditInlineUse() {
         headerRight={<>
           <Button
             icon={editing === EditStatus.EDIT ? "roolback" : "edit"}
-            className="marginh5"
             size="small"
             onClick={() => { if (editing === EditStatus.CANCEL) { message.info('请单击单元格进行编辑') };setEditing(SwitchStatus) }}
           >
@@ -472,7 +471,6 @@ function EditInlineUse() {
           </Button>
           {editing === EditStatus.EDIT && <Button
             icon="save"
-            className="marginh5"
             size="small"
             type="primary"
             onClick={handleSave}

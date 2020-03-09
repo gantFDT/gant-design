@@ -1,10 +1,10 @@
-import React, { useState, useCallback, useEffect, useMemo } from 'react'
-import { Switch, Radio } from 'antd'
-import BlockHeader, { headerType } from '@header'
-import { getType } from '@util'
-import Sortable from '../sortable'
-import formatSchema from '../formatschema'
-import { useIntl } from 'react-intl'
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
+import { Switch, Radio } from 'antd';
+import BlockHeader, { headerType } from '@header';
+import { getType } from '@util';
+import Sortable from '../sortable';
+import formatSchema from '../formatschema';
+import { FormattedMessage } from 'react-intl';
 
 interface UIContentProps {
   viewConfig: any;
@@ -18,10 +18,10 @@ function UIContent(props: UIContentProps) {
     viewConfig = {},
     schema,
     uiFields = ['wrap', 'isZebra', 'bordered', 'clickable', 'footerDirection', 'heightMode'],
-    onChange
+    onChange,
   } = props;
 
-  const { formatMessage: f } = useIntl();
+  const f = ({ id }) => <FormattedMessage id={id} />;
 
   useEffect(() => {
     if (schema && viewConfig && !viewConfig.columnFields) {
@@ -29,7 +29,7 @@ function UIContent(props: UIContentProps) {
       onChange({
         ...viewConfig,
         columnFields,
-      })
+      });
     }
   }, [schema]);
 
@@ -40,82 +40,127 @@ function UIContent(props: UIContentProps) {
     clickable = true,
     footerDirection = 'row',
     heightMode = 'full',
-    columnFields
+    columnFields,
   } = viewConfig;
 
-  const handlerChange = useCallback((key, value) => {
-    onChange({
-      ...viewConfig,
-      [key]: getType(value) === 'Object' ? value.target.value : value
-    });
-  }, [viewConfig])
-  
+  const handlerChange = useCallback(
+    (key, value) => {
+      onChange({
+        ...viewConfig,
+        [key]: getType(value) === 'Object' ? value.target.value : value,
+      });
+    },
+    [viewConfig],
+  );
+
   // tabKey相关
   const [tabKey, setTabKey] = useState<'field' | 'ui'>('field');
-  const handlerChangeTabKey = useCallback((e) => {
+  const handlerChangeTabKey = useCallback(e => {
     setTabKey(e.target.value);
-  },[])
+  }, []);
 
-  const handlerChangeColumnKeys = useCallback((records) => {
-    onChange({
-      ...viewConfig,
-      columnFields:[...records]
-    })
-  },[viewConfig])
+  const handlerChangeColumnKeys = useCallback(
+    records => {
+      onChange({
+        ...viewConfig,
+        columnFields: [...records],
+      });
+    },
+    [viewConfig],
+  );
 
   const hasFixed = useMemo(() => {
-    if(!viewConfig.columnFields) return false;
+    if (!viewConfig.columnFields) return false;
     return viewConfig.columnFields.some((V: any) => {
       if (V.lock && viewConfig.wrap) {
         onChange({
           ...viewConfig,
           wrap: false,
-        })
+        });
       }
 
-      return !!V.lock
-    })
-  }, [viewConfig])
+      return !!V.lock;
+    });
+  }, [viewConfig]);
 
   return (
     <>
-      <Radio.Group value={tabKey} onChange={handlerChangeTabKey} style={{ marginBottom: 16, width: '100%', display:'flex' }} buttonStyle="solid">
-        <Radio.Button style={{flex:1,textAlign:'center'}} value="field">{f({ id: 'fieldConfig' })}</Radio.Button>
-        <Radio.Button style={{flex:1,textAlign:'center'}} value="ui">{f({ id: 'displayConfig' })}</Radio.Button>
+      <Radio.Group
+        value={tabKey}
+        onChange={handlerChangeTabKey}
+        style={{ marginBottom: 16, width: '100%', display: 'flex' }}
+        buttonStyle="solid"
+      >
+        <Radio.Button style={{ flex: 1, textAlign: 'center' }} value="field">
+          {f({ id: 'fieldConfig' })}
+        </Radio.Button>
+        <Radio.Button style={{ flex: 1, textAlign: 'center' }} value="ui">
+          {f({ id: 'displayConfig' })}
+        </Radio.Button>
       </Radio.Group>
-      {
-        tabKey === 'field'?(
-          <Sortable
-            dataSource={columnFields}
-            onChange={handlerChangeColumnKeys}
-          />
-        ):(
-          <>{
-            uiFields.map((K: string, I: number) => {
-              switch (K) {
-                case 'wrap':
-                  return <div key={K}>
+      {tabKey === 'field' ? (
+        <Sortable dataSource={columnFields} onChange={handlerChangeColumnKeys} />
+      ) : (
+        <>
+          {uiFields.map((K: string, I: number) => {
+            switch (K) {
+              case 'wrap':
+                return (
+                  <div key={K}>
                     <BlockHeader type={headerType.num} num={I + 1} title={f({ id: 'isWrap' })} />
-                    <Switch checked={wrap} disabled={hasFixed} onChange={handlerChange.bind(null, 'wrap')} checkedChildren={f({ id: 'wrap' })} unCheckedChildren={f({ id: 'noWrap' })} />
+                    <Switch
+                      checked={wrap}
+                      disabled={hasFixed}
+                      onChange={handlerChange.bind(null, 'wrap')}
+                      checkedChildren={f({ id: 'wrap' })}
+                      unCheckedChildren={f({ id: 'noWrap' })}
+                    />
                   </div>
-                case 'isZebra':
-                  return <div key={K}>
+                );
+              case 'isZebra':
+                return (
+                  <div key={K}>
                     <BlockHeader type={headerType.num} num={I + 1} title={f({ id: 'isZebra' })} />
-                    <Switch checked={isZebra} onChange={handlerChange.bind(null, 'isZebra')} checkedChildren={f({ id: 'yes' })} unCheckedChildren={f({ id: 'no' })} />
+                    <Switch
+                      checked={isZebra}
+                      onChange={handlerChange.bind(null, 'isZebra')}
+                      checkedChildren={f({ id: 'yes' })}
+                      unCheckedChildren={f({ id: 'no' })}
+                    />
                   </div>
-                case 'bordered':
-                  return <div key={K}>
+                );
+              case 'bordered':
+                return (
+                  <div key={K}>
                     <BlockHeader type={headerType.num} num={I + 1} title={f({ id: 'bordered' })} />
-                    <Switch checked={bordered} onChange={handlerChange.bind(null, 'bordered')} checkedChildren={f({ id: 'yes' })} unCheckedChildren={f({ id: 'no' })} />
+                    <Switch
+                      checked={bordered}
+                      onChange={handlerChange.bind(null, 'bordered')}
+                      checkedChildren={f({ id: 'yes' })}
+                      unCheckedChildren={f({ id: 'no' })}
+                    />
                   </div>
-                case 'clickable':
-                  return <div key={K}>
+                );
+              case 'clickable':
+                return (
+                  <div key={K}>
                     <BlockHeader type={headerType.num} num={I + 1} title={f({ id: 'clickable' })} />
-                    <Switch checked={clickable} onChange={handlerChange.bind(null, 'clickable')} checkedChildren={f({ id: 'yes' })} unCheckedChildren={f({ id: 'no' })} />
+                    <Switch
+                      checked={clickable}
+                      onChange={handlerChange.bind(null, 'clickable')}
+                      checkedChildren={f({ id: 'yes' })}
+                      unCheckedChildren={f({ id: 'no' })}
+                    />
                   </div>
-                case 'footerDirection':
-                  return <div key={K}>
-                    <BlockHeader type={headerType.num} num={I + 1} title={f({ id: 'footerDirection' })} />
+                );
+              case 'footerDirection':
+                return (
+                  <div key={K}>
+                    <BlockHeader
+                      type={headerType.num}
+                      num={I + 1}
+                      title={f({ id: 'footerDirection' })}
+                    />
                     <Radio.Group
                       options={[
                         { label: f({ id: 'leftB' }), value: 'row-reverse' },
@@ -125,9 +170,15 @@ function UIContent(props: UIContentProps) {
                       onChange={handlerChange.bind(null, 'footerDirection')}
                     />
                   </div>
-                case 'heightMode':
-                  return <div key={K}>
-                    <BlockHeader type={headerType.num} num={I + 1} title={f({ id: 'heightMode' })} />
+                );
+              case 'heightMode':
+                return (
+                  <div key={K}>
+                    <BlockHeader
+                      type={headerType.num}
+                      num={I + 1}
+                      title={f({ id: 'heightMode' })}
+                    />
                     <Radio.Group
                       options={[
                         { label: f({ id: 'heightAuto' }), value: 'auto' },
@@ -137,13 +188,13 @@ function UIContent(props: UIContentProps) {
                       onChange={handlerChange.bind(null, 'heightMode')}
                     />
                   </div>
-              }
-            })
-          }</>
-        )
-      }
+                );
+            }
+          })}
+        </>
+      )}
     </>
-  )
+  );
 }
 
 export default UIContent;

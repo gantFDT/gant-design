@@ -1,258 +1,229 @@
-const { src, dest, series, parallel } = require('gulp')
-const babel = require('gulp-babel')
-const fs = require('fs')
-const rimraf = require('rimraf')
-const path = require('path')
-const less = require('gulp-less')
-const postcss = require('gulp-postcss')
-const autoprefixer = require('autoprefixer')
-const ts = require('gulp-typescript')
-const through2 = require('through2')
-const LessNpm = require('less-plugin-npm-import')
-const babelConfig = require('./babelConfig.json')
+const { src, dest, series, task } = require('gulp');
+const babel = require('gulp-babel');
+const rimraf = require('rimraf');
+const path = require('path');
+const less = require('gulp-less');
+const postcss = require('gulp-postcss');
+const autoprefixer = require('autoprefixer');
+const ts = require('gulp-typescript');
+const filter = require('gulp-filter');
+const through2 = require('through2');
+const LessNpm = require('less-plugin-npm-import');
+const babelConfig = require('./babelConfig.json');
+const lernaConfig = require('./lerna.json');
+const { all: packageNames } = lernaConfig;
+const tsProject = ts.createProject('./tsconfig.json', {
+  declaration: true,
+  target: 'ES6',
+});
 
-let pkgs = fs.readdirSync(path.join(__dirname, 'packages'),{withFileTypes:true})
-  .filter(item=>item.isDirectory())
-  .map(item=>item.name);
-
-// pkgs = ['data-cell-g', 'gantd']
-
-function resolvePath(content, rules = [], level) {
-  rules.forEach((origin) => {
+/**
+ * 解析包引用路径
+ * @param {*} content 待转换内容
+ * @param {*} level 文件嵌套层级
+ * @returns 转换后内容
+ */
+function resolvePath(content, level) {
+  packageNames.forEach(packageName => {
+    const dirName = packageName.slice(9);
     if (level) {
-      content = content.replace(new RegExp('@' + origin, 'g'), '../'.repeat(level) + origin + '-g/link');
+      content = content.replace(
+        new RegExp('@' + dirName.slice(0, -2), 'g'),
+        '../'.repeat(level) + dirName + '/link',
+      );
     } else {
-      content = content.replace(new RegExp('@' + origin+ '/', 'g'), origin + '-g/lib/');
-      content = content.replace(new RegExp('@' + origin, 'g'), origin + '-g');
+      content = content.replace(
+        new RegExp('@' + dirName.slice(0, -2) + '/', 'g'),
+        dirName + '/lib/',
+      );
+      content = content.replace(new RegExp('@' + dirName.slice(0, -2), 'g'), dirName);
     }
-  })
+  });
   return content;
 }
 
-function clean(cb) {
-  rimraf.sync(path.resolve(__dirname, 'packages/gantd/dist/'))
-  rimraf.sync(path.resolve(__dirname, 'packages/*/lib/'))
-  cb()
+function linkScriptTask(dirName) {
+  return series(
+    function compileJsLevelOne() {
+      return src([`packages/${dirName}/src/*.jsx`, `packages/${dirName}/src/*.js`])
+        .pipe(babel(babelConfig))
+        .pipe(
+          // 处理路径等问题
+          through2.obj(function(chunk, enc, next) {
+            let content = chunk.contents.toString();
+            content = resolvePath(content, 2);
+            content = content.replace(/\.less/g, '.css');
+            content = content.replace(/\.jsx/g, '.js');
+            const buf = Buffer.from(content);
+            chunk.contents = buf;
+            this.push(chunk);
+            next();
+          }),
+        )
+        .pipe(dest(`packages/${dirName}/link/`));
+    },
+    function compileJsLevelTwo() {
+      return src([`packages/${dirName}/src/*/*.jsx`, `packages/${dirName}/src/*/*.js`])
+        .pipe(babel(babelConfig))
+        .pipe(
+          // 处理路径等问题
+          through2.obj(function(chunk, enc, next) {
+            let content = chunk.contents.toString();
+            content = resolvePath(content, 3);
+            content = content.replace(/\.less/g, '.css');
+            content = content.replace(/\.jsx/g, '.js');
+            const buf = Buffer.from(content);
+            chunk.contents = buf;
+            this.push(chunk);
+            next();
+          }),
+        )
+        .pipe(dest(`packages/${dirName}/link/`));
+    },
+    function compileTsLevelOne() {
+      return src([`packages/${dirName}/src/*.tsx`, `packages/${dirName}/src/*.ts`])
+        .pipe(tsProject())
+        .pipe(dest(`packages/${dirName}/link/`))
+        .pipe(filter(file => !file.path.endsWith('.d.ts')))
+        .pipe(babel(babelConfig))
+        .pipe(
+          // 处理路径等问题
+          through2.obj(function(chunk, enc, next) {
+            let content = chunk.contents.toString();
+            content = resolvePath(content, 2);
+            content = content.replace(/\.less/g, '.css');
+            content = content.replace(/\.jsx/g, '.js');
+            const buf = Buffer.from(content);
+            chunk.contents = buf;
+            this.push(chunk);
+            next();
+          }),
+        )
+        .pipe(dest(`packages/${dirName}/link/`));
+    },
+    function compileTsLevelTwo() {
+      return src([`packages/${dirName}/src/*/*.tsx`, `packages/${dirName}/src/*/*.ts`])
+        .pipe(tsProject())
+        .pipe(dest(`packages/${dirName}/link/`))
+        .pipe(filter(file => !file.path.endsWith('.d.ts')))
+        .pipe(babel(babelConfig))
+        .pipe(
+          // 处理路径等问题
+          through2.obj(function(chunk, enc, next) {
+            let content = chunk.contents.toString();
+            content = resolvePath(content, 3);
+            content = content.replace(/\.less/g, '.css');
+            content = content.replace(/\.jsx/g, '.js');
+            const buf = Buffer.from(content);
+            chunk.contents = buf;
+            this.push(chunk);
+            next();
+          }),
+        )
+        .pipe(dest(`packages/${dirName}/link/`));
+    },
+    function copyJson() {
+      return src(`packages/${dirName}/src/**/*.json`).pipe(dest(`packages/${dirName}/link/`));
+    },
+    function compileStyle() {
+      return src(`packages/${dirName}/src/**/*.less`)
+        .pipe(
+          less({
+            plugins: [new LessNpm({ prefix: '~' })],
+            javascriptEnabled: true,
+          }),
+        )
+        .pipe(postcss([autoprefixer()]))
+        .pipe(dest(`packages/${dirName}/link/`));
+    },
+  );
 }
 
-const linktask = function (dirName) {
-  src([`packages/${dirName}/src/*.jsx`, `packages/${dirName}/src/*.js`])
-    .pipe(babel(babelConfig))
-    .pipe(
-      // 处理路径等问题
-      through2.obj(function (chunk, enc, next) {
-        let content = chunk.contents.toString()
-        content = resolvePath(content, ['util', 'header', 'data-cell', 'color-picker', 'modal', 'schema-form', 'auto-reload', 'anchor', 'submenu', 'table', 'smart-table'], 2)
-        const buf = Buffer.from(content)
-        chunk.contents = buf
-        this.push(chunk)
-        next()
-      })
-    )
-    .pipe(dest(`packages/${dirName}/link/`))
-
-  src([`packages/${dirName}/src/*/*.jsx`, `packages/${dirName}/src/*/*.js`])
-    .pipe(babel(babelConfig))
-    .pipe(
-      // 处理路径等问题
-      through2.obj(function (chunk, enc, next) {
-        let content = chunk.contents.toString()
-        content = resolvePath(content, ['util', 'header', 'data-cell', 'color-picker', 'modal', 'schema-form', 'auto-reload', 'anchor', 'submenu', 'table', 'smart-table'], 3)
-        const buf = Buffer.from(content)
-        chunk.contents = buf
-        this.push(chunk)
-        next()
-      })
-    )
-    .pipe(dest(`packages/${dirName}/link/`))
-
-  src([`packages/${dirName}/src/*.tsx`, `packages/${dirName}/src/*.ts`])
-    .pipe(
-      ts({
-        "target": 'es5',
-        "sourceMap": true,
-        "module": "esnext",
-        "declaration": true, // 生成 *.d.ts 文件
-        "allowJs": true,
-        "jsx": "react",
-        "forceConsistentCasingInFileNames": false,
-        "noImplicitReturns": false,
-        "noImplicitThis": false,
-        "noImplicitAny": false,
-        "noUnusedLocals": false,
-        "noUnusedParameters": false,
-        "noEmitOnError": false,
-        "strictNullChecks": false,
-        "importHelpers": true,
-        "suppressImplicitAnyIndexErrors": true,
-        "experimentalDecorators": true,
-        "downlevelIteration": true,
-        "allowSyntheticDefaultImports": true
-      })
-    )
-    .pipe(
-      // 处理路径等问题
-      through2.obj(function (chunk, enc, next) {
-        let content = chunk.contents.toString()
-        content = resolvePath(content, ['util', 'header', 'data-cell', 'color-picker', 'modal', 'schema-form', 'auto-reload', 'anchor', 'submenu', 'table', 'smart-table'], 2)
-        content = content.replace(/\.less/g, '.css')
-        content = content.replace(/\.jsx/g, '.js')
-        const buf = Buffer.from(content)
-        chunk.contents = buf
-        this.push(chunk)
-        next()
-      })
-    )
-    .pipe(dest(`packages/${dirName}/link/`))
-
-  src([`packages/${dirName}/src/*/*.tsx`, `packages/${dirName}/src/*/*.ts`])
-    .pipe(
-      ts({
-        "target": 'es5',
-        "sourceMap": true,
-        "module": "esnext",
-        "declaration": true, // 生成 *.d.ts 文件
-        "allowJs": true,
-        "jsx": "react",
-        "forceConsistentCasingInFileNames": false,
-        "noImplicitReturns": false,
-        "noImplicitThis": false,
-        "noImplicitAny": false,
-        "noUnusedLocals": false,
-        "noUnusedParameters": false,
-        "noEmitOnError": false,
-        "strictNullChecks": false,
-        "importHelpers": true,
-        "suppressImplicitAnyIndexErrors": true,
-        "experimentalDecorators": true,
-        "downlevelIteration": true,
-        "allowSyntheticDefaultImports": true
-      })
-    )
-    .pipe(
-      // 处理路径等问题
-      through2.obj(function (chunk, enc, next) {
-        let content = chunk.contents.toString()
-        content = resolvePath(content, ['util', 'header', 'data-cell', 'color-picker', 'modal', 'schema-form', 'auto-reload', 'anchor', 'submenu', 'table', 'smart-table'], 3)
-        content = content.replace(/\.less/g, '.css')
-        content = content.replace(/\.jsx/g, '.js')
-        const buf = Buffer.from(content)
-        chunk.contents = buf
-        this.push(chunk)
-        next()
-      })
-    )
-    .pipe(dest(`packages/${dirName}/link/`))
+function libScriptTask(dirName) {
+  return series(
+    function compileJs() {
+      return src([`packages/${dirName}/src/**/*.jsx`, `packages/${dirName}/src/**/*.js`])
+        .pipe(babel(babelConfig))
+        .pipe(
+          // 处理路径等问题
+          through2.obj(function(chunk, enc, next) {
+            let content = chunk.contents.toString();
+            content = resolvePath(content);
+            content = content.replace(/\.less/g, '.css');
+            content = content.replace(/\.jsx/g, '.js');
+            const buf = Buffer.from(content);
+            chunk.contents = buf;
+            this.push(chunk);
+            next();
+          }),
+        )
+        .pipe(dest(`packages/${dirName}/lib/`));
+    },
+    function compileTs() {
+      return src([`packages/${dirName}/src/**/*.tsx`, `packages/${dirName}/src/**/*.ts`])
+        .pipe(tsProject())
+        .pipe(dest(`packages/${dirName}/lib/`))
+        .pipe(filter(file => !file.path.endsWith('.d.ts')))
+        .pipe(babel(babelConfig))
+        .pipe(
+          // 处理路径等问题
+          through2.obj(function(chunk, enc, next) {
+            let content = chunk.contents.toString();
+            content = resolvePath(content);
+            content = content.replace(/\.less/g, '.css');
+            content = content.replace(/\.jsx/g, '.js');
+            const buf = Buffer.from(content);
+            chunk.contents = buf;
+            this.push(chunk);
+            next();
+          }),
+        )
+        .pipe(dest(`packages/${dirName}/lib/`));
+    },
+    function copyJson() {
+      return src(`packages/${dirName}/src/**/*.json`).pipe(dest(`packages/${dirName}/lib/`));
+    },
+    function compileStyle() {
+      return src(`packages/${dirName}/src/**/*.less`)
+        .pipe(
+          less({
+            plugins: [new LessNpm({ prefix: '~' })],
+            javascriptEnabled: true,
+          }),
+        )
+        .pipe(postcss([autoprefixer()]))
+        .pipe(dest(`packages/${dirName}/lib/`));
+    },
+  );
 }
 
-const jstask = function (dirName) {
-  return src([`packages/${dirName}/src/**/*.jsx`, `packages/${dirName}/src/**/*.js`])
-    .pipe(babel(babelConfig))
-    .pipe(
-      // 处理路径等问题
-      through2.obj(function (chunk, enc, next) {
-        let content = chunk.contents.toString()
-        content = resolvePath(content, ['util', 'header', 'data-cell', 'color-picker', 'modal', 'schema-form', 'auto-reload', 'anchor', 'submenu', 'table', 'smart-table'])
-        const buf = Buffer.from(content)
-        chunk.contents = buf
-        this.push(chunk)
-        next()
-      })
-    )
-    .pipe(dest(`packages/${dirName}/lib/`))
-}
+packageNames.forEach(packageName => {
+  const dirName = packageName.slice(9);
+  task(
+    `lib:${dirName}`,
+    series(function clean(cb) {
+      rimraf.sync(path.resolve(__dirname, `${packageName}/lib/`));
+      cb();
+    }, libScriptTask(dirName)),
+  );
+  task(
+    `link:${dirName}`,
+    series(function clean(cb) {
+      rimraf.sync(path.resolve(__dirname, `${packageName}/link/`));
+      cb();
+    }, linkScriptTask(dirName)),
+  );
+});
 
-const jsontask = function (dirName) {
-  src(`packages/${dirName}/src/**/*.json`)
-    .pipe(dest(`packages/${dirName}/lib/`))
-    .pipe(dest(`packages/${dirName}/link/`))
-}
+task('lib', series(...packageNames.map(packageName => `lib:${packageName.slice(9)}`)));
 
-const tstask = function (dirName) {
-  src([`packages/${dirName}/src/**/*.tsx`, `packages/${dirName}/src/**/*.ts`])
-    .pipe(
-      ts({
-        "target": 'es6',
-        "sourceMap": true,
-        "module": "esnext",
-        "declaration": true, // 生成 *.d.ts 文件
-        "allowJs": true,
-        "jsx": "react",
-        "forceConsistentCasingInFileNames": false,
-        "noImplicitReturns": false,
-        "noImplicitThis": false,
-        "noImplicitAny": false,
-        "noUnusedLocals": false,
-        "noUnusedParameters": false,
-        "noEmitOnError": false,
-        "strictNullChecks": false,
-        "importHelpers": true,
-        "suppressImplicitAnyIndexErrors": true,
-        "experimentalDecorators": true,
-        "downlevelIteration": true,
-        "allowSyntheticDefaultImports": true
-      })
-    )
-    .pipe(dest(`packages/${dirName}/lib/`))
-    .pipe(babel(babelConfig))
-    .pipe(
-      // 处理路径等问题
-      through2.obj(function (chunk, enc, next) {
-        let content = chunk.contents.toString()
-        content = resolvePath(content, ['util', 'header', 'data-cell', 'color-picker', 'modal', 'schema-form', 'auto-reload', 'anchor', 'submenu', 'table', 'smart-table'])
-        content = content.replace(/\.less/g, '.css')
-        content = content.replace(/\.jsx/g, '.js')
-        const buf = Buffer.from(content)
-        chunk.contents = buf
-        this.push(chunk)
-        next()
-      })
-    )
-    .pipe(dest(`packages/${dirName}/lib/`))
-}
+task('link', series(...packageNames.map(packageName => `link:${packageName.slice(9)}`)));
 
-const jsontasks = pkgs.map(pkg => cb => {
-  jsontask(pkg)
+task('clean', function clean(cb) {
+  rimraf.sync(path.resolve(__dirname, `packages/*/lib/`));
+  rimraf.sync(path.resolve(__dirname, `packages/*/link/`));
+  rimraf.sync(path.resolve(__dirname, `packages/gantd/dist/`));
   cb();
-})
+});
 
-const jstasks = pkgs.map(pkg => cb => {
-  jstask(pkg)
-  tstask(pkg)
-  cb();
-})
-
-const linktasks = pkgs.map(pkg => cb => {
-  linktask(pkg)
-  cb();
-})
-
-const csstasks = pkgs.map(pkg => cb => {
-  src(`packages/${pkg}/src/**/*.less`)
-    .pipe(dest(`packages/${pkg}/lib/`))
-    .pipe(dest(`packages/${pkg}/link/`))
-
-  src(`packages/${pkg}/src/**/*.less`)
-    .pipe(less({
-      plugins: [
-        new LessNpm({ prefix: '~' })
-      ],
-      javascriptEnabled: true,
-    }))
-    .pipe(postcss([autoprefixer()]))
-    .pipe(dest(`packages/${pkg}/lib/`))
-    .pipe(dest(`packages/${pkg}/link/`))
-
-  cb();
-})
-
-const compile = parallel(...jstasks, ...jsontasks, ...csstasks)
-
-const cleanLink = (cb) => {
-  rimraf.sync(path.resolve(__dirname, 'packages/*/link/'))
-  cb()
-}
-
-exports.compileLink = series(cleanLink, parallel(...linktasks, ...jsontasks, ...csstasks))
-
-exports.default = series(clean, compile)
+task('default', series('clean', 'lib', 'link'));

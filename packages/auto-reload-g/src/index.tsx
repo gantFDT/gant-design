@@ -3,7 +3,7 @@ import React, { useCallback, useState, useEffect } from 'react';
 import { Tooltip, Divider, Switch, InputNumber, Icon } from 'antd'
 import moment from 'moment';
 import classnames from 'classnames'
-import { IntlProvider, useIntl } from 'react-intl'
+import { IntlProvider, injectIntl } from 'react-intl'
 import en from './locale/en-US'
 import zh from './locale/zh-CN'
 const format = "hh:mm:ss"
@@ -17,6 +17,7 @@ export interface LocaleProps {
 }
 
 export interface Props {
+  intl?: any,
   prefixCls?: string,
   auto?: boolean,
   interval?: number,
@@ -37,8 +38,8 @@ export interface LocalLocalWrapperProps extends Props {
 
 let playFun: any = null;
 
-const AutoReload: React.SFC<Props> = ({ auto = false, interval = 1, ...props }) => {
-  const { formatMessage: f } = useIntl();
+const AutoReload: React.SFC<Props> = ({ auto = false, interval = 1, intl, ...props }) => {
+  const f = ({ id }) => intl.formatMessage({ id });
   const {
     prefixCls: customizePrefixCls = 'gant',
     className,
@@ -74,6 +75,7 @@ const AutoReload: React.SFC<Props> = ({ auto = false, interval = 1, ...props }) 
       clearInterval(playFun);
       playFun = null
     }
+    
     return () => {
       if (playFun) clearInterval(playFun);
     }
@@ -117,6 +119,7 @@ const AutoReload: React.SFC<Props> = ({ auto = false, interval = 1, ...props }) 
     }
   </div>
 }
+const InjectIntl = injectIntl(AutoReload)
 
 const LocalWrapper = (props: LocalLocalWrapperProps) => {
   const { i18n = navigator.language, locale, ...restProps } = props
@@ -129,7 +132,7 @@ const LocalWrapper = (props: LocalLocalWrapperProps) => {
   let messages = langs[i18n] || en
   if (locale) messages = { ...messages, ...locale }
   return <IntlProvider locale={_locale} messages={messages}>
-    <AutoReload {...restProps} />
+    <InjectIntl {...restProps} />
   </IntlProvider>
 }
 export default LocalWrapper

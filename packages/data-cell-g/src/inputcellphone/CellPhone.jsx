@@ -7,7 +7,7 @@ import { get } from 'lodash'
 import { withEdit } from '../compose'
 import codeTypes from './codes.json'
 
-const reg = /^1$|^(13|14|15|18)$|^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{0,8}$/
+const reg = /^1$|^1[3-9]$|^1[3-9][0-9]\d{0,8}$/
 
 // 格式化电话号码
 const phoneFormatter = phone => Array.from(phone).map((num, index) => index % 4 == 3 ? `-${num}` : num).join('')
@@ -65,7 +65,6 @@ const withValidate = compose(
   lifecycle({
     componentDidMount() {
       const { validateValue, onPhoneChange } = this.props
-      // console.log(this.props)
       if (!validateValue()) {
         onPhoneChange('')
       }
@@ -76,11 +75,11 @@ const withValidate = compose(
 @compose(
   withPhoneCode,
   withValidate,
-  withEdit(({ code, phone }) => phone ? `+${code} ${phone}` : ''),
-  withProps(({ code, onCodeChange, filterOption, getPopupContainer }) => {
+  withEdit(({ code, phone }) => phone ? `+${code} ${phone}` : '', "gantd-input-cellphone-addonBefore"),
+  withProps(({ code, onCodeChange, filterOption }) => {
     return ({
       addonBefore: (
-        <Select getPopupContainer={getPopupContainer} style={{ width: 86 }} value={code} onChange={onCodeChange} filterOption={filterOption} showSearch>
+        <Select  dropdownClassName="gantd-input-cellphone-addonBefore" style={{ width: 86 }} value={code} onChange={onCodeChange} filterOption={filterOption} showSearch>
           {
             codeTypes.map(code => <Select.Option key={code} value={code}>+{code}</Select.Option>)
           }
@@ -88,7 +87,7 @@ const withValidate = compose(
       )
     })
   }),
-  mapProps(({ onCodeChange, searchCode, codeList, filterOption, getPopupContainer, ...props }) => props)
+  mapProps(({ onCodeChange, searchCode, codeList, filterOption, ...props }) => props)
 )
 class CellPhone extends Component {
 
@@ -101,7 +100,6 @@ class CellPhone extends Component {
     this.onChange = this.onChange.bind(this)
     this.onKeyDown = this.onKeyDown.bind(this)
   }
-
   onChange(e) {
     const { onPhoneChange, code } = this.props
     const { value } = e.target;
@@ -134,7 +132,6 @@ class CellPhone extends Component {
     const { onPhoneChange, validateValue, onEnter, ...props } = this.props
     const { value } = this.state
     let computedValue = get(props, 'phone', value)
-    console.log("props", props)
     return (
       <AntInput {...props} value={computedValue}
         onBlur={() => { }}

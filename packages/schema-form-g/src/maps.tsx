@@ -81,7 +81,7 @@ let fields = {
 	[Fields.RadioGroup]: RadioGroup,
 	[Fields.AutoComplete]: AutoComplete
 }
-export function getFields() {
+export function getFields(): any {
 	return { ...fields }
 }
 

@@ -16,6 +16,7 @@ const utils = {
     // let str = JSON.stringify(jsonObj,null,"\t")
     return str
   },
+  
   //同步删除文件夹
   delDir(path) {
     let files = [];

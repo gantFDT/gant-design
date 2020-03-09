@@ -1,6 +1,5 @@
 import React from 'react'
 import { Input } from 'antd'
-import Group from './Group'
 import { withEdit } from '../compose'
 
 const getText = ({ value }) => (value ? <div>{Array.from(value).fill('\u25cf')}</div> : '')
@@ -14,12 +13,8 @@ class Password extends React.Component {
   }
 
   render() {
-    const { addonAfter, onChange, onEnter, style, ...props } = this.props
-    return (
-      <Group gant style={style}>
-        <Input.Password {...props} onChange={e => onChange(e.target.value)} onKeyDown={onEnter} />
-        {addonAfter ? <span className="ant-input-group-addon">{addonAfter}</span> : null}
-      </Group>
+    const { onChange, onEnter, style, ...props } = this.props
+    return (<Input.Password {...props} onChange={e => onChange(e.target.value)} onKeyDown={onEnter} />
     )
   }
 

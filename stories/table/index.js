@@ -3,10 +3,10 @@ import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import CodeDecorator from '../_util/CodeDecorator';
 import code from './code'
 import Table from '@table'
-import { EditStatus, SwitchStatus, Input, InputNumber, Selector } from '@data-cell'
+import { EditStatus, SwitchStatus, Input, InputNumber, Selector, InputCellPhone, InputUrl, InputEmail, InputMoney, DatePicker, RangePicker, ColorPicker, LocationSelector, Icon, InputTelePhone, InputLanguage } from '@data-cell'
 import { Button, Slider } from 'antd'
 
-import { getList, getEditList } from './mock'
+import { getList, getEditList, getNestList } from './mock'
 
 const columns = [
   {
@@ -85,7 +85,7 @@ function EditorTable() {
       editConfig: {
         render: (text, record, index) => {
           return <InputNumber min={0} />
-        }
+        },
       }
     },
     {
@@ -155,14 +155,13 @@ function VirtualScrollTable() {
 }
 
 
-function WidthTable(props) {
+function NestTable(props) {
 
   const [columns, setcolumns] = useState([
     {
       title: '姓名',
       dataIndex: 'name',
       key: 'name',
-      render: text => text + 1,
       width: 150,
     },
     {
@@ -172,79 +171,104 @@ function WidthTable(props) {
       width: 200
     },
     {
-      title: '住址住址住址住址住址住址住址住址住址',
+      title: '住址',
       dataIndex: 'address',
       key: 'address',
       width: 200
     },
     {
-      title: '嵌套',
+      title: '公司',
       dataIndex: 'nest',
-      width: 600,
       children: [
         {
-          title: '123123123123123123123',
-          dataIndex: 'age1',
-          key: 'age1',
+          title: '公司名称',
+          dataIndex: 'cName',
+          key: 'cName',
+          width: 160
         },
         {
-          title: 'Age',
-          dataIndex: 'age2',
-          key: 'age2',
+          title: '创始人',
+          dataIndex: 'boss',
+          key: 'boss',
+          width: 120
+        },
+        {
+          title: '成立时间',
+          dataIndex: 'createDate',
+          key: 'createDate',
+          width: 120
+        },
+        {
+          title: '公司地址',
+          dataIndex: 'cAddress',
+          key: 'cAddress',
+          width: 320,
           children: [
             {
-              title: 'Age',
-              dataIndex: 'age3',
-              key: 'age3',
+              title: "街道",
+              dataIndex: 'street',
+              width: 200
             },
             {
-              title: 'Age',
-              dataIndex: 'age4',
-              key: 'age4',
-            },
+              title: "邮编",
+              dataIndex: 'email',
+              width: 80
+            }
           ]
-        },
-        {
-          title: 'Age',
-          dataIndex: 'age5',
-          key: 'age5',
         },
       ]
     }
   ])
 
-  let dataArray = new Array(10), dataSource = [];
-  dataArray = dataArray.fill()
-  dataArray.map((item, index) => {
-    dataSource.push({
-      name: "namenamenamenamenamenamename",
-      age: index,
-      address: "table的宽度需要是各列宽度的总和，如果没有设置列宽，将平分table的宽度,table默认600px，如果不太清楚table的布局策略，最好table宽度和所有列都加上宽度",
-      key: index,
-      age1: 'aoiduoaisudbaopisdjbpaisjdba;osdbapoisdbna[osidnaosdna[oisda[sidaoibs'
-    })
-  })
+  const dataSource = useMemo(() => getNestList(), [])
 
   return <Table columns={columns} dataSource={dataSource} scroll={{ x: 1050 }} />
 }
 
-function TitleUse(props) {
-  let dataArray = new Array(10), dataSource = [];
-  dataArray = dataArray.fill()
-  dataArray.map((item, index) => {
-    dataSource.push({
-      name: "name" + index,
-      age: index,
-      address: "123",
-      key: index
-    }) 
-  })
+
+function ScrollTable() {
+
+  const [dataSource, setdataSource] = useState(() => getList(5))
+  const [loading, setloading] = useState(false)
+
+  useEffect(() => {
+    setloading(false)
+  }, [dataSource])
+
+  const onWheel = useCallback(
+    () => {
+      setloading(true)
+      setTimeout(() => {
+        setdataSource(list => ([
+          ...list,
+          ...getList(5),
+        ]))
+      }, 1000)
+    },
+    [],
+  )
+
+  return (
+    <Table
+      columns={columns}
+      dataSource={dataSource}
+      scroll={{ y: 300 }}
+      onScroll={onWheel}
+      loading={loading}
+    />
+  )
+}
+
+// 拖动排序
+function DragTable(props) {
+  const [dataSource, setdataSource] = useState(() => getList(20))
+
+
   return <Table
     columns={columns}
-    title="标题"
-    headerRight={<Button size='small'>right</Button>}
     dataSource={dataSource}
-    resizable={false}
+    onDragEnd={setdataSource}
+    scroll={{ y: 300 }}
   />
 }
 
@@ -496,9 +520,8 @@ const TreeTable = () => {
   return <Table
     columns={columns}
     dataSource={dataSource}
-    hideVisibleMenu={true}
     isZebra={false}
-    tail={list => `当前页有${list.length}条数据`}
+    tail={list => keys && keys.length ? `已选中${keys.length}条数据` : "没有选中数据"}
     rowSelection={{
       type: 'checkbox',
       selectedRowKeys: keys,
@@ -515,19 +538,7 @@ function PaginationTable(props) {
 
   const [pagenumber, setpagenumber] = useState(1)
   const [size, setsize] = useState(50)
-
-  const [dataSource, setdataSource] = useState(() => {
-    const dataSource = new Array(78).fill().map((item, index) => {
-      return {
-        name: "name",
-        age: index,
-        address: "123",
-        key: index,
-        isDeleted: true
-      }
-    })
-    return dataSource
-  })
+  const dataSource = useMemo(() => getList(120), [])
 
   const list = useMemo(() => {
     return dataSource.slice((pagenumber - 1) * size, pagenumber * size)
@@ -542,12 +553,6 @@ function PaginationTable(props) {
   )
 
   const [scrollKey, setscrollKey] = useState(null)
-
-  // useEffect(() => {
-  // 	setTimeout(() => {
-  // 		setscrollKey('30')
-  // 	}, 10000)
-  // }, [])
 
   return <Table
     columns={columns}
@@ -611,11 +616,12 @@ const config = {
 
 		<h2>其他特性</h2>
 		<b>1、滚动加载</b><br/>
-		<b>2、拖动排序</b><br/>`
+		<b>2、拖动排序</b><br/>
+		<b>3、级联选择</b><br/>`
   ),
   children: [
     {
-      title: '基本用法',
+      title: '可缩放列',
       describe: '通过columns指定显示的列，通过dataSource显示数据，缩放列的功能默认开启，通过设置resizable来修改配置',
       cmp: BasicTable
     },
@@ -631,32 +637,37 @@ const config = {
     },
     {
       title: '虚拟滚动',
-      describe: '通过virtualScroll开启，必须指定scroll.y控制高度，设置virtualScroll为true，可以使用内置的参数。一般情况下也不需要修改',
+      describe: '虚拟滚动模式下，并不会直接渲染所有数据。通过virtualScroll开启，必须指定scroll.y控制高度。也可以仅设置virtualScroll为true，使用内置的参数。一般情况下也不需要修改',
       cmp: VirtualScrollTable
     },
     {
       title: '嵌套表头',
-      describe: 'table的宽度需要是各列宽度的总和，如果没有设置列宽，将平分table的宽度,table默认600px，如果不太清楚table的布局策略，最好table宽度和所有列都加上宽度',
-      cmp: WidthTable
+      describe: '',
+      cmp: NestTable
     },
     {
-      title: '宽表格',
-      describe: '在小屏幕上出现滚动条,设置fixed的列必须设置宽度，试试缩小屏幕。同时，因为有固定列，所以wrap使文本折行的属性不能生效',
-      cmp: WideTable
+      title: '滚动加载',
+      describe: 'wheel指定滚动回调',
+      cmp: ScrollTable
     },
     {
-      title: '带标题',
-      describe: '标题展示',
-      cmp: TitleUse
+      title: '拖动排序',
+      describe: '',
+      cmp: DragTable
     },
+    // {
+    //   title: '宽表格',
+    //   describe: '在小屏幕上出现滚动条,设置fixed的列必须设置宽度，试试缩小屏幕。同时，因为有固定列，所以wrap使文本折行的属性不能生效',
+    //   cmp: WideTable
+    // },
     {
-      title: '树形表格',
+      title: '树形表格、级联选择',
       describe: '树形表格,级联选择, 与antd组件相比，多选情况下onSelect第一个参数修改为了数组。datasource中有children属性自动开启树形结构, rowSelection为对象开启选择，增强选择的时候判断是否有子节点并一起选中,clickable: false用于关闭行选功能',
       cmp: TreeTable
     },
     {
       title: '带分页组件的table',
-      describe: 'footerDirection=row-reverse控制分页和tail的顺序，延迟5秒滚动第31行数据到视图，再延迟5秒滚动第4行到视图',
+      describe: 'footerDirection=row-reverse控制分页和tail的顺序',
       cmp: PaginationTable
     },
     {

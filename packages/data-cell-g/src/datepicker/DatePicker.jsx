@@ -34,16 +34,8 @@ class DatePicker extends React.Component {
   }
 
   render() {
-    const { addonAfter, value, ...props } = this.props
+    const { value, ...props } = this.props
     const className = classnames('gant-calendar-picker', props.className)
-    if (addonAfter) {
-      return (
-        <Group gant>
-          <AntDatePicker {...props} value={getCurTime(value, props.format)} className={className} onChange={this.onChange} />
-          {addonAfter ? <span className="ant-input-group-addon">{addonAfter}</span> : null}
-        </Group>
-      )
-    }
     return <AntDatePicker {...props} value={getCurTime(value, props.format)} className={className} onChange={this.onChange} />
   }
 }

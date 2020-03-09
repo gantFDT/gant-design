@@ -10,7 +10,8 @@ ColorPicker component based on antd with [`React`](https://facebook.github.io/re
 
 ## Screenshot
 
-<img src='https://zos.alipayobjects.com/rmsportal/JwLASrsOYJuFRIt.png' width='408'>
+<img src='./shortcut.png' width='408'>
+
 
 ## Demo
 

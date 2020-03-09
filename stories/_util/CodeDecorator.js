@@ -1,37 +1,37 @@
-import 'antd/dist/antd.css';
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
-import { Card, Collapse, Icon, Tooltip, Row, Col } from 'antd';
-import { ConfigProvider } from '@gantd';
-import Anchor from '@packages/anchor-g/src';
-import zhCN from '@gantd/locale/zh_CN';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
-import SyntaxHighlighter from 'react-syntax-highlighter';
-import virtualizedRenderer from 'react-syntax-highlighter-virtualized-renderer';
-import { githubGist } from 'react-syntax-highlighter/dist/esm/styles/hljs';
-import { version, name } from '../../packages/gantd/package.json';
-import reactElementToJSXString from 'react-element-to-jsx-string';
-const Panel = Collapse.Panel;
-import Highlight, { defaultProps } from "prism-react-renderer";
-// console.log('version', version)
-import { CodeDecoratorStyles } from "./CodeDecoratorStyles.js";
+import 'antd/dist/antd.css'
+import React, { useState, useMemo, useCallback, useEffect } from 'react'
+import { Card, Collapse, Icon, Tooltip, Row, Col } from 'antd'
+import { ConfigProvider } from '@gantd'
+import Anchor from '@packages/anchor-g/src'
+import zhCN from '@gantd/locale/zh_CN'
+import { CopyToClipboard } from 'react-copy-to-clipboard'
+import SyntaxHighlighter from 'react-syntax-highlighter'
+import virtualizedRenderer from 'react-syntax-highlighter-virtualized-renderer'
+import { githubGist } from 'react-syntax-highlighter/dist/esm/styles/hljs'
+import { version, name } from '../../packages/gantd/package.json'
+import reactElementToJSXString from 'react-element-to-jsx-string'
+import Highlight, { defaultProps } from "prism-react-renderer"
+import { CodeDecoratorStyles } from "./CodeDecoratorStyles.js"
 import classnames from 'classnames'
 import Prism from 'prismjs'
 import styles from './CodeDecoratorStyles.css'
+const Panel = Collapse.Panel
+
 const headerStyle = {
     fontSize: 24,
     margin: '40px 0 16px'
-};
+}
 const cardStyle = {
     margin: '0 0 20px 0'
-};
+}
 const wrapperStyle = {
     padding: '42px 24px 50px',
     borderBottom: '1px solid #e8e8e8'
-};
+}
 const metaStyle = {
     position: 'relative',
     width: '100%',
-};
+}
 const titleStyle = {
     position: 'absolute',
     top: '-14px',
@@ -42,11 +42,11 @@ const titleStyle = {
     fontWeight: 'bold',
     fontSize: '16px',
     borderRadius: '2px 2px 0 0',
-};
+}
 const descriptionStyle = {
     padding: '24px 24px',
     fontSize: '12px',
-};
+}
 const collapseStyle = {
     borderTop: '1px dashed #ebedf0'
 }
@@ -66,28 +66,27 @@ const codeShowExtra = {
 }
 const getCodePenStr = (title, description, code) => {
     code = code
-        .replace(/import\s?ReactDom\s?from\s?['|"]react-dom['|"];?/, '')
-        .replace(/import\s?React\s?from\s?['|"]react['|"];?/, '')
+        .replace(/import\s?ReactDom\s?from\s?['|"]react-dom['|"]?/, '')
+        .replace(/import\s?React\s?from\s?['|"]react['|"]?/, '')
         .replace(/import\s?{(.*)\}\s?from\s?['|"](\w+)['|"]/g, 'const {$1} = $2')
-        .replace(/import\s?.*\{(.*)\}\s?from\s?['|"]react['|"]/, 'const {$1} = React');
+        .replace(/import\s?.*\{(.*)\}\s?from\s?['|"]react['|"]/, 'const {$1} = React')
 
     const codePenData = {
         title: `${title} - Gant Design Demo`,
         description,
-        html: `<div id="container" style="padding: 24px"></div>\n<script>var mountNode = document.getElementById('container');</script>`,
+        html: `<div id="container" style="padding: 24px"></div>\n<script>var mountNode = document.getElementById('container')</script>`,
         js: code,
-        css: `@import 'antd/dist/antd.css';\n@import '${name}/dist/${name}.css';`,
+        css: `@import 'antd/dist/antd.css'\n@import '${name}/dist/${name}.css'`,
         editors: "001",
-        css_external: `https://unpkg.com/antd/dist/antd.css;https://unpkg.com/${name}@${version}/dist/${name}.css`,
-        js_external: `https://unpkg.com/react@16.x/umd/react.development.js;https://unpkg.com/react-dom@16.x/umd/react-dom.development.js;https://unpkg.com/moment/min/moment-with-locales.js;https://unpkg.com/antd/dist/antd-with-locales.js;https://unpkg.com/react-router-dom/umd/react-router-dom.min.js;https://unpkg.com/react-router@3.x/umd/ReactRouter.min.js;https://unpkg.com/${name}@${version}/dist/${name}.js`,
+        css_external: `https://unpkg.com/antd/dist/antd.csshttps://unpkg.com/${name}@${version}/dist/${name}.css`,
+        js_external: `https://unpkg.com/react@16.x/umd/react.development.jshttps://unpkg.com/react-dom@16.x/umd/react-dom.development.jshttps://unpkg.com/moment/min/moment-with-locales.jshttps://unpkg.com/antd/dist/antd-with-locales.jshttps://unpkg.com/react-router-dom/umd/react-router-dom.min.jshttps://unpkg.com/react-router@3.x/umd/ReactRouter.min.jshttps://unpkg.com/${name}@${version}/dist/${name}.js`,
         js_pre_processor: "typescript"
     }
-
-    return JSON.stringify(codePenData);
+    return JSON.stringify(codePenData)
 }
 function CodeBox(props) {
-    const { id, title = '标题', describe = '暂无描述', code, children, isActive, isCollapsed, handleCollapse } = props;
-    const [copy, setCopy] = useState(false);
+    const { id, title = '标题', describe = '暂无描述', code, children, isActive, isCollapsed, handleCollapse } = props
+    const [copy, setCopy] = useState(false)
 
     function genExtra() {
         return <>
@@ -124,32 +123,10 @@ function CodeBox(props) {
                 </div>
                 <div style={metaStyle}>
                     {title && <div style={titleStyle}>{title}</div>}
-                    {/* <div style={descriptionStyle}>{describe}</div> */}
                     <div style={descriptionStyle} dangerouslySetInnerHTML={{ __html: describe }} />
                 </div>
                 {code && <Collapse activeKey={isCollapsed ? null : id} bordered={false} style={collapseStyle} onChange={handleCollapse.bind(null, id)}>
                     <Panel key={id} header='显示代码' style={{ borderBottom: 0 }} extra={genExtra()}>
-                        {/* <SyntaxHighlighter language="javascript" style={githubGist}>{code}</SyntaxHighlighter> */}
-                        {/* <Highlight {...defaultProps} code={code} language="js">
-                        
-                        {({ className, style, tokens, getLineProps, getTokenProps }) => {
-                            return (
-                                <pre className={classnames(className, styles.gantdPrism)} style={styles}>
-                                    {tokens.map((line, i) => {
-                                        return (
-                                            <div {...getLineProps({ line, key: i })}>
-                                                {line.map((token, key) => {
-                                                    return (
-                                                        <span {...getTokenProps({ token, key })} />
-                                                    )
-                                                })}
-                                            </div>
-                                        )
-                                    })}
-                                </pre>
-                            )
-                        }}
-                        </Highlight> */}
                         <pre className="language-tsx">
                             <code>
                                 <div dangerouslySetInnerHTML={{
@@ -162,7 +139,7 @@ function CodeBox(props) {
             </Card>
         </>
     )
-};
+}
 /**
 * @config useage[string|ReactNode] 何时使用内容
 *         inline[bool] 是否一行两列展示 默认false
@@ -171,17 +148,17 @@ function CodeBox(props) {
 *         children[array] 示例items集合 [{title:'...','describe':'...',cmp:function},...]
 */
 export default ({ config }) => {
-    if (!config) return null;
+    if (!config) return null
 
-    const [codeExpends, setCodeExpends] = useState([]);
-    const [showAllCode, setShowAllCode] = useState(false);
-    const [currentAnchor, setCurrentAnchor] = useState(null);
-    const { useage, inline, codes = [], children, showAnchor = true } = config;
-    let anchors = [];
+    const [codeExpends, setCodeExpends] = useState([])
+    const [showAllCode, setShowAllCode] = useState(false)
+    const [currentAnchor, setCurrentAnchor] = useState(null)
+    const { useage, inline, codes = [], children, showAnchor = true } = config
+    let anchors = []
 
     useEffect(() => {
         showAllCodes(showAllCode)
-    }, [showAllCode]);
+    }, [showAllCode])
 
     const allExpends = useMemo(() => {
         let arr = []
@@ -196,13 +173,13 @@ export default ({ config }) => {
     }, [allExpends])
 
     const onAnchorClick = useCallback((e, { href }) => {
-        e.stopPropagation();
-        e.preventDefault();
-        href && setCurrentAnchor(href);
+        e.stopPropagation()
+        e.preventDefault()
+        href && setCurrentAnchor(href)
     }, [])
 
     const handleCollapse = useCallback((id) => {
-        let pos = codeExpends.indexOf(id);
+        let pos = codeExpends.indexOf(id)
         if (pos < 0) {
             setCodeExpends(expends => [...expends, id])
         } else {
@@ -214,9 +191,9 @@ export default ({ config }) => {
 
     const elements = useMemo(() => {
         return children.map(({ title, describe, cmp: Comp, code }, key) => {
-            let id = `demo_${key}`;
-            anchors.push({ id: id, title });
-            let thisCode = code ? code : codes[key];
+            let id = `demo_${key}`
+            anchors.push({ id: id, title })
+            let thisCode = code ? code : codes[key]
             if (React.isValidElement(Comp)) {
                 thisCode = reactElementToJSXString(Comp)
             }
@@ -232,7 +209,7 @@ export default ({ config }) => {
             >
                 {React.isValidElement(Comp) ? Comp : <Comp />}
             </CodeBox>
-        });
+        })
     }, [codes, children, currentAnchor, codeExpends, handleCollapse])
 
     const demos = useMemo(() => {
@@ -257,7 +234,12 @@ export default ({ config }) => {
                 代码演示
           <span style={codeShowExtra}>
                     <Tooltip title={showAllCode ? '收起全部代码' : '展开全部代码'}>
-                        <Icon type='code' theme={showAllCode ? 'filled' : 'outlined'} onClick={() => setShowAllCode(show => !show)} />
+                        <Icon
+                            type='code'
+                            style={{ fontSize: 20 }}
+                            theme={showAllCode ? 'filled' : 'outlined'}
+                            onClick={() => setShowAllCode(show => !show)}
+                        />
                     </Tooltip>
                 </span>
             </h2>

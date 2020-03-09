@@ -1,15 +1,9 @@
 import React from 'react'
-// import {Card,Anchor } from '@'
-// import {Anchor} from '@';
 import Anchor from '@packages/anchor-g/src';
 import CodeDecorator from '../_util/CodeDecorator'
-import { Button } from 'antd';
 
 const code = `
 import { Anchor } from 'gantd';
-// import { Anchor } from 'anchor-g'; //与gantd中引入效果相同
-
-import { Button } from 'antd';
 function BasicUse() {
   const list = [
     {
