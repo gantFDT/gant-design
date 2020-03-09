@@ -1,11 +1,10 @@
 import React from 'react'
-// import { Group } from '../input'
-import { Input } from 'antd'
+import Group from '../input/Group.jsx'
 export default WrapperedComponent => ({ addonAfter, addonBefore, ...props }) => {
 	const factory = React.createFactory(WrapperedComponent)
-	return <Input.Group  className='gant-input-group' >
-		{addonBefore ? <span className="ant-input-group-addon">{addonBefore}</span> : null}
+	return <Group gantd >
+		{addonBefore && <span className="ant-input-group-addon">{addonBefore}</span>}
 		{factory(props)}
-		{addonAfter ? <span className="ant-input-group-addon">{addonAfter}</span> : null}
-	</Input.Group>
+		{addonAfter && <span className="ant-input-group-addon">{addonAfter}</span>}
+	</Group>
 }

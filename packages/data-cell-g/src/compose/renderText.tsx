@@ -14,14 +14,14 @@ const emptyText = '暂无'
 const undef = (a => a)() // 防止undefined被修改
 const emptyTextArray = [undef, null, NaN, ''] // 出现哪些值，显示暂无。
 
-export type GetText<P> = (p: P) => any
+export type GetText<P> = (p?: P) => any
 
-const renderText = <P extends any>(getText: GetText<P>) => (props) => {
+const renderText = <P extends any>(getText?: GetText<P>) => (props) => {
 
   const { setEdit, allowEdit, className } = props
 
   const TextNode = React.memo(() => {
-    const text = getText(props)
+    const text = getText ? getText(props) : props.value;
     if (emptyTextArray.includes(text)) {
       return <span className={'gant-compose-noContent'}>{emptyText}</span>
     }

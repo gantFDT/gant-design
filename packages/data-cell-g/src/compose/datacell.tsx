@@ -23,7 +23,7 @@ export default class DataCell extends Component<DataCellProps> {
 	render() {
 		const {
 			computedEdit,
-			renderText: getText,
+			renderText: propsRenderText,
 			addonBefore,
 			addonAfter,
 			children,
@@ -34,7 +34,7 @@ export default class DataCell extends Component<DataCellProps> {
 		const child = typeof children == 'function' ? children : (props: ChildAgs) => children
 		return <>
 			{
-				!computedEdit ? renderText(getText)({ ...this.props }) : <Group gant>
+				!computedEdit ? renderText(propsRenderText)({ ...this.props }) : <Group gant>
 					{addonBefore ? <span className="ant-input-group-addon">{addonBefore}</span> : null}
 					{child({ onChange, value, onEnter })}
 					{addonAfter ? <span className="ant-input-group-addon">{addonAfter}</span> : null}

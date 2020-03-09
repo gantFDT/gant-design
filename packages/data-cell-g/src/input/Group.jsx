@@ -1,9 +1,16 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { Input } from 'antd'
 import classnames from 'classnames'
-
-export default ({ gant = false, ...props }) => {
+export default ({ gant = true, ...props }) => {
+  const len = useMemo(() => {
+    let eleLen = 0
+    React.Children.map(props.children, item => {
+      if (item) eleLen += 1;
+    })
+    return eleLen
+  }, [props.children])
   return (
-    <Input.Group {...props} className={classnames(props.className, { ['gant-input-group']: gant })} />
+    <Input.Group {...props} className={classnames(props.className,
+      { ['gant-input-group']: gant, ['gant-input-group-child']: len === 1 })} />
   )
 }

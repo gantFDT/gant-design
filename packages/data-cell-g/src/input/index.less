@@ -1,24 +1,24 @@
 @import '../style/index.less';
-
 @input-prefix-cls: ~'@{gant-prefix}-input';
-
 :global {
-  .@{input-prefix-cls} {
-    .@{input-prefix-cls}-group.ant-input-group {
-      display: table;
-
-      &>* {
-        .display-table-cell();
-        border-radius: 4px;
-
-        &:not(:last-child) {
-          .input-group-left();
+    .@{input-prefix-cls} {
+        .@{input-prefix-cls}-group.ant-input-group {
+            display: table;
+            &>* {
+                .display-table-cell();
+                border-radius: 4px;
+                &:not(:last-child) {
+                    .input-group-left();
+                }
+                &:not(:first-child) {
+                    .input-group-right();
+                }
+            }
         }
-
-        &:not(:first-child) {
-          .input-group-right();
+        .@{input-prefix-cls}-group-child {
+            &>* {
+                border-radius: 4px !important;
+            }
         }
-      }
     }
-  }
 }
