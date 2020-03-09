@@ -1,8 +1,9 @@
 import React, { PureComponent, Component } from 'react'
 import { Select } from 'antd'
 import SelectC, { SelectProps, SelectValue as AntSelectValue } from 'antd/lib/select'
-import { debounce, isPlainObject, isNil, cloneDeep, isEqual, zipWith } from 'lodash'
-import { compose, defaultProps, withProps, withPropsOnChange, withState, mapProps, withHandlers, lifecycle, toClass } from 'recompose'
+import { debounce, isPlainObject, isNil, cloneDeep, isEqual, zipWith, groupBy, pick } from 'lodash'
+import { compose, defaultProps, withProps, withPropsOnChange, withState, mapProps, withHandlers, lifecycle, toClass, setDisplayName } from 'recompose'
+import warning from '@util/warning'
 
 import './index.less'
 import { Group } from '../input'
@@ -22,7 +23,7 @@ const defaultprop = {
   valueProp: 'value', // 告诉组件作为value的值是哪一个字段, 为空将取整个值
   labelProp: 'label',
   style: {},
-  defaultList: [],
+  dataSource: [],
   multiple: false,
   allowClear: true,
   showSearch: true,
@@ -55,7 +56,7 @@ export type GetLabelText = (v: SelectValue, s: (v: SelectValue) => void) => void
 // 重写defaultProps中部分数据的类型
 type DefaultProps<R> = ProtoExtends<typeof defaultprop, {
   query: Query<R>,
-  defaultList: R[],
+  dataSource: R[],
   style: React.CSSProperties,
   optionLabel: Label,
   getLabelText: GetLabelText,
@@ -85,7 +86,7 @@ type SelectorInnerProps<T, R> = ProtoExtends<BasicSelectorProps<T, R>, {
   forceUpdateStorageList(): void,
   reg: RegExp,
   addonAfter: React.ReactElement,
-  dataSource: React.ReactElement[]
+  renderList: React.ReactElement[]
 }>
 
 
@@ -93,10 +94,14 @@ const withLocalStorage = compose(
   defaultProps({
     selectorId: 'selector',
   }),
-  withProps(({ selectorId }) => ({
-    reg: new RegExp(`^${selectorId}-(.*)$`),
-    selectorStorageId: `selector:${selectorId}`
-  })),
+  // setDisplayName('Selector'),
+  withProps(({ selectorId }) => {
+    warning(selectorId, `请确保selectorId为一个有效字符串`)
+    return {
+      reg: new RegExp(`^${selectorId}-(.*)$`),
+      selectorStorageId: `selector:${selectorId}`
+    }
+  }),
   withState('storageList', 'setStorageList', ({ selectorStorageId }) => JSON.parse(localStorage.getItem(selectorStorageId) || '[]')),
   withHandlers({
     forceUpdateStorageList: ({ setStorageList, storageList, selectorStorageId }) => () => {
@@ -116,7 +121,7 @@ const withSelector = compose(
   withState('loading', 'setLoading', false),
   withState('filter', 'setFilter', ''),
   withState('selectRef', 'setSelectRef', null), // select组件
-  withState('dataList', 'setDataList', ({ defaultList }) => defaultList),
+  withState('dataList', 'setDataList', ({ dataSource }) => dataSource),
 
   // 监听搜索
   withPropsOnChange(
@@ -131,7 +136,12 @@ const withSelector = compose(
         return renderItem(item, Option)
       }
       if (isPlainObject(item)) {
-        return <Option key={item[valueProp]} value={item[valueProp]}>{item[labelProp]}</Option>
+        const { disabled, title, className } = item
+        const value = item[valueProp] || item.value;
+        const key = value || item.key;
+        const label = item[labelProp]
+
+        return <Option key={key} value={value} disabled={disabled} title={title} className={className}>{label}</Option>
       }
       return <Option key={item} value={item}>{item}</Option>
     }),
@@ -198,7 +208,6 @@ const withSelector = compose(
 
       setLabel(label) // 设置读模式下的显示文本
       setCacheLabel(label) // 设置选项的label
-
     }
   }),
   withHandlers({
@@ -231,7 +240,7 @@ const withSelector = compose(
       setStorageList(copyList) // 更新list
       localStorage.setItem(selectorStorageId, JSON.stringify(copyList)) // 更新缓存
     },
-    getData: ({ taskId, useCache, loading, setLoading, query, filter, setDataList, setLabelWithValue }) => () => {
+    getData: ({ taskId, useCache, loading, setLoading, query, filter, setDataList }) => () => {
       if (!query) return
       let task = null
 
@@ -253,7 +262,6 @@ const withSelector = compose(
         setLoading(false)
         if (Array.isArray(data)) {
           setDataList(data)
-          setLabelWithValue()
         }
         else {
           throw new Error('选择器选项列表只能是数组格式')
@@ -295,51 +303,63 @@ const withSelector = compose(
         catch (e) {
           console.error(e)
         }
+      }
+      let list = [<Select.Option key='none' disabled>{loading ? "加载中..." : "没有查询到数据"}</Select.Option>]
+      if (result.length) {
+        const hasGroup = result.some(item => item.group)
+        if (!hasGroup) {
+          list = transformDataToList(result)
+        } else {
+          const everyGroup = result.every(item => item.group)
+          const group = groupBy(result, 'group')
+          // 某些项没有写group
+          if (!everyGroup) {
+            group['其他选项'] = group['undefined']
+          }
+
+          list = Object.entries(group).reduce((result, [key, data]) => {
+            if (key !== 'undefined') {
+              result.push(
+                <Select.OptGroup key={key} label={key}>{transformDataToList(data)}</Select.OptGroup>
+              )
+            }
+            return result
+          }, [] as React.ReactElement[])
+        }
 
       }
-      const newItems = (
-        <Select.OptGroup key='result' label='搜索结果'>
-          {
-            result.length ? transformDataToList(result) : <Select.Option key='none' disabled>{loading ? "加载中..." : "没有查询到数据"}</Select.Option>
-          }
-        </Select.OptGroup>
-      )
+      if (useStorage) {
+        const newItems = (
+          <Select.OptGroup key='result' label='搜索结果'>{list}</Select.OptGroup>
+        )
 
-      const selectedItems = (
-        <Select.OptGroup key='recent' label='最近选择'>
-          {
-            storageList.length ? transformDataToList(storageList) : <Select.Option key='empty' disabled>没有最近选择</Select.Option>
-          }
-        </Select.OptGroup>
-      )
-      return {
-        dataSource: useStorage ? [selectedItems].concat(newItems) : newItems
+        const selectedItems = (
+          <Select.OptGroup key='recent' label='最近选择'>
+            {
+              storageList.length ? transformDataToList(storageList) : <Select.Option key='empty' disabled>没有最近选择</Select.Option>
+            }
+          </Select.OptGroup>
+        )
+        return {
+          renderList: [selectedItems].concat(newItems)
+        }
+      }
+      else {
+        return {
+          renderList: list
+        }
       }
     }
   ),
-  lifecycle({
-    componentDidMount() {
-      this.props.getData()
-      const { value, label, getLabelText, setLabel } = this.props
-      if (value && !label) {
-        getLabelText(value, setLabel) // 交给调用者来处理
-      }
-    },
-    componentDidUpdate(prevProps) {
-      const { query, getData } = this.props
-      // 监听query变化，触发查询
-      if (query !== prevProps.query) {
-        getData()
-      }
-    }
-  }),
   //#endregion
-  withPropsOnChange(['value', 'optionLabel'], ({ setLabelWithValue }) => setLabelWithValue()),
+  withPropsOnChange(['query'], ({ getData }) => getData()),
+  // 下列属性变化的时候重新根据value值设置label
+  withPropsOnChange(['value', 'optionLabel', 'dataList'], ({ setLabelWithValue }) => setLabelWithValue()),
   // 监听label
   withPropsOnChange(['optionLabel'], ({ optionLabel, setCacheLabel }) => setCacheLabel(optionLabel)),
-  // 去支持只传递defaultList，并且希望更新defaultList的情况
-  withPropsOnChange(['defaultList'], ({ defaultList, setDataList }) => setDataList(defaultList)),
-  mapProps(({ defaultList, transformDataToList, ...props }) => props)
+  // 去支持只传递dataSource，并且希望更新dataSource的情况
+  withPropsOnChange(['dataSource'], ({ dataSource, setDataList }) => setDataList(dataSource)),
+  mapProps(({ dataSource, transformDataToList, ...props }) => props)
 )
 
 const withChange = withPropsOnChange( // 外部value到内部value对象形式的转换
@@ -474,7 +494,7 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
 
   renderSelect = () => {
     const { onSearch, onSelect, onChange, onopen } = this
-    const { multiple, readOnly, dataSource, loading, style, addonAfter, setSelectRef, ...props } = this.props;
+    const { multiple, readOnly, renderList, loading, style, addonAfter, setSelectRef, children, ...props } = this.props;
     if (readOnly) {
       props.open = false
       props.showSearch = false
@@ -494,14 +514,14 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
         labelInValue
         filterOption={false}
       >
-        {dataSource}
+        {children || renderList}
       </Select>
     )
     return select
   }
 
   render() {
-    const {  className } = this.props
+    const { className } = this.props
     return this.renderSelect()
   }
 }
