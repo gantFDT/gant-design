@@ -13,7 +13,7 @@ class Password extends React.Component {
   }
 
   render() {
-    const { onChange, onEnter, style, getPopupContainer, ...props } = this.props
+    const { onChange, onEnter, style, ...props } = this.props
     return (<Input.Password {...props} onChange={e => onChange(e.target.value)} onKeyDown={onEnter} />
     )
   }

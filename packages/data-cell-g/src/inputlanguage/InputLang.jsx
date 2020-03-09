@@ -69,11 +69,11 @@ const withLangSelect = compose(
 @compose(
   toClass,
   withLangSelect,
-  withEdit(({ currentLocale, cacheMap }) => cacheMap.get(currentLocale)),
-  withProps(({ onLocaleChange, language, cacheMap, currentLocale, getPopupContainer }) => {
+  withEdit(({ currentLocale, cacheMap }) => cacheMap.get(currentLocale), "gantd-input-lang-addonBefore"),
+  withProps(({ onLocaleChange, language, cacheMap, currentLocale }) => {
     return {
       addonBefore: (
-        <Select getPopupContainer={getPopupContainer} style={{ width: 75 }} value={currentLocale} onChange={onLocaleChange}>
+        <Select dropdownClassName="gantd-input-lang-addonBefore" style={{ width: 75 }} value={currentLocale} onChange={onLocaleChange}>
           {language.map(item => <Select.Option value={item.locale} key={item.locale}>{item.label}</Select.Option>)}
         </Select>
       ),
@@ -90,7 +90,7 @@ class InputLang extends Component {
   }
 
   render() {
-    const { onEnter, setlocale, cacheId, cacheMap, localeList, setCurrentLocale, onLocaleChange, currentValue, setCacheMap, currentLocale, getPopupContainer, ...props } = this.props
+    const { onEnter, setlocale, cacheId, cacheMap, localeList, setCurrentLocale, onLocaleChange, currentValue, setCacheMap, currentLocale, ...props } = this.props
     return (
       <Input {...props} value={currentValue} onKeyDown={onEnter} onChange={this.onInputChange} />
     );

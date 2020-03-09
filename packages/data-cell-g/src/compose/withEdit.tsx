@@ -82,7 +82,8 @@ interface WithEditInnerProps {
 }
 
 
-export const widthBasic = compose(inputwrapper,
+export const widthBasic = (popupClassName?: string) => compose(
+  inputwrapper(popupClassName),
   defaultProps(defaultComProps),
   setStatic('propsTypes', proptypes),
   withState('selfEdit', 'setEdit', EditStatus.CANCEL),
@@ -92,7 +93,7 @@ export const widthBasic = compose(inputwrapper,
       if (computedEditStatus(edit, selfEdit)) { // 进入编辑状态
         setCacheValue(value)
       } else {  // 退出编辑  这个时候可能的取值状态有3种[false, false]、[false, 0]、[0, false]，必须知道变化路径才能确定是否要回溯缓存
-        const map= [
+        const map = [
           [prevEdit, edit],
           [prevSelfEdit, selfEdit]
         ]
@@ -126,8 +127,6 @@ export const widthBasic = compose(inputwrapper,
     (prevProps, { edit, selfEdit, computedCache, setEdit }) => {
       const prevComputedEdit = computedEditStatus(prevProps.edit, prevProps.selfEdit)
       const computedEdit = computedEditStatus(edit, selfEdit)
-
-
       const shouldUpdate = prevComputedEdit !== computedEdit
       if (shouldUpdate) {
         computedCache(prevProps.edit, prevProps.selfEdit)
@@ -163,11 +162,13 @@ export const widthBasic = compose(inputwrapper,
     }
   }))
 
-export default <T extends any>(getText: GetText<T>) => compose(
-  widthBasic,
+export default <T extends any>(getText: GetText<T>, popupClassName?: string) => compose(
+  widthBasic(popupClassName),
   branch(
     props => !props.computedEdit,   // 读模式
-    () => renderText(getText)
+    () => {
+      return renderText(getText)
+    }
   ),
   editwrapper,
   mapProps(({
@@ -181,6 +182,7 @@ export default <T extends any>(getText: GetText<T>) => compose(
     onCancel,
     onSave,
     confirmable,
+    setPopupClassName,
     ...props
   }) => (props))
 );

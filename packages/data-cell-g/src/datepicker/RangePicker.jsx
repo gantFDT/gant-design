@@ -59,10 +59,7 @@ class RangePicker extends React.Component {
 
 
     return (
-      <Group gant className={className}>
-        <DatePicker.RangePicker {...props} value={this.getValue()} className={'gant-calendar-picker'} />
-        {addonAfter ? <span className="ant-input-group-addon">{addonAfter}</span> : null}
-      </Group>
+      <DatePicker.RangePicker {...props} value={this.getValue()} className={'gant-calendar-picker'} />
     )
   }
 }

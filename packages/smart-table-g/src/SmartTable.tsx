@@ -235,7 +235,7 @@ function SmartTable<R>(props: SmartTableProps<R>) {
       {headerRight}
       {onReload && (
         <Tooltip title={f({ id: 'reload' })}>
-          <Button size="small" icon="reload" className="marginh5" onClick={() => onReload()} />
+          <Button size="small" icon="reload" className="" onClick={() => onReload()} />
         </Tooltip>
       )}
     </>
@@ -261,7 +261,7 @@ function SmartTable<R>(props: SmartTableProps<R>) {
             <Button
               size="small"
               icon="setting"
-              className="marginh5"
+              className=""
               onClick={() => setConfigModalVisible(true)}
             />
           </Tooltip>

@@ -1,10 +1,12 @@
-import React, { useRef, useCallback, useEffect } from 'react';
+import React, { useRef, useCallback, useEffect, useState } from 'react';
+import { findDomNode } from 'react-dom'
 import classnames from 'classnames';
 
-export default WrapperedComponent =>
+export default (_popupClassName?: string) => WrapperedComponent =>
   React.forwardRef<HTMLDivElement, any>(
     ({ isInner, style, wrapperClassName, onBlur, ...props }, ref) => {
       const factory = React.createFactory(WrapperedComponent);
+      const [popupClassName, setPopupClassName] = useState(_popupClassName);
       const className = classnames(
         'gant-input-wrapper',
         {
@@ -13,17 +15,22 @@ export default WrapperedComponent =>
         wrapperClassName,
       );
       const divRef = useRef<HTMLDivElement>(null);
-      const getPopupContainer = useCallback(() => {
-        return divRef.current;
-      }, [divRef.current]);
       const handleClick = useCallback(
         (e: MouseEvent) => {
+          e.stopPropagation();
           if (divRef.current) {
             const target: any = e.target;
-            if (!divRef.current.contains(target)) onBlur && onBlur();
+            if (divRef.current.contains(target)) return;
+            if (!popupClassName) return;
+            const popupDoms = document.getElementsByClassName(popupClassName);
+            const len = popupDoms.length
+            for (let i = 0; i < len; i++) {
+              if (popupDoms[i].contains(target)) return
+            }
+            onBlur && onBlur();
           }
         },
-        [divRef.current, onBlur],
+        [divRef.current, onBlur, popupClassName],
       );
       useEffect(() => {
         window.addEventListener('mousedown', handleClick);
@@ -32,7 +39,7 @@ export default WrapperedComponent =>
       return (
         <div className={className} ref={divRef} style={style}>
           <div className="gant-input" ref={ref}>
-            {factory({ ...props, getPopupContainer })}
+            {factory({ ...props, setPopupClassName })}
           </div>
         </div>
       );
