@@ -7,6 +7,8 @@ import { Button } from 'antd';
 
 const code = `
 import { Anchor } from 'gantd';
+// import { Anchor } from 'anchor-g'; //与gantd中引入效果相同
+
 import { Button } from 'antd';
 function BasicUse() {
   const list = [

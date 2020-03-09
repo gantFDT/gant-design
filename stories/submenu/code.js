@@ -2,6 +2,7 @@ const code =
   `import React, { useState } from 'react';
 import { Avatar ,Icon} from 'antd';
 import { SubMenu  } from 'gantd';
+// import { SubMenu  } from 'submenu-g';//与gantd中引入效果相同
 
 // 设置菜单自定义 font 图标
 const SubMenuIcon = Icon.createFromIconfontCN('SubMenuIcon', {
@@ -95,6 +96,7 @@ const code1 =
   `import React, { useState } from 'react';
 import { Avatar,Icon } from 'antd';
 import { SubMenu  } from 'gantd';
+// import { SubMenu  } from 'submenu-g';//与gantd中引入效果相同
 
 // 设置菜单自定义 font 图标
 const SubMenuIcon = Icon.createFromIconfontCN('SubMenuIcon', {
@@ -170,6 +172,7 @@ const code2 =
   `import React, { useState } from 'react';
 import { Avatar ,Icon} from 'antd';
 import { SubMenu  } from 'gantd';
+// import { SubMenu  } from 'submenu-g';//与gantd中引入效果相同
 
 // 设置菜单自定义 font 图标
 const SubMenuIcon = Icon.createFromIconfontCN('SubMenuIcon', {

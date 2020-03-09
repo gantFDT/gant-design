@@ -2,6 +2,7 @@ const code =
   `import React, { useState } from 'react'
   import { Button } from 'antd'
   import { Modal } from 'gantd'
+  // import { Modal } from 'modal-g' //与gantd中引入效果相同
 
 function BasicUse() {
   const [visible, setVisible] = useState(false)
@@ -29,6 +30,7 @@ const code1 =
   `import React, { useState } from 'react'
   import { Button } from 'antd'
   import { Modal } from 'gantd'
+  // import { Modal } from 'modal-g' //与gantd中引入效果相同
   
   function CustomUse() {
     const [visible, setVisible] = useState(false);
@@ -66,6 +68,7 @@ const code2 =
   `import React, { useState } from 'react'
   import { Button } from 'antd'
   import { Modal } from 'gantd'
+  // import { Modal } from 'modal-g' //与gantd中引入效果相同
   
   function PositionUse() {
     const [visible, setVisible] = useState(false)
@@ -93,6 +96,7 @@ const code3 =
   `import React, { useState } from 'react'
   import { Button } from 'antd'
   import { Modal } from 'gantd'
+  // import { Modal } from 'modal-g' //与gantd中引入效果相同
   
   function MaximizeUse() {
     const [visible, setVisible] = useState(false)
@@ -119,6 +123,7 @@ const code4 =
   `import React, { useState } from 'react'
   import { Button } from 'antd'
   import { Modal } from 'gantd'
+  // import { Modal } from 'modal-g' //与gantd中引入效果相同
   
   function ForbiddenUse() {
     const [visible, setVisible] = useState(false)
@@ -146,6 +151,7 @@ const code5 =
   `import React, { useState } from 'react'
   import { Button } from 'antd'
   import { ResizableModal, ResizableProvider } from 'gantd'
+  // import { ResizableModal, ResizableProvider } from 'modal-g' //与gantd中引入效果相同
   
   function KeepState() {
     const [visible, setVisible] = useState(false)
@@ -175,6 +181,7 @@ const code6 =
   `import React, { useState } from 'react'
   import { Button } from 'antd'
   import { ResizableModal, ResizableProvider } from 'gantd'
+  // import { ResizableModal, ResizableProvider } from 'modal-g' //与gantd中引入效果相同
   
   function multipleModalsUse() {
     const [visible, setVisible] = useState(false)

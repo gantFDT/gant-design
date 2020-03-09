@@ -2,7 +2,7 @@ const codeGenerator = (code) =>
   `import React, { useState } from 'react'
 import { Button, Tag, Divider } from 'antd'
 import { SmartTable } from 'gantd'
-
+//import { SmartTable } from 'smart-table-g';//与gantd中引入效果相同
 const dataSource = [
   {
     key: '1',
@@ -272,7 +272,8 @@ const code6 =
 `import React, { useState, useCallback, useMemo } from 'react'
 import { Button, message } from 'antd'
 import { SmartTable, Input, InputNumber, DatePicker, InputUrl, LocationSelector, InputCellPhone, InputEmail, InputLanguage, InputMoney, EditStatus, SwitchStatus } from 'gantd'
-
+//import { Input, InputNumber, DatePicker, InputUrl, LocationSelector, InputCellPhone, InputEmail, InputLanguage, InputMoney, EditStatus, SwitchStatus } from 'gantd'
+//import { SmartTable } from 'smart-table-g';//与gantd中引入效果相同
 const tableColumns = [
   {
     fieldName: 'name',

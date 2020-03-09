@@ -1,4 +1,5 @@
-const code1 = `import Table from 'table-g';
+const code1 = `import Table from 'gantd';
+//import Table from 'table-g';//与gantd中引入效果相同
 
 const BasicTable = (props) =>{
 	const dataSource = useMemo(() => getList(), [])
@@ -29,7 +30,8 @@ const BasicTable = (props) =>{
 
 ReactDOM.render(<BasicTable/>,mountNode)
 `
-const EditTable = `import { Table } from 'table-g';
+const EditTable = `import Table from 'gantd';
+//import { Table } from 'table-g';//与gantd中引入效果相同
 import {Input, InputNumber, Selector } from 'data-cell-g'
 function EditorTable() {
 
@@ -107,7 +109,8 @@ ReactDOM.render(<EditorTable/>,mountNode)
 `
 
 
-const VirtualScroll = `import { Table } from 'table-g';
+const VirtualScroll = `import Table from 'gantd';
+//import { Table } from 'table-g';//与gantd中引入效果相同
 function VirtualScrollTable() {
 
 	const dataSource = useMemo(() => getList(100), [])
@@ -129,7 +132,8 @@ function VirtualScrollTable() {
   }`
 
 
-const WidthTable = `import { Table } from 'table-g';
+const WidthTable = `import Table from 'gantd';
+//import { Table } from 'table-g';//与gantd中引入效果相同
 
 const WidthTable = () => {
 
@@ -175,6 +179,7 @@ ReactDOM.render(
 )`
 
 const code2 = `import {Table} from 'gantd';
+//import { Table } from 'table-g';//与gantd中引入效果相同
 import { Button } from 'antd';
 const columns = [
 	{
@@ -230,6 +235,7 @@ ReactDOM.render(<DisabledResizeTable/>,mountNode)`
 
 
 const wideTable = `import { Input, TextArea, Table } from 'gantd';
+//import { Table } from 'table-g';//与gantd中引入效果相同
 function WideTable() {
 	const [editingKey, setEditingKey] = useState(null);
 	let dataArray = new Array(10), dataSource = [];
@@ -322,6 +328,7 @@ ReactDOM.render(
 )`;
 
 const TreeTable = `import { Table } from 'gantd';
+//import { Table } from 'table-g';//与gantd中引入效果相同
 const dataSource = [
   {
     key: 1,
@@ -470,7 +477,7 @@ ReactDOM.render(
 )`;
 
 const code6 = `import { Table } from 'gantd';
-
+//import { Table } from 'table-g';//与gantd中引入效果相同
 const columns = [
 	{
 		title: '姓名',
@@ -553,6 +560,7 @@ ReactDOM.render(
 )`
 
 const code7 = `import { Table } from 'gantd';
+//import { Table } from 'table-g';//与gantd中引入效果相同
 import { Slider } from 'antd';
 const columns = [
 	{
@@ -611,7 +619,7 @@ ReactDOM.render(
 )`
 
 const empty = `import { Table } from 'gantd';
-
+//import { Table } from 'table-g';//与gantd中引入效果相同
 const columns = [
 	{
 		title: '姓名',
