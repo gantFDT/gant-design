@@ -1,4 +1,5 @@
-const BasicTable = `import Table from 'table-g';
+const BasicTable = `import Table from 'gantd';
+//import Table from 'table-g';//与gantd中引入效果相同
 
 const BasicTable = (props) =>{
   const dataSource = useMemo(() => getList(), [])
@@ -138,7 +139,8 @@ ReactDOM.render(
   )`
 
 
-const NestTable = `import { Table } from 'table-g';
+const NestTable = `import Table from 'gantd';
+//import Table from 'table-g';//与gantd中引入效果相同
 
 const NestTable = () => {
 
@@ -215,7 +217,8 @@ ReactDOM.render(
   mountNode
 )`
 
-const ScrollTable = `import { Table } from 'table-g';
+const ScrollTable = `import Table from 'gantd';
+//import Table from 'table-g';//与gantd中引入效果相同
 
 function ScrollTable() {
 
@@ -246,7 +249,8 @@ ReactDOM.render(
 )`
 
 
-const DragTable = `import Table from 'table-g'
+const DragTable = `import Table from 'gantd';
+//import Table from 'table-g';//与gantd中引入效果相同
 function DragTable(props) {
 	const [dataSource, setdataSource] = useState(() => getList(20))
   
@@ -263,7 +267,8 @@ function DragTable(props) {
 	mountNode
   )`
 
-const TreeTable = `import Table from 'table-g';
+const TreeTable = `import Table from 'gantd';
+//import Table from 'table-g';//与gantd中引入效果相同
 const dataSource = [
   {
     key: 1,
@@ -410,8 +415,8 @@ ReactDOM.render(
   mountNode
 )`;
 
-const PaginationTable = `import Table from 'table-g';
-
+const PaginationTable = `import Table from 'gantd';
+//import Table from 'table-g';//与gantd中引入效果相同
 const columns = [
 	{
 		title: '姓名',
@@ -467,7 +472,8 @@ ReactDOM.render(
   mountNode
 )`
 
-const LightTable = `import Table from 'table-g';
+const LightTable = `import Table from 'gantd';
+//import Table from 'table-g';//与gantd中引入效果相同
 import { Slider } from 'antd';
 const columns = [
 	{
@@ -525,7 +531,8 @@ ReactDOM.render(
   mountNode
 )`
 
-const empty = `import Table from 'table-g';
+const empty = `import Table from 'gantd';
+//import Table from 'table-g';//与gantd中引入效果相同
 
 const columns = [
 	{
