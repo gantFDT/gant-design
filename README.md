@@ -3,6 +3,10 @@
 GantD是面向B端管理型软件、专注于数据密集型业务场景、基于Antd聚合型React组件库
 在Antd的基础上做了不同程度的针对性的强化，亦可以视作为Antd的补充，可以和Antd同时使用
 
+官网:http://gant.design
+
+文档: http://docs.gant.design/
+
 ## 特性 
 
 💻 面向企业后台产品，偏数据密集型紧凑风格 
