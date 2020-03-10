@@ -43,14 +43,13 @@ function resolveDataCellPath(content, repeat = 1) {
 
   let str2replace = '';
   dirs.forEach(dirName => {
-    str2replace+=`import ${dirName} from '${'../'.repeat(repeat)}${transToCamelCase(dirName)}'\n`;
+    if(dirName)
+      str2replace+=`import ${dirName} from '${'../'.repeat(repeat)}${transToCamelCase(dirName)}'\n`;
   })
   content = content.replace(regex, str2replace)
 
   return content;
 }
-
-let log = '';
 
 function ScriptTask(dirName) {
   return series(
