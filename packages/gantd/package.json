@@ -4,19 +4,19 @@
   "description": "GantD base on antD",
   "author": "Gant FDT",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/gantFDT/GantD/issues"
-  },
-  "homepage": "http://www.gant.design",
   "keywords": [
     "React",
     "gantd",
     "npm",
     "antd"
   ],
+  "homepage": "http://www.gant.design",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gantFDT/GantD.git"
+  },
+  "bugs": {
+    "url": "https://github.com/gantFDT/GantD/issues"
   },
   "main": "lib/index.js",
   "module": "lib/index.js",

@@ -34,7 +34,6 @@ import HeaderCell from './headercell'
 import { DataContext, TableContext, TableBodyWrapperContext } from './context'
 import { tableWrapperRef, scrollIntoViewWithRowKey } from './compose'
 
-import "./index.less"
 const defaultKey = "key"
 
 /**

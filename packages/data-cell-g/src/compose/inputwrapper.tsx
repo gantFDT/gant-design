@@ -1,5 +1,4 @@
 import React, { useRef, useCallback, useEffect, useState } from 'react';
-import { findDomNode } from 'react-dom'
 import classnames from 'classnames';
 
 export default (_popupClassName?: string) => WrapperedComponent =>

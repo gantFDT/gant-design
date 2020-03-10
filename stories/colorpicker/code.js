@@ -1,6 +1,7 @@
 const code_1 = `
 import React, { useState } from 'react';
 import { ColorPicker } from 'gantd';
+// import { ColorPicker } from 'color-picker-g';//与gantd中引入效果相同
 
 function BasicUse() {
   const [color, setColor] = useState('#1890FF');
@@ -22,6 +23,7 @@ ReactDOM.render(
 const code_2 = `
 import React, { useState } from 'react';
 import { ColorPicker } from 'gantd';
+// import { ColorPicker } from 'color-picker-g';//与gantd中引入效果相同
 
 function BasicUse() {
   const [color, setColor] = useState('#1890FF');
@@ -44,7 +46,7 @@ ReactDOM.render(
 const code_3 = `
 import React, { useState } from 'react';
 import { ColorPicker } from 'gantd';
-// import { ColorPicker } from 'data-cell-g'; 此包生效
+// import { ColorPicker } from 'data-cell-g'; 此包生效 //与gantd中引入效果相同
 
 
 function ReadWriteUse() {
@@ -72,6 +74,7 @@ ReactDOM.render(
 const code_4 = `
 import React, { useState } from 'react';
 import { ColorPicker } from 'gantd';
+// import { ColorPicker } from 'color-picker-g';//与gantd中引入效果相同
 
 function ReadOnlyUse() {
   const [color, setColor] = useState('#1890FF');
@@ -94,6 +97,7 @@ ReactDOM.render(
 const code_5 = `
 import React, { useState } from 'react';
 import { ColorPicker } from 'gantd';
+// import { ColorPicker } from 'color-picker-g';//与gantd中引入效果相同
 
 function ReadOnlyUse() {
   const [color, setColor] = useState('#1890FF');

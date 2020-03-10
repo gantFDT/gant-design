@@ -3,7 +3,6 @@ import { Button } from 'antd';
 import config from './typeConfig';
 import classnames from 'classnames';
 import { ConfigConsumer } from '../config-provider'
-import './index.less';
 
 export default class Exception extends Component {
   renderWithConfigConsumer = ({ getPrefixCls }) => {

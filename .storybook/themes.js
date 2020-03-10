@@ -32,7 +32,7 @@ export const light =  create({
   // inputBorderRadius: 4,//表单边框
 
   brandTitle: '甘棠软件',
-  brandUrl: 'http://favori.gitee.io/gantd-landing/',
+  brandUrl: 'http://gant.design',
   brandImage: gantDLogo,
 });
 
@@ -68,6 +68,6 @@ export const dark =  create({
   // inputBorderRadius: 4,//表单边框
 
   brandTitle: '甘棠软件',
-  brandUrl: 'http://favori.gitee.io/gantd-landing/',
+  brandUrl: 'http://gant.design',
   brandImage: gantDLogo,
 });

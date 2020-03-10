@@ -1,4 +1,3 @@
-import './index.less';
 import React, { useCallback, ReactNode } from 'react';
 import { Icon, Tag, Tooltip, Popconfirm, Empty } from 'antd';
 import _ from 'lodash';

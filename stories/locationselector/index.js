@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Button } from 'antd'
 import { LocationSelector, SwitchStatus } from '@data-cell'
+import '@data-cell/location-selector/style'
 import CodeDecorator from '../_util/CodeDecorator'
 import { WrapperValue, WrapperEdit, onSave } from '../_util/composeUseHooks'
 

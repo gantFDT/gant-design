@@ -4,7 +4,6 @@ import { EditableInput } from 'react-color/lib/components/common';
 import Chrome from './chrome';
 import SubPicker from './subpicker';
 import { PrimaryColors, fillText } from './utils';
-import './index.less';
 
 const inputStyles = {
   input:{

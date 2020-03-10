@@ -5,10 +5,8 @@ import { debounce, isPlainObject, isNil, cloneDeep, isEqual, zipWith, groupBy, p
 import { compose, defaultProps, withProps, withPropsOnChange, withState, mapProps, withHandlers, lifecycle, toClass, setDisplayName } from 'recompose'
 import warning from '@util/warning'
 
-import './index.less'
 import { Group } from '../input'
-import { withEdit } from '../compose'
-import { WithEditInProps, WithEditOutProps } from '../compose/withEdit'
+import { default as withEdit, WithEditInProps, WithEditOutProps } from '../with-edit'
 
 type ProtoExtends<T, U> = U & {
   [K in Exclude<keyof T, keyof U>]?: NonNullable<T[K]>

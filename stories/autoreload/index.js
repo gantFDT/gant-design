@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Radio, Switch } from 'antd'
 import AutoReload from '@packages/auto-reload-g/src';
+import '@packages/auto-reload-g/src/style';
 import CodeDecorator from '../_util/CodeDecorator'
 import code from './code.js';
 

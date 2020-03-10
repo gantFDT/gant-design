@@ -1,5 +1,3 @@
-import './index.less';
-
 import React from 'react';
 import LocaleReceiver from '../locale-provider/LocaleReceiver'
 import { ConfigConsumer } from '../config-provider'

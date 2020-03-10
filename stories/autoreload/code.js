@@ -1,6 +1,7 @@
 const code_1 = `
 import React, { useState } from 'react';
 import { AutoReload } from 'gantd';
+// import { AutoReload } from 'auto-reload-g';//与gantd中引入效果相同
 
 function Use1() {
   return <>
@@ -19,6 +20,7 @@ ReactDOM.render(
 const code_2 = `
 import React, { useState } from 'react';
 import { AutoReload } from 'gantd';
+// import { AutoReload } from 'auto-reload-g';//与gantd中引入效果相同
 
 function Use2() {
   return <>
@@ -40,6 +42,7 @@ const code_3 = `
 import React, { useState } from 'react';
 import { Radio, Switch } from 'antd';
 import { AutoReload } from 'gantd';
+// import { AutoReload } from 'auto-reload-g';//与gantd中引入效果相同
 
 function Use3() {
   const initalLocale = {

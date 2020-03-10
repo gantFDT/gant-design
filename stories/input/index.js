@@ -1,10 +1,11 @@
 
-import { Input, TextArea, Password, SwitchStatus } from '@data-cell'
+import { Input, SwitchStatus } from '@data-cell'
+import '@data-cell/input/style'
 import React, { useState } from 'react';
 import { Button } from 'antd'
 import codeList from './code'
 import CodeDecorator from '../_util/CodeDecorator';
-
+const { TextArea, Password } = Input;
 
 const cmps = [
   () => {

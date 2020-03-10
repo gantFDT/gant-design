@@ -15,7 +15,7 @@ class Input extends React.Component {
   render() {
     const { strict, onChange, ...props } = this.props;
     return (
-      <DataCell renderText={() => this.props.value} {...props} onChange={this.onChange}  >
+      <DataCell  {...props} onChange={this.onChange}  >
         {
           ({ onEnter, ...childProps }) => <AntInput
             {...childProps}

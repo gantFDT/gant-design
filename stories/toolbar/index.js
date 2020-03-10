@@ -1,5 +1,6 @@
 import React from 'react';
 import {Toolbar} from '@packages/gantd/src';
+import '@packages/gantd/src/toolbar/style';
 import CodeDecorator from '../_util/CodeDecorator';
 import code from './code.js';
 import { Button, Tooltip, Icon } from 'antd'

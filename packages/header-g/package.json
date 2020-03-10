@@ -13,6 +13,14 @@
     "tool",
     "toolbar"
   ],
+  "homepage": "http://www.gant.design",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gantFDT/GantD.git"
+  },
+  "bugs": {
+    "url": "https://github.com/gantFDT/GantD/issues"
+  },
   "author": "GantFDT",
   "license": "MIT",
   "dependencies": {

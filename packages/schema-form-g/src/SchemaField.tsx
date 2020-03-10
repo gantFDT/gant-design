@@ -1,4 +1,3 @@
-import './index.less';
 import React, { useMemo, useContext, useCallback, useEffect, Fragment } from 'react';
 import classnames from 'classnames';
 import { EditStatus, Input } from '@data-cell';

@@ -1,10 +1,9 @@
 
-import { Icon, EditStatus } from '@data-cell';
+import { Icon } from '@data-cell';
+import '@data-cell/icon/style';
 import React, { useState } from 'react';
 import CodeDecorator from '../_util/CodeDecorator';
 import code from './code.js';
-
-
 
 function BasicUse() {
   return (
