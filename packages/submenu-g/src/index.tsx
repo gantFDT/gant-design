@@ -1,4 +1,3 @@
-import './index.less';
 import React from 'react';
 import { isEqual } from 'lodash';
 import classnames from 'classnames';
@@ -37,7 +36,7 @@ export interface CardIF {
   onSelectedChange: (key: string, record: menuItem, e?: Event) => void;
 }
 
-export default class SubMenu extends React.Component<any, Partial<CardIF>> {
+export default class Submenu extends React.Component<any, Partial<CardIF>> {
   static defaultProps = {
     collapsed: false,
     mode: 'inline',

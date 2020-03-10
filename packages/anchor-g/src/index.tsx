@@ -1,4 +1,3 @@
-import './index.less';
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { Dropdown, Menu, Anchor, Icon, Tooltip } from 'antd';
 import classnames from 'classnames';

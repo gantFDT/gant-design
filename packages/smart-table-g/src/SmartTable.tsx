@@ -16,7 +16,6 @@ import { IntlProvider } from 'react-intl';
 import { FormattedMessage } from 'react-intl';
 import en from './locale/en-US';
 import zh from './locale/zh-CN';
-import './style.less';
 
 const defaultChildrenColumnName: string = 'children';
 const defaultRowKey: string = 'id';

@@ -1,5 +1,6 @@
 
 import { Input, EditStatus, SwitchStatus } from '@data-cell'
+import '@data-cell/edit-status/style'
 import { Alert, Button } from 'antd'
 import React, { useState, useCallback } from 'react';
 import codeList from './code'

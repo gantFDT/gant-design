@@ -1,6 +1,5 @@
 import React,{Component} from 'react';
 import classnames from 'classnames'
-import './index.less';
 import { ConfigConsumer } from '../config-provider'
 
 //页面加载loading

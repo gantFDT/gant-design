@@ -14,13 +14,13 @@
     "npm",
     "antd"
   ],
-  "main": "packages/gantd/link/index.js",
-  "module": "packages/gantd/link/index.js",
+  "main": "packages/gantd/lib/index.js",
+  "module": "packages/gantd/lib/index.js",
   "scripts": {
     "dev": "start-storybook -p 60004 -s public",
     "build-storybook": "build-storybook -o docs",
     "compile": "gulp",
-    "compile:link": "gulp link",
+    "compile:lib": "gulp lib",
     "build": "gulp && webpack -s public",
     "pub": "gulp && webpack && lerna publish",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md"

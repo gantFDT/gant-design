@@ -5,11 +5,11 @@ import classnames from 'classnames';
 import _ from 'lodash';
 import { compose, defaultProps, toClass, withProps } from 'recompose';
 
-import './index.less';
-import { Input, EditStatus, Group } from '..';
-import Icon, { IconComponent, IconProps } from './Icon';
-import { withEdit } from '../compose';
-import { WithEditInProps, WithEditOutProps } from '../compose/withEdit';
+import Icon, { IconComponent, IconProps } from './Icon'
+import { withEdit } from '../compose'
+import Input from '../input'
+import EditStatus from '../edit-status'
+import { WithEditInProps, WithEditOutProps } from '../with-edit'
 
 const tr = a => a;
 

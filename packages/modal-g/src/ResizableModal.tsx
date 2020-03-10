@@ -1,5 +1,3 @@
-
-import './index.less'
 import React, { useContext, useEffect, useMemo, useCallback, memo } from 'react'
 import classnames from 'classnames'
 import { Modal } from 'antd'

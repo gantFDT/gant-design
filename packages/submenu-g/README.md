@@ -30,7 +30,7 @@ online example: https://favori.gitee.io/gantd-landing (CodePen)
 
 ```js
 import React from 'react';
-import SubMenu from 'submenu-g';
+import Submenu from 'submenu-g';
 import { Icon } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 
@@ -64,7 +64,7 @@ function BasicUse() {
   }
   const activeMenu = _.find(menuData, i => i.path === selectedKey)
   return (
-    <SubMenu
+    <Submenu
       menuData={menuData}
       selectedKey={selectedKey}
       width={180}
@@ -88,7 +88,7 @@ function BasicUse() {
       <div style={{ padding: '20px', height: 400 }}>
         {activeMenu['title']}
       </div>
-    </SubMenu>
+    </Submenu>
   )
 }
 

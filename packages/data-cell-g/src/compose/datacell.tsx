@@ -1,7 +1,6 @@
-import React, { Component, createContext } from 'react'
-import { widthBasic, WithEditInProps } from './withEdit'
+import React, { Component } from 'react'
+import { widthBasic, WithEditInProps } from '../with-edit'
 import renderText, { GetText } from './renderText';
-import EditStatus from './editstatus'
 import { Group } from '../input'
 interface DataCellProps extends WithEditInProps<any> {
 	children?: (props: ChildAgs) => React.ReactNode | Element | null;

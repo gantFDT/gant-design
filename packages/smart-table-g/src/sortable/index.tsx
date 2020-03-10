@@ -1,6 +1,5 @@
-import './index.less';
 import React, { useCallback, useMemo } from 'react';
-import { Checkbox, Icon, Row, Radio, notification, Tooltip } from 'antd';
+import { Checkbox, Icon as AntdIcon, Row, Radio, notification, Tooltip } from 'antd';
 import {
   SortableContainer,
   SortableElement,
@@ -8,7 +7,7 @@ import {
   SortEndHandler,
 } from 'react-sortable-hoc';
 import arrayMove from 'array-move';
-import { Icon as GantIcon } from '@data-cell';
+import { Icon } from '@data-cell';
 import { FormattedMessage } from 'react-intl';
 
 interface RecordProps {
@@ -118,7 +117,7 @@ function Sortable(props: SortableProps) {
     [dataSource],
   );
 
-  const DragHandler = SortableHandle(() => <GantIcon className="dragHandler" type="icon-drag" />);
+  const DragHandler = SortableHandle(() => <Icon className="dragHandler" type="icon-drag" />);
 
   const SortableItem = SortableElement(
     ({ record: { title, checked, align }, realIndex, lock }: any) => (
@@ -143,13 +142,13 @@ function Sortable(props: SortableProps) {
             buttonStyle="solid"
           >
             <Radio.Button value="left">
-              <Icon type="align-left" />
+              <AntdIcon type="align-left" />
             </Radio.Button>
             <Radio.Button value="center">
-              <Icon type="align-center" />
+              <AntdIcon type="align-center" />
             </Radio.Button>
             <Radio.Button value="right">
-              <Icon type="align-right" />
+              <AntdIcon type="align-right" />
             </Radio.Button>
           </Radio.Group>
         </div>
@@ -157,11 +156,11 @@ function Sortable(props: SortableProps) {
           {!lock && <DragHandler />}
           {lock ? (
             <Tooltip style={{ flex: 0 }} placement="top" title={f({ id: 'setNormalColumn' })}>
-              <Icon type="lock" onClick={() => handlerUnlock(realIndex)} className="disabledIcon" />
+              <AntdIcon type="lock" onClick={() => handlerUnlock(realIndex)} className="disabledIcon" />
             </Tooltip>
           ) : (
             <Tooltip placement="top" title={f({ id: 'setFixedColumn' })}>
-              <Icon type="unlock" onClick={() => handlerLock(realIndex)} className="disabledIcon" />
+              <AntdIcon type="unlock" onClick={() => handlerLock(realIndex)} className="disabledIcon" />
             </Tooltip>
           )}
         </div>

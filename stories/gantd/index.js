@@ -6,11 +6,6 @@ import { Tag } from 'antd'
 import Prism from 'prismjs'
 Prism.highlightAll()
 
-
-
-
-
-
 export default () => {
   return <div className="idea">
 

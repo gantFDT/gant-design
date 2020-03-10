@@ -9,11 +9,11 @@
     "packages/*"
   ],
   "all": [
+    "packages/gantd",
     "packages/anchor-g",
     "packages/auto-reload-g",
     "packages/color-picker-g",
     "packages/data-cell-g",
-    "packages/gantd",
     "packages/header-g",
     "packages/modal-g",
     "packages/schema-form-g",

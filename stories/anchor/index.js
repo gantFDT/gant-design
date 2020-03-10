@@ -1,5 +1,6 @@
 import React from 'react'
 import Anchor from '@packages/anchor-g/src';
+import '@packages/anchor-g/src/style';
 import CodeDecorator from '../_util/CodeDecorator'
 
 const code = `
