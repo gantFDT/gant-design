@@ -78,7 +78,7 @@ export default function SchemaForm(props: SchemaFormProps) {
 		</div>
 	}, [schema, edit, titleConfig, uiSchema])
 
-	return <Form className={`${prefixCls}-schemaForm`} hideRequiredMark>
+	return <Form className={`${prefixCls}-schemaForm`} hideRequiredMark  >
 		{renderContent()}
 	</Form>
 }

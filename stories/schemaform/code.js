@@ -45,6 +45,7 @@ const schema = {
     }
 }
 
+
 const uiSchema = {
     "ui:col": 24,
     "ui:gutter": 10,
@@ -69,10 +70,10 @@ function BasicUse() {
             wrappedComponentRef={formRef}
             edit={edit}
             schema={schema}
-            uiSchema={uiSchema}
+            uiSchema={initalUiSchema}
         />
         <div style={{ float: 'right' }}>
-            <Button type='primary' onClick={onSubmit}>提交</Button>
+            <Button size="small" type='primary' onClick={onSubmit}>提交</Button>
         </div>
     </div>
 }
@@ -86,18 +87,19 @@ import { Button, Radio, Switch } from 'antd'
 import { SchemaForm, EditStatus } from 'gantd'
 // import { SchemaForm, EditStatus } from 'schema-form-g' //与gantd中引入效果相同
 
-const uiSchema = {
-    "ui:col": 24,
-    "ui:gutter": 10,
-    "ui:labelCol": 4,
-    "ui:wrapperCol": 20,
-}
-
 function EditStatusUse() {
     const [allowEdit, setAllowEdit] = useState(true)
     const [edit, setEdit] = useState(EditStatus.EDIT)
     const [state, setState] = useState({})
     const formRef = useRef(null)
+
+    const uiSchema = {
+        "form:gutter": 10,
+        "field:col": 24,
+        "field:labelCol": 24,
+        "field:wrapperCol": 24,
+        "field:labelAlign": "left"
+    }
 
     const schema = useMemo(() => {
         return {
@@ -161,7 +163,7 @@ function EditStatusUse() {
             titleConfig={titleConfig}
         />
         <div style={{ float: 'right' }}>
-            <Button type='primary' onClick={onSubmit}>提交</Button>
+            <Button size="small" type='primary' onClick={onSubmit}>提交</Button>
         </div>
     </div>
 }
@@ -221,8 +223,16 @@ const code3 = `
     type: "object",
     title: "配置普通表单",
     propertyType: {
-        "col": {
-            title: "col",
+        "field:col": {
+            title: "字段列比例 field:col",
+            type: "number",
+            componentType: "InputNumber",
+            props: {
+                min: 0
+            }
+        },
+        "field:labelCol": {
+            title: "字段描述列宽比例 field:labelCol",
             type: "number",
             componentType: "InputNumber",
             props: {
@@ -230,16 +240,8 @@ const code3 = `
                 min: 0
             }
         },
-        "gutter": {
-            title: "gutter",
-            type: "number",
-            componentType: "InputNumber",
-            props: {
-                min: 0
-            }
-        },
-        "labelCol": {
-            title: "labelCol",
+        "field:wrapperCol": {
+            title: "字段内容列宽占比 field:wrapperCol",
             type: "number",
             componentType: "InputNumber",
             props: {
@@ -247,21 +249,12 @@ const code3 = `
                 min: 0
             }
         },
-        "wrapperCol": {
-            title: "wrapperCol",
-            type: "number",
-            componentType: "InputNumber",
-            props: {
-                max: 24,
-                min: 0
-            }
-        },
-        "labelAlign": {
-            title: "labelAlign",
+        "field:labelAlign": {
+            title: "字段描述文字布局 field:labelAlign",
             type: "string",
             componentType: "Selector",
             props: {
-                defaultList: [
+                dataSource: [
                     {
                         label: "左",
                         value: "left"
@@ -273,27 +266,25 @@ const code3 = `
                 ]
             }
         },
-        "padding": {
-            title: "padding",
-            type: 'string',
+        "form:gutter": {
+            title: "表单字段横向间隔 form:gutter ",
+            type: "number",
             componentType: "InputNumber",
+            props: {
+                max: 24,
+                min: 0
+            }
         },
-        "backgroundColor": {
-            title: "backgroundColor",
-            type: "string",
-            componentType: "ColorPicker",
-        }
     }
  }
  
  function CustomOptions() {
     const configUI = {
-        "ui:labelCol": 6,
-        "ui:wrapperCol": 18,
-        backgroundColor: {
-            "ui:labelCol": 24,
-            "ui:wrapperCol": 24,
-        }
+        "form:gutter": 10,
+        "field:col": 24,
+        "field:labelCol": 24,
+        "field:wrapperCol": 24,
+        "field:labelAlign": "left"
     }
 
     const [uiSchema, setUiSchema] = useState(initalUiSchema)
@@ -301,21 +292,22 @@ const code3 = `
     const data = useMemo(() => {
         const newData = {}
         Object.keys(uiSchema).map(keyname => {
-            const name = keyname.replace('ui:', "")
-            newData[name] = uiSchema[keyname]
+            // const name = keyname.replace('ui:', "")
+            newData[keyname] = uiSchema[keyname]
         })
+        console.log("newData",newData)
         return newData
     }, [uiSchema])
 
     const onChange = (val) => {
         const newData = {}
         Object.keys(val).map(keyname => {
-            newData['ui:'+ keyname] = val[keyname]
+            newData[keyname] = val[keyname]
         })
         setUiSchema(uiSchema => ({ ...uiSchema, ...newData }))
     }
     const Reset = () => setUiSchema(initalUiSchema)
-
+    console.log("data", data)
     return (
         <div>
             <div style={{ display: 'flex' }}>
@@ -325,15 +317,14 @@ const code3 = `
                         uiSchema={uiSchema}
                     />
                 </div>
-                <div style={{ width: 400, marginLeft: 20 }}>
+                <div style={{ width: 250, marginLeft: 10 }}>
                     <SchemaForm schema={configSchma} uiSchema={configUI} data={data} onChange={onChange} />
                 </div>
             </div>
-            <div style={{ float: 'right' }}><Button onClick={Reset}>重置UI</Button></div>
+            <div style={{ float: 'right' }}><Button size="small" onClick={Reset}>重置UI</Button></div>
         </div>
     )
 }
- 
  ReactDOM.render(<CustomOptions/>,mountNode)
   `
 
@@ -382,28 +373,30 @@ const schema = {
         },
     }
 }
-
-const uiSchema = {
-    "ui:col": {
-        xxl: 6,
-        xl: 8,
-        lg: 8,
-        md: 12,
-        sm: 24,
-        xs: 24,
-    },
-    "ui:labelCol": {
-        span: 24,
-        sm: 6
-    },
-    "ui:wrapperCol": {
-        span: 24,
-        sm: 18
-    }
-
-}
-
 function GridLayout() {
+    const uiSchema = {
+        "form:gutter": 10,
+        "field:col": {
+            xxl: 6,
+            xl: 8,
+            lg: 8,
+            md: 12,
+            sm: 24,
+            xs: 24,
+        },
+        "field:labelCol": {
+            span: 6,
+            sm: 6,
+            xs:24
+        },
+        "field:wrapperCol": {
+            span: 18,
+            sm: 18,
+            xs:24
+        },
+        "field:labelAlign": "left"
+
+    }
     return <div style={{ margin: 10 }} >
         <SchemaForm uiSchema={uiSchema} schema={schema} />
     </div>
@@ -418,21 +411,14 @@ const code5 = `
  import { SchemaForm, EditStatus } from 'gantd'
 // import { SchemaForm, EditStatus } from 'schema-form-g' //与gantd中引入效果相同
  
- const uiSchema = {
-    "ui:col": 8,
-    "ui:gutter": 10,
-    "ui:labelCol": 4,
-    "ui:wrapperCol": 20,
-}
-function SearchUse(){
+function SearchUse() {
     const [expand, setExpand] = useState(false)
-
     const schema = useMemo(() => {
         const count = expand ? 10 : 7
         let propertyType = {}
         for (let i = 1; i < count; i++) {
-            propertyType['key_' + i] = {
-                title: 'field_' + i,
+            propertyType['key_'+i] = {
+                title: 'field_'+i,
                 type: "string",
             }
         }
@@ -442,6 +428,13 @@ function SearchUse(){
         }
     }, [expand])
 
+    const uiSchema = {
+        "form:gutter": 10,
+        "field:col": 8,
+        "field:labelCol": 24,
+        "field:wrapperCol": 24,
+        "field:labelAlign": "left"
+    }
     const formRef = useRef(null)
     const onSearch = async () => {
         if (!formRef.current) return
@@ -461,12 +454,12 @@ function SearchUse(){
             uiSchema={uiSchema}
         />
         <div style={{ float: 'right' }}>
-            <Button type='primary' onClick={onSearch}>搜索</Button>
-            <Button onClick={onReset} style={{ marginLeft: 5 }}>重置</Button>
+            <Button size="small" type='primary' onClick={onSearch}>搜索</Button>
+            <Button size="small" onClick={onReset} style={{ marginLeft: 5 }}>重置</Button>
             <a style={{ marginLeft: 5 }} onClick={() => { setExpand(expand => !expand) }}>Collapse <Icon type={expand ? 'up' : 'down'} /></a>
         </div>
     </div>
- }
+}
  ReactDOM.render(<SearchUse/>,mountNode)
   `
 
@@ -491,41 +484,39 @@ function SearchUse(){
   }
   
   const uiSchema = {
-      "ui:col": 24,
-      "ui:gutter": 10,
-      "ui:labelCol": 4,
-      "ui:wrapperCol": 20,
-      "ui:labelAlign": "left",
-      "ui:padding": 10,
-      "ui:backgroundColor": "#fff"
+    "form:gutter": 10,
+    "field:col": 24,
+    "field:labelCol": 24,
+    "field:wrapperCol": 24,
+    "field:labelAlign": "left"
   }
   
   function BindData() {
-      const [data, setData] = useState({ key_1: '1', key_2: '2' })
-      const formRef = useRef(null)
-  
-      const onChange = (val, vals) => {
-          setData(vals)
-      }
-  
-      return <div style={{ margin: 10 }} >
-          <div style={{ display: 'flex' }}>
-              <div style={{ width: 300 }}>
-                  <p>key_1：<span>{data.key_1}</span></p>
-                  <p>key_2：<span>{data.key_2}</span></p>
-              </div>
-              <div style={{ flex: 1 }}>
-                  <SchemaForm
-                      wrappedComponentRef={formRef}
-                      uiSchema={uiSchema}
-                      data={data}
-                      onChange={onChange}
-                      schema={schema}
-                  />
-              </div>
-          </div>
-      </div>
-  }
+    const [data, setData] = useState({ key_1: '1', key_2: '2' })
+    const formRef = useRef(null)
+
+    const onChange = (val, vals) => {
+        setData(vals)
+    }
+
+    return <div style={{ margin: 10 }} >
+        <div style={{ display: 'flex' }}>
+            <div style={{ width: 300 }}>
+                <p>key_1：<span>{data.key_1}</span></p>
+                <p>key_2：<span>{data.key_2}</span></p>
+            </div>
+            <div style={{ flex: 1 }}>
+                <SchemaForm
+                    wrappedComponentRef={formRef}
+                    uiSchema={initalUiSchema}
+                    data={data}
+                    onChange={onChange}
+                    schema={bindDataSchema}
+                />
+            </div>
+        </div>
+    </div>
+}
   
 ReactDOM.render(<BindData/>,mountNode)`
 
@@ -534,13 +525,11 @@ import { SchemaForm } from 'gantd'
 // import { SchemaForm } from 'schema-form-g' //与gantd中引入效果相同
 
 const uiSchema = {
-    "ui:col": 24,
-    "ui:gutter": 10,
-    "ui:labelCol": 4,
-    "ui:wrapperCol": 20,
-    "ui:labelAlign": "left",
-    "ui:padding": 10,
-    "ui:backgroundColor": "#fff"
+    "form:gutter": 10,
+    "field:col": 24,
+    "field:labelCol": 24,
+    "field:wrapperCol": 24,
+    "field:labelAlign": "left"
 }
 
 function DependenceData() {
@@ -551,20 +540,32 @@ function DependenceData() {
             "key_1": {
                 title: "姓氏",
                 type: "string",
+                dependencies: ["key_2"],
+                onDependenciesChange: ([key_2], itemSchema, form) => {
+                    return {
+                        ...itemSchema,
+                        options: {
+                            rules: [
+                                {
+                                    max: key_2,
+                                    message: "姓氏不能超过" + key_2 + "!"
+                                }
+                            ]
+                        }
+                    }
+                }
             },
             "key_2": {
-                title: "全名",
-                type: "string",
-                dependencies: ["key_1"],
-                onDependenciesChange: (value, props, form) => {
-                    // form && form.setFieldsValue({ key_2: value })
-                }
+                title: "字数限制",
+                type: "number",
+                componentType: "InputNumber",
+
             },
         }
     }
     return <div style={{ margin: 10 }}>
         <SchemaForm
-            uiSchema={uiSchema}
+            uiSchema={initalUiSchema}
             schema={dependenceSchema}
         />
     </div>
@@ -578,13 +579,11 @@ import { SchemaForm } from 'gantd'
 // import { SchemaForm } from 'schema-form-g' //与gantd中引入效果相同
 
 const uiSchema = {
-    "ui:col": 24,
-    "ui:gutter": 10,
-    "ui:labelCol": 4,
-    "ui:wrapperCol": 20,
-    "ui:labelAlign": "left",
-    "ui:padding": 10,
-    "ui:backgroundColor": "#fff"
+    "form:gutter": 10,
+    "field:col": 24,
+    "field:labelCol": 24,
+    "field:wrapperCol": 24,
+    "field:labelAlign": "left"
 }
 
 const customCmpSchema = {
@@ -671,9 +670,11 @@ const schema = {
 }
 
 const uiSchema = {
-    "ui:col": 12,
-    "ui:labelCol": 6,
-    "ui:wrapperCol": 18
+    "form:gutter": 10,
+    "field:col": 24,
+    "field:labelCol": 24,
+    "field:wrapperCol": 24,
+    "field:labelAlign": "left"
 }
 
 function NestUse() {
