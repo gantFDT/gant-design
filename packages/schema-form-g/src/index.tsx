@@ -30,9 +30,9 @@ class SchemaForm extends React.Component<Props> {
       schema,
       form: { getFieldsValue, setFieldsValue },
     } = this.props;
-    const vals = getFieldsValue();
+	const vals = getFieldsValue();
     if (!isEqual(pervPops.data, data) && !isEqual(vals, getDateToForm(data, schema))) {
-      const newVals: any = getNewValue(vals, data);
+      const newVals: any = getNewValue(vals, data,schema);
       setFieldsValue(newVals);
     }
   }

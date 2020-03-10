@@ -7,15 +7,14 @@ import CodeDecorator from '../_util/CodeDecorator'
 import code from './code.js'
 
 const initalUiSchema = {
-    "form:gutter":10,
-    "field:col":12,
-    "field:style":{
+    "ui:gutter":10,
+    "ui:col":12,
+    "ui:style":{
         padding:0
     },
-    "field:labelAlign":'left',
-    "field:labelCol":6,
-    "field:wrapperCol":18
-
+    "ui:labelAlign":'left',
+    "ui:labelCol":6,
+    "ui:wrapperCol":18
 }
 
 function BasicUse() {
@@ -199,7 +198,7 @@ function CustomOptions() {
         setUiSchema(uiSchema => ({ ...uiSchema, ...newData }))
     }
     const Reset = () => setUiSchema(initalUiSchema)
-
+    console.log("data",data)
     return (
         <div>
             <div style={{ display: 'flex' }}>
