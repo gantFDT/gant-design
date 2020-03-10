@@ -74,12 +74,12 @@ const getCodePenStr = (title, description, code) => {
     const codePenData = {
         title: `${title} - Gant Design Demo`,
         description,
-        html: `<div id="container" style="padding: 24px"></div>\n<script>var mountNode = document.getElementById('container')</script>`,
+        html: `<div id="container" style="padding: 24px"></div>\n<script>var mountNode = document.getElementById('container');</script>`,
         js: code,
         css: `@import 'antd/dist/antd.css'\n@import '${name}/dist/${name}.css'`,
         editors: "001",
-        css_external: `https://unpkg.com/antd/dist/antd.csshttps://unpkg.com/${name}@${version}/dist/${name}.css`,
-        js_external: `https://unpkg.com/react@16.x/umd/react.development.jshttps://unpkg.com/react-dom@16.x/umd/react-dom.development.jshttps://unpkg.com/moment/min/moment-with-locales.jshttps://unpkg.com/antd/dist/antd-with-locales.jshttps://unpkg.com/react-router-dom/umd/react-router-dom.min.jshttps://unpkg.com/react-router@3.x/umd/ReactRouter.min.jshttps://unpkg.com/${name}@${version}/dist/${name}.js`,
+        css_external: `https://unpkg.com/antd/dist/antd.css;https://unpkg.com/${name}@${version}/dist/${name}.css`,
+        js_external: `https://unpkg.com/react@16.x/umd/react.development.js;https://unpkg.com/react-dom@16.x/umd/react-dom.development.js;https://unpkg.com/moment/min/moment-with-locales.js;https://unpkg.com/antd/dist/antd-with-locales.js;https://unpkg.com/react-router-dom/umd/react-router-dom.min.js;https://unpkg.com/react-router@3.x/umd/ReactRouter.min.js;https://unpkg.com/${name}@${version}/dist/${name}.js`,
         js_pre_processor: "typescript"
     }
     return JSON.stringify(codePenData)
