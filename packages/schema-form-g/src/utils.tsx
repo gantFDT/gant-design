@@ -47,7 +47,7 @@ const uiArray = [
 	{
 		alias: "labelAlign",
 		belong: "field",
-		name: ["ui:extra", "field:labelAlign"],
+		name: ["ui:labelAlign", "field:labelAlign"],
 		defaultValue: undefined
 	}, {
 		alias: "labelCol",
