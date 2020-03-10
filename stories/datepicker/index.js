@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-import { DatePicker, RangePicker } from '@data-cell'
+import { DatePicker } from '@data-cell'
+import '@data-cell/date-picker/style'
 import CodeDecorator from '../_util/CodeDecorator'
 import { WrapperValue, WrapperEdit, onSave } from '../_util/composeUseHooks'
-
+const { RangePicker } = DatePicker;
 
 const codeList = [
   `const [value, setValue] = useState();
@@ -44,6 +45,7 @@ const config = {
   codes: codeList.map(code => (
     `import { DatePicker } from 'gantd';
 import React, { useState } from 'react';
+const { RangePicker } = DatePicker;
 
 const onSave=(id, value ,cb)=>cb()
 

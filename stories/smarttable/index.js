@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useMemo, useEffect } from 'react'
 import { Divider, Tag, Radio, Switch, Button, message } from 'antd'
 import SmartTable from '@packages/smart-table-g/src'
+import '@packages/smart-table-g/src/style'
 import { Input, InputNumber, DatePicker, InputUrl, LocationSelector, InputCellPhone, InputEmail, InputLanguage, InputMoney, EditStatus, SwitchStatus } from '@packages/data-cell-g/src'
 import _ from 'lodash'
 import CodeDecorator from '../_util/CodeDecorator'

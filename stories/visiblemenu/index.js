@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Table } from 'antd';
-import VisibleMenu from '@gantd/visiblemenu';
+import { VisibleMenu } from '@gantd';
 import CodeDecorator from '../_util/CodeDecorator';
 import code from './code.js';
 const column = [

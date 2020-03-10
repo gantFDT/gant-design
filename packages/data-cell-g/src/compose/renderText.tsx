@@ -1,12 +1,7 @@
-
-
-
 import React from 'react'
-import { get } from 'lodash'
 import { Icon } from 'antd'
 
-import './index.less'
-import EditStatus from './editstatus'
+import EditStatus from '../edit-status'
 import classnames from 'classnames'
 
 const emptyText = '暂无'

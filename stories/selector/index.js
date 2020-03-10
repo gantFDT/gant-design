@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Button } from 'antd'
 import { Selector, EditStatus, SwitchStatus } from '@data-cell'
+import '@data-cell/selector/style'
 import CodeDecorator from '../_util/CodeDecorator'
 
 

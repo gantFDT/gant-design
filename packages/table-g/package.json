@@ -1,6 +1,6 @@
 {
     "name": "table-g",
-    "version": "0.0.29",
+    "version": "0.0.28",
     "description": "gantd table",
     "main": "lib/index.js",
     "scripts": {},
@@ -10,6 +10,14 @@
         "antd",
         "table"
     ],
+    "homepage": "http://www.gant.design",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/gantFDT/GantD.git"
+    },
+    "bugs": {
+        "url": "https://github.com/gantFDT/GantD/issues"
+    },
     "author": "GantFDT",
     "license": "MIT",
     "dependencies": {

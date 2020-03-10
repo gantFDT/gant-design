@@ -1,31 +1,23 @@
 
 //读写分离
-export { default as withEdit } from './compose/withEdit';
-export { default as EditStatus } from './compose/editstatus';
-export { default as SwitchStatus } from './compose/switchstatus'
+export { default as withEdit } from './with-edit';
+export { default as EditStatus } from './edit-status';
+export { default as SwitchStatus } from './switch-status'
 //数据单元
 //input
-export {
-  default as Input,
-  TextArea,
-  Search,
-  Group,
-  Password
-} from './input'
-
+export { default as Input } from './input'
 // export { default as Select } from './select'
-export { default as InputCellPhone } from './inputcellphone'
-export { default as InputTelePhone } from './inputtelephone';
-export { default as InputUrl } from './inputurl';
-export { default as InputEmail } from './inputemail'
-export { default as InputLanguage } from './inputlanguage';
-export { default as InputMoney } from './inputmoney';
-export { default as InputNumber } from './inputnumber';
-
+export { default as InputCellPhone } from './input-cell-phone'
+export { default as InputTelePhone } from './input-tele-phone';
+export { default as InputUrl } from './input-url';
+export { default as InputEmail } from './input-email'
+export { default as InputLanguage } from './input-language';
+export { default as InputMoney } from './input-money';
+export { default as InputNumber } from './input-number';
 //picker
-export { default as DatePicker, RangePicker } from './datepicker'
-export { default as ColorPicker } from './colorpicker';
+export { default as DatePicker } from './date-picker'
+export { default as ColorPicker } from './color-picker';
 //selector
 export { default as Selector } from './selector';
-export { default as LocationSelector } from './locationselector';
-export { default as Icon, IconSelector } from './icon';
+export { default as LocationSelector } from './location-selector';
+export { default as Icon } from './icon';

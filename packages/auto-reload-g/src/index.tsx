@@ -1,4 +1,3 @@
-import './index.less';
 import React, { useCallback, useState, useEffect } from 'react';
 import { Tooltip, Divider, Switch, InputNumber, Icon } from 'antd'
 import moment from 'moment';

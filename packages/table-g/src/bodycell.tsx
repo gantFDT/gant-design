@@ -1,7 +1,7 @@
 import React, { useState, useContext, useCallback, useEffect, useMemo } from 'react';
 import classnames from 'classnames'
 import _ from 'lodash'
-import { EditStatus, SwitchStatus } from '@data-cell'
+import { EditStatus, SwitchStatus}from'@data-cell'
 import { DataContext, RowContext, TableContext } from './context'
 
 import { EditConfig, Record } from './index'

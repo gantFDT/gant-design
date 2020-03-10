@@ -1,5 +1,6 @@
 
 import { InputLanguage, SwitchStatus } from '@data-cell'
+import '@data-cell/input-language/style'
 import React, { useState } from 'react';
 import { Button } from 'antd'
 import codeList from './code'

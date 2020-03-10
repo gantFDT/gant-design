@@ -3,6 +3,7 @@ import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import CodeDecorator from '../_util/CodeDecorator';
 import code from './code'
 import Table from '@table'
+import '@table/style'
 import { EditStatus, SwitchStatus, Input, InputNumber, Selector, InputCellPhone, InputUrl, InputEmail, InputMoney, DatePicker, RangePicker, ColorPicker, LocationSelector, Icon, InputTelePhone, InputLanguage } from '@data-cell'
 import { Button, Slider } from 'antd'
 

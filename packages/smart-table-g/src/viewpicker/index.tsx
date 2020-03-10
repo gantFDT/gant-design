@@ -1,4 +1,3 @@
-import './index.less';
 import React, { useMemo, useCallback, useState, ReactNode, CSSProperties } from 'react';
 import { Icon, Popover, Spin, Empty } from 'antd';
 import classnames from 'classnames';

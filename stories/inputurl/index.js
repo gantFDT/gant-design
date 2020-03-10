@@ -1,5 +1,6 @@
 
 import { InputUrl,SwitchStatus } from '@data-cell'
+import '@data-cell/input-url/style'
 import React, { useState } from 'react';
 import { Button } from 'antd'
 import codeList from './code'

@@ -1,10 +1,10 @@
 
 import { InputCellPhone, SwitchStatus } from '@data-cell'
+import '@data-cell/input-cell-phone/style'
 import React, { useState, useRef } from 'react';
 import { Button } from 'antd'
 import codeList from './code'
 import CodeDecorator from '../_util/CodeDecorator';
-
 
 const cmps = [
   () => {

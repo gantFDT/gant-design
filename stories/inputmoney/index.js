@@ -1,5 +1,6 @@
 
 import { InputMoney, SwitchStatus, EditStatus, InputNumber } from '@data-cell'
+import '@data-cell/input-money/style'
 import React, { useState, useCallback } from 'react';
 import codeList from './code'
 import CodeDecorator from '../_util/CodeDecorator';

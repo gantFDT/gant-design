@@ -1,6 +1,6 @@
 {
   "name": "data-cell-g",
-  "version": "0.0.22",
+  "version": "0.0.21",
   "description": "gantd data-cell-g",
   "main": "lib/index.js",
   "scripts": {},
@@ -11,6 +11,14 @@
     "form",
     "schema"
   ],
+  "homepage": "http://www.gant.design",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gantFDT/GantD.git"
+  },
+  "bugs": {
+    "url": "https://github.com/gantFDT/GantD/issues"
+  },
   "author": "GantFDT",
   "license": "MIT",
   "dependencies": {

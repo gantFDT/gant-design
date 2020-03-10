@@ -1,13 +1,3 @@
-
-
-import withEdit from './withEdit'
-import EditStatus from './editstatus'
-// import SwitchStatus from './switchstatus'
-// import withAnchor from './anchor'
-
-export {
-  withEdit,
-  // withAnchor,
-  EditStatus,
-  // SwitchStatus
-}
+export { default as withEdit } from '../with-edit'
+export { default as EditStatus } from '../edit-status'
+export { default as SwitchStatus } from '../switch-status'

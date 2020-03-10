@@ -5,7 +5,6 @@
 import { Card as AntCard } from 'antd';
 import React from 'react';
 import classnames from 'classnames';
-import './index.less';
 
 interface CardIf {
   children: React.ReactNode,
