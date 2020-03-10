@@ -44,8 +44,16 @@ const configSchma = {
     type: "object",
     title: "配置普通表单",
     propertyType: {
-        "col": {
-            title: "col",
+        "field:col": {
+            title: "字段列比例 field:col",
+            type: "number",
+            componentType: "InputNumber",
+            props: {
+                min: 0
+            }
+        },
+        "field:labelCol": {
+            title: "字段描述列宽比例 field:labelCol",
             type: "number",
             componentType: "InputNumber",
             props: {
@@ -53,16 +61,8 @@ const configSchma = {
                 min: 0
             }
         },
-        "gutter": {
-            title: "gutter",
-            type: "number",
-            componentType: "InputNumber",
-            props: {
-                min: 0
-            }
-        },
-        "labelCol": {
-            title: "labelCol",
+        "field:wrapperCol": {
+            title: "字段内容列宽占比 field:wrapperCol",
             type: "number",
             componentType: "InputNumber",
             props: {
@@ -70,21 +70,12 @@ const configSchma = {
                 min: 0
             }
         },
-        "wrapperCol": {
-            title: "wrapperCol",
-            type: "number",
-            componentType: "InputNumber",
-            props: {
-                max: 24,
-                min: 0
-            }
-        },
-        "labelAlign": {
-            title: "labelAlign",
+        "field:labelAlign": {
+            title: "字段描述文字布局 field:labelAlign",
             type: "string",
             componentType: "Selector",
             props: {
-                defaultList: [
+                dataSource: [
                     {
                         label: "左",
                         value: "left"
@@ -96,16 +87,15 @@ const configSchma = {
                 ]
             }
         },
-        "padding": {
-            title: "padding",
-            type: 'string',
+        "form:gutter": {
+            title: "表单字段横向间隔 form:gutter ",
+            type: "number",
             componentType: "InputNumber",
+            props: {
+                max: 24,
+                min: 0
+            }
         },
-        // "backgroundColor": {
-        //     title: "backgroundColor",
-        //     type: "string",
-        //     componentType: "ColorPicker",
-        // }
     }
 }
 

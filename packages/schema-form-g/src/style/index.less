@@ -2,6 +2,9 @@
 @component: ~'@{gant-prefix}-schemaform';
 
 :global {
+  html .ant-col-24.ant-form-item-label{
+    padding: 0 0 0px;
+  }
   .@{component} {
     &-schemaCard {
       clear: both;
@@ -20,15 +23,15 @@
       }
 
       .ant-form-item-control {
-        margin-bottom: 16px !important;
+        margin-bottom: 10px !important;
         line-height: 33px !important;
 
         .ant-form-explain {
           position: absolute;
-          bottom: -16px;
+          bottom: -10px;
           font-size: 12px;
-          min-height: 16px;
-          line-height: 16px;
+          min-height: 10px;
+          line-height: 10px;
         }
       }
 
@@ -38,6 +41,13 @@
         text-overflow: ellipsis !important;
         white-space: nowrap !important;
       }
+
+      .ant-col-24.ant-form-item-label{
+        line-height: 20px !important;
+      }
+      // .ant-col-xs-24.ant-form-item-label{
+      //   line-height: 20px !important;
+      // }
 
       .ant-input {
         padding: 4px 11px !important
