@@ -8,14 +8,11 @@ import CodeDecorator from '../_util/CodeDecorator'
 import code from './code.js'
 
 const initalUiSchema = {
-    "ui:gutter":10,
-    "ui:col":12,
-    "ui:style":{
-        padding:0
-    },
-    "ui:labelAlign":'left',
-    "ui:labelCol":6,
-    "ui:wrapperCol":18
+    "form:gutter": 10,
+    "field:col": 24,
+    "field:labelCol": 24,
+    "field:wrapperCol": 24,
+    "field:labelAlign": "left"
 }
 
 function BasicUse() {
@@ -35,7 +32,7 @@ function BasicUse() {
             uiSchema={initalUiSchema}
         />
         <div style={{ float: 'right' }}>
-            <Button type='primary' onClick={onSubmit}>提交</Button>
+            <Button size="small" type='primary' onClick={onSubmit}>提交</Button>
         </div>
     </div>
 }
@@ -47,10 +44,11 @@ function EditStatusUse() {
     const formRef = useRef(null)
 
     const uiSchema = {
-        "ui:col": 24,
-        "ui:gutter": 10,
-        "ui:labelCol": 4,
-        "ui:wrapperCol": 20,
+        "form:gutter": 10,
+        "field:col": 24,
+        "field:labelCol": 24,
+        "field:wrapperCol": 24,
+        "field:labelAlign": "left"
     }
 
     const schema = useMemo(() => {
@@ -115,7 +113,7 @@ function EditStatusUse() {
             titleConfig={titleConfig}
         />
         <div style={{ float: 'right' }}>
-            <Button type='primary' onClick={onSubmit}>提交</Button>
+            <Button size="small" type='primary' onClick={onSubmit}>提交</Button>
         </div>
     </div>
 }
@@ -139,10 +137,11 @@ function SearchUse() {
     }, [expand])
 
     const uiSchema = {
-        "ui:col": 8,
-        "ui:gutter": 10,
-        "ui:labelCol": 4,
-        "ui:wrapperCol": 20,
+        "form:gutter": 10,
+        "field:col": 8,
+        "field:labelCol": 24,
+        "field:wrapperCol": 24,
+        "field:labelAlign": "left"
     }
     const formRef = useRef(null)
     const onSearch = async () => {
@@ -163,8 +162,8 @@ function SearchUse() {
             uiSchema={uiSchema}
         />
         <div style={{ float: 'right' }}>
-            <Button type='primary' onClick={onSearch}>搜索</Button>
-            <Button onClick={onReset} style={{ marginLeft: 5 }}>重置</Button>
+            <Button size="small" type='primary' onClick={onSearch}>搜索</Button>
+            <Button size="small" onClick={onReset} style={{ marginLeft: 5 }}>重置</Button>
             <a style={{ marginLeft: 5 }} onClick={() => { setExpand(expand => !expand) }}>Collapse <Icon type={expand ? 'up' : 'down'} /></a>
         </div>
     </div>
@@ -172,12 +171,11 @@ function SearchUse() {
 
 function CustomOptions() {
     const configUI = {
-        "ui:labelCol": 6,
-        "ui:wrapperCol": 18,
-        backgroundColor: {
-            "ui:labelCol": 24,
-            "ui:wrapperCol": 24,
-        }
+        "form:gutter": 10,
+        "field:col": 24,
+        "field:labelCol": 24,
+        "field:wrapperCol": 24,
+        "field:labelAlign": "left"
     }
 
     const [uiSchema, setUiSchema] = useState(initalUiSchema)
@@ -185,21 +183,22 @@ function CustomOptions() {
     const data = useMemo(() => {
         const newData = {}
         Object.keys(uiSchema).map(keyname => {
-            const name = keyname.replace('ui:', "")
-            newData[name] = uiSchema[keyname]
+            // const name = keyname.replace('ui:', "")
+            newData[keyname] = uiSchema[keyname]
         })
+        console.log("newData",newData)
         return newData
     }, [uiSchema])
 
     const onChange = (val) => {
         const newData = {}
         Object.keys(val).map(keyname => {
-            newData[`ui:${keyname}`] = val[keyname]
+            newData[`${keyname}`] = val[keyname]
         })
         setUiSchema(uiSchema => ({ ...uiSchema, ...newData }))
     }
     const Reset = () => setUiSchema(initalUiSchema)
-    console.log("data",data)
+    console.log("data", data)
     return (
         <div>
             <div style={{ display: 'flex' }}>
@@ -209,18 +208,19 @@ function CustomOptions() {
                         uiSchema={uiSchema}
                     />
                 </div>
-                <div style={{ width: 400, marginLeft: 20 }}>
+                <div style={{ width: 250, marginLeft: 10 }}>
                     <SchemaForm schema={configSchma} uiSchema={configUI} data={data} onChange={onChange} />
                 </div>
             </div>
-            <div style={{ float: 'right' }}><Button onClick={Reset}>重置UI</Button></div>
+            <div style={{ float: 'right' }}><Button size="small" onClick={Reset}>重置UI</Button></div>
         </div>
     )
 }
 
 function GridLayout() {
     const uiSchema = {
-        "ui:col": {
+        "form:gutter": 10,
+        "field:col": {
             xxl: 6,
             xl: 8,
             lg: 8,
@@ -228,14 +228,17 @@ function GridLayout() {
             sm: 24,
             xs: 24,
         },
-        "ui:labelCol": {
-            span: 24,
-            sm: 6
+        "field:labelCol": {
+            span: 6,
+            sm: 6,
+            xs:24
         },
-        "ui:wrapperCol": {
-            span: 24,
-            sm: 18
-        }
+        "field:wrapperCol": {
+            span: 18,
+            sm: 18,
+            xs:24
+        },
+        "field:labelAlign": "left"
 
     }
     return <div style={{ margin: 10 }} >
@@ -312,9 +315,11 @@ function CustomCmp() {
 
 function NestUse() {
     const uiSchema = {
-        "ui:col": 12,
-        "ui:labelCol": 6,
-        "ui:wrapperCol": 18
+        "form:gutter": 10,
+        "field:col": 24,
+        "field:labelCol": 24,
+        "field:wrapperCol": 24,
+        "field:labelAlign": "left"
     }
     return <div style={{ margin: 10 }} >
         <SchemaForm uiSchema={uiSchema} schema={nestSchema} />
