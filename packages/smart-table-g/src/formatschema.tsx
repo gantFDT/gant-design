@@ -28,7 +28,7 @@ const DEFAULT_VIEW: PanelConfig = {
   columnFields: [],
 };
 
-const mapComponents = (ComponentName: string, props: any) => {
+const mapComponents = (ComponentName: any, props: any) => {
   if (ComponentName && getType(ComponentName) !== 'String') {
     return ComponentName;
   }
@@ -65,10 +65,7 @@ const mapComponents = (ComponentName: string, props: any) => {
   }
 };
 
-interface FormatColumnProps<R> extends CustomColumnProps<R> {
-  editConfig?: { render?: (text: any, record: R, index: number) => React.ReactNode };
-}
-function formatColumn<R>(schema: FormatColumnProps<R>) {
+function formatColumn<R>(schema: CustomColumnProps<R>) {
   let fakeColumn = { dataIndex: schema.fieldName, ...schema };
   if (!schema.render) {
     switch (schema.componentType) {

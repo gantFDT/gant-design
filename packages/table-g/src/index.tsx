@@ -85,8 +85,10 @@ export type RowSelection<T> = ProtoExtends<TableRowSelection<T>, {
     showFooterSelection?: boolean,
 }>
 
+export type EditRender<T = any> = (value: string, record: T, rowIndex: number)=> React.ReactElement
+
 export type EditConfig<T> = {
-    render(value: string, record: T, rowIndex: number): React.ReactElement,
+    render: EditRender<T>,
     showDirt?: boolean,
     editValue?: string | ((record: T, rowIndex: number, dataIndex: string) => string)
 }
