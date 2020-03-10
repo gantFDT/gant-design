@@ -186,7 +186,7 @@ function CustomOptions() {
             // const name = keyname.replace('ui:', "")
             newData[keyname] = uiSchema[keyname]
         })
-        console.log("newData",newData)
+        console.log("newData", newData)
         return newData
     }, [uiSchema])
 
@@ -231,12 +231,12 @@ function GridLayout() {
         "field:labelCol": {
             span: 6,
             sm: 6,
-            xs:24
+            xs: 24
         },
         "field:wrapperCol": {
             span: 18,
             sm: 18,
-            xs:24
+            xs: 24
         },
         "field:labelAlign": "left"
 
@@ -280,14 +280,26 @@ function DependenceData() {
             "key_1": {
                 title: "姓氏",
                 type: "string",
+                dependencies: ["key_2"],
+                onDependenciesChange: ([key_2], itemSchema, form) => {
+                    return {
+                        ...itemSchema,
+                        options: {
+                            rules: [
+                                {
+                                    max: key_2,
+                                    message: "姓氏不能超过" + key_2 + "!"
+                                }
+                            ]
+                        }
+                    }
+                }
             },
             "key_2": {
-                title: "全名",
-                type: "string",
-                dependencies: ["key_1"],
-                onDependenciesChange: (value, props, form) => {
-                    form && form.setFieldsValue({ key_2: value })
-                }
+                title: "字数限制",
+                type: "number",
+                componentType: "InputNumber",
+
             },
         }
     }
