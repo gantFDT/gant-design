@@ -1,7 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import classnames from 'classnames';
 import { Icon } from 'antd'
-import './index.less';
 
 type Item = {
     title: string,

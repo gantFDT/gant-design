@@ -10,7 +10,6 @@ import TextArea from './TextArea'
 import Password from './Password'
 import Search from './Search'
 import Group from './Group'
-import './index.less'
 
 (<InputShape>Input).TextArea = TextArea;
 (<InputShape>Input).Search = Search;
