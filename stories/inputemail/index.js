@@ -1,5 +1,6 @@
 
 import { InputEmail,SwitchStatus } from '@data-cell'
+import '@data-cell/input-email/style'
 import React, { useState } from 'react';
 import { Button } from 'antd'
 import codeList from './code'

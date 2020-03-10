@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import ColorPicker from '@color-picker';
-import { ColorPicker as DataCellColorPicker, EditStatus } from '@data-cell';
+import '@data-cell/color-picker/style';
+import { ColorPicker as DataCellColorPicker } from '@data-cell';
 import CodeDecorator from '../_util/CodeDecorator'
 import code from './code.js';
 

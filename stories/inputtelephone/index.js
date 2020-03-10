@@ -1,5 +1,6 @@
 import React from 'react'
 import { InputTelePhone } from '@data-cell'
+import '@data-cell/input-tele-phone/style'
 import CodeDecorator from '../_util/CodeDecorator'
 import { WrapperValue, onSave } from '../_util/composeUseHooks'
 

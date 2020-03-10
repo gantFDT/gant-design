@@ -1,7 +1,7 @@
 import 'antd/dist/antd.css'
 import React, { useState, useMemo, useCallback, useEffect } from 'react'
 import { Card, Collapse, Icon, Tooltip, Row, Col } from 'antd'
-import { ConfigProvider } from '@gantd'
+import ConfigProvider from '@gantd/config-provider'
 import Anchor from '@packages/anchor-g/src'
 import zhCN from '@gantd/locale/zh_CN'
 import { CopyToClipboard } from 'react-copy-to-clipboard'

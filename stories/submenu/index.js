@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react'
 import { Icon } from 'antd'
 import SubMenu from '@packages/submenu-g/src'
+import '@packages/submenu-g/src/style'
 import { Avatar } from 'antd'
 import CodeDecorator from '../_util/CodeDecorator'
 import code from './code.js'

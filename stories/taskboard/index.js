@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Input, Button, Radio, Icon, Tooltip, Avatar } from 'antd';
 import { TaskBoard } from '@packages/gantd/src';
+import '@packages/gantd/src/task-board/style';
 import CodeDecorator from '../_util/CodeDecorator';
 import code from './code';
 import _ from 'lodash';
