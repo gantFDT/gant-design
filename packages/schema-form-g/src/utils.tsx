@@ -242,18 +242,18 @@ export function getBackgroundColor(backgroundColor: string, len: number): string
 	return `rgba(0,0,0,0.04)`;
 }
 
-export function getNewValue(formVals: any, data: any) {
+export function getNewValue(formVals: any, data: any, schema) {
 	const newVals: any = {};
 	formVals = formVals ? formVals : {};
 	data = data ? data : {}
 	Object.keys(formVals).map((keyname: string) => {
 		if (formVals[keyname] && typeof formVals[keyname] === 'object' && !Array.isArray(formVals[keyname])) {
-			newVals[keyname] = getNewValue(formVals[keyname], data[keyname])
+			newVals[keyname] = getNewValue(formVals[keyname], data[keyname],schema)
 		} else {
 			newVals[keyname] = get(data, `${keyname}`, undefined)
 		}
 	})
-	return { ...data, ...newVals }
+	return { ...newVals }
 }
 
 export function getDateToForm(data: any, schema: Schema) {

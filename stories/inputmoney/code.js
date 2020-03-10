@@ -14,6 +14,9 @@ export default [
     const onSave = (id, value, cb) => {
       cb()
     }
+    const onPrecisionChange = useCallback((p) => {
+      setprecision(Math.max(0, Math.min(p, 7)))
+    }, []);
     return <>
       小数点后位数: 
       <InputNumber 
@@ -21,7 +24,7 @@ export default [
         min={1} 
         edit={EditStatus.EDIT} 
         value={precision} 
-        onChange={setprecision} 
+        onChange={onPrecisionChange} 
       />
       <InputMoney 
         placeholder='可编辑' 

@@ -2,6 +2,7 @@
 const code_1 = `
 import React from 'react';
 import { Header } from 'gantd';
+// import { Header } from 'header-g';//与gantd中引入效果相同
 
 ReactDOM.render(
     <>
@@ -25,6 +26,7 @@ ReactDOM.render(
 const code_2 = `
 import React from 'react';
 import { Header } from 'gantd';
+// import { Header } from 'header-g';//与gantd中引入效果相同
 import { message, Icon, Button, Tooltip } from 'antd';
 
 function ExtraUse() {
@@ -86,6 +88,7 @@ ReactDOM.render(<ExtraUse />, mountNode)`
 const code_3 = `
 import React from 'react';
 import { Header } from 'gantd';
+// import { Header } from 'header-g';//与gantd中引入效果相同
 
 ReactDOM.render(
     <>
@@ -111,6 +114,7 @@ ReactDOM.render(
 const code_4 = `
 import React from 'react';
 import { Header } from 'gantd';
+// import { Header } from 'header-g';//与gantd中引入效果相同
 
 ReactDOM.render(
     <>

@@ -2,6 +2,7 @@ const code1 = `
 import React, { useState, useRef } from 'react'
 import { Button } from 'antd'
 import { SchemaForm, EditStatus } from 'gantd'
+// import { SchemaForm, EditStatus } from 'schema-form-g' //与gantd中引入效果相同
 
 const schema = {
     type: "object",
@@ -83,6 +84,7 @@ const code2 = `
 import React, { useState, useRef } from 'react'
 import { Button, Radio, Switch } from 'antd'
 import { SchemaForm, EditStatus } from 'gantd'
+// import { SchemaForm, EditStatus } from 'schema-form-g' //与gantd中引入效果相同
 
 const uiSchema = {
     "ui:col": 24,
@@ -172,6 +174,7 @@ ReactDOM.render(<EditStatusUse/>,mountNode)
 const code3 = `
  import React, { useState,useMemo, useRef } from 'react'
  import { SchemaForm } from 'gantd'
+// import { SchemaForm } from 'schema-form-g' //与gantd中引入效果相同
  
  const schema = {
     type: "object",
@@ -337,6 +340,7 @@ const code3 = `
 const code4 = `
 import React from 'react'
 import { SchemaForm } from 'gantd'
+// import { SchemaForm } from 'schema-form-g' //与gantd中引入效果相同
 
 const schema = {
     type: "object",
@@ -412,6 +416,7 @@ const code5 = `
  import React, { useState, useRef } from 'react'
  import { Button } from 'antd'
  import { SchemaForm, EditStatus } from 'gantd'
+// import { SchemaForm, EditStatus } from 'schema-form-g' //与gantd中引入效果相同
  
  const uiSchema = {
     "ui:col": 8,
@@ -468,6 +473,7 @@ function SearchUse(){
   const code6 = `
   import React, { useState, useRef } from 'react'
   import { SchemaForm } from 'gantd'
+// import { SchemaForm } from 'schema-form-g' //与gantd中引入效果相同
   
   const schema = {
       type: "object",
@@ -525,6 +531,7 @@ ReactDOM.render(<BindData/>,mountNode)`
 
 const code7 = `import React, { useState } from 'react'
 import { SchemaForm } from 'gantd'
+// import { SchemaForm } from 'schema-form-g' //与gantd中引入效果相同
 
 const uiSchema = {
     "ui:col": 24,
@@ -568,6 +575,7 @@ ReactDOM.render(<DependenceData/>,mountNode)`
 const code8 = `import React, { useState } from 'react'
 import { Rate } from 'antd'
 import { SchemaForm } from 'gantd'
+// import { SchemaForm } from 'schema-form-g' //与gantd中引入效果相同
 
 const uiSchema = {
     "ui:col": 24,
@@ -612,6 +620,7 @@ ReactDOM.render(<CustomCmp/>,mountNode) `
 
 const code9 = `import React from 'react'
 import { SchemaForm } from 'gantd'
+// import { SchemaForm } from 'schema-form-g' //与gantd中引入效果相同
 
 const schema = {
     title: "嵌套表单—— parent",
