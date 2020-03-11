@@ -111,7 +111,7 @@ function ScriptTask(dirName) {
               }else{ // 子包依赖线上包
                 packageNames.forEach((packageName) => {
                   const _dirName = packageName.slice(9, -2);
-                  content = content.replace(new RegExp('@' + _dirName + '/', 'g'), _dirName + '/lib/');
+                  content = content.replace(new RegExp('@' + _dirName + '/', 'g'), _dirName + '-g/lib/');
                   content = content.replace(new RegExp('@' + _dirName, 'g'), _dirName + '-g');
                 })
               }

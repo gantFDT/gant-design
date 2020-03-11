@@ -3,9 +3,9 @@ import ResizableModal from './ResizableModal'
 import ResizableProvider from './ResizableProvider'
 import ModalContext from './Context'
 import { InnerModalProps } from './interface'
-export * from './ResizableModal';
-export * from './ResizableProvider';
-export * from './Context';
+// export * from './ResizableModal';
+// export * from './ResizableProvider';
+// export * from './Context';
 
 const uuid = 'modal-g-uuid'
 
@@ -61,4 +61,5 @@ Modal.defaultProps = {
 // Modal.ResizableProvider = ResizableProvider
 // Modal.ModalContext = ModalContext
 
+export { ResizableModal, ResizableProvider, ModalContext };
 export default Modal
