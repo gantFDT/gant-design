@@ -147,7 +147,6 @@ export default class Submenu extends React.Component<any, Partial<CardIF>> {
     let selectedKeys = selectedKey ? [selectedKey] : (menuData.length && [menuData[0].key]) || [];
     let inlineCollapsed = mode == 'inline' && collapsed;
     let inlineProperty = mode == 'inline' ? { inlineCollapsed: collapsed } : {};
-    console.log('menuData', menuData);
     return (
       <Menu
         className={prefixCls}
@@ -252,7 +251,7 @@ export default class Submenu extends React.Component<any, Partial<CardIF>> {
         {isInline ? this.renderInlineMenu(this.prefixCls) : this.renderHorMenu(this.prefixCls)}
         <div className={`${this.prefixCls}-pagecard`}>
           <>{children}</>
-          {showFlipOverFooter && (
+          {menuData.length > 0 && showFlipOverFooter && (
             <FlipOverFooter
               prefixCls={this.prefixCls}
               data={menuData}
