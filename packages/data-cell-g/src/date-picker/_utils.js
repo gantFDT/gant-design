@@ -19,8 +19,9 @@ export function getCurTime(time, format) {
   }
   else if ($value && isString($value)) {
     if ($value.indexOf('+') === -1) { // 没有时区信息,当作东八区的时间计算
-      return moment($value).subtract(8 - offset, 'hour')
+      return moment($value, format).subtract(8 - offset, 'hour')
     }
+    // 带时区的时间不能用format格式化
     return moment($value)
   }
 
