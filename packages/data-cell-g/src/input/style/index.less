@@ -20,5 +20,16 @@
                 border-radius: 4px !important;
             }
         }
+        .@{input-prefix-cls}-group-children {
+            .ant-input-group {
+                &>* {
+                    &:not(:first-child) {
+                        &>* {
+                            border-radius: 0px !important;
+                        }
+                    }
+                }
+            }
+        }
     }
 }
