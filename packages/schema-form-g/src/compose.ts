@@ -112,7 +112,6 @@ export const refHoc = compose(
 )
 
 export default compose(
-    withPropsOnChange(['schema'], (props: Inner) => ({ key: getKey() })),
     withStateHandlers(
         ({ schema }: Props) => ({ schemaState: schema }),
         {
@@ -133,8 +132,11 @@ export default compose(
             setSchema: () => schema => ({ schemaState: schema })
         }
     ),
-    withPropsOnChange(['schema'], ({ schema, setSchema }: Inner) => {
-        setSchema(schema)
+    withPropsOnChange((props: Inner, nextProps: Inner) => {
+        return !isEqual(props.schema, nextProps.schema);
+    }, ({ schema, setSchema }: Inner) => {
+        setSchema(schema);
+        return { key: getKey() }
     }),
     renameProp('schemaState', 'schema'),
 )
