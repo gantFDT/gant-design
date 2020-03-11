@@ -57,7 +57,7 @@
 | onChange | 否 | function | function(keys, rows) | 当选中值发生改变的时候 |
 | onSelect | 否 | function | function(keys,rows,selected) | 当某一项选中或取消选中的时候调用 |
 | preventDefault | 否 | boolean | false | 默认情况下，多选模式的树状结构中，勾选父级节点会选中子节点。为true的情况下会阻止这种行为 |
-| selectedRowKeys | 否 | Array<string> |  | 已选中的key，根据rowKey计算 |
+| selectedRowKeys | 否 | string[] |  | 已选中的key，根据rowKey计算 |
 | showFooterSelection | 否 | boolean | false | 是否显示底部的勾选框，多选模式下生效，单选模式下默认不显示 |
 | type | 否 | string | checkbox | 选择类型,'checkbox'为多选，'radio'为单选 |
 
