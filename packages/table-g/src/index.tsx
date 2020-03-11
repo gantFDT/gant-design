@@ -85,7 +85,7 @@ export type RowSelection<T> = ProtoExtends<TableRowSelection<T>, {
     showFooterSelection?: boolean,
 }>
 
-export type EditRender<T = any> = (value: string, record: T, rowIndex: number)=> React.ReactElement
+export type EditRender<T = any> = (value: string, record: T, rowIndex: number) => React.ReactElement
 
 export type EditConfig<T> = {
     render: EditRender<T>,
@@ -268,7 +268,9 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
     // 展开的expandedRowKeys
     const [expandRowKeys, setexpandRowKeys] = useState([])
     useEffect(() => {
-        setexpandRowKeys(expandRowKeys)
+        if (Array.isArray(expandedRowKeys)) {
+            setexpandRowKeys(expandedRowKeys)
+        }
     }, [expandedRowKeys])
     // dataIndex的索引
     const computedColIndex = useMemo(() => getComputedColIndex(columns), [columns])
@@ -692,7 +694,7 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
         (expandedRowKeys: string[] | number[]) => {
             setEmitReCompute(e => e + 1)
         },
-        [onExpandedRowsChange],
+        [],
     )
 
     const expand = useCallback(

@@ -7,6 +7,7 @@
 
 | 属性 | 是否必传 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- | --- |
+| cellPadding | 否 | number | 4 |单元格内填充大小 |
 | editActions | 否 | function([dataList, setDataList],selectedRowKeys): ReactNode | - | 当editable为EDIT状态的时候会调用，返回的组件将显示在headerRight处。 |
 | editable | 否 | EditStatus |  | 当前表格编辑状态 |
 | emptyDescription | 否 | string、ReactNode | - | table无数据时展示的空状态描述 |
