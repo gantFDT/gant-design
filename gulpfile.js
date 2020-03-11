@@ -106,7 +106,6 @@ function ScriptTask(dirName) {
   
                 packageNames.forEach((packageName) => {
                   const _dirName = packageName.slice(9, -2);
-                  content = content.replace(new RegExp('@' + _dirName + '/', 'g'), pathPrefix + _dirName + '/lib/');
                   content = content.replace(new RegExp('@' + _dirName, 'g'), pathPrefix + _dirName);
                 })
               }else{ // 子包依赖线上包
@@ -144,7 +143,6 @@ function ScriptTask(dirName) {
 
               packageNames.forEach((packageName) => {
                 const _dirName = packageName.slice(9, -2);
-                content = content.replace(new RegExp('@' + _dirName + '/', 'g'), pathPrefix + _dirName + '/lib/');
                 content = content.replace(new RegExp('@' + _dirName, 'g'), pathPrefix + _dirName);
               })
             }else{
@@ -246,7 +244,6 @@ function CopileToGantdTask(dirName, targetDir) {
                     content = content.replace(new RegExp('@' + _dirName, 'g'), pathPrefix + '_color-picker');
                   }
                 }else{
-                  content = content.replace(new RegExp('@' + _dirName + '/', 'g'), pathPrefix + _dirName + '/lib/');
                   content = content.replace(new RegExp('@' + _dirName, 'g'), pathPrefix + _dirName);
                 }
               })
@@ -277,7 +274,6 @@ function CopileToGantdTask(dirName, targetDir) {
 
             packageNames.forEach((packageName) => {
               const _dirName = packageName.slice(9, -2);
-              content = content.replace(new RegExp('@' + _dirName + '/', 'g'), pathPrefix + _dirName + '/lib/');
               content = content.replace(new RegExp('@' + _dirName, 'g'), pathPrefix + _dirName);
             })
 
