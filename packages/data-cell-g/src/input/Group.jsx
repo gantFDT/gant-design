@@ -11,6 +11,6 @@ export default ({ gant = true, ...props }) => {
   }, [props.children])
   return (
     <Input.Group {...props} className={classnames(props.className,
-      { ['gant-input-group']: gant, ['gant-input-group-child']: len === 1 })} />
+      { ['gant-input-group']: gant, ['gant-input-group-child']: len === 1,['gant-input-group-children']: len > 1 })} />
   )
 }
