@@ -18,6 +18,12 @@ const tsProject = ts.createProject('./tsconfig.json', {
   target: 'ES6',
 });
 
+let log = '';
+function message(str){
+  log+=(`${str}\n`);
+  fs.writeFileSync('test.log', log);
+}
+
 // 获取路径下文件夹名数组
 function getDirNames(__path) {
   return fs.readdirSync(__path, { withFileTypes: true })
@@ -35,16 +41,23 @@ function transToCamelCase(str) {
 }
 
 function resolveDataCellPath(content, repeat = 1) {
-  const regex = /import\s{0,}\{(.+)\}\s{0,}from\s{0,}[\'\"]@data\-cell[\'\"]/;
+  const regex = /(import|export)\s{0,}\{(.+)\}\s{0,}from\s{0,}[\'\"]@data\-cell[\'\"]/;
   const execs = regex.exec(content);
   if(!execs) return content;
 
-  const dirs = execs[1].split(',').map(s => s.trim());
+  const method = execs[1];
+  const dirs = execs[2].split(',').map(s => s.trim());
 
   let str2replace = '';
-  dirs.forEach(dirName => {
-    if(dirName)
-      str2replace+=`import ${dirName} from '${'../'.repeat(repeat)}${transToCamelCase(dirName)}'\n`;
+  dirs.forEach((dirName, idx) => {
+    if(dirName){
+      if(method === 'import'){
+        str2replace+=`${idx ? '\n' : ''}${method} ${dirName} from '${repeat ? '../'.repeat(repeat) : './'}${transToCamelCase(dirName)}'`;
+      }else{
+        str2replace+=`${idx ? '\n' : ''}${method} { default as ${dirName} } from '${repeat ? '../'.repeat(repeat) : './'}${transToCamelCase(dirName)}'`;
+      }
+    }
+      
   })
   content = content.replace(regex, str2replace)
 
@@ -57,50 +70,96 @@ function ScriptTask(dirName) {
       return src([`packages/${dirName}/src/**/*.tsx`, `packages/${dirName}/src/**/*.ts`])
         .pipe(tsProject())
         .pipe(dest(`packages/${dirName}/lib/`))
-        .pipe(
-          // 样式转成css
-          through2.obj(function (chunk, enc, next) {
-            let content = chunk.contents.toString()
-            const buf = Buffer.from(content)
-            const filePath = chunk.path;
-            if(filePath.endsWith('style/index.d.ts')){
-              fs.writeFileSync(filePath.replace('index', 'css'), buf)
-            }
-            this.push(chunk)
-            next()
-          })
-        )
         .pipe(filter(file => !file.path.endsWith('.d.ts')))
         .pipe(src([`packages/${dirName}/src/**/*.jsx`, `packages/${dirName}/src/**/*.js`]))
         .pipe(
           // 处理DataCell路径问题
-          through2.obj(function (chunk, enc, next) {
-            let content = chunk.contents.toString()
-            content = resolveDataCellPath(content)
+          through2.obj(function (file, enc, next) {
+            let content = file.contents.toString()
+            if( dirName === 'gantd' ){ 
+              const filePath = file.path;
+              const Idx = filePath.lastIndexOf(dirName);
+              const filelevel = filePath.slice(Idx).split('/').length;
+              content = resolveDataCellPath(content, filelevel - 3)
+            }
             const buf = Buffer.from(content)
-            chunk.contents = buf
-            this.push(chunk)
+            file.contents = buf
+            this.push(file)
             next()
           })
         )
         .pipe(babel(babelConfig))
         .pipe(
           // 处理@开头的路径解析问题
-          through2.obj(function (chunk, enc, next) {
-            let content = chunk.contents.toString()
-            const filePath = chunk.path;
-            packageNames.forEach((packageName) => {
-              const _dirName = packageName.slice(9, -2);
-              content = content.replace(new RegExp('@' + _dirName, 'g'), (dirName === 'gantd' ? _dirName : '../' + _dirName));
-            })
+          through2.obj(function (file, enc, next) {
+            let content = file.contents.toString()
+            const filePath = file.path;
+  
             content = content.replace(/\.less/g, '.css')
             content = content.replace(/\.jsx/g, '.js')
+            
+            if(~content.indexOf(`@`)){ // 初步筛选内容
+              if(dirName === 'gantd'){
+                const Idx = filePath.lastIndexOf(dirName);
+                const filelevel = filePath.slice(Idx).split('/').length;
+                const pathPrefix = filelevel > 3 ? '../'.repeat(filelevel - 3) : './';
+  
+                packageNames.forEach((packageName) => {
+                  const _dirName = packageName.slice(9, -2);
+                  content = content.replace(new RegExp('@' + _dirName, 'g'), pathPrefix + _dirName);
+                })
+              }else{ // 子包依赖线上包
+                packageNames.forEach((packageName) => {
+                  const _dirName = packageName.slice(9, -2);
+                  content = content.replace(new RegExp('@' + _dirName + '/', 'g'), _dirName + '/lib/');
+                  content = content.replace(new RegExp('@' + _dirName, 'g'), _dirName + '-g');
+                })
+              }
+            }
             const buf = Buffer.from(content)
-            chunk.contents = buf
+            file.contents = buf
             if(filePath.endsWith('style/index.js')){
               fs.writeFileSync(filePath.replace('index', 'css'), buf)
             }
-            this.push(chunk)
+            this.push(file)
+            next()
+          })
+        )
+        .pipe(dest(`packages/${dirName}/lib/`))
+    },
+    function compileDTS() {
+      return src(`packages/${dirName}/lib/**/*.d.ts`)
+        .pipe(
+          // 处理DataCell路径问题
+          through2.obj(function (file, enc, next) {
+            let content = file.contents.toString()
+            const filePath = file.path;
+            if(dirName === 'gantd'){
+              const Idx = filePath.lastIndexOf(dirName);
+              const filelevel = filePath.slice(Idx).split('/').length;
+              const pathPrefix = filelevel > 3 ? '../'.repeat(filelevel - 3) : './';
+  
+              content = resolveDataCellPath(content, filelevel - 3)
+
+              packageNames.forEach((packageName) => {
+                const _dirName = packageName.slice(9, -2);
+                content = content.replace(new RegExp('@' + _dirName, 'g'), pathPrefix + _dirName);
+              })
+            }else{
+              packageNames.forEach((packageName) => {
+                const _dirName = packageName.slice(9, -2);
+                content = content.replace(new RegExp('@' + _dirName + '/', 'g'), _dirName + '/lib/');
+                content = content.replace(new RegExp('@' + _dirName, 'g'), _dirName + '-g');
+              })
+            }
+
+            const buf = Buffer.from(content)
+            
+            if(filePath.endsWith('style/index.d.ts')){
+              fs.writeFileSync(filePath.replace('index', 'css'), buf)
+            }
+            file.contents = buf
+            this.push(file)
             next()
           })
         )
@@ -142,71 +201,88 @@ function CopileToGantdTask(dirName, targetDir) {
       cb();
     },
     function compileScriptToGantd(){
-      return src([`packages/${dirName}/src/**/*.tsx`, `packages/${dirName}/src/**/*.ts`])
+      return src([`packages/${dirName}/src/**/*.tsx`, `packages/${dirName}/src/**/*.ts`, `!packages/data-cell-g/src/index.ts`])
         .pipe(tsProject())
         .pipe(dest(`packages/gantd/${targetDir}/${__dirName === 'data-cell' ? '' : (__dirName + '/')}`))
-        .pipe(
-          // 样式转成css
-          through2.obj(function (chunk, enc, next) {
-            let content = chunk.contents.toString()
-            const buf = Buffer.from(content)
-            const filePath = chunk.path;
-            if(filePath.endsWith('style/index.d.ts')){
-              fs.writeFileSync(filePath.replace('index', 'css'), buf)
-            }
-            this.push(chunk)
-            next()
-          })
-        )
         .pipe(filter(file => !file.path.endsWith('.d.ts')))
         .pipe(src([`packages/${dirName}/src/**/*.jsx`, `packages/${dirName}/src/**/*.js`]))
           .pipe(
           // 处理路径等问题
-          through2.obj(function (chunk, enc, next) {
-            let content = chunk.contents.toString()
-            const filePath = chunk.path;
+          through2.obj(function (file, enc, next) {
+            let content = file.contents.toString()
+            const filePath = file.path;
             const Idx = filePath.indexOf(__dirName);
             const filelevel = filePath.slice(Idx).split('/').length;
-            content = resolveDataCellPath(content, dirName === 'smart-table-g' ? (filelevel - 1) : 1)
+            content = resolveDataCellPath(content, dirName !== 'data-cell-g' ? (filelevel - 1) : 1)
             const buf = Buffer.from(content)
-            chunk.contents = buf
-            this.push(chunk)
+            file.contents = buf
+            this.push(file)
             next()
           })
         )
         .pipe(babel(babelConfig))
         .pipe(
           // 处理路径等问题
-          through2.obj(function (chunk, enc, next) {
-            let content = chunk.contents.toString()
-            const filePath = chunk.path;
-            const Idx = filePath.indexOf(__dirName);
-            const filelevel = filePath.slice(Idx).split('/').length;
-            const pathPrefix =
-              __dirName === 'gantd' ? '' :
-              __dirName === 'smart-table' ? '../'.repeat(filelevel-1) : '../';
+          through2.obj(function (file, enc, next) {
+            let content = file.contents.toString()
+            const filePath = file.path;
 
             content = content.replace(/\.less/g, '.css')
             content = content.replace(/\.jsx/g, '.js')
 
-            packageNames.forEach((packageName) => {
-              const _dirName = packageName.slice(9, -2);
-              if(_dirName === 'color-picker'){
-                if(filePath.endsWith('style/index.js')){
-                  content = content.replace(new RegExp('@' + _dirName, 'g'), pathPrefix + '../_color-picker');
+            if(~content.indexOf('@')){
+              const Idx = filePath.indexOf(__dirName);
+              const filelevel = filePath.slice(Idx).split('/').length;
+              const pathPrefix = __dirName !== 'data-cell' ? '../'.repeat(filelevel-1) : '../';
+
+              packageNames.forEach((packageName) => {
+                const _dirName = packageName.slice(9, -2);
+                if(_dirName === 'color-picker'){
+                  if(filePath.endsWith('style/index.js')){
+                    content = content.replace(new RegExp('@' + _dirName, 'g'), pathPrefix + '../_color-picker');
+                  }else{
+                    content = content.replace(new RegExp('@' + _dirName, 'g'), pathPrefix + '_color-picker');
+                  }
                 }else{
-                  content = content.replace(new RegExp('@' + _dirName, 'g'), pathPrefix + '_color-picker');
+                  content = content.replace(new RegExp('@' + _dirName, 'g'), pathPrefix + _dirName);
                 }
-              }else{
-                content = content.replace(new RegExp('@' + _dirName, 'g'), pathPrefix + _dirName);
-              }
-            })
+              })
+            }
             const buf = Buffer.from(content)
-            chunk.contents = buf
+            file.contents = buf
             if(filePath.endsWith('style/index.js')){
               fs.writeFileSync(filePath.replace('index', 'css'), buf)
             }
-            this.push(chunk)
+            this.push(file)
+            next()
+          })
+        )
+        .pipe(dest(`packages/gantd/${targetDir}/${__dirName === 'data-cell' ? '' : (__dirName + '/')}`))
+    },
+    function compileDTS() {
+      return src(`packages/gantd/${targetDir}/${__dirName === 'data-cell' ? '' : (__dirName + '/')}**/*.d.ts`)
+        .pipe(
+          // 处理DataCell路径问题
+          through2.obj(function (file, enc, next) {
+            let content = file.contents.toString()
+            const filePath = file.path;
+            const Idx = filePath.lastIndexOf(__dirName);
+            const filelevel = filePath.slice(Idx).split('/').length;
+            const pathPrefix = '../'.repeat(filelevel - 1);
+
+            content = resolveDataCellPath(content, filelevel - 1)
+
+            packageNames.forEach((packageName) => {
+              const _dirName = packageName.slice(9, -2);
+              content = content.replace(new RegExp('@' + _dirName, 'g'), pathPrefix + _dirName);
+            })
+
+            const buf = Buffer.from(content)
+            if(filePath.endsWith('style/index.d.ts')){
+              fs.writeFileSync(filePath.replace('index', 'css'), buf)
+            }
+            file.contents = buf
+            this.push(file)
             next()
           })
         )

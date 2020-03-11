@@ -3,6 +3,10 @@ import ResizableModal from './ResizableModal'
 import ResizableProvider from './ResizableProvider'
 import ModalContext from './Context'
 import { InnerModalProps } from './interface'
+export * from './ResizableModal';
+export * from './ResizableProvider';
+export * from './Context';
+
 const uuid = 'modal-g-uuid'
 
 export interface ModalProps extends InnerModalProps {
@@ -53,5 +57,8 @@ Modal.defaultProps = {
     isModalDialog: true
 }
 
+// Modal.ResizableModal = ResizableModal
+// Modal.ResizableProvider = ResizableProvider
+// Modal.ModalContext = ModalContext
+
 export default Modal
-export { ResizableModal, ResizableProvider, ModalContext }
