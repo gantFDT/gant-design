@@ -16,11 +16,10 @@ export default (_popupClassName?: string) => WrapperedComponent =>
       const divRef = useRef<HTMLDivElement>(null);
       const handleClick = useCallback(
         (e: MouseEvent) => {
-          e.stopPropagation();
           if (divRef.current) {
             const target: any = e.target;
             if (divRef.current.contains(target)) return;
-            if (!popupClassName) return;
+            if (!popupClassName) return onBlur();
             const popupDoms = document.getElementsByClassName(popupClassName);
             const len = popupDoms.length
             for (let i = 0; i < len; i++) {

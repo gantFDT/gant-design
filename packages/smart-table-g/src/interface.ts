@@ -1,7 +1,7 @@
 import React from 'react';
-import { GantTableListOuterProps } from '@table'
+import { GantTableListOuterProps, GColumnProps } from '@table'
 
-export interface CustomColumnProps<R> {
+export interface CustomColumnProps<R> extends GColumnProps<R> {
   fieldName: string,
   title: string,
   props?: any,
