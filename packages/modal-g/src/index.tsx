@@ -53,5 +53,8 @@ Modal.defaultProps = {
     isModalDialog: true
 }
 
+Modal.ResizableModal = ResizableModal
+Modal.ResizableProvider = ResizableProvider
+Modal.ModalContext = ModalContext
+
 export default Modal
-export { ResizableModal, ResizableProvider, ModalContext }

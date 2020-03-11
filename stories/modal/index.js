@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import { Button, ConfigProvider } from 'antd'
-import Modal, { ResizableModal, ResizableProvider } from '@packages/modal-g/src'
+import Modal from '@packages/modal-g/src'
 import '@packages/modal-g/src/style'
 import zhCN from 'antd/es/locale/zh_CN'
 import CodeDecorator from '../_util/CodeDecorator'
 import code from './code.js'
+const { ResizableModal, ResizableProvider } = Modal
 const ButtonGroup = Button.Group
 
 function BasicUse() {

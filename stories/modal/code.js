@@ -180,9 +180,9 @@ const code5 =
 const code6 =
   `import React, { useState } from 'react'
   import { Button } from 'antd'
-  import { ResizableModal, ResizableProvider } from 'gantd'
-  // import { ResizableModal, ResizableProvider } from 'modal-g' //与gantd中引入效果相同
-  
+  import { Modal } from 'gantd'
+  const { ResizableModal, ResizableProvider } = Modal
+
   function multipleModalsUse() {
     const [visible, setVisible] = useState(false)
     const [visible2, setVisible2] = useState(false)
