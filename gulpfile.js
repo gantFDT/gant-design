@@ -19,7 +19,7 @@ const tsProject = ts.createProject('./tsconfig.json', {
 });
 
 let log = '';
-function log(str){
+function message(str){
   log+=(`${str}\n`);
   fs.writeFileSync('test.log', log);
 }
