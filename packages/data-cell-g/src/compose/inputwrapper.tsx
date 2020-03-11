@@ -19,7 +19,7 @@ export default (_popupClassName?: string) => WrapperedComponent =>
           if (divRef.current) {
             const target: any = e.target;
             if (divRef.current.contains(target)) return;
-            if (!popupClassName) return onBlur();
+            if (!popupClassName) return onBlur&&onBlur();
             const popupDoms = document.getElementsByClassName(popupClassName);
             const len = popupDoms.length
             for (let i = 0; i < len; i++) {
