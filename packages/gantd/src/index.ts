@@ -8,7 +8,7 @@ export { default as Loading } from './loading';
 //数据单元
 export {
   Icon,
-  withEdit, EditStatus, SwitchStatus, // 读写分离
+  withEdit, EditStatus, SwitchStatus,
   Input,
   InputCellPhone,
   InputTelePhone,
