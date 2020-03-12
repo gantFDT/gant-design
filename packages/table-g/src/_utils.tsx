@@ -276,14 +276,14 @@ export const getStorageWidth = (key) => {
  * 
  * @param {HTMLTbaleElement} table 主table
  */
-export const toggleFixedTable = (tableParent: HTMLTableElement, scrollY: boolean, scrollX: boolean): void => {
+export const toggleFixedTable = (tableParent: HTMLTableElement, ...args): void => {
   // 找打content区域
   const tablecontent = _.get(tableParent, 'parentElement.parentElement')
   if (!tablecontent) return
   const left = tablecontent.querySelector('.ant-table-fixed-left')
   const right = tablecontent.querySelector('.ant-table-fixed-right')
-  toggleFixedTableScroll(left, scrollY, scrollX)
-  toggleFixedTableScroll(right, scrollY, scrollX)
+  toggleFixedTableScroll(left, ...args)
+  toggleFixedTableScroll(right, ...args)
 }
 
 export const setStyle = (dom, text) => {
@@ -304,7 +304,8 @@ export function getStyleText(p) {
  * @param {*} fix 固定列容器
  * @param {*} hide 隐藏还是显示
  */
-export const toggleFixedTableScroll = (fix, scrollY, scrollX) => {
+export const toggleFixedTableScroll = (fix, ...args) => {
+  const [scrollY, scrollX, hasScrollY] = args
   const scrollbarmeasure = measureScrollbar({ direction: 'horizontal', prefixCls: 'antd' })
   if (fix) {
     const outer = fix.querySelector('.ant-table-body-outer')
@@ -312,26 +313,32 @@ export const toggleFixedTableScroll = (fix, scrollY, scrollX) => {
     // setStyle(inner, "overflow-y: hidden")
     // scrollX --- 设置outer的margin-bottom属性为负值
     // scrollY --- 设置inner的overflow-x属性为scroll
-
-    if (scrollY) {
-      setStyle(inner, `overflow-y: scroll`)
-      if (scrollX) {
-        // 负值保证主table在拖拽的时候不会卡住
-        setStyle(outer, `margin-bottom: -${scrollbarmeasure}px`)
-        setStyle(inner, `overflow-x: scroll`)
+    if (hasScrollY) {
+      if (scrollY) {
+        setStyle(inner, `overflow-y: scroll`)
+        if (scrollX) {
+          // 负值保证主table在拖拽的时候不会卡住
+          setStyle(outer, `margin-bottom: -${scrollbarmeasure}px`)
+          setStyle(inner, `overflow-x: scroll`)
+        } else {
+          setStyle(outer, `margin-bottom: 0`)
+          setStyle(inner, `overflow-x: hidden`)
+        }
       } else {
-        setStyle(outer, `margin-bottom: 0`)
-        setStyle(inner, `overflow-x: hidden`)
+        setStyle(inner, `overflow-y: hidden`)
+        if (scrollX) {
+          setStyle(outer, `margin-bottom: -${scrollbarmeasure}px`)
+          setStyle(inner, `overflow-x: hidden`)
+        } else {
+          setStyle(outer, `margin-bottom: 0`)
+          setStyle(inner, `overflow-x: hidden`)
+        }
       }
     } else {
-      setStyle(inner, `overflow-y: hidden`)
-      if (scrollX) {
-        setStyle(outer, `margin-bottom: -${scrollbarmeasure}px`)
-        setStyle(inner, `overflow-x: hidden`)
-      } else {
-        setStyle(outer, `margin-bottom: 0`)
-        setStyle(inner, `overflow-x: hidden`)
-      }
+      // scrollY一定时false
+      setStyle(inner, `overflow: hidden`)
+      // 这时候不需要设置负margin给滚动条让位
+      setStyle(outer, `margin-bottom: 0`)
     }
     const table = inner.querySelector('table')
     setTableBorderBottom(table, !scrollY || scrollY && scrollX)
