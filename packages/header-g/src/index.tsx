@@ -178,7 +178,7 @@ const Header = (props: HeaderIF) => {
               overlay={<Menu style={{ padding: '5px 0' }} >{getDrapContent}</Menu>}
               placement="bottomRight"
               getPopupContainer={(triggerNode) => triggerNode}
-              overlayStyle={{ zIndex: 1 }}
+              overlayStyle={{ zIndex: 2 }}
               overlayClassName={prefixCls + '-dropdown'}
             >
               <Button icon="ellipsis" className={getPrefixCls('overflow-tool-icon')} style={{ height: toolsHeight, width: toolsHeight }} />
