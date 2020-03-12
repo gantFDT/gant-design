@@ -121,7 +121,7 @@ function Sortable(props: SortableProps) {
 
   const SortableItem = SortableElement(
     ({ record: { title, checked, align }, realIndex, lock }: any) => (
-      <Row type="flex" align="middle" justify="space-between" className="tableRow">
+      <Row type="flex" align="middle" justify="space-between" className="tableRow gant-table-config-row">
         <div style={{ flexGrow: 0 }}>
           <Checkbox checked={checked} onChange={handlerFieldVisible.bind(null, realIndex)} />
         </div>
