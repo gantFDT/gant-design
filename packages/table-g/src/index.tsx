@@ -530,10 +530,17 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
             const cellEditable = _.isPlainObject(editConfig) && !_.isEmpty(editConfig)
             // 修正rowIndex值
             const computedRowIndex = rowIndex + outlineNum
+            // 虚拟滚动或者带有固定列的表格不换行
+            // 根据是否有固定列，以及是否是虚拟滚动来控制文本是否折行
+            const cWrap = (virtualScroll || hasFixed) ? false : wrap
+            const style: React.CSSProperties = { width: col.width }
+            if (cWrap) {
+                // 防止折行模式下，被内容撑出
+                style.maxWidth = col.width
+            }
             let defaultCellProps = {
-                style: { width: col.width, maxWidth: col.width }, // 防止折行模式下，被内容撑出
-                // 根据是否有固定列，以及是否是虚拟滚动来控制文本是否折行
-                wrap: hasFixed ? false : wrap,
+                // style,
+                wrap: cWrap,
                 light,
                 record: { ...record },
                 sortable,
