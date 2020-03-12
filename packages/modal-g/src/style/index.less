@@ -4,6 +4,40 @@
 @activeIconColor: var(--modal-header-icon-hover-color);
 
 :global {
+  .ant-modal-header {
+    padding: 9px 10px !important;
+  }
+
+  .ant-modal-close-x {
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+  }
+
+  .ant-modal-body {
+    padding: 10px;
+  }
+
+  .ant-modal-title {
+    font-size: 14px;
+    font-weight: bold;
+  }
+
+  .ant-modal-confirm-body {
+    padding-bottom: 30px;
+  }
+
+  .ant-modal-confirm {
+    .ant-modal-confirm-btns {
+      margin-top: 0px;
+    }
+
+    .ant-modal-body {
+      padding: 20px !important;
+    }
+  }
+
+
   .@{component} {
     &-resizableModalDefault {
       pointer-events: none;

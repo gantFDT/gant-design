@@ -1,25 +1,72 @@
 @gant-prefix: gant;
 @component: ~'@{gant-prefix}-schemaform';
+
 :global {
+    //form
+    .form-item-align-left {
+        :global(.ant-form-item-label) {
+            text-align: left;
+        }
+    }
+
+    .form-item-align-right {
+        :global(.ant-form-item-label) {
+            text-align: right;
+        }
+    }
+
+    .ant-form label {
+        font-size: 12px !important;
+    }
+
+    .ant-form-item-label {
+        line-height: 30px !important;
+    }
+
+    .ant-form-item-control {
+        line-height: 30px !important;
+        margin-bottom: 10px;
+    }
+
+    //全局formitem marginbottom
+    .ant-form-item {
+        margin-bottom: 0px !important;
+        font-size: 12px !important;
+        color: rgba(0, 0, 0, 0.9) !important;
+        .ant-form-item-label {
+            color: rgba(125, 125, 125, 0.65) !important;
+        }
+
+        .ant-form-item-control-wrapper {
+            color: var(--text-color) !important;
+        }
+    }
+
     html .ant-form-item-label {
         padding: 0 0 0px !important;
     }
+
     .@{component} {
         &-schemaCard {
             clear: both;
         }
+
         &-schemaForm {
+
             .ant-form-item-label label::after,
             .ant-col-24.ant-form-item-label label::after,
             .ant-col-xl-24.ant-form-item-label label::after {
                 display: inline;
             }
+
             .ant-input-number {
                 line-height: 31px;
             }
+
             .ant-form-item-control {
                 // margin-bottom: 10px !important;
                 line-height: 33px !important;
+
                 .ant-form-explain {
                     position: absolute;
                     bottom: -10px;
@@ -28,12 +75,15 @@
                     line-height: 10px;
                 }
             }
+
             .ant-form-item-label {
                 // line-height: 33px !important;
                 overflow: hidden !important;
                 text-overflow: ellipsis !important;
                 white-space: nowrap !important;
-            } // .ant-col-24.ant-form-item-label{
+            }
+
+            // .ant-col-24.ant-form-item-label{
             //   line-height: 20px !important;
             // }
             // .ant-col-xs-24.ant-form-item-label{
@@ -42,22 +92,26 @@
             .ant-input {
                 padding: 4px 11px !important
             }
+
             .@{component}-showRequiredMark {
                 .ant-form-item-required::before {
                     display: inline;
                 }
             }
         }
+
         &-right {
             .ant-form-item-label {
                 text-align: right;
             }
         }
+
         &-left {
             .ant-form-item-label {
                 text-align: left;
             }
         }
+
         &-schemaTable {
             padding: 5px;
         }

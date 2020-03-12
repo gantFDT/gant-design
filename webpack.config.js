@@ -180,8 +180,8 @@ module.exports = {
 
     optimization: {
         minimizer: [
-            // new UglifyJsPlugin(),
-            // new OptimizeCSSAssetsPlugin({})
+            new UglifyJsPlugin(),
+            new OptimizeCSSAssetsPlugin({})
         ]
     },
 
