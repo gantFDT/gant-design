@@ -18,11 +18,8 @@ const tsProject = ts.createProject('./tsconfig.json', {
   target: 'ES6',
 });
 
-let log = '';
-function message(str){
-  log+=(`${str}\n`);
-  fs.writeFileSync('test.log', log);
-}
+const isWin = process.platform === 'win32';
+const pathSplit = isWin ? '\\' :'/';
 
 // 获取路径下文件夹名数组
 function getDirNames(__path) {
@@ -79,7 +76,7 @@ function ScriptTask(dirName) {
             if( dirName === 'gantd' ){ 
               const filePath = file.path;
               const Idx = filePath.lastIndexOf(dirName);
-              const filelevel = filePath.slice(Idx).split('/').length;
+              const filelevel = filePath.slice(Idx).split(pathSplit).length;
               content = resolveDataCellPath(content, filelevel - 3)
             }
             const buf = Buffer.from(content)
@@ -101,7 +98,7 @@ function ScriptTask(dirName) {
             if(~content.indexOf(`@`)){ // 初步筛选内容
               if(dirName === 'gantd'){
                 const Idx = filePath.lastIndexOf(dirName);
-                const filelevel = filePath.slice(Idx).split('/').length;
+                const filelevel = filePath.slice(Idx).split(pathSplit).length;
                 const pathPrefix = filelevel > 3 ? '../'.repeat(filelevel - 3) : './';
   
                 packageNames.forEach((packageName) => {
@@ -136,7 +133,7 @@ function ScriptTask(dirName) {
             const filePath = file.path;
             if(dirName === 'gantd'){
               const Idx = filePath.lastIndexOf(dirName);
-              const filelevel = filePath.slice(Idx).split('/').length;
+              const filelevel = filePath.slice(Idx).split(pathSplit).length;
               const pathPrefix = filelevel > 3 ? '../'.repeat(filelevel - 3) : './';
   
               content = resolveDataCellPath(content, filelevel - 3)
@@ -212,7 +209,7 @@ function CopileToGantdTask(dirName, targetDir) {
             let content = file.contents.toString()
             const filePath = file.path;
             const Idx = filePath.indexOf(__dirName);
-            const filelevel = filePath.slice(Idx).split('/').length;
+            const filelevel = filePath.slice(Idx).split(pathSplit).length;
             content = resolveDataCellPath(content, dirName !== 'data-cell-g' ? (filelevel - 1) : 1)
             const buf = Buffer.from(content)
             file.contents = buf
@@ -232,7 +229,7 @@ function CopileToGantdTask(dirName, targetDir) {
 
             if(~content.indexOf('@')){
               const Idx = filePath.indexOf(__dirName);
-              const filelevel = filePath.slice(Idx).split('/').length;
+              const filelevel = filePath.slice(Idx).split(pathSplit).length;
               const pathPrefix = __dirName !== 'data-cell' ? '../'.repeat(filelevel-1) : '../';
 
               packageNames.forEach((packageName) => {
@@ -267,7 +264,7 @@ function CopileToGantdTask(dirName, targetDir) {
             let content = file.contents.toString()
             const filePath = file.path;
             const Idx = filePath.lastIndexOf(__dirName);
-            const filelevel = filePath.slice(Idx).split('/').length;
+            const filelevel = filePath.slice(Idx).split(pathSplit).length;
             const pathPrefix = '../'.repeat(filelevel - 1);
 
             content = resolveDataCellPath(content, filelevel - 1)
