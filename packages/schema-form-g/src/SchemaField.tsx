@@ -3,16 +3,21 @@ import classnames from 'classnames';
 import { EditStatus, Input } from '@data-cell';
 import { FormContext } from './index';
 import { Form, Col } from 'antd';
+import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
 import { Schema } from './interface';
 import { get, findIndex } from 'lodash';
 import { getFields } from './maps';
-import { injectIntl } from 'react-intl';
+import en from './locale/en-US';
+import zh from './locale/zh-CN';
 
+const langs = {
+  'en': en,
+  'zh-cn': zh
+}
 interface SchemaField extends Schema {
   isRequired?: boolean;
   edit: any;
   uiData: any;
-  intl: any;
 }
 const SchemaField = (props: SchemaField) => {
   const {
@@ -25,8 +30,8 @@ const SchemaField = (props: SchemaField) => {
     required,
     edit,
     uiData,
-    intl,
   } = props;
+
   const {
     form: { getFieldDecorator, resetFields, validateFieldsAndScroll },
     onSave,
@@ -34,7 +39,7 @@ const SchemaField = (props: SchemaField) => {
     customFields,
     emitDependenciesChange,
   } = useContext(FormContext);
-  const f = ({ id }) => intl.formatMessage({ id });
+
   const onCancel = useCallback(() => name && resetFields([name]), [componentType, name]);
   const onItemSave = useCallback(
     (id, value, cb) => {
@@ -46,6 +51,7 @@ const SchemaField = (props: SchemaField) => {
     },
     [name],
   );
+  
   const optionsRules = options && options.rules ? options.rules : [];
   const { col, labelAlign, labelCol, wrapperCol, extra, style, className } = uiData;
   let initialValue = useMemo(() => {
@@ -79,29 +85,34 @@ const SchemaField = (props: SchemaField) => {
 
   return (
     <Col {...colLayout}>
-      <Form.Item
-        label={title}
-        className={classnames(className)}
-        style={style}
-        wrapperCol={wrapperColayout}
-        labelAlign={labelAlign}
-        labelCol={labelColLayout}
-        extra={extra}
-      >
-        {name &&
-          getFieldDecorator(name, {
-            ...options,
-            initialValue,
-            rules: [
-              {
-                required: typeof required === 'boolean' ? required : isRequired,
-                message: `${title}${f({ id: 'required' })}`,
-              },
-              ...optionsRules,
-            ],
-          })(fieldComponent)}
-      </Form.Item>
+      <LocaleReceiver>
+        {(local, localeCode = 'zh-cn') => {
+          let locale = langs[localeCode] || langs['zh-cn']
+          return <Form.Item
+            label={title}
+            className={classnames(className)}
+            style={style}
+            wrapperCol={wrapperColayout}
+            labelAlign={labelAlign}
+            labelCol={labelColLayout}
+            extra={extra}
+          >
+            {name &&
+              getFieldDecorator(name, {
+                ...options,
+                initialValue,
+                rules: [
+                  {
+                    required: typeof required === 'boolean' ? required : isRequired,
+                    message: `${title}${locale.required}`,
+                  },
+                  ...optionsRules,
+                ],
+              })(fieldComponent)}
+          </Form.Item>
+        }}
+      </LocaleReceiver>
     </Col>
   );
 };
-export default injectIntl(SchemaField);
+export default SchemaField;
