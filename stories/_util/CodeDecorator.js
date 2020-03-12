@@ -1,9 +1,7 @@
 import 'antd/dist/antd.css'
 import React, { useState, useMemo, useCallback, useEffect } from 'react'
 import { Card, Collapse, Icon, Tooltip, Row, Col } from 'antd'
-import ConfigProvider from '@gantd/config-provider'
 import Anchor from '@packages/anchor-g/src'
-import zhCN from '@gantd/locale/zh_CN'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import SyntaxHighlighter from 'react-syntax-highlighter'
 import virtualizedRenderer from 'react-syntax-highlighter-virtualized-renderer'
@@ -222,7 +220,7 @@ export default ({ config }) => {
     }, [inline, elements])
 
     return (
-        <ConfigProvider locale={zhCN}>
+        <>
             {useage && <div>
                 <h2 style={headerStyle}>特性</h2>
                 {_.isObject(useage) ?
@@ -248,6 +246,6 @@ export default ({ config }) => {
                 onClick={onAnchorClick}
                 content={demos}
             /> : demos}
-        </ConfigProvider>
+        </>
     )
 }
