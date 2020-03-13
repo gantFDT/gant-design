@@ -178,7 +178,9 @@ const GantAnchor = props => {
     <>
       {stateMode == 'vertical' ? (
         <div className={classnames(className, `${prefixCls}-verticallayout`)} style={{ ...style }}>
-          <div style={{ padding: '0px', minHeight, width: 'calc(100% - 150px)' }}>{content}</div>
+          <div style={{ padding: '0px', minHeight, width: 'calc(100% - 150px)' }}>
+            {content}
+          </div>
           <div
             className="gant-anchor-verticalbox"
             style={{ width: 150, paddingLeft: '10px', paddingTop: '10px' }}
@@ -220,74 +222,74 @@ const GantAnchor = props => {
           </div>
         </div>
       ) : (
-        <div
-          className={classnames(className, 'gant-card-horizontalanchor')}
-          style={{ padding: '0 0 10px', zIndex: 1, minHeight, ...style }}
-        >
-          <div className={`${prefixCls}-horAnchorOut`}>
-            <div className={`gant-gantanchor`} id="anchorBoxId" style={{ zIndex: 1 }}>
-              <Icon
-                type="left"
-                style={{ display: leftArrowsShow ? 'block' : 'none', float: 'left' }}
-                className={`${prefixCls}-iconCss`}
-                onClick={() => handleMobileTabs('left')}
-              />
-              <div className={`${prefixCls}-silderCss`} id="silderId">
-                <div className={`${prefixCls}-contentCss`} id="contentId">
-                  {list.map(item => {
-                    let nowCss = item.id == currentId ? 'activeCss' : '';
-                    return (
-                      <a
-                        className={`${prefixCls}-aCss`}
-                        key={item.id}
-                        onClick={() => scrollToAnchor(item.id)}
-                      >
-                        <span className={`${prefixCls}-${nowCss}`}>
-                          {
-                            <>
-                              {item.title}
-                              {item.complete ? (
-                                <Icon
-                                  type="check-circle"
-                                  theme="twoTone"
-                                  twoToneColor="#52c41a"
-                                  style={{ paddingLeft: '5px' }}
-                                />
-                              ) : null}
-                            </>
-                          }
-                        </span>
-                      </a>
-                    );
-                  })}
+          <div
+            className={classnames(className, 'gant-card-horizontalanchor')}
+            style={{ padding: '0 0 10px', zIndex: 1, minHeight, ...style }}
+          >
+            <div className={`${prefixCls}-horAnchorOut`}>
+              <div className={`gant-gantanchor`} id="anchorBoxId" style={{ zIndex: 1 }}>
+                <Icon
+                  type="left"
+                  style={{ display: leftArrowsShow ? 'block' : 'none', float: 'left' }}
+                  className={`${prefixCls}-iconCss`}
+                  onClick={() => handleMobileTabs('left')}
+                />
+                <div className={`${prefixCls}-silderCss`} id="silderId">
+                  <div className={`${prefixCls}-contentCss`} id="contentId">
+                    {list.map(item => {
+                      let nowCss = item.id == currentId ? 'activeCss' : '';
+                      return (
+                        <a
+                          className={`${prefixCls}-aCss`}
+                          key={item.id}
+                          onClick={() => scrollToAnchor(item.id)}
+                        >
+                          <span className={`${prefixCls}-${nowCss}`}>
+                            {
+                              <>
+                                {item.title}
+                                {item.complete ? (
+                                  <Icon
+                                    type="check-circle"
+                                    theme="twoTone"
+                                    twoToneColor="#52c41a"
+                                    style={{ paddingLeft: '5px' }}
+                                  />
+                                ) : null}
+                              </>
+                            }
+                          </span>
+                        </a>
+                      );
+                    })}
+                  </div>
                 </div>
+                <Icon
+                  type="switcher"
+                  onClick={onSwitchClick}
+                  className={`${prefixCls}-iconCss`}
+                  style={{ float: 'right' }}
+                />
+                <Dropdown
+                  overlay={menu}
+                  // style={{ display: menuArrowsShow ? 'block' : 'none' }}
+                  placement="bottomRight"
+                >
+                  <Icon type="down" className={`${prefixCls}-iconCss`} style={{ float: 'right' }} />
+                </Dropdown>
+                <Icon
+                  type="right"
+                  style={{ display: rightArrowsShow ? 'block' : 'none', float: 'right' }}
+                  className={`${prefixCls}-iconCss`}
+                  onClick={() => handleMobileTabs('right')}
+                />
               </div>
-              <Icon
-                type="switcher"
-                onClick={onSwitchClick}
-                className={`${prefixCls}-iconCss`}
-                style={{ float: 'right' }}
-              />
-              <Dropdown
-                overlay={menu}
-                // style={{ display: menuArrowsShow ? 'block' : 'none' }}
-                placement="bottomRight"
-              >
-                <Icon type="down" className={`${prefixCls}-iconCss`} style={{ float: 'right' }} />
-              </Dropdown>
-              <Icon
-                type="right"
-                style={{ display: rightArrowsShow ? 'block' : 'none', float: 'right' }}
-                className={`${prefixCls}-iconCss`}
-                onClick={() => handleMobileTabs('right')}
-              />
+            </div>
+            <div id="gant-anchor-content" style={{ padding: '0', minHeight }}>
+              {content}
             </div>
           </div>
-          <div id="gant-anchor-content" style={{ padding: '0', minHeight }}>
-            {content}
-          </div>
-        </div>
-      )}
+        )}
     </>
   );
 };
