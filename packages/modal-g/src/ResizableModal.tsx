@@ -104,8 +104,8 @@ const ModalInner: React.FC<Props> = function ModalInner(props) {
         destroyOnClose
         onCancel={onCancel}
         onOk={onOk}
-        cancelButtonProps={{ size: 'small' }}
-        okButtonProps={{ size: 'small' }}
+        cancelButtonProps={{ size: 'small', ...cancelButtonProps }}
+        okButtonProps={{ size: 'small', ...okButtonProps }}
         {...restProps}
     >
         <div className={`${prefixCls}-resizableModalContent`} onClick={onFocus}>

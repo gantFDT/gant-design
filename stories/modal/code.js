@@ -150,8 +150,9 @@ const code4 =
 const code5 =
   `import React, { useState } from 'react'
   import { Button } from 'antd'
-  import { ResizableModal, ResizableProvider } from 'gantd'
-  // import { ResizableModal, ResizableProvider } from 'modal-g' //与gantd中引入效果相同
+  import { Modal } from 'gantd'
+  // import Modal from 'modal-g' //与gantd中引入效果相同
+  const { ResizableModal, ResizableProvider } = Modal
   
   function KeepState() {
     const [visible, setVisible] = useState(false)
