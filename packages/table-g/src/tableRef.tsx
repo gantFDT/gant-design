@@ -9,6 +9,7 @@ const TableComponent = (props) => {
     const width = useMemo(() => getStyleText(storageWidth), [storageWidth])
     const spac = useMemo(() => getStyleText(spacing), [spacing])
     const height = useMemo(() => getStyleText(scrollY), [scrollY])
+    const hasScrollY = useMemo(() => typeof scrollY !== 'undefined', [scrollY])
     useEffect(() => {
         if (table && table.parentElement) {
             // 主table
@@ -21,7 +22,7 @@ const TableComponent = (props) => {
                     // 横向滚动
                     const scrollX = parent.offsetHeight > parent.clientHeight
                     // fix bug:处理不同数据数量下的固定列滚动条的显示与否
-                    toggleFixedTable(parent, scrollY, scrollX)
+                    toggleFixedTable(parent, scrollY, scrollX, hasScrollY)
 
                     // 根据是否出现纵向滚动条来设置header的overflow-y
                     // 通过parent的宽度比较
@@ -54,7 +55,7 @@ const TableComponent = (props) => {
         /**
          * emitReCompute用于控制当展开表格的时候高度被撑开，动态去控制header右边的滚动条站位
          */
-    }, [table, dataSource.length, tableColumns, emitReCompute, virtualScroll, height, spac])
+    }, [table, dataSource.length, tableColumns, emitReCompute, virtualScroll, height, spac, hasScrollY])
     const tableRef = useCallback(
         (dom) => {
             if (dom) {

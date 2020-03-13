@@ -25,22 +25,22 @@ const schema = {
         key_4: {
             title: "url地址",
             type: "string",
-            componentType: "Url"
+            componentType: "InputUrl"
         },
         key_5: {
             title: "邮箱",
             type: "string",
-            componentType: "Email"
+            componentType: "InputEmail"
         },
         key_6: {
             title: "语言",
             type: "string",
-            componentType: "Language"
+            componentType: "InputLanguage"
         },
         key_7: {
             title: "手机号",
             type: "string",
-            componentType: "CellPhone"
+            componentType: "InputCellPhone"
         },
     }
 }
@@ -199,22 +199,22 @@ const code3 = `
         key_4: {
             title: "url地址",
             type: "string",
-            componentType: "Url"
+            componentType: "InputUrl"
         },
         key_5: {
             title: "邮箱",
             type: "string",
-            componentType: "Email"
+            componentType: "InputEmail"
         },
         key_6: {
             title: "语言",
             type: "string",
-            componentType: "Language"
+            componentType: "InputLanguage"
         },
         key_7: {
             title: "手机号",
             type: "string",
-            componentType: "CellPhone"
+            componentType: "InputCellPhone"
         },
     }
  }
@@ -354,22 +354,22 @@ const schema = {
         key_4: {
             title: "url地址",
             type: "string",
-            componentType: "Url"
+            componentType: "InputUrl"
         },
         key_5: {
             title: "邮箱",
             type: "string",
-            componentType: "Email"
+            componentType: "InputEmail"
         },
         key_6: {
             title: "语言",
             type: "string",
-            componentType: "Language"
+            componentType: "InputLanguage"
         },
         key_7: {
             title: "手机号",
             type: "string",
-            componentType: "CellPhone"
+            componentType: "InputCellPhone"
         },
     }
 }
@@ -644,9 +644,9 @@ const schema = {
                     componentType: "InputMoney"
                 },
                 url: {
-                    title: "Url 组件",
+                    title: "InputUrl 组件",
                     type: "string",
-                    componentType: "Url"
+                    componentType: "InputUrl"
                 },
                 grandson: {
                     type: "object",

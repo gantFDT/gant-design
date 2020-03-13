@@ -1,7 +1,7 @@
 const schema = {
     type: "object",
     title: "普通表单",
-    required:['key_1'],
+    required: ['key_1'],
     propertyType: {
         key_1: {
             title: "普通输入框",
@@ -20,22 +20,22 @@ const schema = {
         key_4: {
             title: "url地址",
             type: "string",
-            componentType: "Url"
+            componentType: "InputUrl"
         },
         key_5: {
             title: "邮箱",
             type: "string",
-            componentType: "Email"
+            componentType: "InputEmail"
         },
         key_6: {
             title: "语言",
             type: "string",
-            componentType: "Language"
+            componentType: "InputLanguage"
         },
         key_7: {
             title: "手机号",
             type: "string",
-            componentType: "CellPhone"
+            componentType: "InputCellPhone"
         },
     }
 }
@@ -75,6 +75,7 @@ const configSchma = {
             type: "string",
             componentType: "Selector",
             props: {
+                useStorage: false,
                 dataSource: [
                     {
                         label: "左",

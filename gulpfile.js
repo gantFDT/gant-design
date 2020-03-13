@@ -4,6 +4,7 @@ const babel = require('gulp-babel')
 const rimraf = require('rimraf')
 const path = require('path')
 const less = require('gulp-less')
+const uglify = require('gulp-uglify')
 const postcss = require('gulp-postcss')
 const autoprefixer = require('autoprefixer')
 const ts = require('gulp-typescript')
@@ -115,13 +116,20 @@ function ScriptTask(dirName) {
             }
             const buf = Buffer.from(content)
             file.contents = buf
-            if(filePath.endsWith('style/index.js')){
+            if(filePath.endsWith(`style${pathSplit}index.js`)){
               fs.writeFileSync(filePath.replace('index', 'css'), buf)
             }
             this.push(file)
             next()
           })
         )
+        .pipe(uglify({
+            warnings: false,
+            compress: {
+                drop_console: true,  // 过滤 console
+                drop_debugger: true  // 过滤 debugger
+            }
+        }))
         .pipe(dest(`packages/${dirName}/lib/`))
     },
     function compileDTS() {
@@ -152,7 +160,7 @@ function ScriptTask(dirName) {
 
             const buf = Buffer.from(content)
             
-            if(filePath.endsWith('style/index.d.ts')){
+            if(filePath.endsWith(`style${pathSplit}index.d.ts`)){
               fs.writeFileSync(filePath.replace('index', 'css'), buf)
             }
             file.contents = buf
@@ -235,7 +243,7 @@ function CopileToGantdTask(dirName, targetDir) {
               packageNames.forEach((packageName) => {
                 const _dirName = packageName.slice(9, -2);
                 if(_dirName === 'color-picker'){
-                  if(filePath.endsWith('style/index.js')){
+                  if(filePath.endsWith(`style${pathSplit}index.js`)){
                     content = content.replace(new RegExp('@' + _dirName, 'g'), pathPrefix + '../_color-picker');
                   }else{
                     content = content.replace(new RegExp('@' + _dirName, 'g'), pathPrefix + '_color-picker');
@@ -247,13 +255,20 @@ function CopileToGantdTask(dirName, targetDir) {
             }
             const buf = Buffer.from(content)
             file.contents = buf
-            if(filePath.endsWith('style/index.js')){
+            if(filePath.endsWith(`style${pathSplit}index.js`)){
               fs.writeFileSync(filePath.replace('index', 'css'), buf)
             }
             this.push(file)
             next()
           })
         )
+        .pipe(uglify({
+            warnings: false,
+            compress: {
+                drop_console: true,  // 过滤 console
+                drop_debugger: true  // 过滤 debugger
+            }
+        }))
         .pipe(dest(`packages/gantd/${targetDir}/${__dirName === 'data-cell' ? '' : (__dirName + '/')}`))
     },
     function compileDTS() {
@@ -275,7 +290,7 @@ function CopileToGantdTask(dirName, targetDir) {
             })
 
             const buf = Buffer.from(content)
-            if(filePath.endsWith('style/index.d.ts')){
+            if(filePath.endsWith(`style${pathSplit}index.d.ts`)){
               fs.writeFileSync(filePath.replace('index', 'css'), buf)
             }
             file.contents = buf

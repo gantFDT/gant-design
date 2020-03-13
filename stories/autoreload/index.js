@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Radio, Switch } from 'antd'
+import { Radio, Switch, ConfigProvider } from 'antd'
 import AutoReload from '@packages/auto-reload-g/src';
 import '@packages/auto-reload-g/src/style';
 import CodeDecorator from '../_util/CodeDecorator'
+import zhCN from 'antd/es/locale/zh_CN'
+import enUS from 'antd/es/locale/en_US'
 import code from './code.js';
 
 function Use1() {
@@ -33,22 +35,23 @@ function Use3() {
     unit: '自定义-unit'
   }
 
-  const [i18n, setI18n] = useState('en-US')
+  const [i18n, setI18n] = useState(zhCN)
   const [customLocale, setCustomLocale] = useState(false)
 
   return <>
-    <div style={{ marginBottom: 10 }}>
-      <Radio.Group size='small' onChange={(e) => setI18n(e.target.value)} value={i18n}>
-        <Radio.Button value={'en-US'}>英文</Radio.Button>
-        <Radio.Button value={'zh-CN'}>中文</Radio.Button>
-      </Radio.Group>
-      <span style={{ marginLeft: 10 }}>自定义local：</span><Switch checked={customLocale} onChange={(checked) => { setCustomLocale(checked) }} />
-    </div>
-    <AutoReload
-      i18n={i18n}
-      locale={customLocale ? initalLocale : null}
-      refresh={() => { console.log('refresh1') }}
-    />
+    <ConfigProvider locale={i18n}>
+      <div style={{ marginBottom: 10 }}>
+        <Radio.Group size='small' onChange={(e) => setI18n(e.target.value)} value={i18n}>
+          <Radio.Button value={enUS}>英文</Radio.Button>
+          <Radio.Button value={zhCN}>中文</Radio.Button>
+        </Radio.Group>
+        <span style={{ marginLeft: 10 }}>自定义local：</span><Switch checked={customLocale} onChange={(checked) => { setCustomLocale(checked) }} />
+      </div>
+      <AutoReload
+        locale={customLocale ? initalLocale : null}
+        refresh={() => { console.log('refresh1') }}
+      />
+    </ConfigProvider>
   </>
 }
 
@@ -70,7 +73,7 @@ const config = {
     },
     {
       title: '支持国际化',
-      describe: '可进行语言的切换，同时支持自定义',
+      describe: '可进行语言的切换，同时支持自定义（需要antd-ConfigProvider的上下文环境），默认中文',
       cmp: Use3
     }
   ]

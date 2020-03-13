@@ -40,8 +40,10 @@ ReactDOM.render(
 `
 const code_3 = `
 import React, { useState } from 'react';
-import { Radio, Switch } from 'antd';
+import { Radio, Switch, ConfigProvider } from 'antd';
 import { AutoReload } from 'gantd';
+import zhCN from 'antd/es/locale/zh_CN'
+import enUS from 'antd/es/locale/en_US'
 // import { AutoReload } from 'auto-reload-g';//与gantd中引入效果相同
 
 function Use3() {
@@ -53,22 +55,23 @@ function Use3() {
     unit: '自定义-unit'
   }
 
-  const [i18n, setI18n] = useState('en-US')
+  const [i18n, setI18n] = useState(zhCN)
   const [customLocale, setCustomLocale] = useState(false)
 
   return <>
-    <div style={{ marginBottom: 10 }}>
-      <Radio.Group size='small' onChange={(e) => setI18n(e.target.value)} value={i18n}>
-        <Radio.Button value={'en-US'}>英文</Radio.Button>
-        <Radio.Button value={'zh-CN'}>中文</Radio.Button>
-      </Radio.Group>
-      <span style={{ marginLeft: 10 }}>自定义local：</span><Switch checked={customLocale} onChange={(checked) => { setCustomLocale(checked) }} />
-    </div>
-    <AutoReload
-      i18n={i18n}
-      locale={customLocale ? initalLocale : null}
-      refresh={() => { console.log('refresh1') }}
-    />
+    <ConfigProvider locale={i18n}>
+      <div style={{ marginBottom: 10 }}>
+        <Radio.Group size='small' onChange={(e) => setI18n(e.target.value)} value={i18n}>
+          <Radio.Button value={enUS}>英文</Radio.Button>
+          <Radio.Button value={zhCN}>中文</Radio.Button>
+        </Radio.Group>
+        <span style={{ marginLeft: 10 }}>自定义local：</span><Switch checked={customLocale} onChange={(checked) => { setCustomLocale(checked) }} />
+      </div>
+      <AutoReload
+        locale={customLocale ? initalLocale : null}
+        refresh={() => { console.log('refresh1') }}
+      />
+    </ConfigProvider>
   </>
 }
 

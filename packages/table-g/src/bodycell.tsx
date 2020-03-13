@@ -1,7 +1,7 @@
 import React, { useState, useContext, useCallback, useEffect, useMemo } from 'react';
 import classnames from 'classnames'
 import _ from 'lodash'
-import { EditStatus, SwitchStatus}from'@data-cell'
+import { EditStatus, SwitchStatus } from '@data-cell'
 import { DataContext, RowContext, TableContext } from './context'
 
 import { EditConfig, Record } from './index'
@@ -242,6 +242,7 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 					dStyle.lineHeight = originLineHeight
 				}
 			}
+			console.log(style, dStyle)
 			return (
 				<td {...props} style={{ padding: 0 }} className={computedClassName} onClick={onClick} ref={onTD}>
 					<div style={dStyle} className={innerClassName} >
