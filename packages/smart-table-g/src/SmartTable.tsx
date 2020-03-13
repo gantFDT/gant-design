@@ -12,10 +12,10 @@ import ViewPicker, { DefaultView } from './viewpicker';
 import { useTableConfig, useLocalStorage } from './hooks';
 import { withFocusKeyEvent } from './keyevent';
 import { generateUuid } from '@util';
-import { IntlProvider } from 'react-intl';
-import { FormattedMessage } from 'react-intl';
 import en from './locale/en-US';
 import zh from './locale/zh-CN';
+import Receiver from './locale/Receiver';
+
 
 const defaultChildrenColumnName: string = 'children';
 const defaultRowKey: string = 'id';
@@ -58,7 +58,6 @@ function SmartTable<R>(props: SmartTableProps<R>) {
     ...restProps
   } = props;
 
-  const f = ({ id }) => <FormattedMessage id={id} />;
   const prefixCls = getPrefixCls('smart-table', customizePrefixCls);
 
   const { columns, systemViews } = useMemo(() => formatSchema(schema), [schema]);
@@ -230,45 +229,50 @@ function SmartTable<R>(props: SmartTableProps<R>) {
   });
 
   const HeaderRight: ReactNode = (
-    <>
-      {headerRight}
-      {onReload && (
-        <Tooltip title={f({ id: 'reload' })}>
-          <Button size="small" icon="reload" className="" onClick={() => onReload()} />
-        </Tooltip>
-      )}
-    </>
+    <Receiver>
+      {(locale) => <>
+        {headerRight}
+        {onReload && (
+          <Tooltip title={locale.reload}>
+            <Button size="small" icon="reload" className="" onClick={() => onReload()} />
+          </Tooltip>
+        )}
+      </>}
+    </Receiver>
+
   );
   const titleRef = useRef(null);
 
   const TableTitle = useMemo(
     () => (
-      <ViewPicker
-        viewName={activeView.name}
-        viewId={activeView.viewId}
-        customViews={viewList.customViews}
-        systemViews={viewList.systemViews}
-        switchActiveView={handlerChangeView}
-        updateView={handlerSaveViews}
-        renameLoading={renameLoading}
-        loading={updateViewLoading}
-        splitLine={!!title}
-        defaultView={defaultView}
-        onDefaultViewChange={setDefaultView}
-        config={
-          <Tooltip title={f({ id: 'config' })}>
-            <Button
-              size="small"
-              icon="setting"
-              className=""
-              onClick={() => setConfigModalVisible(true)}
-            />
-          </Tooltip>
-        }
-        getPopupContainer={() => titleRef.current || document.body}
-      />
+      <Receiver>
+        {(locale) => <ViewPicker
+          viewName={activeView.name}
+          viewId={activeView.viewId}
+          customViews={viewList.customViews}
+          systemViews={viewList.systemViews}
+          switchActiveView={handlerChangeView}
+          updateView={handlerSaveViews}
+          renameLoading={renameLoading}
+          loading={updateViewLoading}
+          splitLine={!!title}
+          defaultView={defaultView}
+          onDefaultViewChange={setDefaultView}
+          config={
+            <Tooltip title={locale.config}>
+              <Button
+                size="small"
+                icon="setting"
+                className=""
+                onClick={() => setConfigModalVisible(true)}
+              />
+            </Tooltip>
+          }
+          getPopupContainer={() => titleRef.current || document.body}
+        />}
+      </Receiver>
     ),
-    [activeView, viewList, renameLoading, updateViewLoading, defaultView, titleRef, title, f],
+    [activeView, viewList, renameLoading, updateViewLoading, defaultView, titleRef, title],
   );
 
   const tableHeight = useMemo(
@@ -291,29 +295,32 @@ function SmartTable<R>(props: SmartTableProps<R>) {
       />
       {renderable &&
         withFocusKeyEvent(
-          <Table
-            {...restProps}
-            columns={finalColumns}
-            dataSource={dataSource}
-            resizable={searchTableCellResizable}
-            bordered={panelConfig.bordered}
-            wrap={panelConfig.wrap}
-            isZebra={panelConfig.isZebra}
-            tableKey={`tableKey:${tableKey}`}
-            expandIcon={(_prop: any) => CustomExpandIcon(_prop, isTreeTable)}
-            rowSelection={fakeRowSelection}
-            childrenColumnName={childrenColumnName}
-            footerDirection={panelConfig.footerDirection}
-            bodyStyle={{
-              ...bodyStyle,
-              minHeight:
-                panelConfig.heightMode === 'auto' || isEmpty(dataSource) ? undefined : bodyHeight,
-            }}
-            scroll={{ y: tableHeight === 'auto' ? undefined : tableHeight, x: bodyWidth }}
-            rowKey={rowKey}
-            pagination={fakePagination}
-            emptyDescription={emptyDescription || f({ id: 'empty' })}
-          />,
+          <Receiver>
+            {(locale) => <Table
+              {...restProps}
+              columns={finalColumns}
+              dataSource={dataSource}
+              resizable={searchTableCellResizable}
+              bordered={panelConfig.bordered}
+              wrap={panelConfig.wrap}
+              isZebra={panelConfig.isZebra}
+              tableKey={`tableKey:${tableKey}`}
+              expandIcon={(_prop: any) => CustomExpandIcon(_prop, isTreeTable)}
+              rowSelection={fakeRowSelection}
+              childrenColumnName={childrenColumnName}
+              footerDirection={panelConfig.footerDirection}
+              bodyStyle={{
+                ...bodyStyle,
+                minHeight:
+                  panelConfig.heightMode === 'auto' || isEmpty(dataSource) ? undefined : bodyHeight,
+              }}
+              scroll={{ y: tableHeight === 'auto' ? undefined : tableHeight, x: bodyWidth }}
+              rowKey={rowKey}
+              pagination={fakePagination}
+              emptyDescription={emptyDescription || locale.empty}
+            />
+            }
+          </Receiver>,
           bindKeys,
         )}
       <ConfigModal
@@ -332,20 +339,4 @@ function SmartTable<R>(props: SmartTableProps<R>) {
   );
 }
 
-function LocalWrapper<T>(props: LocalWrapperProps<T>) {
-  const { i18n = navigator.language, locale, ...restProps } = props;
-  const langs = {
-    'en-US': en,
-    'zh-CN': zh,
-  };
-  let _i18n = Object.keys(langs).find(i => i == i18n);
-  let _locale = _i18n ? _i18n.split('-')[0] : 'en';
-  let messages = langs[i18n] || en;
-  if (locale) messages = { ...messages, ...locale };
-  return (
-    <IntlProvider locale={_locale} messages={messages}>
-      <SmartTable {...restProps} />
-    </IntlProvider>
-  );
-}
-export default LocalWrapper;
+export default SmartTable;

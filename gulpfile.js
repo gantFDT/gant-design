@@ -116,7 +116,7 @@ function ScriptTask(dirName) {
             }
             const buf = Buffer.from(content)
             file.contents = buf
-            if(filePath.endsWith('style/index.js')){
+            if(filePath.endsWith(`style${pathSplit}index.js`)){
               fs.writeFileSync(filePath.replace('index', 'css'), buf)
             }
             this.push(file)
@@ -160,7 +160,7 @@ function ScriptTask(dirName) {
 
             const buf = Buffer.from(content)
             
-            if(filePath.endsWith('style/index.d.ts')){
+            if(filePath.endsWith(`style${pathSplit}index.d.ts`)){
               fs.writeFileSync(filePath.replace('index', 'css'), buf)
             }
             file.contents = buf
@@ -243,7 +243,7 @@ function CopileToGantdTask(dirName, targetDir) {
               packageNames.forEach((packageName) => {
                 const _dirName = packageName.slice(9, -2);
                 if(_dirName === 'color-picker'){
-                  if(filePath.endsWith('style/index.js')){
+                  if(filePath.endsWith(`style${pathSplit}index.js`)){
                     content = content.replace(new RegExp('@' + _dirName, 'g'), pathPrefix + '../_color-picker');
                   }else{
                     content = content.replace(new RegExp('@' + _dirName, 'g'), pathPrefix + '_color-picker');
@@ -255,7 +255,7 @@ function CopileToGantdTask(dirName, targetDir) {
             }
             const buf = Buffer.from(content)
             file.contents = buf
-            if(filePath.endsWith('style/index.js')){
+            if(filePath.endsWith(`style${pathSplit}index.js`)){
               fs.writeFileSync(filePath.replace('index', 'css'), buf)
             }
             this.push(file)
@@ -290,7 +290,7 @@ function CopileToGantdTask(dirName, targetDir) {
             })
 
             const buf = Buffer.from(content)
-            if(filePath.endsWith('style/index.d.ts')){
+            if(filePath.endsWith(`style${pathSplit}index.d.ts`)){
               fs.writeFileSync(filePath.replace('index', 'css'), buf)
             }
             file.contents = buf

@@ -1,7 +1,9 @@
-const codeGenerator = (code) =>
+const codeGenerator = (code, islocalDemo) =>
   `import React, { useState } from 'react'
-import { Button, Tag, Divider } from 'antd'
-import { SmartTable } from 'gantd'
+  import { Divider, Tag, Radio, Switch, Button, message, ConfigProvider } from 'antd'
+  import { SmartTable } from 'gantd'
+  ${islocalDemo ? "import zhCN from 'antd/es/locale/zh_CN'" : ''}
+  ${islocalDemo ? "import enUS from 'antd/es/locale/en_US'" : ''}
 //import { SmartTable } from 'smart-table-g';//与gantd中引入效果相同
 const dataSource = [
   {
@@ -239,37 +241,28 @@ function TableUse() {
   )
 }`
 const code5 = `function LocalUse() {
-  const initalLocale = {
-    sysView: '自定义-System view',
-    companyView: '自定义-Company view',
-    customView: '自定义-Custom view',
-  }
-  const [i18n, setI18n] = useState('en-US')
-  const [customLocale, setCustomLocale] = useState(false)
+  const [i18n, setI18n] = useState(zhCN)
   return (
     <div style={{ margin: 10 }}>
-      <div style={{ marginBottom: 10 }}>
-        <p><span>自定义local：</span><Switch checked={customLocale} onChange={(checked) => { setCustomLocale(checked) }} /></p>
-        <Radio.Group size='small' onChange={(e) => setI18n(e.target.value)} value={i18n}>
-          <Radio.Button value={'en-US'}>英文</Radio.Button>
-          <Radio.Button value={'zh-CN'}>中文</Radio.Button>
-        </Radio.Group>
-      </div>
-      <SmartTable
-        i18n={i18n}
-        locale={customLocale ? initalLocale : null}
-        onReload={() => { }}
-        tableKey="BasicUse"
-        schema={tableColumns}
-        dataSource={dataSource}
-      />
+      <Radio.Group size='small' onChange={(e) => setI18n(e.target.value)} value={i18n}>
+        <Radio.Button value={enUS}>英文</Radio.Button>
+        <Radio.Button value={zhCN}>中文</Radio.Button>
+      </Radio.Group>
+      <ConfigProvider locale={i18n}>
+        <SmartTable
+          tableKey="BasicUse"
+          schema={tableColumns}
+          dataSource={dataSource}
+          onReload={() => { }}
+        />
+      </ConfigProvider>
     </div>
   )
 }
 `
 
 const code6 =
-`import React, { useState, useCallback, useMemo } from 'react'
+  `import React, { useState, useCallback, useMemo } from 'react'
 import { Button, message } from 'antd'
 import { SmartTable, Input, InputNumber, DatePicker, InputUrl, LocationSelector, InputCellPhone, InputEmail, InputLanguage, InputMoney, EditStatus, SwitchStatus } from 'gantd'
 //import { Input, InputNumber, DatePicker, InputUrl, LocationSelector, InputCellPhone, InputEmail, InputLanguage, InputMoney, EditStatus, SwitchStatus } from 'gantd'
@@ -488,4 +481,4 @@ ReactDOM.render(
   mountNode,
 )`
 
-export default [codeGenerator(code1), codeGenerator(code2), codeGenerator(code3), codeGenerator(code4), codeGenerator(code5), code6];
+export default [codeGenerator(code1), codeGenerator(code2), codeGenerator(code3), codeGenerator(code4), codeGenerator(code5, true), codeGenerator(code6)];

@@ -1,8 +1,8 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect } from 'react'
 import { Tooltip, Divider, Switch, InputNumber, Icon } from 'antd'
-import moment from 'moment';
+import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver'
+import moment from 'moment'
 import classnames from 'classnames'
-import { IntlProvider, injectIntl } from 'react-intl'
 import en from './locale/en-US'
 import zh from './locale/zh-CN'
 const format = "hh:mm:ss"
@@ -16,7 +16,7 @@ export interface LocaleProps {
 }
 
 export interface Props {
-  intl?: any,
+  locale?: LocaleProps,
   prefixCls?: string,
   auto?: boolean,
   interval?: number,
@@ -26,19 +26,14 @@ export interface Props {
   style?: object
 }
 
-export enum langEnum {
-  'zh-CN' = 'zh-CN',
-  'en-US' = 'en-US',
-}
-export interface LocalLocalWrapperProps extends Props {
-  i18n?: langEnum,
-  locale?: LocaleProps
+const langs = {
+  'en': en,
+  'zh-cn': zh
 }
 
 let playFun: any = null;
 
-const AutoReload: React.SFC<Props> = ({ auto = false, interval = 1, intl, ...props }) => {
-  const f = ({ id }) => intl.formatMessage({ id });
+const AutoReload: React.SFC<Props> = ({ auto = false, interval = 1, locale: customLocale, ...props }) => {
   const {
     prefixCls: customizePrefixCls = 'gant',
     className,
@@ -74,7 +69,6 @@ const AutoReload: React.SFC<Props> = ({ auto = false, interval = 1, intl, ...pro
       clearInterval(playFun);
       playFun = null
     }
-    
     return () => {
       if (playFun) clearInterval(playFun);
     }
@@ -91,47 +85,39 @@ const AutoReload: React.SFC<Props> = ({ auto = false, interval = 1, intl, ...pro
     }
   }, [setAutoTime])
 
-  return <div className={classnames('ant-btn', 'ant-btn-sm', prefixCls + '-container', clsString)} style={style} >
-    <Tooltip title={f({ id: 'tips' })} >
-      <div onClick={handleRefresh} className={prefixCls + '-toolTipTime'} ><span style={{ verticalAlign: 0 }} ><Icon type='redo' /></span> {updateTime}</div>
-    </Tooltip>
-    <Divider type="vertical" />
-    <Tooltip title={autoRefresh ? f({ id: 'close' }) : f({ id: 'open' })} >
-      <Switch className={prefixCls + '-autoSwitch'} size="small" checked={autoRefresh} onChange={switchChange} />
-    </Tooltip>
-    {
-      autoRefresh && <>
-        <Divider type="vertical" />
-        <Tooltip title={<div className={prefixCls + '-toolTipContainer'} >
-          <p>{f({ id: 'set' })}</p>
-          <p>({f({ id: 'unit' })})</p>
-        </div>} >
-          <InputNumber value={autoTime}
-            min={1}
-            max={30}
-            size='small'
-            onChange={inputChange}
-            className={prefixCls + '-autoTimeInput'}
-          />
+  return <LocaleReceiver>
+    {(local, localeCode = 'zh-cn') => {
+      let lang = langs[localeCode] || langs['zh-cn']
+      const locale = { ...lang, ...customLocale }
+      return <div className={classnames('ant-btn', 'ant-btn-sm', prefixCls + '-container', clsString)} style={style} >
+        <Tooltip title={locale.tips}>
+          <div onClick={handleRefresh} className={prefixCls + '-toolTipTime'} ><span style={{ verticalAlign: 0 }} ><Icon type='redo' /></span> {updateTime}</div>
         </Tooltip>
-      </>
+        <Divider type="vertical" />
+        <Tooltip title={autoRefresh ? locale.close : locale.open} >
+          <Switch className={prefixCls + '-autoSwitch'} size="small" checked={autoRefresh} onChange={switchChange} />
+        </Tooltip>
+        {
+          autoRefresh && <>
+            <Divider type="vertical" />
+            <Tooltip title={<div className={prefixCls + '-toolTipContainer'} >
+              <p>{locale.set}</p>
+              <p>({locale.unit})</p>
+            </div>} >
+              <InputNumber value={autoTime}
+                min={1}
+                max={30}
+                size='small'
+                onChange={inputChange}
+                className={prefixCls + '-autoTimeInput'}
+              />
+            </Tooltip>
+          </>
+        }
+      </div>
     }
-  </div>
+    }
+  </LocaleReceiver>
 }
-const InjectIntl = injectIntl(AutoReload)
 
-const LocalWrapper = (props: LocalLocalWrapperProps) => {
-  const { i18n = navigator.language, locale, ...restProps } = props
-  const langs = {
-    'en-US': en,
-    'zh-CN': zh
-  }
-  let _i18n = Object.keys(langs).find(i => i == i18n)
-  let _locale = _i18n ? _i18n.split('-')[0] : 'en'
-  let messages = langs[i18n] || en
-  if (locale) messages = { ...messages, ...locale }
-  return <IntlProvider locale={_locale} messages={messages}>
-    <InjectIntl {...restProps} />
-  </IntlProvider>
-}
-export default LocalWrapper
+export default AutoReload

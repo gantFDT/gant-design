@@ -55,7 +55,7 @@ function BasicUse() {
   const list = [
     {
       id: 'horbasic1',
-      title: '基本信息1',
+      title: '基本信息',
       complete: true
     },
     {
@@ -83,11 +83,11 @@ function BasicUse() {
         list={list}
         minHeight={800}
         content={
-          <div>
+          <>
             <div id='horbasic1' style={style}>基本信息</div>
             <div id='horbasic2' style={style}>高级信息</div>
             <div id='horbasic3' style={style}>额外信息</div>
-          </div>
+          </>
         }
       />
     </>

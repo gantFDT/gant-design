@@ -8,7 +8,7 @@ import {
 } from 'react-sortable-hoc';
 import arrayMove from 'array-move';
 import { Icon } from '@data-cell';
-import { FormattedMessage } from 'react-intl';
+import Receiver from '../locale/Receiver';
 
 interface RecordProps {
   dataIndex: string;
@@ -29,7 +29,6 @@ function Sortable(props: SortableProps) {
   const { dataSource, onChange } = props;
 
   if (!dataSource || !dataSource.length) return null;
-  const f = ({ id }) => <FormattedMessage id={id} />;
 
   const fakeDataSource = useMemo(() => {
     const sliceDataSource = (start: number, end?: number) =>
@@ -80,7 +79,7 @@ function Sortable(props: SortableProps) {
         onChange(dataSource);
       } else {
         notification.info({
-          message: f({ id: 'onlySide' }),
+          message: <Receiver>{(locale) => <>{locale.onlySide}</>}</Receiver>,
         });
       }
     },
@@ -94,7 +93,7 @@ function Sortable(props: SortableProps) {
         onChange(dataSource);
       } else {
         notification.info({
-          message: f({ id: 'onlyNearUnlock' }),
+          message: <Receiver>{(locale) => <>{locale.onlyNearUnlock}</>}</Receiver>,
         });
       }
     },
@@ -121,7 +120,7 @@ function Sortable(props: SortableProps) {
 
   const SortableItem = SortableElement(
     ({ record: { title, checked, align }, realIndex, lock }: any) => (
-      <Row type="flex" align="middle" justify="space-between" className="tableRow">
+      <Row type="flex" align="middle" justify="space-between" className="tableRow gant-table-config-row">
         <div style={{ flexGrow: 0 }}>
           <Checkbox checked={checked} onChange={handlerFieldVisible.bind(null, realIndex)} />
         </div>
@@ -152,18 +151,20 @@ function Sortable(props: SortableProps) {
             </Radio.Button>
           </Radio.Group>
         </div>
-        <div style={{ flexGrow: 0, display: 'flex', width: 56, flexDirection: 'row-reverse' }}>
-          {!lock && <DragHandler />}
-          {lock ? (
-            <Tooltip style={{ flex: 0 }} placement="top" title={f({ id: 'setNormalColumn' })}>
-              <AntdIcon type="lock" onClick={() => handlerUnlock(realIndex)} className="disabledIcon" />
-            </Tooltip>
-          ) : (
-            <Tooltip placement="top" title={f({ id: 'setFixedColumn' })}>
-              <AntdIcon type="unlock" onClick={() => handlerLock(realIndex)} className="disabledIcon" />
-            </Tooltip>
-          )}
-        </div>
+        <Receiver>{
+          (locale) => <div style={{ flexGrow: 0, display: 'flex', width: 56, flexDirection: 'row-reverse' }}>
+            {!lock && <DragHandler />}
+            {lock ? (
+              <Tooltip style={{ flex: 0 }} placement="top" title={locale.setNormalColumn}>
+                <AntdIcon type="lock" onClick={() => handlerUnlock(realIndex)} className="disabledIcon" />
+              </Tooltip>
+            ) : (
+                <Tooltip placement="top" title={locale.setFixedColumn}>
+                  <AntdIcon type="unlock" onClick={() => handlerLock(realIndex)} className="disabledIcon" />
+                </Tooltip>
+              )}
+          </div>}
+        </Receiver>
       </Row>
     ),
   );
@@ -220,30 +221,32 @@ function Sortable(props: SortableProps) {
   );
 
   return (
-    <div style={{ paddingBottom: 10 }} className="gant-smart-table-sortable">
-      <Row type="flex" align="middle" justify="space-between" className="tableHeader">
-        <div style={{ flexGrow: 0 }}>
-          <Checkbox
-            indeterminate={indeterminate}
-            onChange={onCheckAllChange}
-            checked={checkedAll}
+    <Receiver>
+      {(locale) => <div style={{ paddingBottom: 10 }} className="gant-smart-table-sortable">
+        <Row type="flex" align="middle" justify="space-between" className="tableHeader">
+          <div style={{ flexGrow: 0 }}>
+            <Checkbox
+              indeterminate={indeterminate}
+              onChange={onCheckAllChange}
+              checked={checkedAll}
+            />
+          </div>
+          <div style={{ flexGrow: 1 }}>
+            {locale.checkAll}（{`${selectedRows.length}/${dataSource.length}`}）
+        </div>
+          <div style={{ flexGrow: 1 }}>{locale.align}</div>
+          <div style={{ flexGrow: 0, width: 56 }}></div>
+        </Row>
+        <div>
+          <SortableList
+            onSortEnd={handlerSortEnd}
+            axis="y"
+            helperClass="sortableHelper"
+            useDragHandle
           />
         </div>
-        <div style={{ flexGrow: 1 }}>
-          {f({ id: 'checkAll' })}（{`${selectedRows.length}/${dataSource.length}`}）
-        </div>
-        <div style={{ flexGrow: 1 }}>{f({ id: 'align' })}</div>
-        <div style={{ flexGrow: 0, width: 56 }}></div>
-      </Row>
-      <div>
-        <SortableList
-          onSortEnd={handlerSortEnd}
-          axis="y"
-          helperClass="sortableHelper"
-          useDragHandle
-        />
-      </div>
-    </div>
+      </div>}
+    </Receiver>
   );
 }
 

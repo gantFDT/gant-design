@@ -1,10 +1,12 @@
 import React, { useState, useCallback, useMemo, useEffect } from 'react'
-import { Divider, Tag, Radio, Switch, Button, message } from 'antd'
+import { Divider, Tag, Radio, Switch, Button, message, ConfigProvider } from 'antd'
 import SmartTable from '@packages/smart-table-g/src'
 import '@packages/smart-table-g/src/style'
 import { Input, InputNumber, DatePicker, InputUrl, LocationSelector, InputCellPhone, InputEmail, InputLanguage, InputMoney, EditStatus, SwitchStatus } from '@packages/data-cell-g/src'
 import _ from 'lodash'
 import CodeDecorator from '../_util/CodeDecorator'
+import zhCN from 'antd/es/locale/zh_CN'
+import enUS from 'antd/es/locale/en_US'
 import code from './code.js'
 
 const tableColumns1 = [
@@ -182,12 +184,6 @@ function EditInlineUse() {
     setEditing(EditStatus.SAVE)
   }, [])
 
-  // useEffect(() => {
-  //   setInterval(() => {
-  //     setEditing(SwitchStatus)
-  //   }, 1000);
-  // }, [SwitchStatus]);
-
   return (
     <div style={{ margin: 10 }}>
       <SmartTable
@@ -205,7 +201,7 @@ function EditInlineUse() {
             <Button
               icon={editing === EditStatus.EDIT ? "roolback" : "edit"}
               size="small"
-              onClick={() => { if (editing === EditStatus.CANCEL) { message.info('请单击单元格进行编辑') };setEditing(SwitchStatus) }}
+              onClick={() => { if (editing === EditStatus.CANCEL) { message.info('请单击单元格进行编辑') }; setEditing(SwitchStatus) }}
             >
               {editing === EditStatus.EDIT ? "结束" : "进入"}编辑
             </Button>
@@ -372,21 +368,21 @@ function ConfigDisplayUse() {
   }
   const [rowKeys, setRowKeys] = useState([])
   return (
-      <div style={{ margin: 10 }}>
-        <SmartTable
-          tableKey="ConfigDisplayUse"
-          schema={tableSchema}
-          dataSource={dataSource}
-          rowSelection={
-            {
-              selectedRowKeys: rowKeys,
-              onChange: (selectedRowKeys, selectedRows) => {
-                setRowKeys(selectedRowKeys)
-              }
+    <div style={{ margin: 10 }}>
+      <SmartTable
+        tableKey="ConfigDisplayUse"
+        schema={tableSchema}
+        dataSource={dataSource}
+        rowSelection={
+          {
+            selectedRowKeys: rowKeys,
+            onChange: (selectedRowKeys, selectedRows) => {
+              setRowKeys(selectedRowKeys)
             }
           }
-        />
-      </div>
+        }
+      />
+    </div>
   )
 }
 
@@ -456,30 +452,21 @@ function MultiViewUse() {
 }
 
 function LocalUse() {
-  const initalLocale = {
-    sysView: '自定义-System view',
-    companyView: '自定义-Company view',
-    customView: '自定义-Custom view',
-  }
-  const [i18n, setI18n] = useState('en-US')
-  const [customLocale, setCustomLocale] = useState(false)
+  const [i18n, setI18n] = useState(zhCN)
   return (
     <div style={{ margin: 10 }}>
-      <div style={{ marginBottom: 10 }}>
-        <p><span>自定义local：</span><Switch checked={customLocale} onChange={(checked) => { setCustomLocale(checked) }} /></p>
-        <Radio.Group size='small' onChange={(e) => setI18n(e.target.value)} value={i18n}>
-          <Radio.Button value={'en-US'}>英文</Radio.Button>
-          <Radio.Button value={'zh-CN'}>中文</Radio.Button>
-        </Radio.Group>
-      </div>
-      <SmartTable
-        i18n={i18n}
-        locale={customLocale ? initalLocale : null}
-        onReload={() => { }}
-        tableKey="BasicUse"
-        schema={tableColumns}
-        dataSource={dataSource}
-      />
+      <Radio.Group size='small' onChange={(e) => setI18n(e.target.value)} value={i18n}>
+        <Radio.Button value={enUS}>英文</Radio.Button>
+        <Radio.Button value={zhCN}>中文</Radio.Button>
+      </Radio.Group>
+      <ConfigProvider locale={i18n}>
+        <SmartTable
+          tableKey="BasicUse"
+          schema={tableColumns}
+          dataSource={dataSource}
+          onReload={() => { }}
+        />
+      </ConfigProvider>
     </div>
   )
 }
@@ -520,7 +507,7 @@ const config = {
     },
     {
       title: '国际化用法',
-      describe: '可进行语言的切换，同时支持自定义',
+      describe: '可进行语言的切换，同时支持自定义（需要antd-ConfigProvider的上下文环境），默认中文',
       cmp: LocalUse
     },
     {

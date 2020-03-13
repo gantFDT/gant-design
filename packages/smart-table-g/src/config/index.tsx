@@ -6,8 +6,7 @@ import { deepCopy4JSON } from '@util';
 import ViewPicker from '../viewpicker';
 import SaveAsModal from './SaveAsModal';
 import UIContent from './UIContent';
-import { FormattedMessage } from 'react-intl';
-
+import Receiver from '../locale/Receiver';
 interface ConfigModalProps extends ModalProps {
   dataSource: any;
   originColumns: any;
@@ -39,7 +38,6 @@ function ConfigModal(props: ConfigModalProps) {
 
   const [fakeView, setFakeView] = useState(deepCopy4JSON(dataSource));
   const { panelConfig } = fakeView;
-  const f = ({ id }) => <FormattedMessage id={id} />;
 
   useEffect(() => {
     const view = deepCopy4JSON(dataSource);
@@ -54,7 +52,7 @@ function ConfigModal(props: ConfigModalProps) {
   const handlerSave = useCallback(() => {
     if (!panelConfig.columnFields.filter((record: any) => record.checked).length)
       return notification.info({
-        message: f({ id: 'saveMessage' }),
+        message: <Receiver>{(locale) => <>{locale.saveMessage}</>}</Receiver>,
       });
     onOk && onOk(fakeView);
   }, [fakeView]);
@@ -103,7 +101,7 @@ function ConfigModal(props: ConfigModalProps) {
         title={
           <>
             <Icon type="setting" />
-            <span style={{ margin: '0 8px' }}>{f({ id: 'config' })}</span>
+            <Receiver>{(locale) => <span style={{ margin: '0 8px' }}>{locale.config}</span>}</Receiver>
             <ViewPicker
               viewName={fakeView.name}
               viewId={fakeView.viewId}
@@ -119,29 +117,33 @@ function ConfigModal(props: ConfigModalProps) {
         destroyOnClose
         isModalDialog
         footer={
-          <div>
-            <Button size="small" icon="close-circle" onClick={handlerClose}>
-              {f({ id: 'cancel' })}
-            </Button>
-            <Button
-              size="small"
-              icon="diff"
-              onClick={() => {
-                setTitleModalVisible(true);
-              }}
-            >
-              {f({ id: 'saveAs' })}
-            </Button>
-            <Button
-              size="small"
-              type="primary"
-              icon="save"
-              onClick={handlerSave}
-              disabled={isSystem}
-            >
-              {f({ id: 'save' })}
-            </Button>
-          </div>
+          <Receiver>
+            {(locale) => {
+              return <>
+                <Button size="small" icon="close-circle" onClick={handlerClose}>
+                  {locale.cancel}
+                </Button>
+                <Button
+                  size="small"
+                  icon="diff"
+                  onClick={() => {
+                    setTitleModalVisible(true);
+                  }}
+                >
+                  {locale.saveAs}
+                </Button>
+                <Button
+                  size="small"
+                  type="primary"
+                  icon="save"
+                  onClick={handlerSave}
+                  disabled={isSystem}
+                >
+                  {locale.save}
+                </Button>
+              </>
+            }}
+          </Receiver>
         }
         {...restProps}
       >

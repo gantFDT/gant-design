@@ -5,7 +5,7 @@ import _ from 'lodash';
 import Panel from './Panel';
 import EditModal from './EditModal';
 import { getActiveDefaultView } from './utils';
-import { FormattedMessage } from 'react-intl';
+import Receiver from '../locale/Receiver';
 
 export type ViewType = 'company' | 'system' | 'custom';
 
@@ -65,7 +65,6 @@ export default function View(props: ViewProps) {
   const [editView, setEditView] = useState({ name: '' });
   const currentLoading = loading || renameLoading ? true : false;
   const [showPop, setShowPop] = useState(false);
-  const f = ({ id }) => <FormattedMessage id={id} />;
 
   const switchActiveViewImpl = useCallback(
     (viewType: ViewType, view: any) => {
@@ -99,7 +98,7 @@ export default function View(props: ViewProps) {
 
   const views = useMemo(() => {
     if (systemViews.length === 0 && customViews.length === 0) {
-      return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={f({ id: 'noView' })}></Empty>;
+      return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={<Receiver>{(locale) => <>{locale.noView}</>}</Receiver>}></Empty >;
     }
 
     const activeDefaultView = getActiveDefaultView({
@@ -112,40 +111,46 @@ export default function View(props: ViewProps) {
     return (
       <div style={{ margin: '-10px' }}>
         <Spin spinning={currentLoading}>
-          <Panel
-            title={f({ id: 'sysView' })}
-            views={systemViews}
-            viewType="system"
-            switchActiveView={switchActiveViewImpl.bind(null, 'system')}
-            updateView={updateView}
-            defaultViewId={activeDefaultView.viewId}
-            onDefaultViewChange={onDefaultViewChange}
-          />
-          {companyViews.length > 0 && (
-            <Panel
-              title={f({ id: 'companyView' })}
-              views={companyViews}
-              viewType="company"
-              switchActiveView={switchActiveViewImpl.bind(null, 'company')}
-              updateView={updateView}
-              defaultViewId={activeDefaultView.viewId}
-              onDefaultViewChange={onDefaultViewChange}
-            />
-          )}
-          <Panel
-            viewId={viewId}
-            title={f({ id: 'customView' })}
-            views={customViews}
-            viewType="custom"
-            switchActiveView={switchActiveViewImpl.bind(null, 'custom')}
-            updateView={updateView}
-            setViewName={setEditViewName}
-            setShowModal={setShowModal}
-            setEditView={setEditView}
-            defaultViewId={activeDefaultView.viewId}
-            onDefaultViewChange={onDefaultViewChange}
-            extra={config}
-          />
+          <Receiver>
+            {(locale) => {
+              return <>
+                <Panel
+                  title={locale.sysView}
+                  views={systemViews}
+                  viewType="system"
+                  switchActiveView={switchActiveViewImpl.bind(null, 'system')}
+                  updateView={updateView}
+                  defaultViewId={activeDefaultView.viewId}
+                  onDefaultViewChange={onDefaultViewChange}
+                />
+                {companyViews.length > 0 && (
+                  <Panel
+                    title={locale.companyView}
+                    views={companyViews}
+                    viewType="company"
+                    switchActiveView={switchActiveViewImpl.bind(null, 'company')}
+                    updateView={updateView}
+                    defaultViewId={activeDefaultView.viewId}
+                    onDefaultViewChange={onDefaultViewChange}
+                  />
+                )}
+                <Panel
+                  viewId={viewId}
+                  title={locale.customView}
+                  views={customViews}
+                  viewType="custom"
+                  switchActiveView={switchActiveViewImpl.bind(null, 'custom')}
+                  updateView={updateView}
+                  setViewName={setEditViewName}
+                  setShowModal={setShowModal}
+                  setEditView={setEditView}
+                  defaultViewId={activeDefaultView.viewId}
+                  onDefaultViewChange={onDefaultViewChange}
+                  extra={config}
+                />
+              </>
+            }}
+          </Receiver>
         </Spin>
       </div>
     );
@@ -178,8 +183,12 @@ export default function View(props: ViewProps) {
             SplitLine: splitLine,
           })}
         >
-          {viewName || f({ id: 'view' })}
-          <Icon type="down" style={{ marginLeft: '5px' }} />
+          <Receiver>{(locale) => {
+            return <>
+              {viewName || locale.view}
+              <Icon type="down" style={{ marginLeft: '5px' }} />
+            </>
+          }}</Receiver>
         </div>
       </Popover>
       <EditModal

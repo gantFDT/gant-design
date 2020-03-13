@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { Modal, Form, Input } from 'antd';
 import _ from 'lodash';
-import { FormattedMessage } from 'react-intl';
+import Receiver from '../locale/Receiver';
 
 interface EditModalProps {
   loading: boolean;
@@ -22,7 +22,6 @@ const EditModal = (props: EditModalProps) => {
     onSubmit,
   } = props;
 
-  const f = ({ id }) => <FormattedMessage id={id} />;
 
   const onOk = useCallback(
     (e: any) => {
@@ -43,36 +42,37 @@ const EditModal = (props: EditModalProps) => {
   }, []);
 
   return (
-    <div
-      onMouseDown={stoppropagation}
-      onDoubleClick={stoppropagation}
-      style={{ display: 'inline-block' }}
-    >
-      <Modal
-        okText={f({ id: 'ok' })}
-        cancelText={f({ id: 'cancel' })}
-        title={f({ id: 'setViewName' })}
-        visible={showModal}
-        destroyOnClose
-        centered
-        onCancel={setShowModal.bind(null, false)}
-        zIndex={1040}
-        onOk={onOk}
-        confirmLoading={loading}
-        okButtonProps={{ size: 'small' }}
-        cancelButtonProps={{ size: 'small' }}
+    <Receiver>
+      {(locale) => <div
+        onMouseDown={stoppropagation}
+        onDoubleClick={stoppropagation}
+        style={{ display: 'inline-block' }}
       >
-        <Form layout="horizontal">
-          <Form.Item>
-            {getFieldDecorator('name', {
-              initialValue: initValue,
-              rules: [{ required: true, message: f({ id: 'viewNameRequired' }) }],
-              // })(<Input placeholder={f({ id: 'viewNamePlaceholder' })} maxLength={500} />)}
-            })(<Input maxLength={500} />)}
-          </Form.Item>
-        </Form>
-      </Modal>
-    </div>
+        <Modal
+          okText={locale.ok}
+          cancelText={locale.cancel}
+          title={locale.setViewName}
+          visible={showModal}
+          destroyOnClose
+          centered
+          onCancel={setShowModal.bind(null, false)}
+          zIndex={1040}
+          onOk={onOk}
+          confirmLoading={loading}
+          okButtonProps={{ size: 'small' }}
+          cancelButtonProps={{ size: 'small' }}
+        >
+          <Form layout="horizontal">
+            <Form.Item>
+              {getFieldDecorator('name', {
+                initialValue: initValue,
+                rules: [{ required: true, message: locale.viewNameRequired }],
+              })(<Input placeholder={locale.viewNamePlaceholder} maxLength={500} />)}
+            </Form.Item>
+          </Form>
+        </Modal>
+      </div>}
+    </Receiver>
   );
 };
 

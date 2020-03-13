@@ -63,16 +63,11 @@ export interface OptionalProps {
 	className?: any,
 	ref?: any | ReactElement | ReactHTML | HTMLDivElement
 }
-export enum langEnum {
-	'zh-CN' = 'zh-CN',
-	'en-US' = 'en-US',
-}
+
 export interface LocaleProps {
 	required: string
 }
 export interface Props extends OptionalProps {
-	i18n?: langEnum,
-	locale?: LocaleProps,
 	prefixCls?: string,
 	onSave: (id: any, value: any, cb: any) => any,
 	form: WrappedFormUtils,
