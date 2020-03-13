@@ -105,16 +105,16 @@ export function getOrders(orders: string[], targetArray: string[]): string[] {
 }
 
 export function getUIData(uiSchema: UISchema, type: "field" | "form", pathName?: string): any {
-	let uiData = {}, uiSchemaData = pathName ? get(uiSchema, pathName) : uiSchema;
-	if (uiSchemaData === undefined && pathName) {
+	let uiData = {}, uiSchemaData = pathName ? get(uiSchema, pathName, {}) : uiSchema;
+	if (pathName) {
 		const arr = pathName.split('.');
 		let index = arr.length - 1;
-		while (uiSchemaData === undefined && index >= 0) {
+		while (index >= 0) {
 			index--;
-			uiSchemaData = get(uiSchema, arr.slice(0, index + 1))
+			uiSchemaData = { ...get(uiSchema, arr.slice(0, index + 1).join('.'), {}), ...uiSchemaData }
 		}
 	}
-	if (uiSchemaData == undefined) uiSchemaData = { ...uiSchema };
+	uiSchemaData = { ...uiSchema, ...uiSchemaData };
 	uiArray.map(item => {
 		if (item.belong === type || item.belong.indexOf(type) >= 0) {
 			if (typeof item.name === "string") {
@@ -248,7 +248,7 @@ export function getNewValue(formVals: any, data: any, schema) {
 	data = data ? data : {}
 	Object.keys(formVals).map((keyname: string) => {
 		if (formVals[keyname] && typeof formVals[keyname] === 'object' && !Array.isArray(formVals[keyname])) {
-			newVals[keyname] = getNewValue(formVals[keyname], data[keyname],schema)
+			newVals[keyname] = getNewValue(formVals[keyname], data[keyname], schema)
 		} else {
 			newVals[keyname] = get(data, `${keyname}`, undefined)
 		}
