@@ -28,7 +28,7 @@ const Card = (props: CardIf) => {
       bordered={bordered}
       bodyStyle={{ ...dafaultBodyStyle, ...bodyStyle }}
       size='small'
-      headStyle={{ display: 'flex', ...headStyle }}
+      headStyle={{...headStyle }}
       {...restProps}
     >
       {children}
