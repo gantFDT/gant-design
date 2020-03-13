@@ -4,7 +4,7 @@ import BlockHeader, { headerType } from '@header';
 import { getType } from '@util';
 import Sortable from '../sortable';
 import formatSchema from '../formatschema';
-import { FormattedMessage } from 'react-intl';
+import Receiver from '../locale/Receiver';
 
 interface UIContentProps {
   viewConfig: any;
@@ -20,8 +20,6 @@ function UIContent(props: UIContentProps) {
     uiFields = ['wrap', 'isZebra', 'bordered', 'clickable', 'footerDirection', 'heightMode'],
     onChange,
   } = props;
-
-  const f = ({ id }) => <FormattedMessage id={id} />;
 
   useEffect(() => {
     if (schema && viewConfig && !viewConfig.columnFields) {
@@ -84,116 +82,120 @@ function UIContent(props: UIContentProps) {
   }, [viewConfig]);
 
   return (
-    <>
-      <Radio.Group
-        value={tabKey}
-        onChange={handlerChangeTabKey}
-        style={{ marginBottom: 16, width: '100%', display: 'flex' }}
-        buttonStyle="solid"
-      >
-        <Radio.Button style={{ flex: 1, textAlign: 'center' }} value="field">
-          {f({ id: 'fieldConfig' })}
-        </Radio.Button>
-        <Radio.Button style={{ flex: 1, textAlign: 'center' }} value="ui">
-          {f({ id: 'displayConfig' })}
-        </Radio.Button>
-      </Radio.Group>
-      {tabKey === 'field' ? (
-        <Sortable dataSource={columnFields} onChange={handlerChangeColumnKeys} />
-      ) : (
-        <>
-          {uiFields.map((K: string, I: number) => {
-            switch (K) {
-              case 'wrap':
-                return (
-                  <div key={K}>
-                    <BlockHeader type={headerType.num} num={I + 1} title={f({ id: 'isWrap' })} />
-                    <Switch
-                      checked={wrap}
-                      disabled={hasFixed}
-                      onChange={handlerChange.bind(null, 'wrap')}
-                      checkedChildren={f({ id: 'wrap' })}
-                      unCheckedChildren={f({ id: 'noWrap' })}
-                    />
-                  </div>
-                );
-              case 'isZebra':
-                return (
-                  <div key={K}>
-                    <BlockHeader type={headerType.num} num={I + 1} title={f({ id: 'isZebra' })} />
-                    <Switch
-                      checked={isZebra}
-                      onChange={handlerChange.bind(null, 'isZebra')}
-                      checkedChildren={f({ id: 'yes' })}
-                      unCheckedChildren={f({ id: 'no' })}
-                    />
-                  </div>
-                );
-              case 'bordered':
-                return (
-                  <div key={K}>
-                    <BlockHeader type={headerType.num} num={I + 1} title={f({ id: 'bordered' })} />
-                    <Switch
-                      checked={bordered}
-                      onChange={handlerChange.bind(null, 'bordered')}
-                      checkedChildren={f({ id: 'yes' })}
-                      unCheckedChildren={f({ id: 'no' })}
-                    />
-                  </div>
-                );
-              case 'clickable':
-                return (
-                  <div key={K}>
-                    <BlockHeader type={headerType.num} num={I + 1} title={f({ id: 'clickable' })} />
-                    <Switch
-                      checked={clickable}
-                      onChange={handlerChange.bind(null, 'clickable')}
-                      checkedChildren={f({ id: 'yes' })}
-                      unCheckedChildren={f({ id: 'no' })}
-                    />
-                  </div>
-                );
-              case 'footerDirection':
-                return (
-                  <div key={K}>
-                    <BlockHeader
-                      type={headerType.num}
-                      num={I + 1}
-                      title={f({ id: 'footerDirection' })}
-                    />
-                    <Radio.Group
-                      options={[
-                        { label: f({ id: 'leftB' }), value: 'row-reverse' },
-                        { label: f({ id: 'rightB' }), value: 'row' },
-                      ]}
-                      value={footerDirection}
-                      onChange={handlerChange.bind(null, 'footerDirection')}
-                    />
-                  </div>
-                );
-              case 'heightMode':
-                return (
-                  <div key={K}>
-                    <BlockHeader
-                      type={headerType.num}
-                      num={I + 1}
-                      title={f({ id: 'heightMode' })}
-                    />
-                    <Radio.Group
-                      options={[
-                        { label: f({ id: 'heightAuto' }), value: 'auto' },
-                        { label: f({ id: 'heightFull' }), value: 'full' },
-                      ]}
-                      value={heightMode}
-                      onChange={handlerChange.bind(null, 'heightMode')}
-                    />
-                  </div>
-                );
-            }
-          })}
+    <Receiver>
+      {(locale) => {
+        return <>
+          <Radio.Group
+            value={tabKey}
+            onChange={handlerChangeTabKey}
+            style={{ marginBottom: 16, width: '100%', display: 'flex' }}
+            buttonStyle="solid"
+          >
+            <Radio.Button style={{ flex: 1, textAlign: 'center' }} value="field">
+              {locale.fieldConfig}
+            </Radio.Button>
+            <Radio.Button style={{ flex: 1, textAlign: 'center' }} value="ui">
+              {locale.displayConfig}
+            </Radio.Button>
+          </Radio.Group>
+          {tabKey === 'field' ? (
+            <Sortable dataSource={columnFields} onChange={handlerChangeColumnKeys} />
+          ) : (
+              <>
+                {uiFields.map((K: string, I: number) => {
+                  switch (K) {
+                    case 'wrap':
+                      return (
+                        <div key={K}>
+                          <BlockHeader type={headerType.num} num={I + 1} title={locale.isWrap} />
+                          <Switch
+                            checked={wrap}
+                            disabled={hasFixed}
+                            onChange={handlerChange.bind(null, 'wrap')}
+                            checkedChildren={locale.wrap}
+                            unCheckedChildren={locale.noWrap}
+                          />
+                        </div>
+                      );
+                    case 'isZebra':
+                      return (
+                        <div key={K}>
+                          <BlockHeader type={headerType.num} num={I + 1} title={locale.isZebra} />
+                          <Switch
+                            checked={isZebra}
+                            onChange={handlerChange.bind(null, 'isZebra')}
+                            checkedChildren={locale.yes}
+                            unCheckedChildren={locale.no}
+                          />
+                        </div>
+                      );
+                    case 'bordered':
+                      return (
+                        <div key={K}>
+                          <BlockHeader type={headerType.num} num={I + 1} title={locale.bordered} />
+                          <Switch
+                            checked={bordered}
+                            onChange={handlerChange.bind(null, 'bordered')}
+                            checkedChildren={locale.yes}
+                            unCheckedChildren={locale.no}
+                          />
+                        </div>
+                      );
+                    case 'clickable':
+                      return (
+                        <div key={K}>
+                          <BlockHeader type={headerType.num} num={I + 1} title={locale.clickable} />
+                          <Switch
+                            checked={clickable}
+                            onChange={handlerChange.bind(null, 'clickable')}
+                            checkedChildren={locale.yes}
+                            unCheckedChildren={locale.no}
+                          />
+                        </div>
+                      );
+                    case 'footerDirection':
+                      return (
+                        <div key={K}>
+                          <BlockHeader
+                            type={headerType.num}
+                            num={I + 1}
+                            title={locale.footerDirection}
+                          />
+                          <Radio.Group
+                            options={[
+                              { label: locale.leftB, value: 'row-reverse' },
+                              { label: locale.rightB, value: 'row' },
+                            ]}
+                            value={footerDirection}
+                            onChange={handlerChange.bind(null, 'footerDirection')}
+                          />
+                        </div>
+                      );
+                    case 'heightMode':
+                      return (
+                        <div key={K}>
+                          <BlockHeader
+                            type={headerType.num}
+                            num={I + 1}
+                            title={locale.eightMode}
+                          />
+                          <Radio.Group
+                            options={[
+                              { label: locale.heightAuto, value: 'auto' },
+                              { label: locale.heightFull, value: 'full' },
+                            ]}
+                            value={heightMode}
+                            onChange={handlerChange.bind(null, 'heightMode')}
+                          />
+                        </div>
+                      );
+                  }
+                })}
+              </>
+            )}
         </>
-      )}
-    </>
+      }}
+    </Receiver>
   );
 }
 

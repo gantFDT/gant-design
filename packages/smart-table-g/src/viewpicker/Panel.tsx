@@ -3,7 +3,7 @@ import { Icon, Tag, Tooltip, Popconfirm, Empty } from 'antd';
 import _ from 'lodash';
 import { UpdateViewProps, ViewType, DefaultView } from './index';
 import BlockHeader from '@header';
-import { FormattedMessage } from 'react-intl';
+import Receiver from '../locale/Receiver';
 
 interface PanelProps {
   viewId?: string; // 当前视图id
@@ -36,8 +36,6 @@ export default (props: PanelProps) => {
     onDefaultViewChange,
     extra,
   } = props;
-
-  const f = ({ id }) => <FormattedMessage id={id} />;
 
   const onViewChange = useCallback(
     (item: any) => {
@@ -80,55 +78,57 @@ export default (props: PanelProps) => {
   };
 
   return (
-    <div className={`gant-smart-table-viewpicker-panel`}>
-      <BlockHeader title={title} extra={extra} />
-      <ul className="content">
-        {views.length === 0 && (
-          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={f({ id: 'noView' })}></Empty>
-        )}
-        {views.map(item => {
-          const { viewId: id, name } = item;
-          return (
-            <li key={name}>
-              <div className="leftContent" onClick={onViewChange.bind(null, item)}>
-                <span>{name}</span>
-                {id === defaultViewId && <Tag className="tag">&nbsp;{f({ id: 'default' })}</Tag>}
-              </div>
-              <div className="operates">
-                {id !== defaultViewId && (
-                  <span className="operate" onClick={onSetDefault.bind(null, viewType, id)}>
-                    {f({ id: 'setDefault' })}
-                  </span>
-                )}
-                {viewType === 'custom' && (
-                  <>
-                    <Tooltip title={f({ id: 'rename' })}>
-                      <Icon
-                        className={`operate`}
-                        type="edit"
-                        onClick={onEditView.bind(null, item)}
-                      />
-                    </Tooltip>
-                    {viewId !== id && (
-                      <Popconfirm
-                        placement="topRight"
-                        title={f({ id: 'confirmDelView' })}
-                        onConfirm={onDelete.bind(null, item)}
-                        okText={f({ id: 'ok' })}
-                        cancelText={f({ id: 'cancel' })}
-                      >
-                        <Tooltip title={f({ id: 'delete' })}>
-                          <Icon className={`operate delete`} type="delete" />
-                        </Tooltip>
-                      </Popconfirm>
-                    )}
-                  </>
-                )}
-              </div>
-            </li>
-          );
-        })}
-      </ul>
-    </div>
+    <Receiver>
+      {(locale) => <div className={`gant-smart-table-viewpicker-panel`}>
+        <BlockHeader title={title} extra={extra} />
+        <ul className="content">
+          {views.length === 0 && (
+            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={locale.noView}></Empty>
+          )}
+          {views.map(item => {
+            const { viewId: id, name } = item;
+            return (
+              <li key={name}>
+                <div className="leftContent" onClick={onViewChange.bind(null, item)}>
+                  <span>{name}</span>
+                  {id === defaultViewId && <Tag className="tag">&nbsp;{locale.default}</Tag>}
+                </div>
+                <div className="operates">
+                  {id !== defaultViewId && (
+                    <span className="operate" onClick={onSetDefault.bind(null, viewType, id)}>
+                      {locale.setDefault}
+                    </span>
+                  )}
+                  {viewType === 'custom' && (
+                    <>
+                      <Tooltip title={locale.rename}>
+                        <Icon
+                          className={`operate`}
+                          type="edit"
+                          onClick={onEditView.bind(null, item)}
+                        />
+                      </Tooltip>
+                      {viewId !== id && (
+                        <Popconfirm
+                          placement="topRight"
+                          title={locale.confirmDelView}
+                          onConfirm={onDelete.bind(null, item)}
+                          okText={locale.ok}
+                          cancelText={locale.cancel}
+                        >
+                          <Tooltip title={locale.delete}>
+                            <Icon className={`operate delete`} type="delete" />
+                          </Tooltip>
+                        </Popconfirm>
+                      )}
+                    </>
+                  )}
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      </div>}
+    </Receiver>
   );
 };
