@@ -10,7 +10,6 @@ export enum headerType {
   num
 }
 interface HeaderIF {
-  // id?: string,
   type?: headerType,
   bottomLine?: boolean,
   title?: string | ReactNode,
@@ -60,7 +59,7 @@ const Header = (props: HeaderIF) => {
         if (item && item.type && item.type.toString() === 'Symbol(react.fragment)') {
           interator([item.props.children], index)
         } else {
-          if (React.isValidElement(item) || typeof (item) == 'string') {
+          if (React.isValidElement(item) || typeof (item) === 'string') {
             toolsArr.push(
               item
             )

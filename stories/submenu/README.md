@@ -15,6 +15,7 @@
 | menuData           | 菜单渲染项, 必填                       | array                     | []                        |
 | showMenuMagnet     | 是否显示磁吸功能                       | boolean                   | false                     |
 | showFlipOverFooter | 是否显示翻页页脚                       | boolean                   | false                     |
+| bordered           | 是否有边框                             | boolean                   | true                      |
 | style              | 额外样式                               | cSSProperties             |                           |
 | classname          | classname属性                          | string                    |                           |
 | onSwitchChange     | 切换菜单后的执行回调函数               | function                  | (nowMode) => void         |
