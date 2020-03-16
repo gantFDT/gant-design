@@ -147,7 +147,7 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 					return tree
 				})
 			}
-			// switchEdit()
+			switchEdit()
 		},
 		[value, element, switchEdit, isTree, dataSource],
 	)

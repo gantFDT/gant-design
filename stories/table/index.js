@@ -105,7 +105,7 @@ function EditorTable() {
       editConfig: {
         render: (value, record, index) => {
           return (
-            <Selector defaultList={address} />
+            <Selector useStorage={false} dataSource={address} />
           )
         }
       },
