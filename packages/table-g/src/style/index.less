@@ -117,7 +117,9 @@
                     // 所有table设置为fixed
                     // 宽度需要业务层传递
                     .layoutfixed();
-                    tr.ant-table-row{
+                    
+                    tr.ant-table-row,
+                    tr.gant-table-header-row{
                         &:after {
                             content: 'clear';
                             width: 0;

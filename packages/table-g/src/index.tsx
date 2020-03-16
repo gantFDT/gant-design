@@ -31,6 +31,7 @@ import BodyCell from './bodycell'
 import BodyRow from './bodyrow'
 import BodyWrapper from './bodywrapper'
 import HeaderCell from './headercell'
+import HeaderRow from './headerrow'
 import { DataContext, TableContext, TableBodyWrapperContext } from './context'
 import { tableWrapperRef, scrollIntoViewWithRowKey } from './compose'
 
@@ -672,6 +673,7 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
                 table: TableComponent,
                 header: {
                     // wrapper: HeaderWrapper,
+                    row: HeaderRow,
                     cell: HeaderCell,
                 },
                 body: {
