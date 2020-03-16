@@ -8,12 +8,18 @@
     .@{select} {
         width: 100%;
         height: 32px;
-        line-height: 30px;
         box-sizing: border-box;
         display: inline-block;
         cursor: pointer;
         border: 1px solid #d9d9d9;
         padding: 0 6px;
+        // 解决再单元格编辑中的位置问题
+        position: relative;
+        &>*{
+            transform: translateY(-50%);
+            position: absolute;
+            top: 50%;
+        }
     }
     .@{component} {
         &-search {

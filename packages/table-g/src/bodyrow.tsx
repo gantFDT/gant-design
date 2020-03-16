@@ -1,9 +1,9 @@
-import React, { useMemo, useState, useContext } from 'react'
+import React, { useMemo, useState, useContext, useEffect } from 'react'
 import classnames from 'classnames'
 import { Draggable } from "react-beautiful-dnd";
 
-import { RowContext, TableContext } from './context'
-import { setStyle, getListRange } from './_utils'
+import { RowContext, TableContext, DataContext } from './context'
+import { setStyle, getListRange, getStyleText } from './_utils'
 
 const getPrefixCls = (cls) => 'gant-' + cls;
 
@@ -11,9 +11,11 @@ const BodyRow = ({ isDeleted, rowIndex, className, sortable, children, ...props 
     const rowData = useMemo(() => ({ dataRowKey: props['data-row-key'] }), [props])
 
     const { outlineNum, thresholdInner, renderRowKeys, virtualScroll, } = useContext(TableContext)
+    const { cellPadding } = useContext(DataContext)
 
     const style = useMemo(() => {
-        const s = props.style || {}
+        const s = { ...(props.style || {}) }
+        s['--padding'] = getStyleText(cellPadding)
         if (virtualScroll) {
             const keysRange = getListRange(renderRowKeys, outlineNum, thresholdInner)
             if (!keysRange.includes(rowData.dataRowKey)) {
@@ -21,7 +23,7 @@ const BodyRow = ({ isDeleted, rowIndex, className, sortable, children, ...props 
             }
         }
         return s
-    }, [props.style, rowData])
+    }, [props.style, rowData, cellPadding])
     const [trRef, setTrRef] = useState(null)
     const row = useMemo(() => {
         // 非拖动排序
@@ -30,6 +32,7 @@ const BodyRow = ({ isDeleted, rowIndex, className, sortable, children, ...props 
                 <tr
                     {...props}
                     style={style}
+                    ref={tr => setTrRef(tr)}
                     className={classnames(className, { [getPrefixCls('table-row-deleted')]: isDeleted })}
                 >
                     {children}
@@ -48,6 +51,7 @@ const BodyRow = ({ isDeleted, rowIndex, className, sortable, children, ...props 
                             dragStyle.display = 'table';
                             dragStyle.tableLayout = 'fixed';
                             dragStyle.borderSpacing = 0
+                            // 拖动的时候设置单元格的宽度，防止宽度塌陷
                             const table = trRef.parentElement.parentElement;
                             const cols = table.querySelectorAll("colgroup col");
                             ([...trRef.cells]).forEach((td, index) => {
