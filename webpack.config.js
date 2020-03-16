@@ -11,6 +11,7 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const FilterWarningsPlugin = require('webpack-filter-warnings-plugin');
 const babelConfig = require('./babelConfig.json');
+const WebpackPluginImport = require('./plugins/webpack-plugin-import');
 
 function resolve(moduleName) {
     return require.resolve(moduleName);
@@ -113,6 +114,8 @@ module.exports = {
                     loader: 'css-loader',
                     options: {
                         sourceMap: true,
+                        modules: true,
+                        getLocalIdent: (context, localIdentName, localName) => localName
                     },
                 },
                 {
@@ -130,6 +133,8 @@ module.exports = {
                     loader: 'css-loader',
                     options: {
                         sourceMap: true,
+                        modules: true,
+                        getLocalIdent: (context, localIdentName, localName) => localName
                     },
                 },
                 {
@@ -156,6 +161,13 @@ module.exports = {
     },
 
     plugins: [
+      // babel import for components
+        new WebpackPluginImport([
+          {
+            libraryName: /^@[\w\-]+$/,
+            stylePath: 'style/index.ts',
+          },
+        ]),
         new CaseSensitivePathsPlugin(),
         // 这个Webpack插件强制所有需要的模块的整个路径匹配磁盘上实际路径的具体情况。
         // 使用这个插件可以帮助减轻开发人员在OSX上工作的情况，因为OSX不遵循严格的路径敏感性，这会导致与其他开发人员的冲突，或者构建运行其他操作系统的盒子，这些系统需要正确的路径。
@@ -181,7 +193,7 @@ module.exports = {
     optimization: {
         minimizer: [
             new UglifyJsPlugin(),
-            new OptimizeCSSAssetsPlugin({})
+            // new OptimizeCSSAssetsPlugin({})
         ]
     },
 

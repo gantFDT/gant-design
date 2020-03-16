@@ -88,6 +88,7 @@
     "gulp-less": "^4.0.1",
     "gulp-postcss": "^8.0.0",
     "gulp-typescript": "^5.0.1",
+    "gulp-uglify": "^3.0.2",
     "husky": "^4.2.3",
     "jest": "^24.8.0",
     "less": "^3.9.0",
@@ -138,7 +139,8 @@
     "react-resize-detector": "^4.2.1",
     "react-sortable-hoc": "^1.9.1",
     "react-syntax-highlighter-virtualized-renderer": "^1.1.0",
-    "recompose": "^0.30.0"
+    "recompose": "^0.30.0",
+    "webpack-plugin-import": "^0.2.6"
   },
   "browserslist": [
     "last 2 version",

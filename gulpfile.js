@@ -4,6 +4,7 @@ const babel = require('gulp-babel')
 const rimraf = require('rimraf')
 const path = require('path')
 const less = require('gulp-less')
+const uglify = require('gulp-uglify')
 const postcss = require('gulp-postcss')
 const autoprefixer = require('autoprefixer')
 const ts = require('gulp-typescript')
@@ -122,6 +123,13 @@ function ScriptTask(dirName) {
             next()
           })
         )
+        .pipe(uglify({
+            warnings: false,
+            compress: {
+                drop_console: true,  // 过滤 console
+                drop_debugger: true  // 过滤 debugger
+            }
+        }))
         .pipe(dest(`packages/${dirName}/lib/`))
     },
     function compileDTS() {
@@ -254,6 +262,13 @@ function CopileToGantdTask(dirName, targetDir) {
             next()
           })
         )
+        .pipe(uglify({
+            warnings: false,
+            compress: {
+                drop_console: true,  // 过滤 console
+                drop_debugger: true  // 过滤 debugger
+            }
+        }))
         .pipe(dest(`packages/gantd/${targetDir}/${__dirName === 'data-cell' ? '' : (__dirName + '/')}`))
     },
     function compileDTS() {
