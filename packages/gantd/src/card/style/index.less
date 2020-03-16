@@ -2,13 +2,19 @@
 @intro-prefix-cls: ~'@{gant-prefix}-card';
 
 :global {
+  .ant-page-header-title-view-extra {
+    right: 0px !important;
+  }
+
   .ant-card-head {
     margin-bottom: 0 !important;
   }
+
   .@{intro-prefix-cls} {
     background: var(--component-background);
     border-radius: 3px;
     overflow: hidden;
+
     .ant-card-head {
       min-height: 30px;
       padding: 5px;

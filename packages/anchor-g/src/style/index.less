@@ -4,7 +4,20 @@
 @standard: 40px;
 @theme: #1890FF;
 
-:global{
+:global {
+  .ant-tooltip-inner {
+    min-height: 20px !important;
+  }
+
+  .ant-popover-inner-content {
+    padding: 10px !important;
+  }
+
+  .ant-tooltip {
+    font-size: 12px !important;
+    line-height: 1 !important;
+  }
+
   //锚点
   .ant-anchor {
     font-size: 12px !important;
@@ -13,6 +26,7 @@
   .ant-anchor-wrapper {
     background-color: transparent !important;
   }
+
   .@{profilecard-prefix-cls} {
     height: @standard;
     background: #fff;
@@ -91,8 +105,9 @@
       width: 100%;
       height: @standard - 1;
     }
-    &-verticallayout{
-      display:flex;
+
+    &-verticallayout {
+      display: flex;
       // .ant-layout {
       //   background:transparent
       // }
