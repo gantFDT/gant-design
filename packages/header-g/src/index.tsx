@@ -25,7 +25,6 @@ interface HeaderIF {
 const Header = (props: HeaderIF) => {
   let {
     prefixCls: customizePrefixCls,
-    // id,
     type = '',
     bottomLine = false,
     title,
@@ -152,8 +151,7 @@ const Header = (props: HeaderIF) => {
   const clsString = classnames(prefixCls, className);
 
   return (
-
-    <div className={clsString} style={{ borderBottom: bottomLine && '1px solid #edebe9', ...style }} {...restProps}>
+    <div className={clsString} style={{ borderBottom: bottomLine && '1px solid rgba(128,128,128,0.2)', ...style }} {...restProps}>
       <div className={prefixCls + '-wrapper'}>
         <div className={prefixCls + '-beforeExtra'}>
           {beforeExtra}
@@ -187,7 +185,6 @@ const Header = (props: HeaderIF) => {
         </div>
       </div>
     </div>
-
   )
 }
 

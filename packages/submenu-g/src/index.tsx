@@ -219,7 +219,6 @@ export default class Submenu extends React.Component<any, Partial<SubmenuIF>> {
             <div className={`${prefixCls}-menuright`}>
               <Icon.Ant
                 type="switcher"
-                className={`${prefixCls}-horIcon`}
                 onClick={this.onSwitchClick}
               />
             </div>
