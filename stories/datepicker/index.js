@@ -1,60 +1,37 @@
-import React, { useState } from 'react'
-import { DatePicker } from '@data-cell'
 import '@data-cell/date-picker/style'
 import CodeDecorator from '../_util/CodeDecorator'
-import { WrapperValue, WrapperEdit, onSave } from '../_util/composeUseHooks'
+import codes from './code.js'
+/*! Start !*/
+import React, { useState } from 'react'
+import { DatePicker, EditStatus } from '@gantd'
 const { RangePicker } = DatePicker;
 
-const codeList = [
-  `const [value, setValue] = useState();
-return (
-  <>
-    <DatePicker value={value} onChange={setValue} onSave={onSave} />
-  </>
-)`,
-  `const [value, setValue] = useState('2019-06-05 11:01:29');
-return (
-  <>
-    <DatePicker format='YYYY-MM-DD HH:mm:ss' value={value} onChange={setValue} onSave={onSave} style={{ marginBottom: 10 }} />
-    <DatePicker value={value} onChange={setValue} onSave={onSave} />
-    <DatePicker format='MM-DD-YY' value='06-05-19' onChange={setValue} onSave={onSave} />
-  </>
-)`,
-  `const [value, setValue] = useState('2019-06-01 00:00+0100');
-return (
-  <>
-    东1区的时间 2019-06-01 00:00 在当前时区是
-    <DatePicker format='YYYY-MM-DD HH:mm:ss' showTime value={value} onChange={setValue} onSave={onSave} />
-  </>
-)`,
-  `const [value, setValue] = useState(['2019-06-01 00:00+0100', '2019-06-05 05:00+0100']);
-  return (
-    <RangePicker showTime value={value} onChange={setValue} onSave={onSave} />
-  )`,
-]
+const WrapperValue = defaultValue => Component => props => {
+  const [value, setValue] = useState(defaultValue)
+  const factory = React.createFactory(Component)
+  return factory({ value, setValue })
+}
 
+const onSave = (id, value, cb) => {
+  console.log(id, value);
+  cb()
+}
 
+const WrapperEdit = Component => props => {
+  const [edit, setEdit] = useState(EditStatus.CANCEL)
+  return React.createElement(Component, { edit, setEdit })
+}
+/*! Split !*/
 const C1 = WrapperValue('2019-06-05 11:01:29')(({ value, setValue }) => <DatePicker format='YYYY-MM-DD HH:mm:ss' value={value} onChange={setValue} onSave={onSave} />)
+/*! Split !*/
 const C2 = WrapperValue('2019-06-05 11:01:29')(({ value, setValue }) => <DatePicker style={{ margin: "10px 0" }} value={value} onChange={setValue} onSave={onSave} />)
+/*! Split !*/
 const C3 = WrapperValue('06-05-19 11:01:29')(({ value, setValue }) => <DatePicker format='MM-DD-YY' value={value} onChange={setValue} onSave={onSave} />)
-
-
+/*! End !*/
 const config = {
   useage: `<b>🖍 读写分离</b></br>
   `,
-  codes: codeList.map(code => (
-    `import { DatePicker } from 'gantd';
-import React, { useState } from 'react';
-const { RangePicker } = DatePicker;
-
-const onSave=(id, value ,cb)=>cb()
-
-function Demo(){
-  ${code}
-}
-
-ReactDOM.render(<Demo />, mountNode)`
-  )),
+  codes,
   inline: true,
   children: [
     {

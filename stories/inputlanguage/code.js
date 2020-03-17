@@ -1,29 +1,22 @@
 export default [
-  `
-  import React, { useState } from 'react';
-  import {InputLanguage} from 'gantd';
-  
-  const Demo = () => {
-    const [value, setValue] = useState([
-      {
-        value: "中文文本",
-        locale: 'zh-CN'
-      }
-    ])
-    const onSave = (id, value, cb) => {
-      cb()
+`
+import React, { useState } from 'react';
+import { InputLanguage } from 'gantd'
+
+
+const Use = () => {
+  const [value, setValue] = useState([
+    {
+      value: "中文文本",
+      locale: 'zh-CN'
     }
-    return <>
-      <InputLanguage placeholder='输入当前语言文本' allowEdit={true} onSave={onSave} value={value} onChange={setValue} />
-    </>
+  ])
+  const onSave = (id, value, cb) => {
+    cb()
   }
-  
-  ReactDOM.render(
-      <Demo />,
-      mountNode,
-  );
-  `,
-]
+  return <>
+    <InputLanguage placeholder='输入当前语言文本' onSave={onSave} value={value} onChange={setValue} />
+  </>
+}
 
-
-
+ReactDOM.render(<Use />, mountNode)`,]
