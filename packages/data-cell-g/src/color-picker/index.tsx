@@ -2,7 +2,6 @@ import React from 'react'
 import GantColorPicker from '@color-picker'
 import { compose, defaultProps, toClass } from 'recompose'
 
-import { Group } from '../input'
 import { withEdit } from '../compose'
 
 const withColorPicker = compose(
@@ -18,6 +17,7 @@ const withColorPicker = compose(
   withEdit(({ value }) => value ? <GantColorPicker value={value} edit={false} /> : undefined)
 )
 class ColorPicker extends React.Component<any> {
+  static PurePicker: typeof GantColorPicker;
   render() {
     const { addonAfter, className, ...props } = this.props
 
@@ -28,4 +28,5 @@ class ColorPicker extends React.Component<any> {
 
 }
 
+ColorPicker.PurePicker = GantColorPicker;
 export default ColorPicker;
