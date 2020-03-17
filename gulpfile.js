@@ -1,4 +1,4 @@
-const { src, dest, series, task } = require('gulp')
+const { src, dest, series, task, watch } = require('gulp')
 const fs = require('fs')
 const babel = require('gulp-babel')
 const rimraf = require('rimraf')
@@ -389,6 +389,10 @@ task('code', function code(){
       extname: ".js"
     }))
     .pipe(dest(`stories/`))
+})
+
+task('watch:code', function () {
+  watch([`stories/*/index.js`, `stories/*/index.ts`], series('code'));
 })
 
 task('default', series('clean', 'lib'))
