@@ -32,7 +32,7 @@ const Header = (props: HeaderIF) => {
     extra = null,
     icon = null,
     num = "1",
-    color = '#202020',
+    color = 'var(--text-color)',
     style = {},
     className,
     ...restProps
@@ -162,7 +162,7 @@ const Header = (props: HeaderIF) => {
         </div>}
         {type == 'line' && title && <div className={prefixCls + '-line'} style={{ background: color }}></div>}
         {type == 'num' && <div className={prefixCls + '-num'} style={{ background: color }}>{num}</div>}
-        <div className={prefixCls + '-title'} style={{ color: color ? color : 'var(--text-color)' }}>{title}</div>
+        <div className={prefixCls + '-title'} style={{ color: color }}>{title}</div>
         <div ref={(ref) => outerRef.current = ref} className={getPrefixCls('overflow-tool-outer')}>
           <div className={getPrefixCls('overflow-tool-inner')} style={{ width: width }} >
             <ReactResizeDetector handleWidth handleHeight onResize={onResize} key={1}>
