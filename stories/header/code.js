@@ -1,11 +1,12 @@
+export default [
+`
+import React, { useState } from 'react'
+import { message, Icon, Button, Tooltip, Slider } from 'antd';
+import { Header } from 'gantd'
 
-const code_1 = `
-import React from 'react';
-import { Header } from 'gantd';
-// import { Header } from 'header-g';//与gantd中引入效果相同
 
-ReactDOM.render(
-    <>
+function BasicUse() {
+    return <>
         <Header type='line' title="标题(短线)" />
         <Header type='icon' icon="file-text" title="标题(图标)" />
         <Header type='num' title="标题(数字)" />
@@ -20,14 +21,13 @@ ReactDOM.render(
             }
         />
     </>
-    ,mountNode);
-`;
+}
 
-const code_2 = `
-import React from 'react';
-import { Header } from 'gantd';
-// import { Header } from 'header-g';//与gantd中引入效果相同
-import { message, Icon, Button, Tooltip } from 'antd';
+ReactDOM.render(<BasicUse />, mountNode)`,`
+import React, { useState } from 'react'
+import { message, Icon, Button, Tooltip, Slider } from 'antd';
+import { Header } from 'gantd'
+
 
 function ExtraUse() {
     const [value, setvalue] = useState(100)
@@ -39,12 +39,12 @@ function ExtraUse() {
     )
     return <>
         <Slider min={1} max={100} onChange={onChange} value={value} />
-        <div style={{ width: value+'%' }}>
+        <div style={{ width: \`\${value}%\` }}>
             <Header
                 title="工具栏"
                 extra={<>
                     <Tooltip title='新增'>
-                        <Button icon="plus" type="primary"/>
+                        <Button icon="plus" type="primary" />
                     </Tooltip>
                     <Tooltip title='编辑'>
                         <Button icon="edit" />
@@ -56,7 +56,7 @@ function ExtraUse() {
                         <Button icon="copy">复制</Button>
                     </Tooltip>
                     <Tooltip title='删除' >
-                        <Button icon="delete" type="danger"/>
+                        <Button icon="delete" type="danger" />
                     </Tooltip>
                 </>}
             />
@@ -64,10 +64,10 @@ function ExtraUse() {
                 title="小工具栏"
                 extra={<>
                     <Tooltip title='新增'>
-                        <Button icon="plus" size="small" type="primary"/>
+                        <Button icon="plus" size="small" type="primary" />
                     </Tooltip>
                     <Tooltip title='编辑'>
-                        <Button icon="edit" size="small"/>
+                        <Button icon="edit" size="small" />
                     </Tooltip>
                     <Tooltip title='保存'>
                         <Button icon="save" size="small">保存</Button>
@@ -76,53 +76,49 @@ function ExtraUse() {
                         <Button icon="copy" size="small">复制</Button>
                     </Tooltip>
                     <Tooltip title='删除'>
-                        <Button icon="delete" size="small" type="danger"/>
+                        <Button icon="delete" size="small" type="danger" />
                     </Tooltip>
                 </>}
             />
         </div>
     </>
 }
-ReactDOM.render(<ExtraUse />, mountNode)`
 
-const code_3 = `
-import React from 'react';
-import { Header } from 'gantd';
-// import { Header } from 'header-g';//与gantd中引入效果相同
+ReactDOM.render(<ExtraUse />, mountNode)`,`
+import React, { useState } from 'react'
+import { message, Icon, Button, Tooltip, Slider } from 'antd';
+import { Header } from 'gantd'
 
-ReactDOM.render(
-    <>
-        <Header type='line' title="标题(短线)" color="#1890ff"/>
-        <Header type='icon' icon="file-text" title="标题(图标)" color="#1890ff"/>
-        <Header type='num' title="标题(数字)" color="#1890ff"/>
+
+function ColorUse() {
+    return <>
+        <Header type='line' title="标题(短线)" color="#1890ff" />
+        <Header type='icon' icon="file-text" title="标题(图标)" color="#1890ff" />
+        <Header type='num' title="标题(数字)" color="#1890ff" />
         <Header
             title="标题(回退)"
             beforeExtra={
                 <Icon
                     type="left"
-                    style={{ marginRight: 10,color:"#1EA7FD" }}
+                    style={{ marginRight: 10, color: "#1EA7FD" }}
                     onClick={() => { message.info('goback success') }}
                 />
             }
             color="#1890ff"
         />
     </>
-    ,mountNode);
+}
 
-`;
+ReactDOM.render(<ColorUse />, mountNode)`,`
+import React, { useState } from 'react'
+import { message, Icon, Button, Tooltip, Slider } from 'antd';
+import { Header } from 'gantd'
 
-const code_4 = `
-import React from 'react';
-import { Header } from 'gantd';
-// import { Header } from 'header-g';//与gantd中引入效果相同
 
-ReactDOM.render(
-    <>
-        <Header title="显示分割线" bottomLine={true}/>
+function BottomLineUse() {
+    return <>
+        <Header title="显示分割线" bottomLine={true} />
     </>
-    ,mountNode);
+}
 
-`;
-
-export default [code_1, code_2, code_3, code_4]
-
+ReactDOM.render(<BottomLineUse />, mountNode)`,]

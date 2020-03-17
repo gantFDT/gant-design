@@ -1,9 +1,14 @@
 
-import { InputNumber, SwitchStatus, EditStatus } from '@data-cell'
+
 import '@data-cell/input-number/style'
-import React, { useState } from 'react';
 import codeList from './code'
 import CodeDecorator from '../_util/CodeDecorator';
+/*! Start !*/
+import React, { useState } from 'react';
+import { InputNumber, EditStatus } from '@gantd';
+
+/*! Split !*/
+/*! End !*/
 
 
 const cmps = [

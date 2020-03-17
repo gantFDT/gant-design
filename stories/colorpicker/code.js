@@ -1,36 +1,36 @@
-const code_1 = `
+export default [
+`
 import React, { useState } from 'react';
 import { ColorPicker } from 'gantd';
-// import { ColorPicker } from 'color-picker-g';//与gantd中引入效果相同
+const { PurePicker } = ColorPicker;
+// import { ColorPicker } = 'color-picker-g'; 此处的ColorPicker同PurePicker，即不添加读写分离的选择器
+
 
 function BasicUse() {
-  const [color, setColor] = useState('#1890FF');
-  
+  const [color, setColor] = useState('#EB2F96');
+
   return <>
-    <h3 style={{color}}>颜色选择器</h3>
-    <ColorPicker
+    <h3 style={{ color }}>颜色选择器</h3>
+    <PurePicker
       value={color}
       onChange={setColor.bind(null)}
     />
   </>
 }
 
-ReactDOM.render(
-    <BasicUse />,
-    mountNode,
-);
-`;
-const code_2 = `
+ReactDOM.render(<BasicUse />, mountNode)`,`
 import React, { useState } from 'react';
 import { ColorPicker } from 'gantd';
-// import { ColorPicker } from 'color-picker-g';//与gantd中引入效果相同
+const { PurePicker } = ColorPicker;
+// import { ColorPicker } = 'color-picker-g'; 此处的ColorPicker同PurePicker，即不添加读写分离的选择器
 
-function BasicUse() {
-  const [color, setColor] = useState('#1890FF');
-  
+
+function BottomUse() {
+  const [color, setColor] = useState('#EB2F96');
+
   return <>
-    <h3 style={{color}}>颜色选择器</h3>
-    <ColorPicker
+    <h3 style={{ color }}>颜色选择器(向下弹出)</h3>
+    <PurePicker
       placement="bottom"
       value={color}
       onChange={setColor.bind(null)}
@@ -38,15 +38,11 @@ function BasicUse() {
   </>
 }
 
-ReactDOM.render(
-    <BasicUse />,
-    mountNode,
-);
-`;
-const code_3 = `
+ReactDOM.render(<BottomUse />, mountNode)`,`
 import React, { useState } from 'react';
 import { ColorPicker } from 'gantd';
-// import { ColorPicker } from 'data-cell-g'; 此包生效 //与gantd中引入效果相同
+const { PurePicker } = ColorPicker;
+// import { ColorPicker } = 'color-picker-g'; 此处的ColorPicker同PurePicker，即不添加读写分离的选择器
 
 
 function ReadWriteUse() {
@@ -66,45 +62,39 @@ function ReadWriteUse() {
   </>
 }
 
-ReactDOM.render(
-    <ReadWriteUse />,
-    mountNode,
-);
-`;
-const code_4 = `
+ReactDOM.render(<ReadWriteUse />, mountNode)`,`
 import React, { useState } from 'react';
 import { ColorPicker } from 'gantd';
-// import { ColorPicker } from 'color-picker-g';//与gantd中引入效果相同
+const { PurePicker } = ColorPicker;
+// import { ColorPicker } = 'color-picker-g'; 此处的ColorPicker同PurePicker，即不添加读写分离的选择器
+
 
 function ReadOnlyUse() {
-  const [color, setColor] = useState('#1890FF');
-  
+  const [color, setColor] = useState('#EB2F96');
+
   return <>
-    <h3 style={{color}}>颜色选择器(只读)</h3>
+    <h3 style={{ color }}>颜色选择器（只读）</h3>
     <ColorPicker
-      edit={false}
+      allowEdit={false}
       value={color}
       onChange={setColor.bind(null)}
     />
   </>
 }
 
-ReactDOM.render(
-    <ReadOnlyUse />,
-    mountNode,
-);
-`;
-const code_5 = `
+ReactDOM.render(<ReadOnlyUse />, mountNode)`,`
 import React, { useState } from 'react';
 import { ColorPicker } from 'gantd';
-// import { ColorPicker } from 'color-picker-g';//与gantd中引入效果相同
+const { PurePicker } = ColorPicker;
+// import { ColorPicker } = 'color-picker-g'; 此处的ColorPicker同PurePicker，即不添加读写分离的选择器
 
-function ReadOnlyUse() {
-  const [color, setColor] = useState('#1890FF');
-  
+
+function DisabledUse() {
+  const [color, setColor] = useState('#EB2F96');
+
   return <>
-    <h3 style={{color}}>颜色选择器(禁用)</h3>
-    <ColorPicker
+    <h3 style={{ color }}>颜色选择器（禁用）</h3>
+    <PurePicker
       disabled
       value={color}
       onChange={setColor.bind(null)}
@@ -112,9 +102,4 @@ function ReadOnlyUse() {
   </>
 }
 
-ReactDOM.render(
-    <BasicUse />,
-    ReadOnlyUse,
-);
-`;
-export default [code_1, code_2, code_3, code_4, code_5];
+ReactDOM.render(<DisabledUse />, mountNode)`,]

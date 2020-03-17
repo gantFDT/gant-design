@@ -1,35 +1,37 @@
-import React, { useState } from 'react';
-import ColorPicker from '@color-picker';
 import '@data-cell/color-picker/style';
-import { ColorPicker as DataCellColorPicker } from '@data-cell';
 import CodeDecorator from '../_util/CodeDecorator'
 import code from './code.js';
-
+/*! Start !*/
+import React, { useState } from 'react';
+import { ColorPicker } from '@gantd';
+const { PurePicker } = ColorPicker;
+// import { ColorPicker } = '@color-picker-g'; 此处的ColorPicker同PurePicker，即不添加读写分离的选择器
+/*! Split !*/
 function BasicUse() {
   const [color, setColor] = useState('#EB2F96');
 
   return <>
     <h3 style={{ color }}>颜色选择器</h3>
-    <ColorPicker
+    <PurePicker
       value={color}
       onChange={setColor.bind(null)}
     />
   </>
 }
-
+/*! Split !*/
 function BottomUse() {
   const [color, setColor] = useState('#EB2F96');
 
   return <>
     <h3 style={{ color }}>颜色选择器(向下弹出)</h3>
-    <ColorPicker
+    <PurePicker
       placement="bottom"
       value={color}
       onChange={setColor.bind(null)}
     />
   </>
 }
-
+/*! Split !*/
 function ReadWriteUse() {
   const [color, setColor] = useState('#EB2F96');
   const onSave = (id, value, cb) => {
@@ -39,40 +41,40 @@ function ReadWriteUse() {
 
   return <>
     <h3 style={{ color }}>颜色选择器（读写分离）</h3>
-    <DataCellColorPicker
+    <ColorPicker
       value={color}
       onSave={onSave}
       onChange={setColor.bind(null)}
     />
   </>
 }
-
+/*! Split !*/
 function ReadOnlyUse() {
   const [color, setColor] = useState('#EB2F96');
 
   return <>
     <h3 style={{ color }}>颜色选择器（只读）</h3>
-    <DataCellColorPicker
+    <ColorPicker
       allowEdit={false}
       value={color}
       onChange={setColor.bind(null)}
     />
   </>
 }
-
+/*! Split !*/
 function DisabledUse() {
   const [color, setColor] = useState('#EB2F96');
 
   return <>
     <h3 style={{ color }}>颜色选择器（禁用）</h3>
-    <ColorPicker
+    <PurePicker
       disabled
       value={color}
       onChange={setColor.bind(null)}
     />
   </>
 }
-
+/*! End !*/
 const config = {
   useage: `<b>🖍 读写分离</b></br>
     <b>🎨 antd标准颜色板</b>
