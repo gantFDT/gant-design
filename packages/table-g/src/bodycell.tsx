@@ -23,6 +23,7 @@ interface BodyCellProps<T> {
 	[k: string]: any
 }
 
+
 const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', rowIndex, editConfig = {} as EditConfig<T>, sortable, wrap, light, children, className, style, ...props }: BodyCellProps<T>) => {
 	const [value, setValue] = useState<string>()
 	const [cacheInitialValue, setCacheInitialValue] = useState<string>()
@@ -31,6 +32,7 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 	const { dataSource, setDataSource, isTree, cellPadding, computedRowKey, editable, originRowHeight, originLineHeight } = useContext(DataContext)
 	const { dataRowKey } = useContext(RowContext)
 	const { virtualScroll } = useContext(TableContext)
+	const isEdit = useMemo(() => edit === EditStatus.EDIT, [edit]);
 	const showDirt = useMemo(() => _.get(editConfig, 'showDirt', true), [editConfig])
 	const isSelection = useMemo(() => className.includes('ant-table-selection-column'), [className])
 	const { editValue, render: editRender } = editConfig
@@ -221,9 +223,10 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 
 	const renderTd = useCallback(
 		() => {
+			const wrapClass = (virtualScroll || !wrap) ? [isSelection ? '' : getPrefixCls('table-editcell-ellipsis')] : [getPrefixCls('table-editcell-wrap')]
 			const computedClassName = classnames(
 				className,
-				// wrap ? [getPrefixCls('table-editcell-wrap')] : [isSelection ? '' : getPrefixCls('table-editcell-ellipsis')],
+				wrapClass,
 				element ?
 					{
 						[getPrefixCls('table-editcell-dirt')]: showDirt && valueChanged,
@@ -231,7 +234,8 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 			)
 			const innerClassName = classnames(
 				getPrefixCls('table-cell-inner'), // 设置after撑高td
-				(virtualScroll || !wrap) ? [isSelection ? '' : getPrefixCls('table-editcell-ellipsis')] : [getPrefixCls('table-editcell-wrap')]
+				// (virtualScroll || !wrap) ? [isSelection ? '' : getPrefixCls('table-editcell-ellipsis')] : [getPrefixCls('table-editcell-wrap')]
+				wrapClass
 			)
 			//fix Cannot assign to read only property
 			const dStyle = { ...(style || {}) }
@@ -242,14 +246,21 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 					dStyle.lineHeight = originLineHeight
 				}
 			}
-			console.log(style, dStyle)
 			return (
-				<td {...props} style={{ padding: 0 }} className={computedClassName} onClick={onClick} ref={onTD}>
-					<div style={dStyle} className={innerClassName} >
-						{renderChildren()}
-					</div>
-				</td>
+				<td {...props} style={dStyle} className={computedClassName} onClick={onClick} ref={onTD}>{renderChildren()}</td>
 			)
+			// if (!isEdit) {
+			// 	return (
+			// 		<td {...props} style={dStyle} className={computedClassName} onClick={onClick} ref={onTD}>{{renderChildren()}}</td>
+			// 	)
+			// }
+			// return (
+			// 	<td {...props} style={{ padding: 0 }} className={computedClassName} onClick={onClick} ref={onTD}>
+			// 		<div style={dStyle} className={innerClassName} >
+			// 			{renderChildren()}
+			// 		</div>
+			// 	</td>
+			// )
 		},
 		[className, cellPadding, style, wrap, showDirt, valueChanged, element, onClick, onTD, renderChildren, isSelection, originRowHeight, virtualScroll, originLineHeight],
 	)

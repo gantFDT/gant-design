@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 
-interface ToolBarPropsIF {
+export interface ToolBarPropsIF {
   extraLeft?: React.ReactNode;
   extraRight?: React.ReactNode;
   style?: React.CSSProperties;

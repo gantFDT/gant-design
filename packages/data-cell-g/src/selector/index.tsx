@@ -35,9 +35,7 @@ const defaultprop = {
   onChange: _ => _,
   onDeselect: _ => _,
   onDropdownVisibleChange: _ => _,
-  // 由外部组件来实现的获取label的方法, 一般在初始化的时候调用
-  getLabelText: (value, setLabel) => setLabel(value),
-  blurOnSelect: true,
+  blurOnSelect: false,
 }
 
 type NArray<T> = T | T[];
@@ -48,7 +46,6 @@ export type Query<T> = (f: string) => Promise<T[]>
 
 type Label = NArray<string>
 
-export type GetLabelText = (v: SelectValue, s: (v: SelectValue) => void) => void
 
 // 重写defaultProps中部分数据的类型
 type DefaultProps<R> = ProtoExtends<typeof defaultprop, {
@@ -56,7 +53,6 @@ type DefaultProps<R> = ProtoExtends<typeof defaultprop, {
   dataSource: R[],
   style: React.CSSProperties,
   optionLabel: Label,
-  getLabelText: GetLabelText,
   multiple: boolean,
   onSelect: (k: string, item: R) => void,
   selectorId: string,

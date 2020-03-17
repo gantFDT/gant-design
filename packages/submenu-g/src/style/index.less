@@ -1,7 +1,7 @@
 @gant-prefix: gant;
 @profilecard-prefix-cls: ~'@{gant-prefix}-submenu';
 
-@border: 1px solid rgba(0, 0, 0, 0.05);
+@border: 1px solid rgba(128, 128, 128, 0.2);
 @standard: 40px;
 
 :global {
@@ -45,7 +45,7 @@
     }
 
     &-pagewrap {
-      box-shadow: 0 0px 8px 0 rgba(0, 0, 0, 0.06), 0 1px 0px 0 rgba(0, 0, 0, 0.02);
+      // box-shadow: 0 0px 8px 0 rgba(0, 0, 0, 0.06), 0 1px 0px 0 rgba(0, 0, 0, 0.02);
       border-radius: 3px;
       overflow: hidden;
 
@@ -79,29 +79,24 @@
     &-menuinternal {
       display: flex;
       width: 100%;
-      border: @border;
       border-bottom: none;
     }
 
     &-menuleft {
       width: calc(100% - @standard);
+      border-bottom:1px solid rgba(128,128,128,0.2);
     }
 
     &-menuright {
       width: @standard;
-      height: @standard - 1;
+      height: @standard;
       border-left: @border;
       border-bottom: @border;
+      text-align: center;
+      line-height: 40px;
     }
 
-    &-horIcon {
-      width: 100%;
-      height: @standard - 1 !important;
-      line-height: @standard - 1 !important;
-      display: flex !important;
-      justify-content: center;
-      align-items: center;
-    }
+    &-horIcon {}
 
     &-horMenu {
       display: block;
@@ -109,6 +104,7 @@
 
       .ant-menu-horizontal {
         line-height: @standard - 2;
+        border:none;
       }
     }
 

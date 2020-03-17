@@ -117,149 +117,157 @@
                     // 所有table设置为fixed
                     // 宽度需要业务层传递
                     .layoutfixed();
+                    
+                    tr.ant-table-row,
+                    tr.gant-table-header-row{
+                        &:after {
+                            content: close-quote;
+                            width: 0;
+                            opacity: 0;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            display: table-cell;
+                            padding-top: var(--padding);
+                            padding-bottom: var(--padding);
+                        }
+                    }
 
                     td {
                         position: relative;
 
-                        // 文本溢出格式
-                        // 选择框不添加文本溢出格式
-                        .@{table-prefix-cls}-cell-inner {
-                            >* {
-                                display: inline-block;
-                                max-width: 100%;
+                        &.@{table-prefix-cls}-editcell-ellipsis {
+                            .ellipsis();
+                        }
+
+                        &.@{table-prefix-cls}-editcell-wrap {
+                            .overflowwrap();
+                        }
+                        .table-cell-editing {
+                            position: absolute;
+                            width: calc(100%);
+                            height: calc(100%);
+                            top: 0;
+                            left: 0;
+
+                            .full() {
+                                height: 100%;
+                            }
+                            // 缩小input，使其再较小行高下自适应
+                            .small-input() {
+                                padding-top: 2px;
+                                padding-bottom: 2px;
+                            }
+                            .gant-input{
+                                .full();
                             }
 
-                            &.@{table-prefix-cls}-editcell-ellipsis {
-                                .ellipsis();
-                            }
-
-                            &.@{table-prefix-cls}-editcell-wrap {
-                                .overflowwrap();
-                            }
-
-                            &::after {
-                                content: "clear";
-                                width: 0;
-                                opacity: 0;
-                                white-space: nowrap;
-                                overflow: hidden;
-                                display: inline-flex;
-                            }
-
-                            .table-cell-editing {
-                                position: absolute;
-                                width: calc(100% + 1px);
-                                height: calc(100% + 1px);
-                                top: 0;
-                                left: 0;
-
-                                .full() {
-                                    height: 100%;
+                            >.gant-input {
+                                > .gant-input-group{
+                                    display: block;
+                                    // 排除地址选择器
+                                    &>*{
+                                        display: block;
+                                    }
                                 }
 
-                                // 缩小input，使其再较小行高下自适应
-                                .small-input() {
-                                    padding-top: 2px;
-                                    padding-bottom: 2px;
+                                .gant-input-inner,
+                                .gant-location-cascader, // 地址选择器
+                                .gant-icon-select, // 图标选择器
+                                input {
+                                    .full()
                                 }
 
-                                .gant-input {
+                                // 手机、电话
+                                .ant-input-group-wrapper {
+                                    .full();
+                                }
+
+                                // 日期选择器
+                                .gant-calendar-picker {
                                     .full();
 
-                                    .gant-input-inner,
-                                    input {
+                                    >div {
                                         .full()
                                     }
 
-                                    // 手机、电话
-                                    .ant-input-group-wrapper {
+                                    .ant-calendar-picker-input {
+                                        .full();
+                                    }
+                                }
+
+                                .ant-input-group {
+                                    width: 100%;
+                                    .full();
+
+                                    // 数字输入框
+                                    .gant-input-number,
+                                    .ant-input-number-input-wrap {
                                         .full();
                                     }
 
-                                    // 日期选择器
-                                    .gant-calendar-picker {
+                                    // 选择器
+                                    .gant-selector,
+                                    .gant-selector .ant-select-selection,
+                                    .gant-selector .ant-select-selection,
+                                    .ant-select-selection__rendered,
+                                    // 邮箱选择器
+                                    .gant-select-email .ant-select-selection {
                                         .full();
-
-                                        >div {
-                                            .full()
-                                        }
-
-                                        .ant-calendar-picker-input {
-                                            .full();
-                                        }
                                     }
 
-                                    .ant-input-group {
+                                    .gant-selector .ant-select-selection,
+                                    .ant-select-selection__rendered {
+                                        display: flex;
+                                        align-items: center;
+                                    }
+
+                                    .ant-select-selection__rendered {
+                                        line-height: 100%;
+                                    }
+
+                                    // 邮箱
+                                    .gant-select-email ul {
                                         width: 100%;
                                         .full();
 
-                                        // 数字输入框
-                                        .gant-input-number,
-                                        .ant-input-number-input-wrap {
-                                            .full();
+                                        li.ant-select-search {
+                                            line-height: 1;
                                         }
+                                    }
 
-                                        // 选择器
-                                        .gant-selector,
-                                        .gant-selector .ant-select-selection,
-                                        .gant-selector .ant-select-selection,
-                                        .ant-select-selection__rendered,
-                                        // 邮箱选择器
-                                        .gant-select-email .ant-select-selection {
-                                            .full();
-                                        }
+                                    .ant-input-affix-wrapper {
+                                        height: 100%;
+                                        margin: 0px !important;
 
-                                        .gant-selector .ant-select-selection,
-                                        .ant-select-selection__rendered {
-                                            display: flex;
-                                            align-items: center;
-                                        }
-
-                                        .ant-select-selection__rendered {
-                                            line-height: 100%;
-                                        }
-
-                                        // 邮箱
-                                        .gant-select-email ul {
-                                            width: 100%;
-                                            .full();
-
-                                            li.ant-select-search {
-                                                line-height: 1;
-
-                                                .ant-select-search__field {
-                                                    .small-input()
-                                                }
-                                            }
-                                        }
-
-                                        .ant-input-affix-wrapper {
+                                        .ant-input {
                                             height: 100%;
-                                            margin: 0px !important;
-
-                                            .ant-input {
-                                                height: 100%;
-                                                .small-input()
-                                            }
+                                            .small-input()
                                         }
                                     }
                                 }
+                            }
 
-                                * {
+                            * {
+                                box-shadow: none !important;
+                                border-radius: 0 !important;
+
+                                &:hover {
                                     box-shadow: none !important;
-                                    border-radius: 0 !important;
-
-                                    &:hover {
-                                        box-shadow: none !important;
-                                    }
-
-                                    &:active {
-                                        box-shadow: none !important;
-                                    }
                                 }
 
+                                &:active {
+                                    box-shadow: none !important;
+                                }
                             }
+
                         }
+
+                        // 文本溢出格式
+                        // 选择框不添加文本溢出格式
+                        // .@{table-prefix-cls}-cell-inner {
+
+                            
+                        // }
 
                     }
 

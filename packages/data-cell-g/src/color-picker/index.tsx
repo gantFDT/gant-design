@@ -22,10 +22,7 @@ class ColorPicker extends React.Component<any> {
     const { addonAfter, className, ...props } = this.props
 
     return (
-      <Group gant className={className}>
-        <span><GantColorPicker {...props} /></span>
-        {addonAfter ? <span className="ant-input-group-addon">{addonAfter}</span> : null}
-      </Group>
+      <span><GantColorPicker {...props} /></span>
     )
   }
 

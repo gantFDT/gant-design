@@ -10,7 +10,6 @@ export enum headerType {
   num
 }
 interface HeaderIF {
-  // id?: string,
   type?: headerType,
   bottomLine?: boolean,
   title?: string | ReactNode,
@@ -26,7 +25,6 @@ interface HeaderIF {
 const Header = (props: HeaderIF) => {
   let {
     prefixCls: customizePrefixCls,
-    // id,
     type = '',
     bottomLine = false,
     title,
@@ -60,7 +58,7 @@ const Header = (props: HeaderIF) => {
         if (item && item.type && item.type.toString() === 'Symbol(react.fragment)') {
           interator([item.props.children], index)
         } else {
-          if (React.isValidElement(item) || typeof (item) == 'string') {
+          if (React.isValidElement(item) || typeof (item) === 'string') {
             toolsArr.push(
               item
             )
@@ -153,8 +151,7 @@ const Header = (props: HeaderIF) => {
   const clsString = classnames(prefixCls, className);
 
   return (
-
-    <div className={clsString} style={{ borderBottom: bottomLine && '1px solid #edebe9', ...style }} {...restProps}>
+    <div className={clsString} style={{ borderBottom: bottomLine && '1px solid rgba(128,128,128,0.2)', ...style }} {...restProps}>
       <div className={prefixCls + '-wrapper'}>
         <div className={prefixCls + '-beforeExtra'}>
           {beforeExtra}
@@ -188,7 +185,6 @@ const Header = (props: HeaderIF) => {
         </div>
       </div>
     </div>
-
   )
 }
 

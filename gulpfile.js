@@ -6,6 +6,7 @@ const path = require('path')
 const less = require('gulp-less')
 const uglify = require('gulp-uglify')
 const postcss = require('gulp-postcss')
+const rename = require('gulp-rename')
 const autoprefixer = require('autoprefixer')
 const ts = require('gulp-typescript')
 const filter = require('gulp-filter');
@@ -346,6 +347,48 @@ task('clean', function clean(cb) {
   rimraf.sync(path.resolve(__dirname, `packages/*/link/`));
   rimraf.sync(path.resolve(__dirname, `packages/*/dist/`));
   cb();
+})
+
+task('code', function code(){
+
+  const CODE_START = '/*! Start !*/';
+  const CODE_END = '/*! End !*/';
+  const CODE_SPLIT = '/*! Split !*/';
+  const REGEX = /function\s?([\w\-]+)\(\)\s?\{[\s\S]+\}|const\s+([\w\-]+)\s?=\s\(\)\s?=>\s?\{[\s\S]+\}/g;
+
+  return src([`stories/*/index.js`, `stories/*/index.ts`])
+    .pipe(
+      through2.obj(function (file, enc, next) {
+        let content = file.contents.toString();
+        const startIdx = content.indexOf(CODE_START);
+        if(~startIdx){
+          let fileContent = 'export default [\n';
+          const endIdx = content.indexOf(CODE_END);
+          const codeStr = content.slice(startIdx + CODE_START.length, endIdx);
+          const [ CodeHead, ...CodeBodys ] = codeStr.split(CODE_SPLIT);
+          const Header = CodeHead.replace(/@/g, '');
+          CodeBodys.forEach(CodeBody => {
+            const matches = REGEX.exec(CodeBody);
+            if(matches){
+              const [_, _name, __name] = matches;
+              fileContent += `\`${Header}\n${CodeBody}\nReactDOM.render(<${_name || __name} />, mountNode)\`,`;
+            }
+          })
+          fileContent += ']';
+          const buf = Buffer.from(fileContent)
+          file.contents = buf
+          this.push(file)
+          next()
+        }else{
+          next(false)
+        }
+      })
+    )
+    .pipe(rename({
+      basename: 'code',
+      extname: ".js"
+    }))
+    .pipe(dest(`stories/`))
 })
 
 task('default', series('clean', 'lib'))

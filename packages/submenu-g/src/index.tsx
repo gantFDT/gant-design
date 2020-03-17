@@ -17,7 +17,7 @@ type menuItem = {
 
 type MenuMode = 'horizontal' | 'inline';
 
-export interface CardIF {
+export interface SubmenuIF {
   collapsed: boolean;
   mode: MenuMode;
   selectedKey?: string;
@@ -27,6 +27,7 @@ export interface CardIF {
   collapsedWidth: number | string;
   extra?: React.ReactNode;
   menuData: menuItem[];
+  bordered?: boolean;
   style?: React.CSSProperties;
   classname?: string;
   showMenuMagnet: boolean;
@@ -36,7 +37,7 @@ export interface CardIF {
   onSelectedChange: (key: string, record: menuItem, e?: Event) => void;
 }
 
-export default class Submenu extends React.Component<any, Partial<CardIF>> {
+export default class Submenu extends React.Component<any, Partial<SubmenuIF>> {
   static defaultProps = {
     collapsed: false,
     mode: 'inline',
@@ -46,6 +47,7 @@ export default class Submenu extends React.Component<any, Partial<CardIF>> {
     subMinHeight: 112,
     selectedKey: '',
     menuData: [],
+    bordered:true,
     showMenuMagnet: false,
     showFlipOverFooter: false,
     style: {},
@@ -217,7 +219,6 @@ export default class Submenu extends React.Component<any, Partial<CardIF>> {
             <div className={`${prefixCls}-menuright`}>
               <Icon.Ant
                 type="switcher"
-                className={`${prefixCls}-horIcon`}
                 onClick={this.onSwitchClick}
               />
             </div>
@@ -236,6 +237,7 @@ export default class Submenu extends React.Component<any, Partial<CardIF>> {
       selectedKey,
       menuData,
       showFlipOverFooter,
+      bordered
     } = this.props;
     this.prefixCls = getPrefixCls('-submenu', customizePrefixCls);
     const isInline = this.state.mode == 'inline';
@@ -246,7 +248,7 @@ export default class Submenu extends React.Component<any, Partial<CardIF>> {
       <div
         ref={ref => (this.warpRef = ref)}
         className={classnames(`${this.prefixCls}-pagewrap`, classname)}
-        style={wrapStyle}
+        style={{ border: bordered ? '1px solid rgba(128,128,128,0.2)' : 'none', ...wrapStyle }}
       >
         {isInline ? this.renderInlineMenu(this.prefixCls) : this.renderHorMenu(this.prefixCls)}
         <div className={`${this.prefixCls}-pagecard`}>
