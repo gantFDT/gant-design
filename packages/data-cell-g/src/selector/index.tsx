@@ -4,8 +4,7 @@ import SelectC, { SelectProps, SelectValue as AntSelectValue } from 'antd/lib/se
 import { debounce, isPlainObject, isNil, cloneDeep, isEqual, zipWith, groupBy, pick } from 'lodash'
 import { compose, defaultProps, withProps, withPropsOnChange, withState, mapProps, withHandlers, lifecycle, toClass, setDisplayName } from 'recompose'
 import warning from '@util/warning'
-
-import { Group } from '../input'
+import classnames from 'classnames'
 import { default as withEdit, WithEditInProps, WithEditOutProps } from '../with-edit'
 
 type ProtoExtends<T, U> = U & {
@@ -492,7 +491,7 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
 
   renderSelect = () => {
     const { onSearch, onSelect, onChange, onopen } = this
-    const { multiple, readOnly, renderList, loading, style, addonAfter, setSelectRef, children, ...props } = this.props;
+    const { multiple, readOnly, renderList, loading, style, addonAfter, setSelectRef, dropdownClassName, children, ...props } = this.props;
     if (readOnly) {
       props.open = false
       props.showSearch = false
@@ -511,6 +510,7 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
         onDropdownVisibleChange={onopen}
         labelInValue
         filterOption={false}
+        dropdownClassName={classnames(dropdownClassName, 'gant-selector-dropdown')}
       >
         {children || renderList}
       </Select>
@@ -528,7 +528,7 @@ const SelectorComponent = compose(
   toClass,
   withLocalStorage,
   withSelector,
-  withEdit<SelectorInnerProps<any, any>>(({ label }) => label),
+  withEdit<SelectorInnerProps<any, any>>(({ label }) => label, 'gant-selector-dropdown'),
   withChange, // 单独将value的处理放到withEdit后面，
 )(BasicSelector)
 
