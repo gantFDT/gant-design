@@ -1,13 +1,21 @@
-import React, { useState } from 'react'
-import { Button, ConfigProvider } from 'antd'
-import Modal from '@packages/modal-g/src'
 import '@packages/modal-g/src/style'
-import zhCN from 'antd/es/locale/zh_CN'
 import CodeDecorator from '../_util/CodeDecorator'
 import code from './code.js'
+/*! Start !*/
+import React, { useState } from 'react'
+import { Button, ConfigProvider } from 'antd'
+import { Modal } from '@gantd'
 const { ResizableModal, ResizableProvider } = Modal
 const ButtonGroup = Button.Group
-
+// import zhCN from 'antd/es/locale/zh_CN' 按模块引入
+const zhCN = {
+  "Modal": {
+    "okText": "确定",
+    "cancelText": "取消",
+    "justOkText": "知道了"
+  }
+}
+/*! Split !*/
 function BasicUse() {
     const [visible, setVisible] = useState(false)
     return (
@@ -27,6 +35,7 @@ function BasicUse() {
         </div>
     )
 }
+/*! Split !*/
 function CustomUse() {
     const [visible, setVisible] = useState(false)
     const [widthAndHei, setWidthAndHei] = useState([400, 400])
@@ -55,7 +64,7 @@ function CustomUse() {
         </div>
     )
 }
-
+/*! Split !*/
 function PositionUse() {
     const [visible, setVisible] = useState(false)
     return (
@@ -74,7 +83,7 @@ function PositionUse() {
         </div>
     )
 }
-
+/*! Split !*/
 function MaximizeUse() {
     const [visible, setVisible] = useState(false)
     return (
@@ -92,7 +101,7 @@ function MaximizeUse() {
         </div>
     )
 }
-
+/*! Split !*/
 function ForbiddenUse() {
     const [visible, setVisible] = useState(false)
     return (
@@ -111,7 +120,7 @@ function ForbiddenUse() {
         </div>
     )
 }
-
+/*! Split !*/
 function KeepState() {
     const [visible, setVisible] = useState(false)
     return (
@@ -132,8 +141,8 @@ function KeepState() {
         </div>
     )
 }
-
-function multipleModalsUse() {
+/*! Split !*/
+function MultipleModalsUse() {
     const [visible, setVisible] = useState(false)
     const [visible2, setVisible2] = useState(false)
     return (
@@ -166,7 +175,7 @@ function multipleModalsUse() {
         </ResizableProvider>
     )
 }
-
+/*! End !*/
 const config = {
     codes: code,
     useage: `
@@ -211,7 +220,7 @@ const config = {
         {
             title: '同屏多弹窗模式',
             describe: '支持同屏多非模态型的弹窗，可通过点击改变当前选中弹窗层级',
-            cmp: multipleModalsUse
+            cmp: MultipleModalsUse
         },
     ]
 }

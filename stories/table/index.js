@@ -1,16 +1,56 @@
-
-import React, { useState, useCallback, useEffect, useMemo } from 'react'
+import '@table/style'
 import CodeDecorator from '../_util/CodeDecorator';
 import code from './code'
-import Table from '@table'
-import '@table/style'
-import { EditStatus, SwitchStatus, Input, InputNumber, Selector, InputCellPhone, InputUrl, InputEmail, InputMoney, DatePicker, ColorPicker, LocationSelector, Icon, InputTelePhone, InputLanguage } from '@data-cell'
-
+import Mock from 'mockjs'
+/*! Start !*/
+import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { Button, Slider } from 'antd'
-
-import { getList, getEditList, getNestList } from './mock'
-const { RangePicker } = DatePicker
-
+import { Table, EditStatus, SwitchStatus, Input, InputNumber, Selector } from '@gantd'
+const { Random } = Mock
+const getList = function getList(length = 5) {
+    const key = `list|2`
+    const data = Mock.mock({
+        [key]: Array.from({ length }).map(() => (
+            {
+                "name|1": Random.name(),
+                "age|1-100": 1,
+                "address|1": Random.province()
+            }
+        ))
+    })
+    return data.list.slice(0, length)
+}
+const getEditList = function getList(length = 5) {
+    const key = `list|2`
+    const data = Mock.mock({
+        [key]: Array.from({ length }).map(() => (
+            {
+                "name|1": Random.name(),
+                "age|1-100": 1
+            }
+        ))
+    })
+    return data.list.slice(0, length)
+}
+const getNestList = function getNestList(length = 15) {
+    const key = `list|2`
+    const data = Mock.mock({
+        [key]: Array.from({ length }).map(() => (
+            {
+                "name|1": Random.name(),
+                "age|1-100": 1,
+                "address|1": Random.province(),
+                "cName|1": Random.paragraph(2, 5),
+                "createDate|1": Random.date(),
+                "cAddress|1": Random.province(),
+                "street|1": Random.paragraph(2, 5),
+                "email|000000-999999": 1,
+                "boss|1": Random.name()
+            }
+        ))
+    })
+    return data.list.slice(0, length)
+}
 const columns = [
   {
     title: '姓名',
@@ -29,7 +69,7 @@ const columns = [
     key: 'address',
   },
 ];
-
+/*! Split !*/
 function BasicTable(props) {
 
   const dataSource = useMemo(() => getList(), [])
@@ -60,7 +100,7 @@ function BasicTable(props) {
     headerLeft={headerLeft}
   />
 }
-
+/*! Split !*/
 // 可编辑表格
 function EditorTable() {
 
@@ -135,8 +175,7 @@ function EditorTable() {
     scroll={{ y: 400 }}
   />
 }
-
-
+/*! Split !*/
 // 虚拟滚动
 function VirtualScrollTable() {
 
@@ -157,8 +196,7 @@ function VirtualScrollTable() {
     />
   )
 }
-
-
+/*! Split !*/
 function NestTable(props) {
 
   const [columns, setcolumns] = useState([
@@ -228,8 +266,7 @@ function NestTable(props) {
 
   return <Table columns={columns} dataSource={dataSource} scroll={{ x: 1050 }} />
 }
-
-
+/*! Split !*/
 function ScrollTable() {
 
   const [dataSource, setdataSource] = useState(() => getList(5))
@@ -262,7 +299,7 @@ function ScrollTable() {
     />
   )
 }
-
+/*! Split !*/
 // 拖动排序
 function DragTable(props) {
   const [dataSource, setdataSource] = useState(() => getList(20))
@@ -275,8 +312,7 @@ function DragTable(props) {
     scroll={{ y: 300 }}
   />
 }
-
-
+/*! Split !*/
 function WideTable() {
 
   let dataArray = new Array(10), dataSource = [];
@@ -383,7 +419,7 @@ function WideTable() {
     scroll={{ x: 2000, y: 400 }}
   />
 }
-
+/*! Split !*/
 const TreeTable = () => {
   const [keys, setKeys] = useState();
   const dataSource = [
@@ -536,8 +572,7 @@ const TreeTable = () => {
     }}
   />
 }
-
-
+/*! Split !*/
 function PaginationTable(props) {
 
   const [pagenumber, setpagenumber] = useState(1)
@@ -569,8 +604,7 @@ function PaginationTable(props) {
     footerDirection='row-reverse'
   />
 }
-
-
+/*! Split !*/
 function LightTable(props) {
   const getlist = useCallback(
     (length) => {
@@ -603,14 +637,14 @@ function LightTable(props) {
     </>
   )
 }
-
+/*! Split !*/
 function EmptyTable(props) {
 
   return <Table columns={columns} dataSource={[]} scroll={{ x: '100%', y: 350 }} pagination={false} emptyDescription='这个表格是空的' />
 }
-
+/*! End !*/
 const config = {
-  codes: code.map(V => `import React, { useState, useCallback, useEffect, useMemo } from 'react';\n${V}`),
+  codes: code,
   useage: (
     `在已有的表格基本功能以后，还有其他以下功能以增强表格在不同场景下的应用
 		<h2>主要特性</h2>
@@ -659,11 +693,11 @@ const config = {
       describe: '',
       cmp: DragTable
     },
-    // {
-    //   title: '宽表格',
-    //   describe: '在小屏幕上出现滚动条,设置fixed的列必须设置宽度，试试缩小屏幕。同时，因为有固定列，所以wrap使文本折行的属性不能生效',
-    //   cmp: WideTable
-    // },
+    {
+      title: '宽表格',
+      describe: '在小屏幕上出现滚动条,设置fixed的列必须设置宽度，试试缩小屏幕。同时，因为有固定列，所以wrap使文本折行的属性不能生效',
+      cmp: WideTable
+    },
     {
       title: '树形表格、级联选择',
       describe: '树形表格,级联选择, 与antd组件相比，多选情况下onSelect第一个参数修改为了数组。datasource中有children属性自动开启树形结构, rowSelection为对象开启选择，增强选择的时候判断是否有子节点并一起选中,clickable: false用于关闭行选功能',

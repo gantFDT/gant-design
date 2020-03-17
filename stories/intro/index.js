@@ -1,9 +1,10 @@
-import React from 'react'
-import {Intro} from '@packages/gantd/src';
 import '@packages/gantd/src/intro/style';
 import CodeDecorator from '../_util/CodeDecorator'
 import code from './code.js'
-
+/*! Start !*/
+import React, { useState } from 'react'
+import { Intro } from '@gantd';
+/*! Split !*/
 function BasicUse() {
     return <Intro
         title="标题"
@@ -12,7 +13,7 @@ function BasicUse() {
         content='this is the content'
     />
 }
-
+/*! Split !*/
 function noImageUse() {
     return <Intro
         title="标题"
@@ -21,7 +22,7 @@ function noImageUse() {
         content='this is the content'
     />
 }
-
+/*! Split !*/
 function ImageRightUse() {
     return <Intro
         title="标题"
@@ -31,7 +32,7 @@ function ImageRightUse() {
         content='this is the content'
     />
 }
-
+/*! Split !*/
 const config = {
     inline: true,
     codes: code.map(item => {

@@ -1,12 +1,11 @@
-
-import { Input, EditStatus, SwitchStatus } from '@data-cell'
 import '@data-cell/edit-status/style'
-import { Alert, Button } from 'antd'
-import React, { useState, useCallback } from 'react';
 import codeList from './code'
 import CodeDecorator from '../_util/CodeDecorator';
-
-
+/*! Start !*/
+import React, { useState, useCallback } from 'react'
+import { Button } from 'antd'
+import { Input, EditStatus, SwitchStatus } from '@gantd'
+/*! Split !*/
 const EditStatusUse = () => {
   const [edit, setEdit] = useState(EditStatus.CANCEL)
   const [value, setValue] = useState()
@@ -44,8 +43,7 @@ const EditStatusUse = () => {
     </>
   )
 }
-
-
+/*! Split !*/
 const SwitchStatusUse = () => {
   const [edit, setEdit] = useState(EditStatus.CANCEL)
   const [value, setValue] = useState()
@@ -76,9 +74,7 @@ const SwitchStatusUse = () => {
     </>
   )
 }
-
-
-
+/*! End !*/
 
 const config = {
   useage: `
@@ -89,18 +85,7 @@ const config = {
   <b>✊🏼 同时支持在表单和表格中使用</b></br>
   不光是表单分读写，同样，表格也可以分读写
   `,
-  codes: codeList.map(code => (
-    `import React, { useState } from 'react';
-     import { Switch, Button } from 'antd';
-     import { Input, TextArea, Password, Search, EditStatus, SwitchStatus } from 'gantd';
-    function Demo(){
-      ${code}
-    }
-    ReactDOM.render(
-      <Demo />,
-      mountNode,
-    );`
-  )),
+  codes: codeList,
   // inline: true,
   children: [
     {

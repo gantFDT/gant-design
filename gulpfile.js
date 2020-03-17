@@ -366,12 +366,12 @@ task('code', function code(){
           const endIdx = content.indexOf(CODE_END);
           const codeStr = content.slice(startIdx + CODE_START.length, endIdx);
           const [ CodeHead, ...CodeBodys ] = codeStr.split(CODE_SPLIT);
-          const Header = CodeHead.replace(/@/g, '');
+          const Header = CodeHead.replace(/@/g, '').replace(/([`\$])/g,'\\$1');
           CodeBodys.forEach(CodeBody => {
             const matches = REGEX.exec(CodeBody);
             if(matches){
               const [_, _name, __name] = matches;
-              CodeBody = CodeBody.replace(/([`|\$])/g,'\\$1')
+              CodeBody = CodeBody.replace(/([`\$])/g,'\\$1')
               fileContent += `\`${Header}\n${CodeBody}\nReactDOM.render(<${_name || __name} />, mountNode)\`,`;
             }
           })
