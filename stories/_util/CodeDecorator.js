@@ -66,7 +66,8 @@ const getCodePenStr = (title, description, code) => {
     code = code
         .replace(/import\s?ReactDom\s?from\s?['|"]react-dom['|"]?/, '')
         .replace(/import\s?React\s?from\s?['|"]react['|"]?/, '')
-        .replace(/import\s?{(.*)\}\s?from\s?['|"](\w+)['|"]/g, 'const {$1} = $2')
+        .replace(/import\s?\{(.*)\}\s?from\s?['|"](\w+)['|"]/g, 'const {$1} = $2')
+        .replace(/import\s?(\S*)\s?from\s?['|"](\S+)['|"]/g, 'const $1 = $2')
         .replace(/import\s?.*\{(.*)\}\s?from\s?['|"]react['|"]/, 'const {$1} = React')
 
     const codePenData = {
@@ -77,7 +78,7 @@ const getCodePenStr = (title, description, code) => {
         css: `@import 'antd/dist/antd.css'\n@import '${name}/dist/${name}.css'`,
         editors: "001",
         css_external: `https://unpkg.com/antd@3.26.13/dist/antd.min.css;https://unpkg.com/${name}@${version}/dist/${name}.css`,
-        js_external: `https://unpkg.com/react@16.x/umd/react.development.js;https://unpkg.com/react-dom@16.x/umd/react-dom.development.js;https://unpkg.com/moment/min/moment-with-locales.js;https://unpkg.com/antd@3.26.13/dist/antd.min.js;https://unpkg.com/react-router-dom/umd/react-router-dom.min.js;https://unpkg.com/react-router@3.x/umd/ReactRouter.min.js;https://unpkg.com/${name}@${version}/dist/${name}.js`,
+        js_external: `https://unpkg.com/react@16.x/umd/react.development.js;https://unpkg.com/react-dom@16.x/umd/react-dom.development.js;https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js;https://unpkg.com/moment/min/moment-with-locales.js;https://unpkg.com/antd@3.26.13/dist/antd.min.js;https://unpkg.com/react-router-dom/umd/react-router-dom.min.js;https://unpkg.com/react-router@3.x/umd/ReactRouter.min.js;https://unpkg.com/${name}@${version}/dist/${name}.js`,
         js_pre_processor: "typescript"
     }
     return JSON.stringify(codePenData)

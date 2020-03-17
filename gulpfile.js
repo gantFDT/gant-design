@@ -354,7 +354,7 @@ task('code', function code(){
   const CODE_START = '/*! Start !*/';
   const CODE_END = '/*! End !*/';
   const CODE_SPLIT = '/*! Split !*/';
-  const REGEX = /function\s?([\w\-]+)\(\)\s?\{[\s\S]+\}|const\s+([\w\-]+)\s?=\s\(\)\s?=>\s?\{[\s\S]+\}/g;
+  const REGEX = /function\s?([\w\-]+)\(\)\s?\{[\s\S]+\}|const\s+([\w\-]+)\s?=\s\(\)\s?=>\s?\{[\s\S]+\}/;
 
   return src([`stories/*/index.js`, `stories/*/index.ts`])
     .pipe(
