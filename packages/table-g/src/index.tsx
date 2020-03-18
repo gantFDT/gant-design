@@ -560,12 +560,7 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
         [wrap, light, sortable, tableKey, cellPadding, headerFixed, virtualScroll, outlineNum],
     )
 
-    const expandIconColumnIndex = useMemo(() => {
-        let index = 0
-        index = Math.max(columns.findIndex(item => item.expandColumn), 0)
 
-        return computedRowSelection ? index + 1 : index
-    }, [columns, computedRowSelection])
     /**
      * columns API
      * @param editConfig object 编辑对象
@@ -689,6 +684,13 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
 
     //#endregion
     const tableColumns = useMemo(() => convertColumns(columns), [columns, convertColumns, orderList])
+
+    const expandIconColumnIndex = useMemo(() => {
+        let index = 0
+        index = Math.max(tableColumns.findIndex(item => item.expandColumn), 0)
+
+        return computedRowSelection ? index + 1 : index
+    }, [tableColumns, computedRowSelection])
 
     // 缺省显示
     const emptyText = useMemo(() => {

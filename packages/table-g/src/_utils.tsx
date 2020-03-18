@@ -474,19 +474,6 @@ export const getComputedColIndex = (cols): string[] => {
   return colIndexs
 }
 
-function computeIndexInner<T>([...list], parent): [Array<T>, number] {
-  let start = parent;
-  const c = list.map(({ ...item }) => {
-    item['g-index'] = ++start
-    if (_.get(item, 'children.length')) {
-      const [children, subStart] = computeIndexInner(item.children, start)
-      item.children = children;
-      start = subStart as number
-    }
-    return item
-  })
-  return [c, start]
-}
 /**
  * 给list计算g-index属性
  * @param {Array} list 
@@ -562,17 +549,26 @@ export const getListRange = function getListRange<T>(list: T[], start: number, l
   )
 }
 
-export const getVirtualList = function getVirtualList<T extends Record>(start: number, length: number, renderRowKeys: string[], [...list]: Array<T>): Array<T> {
+export const getVirtualList = function getVirtualList<T extends Record>(start: number, length: number, renderRowKeys: string[], list: Array<T>): Array<T> {
   // const keys = renderRowKeys.slice(start, start+length);
-  let result = getListRange(list, start, length);
+  // 拟定要去掉的属性
+  // g-parent、g-parent-row-key、g-row-key
+  const cloneList: Array<T> = _.cloneDeep(list)
+  let result = getListRange(cloneList, start, length);
   if (!result.length) return result
   do {
     const { root = [], ...groups } = _.groupBy(result, 'g-parent-row-key')
-    for (const [key, nodes] of Object.entries(groups).reverse()) {
+    const entries = Object.entries(groups).reverse()
+    for (const [parentRowKey, nodes] of entries) {
       let seted = false;
       for (const item of root) {
-        if (String(item['g-row-key']) === key) {
-          item.children = nodes
+        if (String(item['g-row-key']) === parentRowKey) {
+          if (!item.children || !item.children.length) {
+            item.children = nodes
+          } else {
+            const idsGroup = _.groupBy(nodes, 'g-row-key')
+            item.children = item.children.map(subItem => _.get(idsGroup[subItem["g-row-key"]], '0', subItem))
+          }
           seted = true;
           break;
         }
