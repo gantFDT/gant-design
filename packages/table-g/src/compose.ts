@@ -18,9 +18,7 @@ export const scrollIntoViewWithRowKey = compose(
             if (tableWraper && scrollKey) {
                 const tr = tableWraper.querySelector(`tr[data-row-key=\'${scrollKey}\']`)
                 if (tr) {
-                    tr.scrollIntoView({
-                        behavior: 'smooth'
-                    })
+                    tr.scrollIntoView()
                 }
             }
         }
