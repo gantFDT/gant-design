@@ -27,7 +27,6 @@ function BasicUse() {
     alignItems: 'center',
     height: 400,
     fontSize: 24,
-    width: '100%',
     border: '1px solid rgba(128,128,128,0.1)'
   }
   return (
