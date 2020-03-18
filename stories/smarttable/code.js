@@ -600,7 +600,7 @@ var editTableSchema = {
     }
   ]
 }
-const editTableData = Array(15).fill().map(() => ({
+var editTableData = Array(15).fill().map(() => ({
   name: Random.cname(),
   age: Random.natural(20, 70),
   domain: Random.url(),
@@ -680,4 +680,4 @@ function EditInlineUse() {
   )
 }
 
-ReactDOM.render(<editTableData />, mountNode)`,]
+ReactDOM.render(<EditInlineUse />, mountNode)`,]
