@@ -1,36 +1,20 @@
-const codeGenerator = (code, islocalDemo) =>
-  `import React, { useState } from 'react'
-  import { Divider, Tag, Radio, Switch, Button, message, ConfigProvider } from 'antd'
-  import { SmartTable } from 'gantd'
-  ${islocalDemo ? "import zhCN from 'antd/es/locale/zh_CN'" : ''}
-  ${islocalDemo ? "import enUS from 'antd/es/locale/en_US'" : ''}
-//import { SmartTable } from 'smart-table-g';//与gantd中引入效果相同
-const dataSource = [
-  {
-    key: '1',
-    name: '张三',
-    age: 32,
-    address: '四川成都 春熙路1号',
-    tags: ['宅', '程序猿'],
-  },
-  {
-    key: '2',
-    name: '李四',
-    age: 42,
-    address: '北京 天安门大道123号',
-    tags: ['高富帅'],
-  },
-  {
-    key: '3',
-    name: '王五',
-    age: 32,
-    address: '天津 南京路23号',
-    tags: ['矮矬穷', '教师'],
-  },
-]
+export default [
+`
+import React, { useState, useCallback } from 'react'
+import { Divider, Tag, Radio, Button, message, ConfigProvider } from 'antd'
+import { SmartTable, EditStatus, SwitchStatus } from 'gantd'
+const { mock, Random } = Mock
 
 
-const tableColumns = [
+var dataSource = Array(10).fill().map((_, Idx) => ({
+  key: Idx,
+  name: Random.cname(),
+  age: Random.natural(20, 70),
+  address: Random.county(true),
+  tags: [[ '宅', '程序猿', '高富帅', '矮矬穷', '教师' ][Random.natural(0, 4)]]
+}))
+
+var tableColumns = [
   {
     title: '姓名',
     fieldName: 'name',
@@ -75,31 +59,79 @@ const tableColumns = [
     ),
   },
 ]
-
-${code}
-
-ReactDOM.render(
-  <TableUse/>,
-  mountNode,
-)`;
-
-const code1 =
-  `
-function TableUse() {
+function BasicUse() {
   return (
-      <div style={{ margin: 10 }}>
-        <SmartTable
-          tableKey="TableUse"
-          schema={tableColumns}
-          dataSource={dataSource}
-        />
-      </div>
+    <div style={{ margin: 10 }}>
+      <SmartTable
+        tableKey="BasicUse"
+        schema={tableColumns}
+        dataSource={dataSource}
+      />
+    </div>
   )
-}`
+}
 
-const code2 =
-  `
-function TableUse() {
+ReactDOM.render(<BasicUse />, mountNode)`,`
+import React, { useState, useCallback } from 'react'
+import { Divider, Tag, Radio, Button, message, ConfigProvider } from 'antd'
+import { SmartTable, EditStatus, SwitchStatus } from 'gantd'
+const { mock, Random } = Mock
+
+
+var dataSource = Array(10).fill().map((_, Idx) => ({
+  key: Idx,
+  name: Random.cname(),
+  age: Random.natural(20, 70),
+  address: Random.county(true),
+  tags: [[ '宅', '程序猿', '高富帅', '矮矬穷', '教师' ][Random.natural(0, 4)]]
+}))
+
+var tableColumns = [
+  {
+    title: '姓名',
+    fieldName: 'name',
+    render: text => <a>{text}</a>,
+  },
+  {
+    title: '年龄',
+    fieldName: 'age',
+  },
+  {
+    title: '住址',
+    fieldName: 'address',
+  },
+  {
+    title: '标签',
+    fieldName: 'tags',
+    render: tags => (
+      <span>
+        {tags.map(tag => {
+          let color = tag.length > 5 ? 'geekblue' : 'green';
+          if (tag === 'loser') {
+            color = 'volcano';
+          }
+          return (
+            <Tag color={color} key={tag}>
+              {tag.toUpperCase()}
+            </Tag>
+          );
+        })}
+      </span>
+    ),
+  },
+  {
+    title: '操作',
+    fieldName: 'action',
+    render: (text, record) => (
+      <span>
+        <a>邀请 {record.name}</a>
+        <Divider type="vertical" />
+        <a>删除</a>
+      </span>
+    ),
+  },
+]
+function ConfigColumnsUse() {
   const tableSchema = {
     supportColumnFields: tableColumns,
     systemViews: [
@@ -131,19 +163,77 @@ function TableUse() {
     ]
   }
   return (
-      <div style={{ margin: 10 }}>
-        <SmartTable
-          tableKey="TableUse"
-          schema={tableSchema}
-          dataSource={dataSource}
-        />
-      </div>
+    <div style={{ margin: 10 }}>
+      <SmartTable
+        tableKey="ConfigViewUse"
+        schema={tableSchema}
+        dataSource={dataSource}
+      />
+    </div>
   )
-}`
+}
 
-const code3 =
-  `
-function TableUse() {
+ReactDOM.render(<ConfigColumnsUse />, mountNode)`,`
+import React, { useState, useCallback } from 'react'
+import { Divider, Tag, Radio, Button, message, ConfigProvider } from 'antd'
+import { SmartTable, EditStatus, SwitchStatus } from 'gantd'
+const { mock, Random } = Mock
+
+
+var dataSource = Array(10).fill().map((_, Idx) => ({
+  key: Idx,
+  name: Random.cname(),
+  age: Random.natural(20, 70),
+  address: Random.county(true),
+  tags: [[ '宅', '程序猿', '高富帅', '矮矬穷', '教师' ][Random.natural(0, 4)]]
+}))
+
+var tableColumns = [
+  {
+    title: '姓名',
+    fieldName: 'name',
+    render: text => <a>{text}</a>,
+  },
+  {
+    title: '年龄',
+    fieldName: 'age',
+  },
+  {
+    title: '住址',
+    fieldName: 'address',
+  },
+  {
+    title: '标签',
+    fieldName: 'tags',
+    render: tags => (
+      <span>
+        {tags.map(tag => {
+          let color = tag.length > 5 ? 'geekblue' : 'green';
+          if (tag === 'loser') {
+            color = 'volcano';
+          }
+          return (
+            <Tag color={color} key={tag}>
+              {tag.toUpperCase()}
+            </Tag>
+          );
+        })}
+      </span>
+    ),
+  },
+  {
+    title: '操作',
+    fieldName: 'action',
+    render: (text, record) => (
+      <span>
+        <a>邀请 {record.name}</a>
+        <Divider type="vertical" />
+        <a>删除</a>
+      </span>
+    ),
+  },
+]
+function ConfigDisplayUse() {
   const tableSchema = {
     supportColumnFields: tableColumns,
     systemViews: [
@@ -163,20 +253,94 @@ function TableUse() {
       }
     ]
   }
+  const [rowKeys, setRowKeys] = useState([])
+  const [page, setPage] = useState(1)
+  const [pageSize, setPageSize] = useState(5)
   return (
-      <div style={{ margin: 10 }}>
-        <SmartTable
-          tableKey="TableUse"
-          schema={tableSchema}
-          dataSource={dataSource}
-        />
-      </div>
+    <div style={{ margin: 10 }}>
+      <SmartTable
+        tableKey="ConfigDisplayUse"
+        schema={tableSchema}
+        dataSource={dataSource}
+        rowSelection={
+          {
+            selectedRowKeys: rowKeys,
+            onChange: (selectedRowKeys, selectedRows) => {
+              setRowKeys(selectedRowKeys)
+            }
+          }
+        }
+        pageIndex={page}
+        pageSize={pageSize}
+        onPageChange={(page,pageSize)=>{console.log(page, pageSize);setPage(page);setPageSize(pageSize)}}
+        totalCount={10}
+        // pageSizeOptions={['5', '10', '15', '20']}
+      />
+    </div>
   )
-}`
+}
 
-const code4 =
-  `
-function TableUse() {
+ReactDOM.render(<ConfigDisplayUse />, mountNode)`,`
+import React, { useState, useCallback } from 'react'
+import { Divider, Tag, Radio, Button, message, ConfigProvider } from 'antd'
+import { SmartTable, EditStatus, SwitchStatus } from 'gantd'
+const { mock, Random } = Mock
+
+
+var dataSource = Array(10).fill().map((_, Idx) => ({
+  key: Idx,
+  name: Random.cname(),
+  age: Random.natural(20, 70),
+  address: Random.county(true),
+  tags: [[ '宅', '程序猿', '高富帅', '矮矬穷', '教师' ][Random.natural(0, 4)]]
+}))
+
+var tableColumns = [
+  {
+    title: '姓名',
+    fieldName: 'name',
+    render: text => <a>{text}</a>,
+  },
+  {
+    title: '年龄',
+    fieldName: 'age',
+  },
+  {
+    title: '住址',
+    fieldName: 'address',
+  },
+  {
+    title: '标签',
+    fieldName: 'tags',
+    render: tags => (
+      <span>
+        {tags.map(tag => {
+          let color = tag.length > 5 ? 'geekblue' : 'green';
+          if (tag === 'loser') {
+            color = 'volcano';
+          }
+          return (
+            <Tag color={color} key={tag}>
+              {tag.toUpperCase()}
+            </Tag>
+          );
+        })}
+      </span>
+    ),
+  },
+  {
+    title: '操作',
+    fieldName: 'action',
+    render: (text, record) => (
+      <span>
+        <a>邀请 {record.name}</a>
+        <Divider type="vertical" />
+        <a>删除</a>
+      </span>
+    ),
+  },
+]
+function MultiViewUse() {
   const tableSchema = {
     supportColumnFields: tableColumns,
     systemViews: [
@@ -231,16 +395,81 @@ function TableUse() {
     ]
   }
   return (
-      <div style={{ margin: 10 }}>
-        <SmartTable
-          tableKey="TableUse"
-          schema={tableSchema}
-          dataSource={dataSource}
-        />
-      </div>
+    <div style={{ margin: 10 }}>
+      <SmartTable
+        tableKey="MultiViewUse"
+        schema={tableSchema}
+        dataSource={dataSource}
+      />
+    </div>
   )
-}`
-const code5 = `function LocalUse() {
+}
+
+ReactDOM.render(<MultiViewUse />, mountNode)`,`
+import React, { useState, useCallback } from 'react'
+import { Divider, Tag, Radio, Button, message, ConfigProvider } from 'antd'
+import { SmartTable, EditStatus, SwitchStatus } from 'gantd'
+const { mock, Random } = Mock
+
+
+// import zhCN from 'antd/es/locale/zh_CN' 按模块导入
+// import enUS from 'antd/es/locale/en_US' 按模块导入
+var zhCN = {};
+var enUS = {};
+var dataSource = Array(10).fill().map((_, Idx) => ({
+  key: Idx,
+  name: Random.cname(),
+  age: Random.natural(20, 70),
+  address: Random.county(true),
+  tags: [[ '宅', '程序猿', '高富帅', '矮矬穷', '教师' ][Random.natural(0, 4)]]
+}))
+
+var tableColumns = [
+  {
+    title: '姓名',
+    fieldName: 'name',
+    render: text => <a>{text}</a>,
+  },
+  {
+    title: '年龄',
+    fieldName: 'age',
+  },
+  {
+    title: '住址',
+    fieldName: 'address',
+  },
+  {
+    title: '标签',
+    fieldName: 'tags',
+    render: tags => (
+      <span>
+        {tags.map(tag => {
+          let color = tag.length > 5 ? 'geekblue' : 'green';
+          if (tag === 'loser') {
+            color = 'volcano';
+          }
+          return (
+            <Tag color={color} key={tag}>
+              {tag.toUpperCase()}
+            </Tag>
+          );
+        })}
+      </span>
+    ),
+  },
+  {
+    title: '操作',
+    fieldName: 'action',
+    render: (text, record) => (
+      <span>
+        <a>邀请 {record.name}</a>
+        <Divider type="vertical" />
+        <a>删除</a>
+      </span>
+    ),
+  },
+]
+function LocalUse() {
   const [i18n, setI18n] = useState(zhCN)
   return (
     <div style={{ margin: 10 }}>
@@ -259,15 +488,15 @@ const code5 = `function LocalUse() {
     </div>
   )
 }
-`
 
-const code6 =
-  `import React, { useState, useCallback, useMemo } from 'react'
-import { Button, message } from 'antd'
-import { SmartTable, Input, InputNumber, DatePicker, InputUrl, LocationSelector, InputCellPhone, InputEmail, InputLanguage, InputMoney, EditStatus, SwitchStatus } from 'gantd'
-//import { Input, InputNumber, DatePicker, InputUrl, LocationSelector, InputCellPhone, InputEmail, InputLanguage, InputMoney, EditStatus, SwitchStatus } from 'gantd'
-//import { SmartTable } from 'smart-table-g';//与gantd中引入效果相同
-const tableColumns = [
+ReactDOM.render(<LocalUse />, mountNode)`,`
+import React, { useState, useCallback } from 'react'
+import { Divider, Tag, Radio, Button, message, ConfigProvider } from 'antd'
+import { SmartTable, EditStatus, SwitchStatus } from 'gantd'
+const { mock, Random } = Mock
+
+
+var editTableColumns = [
   {
     fieldName: 'name',
     title: '姓名',
@@ -320,9 +549,8 @@ const tableColumns = [
     componentType: 'DataPicker'
   }
 ]
-
-const tableSchema = {
-  supportColumnFields: tableColumns,
+var editTableSchema = {
+  supportColumnFields: editTableColumns,
   systemViews: [
     {
       viewId: 'systemView',
@@ -372,46 +600,19 @@ const tableSchema = {
     }
   ]
 }
-
-const data = [
-  {
-    name: '王医生',
-    age: 55,
-    cellPhone: { phone: "18010032938" },
-    domain: 'https://www.baidu.com/',
-    email: 'doc_wang@qq.com',
-    bio: { locale: 'zh-CN', value: '华西口腔主任医师。' },
-    price: { money: 29.9 },
-    address: ["CHN", "510000", "510100"],
-    birth: '1965-04-24',
-  },
-  {
-    name: '张医生',
-    age: 42,
-    cellPhone: { phone: "13583384957" },
-    domain: 'https://www.google.com/',
-    email: 'doc_zhang@163.com',
-    bio: { locale: 'zh-CN', value: '北京协和泌尿科主任医师。' },
-    price: { money: 19.9 },
-    address: ["CHN", "110000", "110101"],
-    birth: '1977-01-04',
-  },
-  {
-    name: '李医生',
-    age: 35,
-    cellPhone: { phone: "13777574848" },
-    domain: 'https://www.souhu.com/',
-    email: 'doc_li@souhu.com',
-    bio: { locale: 'zh-CN', value: '上海第一人民医院妇产科主治医师。' },
-    price: { money: 9.9 },
-    address: ["CHN", "310000", "310104"],
-    birth: '1986-02-14',
-  }
-]
-
+var editTableData = Array(15).fill().map(() => ({
+  name: Random.cname(),
+  age: Random.natural(20, 70),
+  domain: Random.url(),
+  email: Random.email(),
+  birth: Random.datetime('yyyy-MM-dd'),
+  cellPhone: { value: Random.string('number', 11) },
+  bio: [{ value: Random.cparagraph(1, 3) }],
+  price: { value: Random.float(9, 50, 2, 2) },
+  address: ["CHN", "510000", "510100"],
+}))
 function EditInlineUse() {
-
-  const [stateData, setStateData] = useState(data)
+  const [stateData, setStateData] = useState(editTableData)
   const [editing, setEditing] = useState(EditStatus.CANCEL);
   const getDifference = useCallback(
     (current, old) => {
@@ -442,43 +643,41 @@ function EditInlineUse() {
   const handleSave = useCallback(() => {
     setEditing(EditStatus.SAVE)
   }, [])
+
   return (
     <div style={{ margin: 10 }}>
       <SmartTable
         tableKey="EditInlineUse"
         rowKey="id"
         title="行内编辑"
-        schema={tableSchema}
+        schema={editTableSchema}
         dataSource={stateData}
         editable={editing}
         bodyHeight={300}
         bodyWidth={1630}
         onSave={onSave}
-        headerRight={<>
-          <Button
-            icon={editing === EditStatus.EDIT ? "roolback" : "edit"}
-            size="small"
-            onClick={() => { if (editing === EditStatus.CANCEL) { message.info('请单击单元格进行编辑') };setEditing(SwitchStatus) }}
-          >
-            {editing === EditStatus.EDIT ? "结束" : "进入"}编辑
-          </Button>
-          {editing === EditStatus.EDIT && <Button
-            icon="save"
-            size="small"
-            type="primary"
-            onClick={handleSave}
-          >
-            保存
-          </Button>}
-        </>}
+        headerRight={
+          <>
+            <Button
+              icon={editing === EditStatus.EDIT ? "roolback" : "edit"}
+              size="small"
+              onClick={() => { if (editing === EditStatus.CANCEL) { message.info('请单击单元格进行编辑') }; setEditing(SwitchStatus) }}
+            >
+              {editing === EditStatus.EDIT ? "结束" : "进入"}编辑
+            </Button>
+            {editing === EditStatus.EDIT && <Button
+              icon="save"
+              size="small"
+              type="primary"
+              onClick={handleSave}
+            >
+              保存
+            </Button>}
+          </>
+        }
       />
     </div>
   )
 }
 
-ReactDOM.render(
-  <EditInlineUse />,
-  mountNode,
-)`
-
-export default [codeGenerator(code1), codeGenerator(code2), codeGenerator(code3), codeGenerator(code4), codeGenerator(code5, true), codeGenerator(code6)];
+ReactDOM.render(<EditInlineUse />, mountNode)`,]

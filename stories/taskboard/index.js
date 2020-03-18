@@ -1,25 +1,11 @@
-import React, { useState } from 'react';
-import { Input, Button, Radio, Icon, Tooltip, Avatar } from 'antd';
-import { TaskBoard } from '@packages/gantd/src';
 import '@packages/gantd/src/task-board/style';
 import CodeDecorator from '../_util/CodeDecorator';
 import code from './code';
 import _ from 'lodash';
-
-// const kbdStyle = {
-//     backgroundColor: '#fafbfc',
-//     border: '1px solid #c6cbd1',
-//     borderBottomColor: '#959da5',
-//     borderRadius: 3,
-//     boxShadow: 'inset 0 -1px 0 #959da5',
-//     color: ' #444d56',
-//     display: 'inline-block',
-//     fontSize: '12px',
-//     lineHeight: '14px',
-//     padding: '3px 5px',
-//     marginRight: 5
-// };
-
+/*! Start !*/
+import React, { useState } from 'react'
+import { Input, Button, Radio, Icon, Tooltip, Avatar } from 'antd'
+import { TaskBoard } from '@gantd'
 const Search = Input.Search;
 const data = [
     {
@@ -40,7 +26,7 @@ const data = [
         children: []
     },
 ];
-
+/*! Split !*/
 function BasicUse() {
     const [hideAddBtn, setHide] = useState(false);
     const [columnKey, setColumn] = useState('default');
@@ -89,7 +75,7 @@ function BasicUse() {
         />
     </div>)
 }
-
+/*! Split !*/
 function HightLightUse() {
     const [keywords, setKeyWords] = useState('');
     return (
@@ -106,7 +92,7 @@ function HightLightUse() {
         </div>
     )
 }
-
+/*! Split !*/
 function DragDropUse() {
     const [columnKey, setColumn] = useState('default');
     const [dragDropData, setData] = useState([{
@@ -203,17 +189,9 @@ function DragDropUse() {
         </div>
     )
 }
-
+/*! End !*/
 const config = {
-    codes: code.map(item => {
-        return `
-        import React, { useState } from 'react';
-        import { TaskBoard } from 'gantd';
-        ${item.topInfo}
-        ${item.content}
-        ReactDOM.render(<${item.fnName} />,mountNode);
-        `
-    }),
+    codes: code,
     useage: `
     🦁 提供默认支持面板与任务拖拽排序的功能性面板，支持自定义面板header与task内容、任务高亮、手势操作等功能
     `,

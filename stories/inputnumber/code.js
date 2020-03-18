@@ -1,8 +1,10 @@
 export default [
-  `import React, { useState } from 'react';
-import {InputNumber} from '@data-cell';
-  
-const Demo = () => {
+`
+import React, { useState } from 'react';
+import { InputNumber, EditStatus } from 'gantd';
+
+
+const Use1 = () => {
   const [value, setValue] = useState(99)
   const onSave = (id, value, cb) => {
     cb()
@@ -11,42 +13,34 @@ const Demo = () => {
     <InputNumber placeholder='可编辑' onSave={onSave} value={value} onChange={setValue} />
   </>
 }
-  
-ReactDOM.render(
-    <Demo />,
-    mountNode,
-);`,
-  `import React, { useState } from 'react';
-import {InputNumber} from '@data-cell';
-  
-const Demo = () => {
+
+ReactDOM.render(<Use1 />, mountNode)`,`
+import React, { useState } from 'react';
+import { InputNumber, EditStatus } from 'gantd';
+
+
+const Use2 = () => {
   return <>
-    <InputNumber placeholder='可编辑' value="123" />
+    <InputNumber placeholder='被忽略的值' value="123" />
   </>
 }
 
-ReactDOM.render(
-    <Demo />,
-    mountNode,
-);`,
-  `import React, { useState } from 'react';
-import {InputNumber, EditStatus} from '@data-cell';
+ReactDOM.render(<Use2 />, mountNode)`,`
+import React, { useState } from 'react';
+import { InputNumber, EditStatus } from 'gantd';
 
-const Demo = () => {
+
+const Use3 = () => {
   const [value, setValue] = useState(0)
+  const addonBefore = (
+    <>重量</>
+  )
   const addonAfter = (
     <>KG</>
   )
   return <>
-  <InputNumber placeholder='金额' edit={EditStatus.EDIT} value={value} onChange={setValue} onSave={(id, value, cb) => cb()} addonAfter={addonAfter} />
+    <InputNumber placeholder='金额' edit={EditStatus.CANCEL} value={value} onChange={setValue} onSave={(id, value, cb) => cb()} addonBefore={addonBefore} addonAfter={addonAfter} />
   </>
 }
 
-ReactDOM.render(
-    <Demo />,
-    mountNode,
-);`,
-]
-
-
-
+ReactDOM.render(<Use3 />, mountNode)`,]

@@ -1,10 +1,12 @@
-import React, { useState } from 'react'
-import Header from '@header'
+
 import '@header/style'
 import CodeDecorator from '../_util/CodeDecorator'
 import code from './code.js'
+/*! Start !*/
+import React, { useState } from 'react'
 import { message, Icon, Button, Tooltip, Slider } from 'antd';
-
+import { Header } from '@gantd'
+/*! Split !*/
 function BasicUse() {
     return <>
         <Header type='line' title="标题(短线)" />
@@ -22,7 +24,7 @@ function BasicUse() {
         />
     </>
 }
-
+/*! Split !*/
 function ExtraUse() {
     const [value, setvalue] = useState(100)
     const onChange = React.useCallback(
@@ -77,6 +79,7 @@ function ExtraUse() {
         </div>
     </>
 }
+/*! Split !*/
 function ColorUse() {
     return <>
         <Header type='line' title="标题(短线)" color="#1890ff" />
@@ -95,11 +98,13 @@ function ColorUse() {
         />
     </>
 }
+/*! Split !*/
 function BottomLineUse() {
     return <>
         <Header title="显示分割线" bottomLine={true} />
     </>
 }
+/*! End !*/
 const config = {
     codes: code,
     inline: true,

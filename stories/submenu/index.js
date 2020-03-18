@@ -1,16 +1,12 @@
-import React, { useState, useRef } from 'react'
-import { Icon } from 'antd'
-import SubMenu from '@packages/submenu-g/src'
 import '@packages/submenu-g/src/style'
-import { Avatar } from 'antd'
 import CodeDecorator from '../_util/CodeDecorator'
 import code from './code.js'
 import _ from 'lodash'
-
-// const Icon = Icon.createFromIconfontCN('Icon', {
-//   scriptUrl: '//at.alicdn.com/t/font_687278_5i22ts2wtbx.js'
-// })
-
+/*! Start !*/
+import React, { useState, useRef } from 'react'
+import { Avatar, Icon } from 'antd'
+import { Submenu } from '@gantd';
+/*! Split !*/
 function BasicUse() {
   const menuData = [
     {
@@ -59,7 +55,7 @@ function BasicUse() {
   }
   const activeMenu = _.find(menuData, i => i.path === selectedKey)
   return (
-    <SubMenu
+    <Submenu
       menuData={menuData}
       selectedKey={selectedKey}
       width={180}
@@ -83,11 +79,10 @@ function BasicUse() {
       <div style={{ padding: '20px', height: 400 }}>
         {activeMenu['title']}
       </div>
-    </SubMenu>
+    </Submenu>
   )
 }
-
-
+/*! Split !*/
 function TopLayout() {
   const menuData = [
     {
@@ -133,7 +128,7 @@ function TopLayout() {
   const onSelectedChange = (key, record, item) => setSelectedKey(key);
   const activeMenu = _.find(menuData, i => i.path === selectedKey)
   return (
-    <SubMenu
+    <Submenu
       menuData={menuData}
       selectedKey={selectedKey}
       mode='horizontal'
@@ -144,9 +139,10 @@ function TopLayout() {
       <div style={{ padding: '20px', height: 400 }}>
         {activeMenu['title']}
       </div>
-    </SubMenu>
+    </Submenu>
   )
 }
+/*! Split !*/
 function ExtraUse() {
   const menuData = [
     {
@@ -192,7 +188,7 @@ function ExtraUse() {
   const onSelectedChange = (key, record, item) => setSelectedKey(key);
   const activeMenu = _.find(menuData, i => i.path === selectedKey)
   return (
-    <SubMenu
+    <Submenu
       menuData={menuData}
       selectedKey={selectedKey}
       collapsed={true}
@@ -201,9 +197,11 @@ function ExtraUse() {
       <div style={{ padding: '20px' }}>
         {activeMenu['title']}
       </div>
-    </SubMenu>
+    </Submenu>
   )
 }
+
+/*! End !*/
 
 const config = {
   codes: code,

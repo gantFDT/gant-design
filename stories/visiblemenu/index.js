@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { Table } from 'antd';
-import { VisibleMenu } from '@gantd';
 import CodeDecorator from '../_util/CodeDecorator';
 import code from './code.js';
+/*! Start !*/
+import React, { useState } from 'react'
+import { Table } from 'antd'
+import { VisibleMenu } from '@gantd'
 const column = [
     {
         value: 'Name',
@@ -34,7 +35,6 @@ const column2 = [
         key: 'address',
     },
 ]
-
 const dataSource = [
     {
         key: '1',
@@ -55,6 +55,7 @@ const dataSource = [
         address: 'Sidney No. 1 Lake Park',
     },
 ];
+/*! Split !*/
 function BasicUse() {
     return <VisibleMenu
         data={column}
@@ -63,14 +64,14 @@ function BasicUse() {
         }}
     />
 }
-
+/*! Split !*/
 function DisabledUse() {
     return <VisibleMenu
         data={column2}
         disabled
     />
 }
-
+/*! Split !*/
 function Sortable() {
     const [column, setColumn] = useState(column2)
     const [hiddenCol, setHiddenCol] = useState([])
@@ -96,7 +97,7 @@ function Sortable() {
         }
     />
 }
-
+/*! Split !*/
 function CustomUse() {
     return <VisibleMenu
         data={column2}
@@ -108,7 +109,7 @@ function CustomUse() {
         }}
     />
 }
-
+/*! Split !*/
 function CombineUse() {
     const [rows, setHiddenRows] = useState([]);
 
@@ -138,6 +139,7 @@ function CombineUse() {
         </>
     )
 }
+/*! End !*/
 const config = {
     codes: code,
     inline: true,

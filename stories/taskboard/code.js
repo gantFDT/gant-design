@@ -1,34 +1,37 @@
-const code_1 = {
-    fnName: 'BasicUse',
-    topInfo: `import { Button, Radio, Icon, Tooltip, Avatar } from 'antd';
+export default [
+`
+import React, { useState } from 'react'
+import { Input, Button, Radio, Icon, Tooltip, Avatar } from 'antd'
+import { TaskBoard } from 'gantd'
+const Search = Input.Search;
+const data = [
+    {
+        title: '卡片1',
+        id: 'col1',
+        children: [
+            {
+                name: 'task-1',
+                id: '1',
+            }, {
+                name: 'task-2',
+                id: '2',
+            }
+        ]
+    }, {
+        title: '卡片2',
+        id: 'col2',
+        children: []
+    },
+];
 
-    const data = [
-        {
-            title: '卡片1',
-            id: 'col1',
-            children: [
-                {
-                    name: 'task-1',
-                    id: '1',
-                }, {
-                    name: 'task-2',
-                    id: '2',
-                }
-            ]
-        }, {
-            title: '卡片2',
-            id: 'col2',
-            children: []
-        },
-    ];
-`,
-    content: `function BasicUse() {
+
+function BasicUse() {
     const [hideAddBtn, setHide] = useState(false);
     const [columnKey, setColumn] = useState('default');
     const [taskKey, setTask] = useState('default');
 
     const customTaskContent = (task) => (
-        <div>
+        <div style={{ padding: 8, borderLeft: '3px solid red' }}>
             <Avatar style={{ backgroundColor: '#87d068' }} icon="user" />
             <div>custom-task-content of {task.name}</div>
         </div>
@@ -69,42 +72,41 @@ const code_1 = {
             renderItem={taskKey == 'custom' ? customTaskContent : undefined}
         />
     </div>)
-}`
-};
-const code_2 = {
-    fnName: 'HightLightUse',
-    topInfo: `import { Input, Button, Radio, Icon, Tooltip, Avatar } from 'antd';
+}
 
-    const Search = Input.Search;
-    const data = [
-        {
-            title: '卡片1',
-            id: 'col1',
-            children: [
-                {
-                    name: 'task-1',
-                    id: '1',
-                }, {
-                    name: 'task-2',
-                    id: '2',
-                }
-            ]
-        }, {
-            title: '卡片2',
-            id: 'col2',
-            children: []
-        },
-    ];
-`,
-    content: `function HightLightUse() {
+ReactDOM.render(<BasicUse />, mountNode)`,`
+import React, { useState } from 'react'
+import { Input, Button, Radio, Icon, Tooltip, Avatar } from 'antd'
+import { TaskBoard } from 'gantd'
+const Search = Input.Search;
+const data = [
+    {
+        title: '卡片1',
+        id: 'col1',
+        children: [
+            {
+                name: 'task-1',
+                id: '1',
+            }, {
+                name: 'task-2',
+                id: '2',
+            }
+        ]
+    }, {
+        title: '卡片2',
+        id: 'col2',
+        children: []
+    },
+];
+
+
+function HightLightUse() {
     const [keywords, setKeyWords] = useState('');
     return (
         <div>
             <Search
                 placeholder="输入关键字"
-                onSearch={(value) => {
-                    setKeyWords(value);
-                }}
+                onSearch={(value) => setKeyWords(value)}
                 style={{ width: 600 }}
             />
             <TaskBoard
@@ -114,13 +116,34 @@ const code_2 = {
         </div>
     )
 }
-    `
-};
-const code_3 = {
-    fnName: 'DragDropUse',
-    topInfo: `import { Radio } from 'antd';
-`,
-    content: `function DragDropUse() {
+
+ReactDOM.render(<HightLightUse />, mountNode)`,`
+import React, { useState } from 'react'
+import { Input, Button, Radio, Icon, Tooltip, Avatar } from 'antd'
+import { TaskBoard } from 'gantd'
+const Search = Input.Search;
+const data = [
+    {
+        title: '卡片1',
+        id: 'col1',
+        children: [
+            {
+                name: 'task-1',
+                id: '1',
+            }, {
+                name: 'task-2',
+                id: '2',
+            }
+        ]
+    }, {
+        title: '卡片2',
+        id: 'col2',
+        children: []
+    },
+];
+
+
+function DragDropUse() {
     const [columnKey, setColumn] = useState('default');
     const [dragDropData, setData] = useState([{
         title: '拖拽1',
@@ -175,7 +198,7 @@ const code_3 = {
             let nowTasks = _.cloneDeep(nowCol.children);
             nowTasks.splice(startIndex, 1);
             nowTasks.splice(endIndex, 0, nowCol.children[startIndex]);
-            nowCol.tasks = nowTasks;
+            nowCol.children = nowTasks;
             let cloneData = _.cloneDeep(dragDropData);
             cloneData[nowColIndex] = nowCol;
             setData(cloneData);
@@ -216,6 +239,5 @@ const code_3 = {
         </div>
     )
 }
-`
-};
-export default [code_1, code_2, code_3];
+
+ReactDOM.render(<DragDropUse />, mountNode)`,]

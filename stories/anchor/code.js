@@ -1,10 +1,9 @@
-import '@packages/anchor-g/src/style';
-import CodeDecorator from '../_util/CodeDecorator'
-import codes from './code.js'
-/*! Start !*/
+export default [
+`
 import React from 'react'
-import { Anchor } from '@gantd';
-/*! Split !*/
+import { Anchor } from 'gantd';
+
+
 function BasicUse() {
   const list = [
     {
@@ -46,23 +45,5 @@ function BasicUse() {
     </>
   )
 }
-/*! End !*/
-const config = {
-  codes,
-  useage: `
-  <b>📚 可快速切换锚点展示为页签效果</b></br>
-  在横向空间很局限时，用户可以把锚点快速切换为顶部页签效果</br>
-  <b>⛏ 磁吸效果</b></br>
-  当菜单滚动超出屏幕时，可以开启磁吸效果</br>
-  `,
-  showAnchor: false,
-  children: [
-    {
-      title: '基本用法',
-      describe: '注意：可切换锚点位置，右侧或上侧 ',
-      cmp: BasicUse
-    },
 
-  ]
-};
-export default () => <CodeDecorator config={config} />
+ReactDOM.render(<BasicUse />, mountNode)`,]

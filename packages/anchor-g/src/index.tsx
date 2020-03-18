@@ -42,7 +42,7 @@ const GantAnchor = props => {
   const handleScroll = useCallback(
     e => {
       const fixedEle = document.getElementById('anchorBoxId'); //定位元素
-      const fixedEleParent = document.querySelector('.gant-gantanchor-horAnchorOut'); //定位元素的父元素
+      const fixedEleParent = document.querySelector('.gant-anchor-horAnchorOut'); //定位元素的父元素
 
       if (fixedEle && stateMode == 'horizontal') {
         clearTimeout(timer);
@@ -53,12 +53,12 @@ const GantAnchor = props => {
         const extraheight = menuboxhor ? menuboxhor['offsetHeight'] : 0;
         if (fixedEle) {
           if (parentClientTop <= fixedTop + extraheight) {
-            fixedEle.classList.add('gant-gantanchor-activeScroll');
-            const active = document.querySelector('.gant-gantanchor-activeScroll');
+            fixedEle.classList.add('gant-anchor-activeScroll');
+            const active = document.querySelector('.gant-anchor-activeScroll');
             active['style'].top = `${fixedTop + extraheight}px`;
             active['style'].width = `${fixedEleParent['offsetWidth']}px`;
           } else if (parentClientTop > fixedTop + extraheight) {
-            fixedEle.classList.remove('gant-gantanchor-activeScroll');
+            fixedEle.classList.remove('gant-anchor-activeScroll');
           }
         }
         if (!isClickScroll) {
@@ -173,12 +173,12 @@ const GantAnchor = props => {
     [stateMode, setStateMode],
   );
 
-  const prefixCls = customizePrefixCls + '-gantanchor';
+  const prefixCls = customizePrefixCls + '-anchor';
   return (
     <>
       {stateMode == 'vertical' ? (
         <div className={classnames(className, `${prefixCls}-verticallayout`)} style={{ ...style }}>
-          <div style={{ padding: '0px', minHeight, width: 'calc(100% - 150px)' }}>
+          <div className='gant-anchor-content' style={{ padding: '0px', minHeight, width: 'calc(100% - 150px)' }}>
             {content}
           </div>
           <div
@@ -227,7 +227,7 @@ const GantAnchor = props => {
             style={{ padding: '0 0 10px', zIndex: 1, minHeight, ...style }}
           >
             <div className={`${prefixCls}-horAnchorOut`}>
-              <div className={`gant-gantanchor`} id="anchorBoxId" style={{ zIndex: 1 }}>
+              <div className={`gant-anchor`} id="anchorBoxId" style={{ zIndex: 1 }}>
                 <Icon
                   type="left"
                   style={{ display: leftArrowsShow ? 'block' : 'none', float: 'left' }}
@@ -285,7 +285,7 @@ const GantAnchor = props => {
                 />
               </div>
             </div>
-            <div id="gant-anchor-content" style={{ padding: '0', minHeight }}>
+            <div className="gant-anchor-content" style={{ padding: '0', minHeight }}>
               {content}
             </div>
           </div>

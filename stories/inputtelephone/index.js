@@ -1,33 +1,32 @@
-import React from 'react'
-import { InputTelePhone } from '@data-cell'
 import '@data-cell/input-tele-phone/style'
 import CodeDecorator from '../_util/CodeDecorator'
-import { WrapperValue, onSave } from '../_util/composeUseHooks'
+import codes from './code'
+/*! Start !*/
+import React, { useState } from 'react';
+import { InputTelePhone } from '@gantd';
 
+const WrapperValue = defaultValue => Component => props => {
+  const [value, setValue] = useState(defaultValue)
+  const factory = React.createFactory(Component)
+  return factory({ value, setValue })
+}
 
-
-const codeList = [
-  `const [value, setValue] = useState({ key: "0832", value: "4300698" })
-  return <InputTelePhone value={value} onChange={setValue} />`,
-]
+const onSave = (id, value, cb) => {
+  console.log(id, value);
+  cb()
+}
+/*! Split !*/
+const Demo = WrapperValue({ key: '0832', value: '4300698' })(({ value, setValue }) => <InputTelePhone value={value} onChange={setValue} onSave={onSave} />);
+/*! End !*/
 
 const config = {
   inline: true,
-  codes: codeList.map(code =>
-    `import { InputTelePhone, EditStatus, SwitchStatus } from 'gantd';
-import { Button } from 'antd';
-import React, { useState } from 'react';
-
-function Demo(){
-  ${code}
-}
-
-ReactDOM.render(<Demo />, mountNode)`),
+  codes,
   children: [
     {
       title: '基本使用',
       describe: '固定电话基本格式，可以指定区号。国内座机号最多8位',
-      cmp: WrapperValue({ key: '0832', value: '4300698' })(({ value, setValue }) => <InputTelePhone value={value} onChange={setValue} onSave={onSave} />)
+      cmp: Demo
     },
   ]
 }
