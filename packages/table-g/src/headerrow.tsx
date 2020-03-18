@@ -9,7 +9,6 @@ const HeaderRow = ({ cellPadding, ...props }) => {
     const style = useMemo(() => {
         const s = { ...(props.style || {}) }
         s['--padding'] = getStyleText(cellPadding)
-        console.log(s)
         return s
     }, [props.style, cellPadding])
 

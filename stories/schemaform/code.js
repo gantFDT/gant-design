@@ -1,60 +1,57 @@
-const code1 = `
-import React, { useState, useRef } from 'react'
-import { Button } from 'antd'
-import { SchemaForm, EditStatus } from 'gantd'
-// import { SchemaForm, EditStatus } from 'schema-form-g' //与gantd中引入效果相同
-
+export default [
+`
+import React, { useState, useMemo, useRef } from 'react'
+import { Button, Radio, Rate, Switch, Icon } from 'antd'
+import { EditStatus, SchemaForm } from 'gantd'
+const initalUiSchema = {
+    "form:gutter": 10,
+    "field:col": 24,
+    "field:labelCol": 24,
+    "field:wrapperCol": 24,
+    "field:labelAlign": "left"
+}
 const schema = {
-    type: "object",
-    title: "普通表单",
-    propertyType: {
-        key_1: {
-            title: "普通输入框",
-            type: "string",
-        },
-        key_2: {
-            title: "数字输入框",
-            type: "number",
-            componentType: "InputNumber"
-        },
-        key_3: {
-            title: "金额",
-            type: "string",
-            componentType: "InputMoney"
-        },
-        key_4: {
-            title: "url地址",
-            type: "string",
-            componentType: "InputUrl"
-        },
-        key_5: {
-            title: "邮箱",
-            type: "string",
-            componentType: "InputEmail"
-        },
-        key_6: {
-            title: "语言",
-            type: "string",
-            componentType: "InputLanguage"
-        },
-        key_7: {
-            title: "手机号",
-            type: "string",
-            componentType: "InputCellPhone"
-        },
-    }
+  type: "object",
+  title: "普通表单",
+  required: ['key_1'],
+  propertyType: {
+      key_1: {
+          title: "普通输入框",
+          type: "string",
+      },
+      key_2: {
+          title: "数字输入框",
+          type: "number",
+          componentType: "InputNumber"
+      },
+      key_3: {
+          title: "金额",
+          type: "string",
+          componentType: "InputMoney"
+      },
+      key_4: {
+          title: "url地址",
+          type: "string",
+          componentType: "InputUrl"
+      },
+      key_5: {
+          title: "邮箱",
+          type: "string",
+          componentType: "InputEmail"
+      },
+      key_6: {
+          title: "语言",
+          type: "string",
+          componentType: "InputLanguage"
+      },
+      key_7: {
+          title: "手机号",
+          type: "string",
+          componentType: "InputCellPhone"
+      },
+  }
 }
 
-
-const uiSchema = {
-    "ui:col": 24,
-    "ui:gutter": 10,
-    "ui:labelCol": 4,
-    "ui:wrapperCol": 20,
-    "ui:labelAlign": "left",
-    "ui:padding": 10,
-    "ui:backgroundColor": "#fff"
-}
 
 function BasicUse() {
     const [edit, setEdit] = useState(EditStatus.EDIT)
@@ -78,14 +75,59 @@ function BasicUse() {
     </div>
 }
 
-ReactDOM.render(<BasicUse/>,mountNode)
- `
+ReactDOM.render(<BasicUse />, mountNode)`,`
+import React, { useState, useMemo, useRef } from 'react'
+import { Button, Radio, Rate, Switch, Icon } from 'antd'
+import { EditStatus, SchemaForm } from 'gantd'
+const initalUiSchema = {
+    "form:gutter": 10,
+    "field:col": 24,
+    "field:labelCol": 24,
+    "field:wrapperCol": 24,
+    "field:labelAlign": "left"
+}
+const schema = {
+  type: "object",
+  title: "普通表单",
+  required: ['key_1'],
+  propertyType: {
+      key_1: {
+          title: "普通输入框",
+          type: "string",
+      },
+      key_2: {
+          title: "数字输入框",
+          type: "number",
+          componentType: "InputNumber"
+      },
+      key_3: {
+          title: "金额",
+          type: "string",
+          componentType: "InputMoney"
+      },
+      key_4: {
+          title: "url地址",
+          type: "string",
+          componentType: "InputUrl"
+      },
+      key_5: {
+          title: "邮箱",
+          type: "string",
+          componentType: "InputEmail"
+      },
+      key_6: {
+          title: "语言",
+          type: "string",
+          componentType: "InputLanguage"
+      },
+      key_7: {
+          title: "手机号",
+          type: "string",
+          componentType: "InputCellPhone"
+      },
+  }
+}
 
-const code2 = `
-import React, { useState, useRef } from 'react'
-import { Button, Radio, Switch } from 'antd'
-import { SchemaForm, EditStatus } from 'gantd'
-// import { SchemaForm, EditStatus } from 'schema-form-g' //与gantd中引入效果相同
 
 function EditStatusUse() {
     const [allowEdit, setAllowEdit] = useState(true)
@@ -168,257 +210,69 @@ function EditStatusUse() {
     </div>
 }
 
-ReactDOM.render(<EditStatusUse/>,mountNode)
- `
-
-
-
-const code3 = `
- import React, { useState,useMemo, useRef } from 'react'
- import { SchemaForm } from 'gantd'
-// import { SchemaForm } from 'schema-form-g' //与gantd中引入效果相同
- 
- const schema = {
-    type: "object",
-    title: "普通表单",
-    propertyType: {
-        key_1: {
-            title: "普通输入框",
-            type: "string",
-        },
-        key_2: {
-            title: "数字输入框",
-            type: "number",
-            componentType: "InputNumber"
-        },
-        key_3: {
-            title: "金额",
-            type: "string",
-            componentType: "InputMoney"
-        },
-        key_4: {
-            title: "url地址",
-            type: "string",
-            componentType: "InputUrl"
-        },
-        key_5: {
-            title: "邮箱",
-            type: "string",
-            componentType: "InputEmail"
-        },
-        key_6: {
-            title: "语言",
-            type: "string",
-            componentType: "InputLanguage"
-        },
-        key_7: {
-            title: "手机号",
-            type: "string",
-            componentType: "InputCellPhone"
-        },
-    }
- }
-
- const configSchema={
-    type: "object",
-    title: "配置普通表单",
-    propertyType: {
-        "field:col": {
-            title: "字段列比例 field:col",
-            type: "number",
-            componentType: "InputNumber",
-            props: {
-                min: 0
-            }
-        },
-        "field:labelCol": {
-            title: "字段描述列宽比例 field:labelCol",
-            type: "number",
-            componentType: "InputNumber",
-            props: {
-                max: 24,
-                min: 0
-            }
-        },
-        "field:wrapperCol": {
-            title: "字段内容列宽占比 field:wrapperCol",
-            type: "number",
-            componentType: "InputNumber",
-            props: {
-                max: 24,
-                min: 0
-            }
-        },
-        "field:labelAlign": {
-            title: "字段描述文字布局 field:labelAlign",
-            type: "string",
-            componentType: "Selector",
-            props: {
-                dataSource: [
-                    {
-                        label: "左",
-                        value: "left"
-                    },
-                    {
-                        label: "右",
-                        value: "right"
-                    }
-                ]
-            }
-        },
-        "form:gutter": {
-            title: "表单字段横向间隔 form:gutter ",
-            type: "number",
-            componentType: "InputNumber",
-            props: {
-                max: 24,
-                min: 0
-            }
-        },
-    }
- }
- 
- function CustomOptions() {
-    const configUI = {
-        "form:gutter": 10,
-        "field:col": 24,
-        "field:labelCol": 24,
-        "field:wrapperCol": 24,
-        "field:labelAlign": "left"
-    }
-
-    const [uiSchema, setUiSchema] = useState(initalUiSchema)
-
-    const data = useMemo(() => {
-        const newData = {}
-        Object.keys(uiSchema).map(keyname => {
-            // const name = keyname.replace('ui:', "")
-            newData[keyname] = uiSchema[keyname]
-        })
-        console.log("newData",newData)
-        return newData
-    }, [uiSchema])
-
-    const onChange = (val) => {
-        const newData = {}
-        Object.keys(val).map(keyname => {
-            newData[keyname] = val[keyname]
-        })
-        setUiSchema(uiSchema => ({ ...uiSchema, ...newData }))
-    }
-    const Reset = () => setUiSchema(initalUiSchema)
-    console.log("data", data)
-    return (
-        <div>
-            <div style={{ display: 'flex' }}>
-                <div style={{ flex: 1 }}>
-                    <SchemaForm
-                        schema={schema}
-                        uiSchema={uiSchema}
-                    />
-                </div>
-                <div style={{ width: 250, marginLeft: 10 }}>
-                    <SchemaForm schema={configSchma} uiSchema={configUI} data={data} onChange={onChange} />
-                </div>
-            </div>
-            <div style={{ float: 'right' }}><Button size="small" onClick={Reset}>重置UI</Button></div>
-        </div>
-    )
+ReactDOM.render(<EditStatusUse />, mountNode)`,`
+import React, { useState, useMemo, useRef } from 'react'
+import { Button, Radio, Rate, Switch, Icon } from 'antd'
+import { EditStatus, SchemaForm } from 'gantd'
+const initalUiSchema = {
+    "form:gutter": 10,
+    "field:col": 24,
+    "field:labelCol": 24,
+    "field:wrapperCol": 24,
+    "field:labelAlign": "left"
 }
- ReactDOM.render(<CustomOptions/>,mountNode)
-  `
-
-const code4 = `
-import React from 'react'
-import { SchemaForm } from 'gantd'
-// import { SchemaForm } from 'schema-form-g' //与gantd中引入效果相同
-
 const schema = {
-    type: "object",
-    title: "普通表单",
-    propertyType: {
-        key_1: {
-            title: "普通输入框",
-            type: "string",
-        },
-        key_2: {
-            title: "数字输入框",
-            type: "number",
-            componentType: "InputNumber"
-        },
-        key_3: {
-            title: "金额",
-            type: "string",
-            componentType: "InputMoney"
-        },
-        key_4: {
-            title: "url地址",
-            type: "string",
-            componentType: "InputUrl"
-        },
-        key_5: {
-            title: "邮箱",
-            type: "string",
-            componentType: "InputEmail"
-        },
-        key_6: {
-            title: "语言",
-            type: "string",
-            componentType: "InputLanguage"
-        },
-        key_7: {
-            title: "手机号",
-            type: "string",
-            componentType: "InputCellPhone"
-        },
-    }
-}
-function GridLayout() {
-    const uiSchema = {
-        "form:gutter": 10,
-        "field:col": {
-            xxl: 6,
-            xl: 8,
-            lg: 8,
-            md: 12,
-            sm: 24,
-            xs: 24,
-        },
-        "field:labelCol": {
-            span: 6,
-            sm: 6,
-            xs:24
-        },
-        "field:wrapperCol": {
-            span: 18,
-            sm: 18,
-            xs:24
-        },
-        "field:labelAlign": "left"
-
-    }
-    return <div style={{ margin: 10 }} >
-        <SchemaForm uiSchema={uiSchema} schema={schema} />
-    </div>
+  type: "object",
+  title: "普通表单",
+  required: ['key_1'],
+  propertyType: {
+      key_1: {
+          title: "普通输入框",
+          type: "string",
+      },
+      key_2: {
+          title: "数字输入框",
+          type: "number",
+          componentType: "InputNumber"
+      },
+      key_3: {
+          title: "金额",
+          type: "string",
+          componentType: "InputMoney"
+      },
+      key_4: {
+          title: "url地址",
+          type: "string",
+          componentType: "InputUrl"
+      },
+      key_5: {
+          title: "邮箱",
+          type: "string",
+          componentType: "InputEmail"
+      },
+      key_6: {
+          title: "语言",
+          type: "string",
+          componentType: "InputLanguage"
+      },
+      key_7: {
+          title: "手机号",
+          type: "string",
+          componentType: "InputCellPhone"
+      },
+  }
 }
 
-ReactDOM.render(<GridLayout/>,mountNode)
- `
 
-const code5 = `
- import React, { useState, useRef } from 'react'
- import { Button } from 'antd'
- import { SchemaForm, EditStatus } from 'gantd'
-// import { SchemaForm, EditStatus } from 'schema-form-g' //与gantd中引入效果相同
- 
 function SearchUse() {
     const [expand, setExpand] = useState(false)
+
     const schema = useMemo(() => {
         const count = expand ? 10 : 7
         let propertyType = {}
         for (let i = 1; i < count; i++) {
-            propertyType['key_'+i] = {
-                title: 'field_'+i,
+            propertyType[\`key_\${i}\`] = {
+                title: \`field_\${i}\`,
                 type: "string",
             }
         }
@@ -460,38 +314,320 @@ function SearchUse() {
         </div>
     </div>
 }
- ReactDOM.render(<SearchUse/>,mountNode)
-  `
 
-  const code6 = `
-  import React, { useState, useRef } from 'react'
-  import { SchemaForm } from 'gantd'
-// import { SchemaForm } from 'schema-form-g' //与gantd中引入效果相同
-  
-  const schema = {
-      type: "object",
-      title: "支持双向绑定的表单",
-      propertyType: {
-          key_1: {
-              title: "普通输入框_1",
-              type: "string",
-          },
-          key_2: {
-              title: "普通输入框_2",
-              type: "string",
-          },
-      }
-  }
-  
-  const uiSchema = {
+ReactDOM.render(<SearchUse />, mountNode)`,`
+import React, { useState, useMemo, useRef } from 'react'
+import { Button, Radio, Rate, Switch, Icon } from 'antd'
+import { EditStatus, SchemaForm } from 'gantd'
+const initalUiSchema = {
     "form:gutter": 10,
     "field:col": 24,
     "field:labelCol": 24,
     "field:wrapperCol": 24,
     "field:labelAlign": "left"
+}
+const schema = {
+  type: "object",
+  title: "普通表单",
+  required: ['key_1'],
+  propertyType: {
+      key_1: {
+          title: "普通输入框",
+          type: "string",
+      },
+      key_2: {
+          title: "数字输入框",
+          type: "number",
+          componentType: "InputNumber"
+      },
+      key_3: {
+          title: "金额",
+          type: "string",
+          componentType: "InputMoney"
+      },
+      key_4: {
+          title: "url地址",
+          type: "string",
+          componentType: "InputUrl"
+      },
+      key_5: {
+          title: "邮箱",
+          type: "string",
+          componentType: "InputEmail"
+      },
+      key_6: {
+          title: "语言",
+          type: "string",
+          componentType: "InputLanguage"
+      },
+      key_7: {
+          title: "手机号",
+          type: "string",
+          componentType: "InputCellPhone"
+      },
   }
-  
-  function BindData() {
+}
+
+
+const configSchma = {
+  type: "object",
+  title: "配置普通表单",
+  propertyType: {
+      "field:col": {
+          title: "字段列比例 field:col",
+          type: "number",
+          componentType: "InputNumber",
+          props: {
+              min: 0
+          }
+      },
+      "field:labelCol": {
+          title: "字段描述列宽比例 field:labelCol",
+          type: "number",
+          componentType: "InputNumber",
+          props: {
+              max: 24,
+              min: 0
+          }
+      },
+      "field:wrapperCol": {
+          title: "字段内容列宽占比 field:wrapperCol",
+          type: "number",
+          componentType: "InputNumber",
+          props: {
+              max: 24,
+              min: 0
+          }
+      },
+      "field:labelAlign": {
+          title: "字段描述文字布局 field:labelAlign",
+          type: "string",
+          componentType: "Selector",
+          props: {
+              useStorage: false,
+              dataSource: [
+                  {
+                      label: "左",
+                      value: "left"
+                  },
+                  {
+                      label: "右",
+                      value: "right"
+                  }
+              ]
+          }
+      },
+      "form:gutter": {
+          title: "表单字段横向间隔 form:gutter ",
+          type: "number",
+          componentType: "InputNumber",
+          props: {
+              max: 24,
+              min: 0
+          }
+      },
+  }
+}
+function CustomOptions() {
+    const configUI = {
+        "form:gutter": 10,
+        "field:col": 24,
+        "field:labelCol": 24,
+        "field:wrapperCol": 24,
+        "field:labelAlign": "left"
+    }
+
+    const [uiSchema, setUiSchema] = useState(initalUiSchema)
+
+    const data = useMemo(() => {
+        const newData = {}
+        Object.keys(uiSchema).map(keyname => {
+            // const name = keyname.replace('ui:', "")
+            newData[keyname] = uiSchema[keyname]
+        })
+        console.log("newData", newData)
+        return newData
+    }, [uiSchema])
+
+    const onChange = (val) => {
+        const newData = {}
+        Object.keys(val).map(keyname => {
+            newData[\`\${keyname}\`] = val[keyname]
+        })
+        setUiSchema(uiSchema => ({ ...uiSchema, ...newData }))
+    }
+    const Reset = () => setUiSchema(initalUiSchema)
+    console.log("data", data)
+    return (
+        <div>
+            <div style={{ display: 'flex' }}>
+                <div style={{ flex: 1 }}>
+                    <SchemaForm
+                        schema={schema}
+                        uiSchema={uiSchema}
+                    />
+                </div>
+                <div style={{ width: 250, marginLeft: 10 }}>
+                    <SchemaForm schema={configSchma} uiSchema={configUI} data={data} onChange={onChange} />
+                </div>
+            </div>
+            <div style={{ float: 'right' }}><Button size="small" onClick={Reset}>重置UI</Button></div>
+        </div>
+    )
+}
+
+ReactDOM.render(<configSchma />, mountNode)`,`
+import React, { useState, useMemo, useRef } from 'react'
+import { Button, Radio, Rate, Switch, Icon } from 'antd'
+import { EditStatus, SchemaForm } from 'gantd'
+const initalUiSchema = {
+    "form:gutter": 10,
+    "field:col": 24,
+    "field:labelCol": 24,
+    "field:wrapperCol": 24,
+    "field:labelAlign": "left"
+}
+const schema = {
+  type: "object",
+  title: "普通表单",
+  required: ['key_1'],
+  propertyType: {
+      key_1: {
+          title: "普通输入框",
+          type: "string",
+      },
+      key_2: {
+          title: "数字输入框",
+          type: "number",
+          componentType: "InputNumber"
+      },
+      key_3: {
+          title: "金额",
+          type: "string",
+          componentType: "InputMoney"
+      },
+      key_4: {
+          title: "url地址",
+          type: "string",
+          componentType: "InputUrl"
+      },
+      key_5: {
+          title: "邮箱",
+          type: "string",
+          componentType: "InputEmail"
+      },
+      key_6: {
+          title: "语言",
+          type: "string",
+          componentType: "InputLanguage"
+      },
+      key_7: {
+          title: "手机号",
+          type: "string",
+          componentType: "InputCellPhone"
+      },
+  }
+}
+
+
+function GridLayout() {
+    const uiSchema = {
+        "form:gutter": 10,
+        "field:col": {
+            xxl: 6,
+            xl: 8,
+            lg: 8,
+            md: 12,
+            sm: 24,
+            xs: 24,
+        },
+        "field:labelCol": {
+            span: 6,
+            sm: 6,
+            xs: 24
+        },
+        "field:wrapperCol": {
+            span: 18,
+            sm: 18,
+            xs: 24
+        },
+        "field:labelAlign": "left"
+
+    }
+    return <div style={{ margin: 10 }} >
+        <SchemaForm uiSchema={uiSchema} schema={schema} />
+    </div>
+}
+
+ReactDOM.render(<GridLayout />, mountNode)`,`
+import React, { useState, useMemo, useRef } from 'react'
+import { Button, Radio, Rate, Switch, Icon } from 'antd'
+import { EditStatus, SchemaForm } from 'gantd'
+const initalUiSchema = {
+    "form:gutter": 10,
+    "field:col": 24,
+    "field:labelCol": 24,
+    "field:wrapperCol": 24,
+    "field:labelAlign": "left"
+}
+const schema = {
+  type: "object",
+  title: "普通表单",
+  required: ['key_1'],
+  propertyType: {
+      key_1: {
+          title: "普通输入框",
+          type: "string",
+      },
+      key_2: {
+          title: "数字输入框",
+          type: "number",
+          componentType: "InputNumber"
+      },
+      key_3: {
+          title: "金额",
+          type: "string",
+          componentType: "InputMoney"
+      },
+      key_4: {
+          title: "url地址",
+          type: "string",
+          componentType: "InputUrl"
+      },
+      key_5: {
+          title: "邮箱",
+          type: "string",
+          componentType: "InputEmail"
+      },
+      key_6: {
+          title: "语言",
+          type: "string",
+          componentType: "InputLanguage"
+      },
+      key_7: {
+          title: "手机号",
+          type: "string",
+          componentType: "InputCellPhone"
+      },
+  }
+}
+
+
+const bindDataSchema = {
+  type: "object",
+  title: "支持双向绑定的表单",
+  propertyType: {
+      key_1: {
+          title: "普通输入框_1",
+          type: "string",
+      },
+      key_2: {
+          title: "普通输入框_2",
+          type: "string",
+      },
+  }
+}
+function BindData() {
     const [data, setData] = useState({ key_1: '1', key_2: '2' })
     const formRef = useRef(null)
 
@@ -517,20 +653,60 @@ function SearchUse() {
         </div>
     </div>
 }
-  
-ReactDOM.render(<BindData/>,mountNode)`
 
-const code7 = `import React, { useState } from 'react'
-import { SchemaForm } from 'gantd'
-// import { SchemaForm } from 'schema-form-g' //与gantd中引入效果相同
-
-const uiSchema = {
+ReactDOM.render(<bindDataSchema />, mountNode)`,`
+import React, { useState, useMemo, useRef } from 'react'
+import { Button, Radio, Rate, Switch, Icon } from 'antd'
+import { EditStatus, SchemaForm } from 'gantd'
+const initalUiSchema = {
     "form:gutter": 10,
     "field:col": 24,
     "field:labelCol": 24,
     "field:wrapperCol": 24,
     "field:labelAlign": "left"
 }
+const schema = {
+  type: "object",
+  title: "普通表单",
+  required: ['key_1'],
+  propertyType: {
+      key_1: {
+          title: "普通输入框",
+          type: "string",
+      },
+      key_2: {
+          title: "数字输入框",
+          type: "number",
+          componentType: "InputNumber"
+      },
+      key_3: {
+          title: "金额",
+          type: "string",
+          componentType: "InputMoney"
+      },
+      key_4: {
+          title: "url地址",
+          type: "string",
+          componentType: "InputUrl"
+      },
+      key_5: {
+          title: "邮箱",
+          type: "string",
+          componentType: "InputEmail"
+      },
+      key_6: {
+          title: "语言",
+          type: "string",
+          componentType: "InputLanguage"
+      },
+      key_7: {
+          title: "手机号",
+          type: "string",
+          componentType: "InputCellPhone"
+      },
+  }
+}
+
 
 function DependenceData() {
     const dependenceSchema = {
@@ -571,41 +747,79 @@ function DependenceData() {
     </div>
 }
 
-ReactDOM.render(<DependenceData/>,mountNode)`
-
-const code8 = `import React, { useState } from 'react'
-import { Rate } from 'antd'
-import { SchemaForm } from 'gantd'
-// import { SchemaForm } from 'schema-form-g' //与gantd中引入效果相同
-
-const uiSchema = {
+ReactDOM.render(<DependenceData />, mountNode)`,`
+import React, { useState, useMemo, useRef } from 'react'
+import { Button, Radio, Rate, Switch, Icon } from 'antd'
+import { EditStatus, SchemaForm } from 'gantd'
+const initalUiSchema = {
     "form:gutter": 10,
     "field:col": 24,
     "field:labelCol": 24,
     "field:wrapperCol": 24,
     "field:labelAlign": "left"
 }
-
-const customCmpSchema = {
-    type: "object",
-    title: "扩展自定义组件",
-    propertyType: {
-        key_1: {
-            title: "普通输入框_1",
-            type: "string",
-        },
-        key_2: {
-            title: "自定义组件",
-            type: "string",
-            componentType: 'CustomComponent'
-        },
-    }
+const schema = {
+  type: "object",
+  title: "普通表单",
+  required: ['key_1'],
+  propertyType: {
+      key_1: {
+          title: "普通输入框",
+          type: "string",
+      },
+      key_2: {
+          title: "数字输入框",
+          type: "number",
+          componentType: "InputNumber"
+      },
+      key_3: {
+          title: "金额",
+          type: "string",
+          componentType: "InputMoney"
+      },
+      key_4: {
+          title: "url地址",
+          type: "string",
+          componentType: "InputUrl"
+      },
+      key_5: {
+          title: "邮箱",
+          type: "string",
+          componentType: "InputEmail"
+      },
+      key_6: {
+          title: "语言",
+          type: "string",
+          componentType: "InputLanguage"
+      },
+      key_7: {
+          title: "手机号",
+          type: "string",
+          componentType: "InputCellPhone"
+      },
+  }
 }
 
+
+const customCmpSchema = {
+  type: "object",
+  title: "扩展自定义组件",
+  propertyType: {
+      key_1: {
+          title: "普通输入框_1",
+          type: "string",
+      },
+      key_2: {
+          title: "自定义组件",
+          type: "string",
+          componentType: 'CustomComponent'
+      },
+  }
+}
 function CustomCmp() {
     return <div style={{ margin: 10 }}>
         <SchemaForm
-            uiSchema={uiSchema}
+            uiSchema={initalUiSchema}
             schema={customCmpSchema}
             customFields={[{
                 type: "CustomComponent",
@@ -615,74 +829,119 @@ function CustomCmp() {
     </div>
 }
 
-ReactDOM.render(<CustomCmp/>,mountNode) `
-
-const code9 = `import React from 'react'
-import { SchemaForm } from 'gantd'
-// import { SchemaForm } from 'schema-form-g' //与gantd中引入效果相同
-
-const schema = {
-    title: "嵌套表单—— parent",
-    type: "object",
-    propertyType: {
-        input: {
-            title: "input 组件",
-            type: "string"
-        },
-        inputNumber: {
-            title: "inputNumber 组件",
-            type: "number",
-            componentType: "InputNumber"
-        },
-        children: {
-            type: "object",
-            title: "嵌套表单—— children",
-            propertyType: {
-                inputMoney: {
-                    title: "InputMoney 组件",
-                    type: "string",
-                    componentType: "InputMoney"
-                },
-                url: {
-                    title: "InputUrl 组件",
-                    type: "string",
-                    componentType: "InputUrl"
-                },
-                grandson: {
-                    type: "object",
-                    title: "嵌套表单—— grandson",
-                    propertyType: {
-                        telePhone: {
-                            title: "TelePhone 组件",
-                            type: "string",
-                            componentType: "InputNumber"
-                        },
-                        datePicker: {
-                            title: "DatePicker 组件",
-                            type: "date",
-                            componentType: "DatePicker"
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-const uiSchema = {
+ReactDOM.render(<customCmpSchema />, mountNode)`,`
+import React, { useState, useMemo, useRef } from 'react'
+import { Button, Radio, Rate, Switch, Icon } from 'antd'
+import { EditStatus, SchemaForm } from 'gantd'
+const initalUiSchema = {
     "form:gutter": 10,
     "field:col": 24,
     "field:labelCol": 24,
     "field:wrapperCol": 24,
     "field:labelAlign": "left"
 }
+const schema = {
+  type: "object",
+  title: "普通表单",
+  required: ['key_1'],
+  propertyType: {
+      key_1: {
+          title: "普通输入框",
+          type: "string",
+      },
+      key_2: {
+          title: "数字输入框",
+          type: "number",
+          componentType: "InputNumber"
+      },
+      key_3: {
+          title: "金额",
+          type: "string",
+          componentType: "InputMoney"
+      },
+      key_4: {
+          title: "url地址",
+          type: "string",
+          componentType: "InputUrl"
+      },
+      key_5: {
+          title: "邮箱",
+          type: "string",
+          componentType: "InputEmail"
+      },
+      key_6: {
+          title: "语言",
+          type: "string",
+          componentType: "InputLanguage"
+      },
+      key_7: {
+          title: "手机号",
+          type: "string",
+          componentType: "InputCellPhone"
+      },
+  }
+}
 
+
+const nestSchema = {
+  title: "嵌套表单—— parent",
+  type: "object",
+  propertyType: {
+      input: {
+          title: "input 组件",
+          type: "string"
+      },
+      inputNumber: {
+          title: "inputNumber 组件",
+          type: "number",
+          componentType: "InputNumber"
+      },
+      children: {
+          type: "object",
+          title: "嵌套表单—— children",
+          propertyType: {
+              inputMoney: {
+                  title: "InputMoney 组件",
+                  type: "string",
+                  componentType: "InputMoney"
+              },
+              url: {
+                  title: "Url 组件",
+                  type: "string",
+                  componentType: "Url"
+              },
+              grandson: {
+                  type: "object",
+                  title: "嵌套表单—— grandson",
+                  propertyType: {
+                      telePhone: {
+                          title: "TelePhone 组件",
+                          type: "string",
+                          componentType: "InputNumber"
+                      },
+                      datePicker: {
+                          title: "DatePicker 组件",
+                          type: "date",
+                          componentType: "DatePicker"
+                      }
+                  }
+              }
+
+          }
+      }
+  }
+}
 function NestUse() {
+    const uiSchema = {
+        "form:gutter": 10,
+        "field:col": 24,
+        "field:labelCol": 24,
+        "field:wrapperCol": 24,
+        "field:labelAlign": "left"
+    }
     return <div style={{ margin: 10 }} >
         <SchemaForm uiSchema={uiSchema} schema={nestSchema} />
     </div>
 }
 
-ReactDOM.render(<NestUse/>,mountNode) `
-
-export default [code1, code2, code3, code4, code5, code6, code7, code8, code9]
+ReactDOM.render(<nestSchema />, mountNode)`,]

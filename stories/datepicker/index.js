@@ -17,10 +17,6 @@ const onSave = (id, value, cb) => {
   cb()
 }
 
-const WrapperEdit = Component => props => {
-  const [edit, setEdit] = useState(EditStatus.CANCEL)
-  return React.createElement(Component, { edit, setEdit })
-}
 /*! Split !*/
 const C1 = WrapperValue('2019-06-05 11:01:29')(({ value, setValue }) => <DatePicker format='YYYY-MM-DD HH:mm:ss' value={value} onChange={setValue} onSave={onSave} />)
 /*! Split !*/
