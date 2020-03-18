@@ -298,7 +298,7 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
     const originLineHeight = useMemo(() => {
         if (virtualScroll && virtualScrollConfigInner.center) {
             const height = parseInt(virtualScrollConfigInner.rowHeight as string)
-            return (height - 2 * parseInt(cellPadding as string)) + 'px'
+            return (height - 2 * parseInt(cellPadding as string) - 1) + 'px'
         }
     }, [virtualScrollConfigInner, cellPadding, virtualScroll])
     const rate = useMemo(() => {
@@ -426,7 +426,7 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
         setOutLineNum(outTopLine)
         // 实际渲染的高度
         // td有个border-bottom，要加1
-        const domHeight = thresholdInner * (rowHeight + 1) * rate
+        const domHeight = thresholdInner * rowHeight * rate
         const outTopHeight = outTopLinevir * rowHeight
         let top = Math.max(0, Math.min(mainHeight - domHeight, outTopHeight))
 
@@ -496,11 +496,9 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
                 resizable: boolean,
             }>
             interface cellProps extends resizeCellProps {
-                cellPadding: number | string,
                 style: React.CSSProperties
             }
             let headerCellProps: cellProps = {
-                cellPadding,
                 style: { width: col.width, maxWidth: col.width } // 防止折行模式下，被内容撑出
             }
             const ordered = orderList.find(order => dataIndex === order.fieldName)

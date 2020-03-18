@@ -1,14 +1,15 @@
 import React, { useContext, useMemo } from 'react'
 import classnames from 'classnames'
-// import { DataContext } from './context'
+import { DataContext } from './context'
 import { getStyleText } from './_utils'
 
-const HeaderRow = ({ cellPadding, ...props }) => {
-    // const { cellPadding } = useContext(DataContext)
+const HeaderRow = (props) => {
+    const { cellPadding, originLineHeight } = useContext(DataContext)
 
     const style = useMemo(() => {
         const s = { ...(props.style || {}) }
         s['--padding'] = getStyleText(cellPadding)
+        s['--lineHeight'] = getStyleText(originLineHeight)
         return s
     }, [props.style, cellPadding])
 

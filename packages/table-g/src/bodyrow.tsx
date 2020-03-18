@@ -11,11 +11,12 @@ const BodyRow = ({ isDeleted, rowIndex, className, sortable, children, ...props 
     const rowData = useMemo(() => ({ dataRowKey: props['data-row-key'] }), [props])
 
     const { outlineNum, thresholdInner, renderRowKeys, virtualScroll, } = useContext(TableContext)
-    const { cellPadding } = useContext(DataContext)
+    const { cellPadding, originLineHeight } = useContext(DataContext)
 
     const style = useMemo(() => {
         const s = { ...(props.style || {}) }
         s['--padding'] = getStyleText(cellPadding)
+        s['--lineHeight'] = getStyleText(originLineHeight)
         if (virtualScroll) {
             const keysRange = getListRange(renderRowKeys, outlineNum, thresholdInner)
             if (!keysRange.includes(rowData.dataRowKey)) {
