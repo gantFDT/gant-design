@@ -4,4 +4,4 @@ import './sortable.less';
 import '@table/style';
 import '@header/style';
 import '@modal/style';
-// import '@data-cell/icon/style';
+import '@data-cell/icon/style';

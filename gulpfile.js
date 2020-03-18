@@ -232,6 +232,7 @@ function CopileToGantdTask(dirName, targetDir) {
           through2.obj(function (file, enc, next) {
             let content = file.contents.toString()
             const filePath = file.path;
+            const isStyleFile = filePath.endsWith(`style${pathSplit}index.js`);
 
             content = content.replace(/\.less/g, '.css')
             content = content.replace(/\.jsx/g, '.js')
@@ -240,11 +241,14 @@ function CopileToGantdTask(dirName, targetDir) {
               const Idx = filePath.indexOf(__dirName);
               const filelevel = filePath.slice(Idx).split(pathSplit).length;
               const pathPrefix = __dirName !== 'data-cell' ? '../'.repeat(filelevel-1) : '../';
+              if(isStyleFile){ // 处理 */style/index.js 里面的 '@data-cell/*/style'
+                content = content.replace(new RegExp('@data-cell/', 'g'), pathPrefix);
+              }
 
               packageNames.forEach((packageName) => {
                 const _dirName = packageName.slice(9, -2);
                 if(_dirName === 'color-picker'){
-                  if(filePath.endsWith(`style${pathSplit}index.js`)){
+                  if(isStyleFile){
                     content = content.replace(new RegExp('@' + _dirName, 'g'), pathPrefix + '../_color-picker');
                   }else{
                     content = content.replace(new RegExp('@' + _dirName, 'g'), pathPrefix + '_color-picker');
@@ -256,7 +260,7 @@ function CopileToGantdTask(dirName, targetDir) {
             }
             const buf = Buffer.from(content)
             file.contents = buf
-            if(filePath.endsWith(`style${pathSplit}index.js`)){
+            if(isStyleFile){
               fs.writeFileSync(filePath.replace('index', 'css'), buf)
             }
             this.push(file)
@@ -279,9 +283,13 @@ function CopileToGantdTask(dirName, targetDir) {
           through2.obj(function (file, enc, next) {
             let content = file.contents.toString()
             const filePath = file.path;
+            const isStyleFile = filePath.endsWith(`style${pathSplit}index.d.ts`);
             const Idx = filePath.lastIndexOf(__dirName);
             const filelevel = filePath.slice(Idx).split(pathSplit).length;
             const pathPrefix = '../'.repeat(filelevel - 1);
+            if(isStyleFile){ // 处理 */style/index.js 里面的 '@data-cell/*/style'
+              content = content.replace(new RegExp('@data-cell/', 'g'), pathPrefix);
+            }
 
             content = resolveDataCellPath(content, filelevel - 1)
 
@@ -291,7 +299,7 @@ function CopileToGantdTask(dirName, targetDir) {
             })
 
             const buf = Buffer.from(content)
-            if(filePath.endsWith(`style${pathSplit}index.d.ts`)){
+            if(isStyleFile){
               fs.writeFileSync(filePath.replace('index', 'css'), buf)
             }
             file.contents = buf
