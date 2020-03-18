@@ -1,15 +1,24 @@
 import React, { Component } from 'react';
 import { Input, Select } from 'antd';
 import { compose, toClass, withProps, defaultProps, mapProps, withPropsOnChange } from 'recompose'
-
-import { withEdit } from '../compose'
-import codesList from './codes.json'
-
+import { withEdit } from '../compose';
+import { WidthBasicProps } from '../compose/widthbasic';
+import codesList from './codes.json';
+export interface GantTelePhoneProps extends WidthBasicProps {
+  value?: value,
+  onChange?: (val: value) => void,
+  placeholder?: string,
+  allowClear?: boolean
+}
+interface value {
+  key: string,
+  value: string,
+}
 const isPhone = /^\d{7,8}$/
 const reg = /^\d{0,8}$/
 const withCode = compose(
   toClass,
-  withProps(({ value = {} }) => {
+  withProps(({ value = {} as any }) => {
     const { key: code = "010", value: phone } = value
     return {
       code,
@@ -50,7 +59,7 @@ const getValue = ({ code, phone }) => phone ? `${code} - ${phone}` : ''
   withEdit(getValue, "gantd-input-telphone-addonBefore"),
   withProps(({ code, onCodeChange, filterOption }) => ({
     addonBefore: (
-      <Select dropdownClassName="gantd-input-telphone-addonBefore" style={{ width: 130 }}  value={code} onChange={onCodeChange} showSearch filterOption={filterOption}>
+      <Select dropdownClassName="gantd-input-telphone-addonBefore" style={{ width: 130 }} value={code} onChange={onCodeChange} showSearch filterOption={filterOption}>
         {
           codesList.map((citys, index) => {
             let renderCitys = citys
@@ -75,7 +84,7 @@ const getValue = ({ code, phone }) => phone ? `${code} - ${phone}` : ''
   mapProps(({ filterOption, ...props }) => props),
 
 )
-class TelePhone extends Component {
+class TelePhone extends Component<any> {
 
   onChange = (e) => {
     const { onPhoneChange } = this.props
@@ -86,8 +95,8 @@ class TelePhone extends Component {
   }
 
   onKeyDown = (e) => {
-    const { value, onEnter } = this.props
-    if (!value || isPhone.test(value)) {
+    const { value, code, phone, onEnter } = this.props
+    if (!code || isPhone.test(phone)) {
       onEnter(e)
     }
   }
@@ -101,4 +110,8 @@ class TelePhone extends Component {
   }
 }
 
-export default TelePhone
+export default class TelePhoneWrapper extends Component<GantTelePhoneProps> {
+  render() {
+    return <TelePhone {...this.props} />
+  }
+}

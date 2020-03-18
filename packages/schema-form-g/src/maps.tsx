@@ -3,7 +3,8 @@ import {
 	InputCellPhone, InputTelePhone,
 	InputUrl, InputEmail, InputLanguage,
 	ColorPicker, DatePicker,
-	Selector, LocationSelector, Icon
+	Selector, LocationSelector, Icon,
+
 } from '@data-cell'
 import { Switch, Checkbox, Radio, AutoComplete } from 'antd'
 const CheckboxGroup = Checkbox.Group
@@ -11,7 +12,6 @@ const RadioGroup = Radio.Group
 const { Password, TextArea } = Input;
 const { RangePicker } = DatePicker;
 const IconSelector = Icon;
-
 export enum Fields {
 	Input = "Input",
 	Password = "Password",

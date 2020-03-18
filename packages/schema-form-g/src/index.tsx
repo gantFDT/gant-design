@@ -76,7 +76,6 @@ class SchemaForm extends React.Component<Props> {
     } = this.props;
 
     if (isEmpty(schema)) {
-      console.warn('schema is null');
       return null;
     }
     const prefixCls = customizePrefixCls + '-schemaform';

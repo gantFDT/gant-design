@@ -1,16 +1,24 @@
 import React, { Component } from 'react';
 import { Select } from 'antd';
-import { isNumber, isNil } from 'lodash'
+import { isNumber } from 'lodash'
 import numeral from 'numeral'
-import { compose, defaultProps, withProps, withState, toClass } from 'recompose'
+import { compose, withProps, toClass, defaultProps } from 'recompose'
 import InputNumber from '../input-number';
 import { withEdit, EditStatus } from '../compose'
 import symbols from './symbol.json'
-
-
-
+import { WidthBasicProps } from '../compose/widthbasic';
+interface value {
+  key?: string,
+  value?: string
+}
+export interface GantInputMoneyProps extends WidthBasicProps {
+  onChange?: (val: value) => void;
+  value?: value,
+  placeholder?: string,
+  allowClear?: boolean,
+  precision?: number
+}
 const withMoneyType = compose(
-  toClass,
   defaultProps({
     allowClear: true,
     precision: 2,
@@ -25,24 +33,11 @@ const withMoneyType = compose(
       reg: new RegExp(`[1-9](?:[0-9]+)?(?:\.[0-9]{0,${pre}})?|0.[0-9]{0,${pre}}`)
     }
   }),
-  withProps(({ value = {}, format, onChange }) => {
+  withProps(({ value = {} as any, format, onChange }) => {
     const { key: currency = symbols[0], value: money } = value
     let obj = {
       currency,
       money,
-    }
-    if (money) {
-      // 去掉超过精度的部分
-      const m = Number(numeral(money).format(format))
-      if (money !== m) {
-        // 改写money
-        obj.money = m;
-        onChange({
-          key: obj.currency,
-          value: m
-        }) // 可以不用调
-      }
-
     }
     return obj
   }),
@@ -82,7 +77,7 @@ const withMoneyType = compose(
     })
   }),
 )
-class InputMoney extends Component {
+class InputMoney extends Component<any>{
 
   state = {
     value: undefined
@@ -116,4 +111,8 @@ class InputMoney extends Component {
   }
 }
 
-export default InputMoney
+export default class InputMoneyWrapper extends Component<GantInputMoneyProps>{
+  render() {
+    return <InputMoney {...this.props} />
+  }
+}

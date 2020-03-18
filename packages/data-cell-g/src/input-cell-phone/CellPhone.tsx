@@ -1,20 +1,27 @@
 import React, { Component } from 'react';
 import { Input as AntInput, Select } from 'antd';
 import { compose, withProps, defaultProps, toClass, mapProps, lifecycle, withHandlers, withPropsOnChange } from 'recompose'
-import classnames from 'classnames'
+import { WidthBasicProps } from '../compose/widthbasic';
 import { get } from 'lodash'
-
 import { withEdit } from '../compose'
-import codeTypes from './codes.json'
-
+import codeTypes from './codes.json';
+interface value {
+  key?: string,
+  value?: string,
+}
+export interface GantCellPhoneProps extends WidthBasicProps {
+  value?: value,
+  onChage: (val: value) => void,
+  placeholder?:string,
+  allowClear?: boolean
+}
 const reg = /^1$|^1[3-9]$|^1[3-9][0-9]\d{0,8}$/
-
 // 格式化电话号码
 const phoneFormatter = phone => Array.from(phone).map((num, index) => index % 4 == 3 ? `-${num}` : num).join('')
 
 const withPhoneCode = compose(
   toClass,
-  withProps(({ value = {} }) => {
+  withProps(({ value = {} as value }) => {
     const { key: code = "86", value: phone } = value;
     return {
       code,
@@ -72,14 +79,21 @@ const withValidate = compose(
   })
 )
 
-@compose(
+@compose<GantCellPhoneProps>(
   withPhoneCode,
   withValidate,
   withEdit(({ code, phone }) => phone ? `+${code} ${phone}` : '', "gantd-input-cellphone-addonBefore"),
   withProps(({ code, onCodeChange, filterOption }) => {
     return ({
       addonBefore: (
-        <Select  dropdownClassName="gantd-input-cellphone-addonBefore" style={{ width: 86 }} value={code} onChange={onCodeChange} filterOption={filterOption} showSearch>
+        <Select
+          dropdownClassName="gantd-input-cellphone-addonBefore"
+          style={{ width: 86 }}
+          value={code}
+          onChange={onCodeChange}
+          filterOption={filterOption}
+          showSearch
+        >
           {
             codeTypes.map(code => <Select.Option key={code} value={code}>+{code}</Select.Option>)
           }
@@ -89,12 +103,10 @@ const withValidate = compose(
   }),
   mapProps(({ onCodeChange, searchCode, codeList, filterOption, ...props }) => props)
 )
-class CellPhone extends Component {
-
+class CellPhone extends Component<any> {
   state = {
     value: ''
   }
-
   constructor(props) {
     super(props);
     this.onChange = this.onChange.bind(this)
@@ -127,17 +139,21 @@ class CellPhone extends Component {
       onEnter(e)
     }
   }
-
   render() {
     const { onPhoneChange, validateValue, onEnter, ...props } = this.props
     const { value } = this.state
     let computedValue = get(props, 'phone', value)
     return (
-      <AntInput {...props} value={computedValue}
-        onBlur={() => { }}
-        onKeyDown={this.onKeyDown} onChange={this.onChange} />
+      <AntInput
+        {...props}
+        value={computedValue}
+        onKeyDown={this.onKeyDown}
+        onChange={this.onChange} />
     );
   }
 }
-
-export default CellPhone
+export default class CellPhoneWrapper extends Component<GantCellPhoneProps>{
+  render() {
+    return <CellPhone {...this.props} />
+  }
+}

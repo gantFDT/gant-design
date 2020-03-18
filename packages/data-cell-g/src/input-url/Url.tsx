@@ -1,7 +1,11 @@
-import React from 'react'
-
-import { Input } from 'antd'
-import { withEdit } from '../compose'
+import React from 'react';
+import { Input } from 'antd';
+import { withEdit } from '../compose';
+import { InputProps } from 'antd/lib/input'
+import { WidthBasicProps } from '../compose/widthbasic';
+export interface GantUrlProps extends InputProps, WidthBasicProps {
+  onChange?: (val: any) => void
+}
 
 const getValue = ({ value }) => {
   // const reg = /^((ht|f)tps?):\/\/[\w\-]+(\.[\w\-]+)+([\w\-.,@?^=%&:\/~+#]*[\w\-@?^=%&\/~+#])?$/;
@@ -23,13 +27,13 @@ const getValue = ({ value }) => {
  * 普通模式下与Input一样
  */
 @withEdit(getValue)
-class Url extends React.Component {
-
+class Url extends React.Component<GantUrlProps> {
   render() {
-    const { onEnter,onChange,...props } = this.props
-    return <Input onKeyDown={onEnter} onChange={e => onChange(e.target.value)} {...props} />
+    const { onChange, ...mapProps } = this.props;
+    const _props: any = mapProps;
+    const { onEnter, ...props } = _props
+    return <Input onChange={(e: any) => onChange(e.target.value)} onKeyDown={onEnter}  {...props} />
   }
 
 }
-
 export default Url

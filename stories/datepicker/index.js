@@ -24,7 +24,7 @@ return (
 return (
   <>
     东1区的时间 2019-06-01 00:00 在当前时区是
-    <DatePicker format='YYYY-MM-DD HH:mm:ss' showTime value={value} onChange={setValue} onSave={onSave} />
+    <DatePicker format='YYYY-MM-DD HH:mm:ss' showTime allowEdit={false} value={value} onChange={setValue} onSave={onSave} />
   </>
 )`,
   `const [value, setValue] = useState(['2019-06-01 00:00+0100', '2019-06-05 05:00+0100']);
@@ -79,7 +79,7 @@ ReactDOM.render(<Demo />, mountNode)`
     },
     {
       title: '指定一个带时区的时间字符串',
-      describe: '将指定时区时间转换到当前时区, 通过指定showTime增加时间选择的功能',
+      describe: '将指定时区时间转换到当前时区, 通过指定showTime增加时间选择的功能(不允许编辑)',
       cmp: WrapperValue('2019-06-01 00:00+0100')(({ value, setValue }) => (
         <>
           东1区的时间 2019-06-01 00:00 在当前时区是

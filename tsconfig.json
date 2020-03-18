@@ -24,6 +24,7 @@
     "suppressImplicitAnyIndexErrors": false, // 阻止 --noImplicitAny对缺少索引签名的索引对象报错
     "experimentalDecorators": true, // 启用实验性的ES装饰器
     "allowSyntheticDefaultImports": true, // 允许从没有设置默认导出的模块中默认导入。这并不影响代码的输出，仅为了类型检查
+    "resolveJsonModule": true, //json 导入
     "paths": {
       "@util": [
         "packages/util-g/src"

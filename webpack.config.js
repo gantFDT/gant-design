@@ -31,7 +31,7 @@ module.exports = {
             'node_modules',
             path.resolve(__dirname, "packages")
         ],// 用于查找模块的目录
-        extensions: [".js", ".ts", ".tsx", ".json", ".jsx", ".css"],// 使用的扩展名
+        extensions: [".js", ".ts", ".tsx", ".jsx", ".css"],// 使用的扩展名
         alias: {// 模块别名列表
             "@anchor": path.resolve(__dirname, 'packages/anchor-g/src'),
             "@auto-reload": path.resolve(__dirname, 'packages/auto-reload-g/src'),

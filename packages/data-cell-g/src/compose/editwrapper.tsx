@@ -1,5 +1,5 @@
 import React from 'react'
-import Group from '../input/Group.jsx'
+import Group from '../input/Group'
 export default WrapperedComponent => ({ addonAfter, addonBefore, ...props }) => {
 	const factory = React.createFactory(WrapperedComponent)
 	return <Group gantd >
