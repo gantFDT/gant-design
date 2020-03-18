@@ -1,6 +1,7 @@
 import React from 'react';
 import { Input } from 'antd';
-import { withEdit } from '../compose';
+import { withEdit, } from '../compose';
+import { compose, toClass } from 'recompose'
 import { InputProps } from 'antd/lib/input'
 import { WidthBasicProps } from '../compose/widthbasic';
 export interface GantUrlProps extends InputProps, WidthBasicProps {
@@ -26,12 +27,15 @@ const getValue = ({ value }) => {
 /**
  * 普通模式下与Input一样
  */
-@withEdit(getValue)
+@compose(
+  toClass,
+  withEdit(getValue)
+)
 class Url extends React.Component<GantUrlProps> {
   render() {
     const { onChange, ...mapProps } = this.props;
     const _props: any = mapProps;
-    const { onEnter, ...props } = _props
+    const { onEnter, ...props } = _props;
     return <Input onChange={(e: any) => onChange(e.target.value)} onKeyDown={onEnter}  {...props} />
   }
 
