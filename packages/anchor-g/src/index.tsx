@@ -1,10 +1,26 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { Dropdown, Menu, Anchor, Icon, Tooltip } from 'antd';
 import classnames from 'classnames';
-
-const GantAnchor = props => {
+import { AnchorProps } from 'antd/lib/anchor'
+const customizePrefixCls = 'gant';
+const prefixCls = customizePrefixCls + '-gantanchor';
+type layout = 'vertical' | 'horizontal';
+interface ListItem {
+  key: string,
+  id: string,
+  title: string,
+  complete?: boolean
+}
+export interface GantAnchorProps extends AnchorProps {
+  minHeight?: number | string,
+  layout?: layout,
+  onLayoutChange?: (layout: layout) => void,
+  fixedTop?: number,
+  list?: ListItem[],
+  content?: React.ReactNode | Element | string | number | null | React.ReactNode[]
+}
+const GantAnchor = (props: GantAnchorProps) => {
   let {
-    prefixCls: customizePrefixCls = 'gant',
     list = [],
     content,
     fixedTop = 0,
@@ -173,7 +189,7 @@ const GantAnchor = props => {
     [stateMode, setStateMode],
   );
 
-  const prefixCls = customizePrefixCls + '-gantanchor';
+
   return (
     <>
       {stateMode == 'vertical' ? (
@@ -293,5 +309,4 @@ const GantAnchor = props => {
     </>
   );
 };
-
 export default GantAnchor;
