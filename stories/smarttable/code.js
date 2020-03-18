@@ -3,31 +3,16 @@ export default [
 import React, { useState, useCallback } from 'react'
 import { Divider, Tag, Radio, Button, message, ConfigProvider } from 'antd'
 import { SmartTable, EditStatus, SwitchStatus } from 'gantd'
+const { mock, Random } = Mock
 
 
-var dataSource = [
-  {
-    key: '1',
-    name: '张三',
-    age: 32,
-    address: '四川成都 春熙路1号',
-    tags: ['宅', '程序猿'],
-  },
-  {
-    key: '2',
-    name: '李四',
-    age: 42,
-    address: '北京 天安门大道123号',
-    tags: ['高富帅'],
-  },
-  {
-    key: '3',
-    name: '王五',
-    age: 32,
-    address: '天津 南京路23号',
-    tags: ['矮矬穷', '教师'],
-  },
-]
+var dataSource = Array(10).fill().map((_, Idx) => ({
+  key: Idx,
+  name: Random.cname(),
+  age: Random.natural(20, 70),
+  address: Random.county(true),
+  tags: [[ '宅', '程序猿', '高富帅', '矮矬穷', '教师' ][Random.natural(0, 4)]]
+}))
 
 var tableColumns = [
   {
@@ -90,31 +75,16 @@ ReactDOM.render(<BasicUse />, mountNode)`,`
 import React, { useState, useCallback } from 'react'
 import { Divider, Tag, Radio, Button, message, ConfigProvider } from 'antd'
 import { SmartTable, EditStatus, SwitchStatus } from 'gantd'
+const { mock, Random } = Mock
 
 
-var dataSource = [
-  {
-    key: '1',
-    name: '张三',
-    age: 32,
-    address: '四川成都 春熙路1号',
-    tags: ['宅', '程序猿'],
-  },
-  {
-    key: '2',
-    name: '李四',
-    age: 42,
-    address: '北京 天安门大道123号',
-    tags: ['高富帅'],
-  },
-  {
-    key: '3',
-    name: '王五',
-    age: 32,
-    address: '天津 南京路23号',
-    tags: ['矮矬穷', '教师'],
-  },
-]
+var dataSource = Array(10).fill().map((_, Idx) => ({
+  key: Idx,
+  name: Random.cname(),
+  age: Random.natural(20, 70),
+  address: Random.county(true),
+  tags: [[ '宅', '程序猿', '高富帅', '矮矬穷', '教师' ][Random.natural(0, 4)]]
+}))
 
 var tableColumns = [
   {
@@ -207,31 +177,16 @@ ReactDOM.render(<ConfigColumnsUse />, mountNode)`,`
 import React, { useState, useCallback } from 'react'
 import { Divider, Tag, Radio, Button, message, ConfigProvider } from 'antd'
 import { SmartTable, EditStatus, SwitchStatus } from 'gantd'
+const { mock, Random } = Mock
 
 
-var dataSource = [
-  {
-    key: '1',
-    name: '张三',
-    age: 32,
-    address: '四川成都 春熙路1号',
-    tags: ['宅', '程序猿'],
-  },
-  {
-    key: '2',
-    name: '李四',
-    age: 42,
-    address: '北京 天安门大道123号',
-    tags: ['高富帅'],
-  },
-  {
-    key: '3',
-    name: '王五',
-    age: 32,
-    address: '天津 南京路23号',
-    tags: ['矮矬穷', '教师'],
-  },
-]
+var dataSource = Array(10).fill().map((_, Idx) => ({
+  key: Idx,
+  name: Random.cname(),
+  age: Random.natural(20, 70),
+  address: Random.county(true),
+  tags: [[ '宅', '程序猿', '高富帅', '矮矬穷', '教师' ][Random.natural(0, 4)]]
+}))
 
 var tableColumns = [
   {
@@ -299,6 +254,8 @@ function ConfigDisplayUse() {
     ]
   }
   const [rowKeys, setRowKeys] = useState([])
+  const [page, setPage] = useState(1)
+  const [pageSize, setPageSize] = useState(5)
   return (
     <div style={{ margin: 10 }}>
       <SmartTable
@@ -313,6 +270,11 @@ function ConfigDisplayUse() {
             }
           }
         }
+        pageIndex={page}
+        pageSize={pageSize}
+        onPageChange={(page,pageSize)=>{console.log(page, pageSize);setPage(page);setPageSize(pageSize)}}
+        totalCount={10}
+        // pageSizeOptions={['5', '10', '15', '20']}
       />
     </div>
   )
@@ -322,31 +284,16 @@ ReactDOM.render(<ConfigDisplayUse />, mountNode)`,`
 import React, { useState, useCallback } from 'react'
 import { Divider, Tag, Radio, Button, message, ConfigProvider } from 'antd'
 import { SmartTable, EditStatus, SwitchStatus } from 'gantd'
+const { mock, Random } = Mock
 
 
-var dataSource = [
-  {
-    key: '1',
-    name: '张三',
-    age: 32,
-    address: '四川成都 春熙路1号',
-    tags: ['宅', '程序猿'],
-  },
-  {
-    key: '2',
-    name: '李四',
-    age: 42,
-    address: '北京 天安门大道123号',
-    tags: ['高富帅'],
-  },
-  {
-    key: '3',
-    name: '王五',
-    age: 32,
-    address: '天津 南京路23号',
-    tags: ['矮矬穷', '教师'],
-  },
-]
+var dataSource = Array(10).fill().map((_, Idx) => ({
+  key: Idx,
+  name: Random.cname(),
+  age: Random.natural(20, 70),
+  address: Random.county(true),
+  tags: [[ '宅', '程序猿', '高富帅', '矮矬穷', '教师' ][Random.natural(0, 4)]]
+}))
 
 var tableColumns = [
   {
@@ -462,35 +409,20 @@ ReactDOM.render(<MultiViewUse />, mountNode)`,`
 import React, { useState, useCallback } from 'react'
 import { Divider, Tag, Radio, Button, message, ConfigProvider } from 'antd'
 import { SmartTable, EditStatus, SwitchStatus } from 'gantd'
+const { mock, Random } = Mock
 
 
 // import zhCN from 'antd/es/locale/zh_CN' 按模块导入
 // import enUS from 'antd/es/locale/en_US' 按模块导入
-const zhCN = {};
-const enUS = {};
-var dataSource = [
-  {
-    key: '1',
-    name: '张三',
-    age: 32,
-    address: '四川成都 春熙路1号',
-    tags: ['宅', '程序猿'],
-  },
-  {
-    key: '2',
-    name: '李四',
-    age: 42,
-    address: '北京 天安门大道123号',
-    tags: ['高富帅'],
-  },
-  {
-    key: '3',
-    name: '王五',
-    age: 32,
-    address: '天津 南京路23号',
-    tags: ['矮矬穷', '教师'],
-  },
-]
+var zhCN = {};
+var enUS = {};
+var dataSource = Array(10).fill().map((_, Idx) => ({
+  key: Idx,
+  name: Random.cname(),
+  age: Random.natural(20, 70),
+  address: Random.county(true),
+  tags: [[ '宅', '程序猿', '高富帅', '矮矬穷', '教师' ][Random.natural(0, 4)]]
+}))
 
 var tableColumns = [
   {
@@ -557,13 +489,14 @@ function LocalUse() {
   )
 }
 
-ReactDOM.render(<zhCN />, mountNode)`,`
+ReactDOM.render(<LocalUse />, mountNode)`,`
 import React, { useState, useCallback } from 'react'
 import { Divider, Tag, Radio, Button, message, ConfigProvider } from 'antd'
 import { SmartTable, EditStatus, SwitchStatus } from 'gantd'
+const { mock, Random } = Mock
 
 
-const editTableColumns = [
+var editTableColumns = [
   {
     fieldName: 'name',
     title: '姓名',
@@ -616,7 +549,7 @@ const editTableColumns = [
     componentType: 'DataPicker'
   }
 ]
-const editTableSchema = {
+var editTableSchema = {
   supportColumnFields: editTableColumns,
   systemViews: [
     {
@@ -667,42 +600,17 @@ const editTableSchema = {
     }
   ]
 }
-
-const editTableData = [
-  {
-    name: '王医生',
-    age: 55,
-    cellPhone: { phone: "18010032938" },
-    domain: 'https://www.baidu.com/',
-    email: 'doc_wang@qq.com',
-    bio: { locale: 'zh-CN', value: '华西口腔主任医师。' },
-    price: { money: 29.9 },
-    address: ["CHN", "510000", "510100"],
-    birth: '1965-04-24',
-  },
-  {
-    name: '张医生',
-    age: 42,
-    cellPhone: { phone: "13583384957" },
-    domain: 'https://www.google.com/',
-    email: 'doc_zhang@163.com',
-    bio: { locale: 'zh-CN', value: '北京协和泌尿科主任医师。' },
-    price: { money: 19.9 },
-    address: ["CHN", "110000", "110101"],
-    birth: '1977-01-04',
-  },
-  {
-    name: '李医生',
-    age: 35,
-    cellPhone: { phone: "13777574848" },
-    domain: 'https://www.souhu.com/',
-    email: 'doc_li@souhu.com',
-    bio: { locale: 'zh-CN', value: '上海第一人民医院妇产科主治医师。' },
-    price: { money: 9.9 },
-    address: ["CHN", "310000", "310104"],
-    birth: '1986-02-14',
-  }
-]
+const editTableData = Array(15).fill().map(() => ({
+  name: Random.cname(),
+  age: Random.natural(20, 70),
+  domain: Random.url(),
+  email: Random.email(),
+  birth: Random.datetime('yyyy-MM-dd'),
+  cellPhone: { value: Random.string('number', 11) },
+  bio: [{ value: Random.cparagraph(1, 3) }],
+  price: { value: Random.float(9, 50, 2, 2) },
+  address: ["CHN", "510000", "510100"],
+}))
 function EditInlineUse() {
   const [stateData, setStateData] = useState(editTableData)
   const [editing, setEditing] = useState(EditStatus.CANCEL);
@@ -772,4 +680,4 @@ function EditInlineUse() {
   )
 }
 
-ReactDOM.render(<editTableColumns />, mountNode)`,]
+ReactDOM.render(<editTableData />, mountNode)`,]

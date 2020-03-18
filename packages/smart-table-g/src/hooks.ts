@@ -48,9 +48,9 @@ export const usePagination = (props: usePaginationProps): PaginationConfig | und
   const handlerPageChange = useCallback((page: number = 1, pageSize: number = 50): void => {
     if (pagination !== undefined || !onPageChange) return;
 
-    let fakePageIndex = (page - 1) * pageSize;
+    let fakePageIndex = isGantPageMode ? (page - 1) * pageSize : page;
     onPageChange(fakePageIndex, pageSize)
-  }, [onPageChange])
+  }, [onPageChange, isGantPageMode])
   return useMemo(() => {
     if (pagination !== undefined) return pagination;
     if (!onPageChange) return undefined;
