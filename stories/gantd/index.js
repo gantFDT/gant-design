@@ -118,7 +118,23 @@ import 'gantd/lib/smart-table/style/css'; // 加载 CSS
     </div >
 
 
+    <h2 className="title">链接</h2>
+    <div className="content">
+      <ul>
+        <li>
+          <a href="https://github.com/gantFDT/gant-design" target="_blank">GITHUB</a>
+        </li>
+        <li>
+          <a href="https://ant.design/index-cn" target="_blank">Ant Design</a>
+        </li>
+        <li>
+          <a href="#" target="_blank">Lite UI Framework</a>
+        </li>
+      </ul>
 
+
+
+    </div>
 
   </div >
 }
