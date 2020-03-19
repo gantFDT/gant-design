@@ -48,6 +48,8 @@ export default () => {
 
     </div>
 
+
+
     <h2 className="title">示例</h2>
     <div className="content">
       <pre className="language-javascript">
@@ -59,11 +61,80 @@ ReactDOM.render(<Input />, mountNode);
           }} ></div>
         </code >
       </pre >
+      引入样式：
+      <pre className="language-javascript">
+        <code>
+          <div dangerouslySetInnerHTML={{
+            __html: Prism.highlight(`import 'gantd/dist/gantd.css'
+`, Prism.languages.javascript, 'javascript')
+          }} ></div>
+        </code >
+      </pre >
+
     </div >
 
 
+    <h2 className="title">按需加载</h2>
+    <div className="content">
+      下面两种方式都可以只加载用到的组件。
+      <h4>1、使用 babel-plugin-import（推荐）。</h4>
+      <pre className="language-javascript">
+        <code>
+          <div dangerouslySetInnerHTML={{
+            __html: Prism.highlight(`// .babelrc or babel-loader option
+{
+  "plugins": [
+    ["import", {
+      "libraryName": "gantd",
+      "libraryDirectory": "lib",
+      "style": "css"
+    }]
+  ]
+}
+`, Prism.languages.javascript, 'javascript')
+          }} ></div>
+        </code >
+      </pre >
+      然后只需从 gantd 引入模块即可，无需单独引入样式。等同于下面手动引入的方式。
+      <pre className="language-javascript">
+        <code>
+          <div dangerouslySetInnerHTML={{
+            __html: Prism.highlight(`// babel-plugin-import 会帮助你加载 JS 和 CSS
+import { SmartTable } from 'gantd';
+`, Prism.languages.javascript, 'javascript')
+          }} ></div>
+        </code >
+      </pre >
+      <h4>2、手动引入</h4>
+      <pre className="language-javascript">
+        <code>
+          <div dangerouslySetInnerHTML={{
+            __html: Prism.highlight(`import DatePicker from 'gantd/lib/smart-table'; // 加载 JS
+import 'gantd/lib/smart-table/style/css'; // 加载 CSS
+`, Prism.languages.javascript, 'javascript')
+          }} ></div>
+        </code >
+      </pre >
+    </div >
 
 
+    <h2 className="title">链接</h2>
+    <div className="content">
+      <ul>
+        <li>
+          <a href="https://github.com/gantFDT/gant-design" target="_blank">GITHUB</a>
+        </li>
+        <li>
+          <a href="https://ant.design/index-cn" target="_blank">Ant Design</a>
+        </li>
+        <li>
+          <a href="#" target="_blank">Lite UI Framework</a>
+        </li>
+      </ul>
+
+
+
+    </div>
 
   </div >
 }
