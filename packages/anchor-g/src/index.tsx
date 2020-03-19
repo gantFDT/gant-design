@@ -3,7 +3,7 @@ import { Dropdown, Menu, Anchor, Icon, Tooltip } from 'antd';
 import classnames from 'classnames';
 import { AnchorProps } from 'antd/lib/anchor'
 const customizePrefixCls = 'gant';
-const prefixCls = customizePrefixCls + '-gantanchor';
+const prefixCls = customizePrefixCls + '-anchor';
 type layout = 'vertical' | 'horizontal';
 interface ListItem {
   key: string,
