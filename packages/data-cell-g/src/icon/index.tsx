@@ -207,14 +207,14 @@ const IconSelector = compose(
   toClass,
   defaultProps(defaultprops),
   withProps(({ allowEdit, edit, style = {}, type, value, onChange }) => {
-    const cStyle: React.CSSProperties = { ...style };
+    const cStyle: React.CSSProperties = {};
     // 根据是否有value和onChange来确定是否受控
     const controlMode = !(_.isUndefined(value) || _.isUndefined(onChange));
     if (!controlMode) {
       cStyle.display = 'inline-block';
     }
     return {
-      style: cStyle,
+      wrapperStyle: cStyle,
       value: value || type,
       allowEdit: controlMode ? allowEdit : false,
       edit: controlMode ? edit : EditStatus.CANCEL,
