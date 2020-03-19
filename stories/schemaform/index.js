@@ -1,12 +1,10 @@
-import React, { useState, useMemo, useRef } from 'react'
-import { Button, Radio, Rate, Switch, Icon } from 'antd'
-import { EditStatus } from '@data-cell'
-import SchemaForm from '@packages/schema-form-g/src'
 import '@packages/schema-form-g/src/style'
-import { schema, configSchma, nestSchema, bindDataSchema, customCmpSchema } from './schema'
 import CodeDecorator from '../_util/CodeDecorator'
 import code from './code.js'
-
+/*! Start !*/
+import React, { useState, useMemo, useRef } from 'react'
+import { Button, Radio, Rate, Switch, Icon } from 'antd'
+import { EditStatus, SchemaForm } from '@gantd'
 const initalUiSchema = {
     "form:gutter": 10,
     "field:col": 24,
@@ -14,7 +12,48 @@ const initalUiSchema = {
     "field:wrapperCol": 24,
     "field:labelAlign": "left"
 }
-
+const schema = {
+  type: "object",
+  title: "普通表单",
+  required: ['key_1'],
+  propertyType: {
+      key_1: {
+          title: "普通输入框",
+          type: "string",
+      },
+      key_2: {
+          title: "数字输入框",
+          type: "number",
+          componentType: "InputNumber"
+      },
+      key_3: {
+          title: "金额",
+          type: "string",
+          componentType: "InputMoney"
+      },
+      key_4: {
+          title: "url地址",
+          type: "string",
+          componentType: "InputUrl"
+      },
+      key_5: {
+          title: "邮箱",
+          type: "string",
+          componentType: "InputEmail"
+      },
+      key_6: {
+          title: "语言",
+          type: "string",
+          componentType: "InputLanguage"
+      },
+      key_7: {
+          title: "手机号",
+          type: "string",
+          componentType: "InputCellPhone"
+      },
+  }
+}
+/*! Split !*/
 function BasicUse() {
     const [edit, setEdit] = useState(EditStatus.EDIT)
     const formRef = useRef(null)
@@ -36,7 +75,7 @@ function BasicUse() {
         </div>
     </div>
 }
-
+/*! Split !*/
 function EditStatusUse() {
     const [allowEdit, setAllowEdit] = useState(true)
     const [edit, setEdit] = useState(EditStatus.EDIT)
@@ -117,7 +156,7 @@ function EditStatusUse() {
         </div>
     </div>
 }
-
+/*! Split !*/
 function SearchUse() {
     const [expand, setExpand] = useState(false)
 
@@ -168,7 +207,66 @@ function SearchUse() {
         </div>
     </div>
 }
-
+/*! Split !*/
+const configSchma = {
+  type: "object",
+  title: "配置普通表单",
+  propertyType: {
+      "field:col": {
+          title: "字段列比例 field:col",
+          type: "number",
+          componentType: "InputNumber",
+          props: {
+              min: 0
+          }
+      },
+      "field:labelCol": {
+          title: "字段描述列宽比例 field:labelCol",
+          type: "number",
+          componentType: "InputNumber",
+          props: {
+              max: 24,
+              min: 0
+          }
+      },
+      "field:wrapperCol": {
+          title: "字段内容列宽占比 field:wrapperCol",
+          type: "number",
+          componentType: "InputNumber",
+          props: {
+              max: 24,
+              min: 0
+          }
+      },
+      "field:labelAlign": {
+          title: "字段描述文字布局 field:labelAlign",
+          type: "string",
+          componentType: "Selector",
+          props: {
+              useStorage: false,
+              dataSource: [
+                  {
+                      label: "左",
+                      value: "left"
+                  },
+                  {
+                      label: "右",
+                      value: "right"
+                  }
+              ]
+          }
+      },
+      "form:gutter": {
+          title: "表单字段横向间隔 form:gutter ",
+          type: "number",
+          componentType: "InputNumber",
+          props: {
+              max: 24,
+              min: 0
+          }
+      },
+  }
+}
 function CustomOptions() {
     const configUI = {
         "form:gutter": 10,
@@ -216,7 +314,7 @@ function CustomOptions() {
         </div>
     )
 }
-
+/*! Split !*/
 function GridLayout() {
     const uiSchema = {
         "form:gutter": 10,
@@ -245,7 +343,21 @@ function GridLayout() {
         <SchemaForm uiSchema={uiSchema} schema={schema} />
     </div>
 }
-
+/*! Split !*/
+const bindDataSchema = {
+  type: "object",
+  title: "支持双向绑定的表单",
+  propertyType: {
+      key_1: {
+          title: "普通输入框_1",
+          type: "string",
+      },
+      key_2: {
+          title: "普通输入框_2",
+          type: "string",
+      },
+  }
+}
 function BindData() {
     const [data, setData] = useState({ key_1: '1', key_2: '2' })
     const formRef = useRef(null)
@@ -272,6 +384,7 @@ function BindData() {
         </div>
     </div>
 }
+/*! Split !*/
 function DependenceData() {
     const dependenceSchema = {
         type: "object",
@@ -310,9 +423,23 @@ function DependenceData() {
         />
     </div>
 }
-
+/*! Split !*/
+const customCmpSchema = {
+  type: "object",
+  title: "扩展自定义组件",
+  propertyType: {
+      key_1: {
+          title: "普通输入框_1",
+          type: "string",
+      },
+      key_2: {
+          title: "自定义组件",
+          type: "string",
+          componentType: 'CustomComponent'
+      },
+  }
+}
 function CustomCmp() {
-
     return <div style={{ margin: 10 }}>
         <SchemaForm
             uiSchema={initalUiSchema}
@@ -324,7 +451,55 @@ function CustomCmp() {
         />
     </div>
 }
+/*! Split !*/
+const nestSchema = {
+  title: "嵌套表单—— parent",
+  type: "object",
+  propertyType: {
+      input: {
+          title: "input 组件",
+          type: "string"
+      },
+      inputNumber: {
+          title: "inputNumber 组件",
+          type: "number",
+          componentType: "InputNumber"
+      },
+      children: {
+          type: "object",
+          title: "嵌套表单—— children",
+          propertyType: {
+              inputMoney: {
+                  title: "InputMoney 组件",
+                  type: "string",
+                  componentType: "InputMoney"
+              },
+              url: {
+                  title: "Url 组件",
+                  type: "string",
+                  componentType: "Url"
+              },
+              grandson: {
+                  type: "object",
+                  title: "嵌套表单—— grandson",
+                  propertyType: {
+                      telePhone: {
+                          title: "TelePhone 组件",
+                          type: "string",
+                          componentType: "InputNumber"
+                      },
+                      datePicker: {
+                          title: "DatePicker 组件",
+                          type: "date",
+                          componentType: "DatePicker"
+                      }
+                  }
+              }
 
+          }
+      }
+  }
+}
 function NestUse() {
     const uiSchema = {
         "form:gutter": 10,
@@ -337,7 +512,7 @@ function NestUse() {
         <SchemaForm uiSchema={uiSchema} schema={nestSchema} />
     </div>
 }
-
+/*! End !*/
 const config = {
     codes: code,
     useage: <>

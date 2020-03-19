@@ -1,5 +1,5 @@
 @gant-prefix: gant;
-@profilecard-prefix-cls: ~'@{gant-prefix}-gantanchor';
+@profilecard-prefix-cls: ~'@{gant-prefix}-anchor';
 
 @standard: 40px;
 @theme: #1890FF;
@@ -108,10 +108,13 @@
 
     &-verticallayout {
       display: flex;
-      // .ant-layout {
-      //   background:transparent
-      // }
-
     }
+
+    &-content>div {
+      width: 100%!important;
+    }
+
+
+
   }
 }

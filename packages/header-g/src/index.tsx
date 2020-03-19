@@ -32,7 +32,7 @@ const Header = (props: HeaderIF) => {
     extra = null,
     icon = null,
     num = "1",
-    color = '#202020',
+    color = 'var(--text-color)',
     style = {},
     className,
     ...restProps

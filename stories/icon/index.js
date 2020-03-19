@@ -1,10 +1,12 @@
 
-import { Icon } from '@data-cell';
 import '@data-cell/icon/style';
-import React, { useState } from 'react';
 import CodeDecorator from '../_util/CodeDecorator';
-import code from './code.js';
+import codes from './code.js';
 
+/*! Start !*/
+import React, { useState } from 'react';
+import { Icon } from '@gantd';
+/*! Split !*/
 function BasicUse() {
   return (
     <>
@@ -12,23 +14,17 @@ function BasicUse() {
     </>
   )
 }
+/*! Split !*/
 function IconSelector() {
   const [value, setvalue] = useState('loading')
   return (
     <Icon allowEdit value={value} onChange={setvalue} onSave={(id, value, cb) => { cb() }} />
   )
 }
-
-
+/*! End !*/
 
 const config = {
-  codes: code.map(item => {
-    return `import { Icon } from 'data-cell-g';
-${item}`
-  }),
-  useage: `<b>🖍 读写分离</b></br>
-  <b>🎗 Iconfont 选择</b>
-`,
+  codes,
   children: [
     {
       title: '仅显示图标',

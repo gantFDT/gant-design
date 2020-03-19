@@ -119,9 +119,9 @@ export interface RowHeight<T> {
     (index: number, Record: T): number | string,
 }
 export interface VirtualScroll<T> {
-    threshold: number, // 单页显示的行数
-    rowHeight: number | string, //| RowHeight<T>,
-    center: boolean,
+    threshold?: number, // 单页显示的行数
+    rowHeight?: number | string, //| RowHeight<T>,
+    center?: boolean,
 }
 
 const defaultVirtualScrollConfig: VirtualScroll<any> = {
@@ -535,12 +535,13 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
             // 根据是否有固定列，以及是否是虚拟滚动来控制文本是否折行
             const cWrap = (virtualScroll || hasFixed) ? false : wrap
             const style: React.CSSProperties = { width: col.width }
-            if (cWrap) {
+            if (!cWrap) {
                 // 防止折行模式下，被内容撑出
+                // 如果有maxWidth，会有出现缩小单元格时内容在单元格外的异常
                 style.maxWidth = col.width
             }
             let defaultCellProps = {
-                // style,
+                style,
                 wrap: cWrap,
                 light,
                 record: { ...record },
@@ -559,12 +560,7 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
         [wrap, light, sortable, tableKey, cellPadding, headerFixed, virtualScroll, outlineNum],
     )
 
-    const expandIconColumnIndex = useMemo(() => {
-        let index = 0
-        index = Math.max(columns.findIndex(item => item.expandColumn), 0)
 
-        return computedRowSelection ? index + 1 : index
-    }, [columns, computedRowSelection])
     /**
      * columns API
      * @param editConfig object 编辑对象
@@ -688,6 +684,13 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
 
     //#endregion
     const tableColumns = useMemo(() => convertColumns(columns), [columns, convertColumns, orderList])
+
+    const expandIconColumnIndex = useMemo(() => {
+        let index = 0
+        index = Math.max(tableColumns.findIndex(item => item.expandColumn), 0)
+
+        return computedRowSelection ? index + 1 : index
+    }, [tableColumns, computedRowSelection])
 
     // 缺省显示
     const emptyText = useMemo(() => {

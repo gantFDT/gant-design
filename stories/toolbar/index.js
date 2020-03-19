@@ -1,12 +1,11 @@
-import React from 'react';
-import {Toolbar} from '@packages/gantd/src';
 import '@packages/gantd/src/toolbar/style';
 import CodeDecorator from '../_util/CodeDecorator';
 import code from './code.js';
+/*! Start !*/
+import React from 'react'
 import { Button, Tooltip, Icon } from 'antd'
-
-
-
+import { Toolbar } from '@gantd'
+/*! Split !*/
 function BasicUse() {
     return <>
         <Toolbar
@@ -35,7 +34,7 @@ function BasicUse() {
 
     </>
 }
-
+/*! Split !*/
 function FixedUse() {
     return <>
         <>请查看底部</>
@@ -52,8 +51,7 @@ function FixedUse() {
         />
     </>
 }
-
-
+/*! End !*/
 const config = {
     codes: code,
     // inline: true,

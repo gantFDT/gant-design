@@ -1,39 +1,59 @@
 @gant-prefix: gant;
 @component: ~'@{gant-prefix}-modal';
-
 @activeIconColor: var(--modal-header-icon-hover-color);
 
+
 :global {
-  .ant-modal-header {
-    padding: 9px 10px !important;
+
+  // Modal
+  :root {
+    --modal-highlight-color: #f00;
+    --modal-body-padding: 10px;
+    --modal-header-bg: #fff;
+    --modal-footer-bg: transparent;
+    --modal-footer-reset-color: rgba(0, 0, 0, 1);
+    --modal-footer-border-color-split: rgba(0,0,0,0.45);
+    --modal-mask-bg: rgba(0,0,0,0.45);
+    --modal-header-bg: #fff;
+    --modal-header-color: rgba(0, 0, 0, 0.65);
+    --modal-header-hover-color: rgba(0, 0, 0, 1);
+    --modal-header-icon-hover-color: #fff;
+    --modal-header-danger-icon-bg: #f00;
+    --modal-header-default-icon-bg: rgba(0, 0, 0, 0.3);
   }
 
-  .ant-modal-close-x {
-    width: 40px;
-    height: 40px;
-    line-height: 40px;
-  }
+  html {
+    .ant-modal-header {
+      padding: 9px 10px !important;
+    }
 
-  .ant-modal-body {
-    padding: 10px;
-  }
-
-  .ant-modal-title {
-    font-size: 14px;
-    font-weight: bold;
-  }
-
-  .ant-modal-confirm-body {
-    padding-bottom: 30px;
-  }
-
-  .ant-modal-confirm {
-    .ant-modal-confirm-btns {
-      margin-top: 0px;
+    .ant-modal-close-x {
+      width: 40px;
+      height: 40px;
+      line-height: 40px;
     }
 
     .ant-modal-body {
-      padding: 20px !important;
+      padding: 10px;
+    }
+
+    .ant-modal-title {
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .ant-modal-confirm-body {
+      padding-bottom: 30px;
+    }
+
+    .ant-modal-confirm {
+      .ant-modal-confirm-btns {
+        margin-top: 0px;
+      }
+
+      .ant-modal-body {
+        padding: 20px !important;
+      }
     }
   }
 

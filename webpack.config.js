@@ -193,7 +193,7 @@ module.exports = {
     optimization: {
         minimizer: [
             new UglifyJsPlugin(),
-            // new OptimizeCSSAssetsPlugin({})
+            new OptimizeCSSAssetsPlugin({})
         ]
     },
 

@@ -1,13 +1,9 @@
-const code =
-  `import React, { useState } from 'react';
-import { Avatar ,Icon} from 'antd';
-import { SubMenu  } from 'gantd';
-// import { SubMenu  } from 'submenu-g';//与gantd中引入效果相同
+export default [
+`
+import React, { useState, useRef } from 'react'
+import { Avatar, Icon } from 'antd'
+import { Submenu } from 'gantd';
 
-// 设置菜单自定义 font 图标
-const SubMenuIcon = Icon.createFromIconfontCN('SubMenuIcon', {
-  scriptUrl: '//at.alicdn.com/t/font_687278_5i22ts2wtbx.js'
-})
 
 function BasicUse() {
   const menuData = [
@@ -49,15 +45,15 @@ function BasicUse() {
     }
   ].map(item => ({ ...item, key: item.path }));
 
-  const [selectedKey, setSelectedKey] = useState(menuData[0].path);
+  const [selectedKey, setSelectedKey] = useState(menuData[0].path)
   const menuBoxRef = useRef(null);
   const onSelectedChange = (key, record, item) => setSelectedKey(key);
   const onSwitchChange = (mode) => {
     // console.log('当前状态', mode)
-  };
-  const activeMenu = _.find(menuData, i=>i.path === selectedKey)
-   return (
-    <SubMenu
+  }
+  const activeMenu = _.find(menuData, i => i.path === selectedKey)
+  return (
+    <Submenu
       menuData={menuData}
       selectedKey={selectedKey}
       width={180}
@@ -81,27 +77,15 @@ function BasicUse() {
       <div style={{ padding: '20px', height: 400 }}>
         {activeMenu['title']}
       </div>
-    </SubMenu>
+    </Submenu>
   )
 }
 
-ReactDOM.render(
-    <BasicUse/>,
-    mountNode,
-);
-`
+ReactDOM.render(<BasicUse />, mountNode)`,`
+import React, { useState, useRef } from 'react'
+import { Avatar, Icon } from 'antd'
+import { Submenu } from 'gantd';
 
-
-const code1 =
-  `import React, { useState } from 'react';
-import { Avatar,Icon } from 'antd';
-import { SubMenu  } from 'gantd';
-// import { SubMenu  } from 'submenu-g';//与gantd中引入效果相同
-
-// 设置菜单自定义 font 图标
-const SubMenuIcon = Icon.createFromIconfontCN('SubMenuIcon', {
-  scriptUrl: '//at.alicdn.com/t/font_687278_5i22ts2wtbx.js'
-})
 
 function TopLayout() {
   const menuData = [
@@ -146,9 +130,9 @@ function TopLayout() {
   const [selectedKey, setSelectedKey] = useState(menuData[0].path);
 
   const onSelectedChange = (key, record, item) => setSelectedKey(key);
-  const activeMenu = _.find(menuData, i=>i.path === selectedKey)
+  const activeMenu = _.find(menuData, i => i.path === selectedKey)
   return (
-    <SubMenu
+    <Submenu
       menuData={menuData}
       selectedKey={selectedKey}
       mode='horizontal'
@@ -156,29 +140,19 @@ function TopLayout() {
       fixedTopHeight={0}
       onSelectedChange={onSelectedChange}
     >
-      <div style={{ padding: '20px', height: 800 }}>
-      {activeMenu['title']}
+      <div style={{ padding: '20px', height: 400 }}>
+        {activeMenu['title']}
       </div>
-    </SubMenu>
+    </Submenu>
   )
 }
 
-ReactDOM.render(
-    <TopLayout/>,
-    mountNode,
-);
-`
-const code2 =
-  `import React, { useState } from 'react';
-import { Avatar ,Icon} from 'antd';
-import { SubMenu  } from 'gantd';
-// import { SubMenu  } from 'submenu-g';//与gantd中引入效果相同
+ReactDOM.render(<TopLayout />, mountNode)`,`
+import React, { useState, useRef } from 'react'
+import { Avatar, Icon } from 'antd'
+import { Submenu } from 'gantd';
 
-// 设置菜单自定义 font 图标
-const SubMenuIcon = Icon.createFromIconfontCN('SubMenuIcon', {
-  scriptUrl: '//at.alicdn.com/t/font_687278_5i22ts2wtbx.js'
-})
-  
+
 function ExtraUse() {
   const menuData = [
     {
@@ -222,24 +196,20 @@ function ExtraUse() {
   const [selectedKey, setSelectedKey] = useState(menuData[0].path);
 
   const onSelectedChange = (key, record, item) => setSelectedKey(key);
-  const activeMenu = _.find(menuData, i=>i.path === selectedKey)
+  const activeMenu = _.find(menuData, i => i.path === selectedKey)
   return (
-    <SubMenu
+    <Submenu
       menuData={menuData}
       selectedKey={selectedKey}
       collapsed={true}
       onSelectedChange={onSelectedChange}
     >
       <div style={{ padding: '20px' }}>
-      {activeMenu['title']}
+        {activeMenu['title']}
       </div>
-    </SubMenu>
+    </Submenu>
   )
 }
 
-ReactDOM.render(
-    <ExtraUse/>,
-    mountNode,
-);
-`
-export default [code, code1, code2];
+
+ReactDOM.render(<ExtraUse />, mountNode)`,]
