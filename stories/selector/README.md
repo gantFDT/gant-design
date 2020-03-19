@@ -16,6 +16,7 @@
 |useStorage|是否开启最近选择|boolean|true|
 |readOnly|只读模式|boolean|false|
 |blurOnSelect|是否在选中一个项的时候失焦|boolean|true|
+|hideSelected|隐藏选中的项|boolean|false|
 
 ### dataSource API
 

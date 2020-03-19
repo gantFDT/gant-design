@@ -180,6 +180,30 @@ const Demo7 = () => {
     </>
   )
 }
+/*! Split !*/
+const Demo8 = () => {
+  const dataSource = useMemo(() => [
+    {
+      value: 'a1',
+      label: 'a1'
+    },
+    {
+      value: 'b2',
+      label: 'b2'
+    },
+    {
+      value: 'c3',
+      label: 'c3'
+    },
+  ], [])
+  const [value, setValue] = useState('a1')
+
+  return (
+    <>
+      <Selector selectorId='hideSelected' hideSelected dataSource={dataSource} value={value} onChange={setValue} onSave={(id, value, cb) => cb()} />
+    </>
+  )
+}
 /*! End !*/
 const config = {
   inline: true,
@@ -226,6 +250,11 @@ const config = {
       title: '通过外部指定选项的lable显示',
       describe: "设置optionLabel",
       cmp: Demo7
+    },
+    {
+      title: '过滤选中项',
+      describe: "设置hideSelected为true",
+      cmp: Demo8
     },
   ]
 }

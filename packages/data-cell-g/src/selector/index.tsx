@@ -29,7 +29,7 @@ const defaultprop = {
   useCache: true, // 是否开启选择器的缓存功能
   optionLabel: null,  // 用于接收外部传递的选项的label，一般应用于选择的项不再列表中
   isFilter: true, // 过滤模式
-
+  hideSelected: false,
   onSearch: _ => _,
   onSelect: _ => _,
   onChange: _ => _,
@@ -79,7 +79,9 @@ type SelectorInnerProps<T, R> = ProtoExtends<BasicSelectorProps<T, R>, {
   forceUpdateStorageList(): void,
   reg: RegExp,
   addonAfter: React.ReactElement,
-  renderList: React.ReactElement[]
+  renderList: React.ReactElement[],
+  storageToReal: <T>(v: T) => T,
+  isMultiple: boolean,
 }>
 
 
@@ -91,8 +93,8 @@ const withLocalStorage = compose(
   withProps(({ selectorId }) => {
     warning(selectorId, `请确保selectorId为一个有效字符串`)
     return {
-      reg: new RegExp(`^${selectorId}-(.*)$`),
-      selectorStorageId: `selector:${selectorId}`
+      reg: new RegExp(`^${selectorId}-(.*)$`), // 转化最近选择的valueProp
+      selectorStorageId: `selector:${selectorId}`, // 存储在storage的key
     }
   }),
   withState('storageList', 'setStorageList', ({ selectorStorageId }) => JSON.parse(localStorage.getItem(selectorStorageId) || '[]')),
@@ -124,23 +126,16 @@ const withSelector = compose(
     })
   ),
   withHandlers({
-    transformDataToList: ({ labelProp, valueProp, renderItem }) => list => list.map(item => {
-      if (renderItem) {
-        return renderItem(item, Option)
+    //将最近选择的项的key转化为真实的key
+    storageToReal: ({ selectorId, reg }) => (value) => {
+      if (value.startsWith(selectorId)) { // 最近选择
+        return value.replace(reg, '$1')
       }
-      if (isPlainObject(item)) {
-        const { disabled, title, className } = item
-        const value = item[valueProp] || item.value;
-        const key = value || item.key;
-        const label = item[labelProp]
-
-        return <Option key={key} value={value} disabled={disabled} title={title} className={className}>{label}</Option>
-      }
-      return <Option key={item} value={item}>{item}</Option>
-    }),
+      return value
+    },
     getValue: ({ valueProp }) => data => valueProp && isPlainObject(data) ? data[valueProp] : data, // 获取选项的value
     getLabel: ({ labelProp }) => data => labelProp && isPlainObject(data) ? data[labelProp] : data, // 获取选项的label
-    setLabel: ({ setLabel: originSetLabel }) => labels => originSetLabel(Array.isArray(labels) ? labels.join('、') : labels), // 重置setlabel方法,增加格式化的功能
+    setLabel: ({ setLabel: originSetLabel }) => labels => originSetLabel(Array.isArray(labels) ? labels.filter(Boolean).join('、') : labels), // 重置setlabel方法,增加格式化的功能
   }),
   withHandlers({
     // 从dataList或者storageList中找到数据
@@ -157,9 +152,15 @@ const withSelector = compose(
       return optionLabelArray[index]
     }
   }),
+  withPropsOnChange(['multiple', "mode"], ({ multiple, mode }) => ({ isMultiple: (multiple || mode === 'multiple' || mode === 'tags') })),
   withPropsOnChange(
     ['value'],
-    ({ dataList, storageList, value, getValue, selectorId }) => {
+    ({ dataList, storageList, value, getValue, selectorId, isMultiple }) => {
+      if (isNil(value)) {
+        return {
+          value: undefined
+        }
+      }
       const isArray = Array.isArray(value)
       let cValue = isArray ? value : [value]
       const transormedValue = cValue.map(v => {
@@ -172,31 +173,50 @@ const withSelector = compose(
         return v
       })
       return {
-        value: isArray ? transormedValue : transormedValue[0]
+        value: isMultiple ? transormedValue : transormedValue[0]
       }
     }
   ),
   withHandlers({
-    setLabelWithValue: ({ value, setLabel, multiple, mode, setCacheLabel, getItemLabel }) => () => {
+    // 依赖转化后的value
+    transformDataToList: ({ labelProp, valueProp, renderItem, hideSelected, isMultiple, getValue, value: comValue }) => list => list.map(item => {
+      if (renderItem) {
+        return renderItem(item, Option)
+      }
+      if (isPlainObject(item)) {
+        const { disabled, title, className } = item
+        const value = item[valueProp] || item.value;
+        const key = value || item.key;
+        const label = item[labelProp]
+        let show = true, style
+        if (hideSelected) {
+          if (isMultiple) {
+            show = comValue.every(v => v !== value)
+          } else {
+            show = comValue !== value
+          }
+        }
+
+        if (!show) style = { display: 'none' }
+
+
+        return <Option key={key} value={value} disabled={disabled} title={title} style={style} className={className}>{label}</Option>
+      }
+      return <Option key={item} value={item}>{item}</Option>
+    }),
+    setLabelWithValue: ({ value, setLabel, setCacheLabel, getItemLabel }) => () => {
       if (isNil(value)) {
         setLabel(null)
         return
       }
-      let computedValue = value
       let label = null
-      const isArray = Array.isArray(value)
-      if (multiple || mode === 'multiple') {
-        if (!isArray) computedValue = [value]
-      }
-      else if (isArray) computedValue = value[0]
-
       // 从dataList找到value对应的项
       // 如果没有找到就从storagelist里面找
       // 如果还是没有找到，那么就要使用optionLabel参数
-      if (Array.isArray(computedValue)) { // 多选
-        label = computedValue.map((itemValue, index) => getItemLabel(itemValue, index))
+      if (Array.isArray(value)) { // 多选
+        label = value.map((itemValue, index) => itemValue ? getItemLabel(itemValue, index) : null)
       } else {
-        label = getItemLabel(computedValue)
+        label = getItemLabel(value)
       }
 
       setLabel(label) // 设置读模式下的显示文本
@@ -357,27 +377,21 @@ const withSelector = compose(
 
 const withChange = withPropsOnChange( // 外部value到内部value对象形式的转换
   ['value', 'cacheLabel'],
-  ({ value, cacheLabel, multiple, mode }) => { // 这里的value是外部传进来的value,约定是一个基础类型的值
+  ({ value, cacheLabel, isMultiple }) => { // 这里的value是外部传进来的value,约定是一个基础类型的值
     if (isNil(value)) return { value: undefined }
-    let realValue = value
-    if (multiple || mode === 'multiple') {
-      if (!Array.isArray(value)) realValue = [value]
-    } else {
-      if (Array.isArray(value)) realValue = value[0]
-    }
-    if (Array.isArray(realValue)) { // multiple
+    if (isMultiple) {
       let sValue = undefined
       if (Array.isArray(cacheLabel)) {
-        sValue = zipWith(realValue, cacheLabel, (key, label) => ({ key, label }))
+        sValue = zipWith(value, cacheLabel, (key, label) => ({ key, label }))
       } else {
-        sValue = realValue.map(key => ({ key, label: '' }))
+        sValue = value.map(key => ({ key, label: '' }))
       }
       return {
         value: sValue
       }
     }
     return {
-      value: { key: realValue, label: cacheLabel }
+      value: { key: value, label: cacheLabel }
     }
   }
 )
@@ -400,14 +414,14 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
 
   onChange = (...args) => {
     const [value] = args
-    const { onChange, setCacheLabel } = this.props
+    const { onChange, setCacheLabel, storageToReal } = this.props
     let keys: SelectValue = undefined
     let labels: NArray<string> = undefined
     if (value) {
       if (Array.isArray(value)) {
         const keyMap = new Map()
         value.forEach(({ key, label }) => {
-          const realKey = this.storageToReal(key)
+          const realKey = storageToReal(key)
           if (!keyMap.has(realKey)) {
             keyMap.set(realKey, label)
           } else {
@@ -420,7 +434,7 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
           labels = [...keyMap.values()]
         }
       } else {
-        keys = this.storageToReal(value.key)
+        keys = storageToReal(value.key)
         labels = value.label
       }
     }
@@ -435,9 +449,9 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
   }
 
   onSelect(select, option) {
-    const { onSelect, dataList, storageList, selectorId, getValue, updateStorage, selectRef, multiple, mode, query, filter, setFilter, blurOnSelect } = this.props
+    const { onSelect, dataList, storageList, selectorId, getValue, updateStorage, selectRef, isMultiple, query, filter, setFilter, blurOnSelect, storageToReal } = this.props
 
-    const key = this.storageToReal(select.key) // 获取真实的key值
+    const key = storageToReal(select.key) // 获取真实的key值
     const originItem = dataList.find(item => getValue(item) === key)
 
     let isStorage = select.key.startsWith(selectorId)
@@ -449,7 +463,7 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
       onSelect(key, item)
     }
 
-    if (blurOnSelect && !multiple && !['multiple', 'tags'].includes(mode)) { // 单选的情况下、选中失焦
+    if (blurOnSelect && !isMultiple) { // 单选的情况下、选中失焦
       setTimeout(() => {
         selectRef.blur()
       }, 0)
@@ -471,18 +485,6 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
       forceUpdateStorageList()
     }
     onDropdownVisibleChange(open)
-  }
-
-  /**
-   * 将最近选择的转化为正式的id
-   * 主要是避免最近选择的那条数据已经更新
-   */
-  storageToReal = (value) => {
-    const { selectorId, reg } = this.props
-    if (value.startsWith(selectorId)) { // 最近选择
-      return value.replace(reg, '$1')
-    }
-    return value
   }
 
   renderSelect = () => {
@@ -515,7 +517,6 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
   }
 
   render() {
-    const { className } = this.props
     return this.renderSelect()
   }
 }
