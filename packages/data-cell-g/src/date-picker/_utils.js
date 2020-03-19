@@ -24,7 +24,6 @@ export function getCurTime(time, format) {
     // 带时区的时间不能用format格式化
     return moment($value)
   }
-
   return (d => d)()
 }
 

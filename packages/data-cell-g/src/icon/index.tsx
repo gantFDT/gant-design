@@ -9,7 +9,7 @@ import Icon, { IconComponent, IconProps } from './Icon'
 import { withEdit } from '../compose'
 import Input from '../input'
 import EditStatus from '../edit-status'
-import { WithEditInProps, WithEditOutProps } from '../with-edit'
+import { WithEditInProps } from '../with-edit'
 
 const tr = a => a;
 
@@ -49,7 +49,7 @@ type BasicProps = PropExtend<
   >
 >;
 
-type IconHouseProps<T> = BasicProps & WithEditOutProps<T>;
+type IconHouseProps<T> = any;
 
 type IconSelectorProps<T> = PropExtend<WithEditInProps<T>, BasicProps>;
 const drawerClassname = "gant-icon-selector-drawer-wrapper"
@@ -222,7 +222,7 @@ const IconSelector = compose(
     };
   }),
   withEdit(
-    ({ value, style, theme, spin, rotate, component, twoToneColor, controlMode, perfix }) => {
+    ({ value, style, theme, spin, rotate, component, twoToneColor, controlMode, perfix, className }) => {
       const element = (
         <Icon
           type={value}
@@ -233,6 +233,7 @@ const IconSelector = compose(
           rotate={rotate}
           component={component}
           twoToneColor={twoToneColor}
+          className={className}
         />
       );
       if (!controlMode) {

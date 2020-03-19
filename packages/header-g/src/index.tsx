@@ -68,8 +68,9 @@ const Header = (props: HeaderIF) => {
     }
     //过滤掉fragment
     interator(toolsCollection, 0)
+    if (_.isEqual(tools, toolsArr)) return;
     setTools(toolsArr)
-  }, [extra])
+  }, [extra, tools])
 
   useEffect(() => {
     onResize()

@@ -51,7 +51,7 @@ module.exports = async ({ config, mode }) => {
 		resolve: {
       // 用于查找模块的目录
       
-			extensions: [".js", ".ts", ".json", ".jsx", ".tsx"],
+			extensions: [".js", ".ts", ".jsx", ".tsx"],
 			alias: {
 				"@packages": path.resolve('packages'),
 				"@util": path.resolve('packages/util-g/src'),

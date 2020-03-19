@@ -1,11 +1,26 @@
 import React, { Component } from 'react';
 import { Input, Select } from 'antd';
-import { mergeWith, get, map, pick, isUndefined } from 'lodash'
-import { compose, defaultProps, withState, withProps, withHandlers, mapProps, withPropsOnChange, toClass } from 'recompose'
-
+import { map, pick, } from 'lodash'
+import { compose, defaultProps, withState, withProps, withHandlers, toClass } from 'recompose'
 import { withEdit } from '../compose'
+import { WidthBasicProps } from '../compose/widthbasic';
+export interface GantInputLangProps extends WidthBasicProps {
+  allowClear?: boolean,
+  placeholder?: string,
+  onChange?: (val: value) => void
+  value?: value,
+  localeList?: localeItem[]
+}
+interface value {
+  locale: string,
+  value: string
+}
+interface localeItem {
+  locale: string,
+  label: string,
+}
 
-const defaultLocaleList = [
+const defaultLocaleList: localeItem[] = [
   {
     locale: 'zh-CN',
     label: '中文',
@@ -18,7 +33,7 @@ const defaultLocaleList = [
 
 const getMergeLocale = (list) => {
   if (list.length) {
-    const entries = [...defaultLocaleList, ...list].map(item => [item.locale, item.label]);
+    const entries: any = [...defaultLocaleList, ...list].map(item => [item.locale, item.label]);
     const map = new Map(entries)
     const localeList = []
     for (const [locale, label] of map.entries()) {
@@ -47,7 +62,7 @@ const withLangSelect = compose(
   }),
   withProps(({ localeList, cacheMap, onChange }) => {
     return {
-      language: map(getMergeLocale(defaultLocaleList, localeList), item => pick(item, ['locale', 'label'])),
+      language: map(getMergeLocale(localeList), item => pick(item, ['locale', 'label'])),
       onChange() {
         const newValue = []
         for (const [locale, value] of cacheMap.entries()) {
@@ -81,7 +96,7 @@ const withLangSelect = compose(
     }
   })
 )
-class InputLang extends Component {
+class InputLang extends Component<any> {
   onInputChange = (e) => {
     const { value } = e.target;
     const { currentLocale, onChange, cacheMap } = this.props
@@ -98,4 +113,8 @@ class InputLang extends Component {
 }
 
 
-export default InputLang
+export default class InputLangWapper extends Component<GantInputLangProps> {
+  render() {
+    return <InputLang {...this.props} />
+  }
+}

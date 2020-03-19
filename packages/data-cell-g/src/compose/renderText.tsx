@@ -13,7 +13,7 @@ export type GetText<P> = (p?: P) => any
 
 const renderText = <P extends any>(getText?: GetText<P>) => (props) => {
 
-  const { setEdit, allowEdit, className } = props
+  const { setEdit, allowEdit } = props
 
   const TextNode = React.memo(() => {
     const text = getText ? getText(props) : props.value;
@@ -45,7 +45,7 @@ const renderText = <P extends any>(getText?: GetText<P>) => (props) => {
   }
 
   return (
-    <div className={classnames('gant-compose-readWrapper', className)} style={style}>
+    <div className={classnames('gant-compose-readWrapper')} style={style}>
       <TextNode />
       <Pen />
     </div>

@@ -1,14 +1,25 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { Cascader } from 'antd'
+import classnames from 'classnames'
 import json from './district_zh.json'
-
-import { Group } from '../input'
 import { withEdit } from '../compose'
 import { compose, defaultProps, toClass } from 'recompose';
+import { WidthBasicProps } from '../compose/widthbasic';
+
+export interface LocationProps extends WidthBasicProps {
+  disabled?: boolean;
+  allowClear?: boolean;
+  className?: string;
+  style?: React.CSSProperties;
+  value?: string[];
+  onChange?: (value: string[]) => void,
+  popupClassName?: string,
+  onPopupVisibleChange?: (popupVisible: boolean) => void
+}
 
 
 const transformData = ($code, level = 1) => Object.entries(json[$code]).map(([code, name]) => {
-  const item = {
+  const item: any = {
     label: name,
     value: code,
   }
@@ -62,30 +73,36 @@ const withLocation = compose(
 
 @compose(
   withLocation,
-  withEdit(getValue)
+  withEdit(getValue, 'gant-location-cascader-popup')
 )
-class Location extends React.Component {
+class Location extends React.Component<any> {
 
   render() {
 
-    const { onEnter, ...props } = this.props
+    const { onEnter, className, popupClassName, ...props } = this.props
 
     return (
       <Cascader
-          {...props}
-          className={'gant-location-cascader'}
-          changeOnSelect
-          showSearch={{
-            filter: (value, paths) => paths.some(option => (option.label).toLowerCase().indexOf(value.toLowerCase()) > -1)
-          }}
-        />
+        {...props}
+        className={classnames('gant-location-cascader', className)}
+        changeOnSelect
+        popupClassName={classnames('gant-location-cascader-popup', popupClassName)}
+        showSearch={{
+          filter: (value, paths) => paths.some((option: any) => (option.label).toLowerCase().indexOf(value.toLowerCase()) > -1)
+        }}
+      />
     )
   }
 }
 
-export default Location
+export default class LocationWrapper extends Component {
+  static getLocationName: (list: any) => void
+  render() {
+    return <Location {...this.props} />
+  }
+}
 
-Location.getLocationName = locationList => {
+LocationWrapper.getLocationName = locationList => {
   const nameList = getLocationNameList(locationList)
   return nameList
 }

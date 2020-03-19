@@ -5,7 +5,8 @@ import { debounce, isPlainObject, isNil, cloneDeep, isEqual, zipWith, groupBy, p
 import { compose, defaultProps, withProps, withPropsOnChange, withState, mapProps, withHandlers, lifecycle, toClass, setDisplayName } from 'recompose'
 import warning from '@util/warning'
 import classnames from 'classnames'
-import { default as withEdit, WithEditInProps, WithEditOutProps } from '../with-edit'
+import { default as withEdit, WithEditInProps } from '../with-edit';
+import { WidthBasicProps } from '../compose/widthbasic';
 
 type ProtoExtends<T, U> = U & {
   [K in Exclude<keyof T, keyof U>]?: NonNullable<T[K]>
@@ -49,33 +50,33 @@ type Label = NArray<string>
 
 // 重写defaultProps中部分数据的类型
 type DefaultProps<R> = ProtoExtends<typeof defaultprop, {
-  query: Query<R>,
-  dataSource: R[],
-  style: React.CSSProperties,
-  optionLabel: Label,
-  multiple: boolean,
-  onSelect: (k: string, item: R) => void,
-  selectorId: string,
-  onChange: (key: SelectValue) => void,
+  query?: Query<R>,
+  dataSource?: R[],
+  style?: React.CSSProperties,
+  optionLabel?: Label,
+  multiple?: boolean,
+  onSelect?: (k: string, item: R) => void,
+  selectorId?: string,
+  onChange?: (key: SelectValue) => void,
 }>
 
 type BasicSelectorProps<T, R> = ProtoExtends<SelectProps<T>, DefaultProps<R>>
 
-export type SelectorProps<T, R> = ProtoExtends<WithEditInProps<T>, BasicSelectorProps<T, R>>
+export type SelectorProps<T, R> = ProtoExtends<WidthBasicProps, BasicSelectorProps<T, R>>
 
 type SelectorInnerProps<T, R> = ProtoExtends<BasicSelectorProps<T, R>, {
-  setFilter: (v: string) => void,
+  setFilter?: (v: string) => void,
   getData(): void,
-  label: Label,
-  setLabel: (l: Label) => void,
-  setCacheLabel: (lable: Label) => Label,
-  dataList: R[],
-  storageList: R[],
-  getValue: (v: R) => string,
-  updateStorage: (d: R, u: boolean) => void,
-  selectRef: SelectC,
-  setSelectRef: (c: SelectC) => void,
-  filter: string,
+  label?: Label,
+  setLabel?: (l: Label) => void,
+  setCacheLabel?: (lable: Label) => Label,
+  dataList?: R[],
+  storageList?: R[],
+  getValue?: (v: R) => string,
+  updateStorage?: (d: R, u: boolean) => void,
+  selectRef?: SelectC,
+  setSelectRef?: (c: SelectC) => void,
+  filter?: string,
   forceUpdateStorageList(): void,
   reg: RegExp,
   addonAfter: React.ReactElement,
@@ -106,7 +107,6 @@ const withLocalStorage = compose(
       }
     }
   })
-
 )
 
 const withSelector = compose(

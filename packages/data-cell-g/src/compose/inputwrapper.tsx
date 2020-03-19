@@ -3,9 +3,14 @@ import classnames from 'classnames';
 
 export default (_popupClassName?: string) => WrapperedComponent =>
   React.forwardRef<HTMLDivElement, any>(
-    ({ isInner, style, wrapperClassName, onBlur, ...props }, ref) => {
+    ({ isInner, wrapperStyle, wrapperClassName, onBlur, onFocus, disabledBlur: _disabledBlur, ...props }, ref) => {
       const factory = React.createFactory(WrapperedComponent);
       const [popupClassName, setPopupClassName] = useState(_popupClassName);
+      const [disabledBlur, setDisabledBlur] = useState(_disabledBlur);
+      useEffect(() => {
+        setDisabledBlur(_disabledBlur)
+      }, [_disabledBlur])
+      const [isFoucs, setFoucs] = useState(false);
       const className = classnames(
         'gant-input-wrapper',
         {
@@ -16,28 +21,37 @@ export default (_popupClassName?: string) => WrapperedComponent =>
       const divRef = useRef<HTMLDivElement>(null);
       const handleClick = useCallback(
         (e: MouseEvent) => {
-          if (divRef.current) {
+          if (divRef.current && isFoucs && !disabledBlur) {
             const target: any = e.target;
             if (divRef.current.contains(target)) return;
-            if (!popupClassName) return onBlur&&onBlur();
+            if (!popupClassName) {
+              setFoucs(false)
+              return onBlur && onBlur();
+            }
             const popupDoms = document.getElementsByClassName(popupClassName);
             const len = popupDoms.length
             for (let i = 0; i < len; i++) {
               if (popupDoms[i].contains(target)) return
             }
+            setFoucs(false)
             onBlur && onBlur();
           }
         },
-        [divRef.current, onBlur, popupClassName],
+        [divRef.current, onBlur, popupClassName, isFoucs, disabledBlur],
       );
       useEffect(() => {
         window.addEventListener('mousedown', handleClick);
         return () => window.removeEventListener('mousedown', handleClick);
       }, [handleClick]);
+      const handleFoucs = useCallback((e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        if (isFoucs) return;
+        setFoucs(true);
+        onFocus && onFocus();
+      }, [onFocus, isFoucs])
       return (
-        <div className={className} ref={divRef} style={style}>
+        <div className={className} ref={divRef} onClick={handleFoucs} style={wrapperStyle}>
           <div className="gant-input" ref={ref}>
-            {factory({ ...props, setPopupClassName })}
+            {factory({ ...props, setPopupClassName, setDisabledBlur })}
           </div>
         </div>
       );
