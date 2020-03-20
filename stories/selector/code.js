@@ -216,4 +216,34 @@ const Demo7 = () => {
   )
 }
 
-ReactDOM.render(<Demo7 />, mountNode)`,]
+ReactDOM.render(<Demo7 />, mountNode)`,`
+import React, { useState, useMemo, useCallback } from 'react'
+import { Button } from 'antd'
+import { Selector, EditStatus, SwitchStatus } from 'gantd'
+
+
+const Demo8 = () => {
+  const dataSource = useMemo(() => [
+    {
+      value: 'a1',
+      label: 'a1'
+    },
+    {
+      value: 'b2',
+      label: 'b2'
+    },
+    {
+      value: 'c3',
+      label: 'c3'
+    },
+  ], [])
+  const [value, setValue] = useState('a1')
+
+  return (
+    <>
+      <Selector selectorId='hideSelected' hideSelected dataSource={dataSource} value={value} onChange={setValue} onSave={(id, value, cb) => cb()} />
+    </>
+  )
+}
+
+ReactDOM.render(<Demo8 />, mountNode)`,]

@@ -27,7 +27,7 @@ const Use2 = () => {
   const [edit, setEdit] = useState('CANCEL')
   return <>
     <Button onClick={() => setEdit(SwitchStatus)} style={{ marginBottom: 5 }} size="small">{!(edit === 'EDIT') ? '进入编辑' : '退出编辑'}</Button>
-    <InputEmail placeholder='邮箱' edit={edit} style={{ margin: '5px 0' }} />
+    <InputEmail placeholder='邮箱' edit={edit} wrapperStyle={{ margin: '5px 0' }} />
   </>
 }
 

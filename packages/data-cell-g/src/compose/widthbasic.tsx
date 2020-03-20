@@ -46,7 +46,8 @@ export interface WidthBasicProps {
 	isInner?: boolean,
 	confirmable?: boolean,
 	wrapperStyle?: React.CSSProperties,
-	wrapperClassName?: string
+	wrapperClassName?: string,
+	autoFocus?: boolean
 }
 
 // 通过withEdit高阶函数包裹的组件可以接受的参数

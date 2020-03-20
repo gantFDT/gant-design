@@ -121,6 +121,7 @@
   "dependencies": {
     "@ant-design/colors": "^3.1.0",
     "@ant-design/icons": "2.1.1",
+    "@types/react-dom": "^16.9.5",
     "antd": "^3.22.0",
     "array-move": "^2.2.1",
     "classnames": "^2.2.6",
@@ -134,7 +135,7 @@
     "react": "^16.8.6",
     "react-beautiful-dnd": "^10.1.1",
     "react-color": "^2.18.0",
-    "react-dom": "^16.8.6",
+    "react-dom": "^16.13.0",
     "react-element-to-jsx-string": "^14.3.1",
     "react-intl": "^3.12.0",
     "react-resize-detector": "^4.2.1",

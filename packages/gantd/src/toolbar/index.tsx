@@ -7,7 +7,6 @@ export interface ToolBarPropsIF {
   style?: React.CSSProperties;
   className?: string;
   fixed?:boolean;
-  [restProps: string]: any;
 }
 
 const Toolbar = (props: ToolBarPropsIF) => {
