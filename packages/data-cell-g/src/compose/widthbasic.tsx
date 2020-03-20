@@ -71,10 +71,9 @@ export const widthBasic = (popupClassName?: string) => compose(
 			}
 		},
 		onCancelCache: ({ onChange, value, cacheValue, setCacheValue, onCancel }) => () => {
-			console.log()
 			if (value !== cacheValue) { // 避免全局进入编辑，点取消
 				onChange && onChange(cacheValue);
-				// onCancel(cacheValue);
+				onCancel(cacheValue);
 			}
 			setCacheValue(null)
 		},

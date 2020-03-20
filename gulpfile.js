@@ -134,7 +134,7 @@ function ScriptTask(dirName) {
         .pipe(gulpif(options.env === 'production', uglify({
             warnings: false,
             compress: {
-                drop_console: true,  // 过滤 console
+                // drop_console: true,  // 过滤 console
                 drop_debugger: true  // 过滤 debugger
             }
         })))

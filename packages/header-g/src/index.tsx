@@ -2,6 +2,7 @@ import React, { ReactNode, useRef, useState, useEffect, useMemo, useCallback } f
 import classnames from 'classnames';
 import { Dropdown, Menu, Button, Icon } from 'antd';
 import ReactResizeDetector from 'react-resize-detector';
+import ResizeDetector from './ResizeDetector'
 import ExtraContent from './ExtraContent'
 import _ from 'lodash';
 
@@ -38,16 +39,10 @@ const Header = (props: HeaderIF) => {
     className,
     ...restProps
   } = props;
-
-  const wrapperRef = useRef(null)
-  const outerRef = useRef(null)
-  const [hiddenStartIndex, setHiddenStartIndex] = useState(0);
-  // const [numberArr, setNumberArr] = useState([])
-  const [toolsHeight, setToolsHeight] = useState(0);
-  const [showMore, setShowMore] = useState(false);
   const [tools, setTools] = useState([]);
   //打平extra
-
+  const [allWidth, setAllWidth] = useState(0);
+  const leftRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     if (_.isEmpty(extra)) { return }
     let toolsCollection = React.Children.toArray(extra)
@@ -80,14 +75,23 @@ const Header = (props: HeaderIF) => {
     })
   }, [tools])
   //收缩的内容
- 
+
   const getPrefixCls = (cls) => 'gant-' + cls;
   const width = '100%';
   const prefixCls = 'gant-blockheader';
   const clsString = classnames(prefixCls, className);
+  const toolWidth = useMemo(() => {
+    if (leftRef.current) {
+      return allWidth - leftRef.current.clientWidth;
+    }
+    return 0;
+  }, [allWidth, leftRef.current])
   return (
     <div className={clsString} style={{ borderBottom: bottomLine && '1px solid rgba(128,128,128,0.2)', ...style }} {...restProps}>
-      <div className={prefixCls + '-wrapper'}>
+      <ReactResizeDetector handleWidth handleHeight key={1}>
+        <ResizeDetector setAllWidth={setAllWidth} />
+      </ReactResizeDetector>
+      <div className={prefixCls + '-wrapper'} ref={leftRef} >
         <div className={prefixCls + '-beforeExtra'}>
           {beforeExtra}
         </div>
@@ -98,13 +102,10 @@ const Header = (props: HeaderIF) => {
         {type == 'line' && title && <div className={prefixCls + '-line'} style={{ background: color }}></div>}
         {type == 'num' && <div className={prefixCls + '-num'} style={{ background: color }}>{num}</div>}
         <div className={prefixCls + '-title'} style={{ color: color }}>{title}</div>
-        <div ref={wrapperRef} className={getPrefixCls('overflow-tool-outer')}>
-          <div className={getPrefixCls('overflow-tool-inner')} style={{ width: width }} >
-            <ReactResizeDetector handleWidth handleHeight onResize={onResize} key={1}>
-              {extra && <ExtraContent tools={tools} prefixCls={prefixCls} />}
-            </ReactResizeDetector>
-            
-          </div>
+      </div>
+      <div className={getPrefixCls('overflow-tool-outer')}>
+        <div className={getPrefixCls('overflow-tool-inner')} style={{ width: toolWidth }} >
+          {extra && <ExtraContent tools={tools} prefixCls={prefixCls} width={toolWidth} />}
         </div>
       </div>
     </div >
