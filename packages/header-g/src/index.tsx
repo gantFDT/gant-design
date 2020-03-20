@@ -47,10 +47,10 @@ const Header = (props: HeaderIF) => {
     if (_.isEmpty(extra)) { return }
     let toolsCollection = React.Children.toArray(extra)
     let toolsArr = []
-    const interator = (items, parentIndex) => {
+    const interator = (items) => {
       React.Children.map(items, (item, index) => {
         if (item && item.type && item.type.toString() === 'Symbol(react.fragment)') {
-          interator([item.props.children], index)
+          interator([item.props.children])
         } else {
           if (React.isValidElement(item) || typeof (item) === 'string') {
             toolsArr.push(
@@ -61,7 +61,10 @@ const Header = (props: HeaderIF) => {
       })
     }
     //过滤掉fragment
-    interator(toolsCollection, 0)
+    interator(toolsCollection)
+    React.Children.map(toolsCollection, item => {
+      interator(item)
+    })
     if (_.isEqual(tools, toolsArr)) return;
     setTools(toolsArr)
   }, [extra, tools])

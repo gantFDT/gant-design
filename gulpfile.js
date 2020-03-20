@@ -127,7 +127,7 @@ function ScriptTask(dirName) {
         .pipe(uglify({
             warnings: false,
             compress: {
-                // drop_console: true,  // 过滤 console
+                drop_console: true,  // 过滤 console
                 drop_debugger: true  // 过滤 debugger
             }
         }))
@@ -267,13 +267,13 @@ function CopileToGantdTask(dirName, targetDir) {
             next()
           })
         )
-        .pipe(uglify({ 
-            warnings: false,
-            compress: {
-                // drop_console: true,  // 过滤 console
-                drop_debugger: true  // 过滤 debugger
-            }
-        }))
+        // .pipe(uglify({ 
+        //     warnings: false,
+        //     compress: {
+        //         // drop_console: true,  // 过滤 console
+        //         drop_debugger: true  // 过滤 debugger
+        //     }
+        // }))
         .pipe(dest(`packages/gantd/${targetDir}/${__dirName === 'data-cell' ? '' : (__dirName + '/')}`))
     },
     function compileDTS() {
