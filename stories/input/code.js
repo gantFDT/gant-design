@@ -28,9 +28,9 @@ const Use2 = () => {
   const [edit, setEdit] = useState('CANCEL')
   return <>
     <Button onClick={() => setEdit(SwitchStatus)} style={{ marginBottom: 5 }} size="small">{!(edit === 'EDIT') ? '进入编辑' : '退出编辑'}</Button>
-    <Input placeholder='单行输入框' edit={edit} style={{ margin: '5px 0' }} />
-    <TextArea placeholder='多行输入框' edit={edit} style={{ margin: '5px 0' }} />
-    <Password placeholder='密码输入框' edit={edit} style={{ margin: '5px 0' }} />
+    <Input placeholder='单行输入框' edit={edit} wrapperStyle={{ margin: '5px 0' }} />
+    <TextArea placeholder='多行输入框' edit={edit} wrapperStyle={{ margin: '5px 0' }} />
+    <Password placeholder='密码输入框' edit={edit} wrapperStyle={{ margin: '5px 0' }} />
   </>
 }
 

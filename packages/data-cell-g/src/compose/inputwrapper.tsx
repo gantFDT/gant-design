@@ -3,14 +3,14 @@ import classnames from 'classnames';
 
 export default (_popupClassName?: string) => WrapperedComponent =>
   React.forwardRef<HTMLDivElement, any>(
-    ({ isInner, wrapperStyle, wrapperClassName, onBlur, onFocus, disabledBlur: _disabledBlur, ...props }, ref) => {
+    ({ isInner, wrapperStyle, wrapperClassName, autoFocus, onBlur, onFocus, disabledBlur: _disabledBlur, ...props }, ref) => {
       const factory = React.createFactory(WrapperedComponent);
       const [popupClassName, setPopupClassName] = useState(_popupClassName);
       const [disabledBlur, setDisabledBlur] = useState(_disabledBlur);
       useEffect(() => {
         setDisabledBlur(_disabledBlur)
       }, [_disabledBlur])
-      const [isFoucs, setFoucs] = useState(false);
+      const [isFoucs, setFoucs] = useState(autoFocus);
       const className = classnames(
         'gant-input-wrapper',
         {
