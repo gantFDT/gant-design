@@ -4,6 +4,8 @@ const babel = require('gulp-babel')
 const rimraf = require('rimraf')
 const path = require('path')
 const less = require('gulp-less')
+const gulpif = require('gulp-if')
+const minimist = require('minimist')
 const uglify = require('gulp-uglify')
 const postcss = require('gulp-postcss')
 const rename = require('gulp-rename')
@@ -18,6 +20,11 @@ const { all: packageNames } = lernaConfig;
 const tsProject = ts.createProject('./tsconfig.json', {
   declaration: true,
   target: 'ES6',
+});
+
+const options = minimist(process.argv.slice(2), {
+  string: 'env',
+  default: { env: process.env.NODE_ENV || 'production' }
 });
 
 const isWin = process.platform === 'win32';
@@ -124,13 +131,13 @@ function ScriptTask(dirName) {
             next()
           })
         )
-        .pipe(uglify({
+        .pipe(gulpif(options.env === 'production', uglify({
             warnings: false,
             compress: {
                 drop_console: true,  // 过滤 console
                 drop_debugger: true  // 过滤 debugger
             }
-        }))
+        })))
         .pipe(dest(`packages/${dirName}/lib/`))
     },
     function compileDTS() {
@@ -267,13 +274,13 @@ function CopileToGantdTask(dirName, targetDir) {
             next()
           })
         )
-        // .pipe(uglify({ 
-        //     warnings: false,
-        //     compress: {
-        //         // drop_console: true,  // 过滤 console
-        //         drop_debugger: true  // 过滤 debugger
-        //     }
-        // }))
+        .pipe(gulpif(options.env === 'production', uglify({
+          warnings: false,
+          compress: {
+              drop_console: true,  // 过滤 console
+              drop_debugger: true  // 过滤 debugger
+          }
+        })))
         .pipe(dest(`packages/gantd/${targetDir}/${__dirName === 'data-cell' ? '' : (__dirName + '/')}`))
     },
     function compileDTS() {
