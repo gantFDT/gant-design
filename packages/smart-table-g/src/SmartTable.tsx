@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback, ReactNode, useEffect, useRef } from 'react';
-import { Tooltip, Button } from 'antd';
+import { Tooltip, Button, Spin } from 'antd';
 import moment from 'moment';
 import { isEmpty } from 'lodash';
 import Table from '@table';
@@ -293,7 +293,8 @@ function SmartTable<R>(props: SmartTableProps<R>) {
         extra={HeaderRight}
         {...headerProps}
       />
-      {renderable &&
+      {
+        renderable ?
         withFocusKeyEvent(
           <Receiver>
             {(locale) => <Table
@@ -322,7 +323,14 @@ function SmartTable<R>(props: SmartTableProps<R>) {
             }
           </Receiver>,
           bindKeys,
-        )}
+        ) : <Spin>
+          <div style={{
+            height:
+              bodyHeight ?
+              typeof bodyHeight === 'string' ? `${bodyHeight.slice(-1)} + 29px)` : (bodyHeight + 29) : 500
+          }}></div>
+        </Spin>
+      }
       <ConfigModal
         visible={configModalVisible}
         originColumns={columns}
