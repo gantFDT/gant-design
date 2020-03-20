@@ -17,12 +17,13 @@ export default memo(function ExtraContent({ width = 0, height = 0, tools, prefix
 	const getDrapContent = useMemo(() => {
 		if (startIndex === -1) return null;
 		const renderDrapChildren = []
-		 React.Children.map(tools, (item, index) => {
-			if (index > startIndex) renderDrapChildren.push(<div key={index} style={{ margin: '5px' }}>{item}</div>)
+		React.Children.map(tools, (item, index) => {
+			if (index > startIndex || startIndex === 0) renderDrapChildren.push(<div key={index} style={{ margin: '5px' }}>{item}</div>)
 		})
 		return renderDrapChildren
 	}, [tools, startIndex])
 	const renderExtra = useMemo(() => {
+		if (startIndex === 0) return null
 		if (startIndex === -1) return React.Children.map(tools, (item, index) => {
 			return React.cloneElement(item, { key: index })
 		})
@@ -35,13 +36,12 @@ export default memo(function ExtraContent({ width = 0, height = 0, tools, prefix
 		return renderChildren
 	}, [tools, startIndex]);
 	const toolsRef = useRef<HTMLDivElement>(null)
-	useEffect(() => {
+	const ref = useRef<HTMLDivElement>(null)
+	useLayoutEffect(() => {
 		if (toolsRef.current && (width)) {
-
 			const toolsRefHeight = toolsRef.current.offsetHeight + 1;
 			setToolsHeight(toolsRefHeight)
-			if (width - 30 >= toolsRef.current.clientWidth) return setStartIndex(-1);
-
+			if (width - toolsRefHeight - 20 >= toolsRef.current.clientWidth) return setStartIndex(-1);
 			let toolWidth = 0;
 			const childrenItems = toolsRef.current.children;
 			for (let i = 0; i < childrenItems.length; i++) {
@@ -49,17 +49,19 @@ export default memo(function ExtraContent({ width = 0, height = 0, tools, prefix
 				const { width: styleWidth, marginLeft, marginRight } = getComputedStyle(childItem);
 				const itemWidth = parseInt(styleWidth) + parseInt(marginLeft) + parseInt(marginRight);
 				toolWidth += itemWidth;
-				if (toolWidth + toolsRefHeight > width - 30) {
+				if (toolWidth + toolsRefHeight + 20 > width) {
+					if (i === 0) return setStartIndex(0)
 					return setStartIndex(i - 1)
 				}
 			}
+
 			return setStartIndex(-1)
 		}
-	}, [toolsRef.current, width])
+	}, [toolsRef.current, width, ref.current])
 
 	return (
-		<div className={`${prefixCls}-extra`}  >
-			<div className={`${prefixCls}-extra-tools`} style={{ height: toolsHeight }} >
+		<div className={`${prefixCls}-extra`} style={{ width }} >
+			<div className={`${prefixCls}-extra-tools`} style={{ height: toolsHeight }} ref={ref} >
 				{renderExtra}
 				{
 					startIndex > -1 && <Dropdown

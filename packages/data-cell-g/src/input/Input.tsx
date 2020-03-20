@@ -20,7 +20,6 @@ class Input extends React.Component<GantInputProps> {
     if (strict) {
       value = value.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '')
     }
-    console.log("onChange(value)", onChange)
     onChange && onChange(value)
   }
   render() {

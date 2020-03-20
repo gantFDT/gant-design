@@ -5,7 +5,6 @@ export default (WrapperedComponent) => {
 		componentDidUpdate(prevProps) {
 			const { edit, selfEdit, setEdit, onCancelCache } = this.props;
 			if (prevProps.edit !== edit && edit === EditStatus.CANCEL) {
-				console.log("sssss", "wssss")
 				onCancelCache();
 			}
 			if (edit === EditStatus.EDIT && selfEdit === EditStatus.EDIT) {
