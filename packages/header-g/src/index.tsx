@@ -61,7 +61,7 @@ const Header = (props: HeaderIF) => {
       })
     }
     //过滤掉fragment
-    interator(toolsCollection)
+    // interator(toolsCollection)
     React.Children.map(toolsCollection, item => {
       interator(item)
     })
@@ -69,14 +69,14 @@ const Header = (props: HeaderIF) => {
     setTools(toolsArr)
   }, [extra, tools])
   //计算隐藏index
-  const onResize = useCallback(() => {
-    if (tools.length <= 1) return;
-  }, [tools])
-  const renderBlockContent = useMemo(() => {
-    return React.Children.map(tools, (item) => {
-      return React.cloneElement(item)
-    })
-  }, [tools])
+  // const onResize = useCallback(() => {
+  //   if (tools.length <= 1) return;
+  // }, [tools])
+  // const renderBlockContent = useMemo(() => {
+  //   return React.Children.map(tools, (item) => {
+  //     return React.cloneElement(item)
+  //   })
+  // }, [tools])
   //收缩的内容
 
   const getPrefixCls = (cls) => 'gant-' + cls;
