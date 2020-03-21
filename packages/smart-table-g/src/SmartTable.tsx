@@ -327,7 +327,7 @@ function SmartTable<R>(props: SmartTableProps<R>) {
           <div style={{
             height:
               bodyHeight ?
-              typeof bodyHeight === 'string' ? `${bodyHeight.slice(-1)} + 29px)` : (bodyHeight + 29) : 500
+              typeof bodyHeight === 'string' ? `${bodyHeight.slice(0,-1)} + 29px)` : (bodyHeight + 29) : 500
           }}></div>
         </Spin>
       }
