@@ -805,7 +805,7 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
         const lightPrefixCls = getPrefixCls('table-light');
         return (
             <>
-                {(title || headerRightElement.length || headerLeft) && (
+                {(title || headerRightElement || headerLeft) && (
                     <Header
                         title={title}
                         {...headerProps}
