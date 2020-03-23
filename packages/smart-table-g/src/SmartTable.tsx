@@ -3,7 +3,7 @@ import { Tooltip, Button, Spin } from 'antd';
 import moment from 'moment';
 import { isEmpty } from 'lodash';
 import Table from '@table';
-import BlockHeader from '@header';
+// import BlockHeader from '@header';
 import ConfigModal from './config';
 import CustomExpandIcon from './customexpandicon';
 import { LocalWrapperProps, SmartTableProps, ViewConfig, ViewListProps } from './interface';
@@ -283,7 +283,7 @@ function SmartTable<R>(props: SmartTableProps<R>) {
 
   return (
     <div className="gant-smart-table-wrapper">
-      <BlockHeader
+      {/* <BlockHeader
         title={
           <div ref={titleRef}>
             {title}
@@ -292,13 +292,21 @@ function SmartTable<R>(props: SmartTableProps<R>) {
         }
         extra={HeaderRight}
         {...headerProps}
-      />
+      /> */}
       {
         renderable ?
         withFocusKeyEvent(
           <Receiver>
             {(locale) => <Table
               {...restProps}
+              title={
+                <div ref={titleRef}>
+                  {title}
+                  {TableTitle}
+                </div>
+              }
+              headerRight={HeaderRight}
+              headerProps={headerProps}
               columns={finalColumns}
               dataSource={dataSource}
               resizable={searchTableCellResizable}

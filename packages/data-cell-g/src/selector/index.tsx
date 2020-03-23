@@ -139,9 +139,11 @@ const withSelector = compose(
   }),
   withHandlers({
     // 从dataList或者storageList中找到数据
-    getItemLabel: ({ dataList, storageList, selectorId, getValue, getLabel, optionLabel }) => (value, index = 0) => {
+    getItemLabel: ({ dataList, storageList, selectorId, getValue, getLabel, optionLabel, useStorage }) => (value, index = 0) => {
       let list = dataList
-      if (value.startsWith(selectorId)) {
+      // 启用缓存的情况下执行判断
+      // fix: 解决当storageId恰好是value的前缀的情况
+      if (useStorage && value.startsWith(selectorId)) {
         list = storageList
       }
       const valueItem = list.find(item => getValue(item) === value)
