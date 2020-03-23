@@ -1,6 +1,6 @@
 import React from 'react'
 import { Input as AntInput } from 'antd'
-import { DataEditCell } from '../index'
+import DataEditCell from '../data-edit-cell'
 import TextArea from './TextArea'
 import Password from './Password'
 import Search from './Search'
