@@ -731,15 +731,17 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
 
     // 劫持headerRight 
     let headerRightElement = useMemo(() => {
-        const element = []
+        let actions = null
         if (editable === EditStatus.EDIT && typeof editActions === 'function') {
             const keys = computedRowSelection ? (computedRowSelection.selectedRowKeys || []) : []
-            element.push(editActions([cacheDataList, setCacheDataList], keys))
+            actions = editActions([cacheDataList, setCacheDataList], keys)
         }
-        if (headerRight) {
-            element.push(headerRight)
-        }
-        return element.filter(Boolean).map((n, i) => <React.Fragment key={i}>{n}</React.Fragment>)
+        return (
+            <>
+                {actions}
+                {headerRight}
+            </>
+        )
     }, [editable, editActions, cacheDataList, headerRight, computedRowSelection])
     const onResize = useCallback(
         () => {
