@@ -7,9 +7,9 @@ import ExtraContent from './ExtraContent'
 import _ from 'lodash';
 
 export enum headerType {
-  icon,
-  line,
-  num
+  icon = 'icon',
+  line = 'line',
+  num = 'num'
 }
 interface HeaderIF {
   type?: headerType,

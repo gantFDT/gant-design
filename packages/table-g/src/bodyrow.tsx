@@ -1,22 +1,18 @@
-import React, { useMemo, useState, useContext, useEffect } from 'react'
+import React, { useMemo, useState, useContext } from 'react'
 import classnames from 'classnames'
 import { Draggable } from "react-beautiful-dnd";
 
-import { RowContext, TableContext, DataContext } from './context'
-import { setStyle, getListRange, getStyleText } from './_utils'
+import { RowContext, TableContext } from './context'
+import { setStyle, getListRange } from './_utils'
 
 const getPrefixCls = (cls) => 'gant-' + cls;
 
-const BodyRow = ({ isDeleted, rowIndex, className, sortable, children, ...props }) => {
-    const rowData = useMemo(() => ({ dataRowKey: props['data-row-key'] }), [props])
+const BodyRow = ({ isDeleted, rowIndex, className, sortable, children, originRecord, ...props }) => {
+    const rowData = useMemo(() => ({ dataRowKey: props['data-row-key'], originRecord }), [props])
 
     const { outlineNum, thresholdInner, renderRowKeys, virtualScroll, } = useContext(TableContext)
-    const { cellPadding, originLineHeight } = useContext(DataContext)
-
     const style = useMemo(() => {
         const s = { ...(props.style || {}) }
-        s['--padding'] = getStyleText(cellPadding)
-        s['--lineHeight'] = getStyleText(originLineHeight)
         if (virtualScroll) {
             const keysRange = getListRange(renderRowKeys, outlineNum, thresholdInner)
             if (!keysRange.includes(rowData.dataRowKey)) {
@@ -24,7 +20,7 @@ const BodyRow = ({ isDeleted, rowIndex, className, sortable, children, ...props 
             }
         }
         return s
-    }, [props.style, rowData, cellPadding])
+    }, [props.style, rowData])
     const [trRef, setTrRef] = useState(null)
     const row = useMemo(() => {
         // 非拖动排序
