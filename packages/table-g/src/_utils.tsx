@@ -47,12 +47,12 @@ export function renderColumnItem(item, text, record, index) {
 // onSelectInvert	用户手动选择反选的回调	Function(selectedRows)	-
 
 // 获取级联选择的key值
-function getSubKeys(record, computedRowKey) {
+function getSubKeys(record) {
   const keys = []
   if (record.children && record.children.length) {
     record.children.reduce((keys, item, index) => {
-      const key = computedRowKey(item, index)
-      const subKeys = getSubKeys(item, computedRowKey)
+      const key = item["g-row-key"]
+      const subKeys = getSubKeys(item)
       keys.push(key, ...subKeys)
       return keys
     }, keys)
@@ -62,7 +62,7 @@ function getSubKeys(record, computedRowKey) {
 
 
 const defaultColumnWidth = 35 // 勾选列的宽度
-export const useRowSelection = <T extends Record>(rowSelection: RowSelection<T>, dataSource: Array<T>, computedRowKey: RowKey<T>, bordered: boolean): [RowSelection<T>, (record: T) => void, null | React.ReactElement] => {
+export const useRowSelection = <T extends Record>(rowSelection: RowSelection<T>, dataSource: Array<T>, bordered: boolean): [RowSelection<T>, (record: T) => void, null | React.ReactElement] => {
   const getFlatRecords = useCallback(
     (list) => {
       return list.reduce(
@@ -95,7 +95,8 @@ export const useRowSelection = <T extends Record>(rowSelection: RowSelection<T>,
   // 计算选中行
   useEffect(
     () => {
-      const rows = flatRecords.filter((record, index) => selectedRowKeys.includes(computedRowKey(record, index)))
+      // 去掉g-row-key
+      const rows = flatRecords.filter(record => selectedRowKeys.includes(record["g-row-key"])).map(item => _.omit(item, ["g-row-key"]))
       if (typeof _.get(rowSelection, 'onChange') === 'function') {
         rowSelection.onChange(selectedRowKeys, rows)
       }
@@ -118,11 +119,11 @@ export const useRowSelection = <T extends Record>(rowSelection: RowSelection<T>,
   const onSelectRow = useCallback(
     (record: T, selected: boolean) => {
       if (!rowSelection) return
-      const key = computedRowKey(record) // 当前节点的key
+      const key = record["g-row-key"] // 当前节点的key
       let subKeys = []
       if (isMultiple) {
         if (record.children && record.children.length) { // 也可以不用判断,只是对于没有子节点的节点来说不用执行下面的代码
-          subKeys = getSubKeys(record, computedRowKey) // 子节点的key
+          subKeys = getSubKeys(record) // 子节点的key
         }
         const computedKeys = getSelectedKeys([key, ...subKeys], selected)
         setselectedRowKeys(computedKeys)
@@ -131,7 +132,8 @@ export const useRowSelection = <T extends Record>(rowSelection: RowSelection<T>,
         setselectedRowKeys([key])
       }
       if (typeof rowSelection.onSelect === 'function') {
-        const rows = isMultiple ? getFlatRecords([record]) : record
+        // 去掉g-row-key
+        const rows = (isMultiple ? getFlatRecords([record]) : record).map(item => _.omit(item, ["g-row-key"]))
         rowSelection.onSelect(rows, selected)
       }
     },
@@ -142,8 +144,7 @@ export const useRowSelection = <T extends Record>(rowSelection: RowSelection<T>,
   // 设置选中的行,供外部使用
   const setKeys = useCallback(
     (record: T): void => {
-      const key = computedRowKey(record)
-      const selected = !originSelectedKeys.includes(key)
+      const selected = !originSelectedKeys.includes(record["g-row-key"])
       onSelectRow(record, selected)
     },
     [originSelectedKeys]
@@ -179,7 +180,7 @@ export const useRowSelection = <T extends Record>(rowSelection: RowSelection<T>,
 
   const onFooterSelectionChange = useCallback((e) => {
     if (indeterminate === footerselectionchecked) { //全选
-      const keys = flatRecords.map((record, index) => computedRowKey(record, index))
+      const keys = _.map(flatRecords, "g-row-key")
       setselectedRowKeys(keys)
     } else { // 取消全选
       setselectedRowKeys([])
@@ -373,6 +374,33 @@ const setTableBorderBottom = (table, show) => {
   setStyle(table, show ? 'border-bottom: 1px solid rgba(126,126,126,0.3)' : 'border-bottom: 0');
 }
 
+// 定义不可枚举属性
+const defineProperty = function defineProperty(obj: Object, key: string, value: any) {
+  Object.defineProperty(obj, key, { writable: false, value })
+}
+const defineProperties = function defineProperties(obj: Object, data: any) {
+  for (const key of Object.keys(data)) {
+    data[key] = {
+      writable: false,
+      value: data[key]
+    }
+  }
+  Object.defineProperties(obj, data)
+}
+export const originKey = "__origin"
+export const cloneDatasource = function cloneDatasource<T extends Record>(dataSource: T[]): T[] {
+  return dataSource.map((item: T) => {
+    const freezeObj = _.cloneDeep(item);
+    Object.freeze(freezeObj)
+    const copyItem = _.cloneDeep(item);
+    defineProperty(copyItem, originKey, freezeObj)
+    if (_.get(copyItem, "children.length")) {
+      copyItem.children = cloneDatasource(copyItem.children)
+    }
+    return copyItem
+  })
+}
+
 /**
  * 计算diff数据
  * @param {Array<any>} oldList 编辑之前的原始数据
@@ -380,37 +408,22 @@ const setTableBorderBottom = (table, show) => {
  * @param {function} computedRowKey  计算数据的key
  * @param {boolean} isTree 是否是树状结构
  */
-export const diffList = <T extends Record>(oldList: T[], newList: T[], computedRowKey: RowKey<T>, isTree = false, addList = [], delList = [], modifyList = []) => {
-
+export const diffList = <T extends Record>(oldList: T[], newList: T[], isTree = false, addList = [], delList = [], modifyList = []) => {
+  // console.log('整个列表', newList)
   // 2、计算新增节点
   // console.time('计算新增节点')
-  newList.reduce((list, item) => {
-    const isAdd = oldList.every(oldItem => computedRowKey(oldItem) !== computedRowKey(item))
+  newList.reduce((result, newItem) => {
+    const isAdd = !newItem.hasOwnProperty(originKey)
+
     if (isAdd) {
-      list.push(item)
-      if (isTree && item.children && item.children.length) {
-        pushChildrenToList(list, item.children)
+      result[0].push(newItem)
+      if (_.get(newItem, "children.length")) {
+        pushChildrenToList(result[0], newItem.children)
       }
     }
-    return list
-  }, addList)
-  // console.timeEnd('计算新增节点')
-  // 3、计算删除节点
-  // 4、计算修改节点
-  // console.time('计算删改节点')
-  oldList.reduce((result, oldItem) => {
-    const isDelete = newList.every(newItem => computedRowKey(oldItem) !== computedRowKey(newItem))
-    if (isDelete) {
-      // 删除的数据
-      result[0].push(oldItem)
-      if (isTree && oldItem.children && oldItem.children.length) {
-        pushChildrenToList(result[0], oldItem.children)
-      }
-    } else {
-      // 修改的数据
-      const newItem = newList.find(newItem => computedRowKey(oldItem) === computedRowKey(newItem))
-
-      let [oi, ni] = [oldItem, newItem];
+    else {
+      const oldItem = newItem[originKey]
+      let [oi, ni] = [, newItem];
       if (isTree) {
         oi = _.omit(oldItem, 'children') as T;
         ni = _.omit(newItem, 'children') as T
@@ -422,7 +435,6 @@ export const diffList = <T extends Record>(oldList: T[], newList: T[], computedR
           const [subAddList, subDelList, subModifyList] = diffList(
             _.get(oldItem, 'children', []),
             _.get(newItem, 'children', []),
-            computedRowKey,
             isTree
           )
           addList.push.apply(addList, subAddList)
@@ -430,15 +442,29 @@ export const diffList = <T extends Record>(oldList: T[], newList: T[], computedR
           result[1].push.apply(result[1], subModifyList)
         }
       }
-      // 比较数据本身
+      //   // 比较数据本身
       if (!_.isEqual(oi, ni)) {
-        result[1].push(ni)
+        result[1].push(_.cloneDeep(ni))
       }
     }
     return result
-  }, [delList, modifyList])
+  }, [addList, modifyList])
+  // console.timeEnd('计算新增节点')
+  // 3、计算删除节点
+  // 4、计算修改节点
+  // console.time('计算删改节点')
+  oldList.reduce((list, oldItem) => {
+    const isDelete = newList.every(newItem => !_.isEqual(newItem[originKey], oldItem))
+    if (isDelete) {
+      // 删除的数据
+      list.push(oldItem)
+      if (isTree && _.get(oldItem, "children.length")) {
+        pushChildrenToList(list, oldItem.children)
+      }
+    }
+    return list
+  }, delList)
   // console.timeEnd('计算删改节点')
-  // 5、
   return [addList, delList, modifyList]
 }
 
@@ -473,14 +499,13 @@ export const getComputedColIndex = (cols): string[] => {
   // console.timeEnd('计算columnIndex')
   return colIndexs
 }
-
 /**
  * 给list计算g-index属性
  * @param {Array} list 
  * @param {number} withIndex 
  * @param {number} parent 
  */
-export const computeIndex = function computeIndex<T>([...list]: Array<T>, expandRowKeys = [], computedRowKey, virtualScroll: boolean): [T[], string[], T[]] {
+export const computeIndex = function computeIndex<T>(list: Array<T>, expandRowKeys = [], computedRowKey, virtualScroll: boolean): [T[], string[], T[]] {
   // console.time('计算序号')
   const renderRowKeys: string[] = []
   const tilingList: T[] = [];
@@ -516,7 +541,11 @@ export const computeIndex = function computeIndex<T>([...list]: Array<T>, expand
     }
     if (node.children !== undefined) {
       if (_.get(node, "children.length")) {
-        if (node['g-root'] || expandRowKeys.includes(rowKey)) {
+        if (
+          !virtualScroll ||
+          node['g-root'] ||
+          expandRowKeys.includes(rowKey)
+        ) {
           items.unshift(...node.children.map(child => ({
             node: child,
             nestLevel: nestLevel + 1,
@@ -552,13 +581,11 @@ export const getListRange = function getListRange<T>(list: T[], start: number, l
 export const getVirtualList = function getVirtualList<T extends Record>(start: number, length: number, renderRowKeys: string[], list: Array<T>): Array<T> {
   // const keys = renderRowKeys.slice(start, start+length);
   // 拟定要去掉的属性
-  // g-parent、g-parent-row-key、g-row-key
-  const cloneList: Array<T> = _.cloneDeep(list)
-  let result = getListRange(cloneList, start, length);
+  let result = getListRange(list, start, length);
   if (!result.length) return result
   do {
     const { root = [], ...groups } = _.groupBy(result, 'g-parent-row-key')
-    const entries = Object.entries(groups).reverse()
+    const entries = Object.entries<Array<T>>(groups).reverse()
     for (const [parentRowKey, nodes] of entries) {
       let seted = false;
       for (const item of root) {
@@ -584,4 +611,15 @@ export const getVirtualList = function getVirtualList<T extends Record>(start: n
   } while (!result.every(item => item["g-parent-row-key"] === 'root'))
 
   return result
+}
+
+export const omitGTableProps = function omitGTableProps<T extends Record>(list: T[]): T[] {
+  return list.map(item => {
+    // 去掉g-parent, g-parent-row-key, g-level,此数据用于实际渲染
+    const newItem = _.omit(item, ["g-parent", "g-parent-row-key", "g-level"])
+    if (item.children !== undefined) {
+      newItem.children = omitGTableProps(item.children)
+    }
+    return newItem
+  })
 }

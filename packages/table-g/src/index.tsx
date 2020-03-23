@@ -22,6 +22,10 @@ import {
     getComputedColIndex,
     computeIndex,
     getVirtualList,
+    omitGTableProps,
+    cloneDatasource,
+    getStyleText,
+    originKey
 } from './_utils'
 import Header from '@header'
 import { EditStatus } from '@data-cell'
@@ -36,12 +40,6 @@ import { DataContext, TableContext, TableBodyWrapperContext } from './context'
 import { tableWrapperRef, scrollIntoViewWithRowKey } from './compose'
 
 const defaultKey = "key"
-
-/**
- * 无法解决首行有合并列的可缩放table进入编辑状态下的单元格错位问题
- * 废除emptyRow
- */
-const emptyRow = { placeholder: true } // 主要用于bodycell中空行验证，不显示
 
 type Direction = 'row' | 'row-reverse'
 
@@ -233,10 +231,9 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
     })
     const computedRowKey: RowKey<T> = useCallback(
         (record, index) => {
-            if (!record) return undefined
-            if (record === (emptyRow as Record)) return 'defaultrow'
+            if (!record) return index
             const recordKey = typeof rowKey === 'function' ? rowKey(record, index) : record[rowKey || defaultKey];
-            return recordKey === undefined ? record['g-index'] : recordKey
+            return recordKey === undefined ? index : recordKey
         }, [rowKey]
     )
 
@@ -249,14 +246,21 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
     const sortable = useMemo(() => isTree ? false : !!props.onDragEnd, [isTree, props.onDragEnd])
     const [lock, setLock] = useState(true) // 控制onSave回调
 
+    const isEdit = useMemo(() => editable === EditStatus.EDIT, [editable])
     // 编辑时数据
-    const [cacheDataList, setCacheDataList] = useState(dataSource)
+    const [cacheDataList, setCacheDataList] = useState([])
     useEffect(() => {
-        if (editable === EditStatus.EDIT) {
-            setLock(l => !l)
-            setCacheDataList(_.cloneDeep(dataSource))
+        // edit状态下打开锁，其他状态不变
+        if (isEdit) {
+            setLock(false)
         }
-    }, [dataSource, editable])
+        setCacheDataList(list => {
+            if (isEdit) {
+                return cloneDatasource(dataSource)
+            }
+            return []
+        })
+    }, [dataSource, isEdit])
 
     //#endregion
     // 处理表格columns，可能有嵌套头部    
@@ -287,10 +291,10 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
     const [outlineNum, setOutLineNum] = useState(0)
     // 总数据、实际要渲染的rowkeys，用这个数据计算实际高度
     const [renderListAll, renderRowKeys, tilingListAll] = useMemo(() => {
-        const list = _.cloneDeep(editable === EditStatus.EDIT ? cacheDataList : dataSource)
+        const list = isEdit ? cacheDataList : _.cloneDeep(dataSource)
         if (list.length === 0) return [[], [], []]
         return computeIndex<T>(list, expandRowKeys, computedRowKey, virtualScroll)
-    }, [cacheDataList, dataSource, editable, useGIndex, computedRowKey, expandRowKeys])
+    }, [cacheDataList, dataSource, isEdit, useGIndex, computedRowKey, expandRowKeys])
 
     // dom高度
     const originRowHeight = useMemo(() => parseInt(virtualScrollConfigInner.rowHeight as string) || 0, [virtualScrollConfigInner])
@@ -314,7 +318,7 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
         if (virtualScroll) {
             list = getVirtualList(outlineNum, thresholdInner, renderRowKeys, tilingListAll)
         }
-        return list
+        return omitGTableProps(list)
     }, [virtualScroll, outlineNum, renderRowKeys, tilingListAll])
 
     //#endredion
@@ -329,16 +333,18 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
     // 业务层修改editable状态的时候，计算修改前后数据的
     useEffect(() => {
         if (editable === EditStatus.SAVE && !lock) {
-            setLock(l => !l)
+            // 保存之后，锁上保证下次更新不会再次进入
+            setLock(true)
             console.time('计算diff')
-            const diffData = diffList(dataSource, cacheDataList, computedRowKey, isTree)
+            const diffData = diffList(dataSource, cacheDataList, isTree)
             console.timeEnd('计算diff')
-            onSave(cacheDataList, diffData)
+            console.log(diffData)
+            onSave(_.cloneDeep(cacheDataList), diffData)
         }
-    }, [editable, dataSource, isTree, lock])
+    }, [editable, dataSource, cacheDataList, isTree, lock])
     //行选择
     //#region
-    const [computedRowSelection, setselectedRowKeys, footerselection] = useRowSelection(rowSelection, renderList, computedRowKey, bordered)
+    const [computedRowSelection, setselectedRowKeys, footerselection] = useRowSelection(rowSelection, renderList, bordered)
     const computedPagination = usePagination(pagination, computedRowSelection, dataSource.length)
     const footerCallback = useCallback((currentPageData) => {
         return (
@@ -364,7 +370,7 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
     //#region
     const onscroll = useCallback(_.debounce<any>((e) => {
         // 编辑状态下不触发whell事件
-        if (!onScroll || editable === EditStatus.EDIT) return
+        if (!onScroll || isEdit) return
         if (e.type === 'wheel') {
             // 向下滚动，视图上移
             if (e.deltaY > 0) {
@@ -391,7 +397,7 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
             bodyTable.scrollTopBackUp = bodyTable.scrollTop
         }
         e.preventDefault()
-    }, 50), [onScroll, editable])
+    }, 50), [onScroll, isEdit])
 
     const [tableGroup] = useState(new Map<string, HTMLTableElement>())
     /**
@@ -599,6 +605,7 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
     // 处理表格行删除线
     const onRow = useCallback(
         (record, index) => {
+
             type OptialProps = Partial<{
                 onClick: (e: React.MouseEvent) => void
             }>
@@ -607,6 +614,7 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
                 isDeleted: boolean,
                 rowIndex: number,
                 sortable: boolean,
+                originRecord?: T
             }
             const rowIndex = index + outlineNum
 
@@ -614,6 +622,10 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
                 isDeleted: record.isDeleted,
                 rowIndex,
                 sortable
+            }
+            if (isEdit) {
+                const originRecord = tilingListAll[record["g-index"] - 1][originKey]
+                defaultRowProps.originRecord = originRecord
             }
             let originListener: TableEventListeners = {}
             if (originOnRow) {
@@ -643,7 +655,7 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
             }
             return defaultRowProps
         },
-        [sortable, setselectedRowKeys, rowSelection, outlineNum]
+        [sortable, setselectedRowKeys, rowSelection, outlineNum, tilingListAll]
     )
 
     // 表格中所有使用的组件
@@ -723,7 +735,7 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
                 onExpandedRowsChange(rowkey)
             }
             if (onExpand) {
-                onExpand(expanded, record)
+                onExpand(expanded, _.omit(record, ["g-row-key"]))
             }
         },
         [onExpandedRowsChange, onExpand, expandRowKeys],
@@ -732,7 +744,7 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
     // 劫持headerRight 
     let headerRightElement = useMemo(() => {
         let actions = null
-        if (editable === EditStatus.EDIT && typeof editActions === 'function') {
+        if (isEdit && typeof editActions === 'function') {
             const keys = computedRowSelection ? (computedRowSelection.selectedRowKeys || []) : []
             actions = editActions([cacheDataList, setCacheDataList], keys)
         }
@@ -742,7 +754,7 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
                 {headerRight}
             </>
         )
-    }, [editable, editActions, cacheDataList, headerRight, computedRowSelection])
+    }, [isEdit, editActions, cacheDataList, headerRight, computedRowSelection])
     const onResize = useCallback(
         () => {
             setEmitReCompute(e => e + 1)
@@ -783,6 +795,13 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
 
 
     const bodyWrapperContext = useMemo(() => ({ onDragEnd }), [onDragEnd])
+    const style = useMemo(() => {
+        const s = { ...(props.style || {}) }
+        s['--padding'] = getStyleText(cellPadding)
+        s['--lineHeight'] = getStyleText(originLineHeight)
+        return s
+    }, [props.style, cellPadding, originLineHeight])
+
     const getPrefixCls = (cls) => 'gant-' + cls;
     const renderTable = () => {
         const {
@@ -848,6 +867,7 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
                                 columns={tableColumns}
                                 rowSelection={computedRowSelection as TableRowSelection<T>}
                                 expandIconColumnIndex={expandIconColumnIndex}
+                                style={style}
                             />
                         </TableBodyWrapperContext.Provider>
                     </TableContext.Provider>

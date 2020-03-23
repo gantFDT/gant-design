@@ -15,7 +15,8 @@ const DataContext = React.createContext({} as {
     originLineHeight: string,
 })
 const RowContext = React.createContext({} as {
-    dataRowKey: string
+    dataRowKey: string,
+    originRecord: Record
 })
 const TableContext = React.createContext({} as {
     light: boolean,

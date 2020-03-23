@@ -25,16 +25,19 @@ interface BodyCellProps<T> {
 
 
 const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', rowIndex, editConfig = {} as EditConfig<T>, sortable, wrap, light, children, className, style, ...props }: BodyCellProps<T>) => {
+
 	const [value, setValue] = useState<string>()
 	const [cacheInitialValue, setCacheInitialValue] = useState<string>()
 	const [element, setElement] = useState<React.ReactElement>()
 	const [edit, setedit] = useState(EditStatus.CANCEL)
 	const { dataSource, setDataSource, isTree, cellPadding, computedRowKey, editable, originRowHeight, originLineHeight } = useContext(DataContext)
-	const { dataRowKey } = useContext(RowContext)
+	const { dataRowKey, originRecord } = useContext(RowContext)
 	const { virtualScroll } = useContext(TableContext)
 	const isEdit = useMemo(() => edit === EditStatus.EDIT, [edit]);
 	const showDirt = useMemo(() => _.get(editConfig, 'showDirt', true), [editConfig])
 	const isSelection = useMemo(() => className.includes('ant-table-selection-column'), [className])
+
+
 	const { editValue, render: editRender } = editConfig
 
 	const getEditValue = useCallback(
@@ -50,7 +53,7 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 			}
 			return value;
 		},
-		[record, dataIndex, editValue],
+		[record, originRecord, dataIndex, editValue],
 	)
 	const updateElement = useCallback(
 		() => {
@@ -71,6 +74,12 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 		setCacheInitialValue(value)
 		setValue(value)
 	}, [])
+	useEffect(() => {
+		// fix: 虚拟滚动下不能用value的值
+		if (originRecord) {
+			setCacheInitialValue(_.get(originRecord, dataIndex))
+		}
+	}, [originRecord])
 
 	// 编辑状态改变
 	useEffect(() => {
@@ -159,7 +168,7 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 			let index = 0
 			const item = list[rowIndex]
 			// 比如：更新树状table的时候，第一层数据只有2条数据，而更新的数据是下面某一层中的第3条数据
-			// 这个时候rowIndex为2，在第一层数据中取不到值，会出现iten不存在的情况
+			// 这个时候rowIndex为2，在第一层数据中取不到值，会出现item不存在的情况
 			if (item && _.isEqual(computedRowKey(item), dataRowKey)) {
 				list[rowIndex][dataIndex] = value
 				seted = true
@@ -193,7 +202,7 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 		() => {
 			// 在排序表格中，不渲染默认的第一行假数据
 			if (sortable && record.placeholder) return
-			if (edit !== EditStatus.EDIT) return children
+			if (!isEdit) return children
 			if (element) {
 				const elementProps = {
 					value,
@@ -204,13 +213,12 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 					wrapperClassName: 'table-cell-editing',
 					onChange,
 					onBlur,
-
 				}
 				return React.cloneElement(element, elementProps)
 
 			}
 		},
-		[edit, value, element, children, sortable, record, cellPadding],
+		[edit, value, element, children, sortable, record, cellPadding, isEdit],
 	)
 
 	const valueChanged = useMemo(
@@ -227,15 +235,9 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 			const computedClassName = classnames(
 				className,
 				wrapClass,
-				element ?
-					{
-						[getPrefixCls('table-editcell-dirt')]: showDirt && valueChanged,
-					} : null,
-			)
-			const innerClassName = classnames(
-				getPrefixCls('table-cell-inner'), // 设置after撑高td
-				// (virtualScroll || !wrap) ? [isSelection ? '' : getPrefixCls('table-editcell-ellipsis')] : [getPrefixCls('table-editcell-wrap')]
-				wrapClass
+				{
+					[getPrefixCls('table-editcell-dirt')]: showDirt && valueChanged,
+				}
 			)
 			//fix Cannot assign to read only property
 			const dStyle = { ...(style || {}) }
@@ -249,18 +251,6 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 			return (
 				<td {...props} style={dStyle} className={computedClassName} onClick={onClick} ref={onTD}>{renderChildren()}</td>
 			)
-			// if (!isEdit) {
-			// 	return (
-			// 		<td {...props} style={dStyle} className={computedClassName} onClick={onClick} ref={onTD}>{{renderChildren()}}</td>
-			// 	)
-			// }
-			// return (
-			// 	<td {...props} style={{ padding: 0 }} className={computedClassName} onClick={onClick} ref={onTD}>
-			// 		<div style={dStyle} className={innerClassName} >
-			// 			{renderChildren()}
-			// 		</div>
-			// 	</td>
-			// )
 		},
 		[className, cellPadding, style, wrap, showDirt, valueChanged, element, onClick, onTD, renderChildren, isSelection, originRowHeight, virtualScroll, originLineHeight],
 	)
