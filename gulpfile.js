@@ -214,7 +214,7 @@ function CopileToGantdTask(dirName, targetDir) {
       cb();
     },
     function compileScriptToGantd(){
-      return src([`packages/${dirName}/src/**/*.tsx`, `packages/${dirName}/src/**/*.ts`, `!packages/data-cell-g/src/index.ts`])
+      return src([`packages/${dirName}/src/**/*.tsx`, `packages/${dirName}/src/**/*.ts`, `!packages/data-cell-g/src/index.tsx`])
         .pipe(tsProject())
         .pipe(dest(`packages/gantd/${targetDir}/${__dirName === 'data-cell' ? '' : (__dirName + '/')}`))
         .pipe(filter(file => !file.path.endsWith('.d.ts')))
