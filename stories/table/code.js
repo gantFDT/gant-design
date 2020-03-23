@@ -154,7 +154,7 @@ function EditorTable() {
   const [address] = useState([{ value: '1', label: '地址1' }, { value: '2', label: '地址2' }])
   const getKey = useCallback(() => Math.random().toString('16').slice(2), [])
 
-  const [dataSource, setDataSource] = useState(() => getEditList(100), [])
+  const [dataSource, setDataSource] = useState(() => getEditList(10), [])
 
   const editorColumns = [
     {
@@ -216,11 +216,12 @@ function EditorTable() {
         <Button size='small' onClick={() => { setEditing(EditStatus.SAVE) }}>保存</Button>
       </>
     }
+    // defaultExpandAllRows
     editable={editing}
     editActions={actions}
     onSave={setDataSource}
     scroll={{ y: 400 }}
-    virtualScroll={{ rowHeight: 26 }}
+  // virtualScroll={{ rowHeight: 24 }}
   />
 }
 

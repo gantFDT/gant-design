@@ -388,6 +388,37 @@ const defineProperties = function defineProperties(obj: Object, data: any) {
   Object.defineProperties(obj, data)
 }
 export const originKey = "__origin"
+
+/**
+ * 计算序号和可展开rowKey
+ */
+export const computeIndexAndRowKey = function computeIndexAndRowKey<T extends Record>(list: T[], computedRowKey): [T[], string[]] {
+  const rowKey: string[] = [];
+  let index = 0
+
+  const items: any[] = [
+    {
+      root: true,
+      children: list
+    }
+  ]
+  while (items.length) {
+    const item = items.shift()
+    if (!item.root) {
+      item["g-index"] = ++index
+      item["g-row-key"] = computedRowKey(item, index)
+    }
+    if (!_.isUndefined(item.children)) {
+      if (!item.root) rowKey.push(item["g-row-key"])
+      if (item.children.length) {
+        items.unshift(...item.children)
+      }
+    }
+  }
+
+  return [list, rowKey]
+}
+
 export const cloneDatasource = function cloneDatasource<T extends Record>(dataSource: T[]): T[] {
   return dataSource.map((item: T) => {
     const freezeObj = _.cloneDeep(item);
@@ -423,7 +454,7 @@ export const diffList = <T extends Record>(oldList: T[], newList: T[], isTree = 
     }
     else {
       const oldItem = newItem[originKey]
-      let [oi, ni] = [, newItem];
+      let [oi, ni] = [oldItem, newItem];
       if (isTree) {
         oi = _.omit(oldItem, 'children') as T;
         ni = _.omit(newItem, 'children') as T
@@ -443,6 +474,7 @@ export const diffList = <T extends Record>(oldList: T[], newList: T[], isTree = 
         }
       }
       //   // 比较数据本身
+      console.log(oi, ni)
       if (!_.isEqual(oi, ni)) {
         result[1].push(_.cloneDeep(ni))
       }
@@ -505,29 +537,29 @@ export const getComputedColIndex = (cols): string[] => {
  * @param {number} withIndex 
  * @param {number} parent 
  */
-export const computeIndex = function computeIndex<T>(list: Array<T>, expandRowKeys = [], computedRowKey, virtualScroll: boolean): [T[], string[], T[]] {
+export const computeIndex = function computeIndex<T>(list: Array<T>, expandRowKeys = [], computedRowKey, virtualScroll: boolean, expandLevel: number): [T[], string[], T[], string[]] {
   // console.time('计算序号')
+  // 所有数据的key
   const renderRowKeys: string[] = []
+  // 所有数据平铺结构
   const tilingList: T[] = [];
+  // 所有可以展开的数据key
+  const expandableRowKeys: string[] = []
+
   const items = []
-  const root = {
-    'g-root': true,
-    children: list
-  }
   items.push({
     nestLevel: 0,
-    node: root
+    node: {
+      'g-root': true,
+      children: list
+    }
   })
-  let index = 0;
 
   while (items.length) {
     const { node, nestLevel, "g-parent-row-key": gprk, "g-parent": gp } = items.shift();
-    let rowKey;
+    let rowKey = node["g-row-key"]
     if (!node['g-root']) {
-      node["g-index"] = ++index
       node["g-level"] = nestLevel
-      rowKey = computedRowKey(node, node["g-index"])
-      node["g-row-key"] = rowKey
       // 关联父级节点
       if (gprk !== undefined) {
         node["g-parent-row-key"] = gprk;
@@ -544,6 +576,7 @@ export const computeIndex = function computeIndex<T>(list: Array<T>, expandRowKe
         if (
           !virtualScroll ||
           node['g-root'] ||
+          nestLevel <= expandLevel ||
           expandRowKeys.includes(rowKey)
         ) {
           items.unshift(...node.children.map(child => ({
@@ -557,10 +590,13 @@ export const computeIndex = function computeIndex<T>(list: Array<T>, expandRowKe
           node.children = []
         }
       }
+      if (!node['g-root']) {
+        expandableRowKeys.push(rowKey)
+      }
     }
   }
   // console.timeEnd('计算序号')
-  return [list, renderRowKeys, tilingList]
+  return [list, renderRowKeys, tilingList, expandableRowKeys]
 }
 
 /**
