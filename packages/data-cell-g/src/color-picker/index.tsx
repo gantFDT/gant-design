@@ -24,7 +24,7 @@ class ColorPicker extends React.Component<GantColorPickerProps> {
     const { ...props } = this.props
 
     return (
-      <GantColorPicker {...props} />
+      <span><GantColorPicker {...props} /></span>
     )
   }
 

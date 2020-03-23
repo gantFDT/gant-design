@@ -65,12 +65,12 @@ function BasicTable(props) {
 
   const headerRight = useMemo(() => {
     return (
-      <Button onClick={toggleResizable} key='1' >{resizable ? "禁止缩放" : "允许缩放"}</Button>
+      <Button size='small' onClick={toggleResizable} key='1' >{resizable ? "禁止缩放" : "允许缩放"}</Button>
     )
   }, [resizable])
 
   const headerLeft = useMemo(() => {
-    return <>{resizable ? '当前可缩放' : '当前不可缩放'}</>
+    return <div>{resizable ? '当前可缩放' : '当前不可缩放'}</div>
   }, [resizable])
 
   return <Table
@@ -78,7 +78,7 @@ function BasicTable(props) {
     dataSource={dataSource}
     resizable={resizable}
     headerRight={headerRight}
-    headerLeft={headerLeft}
+    title={headerLeft}
   />
 }
 /*! Split !*/
@@ -136,8 +136,8 @@ function EditorTable() {
   const actions = ([editDataList, setEditDataList], selectedRowKeys) => {
     return (
       <>
-        <Button onClick={() => { setEditDataList((list) => [{ key: getKey() }, ...list]) }}>添加到第一行</Button>
-        <Button onClick={() => { setEditDataList(([first, ...list]) => list) }}>删除第一行</Button>
+        <Button size='small' onClick={() => { setEditDataList((list) => [{ key: getKey() }, ...list]) }}>添加到第一行</Button>
+        <Button size='small' onClick={() => { setEditDataList(([first, ...list]) => list) }}>删除第一行</Button>
       </>
     )
   }
@@ -146,8 +146,8 @@ function EditorTable() {
     dataSource={dataSource}
     headerRight={
       <>
-        <Button onClick={() => { setEditing(SwitchStatus) }}>{editing === EditStatus.EDIT ? "退出" : "进入"}编辑</Button>
-        <Button onClick={() => { setEditing(EditStatus.SAVE) }}>保存</Button>
+        <Button size='small' onClick={() => { setEditing(SwitchStatus) }}>{editing === EditStatus.EDIT ? "退出" : "进入"}编辑</Button>
+        <Button size='small' onClick={() => { setEditing(EditStatus.SAVE) }}>保存</Button>
       </>
     }
     editable={editing}
@@ -394,7 +394,7 @@ function WideTable() {
     onDragEnd={setdata}
     headerRight={(
       <>
-        <Button onClick={tollgleFixed}>切换固定列</Button>
+        <Button size='small' onClick={tollgleFixed}>切换固定列</Button>
       </>
     )}
     scroll={{ x: 2000, y: 400 }}

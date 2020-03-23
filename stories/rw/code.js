@@ -37,7 +37,7 @@ const EditStatusUse = () => {
         onSave={onSave}
         value={value}
         onChange={setValue}
-        className='gant-margin-5'
+        wrapClassName='gant-margin-5'
       />
     </>
   )
@@ -74,7 +74,7 @@ const SwitchStatusUse = () => {
         onSave={onSave}
         value={value}
         onChange={setValue}
-        className='gant-margin-5'
+        wrapClassName='gant-margin-5'
       />
     </>
   )

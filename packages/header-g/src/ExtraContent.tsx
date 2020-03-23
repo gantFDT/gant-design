@@ -17,8 +17,8 @@ export default memo(function ExtraContent({ width = 0, height = 0, tools, prefix
 	const getDrapContent = useMemo(() => {
 		if (startIndex === -1) return null;
 		const renderDrapChildren = []
-		 React.Children.map(tools, (item, index) => {
-			if (index > startIndex) renderDrapChildren.push(<div key={index} style={{ margin: '5px' }}>{item}</div>)
+		React.Children.map(tools, (item, index) => {
+			if (index <= startIndex) renderDrapChildren.push(<div key={index} style={{ margin: '5px' }}>{item}</div>)
 		})
 		return renderDrapChildren
 	}, [tools, startIndex])
@@ -28,29 +28,28 @@ export default memo(function ExtraContent({ width = 0, height = 0, tools, prefix
 		})
 		const renderChildren = []
 		React.Children.map(tools, (item, index) => {
-			if (index <= startIndex) {
+			if (index > startIndex) {
 				renderChildren.push(React.cloneElement(item, { key: index }))
 			}
 		})
 		return renderChildren
 	}, [tools, startIndex]);
 	const toolsRef = useRef<HTMLDivElement>(null)
-	useEffect(() => {
+	const ref = useRef<HTMLDivElement>(null)
+	useLayoutEffect(() => {
 		if (toolsRef.current && (width)) {
-
-			const toolsRefHeight = toolsRef.current.offsetHeight + 1;
-			setToolsHeight(toolsRefHeight)
-			if (width - 30 >= toolsRef.current.clientWidth) return setStartIndex(-1);
-
+			const toolsRefHeight = toolsRef.current.clientHeight + 1;
+			setToolsHeight(toolsRefHeight);
+			if (width - toolsRefHeight - 20 >= toolsRef.current.clientWidth) return setStartIndex(-1);
 			let toolWidth = 0;
 			const childrenItems = toolsRef.current.children;
-			for (let i = 0; i < childrenItems.length; i++) {
+			for (let i = childrenItems.length - 1; i >= 0; i--) {
 				const childItem = childrenItems.item(i);
 				const { width: styleWidth, marginLeft, marginRight } = getComputedStyle(childItem);
 				const itemWidth = parseInt(styleWidth) + parseInt(marginLeft) + parseInt(marginRight);
 				toolWidth += itemWidth;
-				if (toolWidth + toolsRefHeight > width - 30) {
-					return setStartIndex(i - 1)
+				if (toolWidth + toolsRefHeight + 20 > width) {
+					return setStartIndex(i)
 				}
 			}
 			return setStartIndex(-1)
@@ -58,8 +57,8 @@ export default memo(function ExtraContent({ width = 0, height = 0, tools, prefix
 	}, [toolsRef.current, width])
 
 	return (
-		<div className={`${prefixCls}-extra`}  >
-			<div className={`${prefixCls}-extra-tools`} style={{ height: toolsHeight }} >
+		<div className={`${prefixCls}-extra`} style={{ width }} >
+			<div className={`${prefixCls}-extra-tools`} style={{ height: toolsHeight }} ref={ref} >
 				{renderExtra}
 				{
 					startIndex > -1 && <Dropdown

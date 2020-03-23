@@ -6,6 +6,9 @@
         width: 100%;
         min-height: 40px;
         padding: 2px 0;
+        display: flex;
+        position: relative;
+        justify-content: space-between;
         &:after {
             content: '';
             width: 100%;
@@ -17,6 +20,8 @@
         &-wrapper {
             display: flex;
             align-items: center;
+            flex-flow: row;
+            flex-wrap: nowrap;
         }
         &-menu>* {
             margin: 0px 5px;
@@ -34,6 +39,7 @@
             -webkit-line-clamp: 1;
             -webkit-box-orient: vertical;
             word-break: break-all;
+            white-space: nowrap;
         }
         &-line {
             width: 3px;
@@ -64,6 +70,7 @@
     .@{flex-group}-outer {
         position: relative;
         flex: 1;
+        align-self: center;
         .@{flex-group}-inner {
             display: flex;
             align-items: center;
@@ -104,8 +111,13 @@
                     opacity: 0;
                     position: fixed;
                     transform: translateY(-10000px);
+                    // white-space: nowrap;
+                    display: flex;
+                    flex-flow: row;
+                    flex-wrap: nowrap;
                     >* {
                         margin: 0px 5px;
+                        
                     }
                 }
             }
