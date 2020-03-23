@@ -229,17 +229,18 @@ function SmartTable<R>(props: SmartTableProps<R>) {
   });
 
   const HeaderRight: ReactNode = (
-    <Receiver>
-      {(locale) => <>
+      <>
         {headerRight}
         {onReload && (
-          <Tooltip title={locale.reload}>
-            <Button size="small" icon="reload" className="" onClick={() => onReload()} />
-          </Tooltip>
+          <Receiver>
+            {
+              (locale) => <Tooltip title={locale.reload}>
+                <Button size="small" icon="reload" className="" onClick={() => onReload()} />
+              </Tooltip>
+            }
+          </Receiver>
         )}
-      </>}
-    </Receiver>
-
+      </>
   );
   const titleRef = useRef(null);
 
