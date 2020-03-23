@@ -18,7 +18,7 @@ export default memo(function ExtraContent({ width = 0, height = 0, tools, prefix
 		if (startIndex === -1) return null;
 		const renderDrapChildren = []
 		React.Children.map(tools, (item, index) => {
-			if (index <= startIndex) renderDrapChildren.push(<div key={index} style={{ margin: '5px' }}>{item}</div>)
+			if (index >= startIndex) renderDrapChildren.push(<div key={index} style={{ margin: '5px' }}>{item}</div>)
 		})
 		return renderDrapChildren
 	}, [tools, startIndex])
@@ -28,7 +28,7 @@ export default memo(function ExtraContent({ width = 0, height = 0, tools, prefix
 		})
 		const renderChildren = []
 		React.Children.map(tools, (item, index) => {
-			if (index > startIndex) {
+			if (index < startIndex) {
 				renderChildren.push(React.cloneElement(item, { key: index }))
 			}
 		})
@@ -39,15 +39,19 @@ export default memo(function ExtraContent({ width = 0, height = 0, tools, prefix
 	useLayoutEffect(() => {
 		if (toolsRef.current && (width)) {
 			const toolsRefHeight = toolsRef.current.clientHeight + 1;
-			setToolsHeight(toolsRefHeight);
-			if (width - toolsRefHeight - 20 >= toolsRef.current.clientWidth) return setStartIndex(-1);
+			if (width - toolsRefHeight - 20 >= toolsRef.current.clientWidth) {
+				setToolsHeight(toolsRefHeight);
+				setStartIndex(-1);
+			}
 			let toolWidth = 0;
 			const childrenItems = toolsRef.current.children;
-			for (let i = childrenItems.length - 1; i >= 0; i--) {
+			for (let i = 0; i < childrenItems.length - 1; i++) {
 				const childItem = childrenItems.item(i);
-				const { width: styleWidth, marginLeft, marginRight } = getComputedStyle(childItem);
+				const { width: styleWidth, marginLeft, marginRight, height } = getComputedStyle(childItem);
 				const itemWidth = parseInt(styleWidth) + parseInt(marginLeft) + parseInt(marginRight);
 				toolWidth += itemWidth;
+				const itemHeight = parseInt(height)
+				setToolsHeight((toolsHeight) => itemHeight > toolsHeight ? itemHeight : toolsHeight);
 				if (toolWidth + toolsRefHeight + 20 > width) {
 					return setStartIndex(i)
 				}
