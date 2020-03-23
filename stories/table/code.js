@@ -80,7 +80,7 @@ function BasicTable(props) {
   />
 }
 
-ReactDOM.render(<dataSource />, mountNode)`,`
+ReactDOM.render(<BasicTable />, mountNode)`,`
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { Button, Slider } from 'antd'
 import { Table, EditStatus, SwitchStatus, Input, InputNumber, Selector } from 'gantd'
@@ -399,7 +399,7 @@ function NestTable(props) {
   return <Table columns={columns} dataSource={dataSource} scroll={{ x: 1050 }} />
 }
 
-ReactDOM.render(<dataSource />, mountNode)`,`
+ReactDOM.render(<NestTable />, mountNode)`,`
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { Button, Slider } from 'antd'
 import { Table, EditStatus, SwitchStatus, Input, InputNumber, Selector } from 'gantd'
@@ -484,6 +484,70 @@ function ScrollTable() {
 }
 
 ReactDOM.render(<ScrollTable />, mountNode)`,`
+import React, { useState, useCallback, useEffect, useMemo } from 'react'
+import { Button, Slider } from 'antd'
+import { Table, EditStatus, SwitchStatus, Input, InputNumber, Selector } from 'gantd'
+const { Random } = Mock
+const getList = function getList(length = 5) {
+  return Array.from({ length }).map(() => Mock.mock({
+    "name|1": Random.cname(),
+    "age|1-100": 1,
+    "address|1": Random.county()
+  }))
+}
+const getEditList = function getList(length = 5) {
+  return Array.from({ length }).map(() => Mock.mock({
+    "name|1": Random.cname(),
+    "age|1-100": 1
+  }))
+}
+const getNestList = function getNestList(length = 15) {
+  return Array.from({ length }).map(() => Mock.mock({
+    "name|1": Random.cname(),
+    "age|1-100": 1,
+    "address|1": Random.county(),
+    "cName|1": Random.cparagraph(1),
+    "createDate|1": Random.date(),
+    "cAddress|1": Random.county(),
+    "street|1": Random.cparagraph(1),
+    "email|000000-999999": 1,
+    "boss|1": Random.cname()
+  }))
+}
+const columns = [
+  {
+    title: '姓名',
+    dataIndex: 'name',
+    key: 'name',
+    showTip: true,
+  },
+  {
+    title: '年龄',
+    dataIndex: 'age',
+    key: 'age',
+  },
+  {
+    title: '住址',
+    dataIndex: 'address',
+    key: 'address',
+  },
+];
+
+
+// 拖动排序
+function DragTable(props) {
+  const [dataSource, setdataSource] = useState(() => getList(20))
+
+
+  return <Table
+    columns={columns}
+    dataSource={dataSource}
+    onDragEnd={setdataSource}
+    scroll={{ y: 300 }}
+  />
+}
+
+ReactDOM.render(<DragTable />, mountNode)`,`
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { Button, Slider } from 'antd'
 import { Table, EditStatus, SwitchStatus, Input, InputNumber, Selector } from 'gantd'
@@ -928,7 +992,7 @@ function PaginationTable(props) {
   />
 }
 
-ReactDOM.render(<dataSource />, mountNode)`,`
+ReactDOM.render(<PaginationTable />, mountNode)`,`
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { Button, Slider } from 'antd'
 import { Table, EditStatus, SwitchStatus, Input, InputNumber, Selector } from 'gantd'
@@ -1012,4 +1076,60 @@ function LightTable(props) {
   )
 }
 
-ReactDOM.render(<getlist />, mountNode)`,]
+ReactDOM.render(<LightTable />, mountNode)`,`
+import React, { useState, useCallback, useEffect, useMemo } from 'react'
+import { Button, Slider } from 'antd'
+import { Table, EditStatus, SwitchStatus, Input, InputNumber, Selector } from 'gantd'
+const { Random } = Mock
+const getList = function getList(length = 5) {
+  return Array.from({ length }).map(() => Mock.mock({
+    "name|1": Random.cname(),
+    "age|1-100": 1,
+    "address|1": Random.county()
+  }))
+}
+const getEditList = function getList(length = 5) {
+  return Array.from({ length }).map(() => Mock.mock({
+    "name|1": Random.cname(),
+    "age|1-100": 1
+  }))
+}
+const getNestList = function getNestList(length = 15) {
+  return Array.from({ length }).map(() => Mock.mock({
+    "name|1": Random.cname(),
+    "age|1-100": 1,
+    "address|1": Random.county(),
+    "cName|1": Random.cparagraph(1),
+    "createDate|1": Random.date(),
+    "cAddress|1": Random.county(),
+    "street|1": Random.cparagraph(1),
+    "email|000000-999999": 1,
+    "boss|1": Random.cname()
+  }))
+}
+const columns = [
+  {
+    title: '姓名',
+    dataIndex: 'name',
+    key: 'name',
+    showTip: true,
+  },
+  {
+    title: '年龄',
+    dataIndex: 'age',
+    key: 'age',
+  },
+  {
+    title: '住址',
+    dataIndex: 'address',
+    key: 'address',
+  },
+];
+
+
+function EmptyTable(props) {
+
+  return <Table columns={columns} dataSource={[]} scroll={{ x: '100%', y: 350 }} pagination={false} emptyDescription='这个表格是空的' />
+}
+
+ReactDOM.render(<EmptyTable />, mountNode)`,]
