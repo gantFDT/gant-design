@@ -1,9 +1,9 @@
 export default [
 `
 import React, { useState, useCallback } from 'react'
-import { Divider, Tag, Radio, Button, message, ConfigProvider } from 'antd'
+import { Divider, Tag, Radio, Button, message, ConfigProvider, Rate } from 'antd'
 import { SmartTable, EditStatus, SwitchStatus } from 'gantd'
-const { mock, Random } = Mock
+const { Random } = Mock
 
 
 var dataSource = Array(10).fill().map((_, Idx) => ({
@@ -73,9 +73,9 @@ function BasicUse() {
 
 ReactDOM.render(<BasicUse />, mountNode)`,`
 import React, { useState, useCallback } from 'react'
-import { Divider, Tag, Radio, Button, message, ConfigProvider } from 'antd'
+import { Divider, Tag, Radio, Button, message, ConfigProvider, Rate } from 'antd'
 import { SmartTable, EditStatus, SwitchStatus } from 'gantd'
-const { mock, Random } = Mock
+const { Random } = Mock
 
 
 var dataSource = Array(10).fill().map((_, Idx) => ({
@@ -175,9 +175,9 @@ function ConfigColumnsUse() {
 
 ReactDOM.render(<ConfigColumnsUse />, mountNode)`,`
 import React, { useState, useCallback } from 'react'
-import { Divider, Tag, Radio, Button, message, ConfigProvider } from 'antd'
+import { Divider, Tag, Radio, Button, message, ConfigProvider, Rate } from 'antd'
 import { SmartTable, EditStatus, SwitchStatus } from 'gantd'
-const { mock, Random } = Mock
+const { Random } = Mock
 
 
 var dataSource = Array(10).fill().map((_, Idx) => ({
@@ -274,7 +274,7 @@ function ConfigDisplayUse() {
         pageSize={pageSize}
         onPageChange={(page,pageSize)=>{console.log(page, pageSize);setPage(page);setPageSize(pageSize)}}
         totalCount={10}
-        // pageSizeOptions={['5', '10', '15', '20']}
+        pageSizeOptions={['5', '10', '15', '20']}
       />
     </div>
   )
@@ -282,9 +282,9 @@ function ConfigDisplayUse() {
 
 ReactDOM.render(<ConfigDisplayUse />, mountNode)`,`
 import React, { useState, useCallback } from 'react'
-import { Divider, Tag, Radio, Button, message, ConfigProvider } from 'antd'
+import { Divider, Tag, Radio, Button, message, ConfigProvider, Rate } from 'antd'
 import { SmartTable, EditStatus, SwitchStatus } from 'gantd'
-const { mock, Random } = Mock
+const { Random } = Mock
 
 
 var dataSource = Array(10).fill().map((_, Idx) => ({
@@ -407,9 +407,9 @@ function MultiViewUse() {
 
 ReactDOM.render(<MultiViewUse />, mountNode)`,`
 import React, { useState, useCallback } from 'react'
-import { Divider, Tag, Radio, Button, message, ConfigProvider } from 'antd'
+import { Divider, Tag, Radio, Button, message, ConfigProvider, Rate } from 'antd'
 import { SmartTable, EditStatus, SwitchStatus } from 'gantd'
-const { mock, Random } = Mock
+const { Random } = Mock
 
 
 // import zhCN from 'antd/es/locale/zh_CN' // 按模块导入
@@ -491,11 +491,14 @@ function LocalUse() {
 
 ReactDOM.render(<LocalUse />, mountNode)`,`
 import React, { useState, useCallback } from 'react'
-import { Divider, Tag, Radio, Button, message, ConfigProvider } from 'antd'
+import { Divider, Tag, Radio, Button, message, ConfigProvider, Rate } from 'antd'
 import { SmartTable, EditStatus, SwitchStatus } from 'gantd'
-const { mock, Random } = Mock
+const { Random } = Mock
 
 
+SmartTable.setField({ // 拓展componentType字段类型
+  'Rate': Rate
+})
 var editTableColumns = [
   {
     fieldName: 'name',
@@ -547,6 +550,10 @@ var editTableColumns = [
     fieldName: 'birth',
     title: '生日',
     componentType: 'DatePicker'
+  },{
+    fieldName: 'star',
+    title: '星级',
+    componentType: 'Rate'
   }
 ]
 var editTableSchema = {
@@ -594,6 +601,10 @@ var editTableSchema = {
           {
             fieldName: 'birth',
             width: 160
+          },
+          {
+            fieldName: 'star',
+            width: 160
           }
         ]
       }
@@ -610,6 +621,7 @@ var editTableData = Array(15).fill().map(() => ({
   bio: [{ value: Random.cparagraph(1, 3) }],
   price: { value: Random.float(9, 50, 2, 2) },
   address: ["CHN", "510000", "510100"],
+  star: Random.natural(0, 5),
 }))
 function EditInlineUse() {
   const [stateData, setStateData] = useState(editTableData)
