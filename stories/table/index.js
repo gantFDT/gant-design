@@ -5,7 +5,7 @@ import Mock from 'mockjs'
 /*! Start !*/
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { Button, Slider } from 'antd'
-import { Table, EditStatus, SwitchStatus, Input, InputNumber, Selector } from '@gantd'
+import { Table, EditStatus, SwitchStatus, Input, InputNumber, Selector, InputUrl } from '@gantd'
 const { Random } = Mock
 const getList = function getList(length = 5) {
   return Array.from({ length }).map(() => Mock.mock({
@@ -19,13 +19,6 @@ const getEditList = function getList(length = 5) {
     "name|1": Random.cname(),
     "age|1-100": 1,
     "key|0000-9999": 1,
-    "children|1-3": [
-      {
-        "name|1": Random.cname(),
-        "key|0000-9999": 1,
-        "age|1-100": 1,
-      }
-    ]
   }))
 }
 const getNestList = function getNestList(length = 15) {
@@ -97,7 +90,7 @@ function EditorTable() {
   const [address] = useState([{ value: '1', label: '地址1' }, { value: '2', label: '地址2' }])
   const getKey = useCallback(() => Math.random().toString('16').slice(2), [])
 
-  const [dataSource, setDataSource] = useState(() => getEditList(10), [])
+  const [dataSource, setDataSource] = useState(() => getEditList(20), [])
 
   const editorColumns = [
     {
@@ -159,7 +152,6 @@ function EditorTable() {
         <Button size='small' onClick={() => { setEditing(EditStatus.SAVE) }}>保存</Button>
       </>
     }
-    // defaultExpandAllRows
     editable={editing}
     editActions={actions}
     onSave={setDataSource}
@@ -559,7 +551,6 @@ const TreeTable = () => {
       selectedRowKeys: keys,
       clickable: false,
       onChange: (keys, rows) => {
-        console.log(rows)
         setKeys(keys)
       },
     }}
@@ -686,11 +677,11 @@ const config = {
       describe: '',
       cmp: DragTable
     },
-    {
-      title: '宽表格',
-      describe: '在小屏幕上出现滚动条,设置fixed的列必须设置宽度，试试缩小屏幕。同时，因为有固定列，所以wrap使文本折行的属性不能生效',
-      cmp: WideTable
-    },
+    // {
+    //   title: '宽表格',
+    //   describe: '在小屏幕上出现滚动条,设置fixed的列必须设置宽度，试试缩小屏幕。同时，因为有固定列，所以wrap使文本折行的属性不能生效',
+    //   cmp: WideTable
+    // },
     {
       title: '树形表格、级联选择',
       describe: '树形表格,级联选择, 与antd组件相比，多选情况下onSelect第一个参数修改为了数组。datasource中有children属性自动开启树形结构, rowSelection为对象开启选择，增强选择的时候判断是否有子节点并一起选中,clickable: false用于关闭行选功能',

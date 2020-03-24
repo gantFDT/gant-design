@@ -97,9 +97,10 @@ export const useRowSelection = <T extends Record>(rowSelection: RowSelection<T>,
   useEffect(
     () => {
       // 去掉g-row-key
-      const rows = flatRecords.filter(record => selectedRowKeys.includes(record["g-row-key"])).map(item => _.omit(item, ["g-row-key"]))
+      const rows = flatRecords.filter(record => selectedRowKeys.includes(record["g-row-key"]))
       if (typeof _.get(rowSelection, 'onChange') === 'function') {
-        rowSelection.onChange(selectedRowKeys, rows)
+        const pureRows = getPureList(rows)
+        rowSelection.onChange(selectedRowKeys, pureRows)
       }
     },
     [selectedRowKeys]
@@ -134,9 +135,10 @@ export const useRowSelection = <T extends Record>(rowSelection: RowSelection<T>,
         setselectedRowKeys([key])
       }
       if (typeof rowSelection.onSelect === 'function') {
-        // 去掉g-row-key
-        const rows = (isMultiple ? getFlatRecords([record]) : record).map(item => _.omit(item, ["g-row-key"]))
-        rowSelection.onSelect(rows, selected)
+        const rows: T[] = isMultiple ? getFlatRecords([record]) : record
+        // 获取纯净数据
+        const pureRows = getPureList(rows)
+        rowSelection.onSelect(pureRows, selected)
       }
     },
     [rowSelection],
@@ -144,6 +146,8 @@ export const useRowSelection = <T extends Record>(rowSelection: RowSelection<T>,
 
 
   // 设置选中的行,供外部使用
+  // 获取到的实际时行数据，会带有children,但是不会有非enumerable属性
+  // 为了统一，需要omit掉
   const setKeys = useCallback(
     (record: T): void => {
       if (typeof rowSelection !== 'undefined') {
@@ -154,6 +158,8 @@ export const useRowSelection = <T extends Record>(rowSelection: RowSelection<T>,
     [originSelectedKeys, rowSelection]
   )
   // 点击选择框
+  // 默认的选择功能
+  // 不会带有children, 但有非enumerable属性
   const onSelect = useCallback(
     (...args) => {
       onSelectRow(...args as [T, boolean]);
@@ -450,10 +456,7 @@ export const diffList = <T extends Record>(oldList: T[], newList: T[], isTree = 
     const isAdd = !newItem.hasOwnProperty(originKey)
 
     if (isAdd) {
-      result[0].push(newItem)
-      if (_.get(newItem, "children.length")) {
-        pushChildrenToList(result[0], newItem.children)
-      }
+      pushChildrenToList(result[0], [newItem])
     }
     else {
       const oldItem = newItem[originKey]
@@ -477,9 +480,10 @@ export const diffList = <T extends Record>(oldList: T[], newList: T[], isTree = 
         }
       }
       //   // 比较数据本身
-      console.log(oi, ni)
+      oi = getPureRecord(oi)
+      ni = getPureRecord(ni)
       if (!_.isEqual(oi, ni)) {
-        result[1].push(_.cloneDeep(ni))
+        result[1].push(ni)
       }
     }
     return result
@@ -489,13 +493,11 @@ export const diffList = <T extends Record>(oldList: T[], newList: T[], isTree = 
   // 4、计算修改节点
   // console.time('计算删改节点')
   oldList.reduce((list, oldItem) => {
-    const isDelete = newList.every(newItem => !_.isEqual(newItem[originKey], oldItem))
+    const pureOld = getPureRecord(oldItem)
+    const isDelete = newList.every(newItem => !_.isEqual(getPureRecord(newItem[originKey]), pureOld))
     if (isDelete) {
       // 删除的数据
-      list.push(oldItem)
-      if (isTree && _.get(oldItem, "children.length")) {
-        pushChildrenToList(list, oldItem.children)
-      }
+      pushChildrenToList(list, [oldItem])
     }
     return list
   }, delList)
@@ -503,10 +505,10 @@ export const diffList = <T extends Record>(oldList: T[], newList: T[], isTree = 
   return [addList, delList, modifyList]
 }
 
-const pushChildrenToList = (list, sub) => {
-  sub.forEach(item => {
-    list.push(item)
-    if (item.children && item.children.length) {
+const pushChildrenToList = (list, items) => {
+  items.forEach(item => {
+    list.push(getPureRecord(item))
+    if (_.get(item, "children.length")) {
       pushChildrenToList(list, item.children)
     }
   })
@@ -531,11 +533,9 @@ export const getComputedColIndex = (cols): string[] => {
     })
   }
   inner(cols)
-  // console.timeEnd('计算columnIndex')
   return colIndexs
 }
 /**
- * 给list计算g-index属性
  * @param {Array} list 
  * @param {number} withIndex 
  * @param {number} parent 
@@ -562,14 +562,16 @@ export const computeIndex = function computeIndex<T>(list: Array<T>, expandRowKe
     const { node, nestLevel, "g-parent-row-key": gprk, "g-parent": gp } = items.shift();
     let rowKey = node["g-row-key"]
     if (!node['g-root']) {
-      node["g-level"] = nestLevel
+      defineProperty(node, "g-level", nestLevel)
       // 关联父级节点
       if (gprk !== undefined) {
-        node["g-parent-row-key"] = gprk;
-        node["g-parent"] = gp
+        defineProperties(node, {
+          ["g-parent-row-key"]: gprk,
+          ["g-parent"]: gp,
+        })
       } else {
         // 根节点
-        node["g-parent-row-key"] = 'root'
+        defineProperty(node, "g-parent-row-key", 'root')
       }
       renderRowKeys.push(rowKey)
       tilingList.push(node)
@@ -579,7 +581,7 @@ export const computeIndex = function computeIndex<T>(list: Array<T>, expandRowKe
         if (
           !virtualScroll ||
           node['g-root'] ||
-          nestLevel <= expandLevel ||
+          // nestLevel <= expandLevel ||
           expandRowKeys.includes(rowKey)
         ) {
           items.unshift(...node.children.map(child => ({
@@ -652,13 +654,16 @@ export const getVirtualList = function getVirtualList<T extends Record>(start: n
   return result
 }
 
-export const omitGTableProps = function omitGTableProps<T extends Record>(list: T[]): T[] {
-  return list.map(item => {
-    // 去掉g-parent, g-parent-row-key, g-level,此数据用于实际渲染
-    const newItem = _.omit(item, ["g-parent", "g-parent-row-key", "g-level"])
-    if (item.children !== undefined) {
-      newItem.children = omitGTableProps(item.children)
-    }
-    return newItem
-  })
+// 获取纯净数据
+
+export const getPureRecord = function getPureRecord<T extends Record>(record: T, exclude: string[] = []): T {
+  let omitPropo = ["g-parent", "g-parent-row-key", "g-level", "children", "g-row-key", "g-index"]
+  if (exclude.length) {
+    omitPropo = _.difference(omitPropo, exclude)
+  }
+  return _.omit(record, omitPropo)
+}
+
+export const getPureList = function getPureList<T extends Record>(list: T[]): T[] {
+  return list.map(item => getPureRecord(item))
 }
