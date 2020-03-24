@@ -25,7 +25,7 @@ import {
     getComputedColIndex,
     computeIndex,
     getVirtualList,
-    omitGTableProps,
+    getPureRecord,
     cloneDatasource,
     getStyleText,
     originKey
@@ -264,11 +264,11 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
         }
         setCacheDataList(list => {
             if (isEdit) {
-                return cloneDatasource(dataSource)
+                return cloneDatasource(dataList)
             }
             return []
         })
-    }, [dataSource, isEdit])
+    }, [dataList, isEdit])
 
     //#endregion
     // 处理表格columns，可能有嵌套头部    
@@ -344,9 +344,8 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
         if (virtualScroll) {
             list = getVirtualList(outlineNum, thresholdInner, renderRowKeys, tilingListAll)
         }
-        return omitGTableProps(list)
+        return list
     }, [virtualScroll, outlineNum, renderRowKeys, tilingListAll])
-
     //#endredion
     const minHeight = useMemo(() => renderList.length > 0 ? scrollY : undefined, [scrollY, renderList])
     const storageWidth = useMemo(() => getStorageWidth(tableKey)['table'] || _.get(scroll, 'x') || '100%', [tableKey])
@@ -362,15 +361,14 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
             // 保存之后，锁上保证下次更新不会再次进入
             setLock(true)
             console.time('计算diff')
-            const diffData = diffList(dataSource, cacheDataList, isTree)
+            const diffData = diffList(dataList, cacheDataList, isTree)
             console.timeEnd('计算diff')
-            console.log(diffData)
             onSave(_.cloneDeep(cacheDataList), diffData)
         }
-    }, [editable, dataSource, cacheDataList, isTree, lock])
+    }, [editable, dataList, cacheDataList, isTree, lock])
     //行选择
     //#region
-    const [computedRowSelection, setselectedRowKeys, footerselection] = useRowSelection(rowSelection, renderList, bordered)
+    const [computedRowSelection, setselectedRowKeys, footerselection] = useRowSelection(rowSelection, dataListWithIndex, bordered)
     const computedPagination = usePagination(pagination, computedRowSelection, dataSource.length)
     const footerCallback = useCallback((currentPageData) => {
         return (
@@ -662,7 +660,7 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
                 let checkable = true
                 if (getCheckBoxProps && typeof getCheckBoxProps === 'function') {
                     const boxProps = getCheckBoxProps(record)
-                    checkable = _.get(boxProps, 'disable')
+                    checkable = !_.get(boxProps, 'disable')
                 }
                 if (checkable) {
                     defaultRowProps.onClick = e => {
@@ -761,7 +759,8 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
                 onExpandedRowsChange(rowkey)
             }
             if (onExpand) {
-                onExpand(expanded, _.omit(record, ["g-row-key"]))
+                const pureRecord = getPureRecord<T>(record)
+                onExpand(expanded, pureRecord)
             }
         },
         [onExpandedRowsChange, onExpand, expandRowKeys],
@@ -872,7 +871,8 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
                                 bordered={bordered}
                                 dataSource={renderList}
                                 onRow={onRow}
-                                rowKey={computedRowKey}
+                                // rowKey={computedRowKey}
+                                rowKey='g-row-key'
                                 components={{ ...components, ...tableProps.components }}
                                 pagination={false}
                                 footer={footer}
