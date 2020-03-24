@@ -515,7 +515,7 @@ var editTableColumns = [
   {
     fieldName: 'domain',
     title: '个人主页',
-    // componentType: 'InputUrl'
+    componentType: 'InputUrl'
   },
   {
     fieldName: 'email',
