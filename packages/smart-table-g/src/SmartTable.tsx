@@ -3,19 +3,15 @@ import { Tooltip, Button, Spin } from 'antd';
 import moment from 'moment';
 import { isEmpty } from 'lodash';
 import Table from '@table';
-// import BlockHeader from '@header';
 import ConfigModal from './config';
 import CustomExpandIcon from './customexpandicon';
-import { LocalWrapperProps, SmartTableProps, ViewConfig, ViewListProps } from './interface';
+import { SmartTableType, SmartTableProps, ViewConfig, ViewListProps } from './interface';
 import formatSchema from './formatschema';
 import ViewPicker, { DefaultView } from './viewpicker';
 import { useTableConfig, useLocalStorage } from './hooks';
 import { withFocusKeyEvent } from './keyevent';
 import { generateUuid } from '@util';
-import en from './locale/en-US';
-import zh from './locale/zh-CN';
 import Receiver from './locale/Receiver';
-
 
 const defaultChildrenColumnName: string = 'children';
 const defaultRowKey: string = 'id';
@@ -23,7 +19,7 @@ const defaultBodyMinHeight: number = 600;
 const viewVersionFormat: string = 'YYYY-MM-DD HH:mm:SSSS';
 const getPrefixCls = (cls, customizePrefixCls) => customizePrefixCls || 'gant' + cls;
 
-function SmartTable<R>(props: SmartTableProps<R>) {
+function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
   const {
     searchTableCellResizable,
     tableKey,
@@ -209,7 +205,7 @@ function SmartTable<R>(props: SmartTableProps<R>) {
   );
 
   const isTreeTable = useMemo(
-    () => dataSource && dataSource.some((data: R) => data[childrenColumnName]),
+    () => dataSource && dataSource.some((data: T) => data[childrenColumnName]),
     [dataSource, childrenColumnName],
   );
 
@@ -284,16 +280,6 @@ function SmartTable<R>(props: SmartTableProps<R>) {
 
   return (
     <div className="gant-smart-table-wrapper">
-      {/* <BlockHeader
-        title={
-          <div ref={titleRef}>
-            {title}
-            {TableTitle}
-          </div>
-        }
-        extra={HeaderRight}
-        {...headerProps}
-      /> */}
       {
         renderable ?
         withFocusKeyEvent(
@@ -336,7 +322,7 @@ function SmartTable<R>(props: SmartTableProps<R>) {
           <div style={{
             height:
               bodyHeight ?
-              typeof bodyHeight === 'string' ? `${bodyHeight.slice(0,-1)} + 29px)` : (bodyHeight + 29) : 500
+              typeof bodyHeight === 'string' ? `${bodyHeight.slice(0,-1)} + 29px)` : (bodyHeight + 29) : defaultBodyMinHeight
           }}></div>
         </Spin>
       }
@@ -356,4 +342,6 @@ function SmartTable<R>(props: SmartTableProps<R>) {
   );
 }
 
-export default SmartTable;
+const SmartTableFn: SmartTableType = SmartTable;
+
+export default SmartTableFn;

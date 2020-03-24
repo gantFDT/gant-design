@@ -93,3 +93,5 @@ ColumnField:
 其他属性请参考：<br />gantd-table: [http://gantd.gantcloud.com/?path=/story/components-list-%E5%88%97%E8%A1%A8--table-%E8%A1%A8%E6%A0%BC](http://gantd.gantcloud.com/?path=/story/components-list-%E5%88%97%E8%A1%A8--table-%E8%A1%A8%E6%A0%BC)<br />antd-table: [https://ant.design/components/table-cn/](https://ant.design/components/table-cn/)
 
 ## FAQ
+#### 1.如何拓展自定义组件？
+导出的默认组件, 包含静态属性 setField, setField接收一个类型为 {\[componentType\]: React.ReactElement} 的对象, 即可扩展schema的componentType类型, 详情参考 示例(行内编辑用法)

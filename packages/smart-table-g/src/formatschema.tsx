@@ -1,5 +1,4 @@
 import React from 'react';
-import { Switch, Input as AntInput } from 'antd';
 import {
   Input,
   InputNumber,
@@ -14,7 +13,7 @@ import {
   InputMoney,
 } from '@data-cell';
 import { isEmpty, cloneDeep, merge, get } from 'lodash';
-import { SchemaProp, PanelConfig, CustomColumnProps, ColumnConfig } from './interface';
+import { SchemaProp, PanelConfig, CustomColumnProps, ColumnConfig, Fields } from './interface';
 import { getType } from '@util';
 
 const DEFAULT_VIEW: PanelConfig = {
@@ -28,81 +27,49 @@ const DEFAULT_VIEW: PanelConfig = {
   columnFields: [],
 };
 
-const mapComponents = (ComponentName: any, props: any) => {
-  if (ComponentName && getType(ComponentName) !== 'String') {
-    return ComponentName;
-  }
-  switch (ComponentName) {
-    case 'Switch':
-      return <Switch {...props} />;
-    case 'TextArea':
-      return <AntInput.TextArea {...props} />;
-    // Gant
-    case 'Input':
-      return <Input {...props} />;
-    case 'InputNumber':
-      return <InputNumber {...props} />;
-    case 'DatePicker':
-      return <DatePicker {...props} />;
-    case 'Selector':
-      return <Selector {...props} />;
-    case 'InputUrl':
-      return <InputUrl {...props} />;
-    case 'LocationSelector':
-      return <LocationSelector {...props} />;
-    case 'InputTelePhone':
-      return <InputTelePhone {...props} />;
-    case 'InputCellPhone':
-      return <InputCellPhone {...props} />;
-    case 'InputEmail':
-      return <InputEmail {...props} />;
-    case 'InputLanguage':
-      return <InputLanguage {...props} />;
-    case 'InputMoney':
-      return <InputMoney {...props} />;
-    default:
-      return <Input {...props} />;
-  }
-};
+let ComponentsMap = {
+  [Fields.Input]: Input,
+  [Fields.InputNumber]: InputNumber,
+  [Fields.InputUrl]: InputUrl,
+  [Fields.InputTelePhone]: InputTelePhone,
+  [Fields.InputCellPhone]: InputCellPhone,
+  [Fields.InputEmail]: InputEmail,
+  [Fields.InputLanguage]: InputLanguage,
+  [Fields.InputMoney]: InputMoney,
+  [Fields.TextArea]: Input.TextArea,
+  [Fields.DatePicker]: DatePicker,
+  [Fields.Selector]: Selector,
+  [Fields.LocationSelector]: LocationSelector
+}
 
 function formatColumn<R>(schema: CustomColumnProps<R>) {
   let fakeColumn = { dataIndex: schema.fieldName, ...schema };
   if (!schema.render) {
-    switch (schema.componentType) {
-      case 'Switch':
-      case 'TextArea':
-        fakeColumn.render = text =>
-          mapComponents(schema.componentType, {
+    if(schema.componentType){
+      if(getType(schema.componentType) !== 'String'){
+        fakeColumn.render = () => schema.componentType;
+      }else{
+        const Cmp = ComponentsMap[schema.componentType];
+        if(Cmp){
+          fakeColumn.render = value => React.createElement(Cmp, {
             ...schema.props,
-            value: text,
-          });
-        break;
-      case 'Input':
-      case 'InputNumber':
-      case 'DatePicker':
-      case 'Selector':
-      case 'InputUrl':
-      case 'LocationSelector':
-      case 'InputTelePhone':
-      case 'InputCellPhone':
-      case 'InputEmail':
-      case 'InputLanguage':
-      case 'InputMoney':
-        fakeColumn.render = text =>
-          mapComponents(schema.componentType, {
-            ...schema.props,
-            value: text,
+            value,
             allowEdit: false,
-            style: merge(get(schema.props, 'style'), { display: 'inline-block' }),
-          });
-        fakeColumn.editConfig = {
-          render: () => {
-            return mapComponents(schema.componentType, { ...schema.props });
-          },
-        };
-        break;
-      default:
-        break;
+            style: merge(get(schema.props, 'style'), { display: 'inline-block' })
+          })
+          fakeColumn.editConfig = {
+            render: () => {
+              return React.createElement(Cmp, schema.props)
+            },
+          }
+        }else{
+          try {
+            fakeColumn.render = value => React.createElement('span', {}, JSON.stringify(value))
+          }catch{
+            throw `字段（${schema.fieldName}）的值解析出错。`
+          }
+        }
+      }
     }
   }
   if (fakeColumn.children && !isEmpty(fakeColumn.children)) {
@@ -111,6 +78,10 @@ function formatColumn<R>(schema: CustomColumnProps<R>) {
     );
   }
   return fakeColumn;
+}
+
+export const setField = (cmpMap) => {
+  ComponentsMap = {...ComponentsMap, ...cmpMap }
 }
 
 export default function formatSchema<R>(schema: SchemaProp<R> | CustomColumnProps<R>[]) {
