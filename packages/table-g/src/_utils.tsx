@@ -90,6 +90,7 @@ export const useRowSelection = <T extends Record>(rowSelection: RowSelection<T>,
   const columnWidth = useMemo<number>(() => parseInt(String(_.get(rowSelection, 'columnWidth', defaultColumnWidth))), [rowSelection])
   const showFooterSelection = useMemo(() => _.get(rowSelection, 'showFooterSelection', true), [rowSelection])
   const isMultiple = useMemo(() => _.get(rowSelection, 'type', 'checkbox') === 'checkbox', [rowSelection])
+  const preventDefault = useMemo(() => _.get(rowSelection, 'preventDefault', false), [rowSelection])
   const [selectedRowKeys, setselectedRowKeys] = useState(originSelectedKeys)
 
   // 计算选中行
@@ -122,7 +123,8 @@ export const useRowSelection = <T extends Record>(rowSelection: RowSelection<T>,
       const key = record["g-row-key"] // 当前节点的key
       let subKeys = []
       if (isMultiple) {
-        if (record.children && record.children.length) { // 也可以不用判断,只是对于没有子节点的节点来说不用执行下面的代码
+        // preventDefault表示不选中子节点
+        if (!preventDefault && record.children && record.children.length) { // 也可以不用判断,只是对于没有子节点的节点来说不用执行下面的代码
           subKeys = getSubKeys(record) // 子节点的key
         }
         const computedKeys = getSelectedKeys([key, ...subKeys], selected)
@@ -144,10 +146,12 @@ export const useRowSelection = <T extends Record>(rowSelection: RowSelection<T>,
   // 设置选中的行,供外部使用
   const setKeys = useCallback(
     (record: T): void => {
-      const selected = !originSelectedKeys.includes(record["g-row-key"])
-      onSelectRow(record, selected)
+      if (typeof rowSelection !== 'undefined') {
+        const selected = !originSelectedKeys.includes(record["g-row-key"])
+        onSelectRow(record, selected)
+      }
     },
-    [originSelectedKeys]
+    [originSelectedKeys, rowSelection]
   )
   // 点击选择框
   const onSelect = useCallback(
@@ -197,13 +201,12 @@ export const useRowSelection = <T extends Record>(rowSelection: RowSelection<T>,
 
 
   if (!rowSelection) return [null, setKeys, null]
-  const { preventDefault, ...rowS } = rowSelection
+  rowSelection.columnWidth = columnWidth
   if (preventDefault) {
-    return [{ columnWidth, ...rowS }, setKeys, footerselection]
+    return [rowSelection, setKeys, footerselection]
   }
   return [
     {
-      columnWidth,
       ...rowSelection,
       onSelect,
       onChange
