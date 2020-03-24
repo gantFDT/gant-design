@@ -546,7 +546,7 @@ var editTableColumns = [
   {
     fieldName: 'birth',
     title: '生日',
-    componentType: 'DataPicker'
+    componentType: 'DatePicker'
   }
 ]
 var editTableSchema = {
