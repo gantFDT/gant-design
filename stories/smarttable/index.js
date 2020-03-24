@@ -483,7 +483,7 @@ var editTableColumns = [
   {
     fieldName: 'domain',
     title: '个人主页',
-    // componentType: 'InputUrl'
+    componentType: 'InputUrl'
   },
   {
     fieldName: 'email',
@@ -514,7 +514,7 @@ var editTableColumns = [
   {
     fieldName: 'birth',
     title: '生日',
-    componentType: 'DataPicker'
+    componentType: 'DatePicker'
   }
 ]
 var editTableSchema = {

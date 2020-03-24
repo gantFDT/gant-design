@@ -3,7 +3,7 @@ import CodeDecorator from '../_util/CodeDecorator'
 import code from './code.js'
 /*! Start !*/
 import React, { useState, useMemo, useRef } from 'react'
-import { Button, Radio, Rate, Switch, Icon } from 'antd'
+import { Button, Radio, Rate, Switch, Icon,Col,Row } from 'antd'
 import { EditStatus, SchemaForm } from '@gantd'
 const initalUiSchema = {
     "form:gutter": 10,
@@ -299,17 +299,17 @@ function CustomOptions() {
     console.log("data", data)
     return (
         <div>
-            <div style={{ display: 'flex' }}>
-                <div style={{ flex: 1 }}>
+            <Row>
+                <Col span={16}>
                     <SchemaForm
                         schema={schema}
                         uiSchema={uiSchema}
                     />
-                </div>
-                <div style={{ width: 250, marginLeft: 10 }}>
+                </Col>
+                <Col span={8}>
                     <SchemaForm schema={configSchma} uiSchema={configUI} data={data} onChange={onChange} />
-                </div>
-            </div>
+                </Col>
+            </Row>
             <div style={{ float: 'right' }}><Button size="small" onClick={Reset}>重置UI</Button></div>
         </div>
     )
