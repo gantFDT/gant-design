@@ -1,7 +1,7 @@
 export default [
 `
 import React, { useState, useMemo, useRef } from 'react'
-import { Button, Radio, Rate, Switch, Icon } from 'antd'
+import { Button, Radio, Rate, Switch, Icon,Col,Row } from 'antd'
 import { EditStatus, SchemaForm } from 'gantd'
 const initalUiSchema = {
     "form:gutter": 10,
@@ -77,7 +77,7 @@ function BasicUse() {
 
 ReactDOM.render(<BasicUse />, mountNode)`,`
 import React, { useState, useMemo, useRef } from 'react'
-import { Button, Radio, Rate, Switch, Icon } from 'antd'
+import { Button, Radio, Rate, Switch, Icon,Col,Row } from 'antd'
 import { EditStatus, SchemaForm } from 'gantd'
 const initalUiSchema = {
     "form:gutter": 10,
@@ -212,7 +212,7 @@ function EditStatusUse() {
 
 ReactDOM.render(<EditStatusUse />, mountNode)`,`
 import React, { useState, useMemo, useRef } from 'react'
-import { Button, Radio, Rate, Switch, Icon } from 'antd'
+import { Button, Radio, Rate, Switch, Icon,Col,Row } from 'antd'
 import { EditStatus, SchemaForm } from 'gantd'
 const initalUiSchema = {
     "form:gutter": 10,
@@ -317,7 +317,7 @@ function SearchUse() {
 
 ReactDOM.render(<SearchUse />, mountNode)`,`
 import React, { useState, useMemo, useRef } from 'react'
-import { Button, Radio, Rate, Switch, Icon } from 'antd'
+import { Button, Radio, Rate, Switch, Icon,Col,Row } from 'antd'
 import { EditStatus, SchemaForm } from 'gantd'
 const initalUiSchema = {
     "form:gutter": 10,
@@ -460,17 +460,17 @@ function CustomOptions() {
     console.log("data", data)
     return (
         <div>
-            <div style={{ display: 'flex' }}>
-                <div style={{ flex: 1 }}>
+            <Row>
+                <Col span={16}>
                     <SchemaForm
                         schema={schema}
                         uiSchema={uiSchema}
                     />
-                </div>
-                <div style={{ width: 250, marginLeft: 10 }}>
+                </Col>
+                <Col span={8}>
                     <SchemaForm schema={configSchma} uiSchema={configUI} data={data} onChange={onChange} />
-                </div>
-            </div>
+                </Col>
+            </Row>
             <div style={{ float: 'right' }}><Button size="small" onClick={Reset}>重置UI</Button></div>
         </div>
     )
@@ -478,7 +478,7 @@ function CustomOptions() {
 
 ReactDOM.render(<configSchma />, mountNode)`,`
 import React, { useState, useMemo, useRef } from 'react'
-import { Button, Radio, Rate, Switch, Icon } from 'antd'
+import { Button, Radio, Rate, Switch, Icon,Col,Row } from 'antd'
 import { EditStatus, SchemaForm } from 'gantd'
 const initalUiSchema = {
     "form:gutter": 10,
@@ -561,7 +561,7 @@ function GridLayout() {
 
 ReactDOM.render(<GridLayout />, mountNode)`,`
 import React, { useState, useMemo, useRef } from 'react'
-import { Button, Radio, Rate, Switch, Icon } from 'antd'
+import { Button, Radio, Rate, Switch, Icon,Col,Row } from 'antd'
 import { EditStatus, SchemaForm } from 'gantd'
 const initalUiSchema = {
     "form:gutter": 10,
@@ -656,7 +656,7 @@ function BindData() {
 
 ReactDOM.render(<bindDataSchema />, mountNode)`,`
 import React, { useState, useMemo, useRef } from 'react'
-import { Button, Radio, Rate, Switch, Icon } from 'antd'
+import { Button, Radio, Rate, Switch, Icon,Col,Row } from 'antd'
 import { EditStatus, SchemaForm } from 'gantd'
 const initalUiSchema = {
     "form:gutter": 10,
@@ -749,7 +749,7 @@ function DependenceData() {
 
 ReactDOM.render(<DependenceData />, mountNode)`,`
 import React, { useState, useMemo, useRef } from 'react'
-import { Button, Radio, Rate, Switch, Icon } from 'antd'
+import { Button, Radio, Rate, Switch, Icon,Col,Row } from 'antd'
 import { EditStatus, SchemaForm } from 'gantd'
 const initalUiSchema = {
     "form:gutter": 10,
@@ -831,7 +831,7 @@ function CustomCmp() {
 
 ReactDOM.render(<customCmpSchema />, mountNode)`,`
 import React, { useState, useMemo, useRef } from 'react'
-import { Button, Radio, Rate, Switch, Icon } from 'antd'
+import { Button, Radio, Rate, Switch, Icon,Col,Row } from 'antd'
 import { EditStatus, SchemaForm } from 'gantd'
 const initalUiSchema = {
     "form:gutter": 10,

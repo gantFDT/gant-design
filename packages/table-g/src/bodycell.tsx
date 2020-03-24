@@ -205,14 +205,14 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 			if (!isEdit) return children
 			if (element) {
 				const elementProps = {
+					...element.props,
 					value,
+					onBlur,
+					onChange,
+					autoFocus: true,
 					allowEdit: false,
 					edit: EditStatus.EDIT,
-					autoFocus: true,
-					...element.props,
 					wrapperClassName: 'table-cell-editing',
-					onChange,
-					onBlur,
 				}
 				return React.cloneElement(element, elementProps)
 
