@@ -286,9 +286,6 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
         }
     }, [expandedRowKeys])
 
-    // dataIndex的索引
-    const computedColIndex = useMemo(() => getComputedColIndex(columns), [columns])
-    const useGIndex = useMemo(() => withIndex >= 0 || computedColIndex.find(item => item === 'g-index'), [withIndex, computedColIndex])
     // 是否触发虚拟滚动
     const virtualScroll = useMemo(() => !!(scrollY && virtualScrollConfig), [scrollY, virtualScrollConfig])
     const virtualScrollConfigInner = useMemo<VirtualScroll<T>>(() => (virtualScroll ? virtualScrollConfig === true ? defaultVirtualScrollConfig : { ...defaultVirtualScrollConfig, ...virtualScrollConfig } : {} as VirtualScroll<T>), [virtualScroll, virtualScrollConfig])
@@ -323,7 +320,7 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
     const [renderListAll, renderRowKeys, tilingListAll] = useMemo(() => {
         if (dataListWithIndex.length === 0) return [[], [], []]
         return computeIndex<T>(dataListWithIndex, expandRowKeys, computedRowKey, virtualScroll, expandLevel)
-    }, [dataListWithIndex, useGIndex, computedRowKey, expandRowKeys, expandLevel])
+    }, [dataListWithIndex, computedRowKey, expandRowKeys, expandLevel])
 
     // dom高度
     const originRowHeight = useMemo(() => parseInt(virtualScrollConfigInner.rowHeight as string) || 0, [virtualScrollConfigInner])
@@ -718,6 +715,8 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
 
     //#endregion
     const tableColumns = useMemo(() => convertColumns(columns), [columns, convertColumns, orderList])
+    // dataIndex的索引
+    const computedColIndex = useMemo(() => getComputedColIndex(tableColumns), [tableColumns])
 
     const expandIconColumnIndex = useMemo(() => {
         let index = 0
