@@ -90,6 +90,7 @@ export const useRowSelection = <T extends Record>(rowSelection: RowSelection<T>,
   const columnWidth = useMemo<number>(() => parseInt(String(_.get(rowSelection, 'columnWidth', defaultColumnWidth))), [rowSelection])
   const showFooterSelection = useMemo(() => _.get(rowSelection, 'showFooterSelection', true), [rowSelection])
   const isMultiple = useMemo(() => _.get(rowSelection, 'type', 'checkbox') === 'checkbox', [rowSelection])
+  const preventDefault = useMemo(() => _.get(rowSelection, 'preventDefault', false), [rowSelection])
   const [selectedRowKeys, setselectedRowKeys] = useState(originSelectedKeys)
 
   // 计算选中行
@@ -122,7 +123,8 @@ export const useRowSelection = <T extends Record>(rowSelection: RowSelection<T>,
       const key = record["g-row-key"] // 当前节点的key
       let subKeys = []
       if (isMultiple) {
-        if (record.children && record.children.length) { // 也可以不用判断,只是对于没有子节点的节点来说不用执行下面的代码
+        // preventDefault表示不选中子节点
+        if (!preventDefault && record.children && record.children.length) { // 也可以不用判断,只是对于没有子节点的节点来说不用执行下面的代码
           subKeys = getSubKeys(record) // 子节点的key
         }
         const computedKeys = getSelectedKeys([key, ...subKeys], selected)
@@ -144,10 +146,12 @@ export const useRowSelection = <T extends Record>(rowSelection: RowSelection<T>,
   // 设置选中的行,供外部使用
   const setKeys = useCallback(
     (record: T): void => {
-      const selected = !originSelectedKeys.includes(record["g-row-key"])
-      onSelectRow(record, selected)
+      if (typeof rowSelection !== 'undefined') {
+        const selected = !originSelectedKeys.includes(record["g-row-key"])
+        onSelectRow(record, selected)
+      }
     },
-    [originSelectedKeys]
+    [originSelectedKeys, rowSelection]
   )
   // 点击选择框
   const onSelect = useCallback(
@@ -197,13 +201,12 @@ export const useRowSelection = <T extends Record>(rowSelection: RowSelection<T>,
 
 
   if (!rowSelection) return [null, setKeys, null]
-  const { preventDefault, ...rowS } = rowSelection
+  rowSelection.columnWidth = columnWidth
   if (preventDefault) {
-    return [{ columnWidth, ...rowS }, setKeys, footerselection]
+    return [rowSelection, setKeys, footerselection]
   }
   return [
     {
-      columnWidth,
       ...rowSelection,
       onSelect,
       onChange
@@ -388,6 +391,37 @@ const defineProperties = function defineProperties(obj: Object, data: any) {
   Object.defineProperties(obj, data)
 }
 export const originKey = "__origin"
+
+/**
+ * 计算序号和可展开rowKey
+ */
+export const computeIndexAndRowKey = function computeIndexAndRowKey<T extends Record>(list: T[], computedRowKey): [T[], string[]] {
+  const rowKey: string[] = [];
+  let index = 0
+
+  const items: any[] = [
+    {
+      root: true,
+      children: list
+    }
+  ]
+  while (items.length) {
+    const item = items.shift()
+    if (!item.root) {
+      item["g-index"] = ++index
+      item["g-row-key"] = computedRowKey(item, index)
+    }
+    if (!_.isUndefined(item.children)) {
+      if (!item.root) rowKey.push(item["g-row-key"])
+      if (item.children.length) {
+        items.unshift(...item.children)
+      }
+    }
+  }
+
+  return [list, rowKey]
+}
+
 export const cloneDatasource = function cloneDatasource<T extends Record>(dataSource: T[]): T[] {
   return dataSource.map((item: T) => {
     const freezeObj = _.cloneDeep(item);
@@ -423,7 +457,7 @@ export const diffList = <T extends Record>(oldList: T[], newList: T[], isTree = 
     }
     else {
       const oldItem = newItem[originKey]
-      let [oi, ni] = [, newItem];
+      let [oi, ni] = [oldItem, newItem];
       if (isTree) {
         oi = _.omit(oldItem, 'children') as T;
         ni = _.omit(newItem, 'children') as T
@@ -443,6 +477,7 @@ export const diffList = <T extends Record>(oldList: T[], newList: T[], isTree = 
         }
       }
       //   // 比较数据本身
+      console.log(oi, ni)
       if (!_.isEqual(oi, ni)) {
         result[1].push(_.cloneDeep(ni))
       }
@@ -505,29 +540,29 @@ export const getComputedColIndex = (cols): string[] => {
  * @param {number} withIndex 
  * @param {number} parent 
  */
-export const computeIndex = function computeIndex<T>(list: Array<T>, expandRowKeys = [], computedRowKey, virtualScroll: boolean): [T[], string[], T[]] {
+export const computeIndex = function computeIndex<T>(list: Array<T>, expandRowKeys = [], computedRowKey, virtualScroll: boolean, expandLevel: number): [T[], string[], T[], string[]] {
   // console.time('计算序号')
+  // 所有数据的key
   const renderRowKeys: string[] = []
+  // 所有数据平铺结构
   const tilingList: T[] = [];
+  // 所有可以展开的数据key
+  const expandableRowKeys: string[] = []
+
   const items = []
-  const root = {
-    'g-root': true,
-    children: list
-  }
   items.push({
     nestLevel: 0,
-    node: root
+    node: {
+      'g-root': true,
+      children: list
+    }
   })
-  let index = 0;
 
   while (items.length) {
     const { node, nestLevel, "g-parent-row-key": gprk, "g-parent": gp } = items.shift();
-    let rowKey;
+    let rowKey = node["g-row-key"]
     if (!node['g-root']) {
-      node["g-index"] = ++index
       node["g-level"] = nestLevel
-      rowKey = computedRowKey(node, node["g-index"])
-      node["g-row-key"] = rowKey
       // 关联父级节点
       if (gprk !== undefined) {
         node["g-parent-row-key"] = gprk;
@@ -544,6 +579,7 @@ export const computeIndex = function computeIndex<T>(list: Array<T>, expandRowKe
         if (
           !virtualScroll ||
           node['g-root'] ||
+          nestLevel <= expandLevel ||
           expandRowKeys.includes(rowKey)
         ) {
           items.unshift(...node.children.map(child => ({
@@ -557,10 +593,13 @@ export const computeIndex = function computeIndex<T>(list: Array<T>, expandRowKe
           node.children = []
         }
       }
+      if (!node['g-root']) {
+        expandableRowKeys.push(rowKey)
+      }
     }
   }
   // console.timeEnd('计算序号')
-  return [list, renderRowKeys, tilingList]
+  return [list, renderRowKeys, tilingList, expandableRowKeys]
 }
 
 /**
