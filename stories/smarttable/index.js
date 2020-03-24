@@ -387,10 +387,10 @@ function MultiViewUse() {
   )
 }
 /*! Split !*/
-// import zhCN from 'antd/es/locale/zh_CN' 按模块导入
-// import enUS from 'antd/es/locale/en_US' 按模块导入
-var zhCN = {};
-var enUS = {};
+// import zhCN from 'antd/es/locale/zh_CN' // 按模块导入
+// import enUS from 'antd/es/locale/en_US' // 按模块导入
+var zhCN = { locale: "zh-cn" };
+var enUS = { locale: "en" };
 var dataSource = Array(10).fill().map((_, Idx) => ({
   key: Idx,
   name: Random.cname(),
@@ -514,7 +514,7 @@ var editTableColumns = [
   {
     fieldName: 'birth',
     title: '生日',
-    componentType: 'DataPicker'
+    componentType: 'DatePicker'
   }
 ]
 var editTableSchema = {

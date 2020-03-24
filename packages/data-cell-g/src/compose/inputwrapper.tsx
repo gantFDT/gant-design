@@ -11,6 +11,9 @@ export default (_popupClassName?: string) => WrapperedComponent =>
         setDisabledBlur(_disabledBlur)
       }, [_disabledBlur])
       const [isFoucs, setFoucs] = useState(props.autoFocus);
+      useEffect(() => {
+        setFoucs(props.autoFocus);
+      }, [props.autoFocus])
       const className = classnames(
         'gant-input-wrapper',
         {
@@ -19,15 +22,18 @@ export default (_popupClassName?: string) => WrapperedComponent =>
         wrapperClassName,
       );
       const divRef = useRef<HTMLDivElement>(null);
+
       const handleClick = useCallback(
         (e: MouseEvent) => {
           if (divRef.current && isFoucs && !disabledBlur) {
+
             const target: any = e.target;
             if (divRef.current.contains(target)) return;
             if (!popupClassName) {
               setFoucs(false)
               return onBlur && onBlur();
             }
+
             const popupDoms = document.getElementsByClassName(popupClassName);
             const len = popupDoms.length
             for (let i = 0; i < len; i++) {

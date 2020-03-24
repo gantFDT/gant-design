@@ -19,6 +19,8 @@ import {
     setMainTableBorder,
     diffList,
     setStyle,
+
+    computeIndexAndRowKey,
     getComputedColIndex,
     computeIndex,
     getVirtualList,
@@ -120,12 +122,14 @@ export interface VirtualScroll<T> {
     threshold?: number, // 单页显示的行数
     rowHeight?: number | string, //| RowHeight<T>,
     center?: boolean,
+    expandLevel?: number
 }
 
 const defaultVirtualScrollConfig: VirtualScroll<any> = {
     threshold: 20,
     rowHeight: 24,
-    center: true
+    center: true,
+    expandLevel: 1
 }
 
 // 定义GantTableProps基础类型
@@ -206,6 +210,7 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
         virtualScroll: virtualScrollConfig,
         resizable: resizeCell,
         onScroll,
+        defaultExpandAllRows
     } = props
     /* =======================warning======================= */
     if (process.env.NODE_ENV !== "production") {
@@ -247,7 +252,9 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
     const [lock, setLock] = useState(true) // 控制onSave回调
 
     const isEdit = useMemo(() => editable === EditStatus.EDIT, [editable])
-    // 编辑时数据
+    // level-1层数据复制dataSource，防止数据污染
+    const dataList = useMemo(() => _.cloneDeep(dataSource), [dataSource])
+    // level-1层数据，编辑时数据
     const [cacheDataList, setCacheDataList] = useState([])
     useEffect(() => {
         // edit状态下打开锁，其他状态不变
@@ -277,6 +284,7 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
             setexpandRowKeys(expandedRowKeys)
         }
     }, [expandedRowKeys])
+
     // dataIndex的索引
     const computedColIndex = useMemo(() => getComputedColIndex(columns), [columns])
     const useGIndex = useMemo(() => withIndex >= 0 || computedColIndex.find(item => item === 'g-index'), [withIndex, computedColIndex])
@@ -284,17 +292,37 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
     const virtualScroll = useMemo(() => !!(scrollY && virtualScrollConfig), [scrollY, virtualScrollConfig])
     const virtualScrollConfigInner = useMemo<VirtualScroll<T>>(() => (virtualScroll ? virtualScrollConfig === true ? defaultVirtualScrollConfig : { ...defaultVirtualScrollConfig, ...virtualScrollConfig } : {} as VirtualScroll<T>), [virtualScroll, virtualScrollConfig])
     // 虚拟滚动的条数
-    const thresholdInner = useMemo(() => virtualScrollConfigInner.threshold, [virtualScrollConfigInner])
+    const thresholdInner = useMemo(() => _.get(virtualScrollConfigInner, 'threshold', defaultVirtualScrollConfig.threshold), [virtualScrollConfigInner])
+    const expandLevel = useMemo(() => _.get(virtualScrollConfigInner, 'expandLevel', defaultVirtualScrollConfig.expandLevel), [virtualScrollConfigInner])
+
+    /**
+     * level-2层数据
+     * 根据是否编辑获取数据列表
+     * 同时添加g-index序号，获取所有可展开rowKey
+     */
+    const [dataListWithIndex, expandableRowKeys] = useMemo(() => {
+        const list = isEdit ? cacheDataList : dataList;
+        return computeIndexAndRowKey<T>(list, computedRowKey)
+    }, [isEdit, cacheDataList, dataList, computedRowKey])
+
+    useEffect(() => {
+        // 默认打开所有子菜单
+        if (defaultExpandAllRows && _.isUndefined(expandedRowKeys)) {
+            setexpandRowKeys(expandableRowKeys)
+        }
+    }, [])
     /**
      * 虚拟滚动的相关数据
      */
     const [outlineNum, setOutLineNum] = useState(0)
-    // 总数据、实际要渲染的rowkeys，用这个数据计算实际高度
+    /**
+     * level-2层数据
+     * 总数据、实际要渲染的rowkeys，用这个数据计算实际高度
+     */
     const [renderListAll, renderRowKeys, tilingListAll] = useMemo(() => {
-        const list = isEdit ? cacheDataList : _.cloneDeep(dataSource)
-        if (list.length === 0) return [[], [], []]
-        return computeIndex<T>(list, expandRowKeys, computedRowKey, virtualScroll)
-    }, [cacheDataList, dataSource, isEdit, useGIndex, computedRowKey, expandRowKeys])
+        if (dataListWithIndex.length === 0) return [[], [], []]
+        return computeIndex<T>(dataListWithIndex, expandRowKeys, computedRowKey, virtualScroll, expandLevel)
+    }, [dataListWithIndex, useGIndex, computedRowKey, expandRowKeys, expandLevel])
 
     // dom高度
     const originRowHeight = useMemo(() => parseInt(virtualScrollConfigInner.rowHeight as string) || 0, [virtualScrollConfigInner])
