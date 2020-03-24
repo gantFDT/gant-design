@@ -11,7 +11,7 @@
 |renderItem|用于自定义optionItem|function(item,Option){}||
 |query|请求选项数据的方法,接受一个搜索框值得参数,返回一个promise|function(filter){}||
 |optionLabel|外部label，主要用于设置一个在list中没有的数据所显示的label|||
-|isFilter|是否过滤模式，过滤模式下会根据输入过滤选项|||
+|isFilter|是否过滤模式，过滤模式下会根据输入过滤选项，在没有query方法的情况下才生效，配合dataSource使用|||
 |useCache|是否开启选择器内置的任务缓存,建议在外部查询条件不会改变的情况下才开启，否则一定要设置为false|boolean|true|
 |useStorage|是否开启最近选择|boolean|true|
 |readOnly|只读模式|boolean|false|
