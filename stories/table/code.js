@@ -141,7 +141,6 @@ function EditorTable() {
   const getKey = useCallback(() => Math.random().toString('16').slice(2), [])
 
   const [dataSource, setDataSource] = useState(() => getEditList(20), [])
-  const [keys, setKeys] = useState([])
 
   const editorColumns = [
     {
