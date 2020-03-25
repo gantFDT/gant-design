@@ -5,6 +5,7 @@ import { EditStatus, SwitchStatus } from '@data-cell'
 import { DataContext, RowContext, TableContext } from './context'
 
 import { EditConfig, Record } from './index'
+import { getPureRecord } from './_utils'
 
 const invalidateValue = ['', null, undefined]
 
@@ -36,16 +37,16 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 	const isEdit = useMemo(() => edit === EditStatus.EDIT, [edit]);
 	const showDirt = useMemo(() => _.get(editConfig, 'showDirt', true), [editConfig])
 	const isSelection = useMemo(() => className.includes('ant-table-selection-column'), [className])
+	const pureRecord = useMemo(() => getPureRecord(record), [record])
 
-
-	const { editValue, render: editRender } = editConfig
+	const { editValue, render: editRender, shouldEdit = true } = editConfig
 
 	const getEditValue = useCallback(
 		() => {
-			let value: string = _.get(record, dataIndex)
+			let value: string = _.get(pureRecord, dataIndex)
 			if (editValue) {
 				if (typeof editValue === 'function') {
-					value = editValue(record, rowIndex, dataIndex)
+					value = editValue(pureRecord, rowIndex, dataIndex)
 				}
 				else {
 					value = editValue
@@ -53,18 +54,18 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 			}
 			return value;
 		},
-		[record, originRecord, dataIndex, editValue],
+		[pureRecord, originRecord, dataIndex, editValue],
 	)
 	const updateElement = useCallback(
 		() => {
 			const value = getEditValue()
 			setValue(value)
 			if (editRender) {
-				const element = editRender(value, record, rowIndex)
+				const element = editRender(value, pureRecord, rowIndex)
 				setElement(element)
 			}
 		},
-		[record, rowIndex, editRender],
+		[pureRecord, rowIndex, editRender],
 	)
 	const close = useCallback(() => setedit(EditStatus.CANCEL), [])
 
@@ -125,16 +126,23 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 	const onClick = useCallback(
 		(e) => {
 			let switchSuccess = false
-			if (!record.isDeleted && edit !== EditStatus.EDIT) {
-				switchSuccess = switchEdit()// 切换编辑状态成功
-				if (switchSuccess) updateElement()
+			if (!pureRecord.isDeleted && !isEdit) {
+				// 判断钩子
+				let allowEdit = shouldEdit
+				if (typeof shouldEdit === 'function') {
+					allowEdit = shouldEdit(pureRecord, rowIndex, dataIndex)
+				}
+				if (allowEdit) {
+					switchSuccess = switchEdit()// 切换编辑状态成功
+					if (switchSuccess) updateElement()
+				}
 			}
 			if (props.onClick) {
 				props.onClick(e, switchSuccess ? setDataSource : undefined);
 			}
 
 		},
-		[edit, switchEdit, updateElement, props.onClick, record.isDeleted],
+		[isEdit, switchEdit, updateElement, props.onClick, pureRecord, shouldEdit, rowIndex, dataIndex],
 	)
 
 	const onBlur = useCallback(
@@ -201,7 +209,7 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 	const renderChildren = useCallback(
 		() => {
 			// 在排序表格中，不渲染默认的第一行假数据
-			if (sortable && record.placeholder) return
+			if (sortable) return
 			if (!isEdit) return children
 			if (element) {
 				const elementProps = {
@@ -218,7 +226,7 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 
 			}
 		},
-		[edit, value, element, children, sortable, record, cellPadding, isEdit],
+		[edit, value, element, children, sortable, cellPadding, isEdit],
 	)
 
 	const valueChanged = useMemo(
@@ -245,7 +253,8 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 			if (virtualScroll) {
 				dStyle.height = originRowHeight
 				if (originLineHeight) {
-					dStyle.lineHeight = originLineHeight
+
+					// dStyle.lineHeight = originLineHeight
 				}
 			}
 			return (
