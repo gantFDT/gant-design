@@ -11,5 +11,6 @@ import '@data-cell/input-number/style';
 import '@data-cell/input-url/style';
 import '@data-cell/location-selector/style';
 import '@data-cell/select/style';
+import '@data-cell/date-picker/style';
 import '@data-cell/selector/style';
 import './index.less';

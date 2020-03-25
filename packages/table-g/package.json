@@ -23,6 +23,7 @@
     "dependencies": {
         "antd": "^3.26.5",
         "classnames": "^2.2.6",
+        "mathjs": "^6.6.1",
         "data-cell-g": "^0.0.11",
         "header-g": "^0.1.4",
         "lodash": "^4.17.11",
