@@ -24,7 +24,6 @@ const uiArray = [
 		belong: "form",
 		name: "form:style",
 		defaultValue: {
-			padding: 10
 		}
 	},
 	{
