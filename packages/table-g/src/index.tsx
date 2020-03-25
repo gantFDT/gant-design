@@ -92,7 +92,8 @@ export type EditRender<T = any> = (value: string, record: T, rowIndex: number) =
 export type EditConfig<T> = {
     render: EditRender<T>,
     showDirt?: boolean,
-    editValue?: string | ((record: T, rowIndex: number, dataIndex: string) => string)
+    editValue?: string | ((record: T, rowIndex: number, dataIndex: string) => string),
+    shouldEdit?: boolean | ((record: T, rowIndex: number, dataIndex: string) => boolean)
 }
 // 重写column类型
 export interface GColumnProps<T> extends ColumnProps<T> {
@@ -122,15 +123,13 @@ export interface RowHeight<T> {
 export interface VirtualScroll<T> {
     threshold?: number, // 单页显示的行数
     rowHeight?: number | string, //| RowHeight<T>,
-    center?: boolean,
-    expandLevel?: number
+    center?: boolean
 }
 
 const defaultVirtualScrollConfig: VirtualScroll<any> = {
     threshold: 20,
     rowHeight: 24,
     center: true,
-    expandLevel: 1
 }
 
 // 定义GantTableProps基础类型

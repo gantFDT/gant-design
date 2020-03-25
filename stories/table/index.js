@@ -14,11 +14,20 @@ const getList = function getList(length = 5) {
     "address|1": Random.county()
   }))
 }
-const getEditList = function getList(length = 5) {
+const getEditList = function getEditList(length = 5) {
   return Array.from({ length }).map(() => Mock.mock({
     "name|1": Random.cname(),
     "age|1-100": 1,
     "key|0000-9999": 1,
+    "key|0000-9999": 1,
+    // "children|2-5": [
+    //   {
+    //     "name|1": Random.cname(),
+    //     "age|1-100": 1,
+    //     "address|1": Random.county(),
+    //     "key|0000-9999": 1
+    //   }
+    // ]
   }))
 }
 const getNestList = function getNestList(length = 15) {
@@ -91,6 +100,7 @@ function EditorTable() {
   const getKey = useCallback(() => Math.random().toString('16').slice(2), [])
 
   const [dataSource, setDataSource] = useState(() => getEditList(20), [])
+  const [keys, setKeys] = useState();
 
   const editorColumns = [
     {
@@ -112,7 +122,9 @@ function EditorTable() {
         render: (text, record, index) => {
           return <InputNumber min={0} />
         },
-        // editValue: () => ({})
+        shouldEdit: (record) => {
+          return record.age < 30
+        }
       }
     },
     {

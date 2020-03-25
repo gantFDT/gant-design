@@ -45,6 +45,7 @@
 | editConfig.showDirt | 否 | boolean | true | 是否显示脏标记 |
 | editConfig.render | 否 | function | - | 返回编辑时显示的组件 |
 | editConfig.editValue | 否 | function、string、object | - | 返回值作为render组件的value并注入,当为function时，function(record, rowIndex, dataIndex) |
+| editConfig.shouldEdit | 否 | function、boolean | - | 点击单元格进入编辑之前的钩子，默认为true |
 | showTip | 否 | boolean | false | 是否显示默认的气泡提示 |
 | placement | 否 | string | rightBottom | 气泡提示的位置，参考[链接](https://ant-design.gitee.io/components/tooltip-cn/) |
 | expandColumn | 否 | boolean |  | 当表格具有属性结构的时候，由设置expandColumn为true的列显示展开按钮，当所有列都没有这个属性的时候由ant决定展开列 |
