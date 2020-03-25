@@ -62,6 +62,31 @@ function getSubKeys(record) {
 
 
 const defaultColumnWidth = 35 // 勾选列的宽度
+
+const useRowSelectionProps = function useRowSelectionProps<T extends Record>(rowSelection: RowSelection<T>) {
+
+  const {
+    // 用户传递的key，所有计算以此为准
+    selectedRowKeys: originSelectedKeys = [],
+    columnWidth = defaultColumnWidth,
+    showFooterSelection = true,
+    type = "checkbox",
+    preventDefault = true,
+    getCheckboxProps
+  } = rowSelection || {}
+  const isMultiple = type === 'checkbox'
+
+  return {
+    originSelectedKeys,
+    columnWidth,
+    showFooterSelection,
+    preventDefault,
+    getCheckboxProps,
+    isMultiple
+  }
+
+}
+
 export const useRowSelection = <T extends Record>(rowSelection: RowSelection<T>, dataSource: Array<T>, bordered: boolean): [RowSelection<T>, (record: T) => void, null | React.ReactElement] => {
   const getFlatRecords = useCallback(
     (list) => {
@@ -85,12 +110,15 @@ export const useRowSelection = <T extends Record>(rowSelection: RowSelection<T>,
     },
     [dataSource]
   )
-  // 用户传递的key，所有计算以此为准
-  const originSelectedKeys: string[] = useMemo(() => _.get(rowSelection, 'selectedRowKeys', []), [rowSelection])
-  const columnWidth = useMemo<number>(() => parseInt(String(_.get(rowSelection, 'columnWidth', defaultColumnWidth))), [rowSelection])
-  const showFooterSelection = useMemo(() => _.get(rowSelection, 'showFooterSelection', true), [rowSelection])
-  const isMultiple = useMemo(() => _.get(rowSelection, 'type', 'checkbox') === 'checkbox', [rowSelection])
-  const preventDefault = useMemo(() => _.get(rowSelection, 'preventDefault', false), [rowSelection])
+  const {
+    originSelectedKeys,
+    columnWidth,
+    showFooterSelection,
+    preventDefault,
+    getCheckboxProps: originGetCheckoutProps,
+    isMultiple
+  } = useRowSelectionProps(rowSelection)
+
   const [selectedRowKeys, setselectedRowKeys] = useState(originSelectedKeys)
 
   // 计算选中行
@@ -175,13 +203,32 @@ export const useRowSelection = <T extends Record>(rowSelection: RowSelection<T>,
     [],
   )
 
+  const getCheckboxProps = useCallback(
+    (record) => {
+      let props = {
+        // className: '123'
+      }
+      if (typeof originGetCheckoutProps === 'function') {
+        const originProps = originGetCheckoutProps(record)
+        if (_.isPlainObject(originProps)) {
+          props = {
+            ...props,
+            ...originProps
+          }
+        }
+      }
+      return props
+    },
+    [originGetCheckoutProps],
+  )
+
   const footerselectionstyle = useMemo(() => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     padding: '0 8px 0 4px',
     marginLeft: '-4px',
-    width: columnWidth + 4,
+    width: parseInt(columnWidth as string) + 4,
     visibility: (isMultiple ? 'show' : 'hidden') as CSS.VisibilityProperty,
     borderRight: bordered ? '1px solid transparent' : undefined
   }), [isMultiple, columnWidth, bordered])
@@ -208,6 +255,7 @@ export const useRowSelection = <T extends Record>(rowSelection: RowSelection<T>,
 
   if (!rowSelection) return [null, setKeys, null]
   rowSelection.columnWidth = columnWidth
+  rowSelection.getCheckboxProps = getCheckboxProps
   if (preventDefault) {
     return [rowSelection, setKeys, footerselection]
   }
@@ -433,7 +481,7 @@ export const cloneDatasource = function cloneDatasource<T extends Record>(dataSo
     const freezeObj = _.cloneDeep(item);
     Object.freeze(freezeObj)
     const copyItem = _.cloneDeep(item);
-    defineProperty(copyItem, originKey, freezeObj)
+    Object.defineProperty(copyItem, originKey, { value: freezeObj, writable: false, configurable: false, enumerable: true })
     if (_.get(copyItem, "children.length")) {
       copyItem.children = cloneDatasource(copyItem.children)
     }
@@ -540,8 +588,10 @@ export const getComputedColIndex = (cols): string[] => {
  * @param {number} withIndex 
  * @param {number} parent 
  */
-export const computeIndex = function computeIndex<T>(list: Array<T>, expandRowKeys = [], computedRowKey, virtualScroll: boolean, expandLevel: number): [T[], string[], T[], string[]] {
+export const computeIndex = function computeIndex<T>(list: Array<T>, expandRowKeys = [], virtualScroll: boolean): [T[], string[], T[], string[]] {
   // console.time('计算序号')
+  // 因为需要对数据的children进行操作
+  const copyList = _.cloneDeep(list);
   // 所有数据的key
   const renderRowKeys: string[] = []
   // 所有数据平铺结构
@@ -554,7 +604,7 @@ export const computeIndex = function computeIndex<T>(list: Array<T>, expandRowKe
     nestLevel: 0,
     node: {
       'g-root': true,
-      children: list
+      children: copyList
     }
   })
 
@@ -581,7 +631,6 @@ export const computeIndex = function computeIndex<T>(list: Array<T>, expandRowKe
         if (
           !virtualScroll ||
           node['g-root'] ||
-          // nestLevel <= expandLevel ||
           expandRowKeys.includes(rowKey)
         ) {
           items.unshift(...node.children.map(child => ({
@@ -657,7 +706,7 @@ export const getVirtualList = function getVirtualList<T extends Record>(start: n
 // 获取纯净数据
 
 export const getPureRecord = function getPureRecord<T extends Record>(record: T, exclude: string[] = []): T {
-  let omitPropo = ["g-parent", "g-parent-row-key", "g-level", "children", "g-row-key", "g-index"]
+  let omitPropo = ["g-parent", "g-parent-row-key", "g-level", "children", "g-row-key", "g-index", originKey]
   if (exclude.length) {
     omitPropo = _.difference(omitPropo, exclude)
   }

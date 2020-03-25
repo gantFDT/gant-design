@@ -20,14 +20,14 @@ const getEditList = function getEditList(length = 5) {
     "age|1-100": 1,
     "key|0000-9999": 1,
     "key|0000-9999": 1,
-    // "children|2-5": [
-    //   {
-    //     "name|1": Random.cname(),
-    //     "age|1-100": 1,
-    //     "address|1": Random.county(),
-    //     "key|0000-9999": 1
-    //   }
-    // ]
+    "children|2-5": [
+      {
+        "name|1": Random.cname(),
+        "age|1-100": 1,
+        "address|1": Random.county(),
+        "key|0000-9999": 1
+      }
+    ]
   }))
 }
 const getNestList = function getNestList(length = 15) {
@@ -99,7 +99,7 @@ function EditorTable() {
   const [address] = useState([{ value: '1', label: '地址1' }, { value: '2', label: '地址2' }])
   const getKey = useCallback(() => Math.random().toString('16').slice(2), [])
 
-  const [dataSource, setDataSource] = useState(() => getEditList(20), [])
+  const [dataSource, setDataSource] = useState(() => getEditList(30), [])
   const [keys, setKeys] = useState();
 
   const editorColumns = [
@@ -164,11 +164,20 @@ function EditorTable() {
         <Button size='small' onClick={() => { setEditing(EditStatus.SAVE) }}>保存</Button>
       </>
     }
+    rowSelection={{
+      type: 'checkbox',
+      selectedRowKeys: keys,
+      clickable: false,
+      onChange: (keys, rows) => {
+        console.log(rows)
+        setKeys(keys)
+      },
+    }}
     editable={editing}
     editActions={actions}
     onSave={setDataSource}
     scroll={{ y: 400 }}
-  // virtualScroll={{ rowHeight: 24 }}
+    virtualScroll={{ rowHeight: 24 }}
   />
 }
 /*! Split !*/

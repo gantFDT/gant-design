@@ -290,12 +290,12 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
     const virtualScrollConfigInner = useMemo<VirtualScroll<T>>(() => (virtualScroll ? virtualScrollConfig === true ? defaultVirtualScrollConfig : { ...defaultVirtualScrollConfig, ...virtualScrollConfig } : {} as VirtualScroll<T>), [virtualScroll, virtualScrollConfig])
     // 虚拟滚动的条数
     const thresholdInner = useMemo(() => _.get(virtualScrollConfigInner, 'threshold', defaultVirtualScrollConfig.threshold), [virtualScrollConfigInner])
-    const expandLevel = useMemo(() => _.get(virtualScrollConfigInner, 'expandLevel', defaultVirtualScrollConfig.expandLevel), [virtualScrollConfigInner])
 
     /**
      * level-2层数据
      * 根据是否编辑获取数据列表
      * 同时添加g-index序号，获取所有可展开rowKey
+     * 编辑状态下会有__origin属性
      */
     const [dataListWithIndex, expandableRowKeys] = useMemo(() => {
         const list = isEdit ? cacheDataList : dataList;
@@ -315,24 +315,37 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
     /**
      * level-2层数据
      * 总数据、实际要渲染的rowkeys，用这个数据计算实际高度
+     * 通过复制dataListWithIndex数据计算，因为在虚拟滚动下要刨除掉children，但是不能影响源数据
      */
     const [renderListAll, renderRowKeys, tilingListAll] = useMemo(() => {
         if (dataListWithIndex.length === 0) return [[], [], []]
-        return computeIndex<T>(dataListWithIndex, expandRowKeys, computedRowKey, virtualScroll, expandLevel)
-    }, [dataListWithIndex, computedRowKey, expandRowKeys, expandLevel])
+        return computeIndex<T>(dataListWithIndex, expandRowKeys, virtualScroll)
+    }, [dataListWithIndex, expandRowKeys])
+    // 单元格padding和border高度
+    const padddingBorder = useMemo(() => 2 * parseInt(cellPadding as string) + 1, [cellPadding])
 
     // dom高度
-    const originRowHeight = useMemo(() => parseInt(virtualScrollConfigInner.rowHeight as string) || 0, [virtualScrollConfigInner])
+    const originRowHeight = useMemo(() => {
+        let height = parseInt(virtualScrollConfigInner.rowHeight as string)
+        if (rowSelection) {
+            height = Math.max(height, 20 + padddingBorder)
+        }
+        if (isTree) {
+            return Math.max(height, 18 + padddingBorder)
+        }
+        return height || 0
+    }, [virtualScrollConfigInner, isTree, padddingBorder, rowSelection])
     // 行高
+    // 对单元格中的选择框和树状结构的展开按钮有影响
     const originLineHeight = useMemo(() => {
         if (virtualScroll && virtualScrollConfigInner.center) {
-            const height = parseInt(virtualScrollConfigInner.rowHeight as string)
-            return (height - 2 * parseInt(cellPadding as string) - 1) + 'px'
+            return (originRowHeight - padddingBorder) + 'px'
         }
-    }, [virtualScrollConfigInner, cellPadding, virtualScroll])
+    }, [virtualScrollConfigInner, padddingBorder, virtualScroll])
     // 计算滚动比例
     const rate = useMemo(() => math.ceil(math.chain(renderRowKeys.length).multiply(originRowHeight).divide(3e+7).done()), [renderRowKeys, originRowHeight])
-    const rowHeight = useMemo(() => originRowHeight / rate, [originRowHeight, rate])
+    // 逻辑上的行高，包括border
+    const rowHeight = useMemo(() => originRowHeight / rate + 1, [originRowHeight, rate])
     const mainHeight = useMemo(() => renderRowKeys.length * rowHeight, [renderRowKeys, rowHeight])
     // 最终渲染的数据
     const renderList = useMemo(() => {
@@ -625,7 +638,7 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
     // 处理表格行删除线
     const onRow = useCallback(
         (record, index) => {
-
+            const pureRecord = getPureRecord(record)
             type OptialProps = Partial<{
                 onClick: (e: React.MouseEvent) => void
             }>
@@ -644,18 +657,17 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
                 sortable
             }
             if (isEdit) {
-                const originRecord = tilingListAll[record["g-index"] - 1][originKey]
-                defaultRowProps.originRecord = originRecord
+                defaultRowProps.originRecord = record[originKey]
             }
             let originListener: TableEventListeners = {}
             if (originOnRow) {
-                originListener = originOnRow(record, rowIndex)
+                originListener = originOnRow(pureRecord, rowIndex)
             }
             if (_.get(rowSelection, 'clickable')) {
                 const getCheckBoxProps = _.get(rowSelection, 'getCheckboxProps')
                 let checkable = true
                 if (getCheckBoxProps && typeof getCheckBoxProps === 'function') {
-                    const boxProps = getCheckBoxProps(record)
+                    const boxProps = getCheckBoxProps(pureRecord)
                     checkable = !_.get(boxProps, 'disable')
                 }
                 if (checkable) {
@@ -675,7 +687,7 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
             }
             return defaultRowProps
         },
-        [sortable, setselectedRowKeys, rowSelection, outlineNum, tilingListAll]
+        [sortable, setselectedRowKeys, rowSelection, outlineNum]
     )
 
     // 表格中所有使用的组件

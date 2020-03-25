@@ -253,6 +253,7 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 			if (virtualScroll) {
 				dStyle.height = originRowHeight
 				if (originLineHeight) {
+
 					// dStyle.lineHeight = originLineHeight
 				}
 			}
