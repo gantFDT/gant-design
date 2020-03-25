@@ -7,6 +7,7 @@ import { TooltipPlacement } from 'antd/lib/tooltip'
 import { PaginationConfig as AntPaginationConfig } from 'antd/lib/pagination'
 import { compose } from 'recompose'
 import _ from 'lodash'
+import * as math from 'mathjs'
 
 import warning from '@util/warning'
 import { ProtoExtends, PartRequired } from '@util/type'
@@ -24,7 +25,7 @@ import {
     getComputedColIndex,
     computeIndex,
     getVirtualList,
-    omitGTableProps,
+    getPureRecord,
     cloneDatasource,
     getStyleText,
     originKey
@@ -263,11 +264,11 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
         }
         setCacheDataList(list => {
             if (isEdit) {
-                return cloneDatasource(dataSource)
+                return cloneDatasource(dataList)
             }
             return []
         })
-    }, [dataSource, isEdit])
+    }, [dataList, isEdit])
 
     //#endregion
     // 处理表格columns，可能有嵌套头部    
@@ -285,9 +286,6 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
         }
     }, [expandedRowKeys])
 
-    // dataIndex的索引
-    const computedColIndex = useMemo(() => getComputedColIndex(columns), [columns])
-    const useGIndex = useMemo(() => withIndex >= 0 || computedColIndex.find(item => item === 'g-index'), [withIndex, computedColIndex])
     // 是否触发虚拟滚动
     const virtualScroll = useMemo(() => !!(scrollY && virtualScrollConfig), [scrollY, virtualScrollConfig])
     const virtualScrollConfigInner = useMemo<VirtualScroll<T>>(() => (virtualScroll ? virtualScrollConfig === true ? defaultVirtualScrollConfig : { ...defaultVirtualScrollConfig, ...virtualScrollConfig } : {} as VirtualScroll<T>), [virtualScroll, virtualScrollConfig])
@@ -322,7 +320,7 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
     const [renderListAll, renderRowKeys, tilingListAll] = useMemo(() => {
         if (dataListWithIndex.length === 0) return [[], [], []]
         return computeIndex<T>(dataListWithIndex, expandRowKeys, computedRowKey, virtualScroll, expandLevel)
-    }, [dataListWithIndex, useGIndex, computedRowKey, expandRowKeys, expandLevel])
+    }, [dataListWithIndex, computedRowKey, expandRowKeys, expandLevel])
 
     // dom高度
     const originRowHeight = useMemo(() => parseInt(virtualScrollConfigInner.rowHeight as string) || 0, [virtualScrollConfigInner])
@@ -333,11 +331,8 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
             return (height - 2 * parseInt(cellPadding as string) - 1) + 'px'
         }
     }, [virtualScrollConfigInner, cellPadding, virtualScroll])
-    const rate = useMemo(() => {
-        const virtualHeight = BigInt(renderRowKeys.length * originRowHeight)
-        return Number(virtualHeight / BigInt(3e+07)) + 1
-    }, [renderRowKeys, originRowHeight])
     // 计算滚动比例
+    const rate = useMemo(() => math.ceil(math.chain(renderRowKeys.length).multiply(originRowHeight).divide(3e+7).done()), [renderRowKeys, originRowHeight])
     const rowHeight = useMemo(() => originRowHeight / rate, [originRowHeight, rate])
     const mainHeight = useMemo(() => renderRowKeys.length * rowHeight, [renderRowKeys, rowHeight])
     // 最终渲染的数据
@@ -346,9 +341,8 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
         if (virtualScroll) {
             list = getVirtualList(outlineNum, thresholdInner, renderRowKeys, tilingListAll)
         }
-        return omitGTableProps(list)
+        return list
     }, [virtualScroll, outlineNum, renderRowKeys, tilingListAll])
-
     //#endredion
     const minHeight = useMemo(() => renderList.length > 0 ? scrollY : undefined, [scrollY, renderList])
     const storageWidth = useMemo(() => getStorageWidth(tableKey)['table'] || _.get(scroll, 'x') || '100%', [tableKey])
@@ -364,15 +358,14 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
             // 保存之后，锁上保证下次更新不会再次进入
             setLock(true)
             console.time('计算diff')
-            const diffData = diffList(dataSource, cacheDataList, isTree)
+            const diffData = diffList(dataList, cacheDataList, isTree)
             console.timeEnd('计算diff')
-            console.log(diffData)
             onSave(_.cloneDeep(cacheDataList), diffData)
         }
-    }, [editable, dataSource, cacheDataList, isTree, lock])
+    }, [editable, dataList, cacheDataList, isTree, lock])
     //行选择
     //#region
-    const [computedRowSelection, setselectedRowKeys, footerselection] = useRowSelection(rowSelection, renderList, bordered)
+    const [computedRowSelection, setselectedRowKeys, footerselection] = useRowSelection(rowSelection, dataListWithIndex, bordered)
     const computedPagination = usePagination(pagination, computedRowSelection, dataSource.length)
     const footerCallback = useCallback((currentPageData) => {
         return (
@@ -664,7 +657,7 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
                 let checkable = true
                 if (getCheckBoxProps && typeof getCheckBoxProps === 'function') {
                     const boxProps = getCheckBoxProps(record)
-                    checkable = _.get(boxProps, 'disable')
+                    checkable = !_.get(boxProps, 'disable')
                 }
                 if (checkable) {
                     defaultRowProps.onClick = e => {
@@ -722,6 +715,8 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
 
     //#endregion
     const tableColumns = useMemo(() => convertColumns(columns), [columns, convertColumns, orderList])
+    // dataIndex的索引
+    const computedColIndex = useMemo(() => getComputedColIndex(tableColumns), [tableColumns])
 
     const expandIconColumnIndex = useMemo(() => {
         let index = 0
@@ -763,7 +758,8 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
                 onExpandedRowsChange(rowkey)
             }
             if (onExpand) {
-                onExpand(expanded, _.omit(record, ["g-row-key"]))
+                const pureRecord = getPureRecord<T>(record)
+                onExpand(expanded, pureRecord)
             }
         },
         [onExpandedRowsChange, onExpand, expandRowKeys],
@@ -874,7 +870,8 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
                                 bordered={bordered}
                                 dataSource={renderList}
                                 onRow={onRow}
-                                rowKey={computedRowKey}
+                                // rowKey={computedRowKey}
+                                rowKey='g-row-key'
                                 components={{ ...components, ...tableProps.components }}
                                 pagination={false}
                                 footer={footer}

@@ -2,7 +2,7 @@ export default [
 `
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { Button, Slider } from 'antd'
-import { Table, EditStatus, SwitchStatus, Input, InputNumber, Selector } from 'gantd'
+import { Table, EditStatus, SwitchStatus, Input, InputNumber, Selector, InputUrl } from 'gantd'
 const { Random } = Mock
 const getList = function getList(length = 5) {
   return Array.from({ length }).map(() => Mock.mock({
@@ -16,13 +16,6 @@ const getEditList = function getList(length = 5) {
     "name|1": Random.cname(),
     "age|1-100": 1,
     "key|0000-9999": 1,
-    "children|1-3": [
-      {
-        "name|1": Random.cname(),
-        "key|0000-9999": 1,
-        "age|1-100": 1,
-      }
-    ]
   }))
 }
 const getNestList = function getNestList(length = 15) {
@@ -91,7 +84,7 @@ function BasicTable(props) {
 ReactDOM.render(<BasicTable />, mountNode)`,`
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { Button, Slider } from 'antd'
-import { Table, EditStatus, SwitchStatus, Input, InputNumber, Selector } from 'gantd'
+import { Table, EditStatus, SwitchStatus, Input, InputNumber, Selector, InputUrl } from 'gantd'
 const { Random } = Mock
 const getList = function getList(length = 5) {
   return Array.from({ length }).map(() => Mock.mock({
@@ -105,13 +98,6 @@ const getEditList = function getList(length = 5) {
     "name|1": Random.cname(),
     "age|1-100": 1,
     "key|0000-9999": 1,
-    "children|1-3": [
-      {
-        "name|1": Random.cname(),
-        "key|0000-9999": 1,
-        "age|1-100": 1,
-      }
-    ]
   }))
 }
 const getNestList = function getNestList(length = 15) {
@@ -154,7 +140,7 @@ function EditorTable() {
   const [address] = useState([{ value: '1', label: '地址1' }, { value: '2', label: '地址2' }])
   const getKey = useCallback(() => Math.random().toString('16').slice(2), [])
 
-  const [dataSource, setDataSource] = useState(() => getEditList(10), [])
+  const [dataSource, setDataSource] = useState(() => getEditList(20), [])
 
   const editorColumns = [
     {
@@ -216,7 +202,6 @@ function EditorTable() {
         <Button size='small' onClick={() => { setEditing(EditStatus.SAVE) }}>保存</Button>
       </>
     }
-    // defaultExpandAllRows
     editable={editing}
     editActions={actions}
     onSave={setDataSource}
@@ -228,7 +213,7 @@ function EditorTable() {
 ReactDOM.render(<EditorTable />, mountNode)`,`
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { Button, Slider } from 'antd'
-import { Table, EditStatus, SwitchStatus, Input, InputNumber, Selector } from 'gantd'
+import { Table, EditStatus, SwitchStatus, Input, InputNumber, Selector, InputUrl } from 'gantd'
 const { Random } = Mock
 const getList = function getList(length = 5) {
   return Array.from({ length }).map(() => Mock.mock({
@@ -242,13 +227,6 @@ const getEditList = function getList(length = 5) {
     "name|1": Random.cname(),
     "age|1-100": 1,
     "key|0000-9999": 1,
-    "children|1-3": [
-      {
-        "name|1": Random.cname(),
-        "key|0000-9999": 1,
-        "age|1-100": 1,
-      }
-    ]
   }))
 }
 const getNestList = function getNestList(length = 15) {
@@ -308,7 +286,7 @@ function VirtualScrollTable() {
 ReactDOM.render(<VirtualScrollTable />, mountNode)`,`
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { Button, Slider } from 'antd'
-import { Table, EditStatus, SwitchStatus, Input, InputNumber, Selector } from 'gantd'
+import { Table, EditStatus, SwitchStatus, Input, InputNumber, Selector, InputUrl } from 'gantd'
 const { Random } = Mock
 const getList = function getList(length = 5) {
   return Array.from({ length }).map(() => Mock.mock({
@@ -322,13 +300,6 @@ const getEditList = function getList(length = 5) {
     "name|1": Random.cname(),
     "age|1-100": 1,
     "key|0000-9999": 1,
-    "children|1-3": [
-      {
-        "name|1": Random.cname(),
-        "key|0000-9999": 1,
-        "age|1-100": 1,
-      }
-    ]
   }))
 }
 const getNestList = function getNestList(length = 15) {
@@ -437,7 +408,7 @@ function NestTable(props) {
 ReactDOM.render(<NestTable />, mountNode)`,`
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { Button, Slider } from 'antd'
-import { Table, EditStatus, SwitchStatus, Input, InputNumber, Selector } from 'gantd'
+import { Table, EditStatus, SwitchStatus, Input, InputNumber, Selector, InputUrl } from 'gantd'
 const { Random } = Mock
 const getList = function getList(length = 5) {
   return Array.from({ length }).map(() => Mock.mock({
@@ -451,13 +422,6 @@ const getEditList = function getList(length = 5) {
     "name|1": Random.cname(),
     "age|1-100": 1,
     "key|0000-9999": 1,
-    "children|1-3": [
-      {
-        "name|1": Random.cname(),
-        "key|0000-9999": 1,
-        "age|1-100": 1,
-      }
-    ]
   }))
 }
 const getNestList = function getNestList(length = 15) {
@@ -529,7 +493,7 @@ function ScrollTable() {
 ReactDOM.render(<ScrollTable />, mountNode)`,`
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { Button, Slider } from 'antd'
-import { Table, EditStatus, SwitchStatus, Input, InputNumber, Selector } from 'gantd'
+import { Table, EditStatus, SwitchStatus, Input, InputNumber, Selector, InputUrl } from 'gantd'
 const { Random } = Mock
 const getList = function getList(length = 5) {
   return Array.from({ length }).map(() => Mock.mock({
@@ -543,13 +507,6 @@ const getEditList = function getList(length = 5) {
     "name|1": Random.cname(),
     "age|1-100": 1,
     "key|0000-9999": 1,
-    "children|1-3": [
-      {
-        "name|1": Random.cname(),
-        "key|0000-9999": 1,
-        "age|1-100": 1,
-      }
-    ]
   }))
 }
 const getNestList = function getNestList(length = 15) {
@@ -601,7 +558,7 @@ function DragTable(props) {
 ReactDOM.render(<DragTable />, mountNode)`,`
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { Button, Slider } from 'antd'
-import { Table, EditStatus, SwitchStatus, Input, InputNumber, Selector } from 'gantd'
+import { Table, EditStatus, SwitchStatus, Input, InputNumber, Selector, InputUrl } from 'gantd'
 const { Random } = Mock
 const getList = function getList(length = 5) {
   return Array.from({ length }).map(() => Mock.mock({
@@ -615,13 +572,6 @@ const getEditList = function getList(length = 5) {
     "name|1": Random.cname(),
     "age|1-100": 1,
     "key|0000-9999": 1,
-    "children|1-3": [
-      {
-        "name|1": Random.cname(),
-        "key|0000-9999": 1,
-        "age|1-100": 1,
-      }
-    ]
   }))
 }
 const getNestList = function getNestList(length = 15) {
@@ -767,7 +717,7 @@ function WideTable() {
 ReactDOM.render(<WideTable />, mountNode)`,`
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { Button, Slider } from 'antd'
-import { Table, EditStatus, SwitchStatus, Input, InputNumber, Selector } from 'gantd'
+import { Table, EditStatus, SwitchStatus, Input, InputNumber, Selector, InputUrl } from 'gantd'
 const { Random } = Mock
 const getList = function getList(length = 5) {
   return Array.from({ length }).map(() => Mock.mock({
@@ -781,13 +731,6 @@ const getEditList = function getList(length = 5) {
     "name|1": Random.cname(),
     "age|1-100": 1,
     "key|0000-9999": 1,
-    "children|1-3": [
-      {
-        "name|1": Random.cname(),
-        "key|0000-9999": 1,
-        "age|1-100": 1,
-      }
-    ]
   }))
 }
 const getNestList = function getNestList(length = 15) {
@@ -970,7 +913,6 @@ const TreeTable = () => {
       selectedRowKeys: keys,
       clickable: false,
       onChange: (keys, rows) => {
-        console.log(rows)
         setKeys(keys)
       },
     }}
@@ -980,7 +922,7 @@ const TreeTable = () => {
 ReactDOM.render(<TreeTable />, mountNode)`,`
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { Button, Slider } from 'antd'
-import { Table, EditStatus, SwitchStatus, Input, InputNumber, Selector } from 'gantd'
+import { Table, EditStatus, SwitchStatus, Input, InputNumber, Selector, InputUrl } from 'gantd'
 const { Random } = Mock
 const getList = function getList(length = 5) {
   return Array.from({ length }).map(() => Mock.mock({
@@ -994,13 +936,6 @@ const getEditList = function getList(length = 5) {
     "name|1": Random.cname(),
     "age|1-100": 1,
     "key|0000-9999": 1,
-    "children|1-3": [
-      {
-        "name|1": Random.cname(),
-        "key|0000-9999": 1,
-        "age|1-100": 1,
-      }
-    ]
   }))
 }
 const getNestList = function getNestList(length = 15) {
@@ -1071,7 +1006,7 @@ function PaginationTable(props) {
 ReactDOM.render(<PaginationTable />, mountNode)`,`
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { Button, Slider } from 'antd'
-import { Table, EditStatus, SwitchStatus, Input, InputNumber, Selector } from 'gantd'
+import { Table, EditStatus, SwitchStatus, Input, InputNumber, Selector, InputUrl } from 'gantd'
 const { Random } = Mock
 const getList = function getList(length = 5) {
   return Array.from({ length }).map(() => Mock.mock({
@@ -1085,13 +1020,6 @@ const getEditList = function getList(length = 5) {
     "name|1": Random.cname(),
     "age|1-100": 1,
     "key|0000-9999": 1,
-    "children|1-3": [
-      {
-        "name|1": Random.cname(),
-        "key|0000-9999": 1,
-        "age|1-100": 1,
-      }
-    ]
   }))
 }
 const getNestList = function getNestList(length = 15) {
@@ -1163,7 +1091,7 @@ function LightTable(props) {
 ReactDOM.render(<LightTable />, mountNode)`,`
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { Button, Slider } from 'antd'
-import { Table, EditStatus, SwitchStatus, Input, InputNumber, Selector } from 'gantd'
+import { Table, EditStatus, SwitchStatus, Input, InputNumber, Selector, InputUrl } from 'gantd'
 const { Random } = Mock
 const getList = function getList(length = 5) {
   return Array.from({ length }).map(() => Mock.mock({
@@ -1177,13 +1105,6 @@ const getEditList = function getList(length = 5) {
     "name|1": Random.cname(),
     "age|1-100": 1,
     "key|0000-9999": 1,
-    "children|1-3": [
-      {
-        "name|1": Random.cname(),
-        "key|0000-9999": 1,
-        "age|1-100": 1,
-      }
-    ]
   }))
 }
 const getNestList = function getNestList(length = 15) {

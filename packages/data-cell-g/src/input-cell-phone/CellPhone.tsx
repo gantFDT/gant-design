@@ -11,7 +11,7 @@ interface value {
 }
 export interface GantCellPhoneProps extends WidthBasicProps {
   value?: value,
-  onChage: (val: value) => void,
+  onChage?: (val: value) => void,
   placeholder?:string,
   allowClear?: boolean
 }

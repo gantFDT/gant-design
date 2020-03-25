@@ -5,9 +5,9 @@ import code from './code.js'
 import Mock from 'mockjs'
 /*! Start !*/
 import React, { useState, useCallback } from 'react'
-import { Divider, Tag, Radio, Button, message, ConfigProvider } from 'antd'
+import { Divider, Tag, Radio, Button, message, ConfigProvider, Rate } from 'antd'
 import { SmartTable, EditStatus, SwitchStatus } from '@gantd'
-const { mock, Random } = Mock
+const { Random } = Mock
 /*! Split !*/
 var dataSource = Array(10).fill().map((_, Idx) => ({
   key: Idx,
@@ -263,7 +263,7 @@ function ConfigDisplayUse() {
         pageSize={pageSize}
         onPageChange={(page,pageSize)=>{console.log(page, pageSize);setPage(page);setPageSize(pageSize)}}
         totalCount={10}
-        // pageSizeOptions={['5', '10', '15', '20']}
+        pageSizeOptions={['5', '10', '15', '20']}
       />
     </div>
   )
@@ -464,6 +464,9 @@ function LocalUse() {
   )
 }
 /*! Split !*/
+SmartTable.setField({ // 拓展componentType字段类型
+  'Rate': Rate
+})
 var editTableColumns = [
   {
     fieldName: 'name',
@@ -483,7 +486,7 @@ var editTableColumns = [
   {
     fieldName: 'domain',
     title: '个人主页',
-    // componentType: 'InputUrl'
+    componentType: 'InputUrl'
   },
   {
     fieldName: 'email',
@@ -514,7 +517,11 @@ var editTableColumns = [
   {
     fieldName: 'birth',
     title: '生日',
-    componentType: 'DataPicker'
+    componentType: 'DatePicker'
+  },{
+    fieldName: 'star',
+    title: '星级',
+    componentType: 'Rate'
   }
 ]
 var editTableSchema = {
@@ -562,6 +569,10 @@ var editTableSchema = {
           {
             fieldName: 'birth',
             width: 160
+          },
+          {
+            fieldName: 'star',
+            width: 160
           }
         ]
       }
@@ -578,6 +589,7 @@ var editTableData = Array(15).fill().map(() => ({
   bio: [{ value: Random.cparagraph(1, 3) }],
   price: { value: Random.float(9, 50, 2, 2) },
   address: ["CHN", "510000", "510100"],
+  star: Random.natural(0, 5),
 }))
 function EditInlineUse() {
   const [stateData, setStateData] = useState(editTableData)

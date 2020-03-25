@@ -1,6 +1,21 @@
 import React from 'react';
 import { GantTableListOuterProps, GColumnProps } from '@table'
 
+export enum Fields {
+  Input = 'Input',
+  InputNumber = 'InputNumber',
+  InputUrl = 'InputUrl',
+  InputTelePhone = 'InputTelePhone',
+  InputCellPhone = 'InputCellPhone',
+  InputEmail = 'InputEmail',
+  InputLanguage = 'InputLanguage',
+  InputMoney = 'InputMoney',
+  TextArea = 'TextArea',
+  DatePicker = 'DatePicker',
+  Selector = 'Selector',
+  LocationSelector = 'LocationSelector'
+}
+
 export interface CustomColumnProps<R> extends GColumnProps<R> {
   fieldName: string,
   title: string,
@@ -9,7 +24,7 @@ export interface CustomColumnProps<R> extends GColumnProps<R> {
   fixed?: 'left' | 'right',
   width?: number | string,
   align?: 'left' | 'center' | 'right',
-  componentType?: string,
+  componentType?: Fields,
   render?: (text: any, record: R, index: number) => React.ReactNode;
   children?: CustomColumnProps<R>[]
 }
@@ -72,6 +87,11 @@ export interface SmartTableProps<T> extends GantTableProps<T> {
   onPageChange?: (pageIndex: number, pageSize?: number) => void,
   totalCount?: number,
   hasExport?: boolean,
+}
+
+export interface SmartTableType {
+  <T>(props: SmartTableProps<T>): React.ReactElement,
+  setField?: (field:Object) => void;
 }
 
 export enum langEnum {
