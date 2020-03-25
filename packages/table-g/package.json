@@ -1,6 +1,6 @@
 {
     "name": "table-g",
-    "version": "0.1.8",
+    "version": "0.1.9",
     "description": "gantd table",
     "main": "lib/index.js",
     "scripts": {},
@@ -23,10 +23,10 @@
     "dependencies": {
         "antd": "^3.26.5",
         "classnames": "^2.2.6",
-        "mathjs": "^6.6.1",
         "data-cell-g": "^0.0.11",
         "header-g": "^0.1.4",
         "lodash": "^4.17.11",
+        "mathjs": "^6.6.1",
         "moment": "^2.24.0",
         "prop-types": "^15.6.0",
         "react": "^16.12.0",
