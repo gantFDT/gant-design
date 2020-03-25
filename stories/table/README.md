@@ -73,6 +73,12 @@
 | rowHeight | 否 | number、string| 24 | 每一行的高度 | 
 | center | 否 | boolean | true | 行内容是否居中
 
+### dataSource新增
+
+| 属性 | 是否必传 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| isDeleted | 否 | boolean | false | 是否标记该条数据为删除 |
+
 
 ## 表格编辑功能重要说明
 
