@@ -91,9 +91,10 @@ const Header = (props: HeaderIF) => {
   }, [allWidth, leftRef.current])
   return (
     <div className={clsString} style={{ borderBottom: bottomLine && '1px solid rgba(128,128,128,0.2)', ...style }} {...restProps}>
-      <ReactResizeDetector handleWidth handleHeight key={1}>
+      {extra && <ReactResizeDetector handleWidth handleHeight key={1}>
         <ResizeDetector setAllWidth={setAllWidth} />
       </ReactResizeDetector>
+      }
       <div className={prefixCls + '-wrapper'} ref={leftRef} >
         <div className={prefixCls + '-beforeExtra'}>
           {beforeExtra}
