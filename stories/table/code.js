@@ -181,7 +181,7 @@ function EditorTable() {
         render: (text, record, index) => {
           return <InputNumber min={0} />
         },
-        shouldEdit: (record) => {
+        editable: (record) => {
           return record.age < 30
         }
       }
