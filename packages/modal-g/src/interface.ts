@@ -13,8 +13,8 @@ export interface PositionSizeProps extends WindowSizeProps {
 export interface ModalStateProps {
     x?: number,
     y?: number,
-    width?: number,
-    height?: number,
+    width?: number | string,
+    height?: number | string,
     zIndex?: number,
     visible?: boolean,
     maximize?: boolean, // 默认窗口是否最大化
