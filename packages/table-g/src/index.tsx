@@ -93,7 +93,7 @@ export type EditConfig<T> = {
     render: EditRender<T>,
     showDirt?: boolean,
     editValue?: string | ((record: T, rowIndex: number, dataIndex: string) => string),
-    shouldEdit?: boolean | ((record: T, rowIndex: number, dataIndex: string) => boolean)
+    clickable?: boolean | ((record: T, rowIndex: number, dataIndex: string) => boolean)
 }
 // 重写column类型
 export interface GColumnProps<T> extends ColumnProps<T> {

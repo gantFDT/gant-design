@@ -256,9 +256,7 @@ export const useRowSelection = <T extends Record>(rowSelection: RowSelection<T>,
   if (!rowSelection) return [null, setKeys, null]
   rowSelection.columnWidth = columnWidth
   rowSelection.getCheckboxProps = getCheckboxProps
-  if (preventDefault) {
-    return [rowSelection, setKeys, footerselection]
-  }
+
   return [
     {
       ...rowSelection,

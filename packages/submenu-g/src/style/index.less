@@ -6,6 +6,11 @@
 
 :global {
   .@{profilecard-prefix-cls} {
+    &.ant-menu-inline-collapsed>.ant-menu-item .gant-input-wrapper+span {
+      display: inline-block;
+      max-width: 0;
+      opacity: 0;
+    }
 
     &.ant-menu-inline-collapsed {
       width: @standard;
@@ -84,7 +89,7 @@
 
     &-menuleft {
       width: calc(100% - @standard);
-      border-bottom:1px solid rgba(128,128,128,0.2);
+      border-bottom: 1px solid rgba(128, 128, 128, 0.2);
     }
 
     &-menuright {
@@ -104,7 +109,7 @@
 
       .ant-menu-horizontal {
         line-height: @standard - 2;
-        border:none;
+        border: none;
       }
     }
 

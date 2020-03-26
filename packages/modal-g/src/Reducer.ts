@@ -24,6 +24,12 @@ const getAxis = (windowMeter: number, targetMeter: number, num?: any) => {
     if (typeof num == 'number') return num
     return (windowMeter - targetMeter) / 2
 }
+const convertPercentage = (target: any, windowSize: number, inital: number) => {
+    if (typeof target == 'number') return target
+    let reg = new RegExp(/^\d+%$/)
+    if (reg.test(target)) return Math.floor(windowSize * (target.replace("%", "") / 100))
+    return inital
+}
 
 const mapObject = <R, K extends keyof R>(obj: R, fn: (v: R[K]) => R[K]): R => Object.assign({}, ...Object.keys(obj).map(key => ({ [key]: fn(obj[key]) })))
 
@@ -51,7 +57,7 @@ const clampResize = (minWidth: number, minHeight: number, windowWidth: number, w
 }
 
 const resizableReducer: React.Reducer<ModalsState, Action> = (state, action) => {
-    const { minWidth, minHeight, initialModalState } = state
+    const { minWidth, minHeight, initialModalState, windowSize } = state
     const needIncrease = Object.keys(state.modals).length != 1
     switch (action.type) {
         case ActionTypes.mount:
@@ -62,8 +68,10 @@ const resizableReducer: React.Reducer<ModalsState, Action> = (state, action) => 
                 x: combineState.x,
                 y: combineState.y,
             }
-            const x = getAxis(state.windowSize.width, combineState.width, combineState.x)
-            const y = getAxis(state.windowSize.height, combineState.height, combineState.y)
+            combineState.width = convertPercentage(combineState.width, windowSize.width, <number>initialModalState.width)
+            combineState.height = convertPercentage(combineState.height, windowSize.height, <number>initialModalState.height)
+            const x = getAxis(windowSize.width, combineState.width, combineState.x)
+            const y = getAxis(windowSize.height, combineState.height, combineState.y)
             return {
                 ...state,
                 maxZIndex: state.maxZIndex + 1,
@@ -99,37 +107,41 @@ const resizableReducer: React.Reducer<ModalsState, Action> = (state, action) => 
                 },
             }
         case ActionTypes.show: {
-            const modalState = state.modals[action.id]
+            const modalState = { ...state.modals[action.id] }
             const needKeep = modalState.keepStateOnClose
             const { inital, maximize } = modalState
             const target = needKeep ? modalState : inital
+            if (!needKeep) {
+                typeof inital.width == 'string' && (modalState.width = convertPercentage(inital.width, windowSize.width, <number>initialModalState.width))
+                typeof inital.height == 'string' && (modalState.height = convertPercentage(inital.height, windowSize.height, <number>initialModalState.height))
+            }
             const maxZIndex = needIncrease ? state.maxZIndex + 1 : state.maxZIndex
-            const centerX = getAxis(state.windowSize.width, modalState.width, target.x)
-            const centerY = getAxis(state.windowSize.height, modalState.height, target.y)
+            const centerX = getAxis(windowSize.width, <number>modalState.width, target.x)
+            const centerY = getAxis(windowSize.height, <number>modalState.height, target.y)
 
             let isMaximized = modalState.isMaximized
             let position = clampDrag(
-                state.windowSize.width,
-                state.windowSize.height,
+                windowSize.width,
+                windowSize.height,
                 centerX,
                 centerY,
-                modalState.width,
-                modalState.height,
+                <number>modalState.width,
+                <number>modalState.height,
             )
             let size = clampResize(
                 minWidth,
                 minHeight,
-                state.windowSize.width,
-                state.windowSize.height,
+                windowSize.width,
+                windowSize.height,
                 position.x,
                 position.y,
-                modalState.width,
-                modalState.height,
+                <number>modalState.width,
+                <number>modalState.height,
             )
 
             if (!needKeep && maximize) {
                 position = { x: 0, y: 0 }
-                size = { width: state.windowSize.width, height: state.windowSize.height }
+                size = { width: windowSize.width, height: windowSize.height }
                 isMaximized = maximize
             }
             return {
@@ -152,8 +164,8 @@ const resizableReducer: React.Reducer<ModalsState, Action> = (state, action) => 
             const modalState = state.modals[action.id]
             let resetState = {
                 ...modalState,
-                width: modalState.inital.width,
-                height: modalState.inital.height,
+                width: convertPercentage(modalState.inital.width, windowSize.width, <number>initialModalState.width),
+                height: convertPercentage(modalState.inital.height, windowSize.height, <number>initialModalState.height),
                 isMaximized: false,
                 visible: false,
             }
@@ -194,11 +206,13 @@ const resizableReducer: React.Reducer<ModalsState, Action> = (state, action) => 
             const modalState = state.modals[action.id]
             const { inital, history } = modalState
             let target = history || inital
-            let x = target.x || getAxis(state.windowSize.width, inital.width)
-            let y = target.y || getAxis(state.windowSize.height, inital.height)
+            target.width = convertPercentage(target.width, windowSize.width, <number>initialModalState.width)
+            target.height = convertPercentage(target.height, windowSize.height, <number>initialModalState.height)
+            let x = target.x != undefined ? target.x : getAxis(windowSize.width, target.width)
+            let y = target.y != undefined ? target.y : getAxis(windowSize.height, target.height)
             const position = clampDrag(
-                state.windowSize.width,
-                state.windowSize.height,
+                windowSize.width,
+                windowSize.height,
                 x,
                 y,
                 target.width,
@@ -207,8 +221,8 @@ const resizableReducer: React.Reducer<ModalsState, Action> = (state, action) => 
             const size = clampResize(
                 minWidth,
                 minHeight,
-                state.windowSize.width,
-                state.windowSize.height,
+                windowSize.width,
+                windowSize.height,
                 position.x,
                 position.y,
                 target.width,
@@ -232,8 +246,8 @@ const resizableReducer: React.Reducer<ModalsState, Action> = (state, action) => 
             const size = clampResize(
                 minWidth,
                 minHeight,
-                state.windowSize.width,
-                state.windowSize.height,
+                windowSize.width,
+                windowSize.height,
                 action.x,
                 action.y,
                 action.width,
@@ -260,12 +274,12 @@ const resizableReducer: React.Reducer<ModalsState, Action> = (state, action) => 
                     [action.id]: {
                         ...state.modals[action.id],
                         ...clampDrag(
-                            state.windowSize.width,
-                            state.windowSize.height,
+                            windowSize.width,
+                            windowSize.height,
                             action.x,
                             action.y,
-                            state.modals[action.id].width,
-                            state.modals[action.id].height,
+                            <number>state.modals[action.id].width,
+                            <number>state.modals[action.id].height,
                         ),
                         zIndex: getNextZIndex(state, action.id),
                     },
@@ -284,8 +298,8 @@ const resizableReducer: React.Reducer<ModalsState, Action> = (state, action) => 
                         action.size.height,
                         modalState.x,
                         modalState.y,
-                        modalState.width,
-                        modalState.height,
+                        <number>modalState.width,
+                        <number>modalState.height,
                     )
                     const size = modalState.isMaximized ?
                         { width: action.size.width, height: action.size.height }
@@ -296,8 +310,8 @@ const resizableReducer: React.Reducer<ModalsState, Action> = (state, action) => 
                             action.size.height,
                             position.x,
                             position.y,
-                            modalState.width,
-                            modalState.height,
+                            <number>modalState.width,
+                            <number>modalState.height,
                         )
                     return {
                         ...modalState,
