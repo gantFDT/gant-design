@@ -1,14 +1,14 @@
 ## API
 ItemState - 属性如下
 
-| 属性             | 说明                                             | 类型    | 默认值 |
-| ---------------- | ------------------------------------------------ | ------- | ------ |
-| x                | 弹窗弹出时定位x轴                                | number  | 无     |
-| y                | 弹窗弹出时定位y轴                                | number  | 无     |
-| width            | 弹窗宽度                                         | number  | 520    |
-| height           | 弹窗高度                                         | number  | 520    |
-| maximize         | 默认弹出时是否为最大化状态                       | boolean | false  |
-| keepStateOnClose | 在弹窗挂载期是否保留弹窗关闭前的xy定位与尺寸信息 | boolean | false  |
+| 属性             | 说明                                             | 类型          | 默认值 |
+| ---------------- | ------------------------------------------------ | ------------- | ------ |
+| x                | 弹窗弹出时定位x轴                                | number        | 无     |
+| y                | 弹窗弹出时定位y轴                                | number        | 无     |
+| width            | 弹窗宽度(支持px或百分比)                         | number/string | 520    |
+| height           | 弹窗高度(支持px或百分比)                         | number/string | 520    |
+| maximize         | 默认弹出时是否为最大化状态                       | boolean       | false  |
+| keepStateOnClose | 在弹窗挂载期是否保留弹窗关闭前的xy定位与尺寸信息 | boolean       | false  |
 
 Modal - 属性如下
 
