@@ -20,9 +20,9 @@ const onSave = (id, value, cb) => {
 /*! Split !*/
 const C1 = WrapperValue('2019-06-05 11:01:29')(({ value, setValue }) => <DatePicker format='YYYY-MM-DD HH:mm:ss' value={value} onChange={setValue} onSave={onSave} />)
 /*! Split !*/
-const C2 = WrapperValue('2019-06-05 11:01:29')(({ value, setValue }) => <DatePicker style={{ margin: "10px 0" }} value={value} onChange={setValue} onSave={onSave} />)
+const C2 = WrapperValue('2019-06-05 11:01:29')(({ value, setValue }) => <DatePicker  value={value} onChange={setValue} onSave={onSave} />)
 /*! Split !*/
-const C3 = WrapperValue('06-05-19 11:01:29')(({ value, setValue }) => <DatePicker format='MM-DD-YY' value={value} onChange={setValue} onSave={onSave} />)
+const C3 = WrapperValue('06-05-19 11:01:29')(({ value, setValue }) => <DatePicker format='MM-DD-YY' allowEdit={false} value={value} onChange={setValue} onSave={onSave} />)
 /*! End !*/
 const config = {
   useage: `<b>🖍 读写分离</b></br>

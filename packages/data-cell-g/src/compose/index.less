@@ -35,29 +35,20 @@
   }
 
   // 作为嵌套表单使用的时候
-  .@{gant-input-wrapper}.@{gant-input-inner}{
-    flex: 1
+  .@{gant-input-wrapper}{
+    display: inline-block;
+    width: 100%;
+    vertical-align: middle;
   }
 
   .@{input-prefix-cls} {
-    display: flex;
-    align-items: center; 
-
-    &::after {
-      content: 'clear';
-      display: inline-block;
-      width: 0;
-      overflow: hidden;
-      white-space: nowrap;
-    }
-
-    .@{compose-prefix-cls}-extra{
-      display: inline-block;
-      padding-right: 8px;
-      margin-right: 8px;
-      border-right: 1px solid #d9d9d9;
-    }
-
+    // &::after {
+    //   content: 'clear';
+    //   display: inline-block;
+    //   width: 0;
+    //   overflow: hidden;
+    //   white-space: nowrap;
+    // }
     .@{compose-prefix-cls}-success { // 确认按钮
       color: @green;
       cursor: pointer;

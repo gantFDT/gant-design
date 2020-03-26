@@ -64,10 +64,12 @@ const withMoneyType = compose(
     const num = numeral(money).format(format)
     return `${currency} ${num}`
   }, "gantd-input-money-addonBefore"),
-  withProps(({ currency, onCurrencyChange }) => {
+  withProps(({ currency, onCurrencyChange, size }) => {
     return ({
       addonBefore: (
-        <Select dropdownClassName="gantd-input-money-addonBefore" style={{ width: 75 }} value={currency} onChange={onCurrencyChange}>
+        <Select dropdownClassName="gantd-input-money-addonBefore" className="gant-input-money-select" style={{ width: 75 }} value={currency}
+          size={size}
+          onChange={onCurrencyChange}>
           {
             symbols.map(type => <Select.Option key={type} value={type}>{type}</Select.Option>)
           }
@@ -103,10 +105,14 @@ class InputMoney extends Component<any>{
   }
 
   render() {
-    const { setType, onEnter, onValueChange, precision, format, reg, ...props } = this.props
+    const { setType, onEnter, onValueChange, precision, format, reg, addonBefore, ...props } = this.props
     const { value } = this.state
+
     return (
-      <InputNumber {...props} isInner value={props.money || value} min={0} edit={EditStatus.EDIT} onPressEnter={onEnter} onChange={this.onChange} />
+      <span className='gant-input-moeny'>
+        {addonBefore}
+        <InputNumber {...props} wrapperClassName={'gant-input-moeny-number'} isInner value={props.money || value} min={0} edit={EditStatus.EDIT} onPressEnter={onEnter} onChange={this.onChange} />
+      </span>
     );
   }
 }

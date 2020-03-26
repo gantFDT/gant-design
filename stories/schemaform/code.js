@@ -18,37 +18,122 @@ const schema = {
       key_1: {
           title: "普通输入框",
           type: "string",
+          props:{
+              placeholder:"输入提示"
+          }
       },
       key_2: {
           title: "数字输入框",
           type: "number",
-          componentType: "InputNumber"
+          componentType: "InputNumber",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_3: {
           title: "金额",
           type: "string",
-          componentType: "InputMoney"
+          componentType: "InputMoney",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_4: {
           title: "url地址",
           type: "string",
-          componentType: "InputUrl"
+          componentType: "InputUrl",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_5: {
           title: "邮箱",
           type: "string",
-          componentType: "InputEmail"
+          componentType: "InputEmail",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_6: {
           title: "语言",
           type: "string",
-          componentType: "InputLanguage"
+          componentType: "InputLanguage",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_7: {
           title: "手机号",
           type: "string",
-          componentType: "InputCellPhone"
+          componentType: "InputCellPhone",
+          props:{
+            placeholder:"输入提示"
+        }
       },
+      key_8: {
+          title: "搜索",
+          type: "string",
+          componentType: "Search",
+          props:{
+            placeholder:"输入提示"
+        }
+      },
+      key_9: {
+          title: "密码",
+          type: "string",
+          componentType: "Password",
+          props:{
+            placeholder:"输入提示"
+        }
+      },
+      key_11: {
+        title: "电话",
+        type: "string",
+        componentType: "InputTelePhone",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+    key_12: {
+        title: "日期",
+        type: "string",
+        componentType: "DatePicker",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+    key_13: {
+        title: "日期区间",
+        type: "string",
+        componentType: "RangePicker",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+    key_14: {
+        title: "枚举",
+        type: "string",
+        componentType: "Selector",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+    key_15: {
+        title: "地址",
+        type: "string",
+        componentType: "LocationSelector",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+      key_10: {
+          title: "多行文本",
+          type: "string",
+          componentType: "TextArea",
+          props:{
+            placeholder:"输入提示"
+        }
+      }
   }
 }
 
@@ -94,37 +179,122 @@ const schema = {
       key_1: {
           title: "普通输入框",
           type: "string",
+          props:{
+              placeholder:"输入提示"
+          }
       },
       key_2: {
           title: "数字输入框",
           type: "number",
-          componentType: "InputNumber"
+          componentType: "InputNumber",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_3: {
           title: "金额",
           type: "string",
-          componentType: "InputMoney"
+          componentType: "InputMoney",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_4: {
           title: "url地址",
           type: "string",
-          componentType: "InputUrl"
+          componentType: "InputUrl",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_5: {
           title: "邮箱",
           type: "string",
-          componentType: "InputEmail"
+          componentType: "InputEmail",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_6: {
           title: "语言",
           type: "string",
-          componentType: "InputLanguage"
+          componentType: "InputLanguage",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_7: {
           title: "手机号",
           type: "string",
-          componentType: "InputCellPhone"
+          componentType: "InputCellPhone",
+          props:{
+            placeholder:"输入提示"
+        }
       },
+      key_8: {
+          title: "搜索",
+          type: "string",
+          componentType: "Search",
+          props:{
+            placeholder:"输入提示"
+        }
+      },
+      key_9: {
+          title: "密码",
+          type: "string",
+          componentType: "Password",
+          props:{
+            placeholder:"输入提示"
+        }
+      },
+      key_11: {
+        title: "电话",
+        type: "string",
+        componentType: "InputTelePhone",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+    key_12: {
+        title: "日期",
+        type: "string",
+        componentType: "DatePicker",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+    key_13: {
+        title: "日期区间",
+        type: "string",
+        componentType: "RangePicker",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+    key_14: {
+        title: "枚举",
+        type: "string",
+        componentType: "Selector",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+    key_15: {
+        title: "地址",
+        type: "string",
+        componentType: "LocationSelector",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+      key_10: {
+          title: "多行文本",
+          type: "string",
+          componentType: "TextArea",
+          props:{
+            placeholder:"输入提示"
+        }
+      }
   }
 }
 
@@ -229,37 +399,122 @@ const schema = {
       key_1: {
           title: "普通输入框",
           type: "string",
+          props:{
+              placeholder:"输入提示"
+          }
       },
       key_2: {
           title: "数字输入框",
           type: "number",
-          componentType: "InputNumber"
+          componentType: "InputNumber",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_3: {
           title: "金额",
           type: "string",
-          componentType: "InputMoney"
+          componentType: "InputMoney",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_4: {
           title: "url地址",
           type: "string",
-          componentType: "InputUrl"
+          componentType: "InputUrl",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_5: {
           title: "邮箱",
           type: "string",
-          componentType: "InputEmail"
+          componentType: "InputEmail",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_6: {
           title: "语言",
           type: "string",
-          componentType: "InputLanguage"
+          componentType: "InputLanguage",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_7: {
           title: "手机号",
           type: "string",
-          componentType: "InputCellPhone"
+          componentType: "InputCellPhone",
+          props:{
+            placeholder:"输入提示"
+        }
       },
+      key_8: {
+          title: "搜索",
+          type: "string",
+          componentType: "Search",
+          props:{
+            placeholder:"输入提示"
+        }
+      },
+      key_9: {
+          title: "密码",
+          type: "string",
+          componentType: "Password",
+          props:{
+            placeholder:"输入提示"
+        }
+      },
+      key_11: {
+        title: "电话",
+        type: "string",
+        componentType: "InputTelePhone",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+    key_12: {
+        title: "日期",
+        type: "string",
+        componentType: "DatePicker",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+    key_13: {
+        title: "日期区间",
+        type: "string",
+        componentType: "RangePicker",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+    key_14: {
+        title: "枚举",
+        type: "string",
+        componentType: "Selector",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+    key_15: {
+        title: "地址",
+        type: "string",
+        componentType: "LocationSelector",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+      key_10: {
+          title: "多行文本",
+          type: "string",
+          componentType: "TextArea",
+          props:{
+            placeholder:"输入提示"
+        }
+      }
   }
 }
 
@@ -334,37 +589,122 @@ const schema = {
       key_1: {
           title: "普通输入框",
           type: "string",
+          props:{
+              placeholder:"输入提示"
+          }
       },
       key_2: {
           title: "数字输入框",
           type: "number",
-          componentType: "InputNumber"
+          componentType: "InputNumber",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_3: {
           title: "金额",
           type: "string",
-          componentType: "InputMoney"
+          componentType: "InputMoney",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_4: {
           title: "url地址",
           type: "string",
-          componentType: "InputUrl"
+          componentType: "InputUrl",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_5: {
           title: "邮箱",
           type: "string",
-          componentType: "InputEmail"
+          componentType: "InputEmail",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_6: {
           title: "语言",
           type: "string",
-          componentType: "InputLanguage"
+          componentType: "InputLanguage",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_7: {
           title: "手机号",
           type: "string",
-          componentType: "InputCellPhone"
+          componentType: "InputCellPhone",
+          props:{
+            placeholder:"输入提示"
+        }
       },
+      key_8: {
+          title: "搜索",
+          type: "string",
+          componentType: "Search",
+          props:{
+            placeholder:"输入提示"
+        }
+      },
+      key_9: {
+          title: "密码",
+          type: "string",
+          componentType: "Password",
+          props:{
+            placeholder:"输入提示"
+        }
+      },
+      key_11: {
+        title: "电话",
+        type: "string",
+        componentType: "InputTelePhone",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+    key_12: {
+        title: "日期",
+        type: "string",
+        componentType: "DatePicker",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+    key_13: {
+        title: "日期区间",
+        type: "string",
+        componentType: "RangePicker",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+    key_14: {
+        title: "枚举",
+        type: "string",
+        componentType: "Selector",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+    key_15: {
+        title: "地址",
+        type: "string",
+        componentType: "LocationSelector",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+      key_10: {
+          title: "多行文本",
+          type: "string",
+          componentType: "TextArea",
+          props:{
+            placeholder:"输入提示"
+        }
+      }
   }
 }
 
@@ -495,37 +835,122 @@ const schema = {
       key_1: {
           title: "普通输入框",
           type: "string",
+          props:{
+              placeholder:"输入提示"
+          }
       },
       key_2: {
           title: "数字输入框",
           type: "number",
-          componentType: "InputNumber"
+          componentType: "InputNumber",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_3: {
           title: "金额",
           type: "string",
-          componentType: "InputMoney"
+          componentType: "InputMoney",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_4: {
           title: "url地址",
           type: "string",
-          componentType: "InputUrl"
+          componentType: "InputUrl",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_5: {
           title: "邮箱",
           type: "string",
-          componentType: "InputEmail"
+          componentType: "InputEmail",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_6: {
           title: "语言",
           type: "string",
-          componentType: "InputLanguage"
+          componentType: "InputLanguage",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_7: {
           title: "手机号",
           type: "string",
-          componentType: "InputCellPhone"
+          componentType: "InputCellPhone",
+          props:{
+            placeholder:"输入提示"
+        }
       },
+      key_8: {
+          title: "搜索",
+          type: "string",
+          componentType: "Search",
+          props:{
+            placeholder:"输入提示"
+        }
+      },
+      key_9: {
+          title: "密码",
+          type: "string",
+          componentType: "Password",
+          props:{
+            placeholder:"输入提示"
+        }
+      },
+      key_11: {
+        title: "电话",
+        type: "string",
+        componentType: "InputTelePhone",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+    key_12: {
+        title: "日期",
+        type: "string",
+        componentType: "DatePicker",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+    key_13: {
+        title: "日期区间",
+        type: "string",
+        componentType: "RangePicker",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+    key_14: {
+        title: "枚举",
+        type: "string",
+        componentType: "Selector",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+    key_15: {
+        title: "地址",
+        type: "string",
+        componentType: "LocationSelector",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+      key_10: {
+          title: "多行文本",
+          type: "string",
+          componentType: "TextArea",
+          props:{
+            placeholder:"输入提示"
+        }
+      }
   }
 }
 
@@ -555,7 +980,7 @@ function GridLayout() {
 
     }
     return <div style={{ margin: 10 }} >
-        <SchemaForm uiSchema={uiSchema} schema={schema} />
+        <SchemaForm uiSchema={uiSchema} schema={schema}  />
     </div>
 }
 
@@ -578,37 +1003,122 @@ const schema = {
       key_1: {
           title: "普通输入框",
           type: "string",
+          props:{
+              placeholder:"输入提示"
+          }
       },
       key_2: {
           title: "数字输入框",
           type: "number",
-          componentType: "InputNumber"
+          componentType: "InputNumber",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_3: {
           title: "金额",
           type: "string",
-          componentType: "InputMoney"
+          componentType: "InputMoney",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_4: {
           title: "url地址",
           type: "string",
-          componentType: "InputUrl"
+          componentType: "InputUrl",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_5: {
           title: "邮箱",
           type: "string",
-          componentType: "InputEmail"
+          componentType: "InputEmail",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_6: {
           title: "语言",
           type: "string",
-          componentType: "InputLanguage"
+          componentType: "InputLanguage",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_7: {
           title: "手机号",
           type: "string",
-          componentType: "InputCellPhone"
+          componentType: "InputCellPhone",
+          props:{
+            placeholder:"输入提示"
+        }
       },
+      key_8: {
+          title: "搜索",
+          type: "string",
+          componentType: "Search",
+          props:{
+            placeholder:"输入提示"
+        }
+      },
+      key_9: {
+          title: "密码",
+          type: "string",
+          componentType: "Password",
+          props:{
+            placeholder:"输入提示"
+        }
+      },
+      key_11: {
+        title: "电话",
+        type: "string",
+        componentType: "InputTelePhone",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+    key_12: {
+        title: "日期",
+        type: "string",
+        componentType: "DatePicker",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+    key_13: {
+        title: "日期区间",
+        type: "string",
+        componentType: "RangePicker",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+    key_14: {
+        title: "枚举",
+        type: "string",
+        componentType: "Selector",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+    key_15: {
+        title: "地址",
+        type: "string",
+        componentType: "LocationSelector",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+      key_10: {
+          title: "多行文本",
+          type: "string",
+          componentType: "TextArea",
+          props:{
+            placeholder:"输入提示"
+        }
+      }
   }
 }
 
@@ -673,37 +1183,122 @@ const schema = {
       key_1: {
           title: "普通输入框",
           type: "string",
+          props:{
+              placeholder:"输入提示"
+          }
       },
       key_2: {
           title: "数字输入框",
           type: "number",
-          componentType: "InputNumber"
+          componentType: "InputNumber",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_3: {
           title: "金额",
           type: "string",
-          componentType: "InputMoney"
+          componentType: "InputMoney",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_4: {
           title: "url地址",
           type: "string",
-          componentType: "InputUrl"
+          componentType: "InputUrl",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_5: {
           title: "邮箱",
           type: "string",
-          componentType: "InputEmail"
+          componentType: "InputEmail",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_6: {
           title: "语言",
           type: "string",
-          componentType: "InputLanguage"
+          componentType: "InputLanguage",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_7: {
           title: "手机号",
           type: "string",
-          componentType: "InputCellPhone"
+          componentType: "InputCellPhone",
+          props:{
+            placeholder:"输入提示"
+        }
       },
+      key_8: {
+          title: "搜索",
+          type: "string",
+          componentType: "Search",
+          props:{
+            placeholder:"输入提示"
+        }
+      },
+      key_9: {
+          title: "密码",
+          type: "string",
+          componentType: "Password",
+          props:{
+            placeholder:"输入提示"
+        }
+      },
+      key_11: {
+        title: "电话",
+        type: "string",
+        componentType: "InputTelePhone",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+    key_12: {
+        title: "日期",
+        type: "string",
+        componentType: "DatePicker",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+    key_13: {
+        title: "日期区间",
+        type: "string",
+        componentType: "RangePicker",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+    key_14: {
+        title: "枚举",
+        type: "string",
+        componentType: "Selector",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+    key_15: {
+        title: "地址",
+        type: "string",
+        componentType: "LocationSelector",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+      key_10: {
+          title: "多行文本",
+          type: "string",
+          componentType: "TextArea",
+          props:{
+            placeholder:"输入提示"
+        }
+      }
   }
 }
 
@@ -766,37 +1361,122 @@ const schema = {
       key_1: {
           title: "普通输入框",
           type: "string",
+          props:{
+              placeholder:"输入提示"
+          }
       },
       key_2: {
           title: "数字输入框",
           type: "number",
-          componentType: "InputNumber"
+          componentType: "InputNumber",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_3: {
           title: "金额",
           type: "string",
-          componentType: "InputMoney"
+          componentType: "InputMoney",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_4: {
           title: "url地址",
           type: "string",
-          componentType: "InputUrl"
+          componentType: "InputUrl",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_5: {
           title: "邮箱",
           type: "string",
-          componentType: "InputEmail"
+          componentType: "InputEmail",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_6: {
           title: "语言",
           type: "string",
-          componentType: "InputLanguage"
+          componentType: "InputLanguage",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_7: {
           title: "手机号",
           type: "string",
-          componentType: "InputCellPhone"
+          componentType: "InputCellPhone",
+          props:{
+            placeholder:"输入提示"
+        }
       },
+      key_8: {
+          title: "搜索",
+          type: "string",
+          componentType: "Search",
+          props:{
+            placeholder:"输入提示"
+        }
+      },
+      key_9: {
+          title: "密码",
+          type: "string",
+          componentType: "Password",
+          props:{
+            placeholder:"输入提示"
+        }
+      },
+      key_11: {
+        title: "电话",
+        type: "string",
+        componentType: "InputTelePhone",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+    key_12: {
+        title: "日期",
+        type: "string",
+        componentType: "DatePicker",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+    key_13: {
+        title: "日期区间",
+        type: "string",
+        componentType: "RangePicker",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+    key_14: {
+        title: "枚举",
+        type: "string",
+        componentType: "Selector",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+    key_15: {
+        title: "地址",
+        type: "string",
+        componentType: "LocationSelector",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+      key_10: {
+          title: "多行文本",
+          type: "string",
+          componentType: "TextArea",
+          props:{
+            placeholder:"输入提示"
+        }
+      }
   }
 }
 
@@ -848,37 +1528,122 @@ const schema = {
       key_1: {
           title: "普通输入框",
           type: "string",
+          props:{
+              placeholder:"输入提示"
+          }
       },
       key_2: {
           title: "数字输入框",
           type: "number",
-          componentType: "InputNumber"
+          componentType: "InputNumber",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_3: {
           title: "金额",
           type: "string",
-          componentType: "InputMoney"
+          componentType: "InputMoney",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_4: {
           title: "url地址",
           type: "string",
-          componentType: "InputUrl"
+          componentType: "InputUrl",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_5: {
           title: "邮箱",
           type: "string",
-          componentType: "InputEmail"
+          componentType: "InputEmail",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_6: {
           title: "语言",
           type: "string",
-          componentType: "InputLanguage"
+          componentType: "InputLanguage",
+          props:{
+            placeholder:"输入提示"
+        }
       },
       key_7: {
           title: "手机号",
           type: "string",
-          componentType: "InputCellPhone"
+          componentType: "InputCellPhone",
+          props:{
+            placeholder:"输入提示"
+        }
       },
+      key_8: {
+          title: "搜索",
+          type: "string",
+          componentType: "Search",
+          props:{
+            placeholder:"输入提示"
+        }
+      },
+      key_9: {
+          title: "密码",
+          type: "string",
+          componentType: "Password",
+          props:{
+            placeholder:"输入提示"
+        }
+      },
+      key_11: {
+        title: "电话",
+        type: "string",
+        componentType: "InputTelePhone",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+    key_12: {
+        title: "日期",
+        type: "string",
+        componentType: "DatePicker",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+    key_13: {
+        title: "日期区间",
+        type: "string",
+        componentType: "RangePicker",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+    key_14: {
+        title: "枚举",
+        type: "string",
+        componentType: "Selector",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+    key_15: {
+        title: "地址",
+        type: "string",
+        componentType: "LocationSelector",
+        props:{
+          placeholder:"输入提示"
+      }
+    },
+      key_10: {
+          title: "多行文本",
+          type: "string",
+          componentType: "TextArea",
+          props:{
+            placeholder:"输入提示"
+        }
+      }
   }
 }
 

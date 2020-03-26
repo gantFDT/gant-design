@@ -100,14 +100,9 @@ export const widthBasic = (popupClassName?: string) => compose(
 		}
 	),
 
-	withProps(({ onConfirm, setEdit, selfEdit, addonAfter: propsAddonAfter, onCancelCache }) => {
+	withProps(({ onConfirm, setEdit, selfEdit, onCancelCache }) => {
 		const addonAfter = (
 			<React.Fragment>
-				{propsAddonAfter ? (
-					<div className="gant-compose-extra">
-						{propsAddonAfter}
-					</div>
-				) : undefined}
 				<Tooltip title='确认'>
 					<Icon type="check" onClick={onConfirm} className={'gant-compose-success'} />
 				</Tooltip>
@@ -120,7 +115,7 @@ export const widthBasic = (popupClassName?: string) => compose(
 			</React.Fragment>
 		)
 		return {
-			addonAfter: selfEdit === EditStatus.EDIT && addonAfter || propsAddonAfter
+			editAfter: selfEdit === EditStatus.EDIT ? addonAfter:null
 		}
 	}),
 	mapProps(({

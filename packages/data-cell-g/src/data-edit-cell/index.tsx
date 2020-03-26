@@ -27,8 +27,7 @@ export default class DataEditCell extends Component<DataCellProps> {
 		const {
 			computedEdit,
 			renderText: propsRenderText,
-			addonBefore,
-			addonAfter,
+			editAfter,
 			children,
 			setPopupClassName,
 			setDisabledBlur,
@@ -39,10 +38,9 @@ export default class DataEditCell extends Component<DataCellProps> {
 		const child = typeof children == 'function' ? children : (props: any) => children;
 		return <>
 			{
-				!computedEdit ? renderText(propsRenderText)({ ...this.props }) : <Group gant>
-					{addonBefore ? <span className="ant-input-group-addon">{addonBefore}</span> : null}
-					{child(props)}
-					{addonAfter ? <span className="ant-input-group-addon">{addonAfter}</span> : null}
+				!computedEdit ? renderText(propsRenderText)({ ...this.props }) : <Group gant size={props.size} edit={editAfter} >
+					<span className="gant-input-group-inner" >{child(props)}</span>
+					{editAfter ? <span className="gant-input-group-addon ant-input-group-addon">{editAfter}</span> : null}
 				</Group>
 			}
 		</>

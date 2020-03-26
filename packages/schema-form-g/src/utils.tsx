@@ -272,3 +272,14 @@ export function getDateToForm(data: any, schema: Schema) {
 export function getKey(): string {
 	return Math.random().toString(32).slice(2)
 }
+
+export function getFieldItemSizeClass(className: string) {
+	switch (className) {
+		case "small":
+			return "gant-form-item-sm"
+		case "large":
+			return "gant-form-item-lg";
+		default:
+			return "gant-form-item"
+	}
+}

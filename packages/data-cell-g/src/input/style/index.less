@@ -3,34 +3,45 @@
 :global {
     .@{input-prefix-cls} {
         .@{input-prefix-cls}-group.ant-input-group {
-            display: table;
-            &>* {
-                .display-table-cell();
-                border-radius: 4px;
-                &:not(:last-child) {
-                    .input-group-left();
-                }
-                &:not(:first-child) {
-                    .input-group-right();
-                }
-            }
-        }
-        .@{input-prefix-cls}-group-child {
-            &>* {
-                border-radius: 4px !important;
-            }
-        }
-        .@{input-prefix-cls}-group-children {
-            .ant-input-group {
+            position: relative;
+            .gant-input-group-inner {
+                position: relative;
+                z-index: 1;
+                margin-right: 0px;
+                display: block;
                 &>* {
-                    &:not(:first-child) {
-                        border-radius: 0px !important;
-                        &>* {
-                            border-radius: 0px !important;
-                        }
+                    border-radius: 4px;
+                }
+            }
+            .gant-input-group-addon {
+                z-index: 0;
+                position: absolute;
+                right: 0px;
+                top: 0px;
+                width: 60px;
+                display: flex;
+                height: 100%;
+                align-items: center;
+                justify-content: space-around;
+                .input-group-right();
+            }
+            &.@{input-prefix-cls}-group-edit {
+                .gant-input-group-inner {
+                    margin-right: 59px;
+                    >*,
+                    .ant-input,
+                    .ant-select-selection {
+                        .input-group-left();
                     }
                 }
-            }
+            } // &>* {
+            //     &:not(:last-child),
+            //     &:not(:last-child).ant-input-group-inner>* {
+            //         .input-group-left();
+            //     }
+            //     &:not(:first-child),
+            //     &:not(:first-child).ant-input-group-inner>* {}
+            // }
         }
     }
 }

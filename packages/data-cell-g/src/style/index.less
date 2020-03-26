@@ -1,12 +1,39 @@
 @import './form.less';
-
 @gant-prefix: gant;
-
 @grab: #ccc;
 @green: #0b8235;
 @close: #f81d22;
-@test:#999;
-
+@test: #999;
 :root {
-  --primary-color: #1890ff;
+    --primary-color: #1890ff;
+}
+
+.ant-select-sm {
+    font-size: 12px;
+}
+
+:global {
+    .gant-input-group-sm {
+        font-size: 12px;
+        .ant-input-sm,
+        .ant-input-number-input,
+        .ant-input {
+            font-size: 12px;
+        }
+        li {
+            line-height: 24px;
+        }
+        input,
+        textarea {
+            &::-webkit-input-placeholder {
+                font-size: 12px !important;
+            }
+        }
+        .ant-select {
+            font-size: 12px;
+        }
+        .ant-select-selection__placeholder {
+            font-size: 12px;
+        }
+    }
 }

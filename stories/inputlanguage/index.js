@@ -16,7 +16,7 @@ const Use = () => {
     cb()
   }
   return <>
-    <InputLanguage placeholder='输入当前语言文本' onSave={onSave} value={value} onChange={setValue} />
+    <InputLanguage placeholder='输入当前语言文本' size="small" onSave={onSave} value={value} onChange={setValue} />
   </>
 }
 /*! End !*/

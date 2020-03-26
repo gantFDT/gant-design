@@ -1,117 +1,106 @@
 @gant-prefix: gant;
 @component: ~'@{gant-prefix}-schemaform';
-
 :global {
-    //form
-    .form-item-align-left {
-        :global(.ant-form-item-label) {
-            text-align: left;
-        }
-    }
-
-    .form-item-align-right {
-        :global(.ant-form-item-label) {
-            text-align: right;
-        }
-    }
-
-    .ant-form label {
-        font-size: 12px !important;
-    }
-
-    .ant-form-item-label {
-        line-height: 30px !important;
-    }
-
-    .ant-form-item-control {
-        line-height: 30px !important;
-        margin-bottom: 10px;
-    }
-
-    //全局formitem marginbottom
-    .ant-form-item {
-        margin-bottom: 0px !important;
-        font-size: 12px !important;
-        color: rgba(0, 0, 0, 0.9) !important;
-        .ant-form-item-label {
-            color: rgba(125, 125, 125, 0.65) !important;
-        }
-
-        .ant-form-item-control-wrapper {
-            color: var(--text-color) !important;
-        }
-    }
-
     html .ant-form-item-label {
         padding: 0 0 0px !important;
     }
-
     .@{component} {
         &-schemaCard {
             clear: both;
         }
-
         &-schemaForm {
-
+            .ant-input-group.gant-input-group,
+            .ant-input-group-wrapper {
+                top: 0px !important;
+                vertical-align: top;
+            }
+            .ant-input-group {
+                .ant-select,
+                .ant-cascader-picker {
+                    width: 100%;
+                }
+            }
+            .ant-form-item {
+                margin-bottom: 24px !important;
+                color: rgba(0, 0, 0, 0.9) !important;
+                .ant-form-item-label {
+                    color: rgba(125, 125, 125, 0.65) !important;
+                    height: 32px;
+                    line-height: 32px;
+                    overflow: hidden !important;
+                    text-overflow: ellipsis !important;
+                    white-space: nowrap !important;
+                }
+                .ant-form-item-control-wrapper {
+                    color: var(--text-color) !important;
+                    .ant-form-item-control {
+                        margin-bottom: 0px;
+                        line-height: 32px;
+                        .ant-form-explain {
+                            position: absolute;
+                            bottom: -10px;
+                            font-size: 14px;
+                            line-height: 1;
+                            width: 100%;
+                            margin-bottom: -15px;
+                        }
+                    }
+                }
+            }
+            .@{gant-prefix} {
+                &-form-item-sm {
+                    font-size: 12px;
+                    margin-bottom: 16px !important;
+                    .ant-select-sm {
+                        font-size: 12px;
+                        .ant-select-selection__placeholder {
+                            line-height: 24px;
+                        }
+                    }
+                    .ant-form-item-control-wrapper {
+                        .ant-form-item-control {
+                            margin-top: -1px;
+                            line-height: 24px;
+                            .ant-form-explain {
+                                font-size: 12px;
+                                margin-bottom: -14px;
+                            }
+                        }
+                    }
+                    .ant-form-item-label {
+                        font-size: 12px;
+                        line-height: 24px;
+                        height: 24px;
+                    }
+                    label {
+                        font-size: 12px;
+                    }
+                }
+            }
             .ant-form-item-label label::after,
             .ant-col-24.ant-form-item-label label::after,
             .ant-col-xl-24.ant-form-item-label label::after {
                 display: inline;
             }
-
-            .ant-input-number {
-                line-height: 31px;
-            }
-
-            .ant-form-item-control {
-                // margin-bottom: 10px !important;
-                line-height: 33px !important;
-
-                .ant-form-explain {
-                    position: absolute;
-                    bottom: -10px;
-                    font-size: 12px;
-                    min-height: 10px;
-                    line-height: 10px;
-                }
-            }
-
-            .ant-form-item-label {
-                // line-height: 33px !important;
-                overflow: hidden !important;
-                text-overflow: ellipsis !important;
-                white-space: nowrap !important;
-            }
-
-            // .ant-col-24.ant-form-item-label{
-            //   line-height: 20px !important;
-            // }
-            // .ant-col-xs-24.ant-form-item-label{
-            //   line-height: 20px !important;
-            // }
             .ant-input {
                 padding: 4px 11px !important
             }
-
             .@{component}-showRequiredMark {
                 .ant-form-item-required::before {
                     display: inline;
                 }
             }
         }
-
         &-right {
             .ant-form-item-label {
                 text-align: right;
             }
         }
-
         &-left {
             .ant-form-item-label {
                 text-align: left;
             }
         }
-
         &-schemaTable {
             padding: 5px;
         }

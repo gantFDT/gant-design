@@ -47,6 +47,7 @@ export default memo(function ExtraContent({ width = 0, height = 0, tools, prefix
 			const childrenItems = toolsRef.current.children;
 			for (let i = 0; i < childrenItems.length - 1; i++) {
 				const childItem = childrenItems.item(i);
+
 				const { width: styleWidth, marginLeft, marginRight, height } = getComputedStyle(childItem);
 				const itemWidth = parseInt(styleWidth) + parseInt(marginLeft) + parseInt(marginRight);
 				toolWidth += itemWidth;
@@ -59,9 +60,8 @@ export default memo(function ExtraContent({ width = 0, height = 0, tools, prefix
 			return setStartIndex(-1)
 		}
 	}, [toolsRef.current, width])
-
 	return (
-		<div className={`${prefixCls}-extra`} style={{ width }} >
+		<div className={`${prefixCls}-extra`} style={{ width: width === NaN ? 0 : width }} >
 			<div className={`${prefixCls}-extra-tools`} style={{ height: toolsHeight }} ref={ref} >
 				{renderExtra}
 				{

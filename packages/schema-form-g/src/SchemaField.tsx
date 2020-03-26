@@ -9,6 +9,7 @@ import { get, findIndex } from 'lodash';
 import { getFields } from './maps';
 import en from './locale/en-US';
 import zh from './locale/zh-CN';
+import { getFieldItemSizeClass } from './utils'
 
 const langs = {
   'en': en,
@@ -38,6 +39,7 @@ const SchemaField = (props: SchemaField) => {
     data,
     customFields,
     emitDependenciesChange,
+    defalutProps,
   } = useContext(FormContext);
 
   const onCancel = useCallback(() => name && resetFields([name]), [componentType, name]);
@@ -51,7 +53,7 @@ const SchemaField = (props: SchemaField) => {
     },
     [name],
   );
-  
+
   const optionsRules = options && options.rules ? options.rules : [];
   const { col, labelAlign, labelCol, wrapperCol, extra, style, className } = uiData;
   let initialValue = useMemo(() => {
@@ -61,28 +63,30 @@ const SchemaField = (props: SchemaField) => {
   const colLayout = typeof col === 'number' ? { span: col } : col;
   const labelColLayout = typeof labelCol === 'number' ? { span: labelCol } : labelCol;
   const wrapperColayout = typeof wrapperCol === 'number' ? { span: wrapperCol } : wrapperCol;
-
+  const renderFieldProps = useMemo(() => {
+    return { ...defalutProps, ...FieldProps }
+  }, [defalutProps,FieldProps])
   const fieldComponent = useMemo(() => {
     let component = get(getFields(), `${componentType}`, null);
     if (component == null) {
       const customIndex = findIndex(customFields, item => item.type === componentType);
       component = get(customFields, `[${customIndex}].component`, Input);
     }
-    const { initialValue, pattern, ...othterProps }: any = FieldProps || {};
+    const { initialValue, pattern, ...othterProps }: any = renderFieldProps || {};
+
     return React.createElement(component, {
       ...othterProps,
       edit: itemEdit,
       onCancel,
       onSave: onItemSave,
     });
-  }, [FieldProps, itemEdit, onCancel, onItemSave, componentType, customFields]);
+  }, [renderFieldProps, itemEdit, onCancel, onItemSave, componentType, customFields]);
 
   useEffect(() => {
     if (![null, undefined].includes(initialValue)) {
       emitDependenciesChange(name as string, initialValue);
     }
   }, []);
-
   return (
     <Col {...colLayout}>
       <LocaleReceiver>
@@ -90,7 +94,7 @@ const SchemaField = (props: SchemaField) => {
           let locale = langs[localeCode] || langs['zh-cn']
           return <Form.Item
             label={title}
-            className={classnames(className)}
+            className={classnames(className, getFieldItemSizeClass(renderFieldProps.size))}
             style={style}
             wrapperCol={wrapperColayout}
             labelAlign={labelAlign}

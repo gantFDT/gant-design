@@ -72,7 +72,7 @@ export default function SchemaForm(props: SchemaFormProps) {
 		const containerColor = getBackgroundColor(backgroundColor, pathNameArray.length)
 		return <div className={classnames(`${prefixCls}-schemaCard`, filedEdit === EditStatus.EDIT && `${prefixCls}-showRequiredMark`, className)}
 			key={pathName}
-			style={{ backgroundColor: containerColor, ...style, padding: padding, }}>
+			style={{ backgroundColor: containerColor, padding: padding, ...style, }}>
 			{(pathName ? visible : title) && <Header title={title} style={{ marginBottom: 16 }} {...restTitleSchema} id={titleSchemaId ? titleSchemaId : id} />}
 			<Row gutter={gutter}>{contents}</Row>
 		</div>

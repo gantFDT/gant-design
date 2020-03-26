@@ -23,6 +23,7 @@ export interface Context {
 	edit?: EditStatus | EditObject,
 	emitDependenciesChange: (key: string, value: any) => void,
 	prefixCls?: string,
+	defalutProps?: any
 }
 export interface Schema {
 	name?: string,
@@ -61,7 +62,8 @@ export interface OptionalProps {
 	wrappedComponentRef?: any,
 	onRef?: any,
 	className?: any,
-	ref?: any | ReactElement | ReactHTML | HTMLDivElement
+	ref?: any | ReactElement | ReactHTML | HTMLDivElement,
+	size?: "small" | "defalut" | "large"
 }
 
 export interface LocaleProps {

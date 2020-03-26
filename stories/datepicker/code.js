@@ -37,7 +37,7 @@ const onSave = (id, value, cb) => {
 
 
 
-const C2 = WrapperValue('2019-06-05 11:01:29')(({ value, setValue }) => <DatePicker style={{ margin: "10px 0" }} value={value} onChange={setValue} onSave={onSave} />)
+const C2 = WrapperValue('2019-06-05 11:01:29')(({ value, setValue }) => <DatePicker  value={value} onChange={setValue} onSave={onSave} />)
 
 ReactDOM.render(<C2 />, mountNode)`,`
 import React, { useState } from 'react'
@@ -57,6 +57,6 @@ const onSave = (id, value, cb) => {
 
 
 
-const C3 = WrapperValue('06-05-19 11:01:29')(({ value, setValue }) => <DatePicker format='MM-DD-YY' value={value} onChange={setValue} onSave={onSave} />)
+const C3 = WrapperValue('06-05-19 11:01:29')(({ value, setValue }) => <DatePicker format='MM-DD-YY' allowEdit={false} value={value} onChange={setValue} onSave={onSave} />)
 
 ReactDOM.render(<C3 />, mountNode)`,]

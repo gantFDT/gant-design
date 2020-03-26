@@ -40,6 +40,7 @@ const Header = (props: HeaderIF) => {
     ...restProps
   } = props;
   const [tools, setTools] = useState([]);
+  const [innerExtra, setInnerExtra] = useState(extra)
   //打平extra
   const [allWidth, setAllWidth] = useState(0);
   const leftRef = useRef<HTMLDivElement>(null)
@@ -65,27 +66,16 @@ const Header = (props: HeaderIF) => {
     React.Children.map(toolsCollection, item => {
       interator(item)
     })
-    if (_.isEqual(tools, toolsArr)) return;
+    if (_.isEqual(tools, toolsArr) || _.isEqual(extra, innerExtra)) return;
     setTools(toolsArr)
-  }, [extra, tools])
-  //计算隐藏index
-  // const onResize = useCallback(() => {
-  //   if (tools.length <= 1) return;
-  // }, [tools])
-  // const renderBlockContent = useMemo(() => {
-  //   return React.Children.map(tools, (item) => {
-  //     return React.cloneElement(item)
-  //   })
-  // }, [tools])
-  //收缩的内容
-
+  }, [extra, tools, innerExtra])
   const getPrefixCls = (cls) => 'gant-' + cls;
   const width = '100%';
   const prefixCls = 'gant-blockheader';
   const clsString = classnames(prefixCls, className);
   const toolWidth = useMemo(() => {
     if (leftRef.current) {
-      return allWidth - leftRef.current.clientWidth;
+      return isNaN(allWidth - leftRef.current.clientWidth) ? 0 : allWidth - leftRef.current.clientWidth;
     }
     return 0;
   }, [allWidth, leftRef.current])

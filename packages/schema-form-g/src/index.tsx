@@ -8,11 +8,13 @@ import { Props, Context } from './interface';
 import classnames from 'classnames';
 import dependencies, { Inner, findDependencies, refHoc } from './compose';
 import { getNewValue, getDateToForm } from './utils';
+import { getFieldProps } from './maps'
 export const FormContext = React.createContext({} as Context);
 export * from './interface';
 export * from './maps';
-
+import * as maps from './maps';
 class SchemaForm extends React.Component<Props> {
+  static maps = maps
   static defaultProps = {
     edit: EditStatus.EDIT,
     onSave: () => true,
@@ -27,9 +29,9 @@ class SchemaForm extends React.Component<Props> {
       schema,
       form: { getFieldsValue, setFieldsValue },
     } = this.props;
-	const vals = getFieldsValue();
+    const vals = getFieldsValue();
     if (!isEqual(pervPops.data, data) && !isEqual(vals, getDateToForm(data, schema))) {
-      const newVals: any = getNewValue(vals, data,schema);
+      const newVals: any = getNewValue(vals, data, schema);
       setFieldsValue(newVals);
     }
   }
@@ -73,21 +75,22 @@ class SchemaForm extends React.Component<Props> {
       className,
       emitDependenciesChange,
       prefixCls: customizePrefixCls = 'gant',
+      size,
     } = this.props;
 
     if (isEmpty(schema)) {
       return null;
     }
     const prefixCls = customizePrefixCls + '-schemaform';
-
+    const defalutProps = size ? { ...getFieldProps(), size } : { ...getFieldProps() };
     return (
-        <FormContext.Provider
-          value={{ form, edit, onSave, data, customFields, emitDependenciesChange, prefixCls }}
-        >
-          <div className={classnames(className)} style={{ backgroundColor }}>
-            <_SchemaForm schema={schema} uiSchema={uiSchema} titleConfig={titleConfig} />
-          </div>
-        </FormContext.Provider>
+      <FormContext.Provider
+        value={{ form, edit, onSave, data, customFields, emitDependenciesChange, prefixCls, defalutProps }}
+      >
+        <div className={classnames(className)} style={{ backgroundColor }}>
+          <_SchemaForm schema={schema} uiSchema={uiSchema} titleConfig={titleConfig} />
+        </div>
+      </FormContext.Provider>
     );
   }
 }

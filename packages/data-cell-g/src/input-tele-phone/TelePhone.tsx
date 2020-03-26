@@ -57,9 +57,11 @@ const getValue = ({ code, phone }) => phone ? `${code} - ${phone}` : ''
     confirmable: !phone || isPhone.test(String(phone))
   })),
   withEdit(getValue, "gantd-input-telphone-addonBefore"),
-  withProps(({ code, onCodeChange, filterOption }) => ({
+  withProps(({ code, onCodeChange, filterOption, size }) => ({
     addonBefore: (
-      <Select dropdownClassName="gantd-input-telphone-addonBefore" style={{ width: 130 }} value={code} onChange={onCodeChange} showSearch filterOption={filterOption}>
+      <Select dropdownClassName="gantd-input-telphone-addonBefore"
+        size={size}
+        style={{ width: 130 }} value={code} onChange={onCodeChange} showSearch filterOption={filterOption}>
         {
           codesList.map((citys, index) => {
             let renderCitys = citys

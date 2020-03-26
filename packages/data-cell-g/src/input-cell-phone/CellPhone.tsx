@@ -12,7 +12,7 @@ interface value {
 export interface GantCellPhoneProps extends WidthBasicProps {
   value?: value,
   onChage?: (val: value) => void,
-  placeholder?:string,
+  placeholder?: string,
   allowClear?: boolean
 }
 const reg = /^1$|^1[3-9]$|^1[3-9][0-9]\d{0,8}$/
@@ -83,7 +83,7 @@ const withValidate = compose(
   withPhoneCode,
   withValidate,
   withEdit(({ code, phone }) => phone ? `+${code} ${phone}` : '', "gantd-input-cellphone-addonBefore"),
-  withProps(({ code, onCodeChange, filterOption }) => {
+  withProps(({ code, onCodeChange, filterOption, size }) => {
     return ({
       addonBefore: (
         <Select
@@ -93,6 +93,7 @@ const withValidate = compose(
           onChange={onCodeChange}
           filterOption={filterOption}
           showSearch
+          size={size}
         >
           {
             codeTypes.map(code => <Select.Option key={code} value={code}>+{code}</Select.Option>)

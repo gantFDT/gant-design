@@ -1,12 +1,16 @@
 @import '../../style/index.less';
-
 @gant-select: ~'gant-select';
-
 :global {
+    .ant-select-sm {
+        .ant-select-search__field__placeholder {
+            line-height: 20px;
+        }
+        height: 24px;
+        line-height: 24px;
+    }
     .gant-input .gant-input-group {
         .@{gant-select}-email.ant-select {
             width: 100%;
-
             &:not(:last-child) {
                 .ant-select-selection[role='combobox'] {
                     .ant-input {
@@ -15,7 +19,6 @@
                     }
                 }
             }
-
             .ant-input {
                 float: none !important;
             }
