@@ -7,11 +7,11 @@ const { ResizableModal, ResizableProvider } = Modal
 const ButtonGroup = Button.Group
 // import zhCN from 'antd/es/locale/zh_CN' 按模块引入
 const zhCN = {
-  "Modal": {
-    "okText": "确定",
-    "cancelText": "取消",
-    "justOkText": "知道了"
-  }
+    "Modal": {
+        "okText": "确定",
+        "cancelText": "取消",
+        "justOkText": "知道了"
+    }
 }
 
 
@@ -43,17 +43,17 @@ const { ResizableModal, ResizableProvider } = Modal
 const ButtonGroup = Button.Group
 // import zhCN from 'antd/es/locale/zh_CN' 按模块引入
 const zhCN = {
-  "Modal": {
-    "okText": "确定",
-    "cancelText": "取消",
-    "justOkText": "知道了"
-  }
+    "Modal": {
+        "okText": "确定",
+        "cancelText": "取消",
+        "justOkText": "知道了"
+    }
 }
 
 
 function CustomUse() {
     const [visible, setVisible] = useState(false)
-    const [widthAndHei, setWidthAndHei] = useState([400, 400])
+    const [widthAndHei, setWidthAndHei] = useState([0, 0])
     const onSizeChange = (width, height) => {
         setWidthAndHei([width, height])
     }
@@ -64,7 +64,7 @@ function CustomUse() {
             </div>
             <Modal
                 title='自定义属性标题'
-                itemState={{ height: 400, width: 400 }}
+                itemState={{ height: 400, width: '60%' }}
                 visible={visible}
                 footer={null}
                 onCancel={() => { setVisible(false) }}
@@ -88,11 +88,11 @@ const { ResizableModal, ResizableProvider } = Modal
 const ButtonGroup = Button.Group
 // import zhCN from 'antd/es/locale/zh_CN' 按模块引入
 const zhCN = {
-  "Modal": {
-    "okText": "确定",
-    "cancelText": "取消",
-    "justOkText": "知道了"
-  }
+    "Modal": {
+        "okText": "确定",
+        "cancelText": "取消",
+        "justOkText": "知道了"
+    }
 }
 
 
@@ -123,11 +123,11 @@ const { ResizableModal, ResizableProvider } = Modal
 const ButtonGroup = Button.Group
 // import zhCN from 'antd/es/locale/zh_CN' 按模块引入
 const zhCN = {
-  "Modal": {
-    "okText": "确定",
-    "cancelText": "取消",
-    "justOkText": "知道了"
-  }
+    "Modal": {
+        "okText": "确定",
+        "cancelText": "取消",
+        "justOkText": "知道了"
+    }
 }
 
 
@@ -157,11 +157,11 @@ const { ResizableModal, ResizableProvider } = Modal
 const ButtonGroup = Button.Group
 // import zhCN from 'antd/es/locale/zh_CN' 按模块引入
 const zhCN = {
-  "Modal": {
-    "okText": "确定",
-    "cancelText": "取消",
-    "justOkText": "知道了"
-  }
+    "Modal": {
+        "okText": "确定",
+        "cancelText": "取消",
+        "justOkText": "知道了"
+    }
 }
 
 
@@ -192,11 +192,11 @@ const { ResizableModal, ResizableProvider } = Modal
 const ButtonGroup = Button.Group
 // import zhCN from 'antd/es/locale/zh_CN' 按模块引入
 const zhCN = {
-  "Modal": {
-    "okText": "确定",
-    "cancelText": "取消",
-    "justOkText": "知道了"
-  }
+    "Modal": {
+        "okText": "确定",
+        "cancelText": "取消",
+        "justOkText": "知道了"
+    }
 }
 
 
@@ -229,11 +229,11 @@ const { ResizableModal, ResizableProvider } = Modal
 const ButtonGroup = Button.Group
 // import zhCN from 'antd/es/locale/zh_CN' 按模块引入
 const zhCN = {
-  "Modal": {
-    "okText": "确定",
-    "cancelText": "取消",
-    "justOkText": "知道了"
-  }
+    "Modal": {
+        "okText": "确定",
+        "cancelText": "取消",
+        "justOkText": "知道了"
+    }
 }
 
 
