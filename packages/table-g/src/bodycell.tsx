@@ -39,7 +39,7 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 	const isSelection = useMemo(() => className.includes('ant-table-selection-column'), [className])
 	const pureRecord = useMemo(() => getPureRecord(record), [record])
 
-	const { editValue, render: editRender, shouldEdit = true } = editConfig
+	const { editValue, render: editRender, clickable = true } = editConfig
 
 	const getEditValue = useCallback(
 		() => {
@@ -128,9 +128,9 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 			let switchSuccess = false
 			if (!pureRecord.isDeleted && !isEdit) {
 				// 判断钩子
-				let allowEdit = shouldEdit
-				if (typeof shouldEdit === 'function') {
-					allowEdit = shouldEdit(pureRecord, rowIndex, dataIndex)
+				let allowEdit = clickable
+				if (typeof clickable === 'function') {
+					allowEdit = clickable(pureRecord, rowIndex, dataIndex)
 				}
 				if (allowEdit) {
 					switchSuccess = switchEdit()// 切换编辑状态成功
@@ -142,7 +142,7 @@ const BodyCell = <T extends Record = {}>({ record = {} as T, dataIndex = '', row
 			}
 
 		},
-		[isEdit, switchEdit, updateElement, props.onClick, pureRecord, shouldEdit, rowIndex, dataIndex],
+		[isEdit, switchEdit, updateElement, props.onClick, pureRecord, clickable, rowIndex, dataIndex],
 	)
 
 	const onBlur = useCallback(
