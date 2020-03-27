@@ -1,9 +1,6 @@
 @gant-prefix: gant;
 @component: ~'@{gant-prefix}-schemaform';
 :global {
-    html .ant-form-item-label {
-        padding: 0 0 0px !important;
-    }
     .@{component} {
         &-schemaCard {
             clear: both;
@@ -21,18 +18,18 @@
                 }
             }
             .ant-form-item {
-                margin-bottom: 24px !important;
-                color: rgba(0, 0, 0, 0.9) !important;
+                margin-bottom: 18px;
                 .ant-form-item-label {
-                    color: rgba(125, 125, 125, 0.65) !important;
+                    color: rgba(125, 125, 125, 0.65);
                     height: 32px;
                     line-height: 32px;
-                    overflow: hidden !important;
-                    text-overflow: ellipsis !important;
-                    white-space: nowrap !important;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    padding: 0 0 0px;
                 }
                 .ant-form-item-control-wrapper {
-                    color: var(--text-color) !important;
+                    color: var(--text-color);
                     .ant-form-item-control {
                         margin-bottom: 0px;
                         line-height: 32px;
@@ -42,7 +39,8 @@
                             font-size: 14px;
                             line-height: 1;
                             width: 100%;
-                            margin-bottom: -15px;
+                            margin-bottom: -6px;
+                            min-height: 12px
                         }
                     }
                 }
@@ -50,7 +48,7 @@
             .@{gant-prefix} {
                 &-form-item-sm {
                     font-size: 12px;
-                    margin-bottom: 16px !important;
+                    margin-bottom: 15px;
                     .ant-select-sm {
                         font-size: 12px;
                         .ant-select-selection__placeholder {
@@ -63,7 +61,7 @@
                             line-height: 24px;
                             .ant-form-explain {
                                 font-size: 12px;
-                                margin-bottom: -14px;
+                                margin-bottom: -4px;
                             }
                         }
                     }

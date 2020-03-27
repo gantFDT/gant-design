@@ -212,6 +212,7 @@ const IconSelector = compose(
     const controlMode = !(_.isUndefined(value) || _.isUndefined(onChange));
     if (!controlMode) {
       cStyle.display = 'inline-block';
+      cStyle.width="auto"
     }
     return {
       wrapperStyle: cStyle,

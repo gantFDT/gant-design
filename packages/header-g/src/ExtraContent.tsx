@@ -8,7 +8,7 @@ interface ExtraContentProps {
 }
 export default memo(function ExtraContent({ width = 0, height = 0, tools, prefixCls }: ExtraContentProps) {
 	const [startIndex, setStartIndex] = useState(-1);
-	const [toolsHeight, setToolsHeight] = useState(24);
+	const [toolsHeight, setToolsHeight] = useState(0);
 	const renderFixed = useMemo(() => {
 		return React.Children.map(tools, (item, index) => {
 			return React.cloneElement(item, { key: index })
@@ -62,7 +62,7 @@ export default memo(function ExtraContent({ width = 0, height = 0, tools, prefix
 	}, [toolsRef.current, width])
 	return (
 		<div className={`${prefixCls}-extra`} style={{ width: width === NaN ? 0 : width }} >
-			<div className={`${prefixCls}-extra-tools`} style={{ height: toolsHeight }} ref={ref} >
+			<div className={`${prefixCls}-extra-tools`} ref={ref} >
 				{renderExtra}
 				{
 					startIndex > -1 && <Dropdown
