@@ -206,8 +206,8 @@ interface IconSelectorCmp {
 const IconSelector = compose(
   toClass,
   defaultProps(defaultprops),
-  withProps(({ allowEdit, edit, style = {}, type, value, onChange }) => {
-    const cStyle: React.CSSProperties = {};
+  withProps(({ allowEdit, edit, wrapperStyle = {}, type, value, onChange }) => {
+    const cStyle: React.CSSProperties = { ...wrapperStyle };
     // 根据是否有value和onChange来确定是否受控
     const controlMode = !(_.isUndefined(value) || _.isUndefined(onChange));
     if (!controlMode) {

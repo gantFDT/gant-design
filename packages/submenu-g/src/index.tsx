@@ -47,7 +47,7 @@ export default class Submenu extends React.Component<any, Partial<SubmenuIF>> {
     subMinHeight: 112,
     selectedKey: '',
     menuData: [],
-    bordered:true,
+    bordered: true,
     showMenuMagnet: false,
     showFlipOverFooter: false,
     style: {},
@@ -163,7 +163,7 @@ export default class Submenu extends React.Component<any, Partial<SubmenuIF>> {
             disabled={item.disabled}
             key={item.key}
           >
-            {typeof item.icon == 'string' ? <Icon type={item.icon} /> : item.icon}
+            {typeof item.icon == 'string' ? <Icon type={item.icon} wrapperStyle={{ width: "auto" }} /> : item.icon}
             <span>{item.title}</span>
             {item.count && (
               <span className={`${prefixCls}-item-count`}>

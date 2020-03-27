@@ -8,7 +8,7 @@ interface ExtraContentProps {
 }
 export default memo(function ExtraContent({ width = 0, height = 0, tools, prefixCls }: ExtraContentProps) {
 	const [startIndex, setStartIndex] = useState(-1);
-	const [toolsHeight, setToolsHeight] = useState(height);
+	const [toolsHeight, setToolsHeight] = useState(24);
 	const renderFixed = useMemo(() => {
 		return React.Children.map(tools, (item, index) => {
 			return React.cloneElement(item, { key: index })
