@@ -7,38 +7,38 @@ module.exports = async ({ config, mode }) => {
 	return webpackMerge(config, {
 		module: {
 			rules: [
-        {
-          test: /\.(jsx|js)?$/,
-          include: [
-            path.resolve(__dirname, "../packages"),
-            path.resolve(__dirname, "../stories"),
-          ],
-          use: [
-            {
-              loader: 'babel-loader',
-              options: babelConfig
-            }
-          ]
-        },
+				{
+					test: /\.(jsx|js)?$/,
+					include: [
+						path.resolve(__dirname, "../packages"),
+						path.resolve(__dirname, "../stories"),
+					],
+					use: [
+						{
+							loader: 'babel-loader',
+							options: babelConfig
+						}
+					]
+				},
 				{
 					test: /\.less$/,
 					use: [
-            'style-loader', 
-            {
-              loader: 'css-loader',
-              options: {
-                modules: true,
-                localIdentName: '[name]__[local]-[hash:base64:5]'
-              }
-            },
-            {
-              loader: 'less-loader',
-              options: { javascriptEnabled: true },
-            }
-          ],
+						'style-loader',
+						{
+							loader: 'css-loader',
+							options: {
+								modules: true,
+								localIdentName: '[name]__[local]-[hash:base64:5]'
+							}
+						},
+						{
+							loader: 'less-loader',
+							options: { javascriptEnabled: true },
+						}
+					],
 					include: [
-            path.resolve(__dirname, '../packages'),
-          ]
+						path.resolve(__dirname, '../packages'),
+					]
 				},
 				{
 					test: /.ts(x)?$/,
@@ -49,8 +49,8 @@ module.exports = async ({ config, mode }) => {
 			]
 		},
 		resolve: {
-      // 用于查找模块的目录
-      
+			// 用于查找模块的目录
+
 			extensions: [".js", ".ts", ".jsx", ".tsx"],
 			alias: {
 				"@packages": path.resolve('packages'),
@@ -65,7 +65,8 @@ module.exports = async ({ config, mode }) => {
 				"@anchor": path.resolve('packages/anchor-g/src'),
 				"@submenu": path.resolve('packages/submenu-g/src'),
 				"@table": path.resolve('packages/table-g/src'),
-				"@smart-table": path.resolve('packages/smart-table-g/src')
+				"@grid": path.resolve('packages/grid-g/src'),
+				"@smart-table": path.resolve('packages/smart-table-g/src'),
 			}
 		},
 	})
