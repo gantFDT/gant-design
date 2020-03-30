@@ -37,7 +37,7 @@ const computedEditStatus = (edit, selfEdit) => edit === EditStatus.EDIT || selfE
 
 export type OnSave = <T>(id: string, value: T, cb: Function) => void
 
-export interface WidthBasicProps {
+export interface WithBasicProps {
 	onSave?: OnSave,
 	onCancel?: () => void,
 	edit?: EditStatus,
@@ -51,13 +51,13 @@ export interface WidthBasicProps {
 }
 
 // 通过withEdit高阶函数包裹的组件可以接受的参数
-export interface WithEditInProps<T> extends WidthBasicProps {
+export interface WithEditInProps<T> extends WithBasicProps {
 	value?: T,
 	onChange?: (v: T) => void,
 	onBlur?: Function,
 	onFocus?: Function,
 }
-export const widthBasic = (popupClassName?: string) => compose(
+export const withBasic = (popupClassName?: string) => compose(
 	defaultProps(defaultComProps),
 	inputwrapper(popupClassName),
 	setStatic('propsTypes', proptypes),

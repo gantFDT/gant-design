@@ -2,8 +2,8 @@ import React from 'react'
 import { Input } from 'antd'
 import { withEdit } from '../compose'
 import { SearchProps } from 'antd/lib/input/Search'
-import { WidthBasicProps } from '../compose/widthbasic';
-export interface GantSearchProps extends SearchProps, WidthBasicProps {
+import { WithBasicProps } from '../compose/withbasic';
+export interface GantSearchProps extends SearchProps, WithBasicProps {
   onChange?: (val: any) => void
 }
 const getText = ({ value }) => value

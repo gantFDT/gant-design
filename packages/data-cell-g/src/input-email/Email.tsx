@@ -3,8 +3,8 @@ import classnames from 'classnames'
 import { AutoComplete } from 'antd'
 import { compose, withState, defaultProps, withProps, lifecycle } from 'recompose'
 import { withEdit } from '../compose'
-import { WidthBasicProps } from '../compose/widthbasic';
-export interface GantEmailProps extends WidthBasicProps {
+import { WithBasicProps } from '../compose/withbasic';
+export interface GantEmailProps extends WithBasicProps {
   value?: string;
   defaultValue?: string;
   dropdownMenuStyle?: React.CSSProperties;
