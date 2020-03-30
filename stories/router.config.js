@@ -107,6 +107,11 @@ export default [
     name: '组件| 列表',
     children: [
       {
+        name: "grid",
+        nameZh: "表格",
+        package: "grid-g"
+      },
+      {
         name: 'Table',
         nameZh: '表格',
         package: 'table-g',

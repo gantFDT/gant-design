@@ -47,6 +47,9 @@
       "@table": [
         "packages/table-g/src"
       ],
+      "@grid": [
+        "packages/grid-g/src"
+      ],
       "@schema-form": [
         "packages/schema-form-g/src"
       ],
@@ -66,6 +69,7 @@
   },
   "include": [
     "packages/*/src",
+    "packages/ag-grid.tsx",
   ],
   "exclude": [
     "node_modules",
