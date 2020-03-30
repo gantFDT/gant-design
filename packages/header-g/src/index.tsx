@@ -67,6 +67,7 @@ const Header = (props: HeaderIF) => {
       interator(item)
     })
     if (_.isEqual(tools, toolsArr) || _.isEqual(extra, innerExtra)) return;
+    setInnerExtra(extra)
     setTools(toolsArr)
   }, [extra, tools, innerExtra])
   const getPrefixCls = (cls) => 'gant-' + cls;

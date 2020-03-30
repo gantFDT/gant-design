@@ -39,6 +39,7 @@ function ExtraUse() {
     )
     return <>
         <Slider min={1} max={100} onChange={onChange} value={value} />
+        <div onClick={()=>setVisible(!visiable)} >show</div>
         <div style={{ width: \`\${value}%\` }}>
             <Header
                 title="工具栏"

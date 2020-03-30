@@ -37,6 +37,7 @@ const defaultprop = {
   onDeselect: _ => _,
   onDropdownVisibleChange: _ => _,
   blurOnSelect: false,
+  wrap: false
 }
 
 type NArray<T> = T | T[];
@@ -58,6 +59,7 @@ type DefaultProps<R> = ProtoExtends<typeof defaultprop, {
   onSelect?: (k: string, item: R) => void,
   selectorId?: string,
   onChange?: (key: SelectValue) => void,
+  wrap?: boolean
 }>
 
 type BasicSelectorProps<T, R> = ProtoExtends<SelectProps<T>, DefaultProps<R>>
@@ -491,7 +493,7 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
 
   renderSelect = () => {
     const { onSearch, onSelect, onChange, onopen } = this
-    const { multiple, readOnly, renderList, loading, style, addonAfter, setSelectRef, dropdownClassName, children, ...props } = this.props;
+    const { multiple, readOnly, renderList, loading, style, addonAfter, setSelectRef, dropdownClassName, className, wrap, children, ...props } = this.props;
     if (readOnly) {
       props.open = false
       props.showSearch = false
@@ -503,13 +505,14 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
         loading={loading}
         {...props}
         ref={setSelectRef}
-        className={'gant-selector'}
+        className={classnames('gant-selector', className, !wrap && 'gant-selector-no-wrap')}
         onSearch={onSearch}
         onSelect={onSelect}
         onChange={onChange}
         onDropdownVisibleChange={onopen}
         labelInValue
         filterOption={false}
+
         dropdownClassName={classnames(dropdownClassName, 'gant-selector-dropdown')}
       >
         {children || renderList}
