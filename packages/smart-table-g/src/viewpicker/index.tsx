@@ -115,7 +115,7 @@ export default function View(props: ViewProps) {
             {(locale) => {
               return <>
                 <Panel
-                  title={locale.sysView}
+                  title={<><Icon type="hdd" className="gant-margin-h-5"/>{locale.sysView}</>}
                   views={systemViews}
                   viewType="system"
                   switchActiveView={switchActiveViewImpl.bind(null, 'system')}
@@ -125,7 +125,7 @@ export default function View(props: ViewProps) {
                 />
                 {companyViews.length > 0 && (
                   <Panel
-                    title={locale.companyView}
+                    title={<><Icon type="user" className="gant-margin-h-5"/>{locale.companyView}</>}
                     views={companyViews}
                     viewType="company"
                     switchActiveView={switchActiveViewImpl.bind(null, 'company')}
@@ -136,7 +136,7 @@ export default function View(props: ViewProps) {
                 )}
                 <Panel
                   viewId={viewId}
-                  title={locale.customView}
+                  title={<><Icon type="user" className="gant-margin-h-5"/>{locale.customView}</>}
                   views={customViews}
                   viewType="custom"
                   switchActiveView={switchActiveViewImpl.bind(null, 'custom')}
