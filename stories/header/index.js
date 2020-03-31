@@ -3,7 +3,7 @@ import '@header/style'
 import CodeDecorator from '../_util/CodeDecorator'
 import code from './code.js'
 /*! Start !*/
-import React, { useState } from 'react'
+import React, { useState,useMemo } from 'react'
 import { message, Icon, Button, Tooltip, Slider } from 'antd';
 import { Header } from '@gantd'
 /*! Split !*/
@@ -33,6 +33,19 @@ function ExtraUse() {
         },
         []
     )
+    const tesxt= useMemo(() => {
+        return <>
+                    <Tooltip title='新增'>
+                        <Button icon="plus" size="small" type="primary" />
+                    </Tooltip>
+                    <Tooltip title='编辑'>
+                        <Button icon="edit" size="small" />
+                    </Tooltip>
+                    <Tooltip title='保存'>
+                        <Button icon="save" size="small">保存</Button>
+                    </Tooltip>
+        </>
+    }, [])
     return <>
         <Slider min={1} max={100} onChange={onChange} value={value} />
         <div onClick={()=>setVisible(!visiable)} >show</div>
@@ -40,6 +53,7 @@ function ExtraUse() {
             <Header
                 title="工具栏"
                 extra={<>
+                    {tesxt}
                     <Tooltip title='新增'>
                         <Button icon="plus" type="primary" />
                     </Tooltip>
@@ -57,26 +71,20 @@ function ExtraUse() {
                     </Tooltip>
                 </>}
             />
-            <Header
-                title="小工具栏"
-                extra={<>
-                    <Tooltip title='新增'>
-                        <Button icon="plus" size="small" type="primary" />
-                    </Tooltip>
-                    <Tooltip title='编辑'>
-                        <Button icon="edit" size="small" />
-                    </Tooltip>
-                    <Tooltip title='保存'>
-                        <Button icon="save" size="small">保存</Button>
-                    </Tooltip>
-                    <Tooltip title='复制'>
-                        <Button icon="copy" size="small">复制</Button>
-                    </Tooltip>
-                    <Tooltip title='删除'>
-                        <Button icon="delete" size="small" type="danger" />
-                    </Tooltip>
-                </>}
-            />
+           {
+        //     <Header
+        //     title="小工具栏"
+        //     extra={<>
+                
+        //         <Tooltip title='复制'>
+        //             <Button icon="copy" size="small">复制</Button>
+        //         </Tooltip>
+        //         <Tooltip title='删除'>
+        //             <Button icon="delete" size="small" type="danger" />
+        //         </Tooltip>
+        //     </>}
+        // />
+           }
         </div>
     </>
 }
@@ -116,26 +124,26 @@ const config = {
     当工具栏放置了很多按钮时，我们的容器不足以展示，但还是可以显示完整的按钮</br>
     `,
     children: [
-        {
-            title: '基本用法',
-            describe: '可以配置短线型、图标型、数字型',
-            cmp: BasicUse
-        },
+        // {
+        //     title: '基本用法',
+        //     describe: '可以配置短线型、图标型、数字型',
+        //     cmp: BasicUse
+        // },
         {
             title: '溢出式工具栏',
             describe: '超出的工具会被收进下拉按钮组里',
             cmp: ExtraUse
         },
-        {
-            title: '自定义颜色',
-            describe: '通过color属性进行颜色自定义,theme关键字可使用主题色',
-            cmp: ColorUse
-        },
-        {
-            title: '显示分割线',
-            describe: '显示分割线',
-            cmp: BottomLineUse
-        },
+        // {
+        //     title: '自定义颜色',
+        //     describe: '通过color属性进行颜色自定义,theme关键字可使用主题色',
+        //     cmp: ColorUse
+        // },
+        // {
+        //     title: '显示分割线',
+        //     describe: '显示分割线',
+        //     cmp: BottomLineUse
+        // },
     ]
 };
 export default () => <CodeDecorator config={config} />

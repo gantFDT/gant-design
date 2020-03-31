@@ -40,7 +40,7 @@ const Header = (props: HeaderIF) => {
     ...restProps
   } = props;
   const [tools, setTools] = useState([]);
-  const [innerExtra, setInnerExtra] = useState(extra)
+  const [innerExtra, setInnerExtra] = useState({} as any)
   //打平extra
   const [allWidth, setAllWidth] = useState(0);
   const leftRef = useRef<HTMLDivElement>(null)
@@ -68,6 +68,7 @@ const Header = (props: HeaderIF) => {
     })
     if (_.isEqual(tools, toolsArr) || _.isEqual(extra, innerExtra)) return;
     setInnerExtra(extra)
+
     setTools(toolsArr)
   }, [extra, tools, innerExtra])
   const getPrefixCls = (cls) => 'gant-' + cls;
@@ -86,23 +87,26 @@ const Header = (props: HeaderIF) => {
         <ResizeDetector setAllWidth={setAllWidth} />
       </ReactResizeDetector>
       }
-      <div className={prefixCls + '-wrapper'} ref={leftRef} >
-        <div className={prefixCls + '-beforeExtra'}>
-          {beforeExtra}
+      <div className={prefixCls + '-container'} >
+        <div className={prefixCls + '-wrapper'} ref={leftRef} >
+          <div className={prefixCls + '-beforeExtra'}>
+            {beforeExtra}
+          </div>
+          {type == 'icon' && <div className={prefixCls + '-icon'} style={{ color: color }}>
+            {typeof icon === 'string' && <Icon type={icon} />}
+            {typeof icon === 'object' && { icon }}
+          </div>}
+          {type == 'line' && title && <div className={prefixCls + '-line'} style={{ background: color }}></div>}
+          {type == 'num' && <div className={prefixCls + '-num'} style={{ background: color }}>{num}</div>}
+          <div className={prefixCls + '-title'} style={{ color: color }}>{title}</div>
         </div>
-        {type == 'icon' && <div className={prefixCls + '-icon'} style={{ color: color }}>
-          {typeof icon === 'string' && <Icon type={icon} />}
-          {typeof icon === 'object' && { icon }}
-        </div>}
-        {type == 'line' && title && <div className={prefixCls + '-line'} style={{ background: color }}></div>}
-        {type == 'num' && <div className={prefixCls + '-num'} style={{ background: color }}>{num}</div>}
-        <div className={prefixCls + '-title'} style={{ color: color }}>{title}</div>
-      </div>
-      <div className={getPrefixCls('overflow-tool-outer')}>
-        <div className={getPrefixCls('overflow-tool-inner')} style={{ width: toolWidth }} >
-          {extra && <ExtraContent tools={tools} prefixCls={prefixCls} width={toolWidth} />}
+        <div className={getPrefixCls('overflow-tool-outer')}>
+          <div className={getPrefixCls('overflow-tool-inner')} >
+            {extra && <ExtraContent tools={tools} prefixCls={prefixCls} width={toolWidth} />}
+          </div>
         </div>
       </div>
+
     </div >
   )
 }
