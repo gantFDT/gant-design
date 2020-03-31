@@ -37,27 +37,12 @@ function ExtraUse() {
         },
         []
     )
-    const tesxt= useMemo(() => {
-        return <>
-                    <Tooltip title='新增'>
-                        <Button icon="plus" size="small" type="primary" />
-                    </Tooltip>
-                    <Tooltip title='编辑'>
-                        <Button icon="edit" size="small" />
-                    </Tooltip>
-                    <Tooltip title='保存'>
-                        <Button icon="save" size="small">保存</Button>
-                    </Tooltip>
-        </>
-    }, [])
     return <>
         <Slider min={1} max={100} onChange={onChange} value={value} />
-        <div onClick={()=>setVisible(!visiable)} >show</div>
         <div style={{ width: \`\${value}%\` }}>
             <Header
                 title="工具栏"
                 extra={<>
-                    {tesxt}
                     <Tooltip title='新增'>
                         <Button icon="plus" type="primary" />
                     </Tooltip>
@@ -75,20 +60,18 @@ function ExtraUse() {
                     </Tooltip>
                 </>}
             />
-           {
-        //     <Header
-        //     title="小工具栏"
-        //     extra={<>
+            <Header
+            title="小工具栏"
+            extra={<>
                 
-        //         <Tooltip title='复制'>
-        //             <Button icon="copy" size="small">复制</Button>
-        //         </Tooltip>
-        //         <Tooltip title='删除'>
-        //             <Button icon="delete" size="small" type="danger" />
-        //         </Tooltip>
-        //     </>}
-        // />
-           }
+                <Tooltip title='复制'>
+                    <Button icon="copy" size="small">复制</Button>
+                </Tooltip>
+                <Tooltip title='删除'>
+                    <Button icon="delete" size="small" type="danger" />
+                </Tooltip>
+            </>}
+        />
         </div>
     </>
 }
