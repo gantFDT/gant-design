@@ -2,7 +2,8 @@
   "name": "grid-g",
   "version": "0.0.1",
   "description": "gantd table",
-  "main": "lib/index.js",
+  "main": "lib/index.tsx",
+  "types": "lib/index.d.ts",
   "keywords": [
     "React",
     "gantd",

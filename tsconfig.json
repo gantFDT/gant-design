@@ -71,8 +71,8 @@
     }
   },
   "include": [
-    "packages/*/src",
-    "packages/ag-grid.tsx",
+    "packages/**/*",
+    "stories/**/*"
   ],
   "exclude": [
     "node_modules",
