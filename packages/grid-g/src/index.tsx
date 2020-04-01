@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useRef, useMemo, useEffect } from 'react';
 import { AgGridReact, AgGridReactProps } from 'ag-grid-react';
-import { ColDef, ColGroupDef, GridApi as AgGridApi, GridOptions, ColumnApi, GridReadyEvent, } from "ag-grid-community";
+import { ColDef, ColGroupDef, GridApi as AgGridApi, GridOptions, ColumnApi, GridReadyEvent, ValueParserParams, ValueFormatterParams } from "ag-grid-community";
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import { LicenseManager } from "ag-grid-enterprise"
@@ -62,7 +62,7 @@ export type EditConfig<T> = {
     /**是否开启编辑，当全局editable为true时生效 */
     editable?: ColumnEdiatble<T>,
     props?: (record: T, rowIndex: number) => Object
-    format?: (v: any) => any
+    changeFormatter?: (v: any) => any
 }
 
 export type ColumnEdiatble<T> = (record: T) => boolean
@@ -93,6 +93,7 @@ export type Columns<T extends {} = {}> = {
     editConfig?: EditConfig<T>,
     /**固定列 */
     fixed?: Fixed | undefined,
+    valueFormatter?: () => string
 }
 
 // TODO:取消 拿到原始值 重新set 然后关闭编辑状态

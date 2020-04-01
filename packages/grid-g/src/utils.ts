@@ -45,7 +45,7 @@ export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, rowSelec
                     colDef.cellEditorParams = {
                         size,
                         props: editConfig.props,
-                        format: editConfig.format,
+                        changeFormatter: editConfig.changeFormatter,
                         rowkey: getRowNodeId
                     }
                     colDef.cellEditorFramework = EditorCol(editConfig.component)

@@ -3,8 +3,8 @@ import CodeDecorator from '../_util/CodeDecorator'
 /*! Start !*/
 import React, { useMemo, useEffect, useCallback, useState, useRef } from 'react'
 import Gird, { Columns, Filter, OnReady, GridApi, Fixed } from '@grid'
-import { Button } from "antd"
-import { Input } from "@data-cell"
+import { Button, Input } from "antd"
+// import { Input } from "@data-cell"
 
 /*! Split !*/
 const BasicUse = () => {
@@ -21,9 +21,7 @@ const BasicUse = () => {
             },
             editConfig: {
                 component: Input,
-                format: (v) => {
-                    return v + 1
-                },
+                changeFormatter: (e: any) => e.target.value,
                 editable(data) {
                     return data.age < 100
                 }
