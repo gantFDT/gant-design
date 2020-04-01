@@ -1,0 +1,36 @@
+:global {
+    .gant-grid-column-editing {
+        .gant-input .gant-input-group.ant-input-group {
+            .gant-input-group-inner {
+                &>* {
+                    border-radius: 0px;
+                }
+            }
+        }
+    }
+    .gant-grid-cell {
+        font-size: 14px;
+        &-small {
+            font-size: 12px;
+        }
+    }
+    .gant-grid-cell-icon {
+        display: block;
+        width: 0;
+        height: 0;
+        border-width: 4px;
+        border-style: solid;
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        &-edit {
+            border-color: #ff4d4f transparent transparent #ff4d4f;
+        }
+        &-add {
+            border-color: #52c41a transparent transparent #52c41a;
+        }
+        &-delete {
+            border-color: #faad14 transparent transparent #faad14;
+        }
+    }
+}
