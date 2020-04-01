@@ -8,29 +8,38 @@
             }
         }
     }
-    .gant-grid-cell {
+    .gant-grid-cell-content {
         font-size: 14px;
         &-small {
             font-size: 12px;
         }
     }
-    .gant-grid-cell-icon {
-        display: block;
-        width: 0;
-        height: 0;
-        border-width: 4px;
-        border-style: solid;
-        position: absolute;
-        left: 0px;
-        top: 0px;
-        &-edit {
-            border-color: #ff4d4f transparent transparent #ff4d4f;
+    .gant-grid-cell {
+        &::after {
+            content: "";
+            display: block;
+            width: 0;
+            height: 0;
+            border-width: 4px;
+            border-style: solid;
+            position: absolute;
+            left: 0px;
+            top: 0px;
+        }
+        &-modify {
+            &::after {
+                border-color: #ff4d4f transparent transparent #ff4d4f;
+            }
         }
         &-add {
-            border-color: #52c41a transparent transparent #52c41a;
+            &::after {
+                border-color: #52c41a transparent transparent #52c41a;
+            }
         }
         &-delete {
-            border-color: #faad14 transparent transparent #faad14;
+            &::after {
+                border-color: #faad14 transparent transparent #faad14;
+            }
         }
     }
 }

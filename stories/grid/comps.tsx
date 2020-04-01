@@ -21,9 +21,7 @@ const BasicUse = () => {
             },
             editConfig: {
                 component: Input,
-                format: (v) => {
-                    return v + 1
-                },
+                changeFormatter: (e: any) => e.target.value,
                 editable(data) {
                     return data.age < 100
                 }
@@ -77,6 +75,9 @@ const BasicUse = () => {
         extra: !editable ? (
             <>
                 <Button onClick={edit}>进入编辑</Button>
+                <div onClick={() => {
+                    apiRef.current.undoCellEditing()
+                }} >ssss</div>
             </>
         ) : undefined
     }), [editable])
@@ -90,7 +91,9 @@ const BasicUse = () => {
         )
     }, [])
     return (
-        <Gird headerProps={header} editActions={editActions} columns={columns} editable={editable} dataSource={dataSource} onReady={onReady} rowSelection />
+        <Gird headerProps={header}
+            rowkey="age"
+            columns={columns} editable={editable} dataSource={dataSource} onReady={onReady} rowSelection />
     )
 }
 /*! End !*/
