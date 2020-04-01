@@ -55,6 +55,10 @@ const BasicUse = () => {
     const get = useCallback((e) => {
         const nodes = apiRef.current.getSelectedNodes()
         console.log(nodes)
+
+        // const diff = apiRef.current.getDiff()
+        // // ... 
+        // apiRef.current.getCurrent()
     }, [])
     const onReady = useCallback<OnReady>((api) => {
         apiRef.current = api

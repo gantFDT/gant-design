@@ -13,12 +13,22 @@ export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, rowSelec
 
     const cheboxIndex = get(rowSelection, "checkboxIndex")
 
-    return columns.map(({ title: headerName, dataIndex: field, children, ...item }, index) => {
+    return columns.map(({ title: headerName, dataIndex: field, children, editable: ColEditable, ...item }, index) => {
         const colDef = {
             ...item,
             headerName,
             field,
-            editable
+            editable: editable ? ColEditable : false,
+
+            cellRendererParams: {
+                // size,
+                // render
+            },
+            cellEditorParams: {
+                // size
+            },
+            // cellEditorFramework: Enhance(Com)
+            // cellRendererFramework
         } as Col
 
         if (!itemisgroup(colDef, children)) {

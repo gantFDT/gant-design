@@ -10,10 +10,13 @@ import key from './license'
 import Header from '@header';
 import { PartRequired, ProtoExtends } from "@util/type"
 import { mapColumns, NonBool, isbool, isstring } from './utils'
+import { Filter } from './interface'
+export * from './interface'
 
 // 设置licenseKey才会在列头右侧显示
 // 切换列头显示、固定列的控制栏
 LicenseManager.setLicenseKey(key)
+
 
 const defaultProps = {
     resizable: true,
@@ -26,12 +29,7 @@ const defaultProps = {
     floatingFilter: false,
     // 分页
     pagination: true,
-}
-
-export enum Filter {
-    Number = "agNumberColumnFilter",
-    Text = 'agTextColumnFilter',
-    Date = "agDateColumnFilter"
+    size: "small"
 }
 
 export type EditActions = (manage: object, keys: Array<string>) => React.ReactElement
@@ -61,9 +59,19 @@ export type Columns<T extends {} = {}> = {
     width?: React.ReactText,
     checkboxSelection?: boolean,
     sortable?: boolean,
+    editable?: boolean,
     filter?: Filter,
     hide?: boolean,
+    // render:
+    editConfig?: {
+        // renCom: D
+        // renderProps:()=>{ return {} }
+    }
 }
+
+// 取消 拿到原始值 重新set 然后关闭编辑状态
+// 保存 关闭编辑状态即可
+// 编辑 打开编辑状态
 
 // Grid Api
 interface Props<T> {
