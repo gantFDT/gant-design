@@ -56,6 +56,7 @@ export { default as Toolbar } from './toolbar'
 export { default as VisibleMenu } from './visible-menu';
 export { default as ProfileCard } from './profile-card'
 export { default as Exception } from './exception';
+export { default as withKeyevent } from '@keyevent';
 
 //内部使用
 export { default as Card } from './card';

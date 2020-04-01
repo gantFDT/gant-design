@@ -67,10 +67,10 @@ class ProfileCard extends Component {
     const { form: { getFieldDecorator }, layout, data } = this.props;
     return (edit) => (
       <>
-        <Row gutter={24} style={{ marginBottom: '20px', width: '100%' }}>
+        <Row gutter={24} style={{ marginBottom: '10px', width: '100%' }}>
           {
             fields.map(field => (
-              <Col key={field.key}>
+              <Col key={field.key} style={{minWidth:200}}>
                 <Form.Item
                   label={field.label}
                   {...layout}
