@@ -4,13 +4,16 @@ import { ColDef, ColGroupDef, GridApi as AgGridApi, GridOptions, ColumnApi, Grid
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import { LicenseManager } from "ag-grid-enterprise"
+import 'ag-grid-enterprise';
 import { get } from 'lodash'
-// import "ag-grid-enterprise"
+
 import key from './license'
 import Header from '@header';
 import { PartRequired, ProtoExtends } from "@util/type"
 import { mapColumns, NonBool, isbool, isstring } from './utils'
 import { Filter, Size, Fixed } from './interface'
+import "./style"
+
 export * from './interface'
 
 // 设置licenseKey才会在列头右侧显示
@@ -35,9 +38,15 @@ const defaultProps = {
     rowkey: "key"
 }
 
-export type EditActions = (manage: object, keys: Array<string>) => React.ReactElement
+export interface Api {
+    undo(): void,
+    getModel(): void,
+    [key: string]: any
+}
 
-export type OnReady = (api: GridApi) => void
+export type EditActions = (api: Api, keys: Array<string>) => React.ReactElement
+
+export type OnReady = (api: Api) => void
 
 export type GridApi = AgGridApi
 
@@ -127,7 +136,7 @@ export type GridPropsPartial<T> = PartRequired<GridProps<T>, "columns" | "dataSo
 
 const Grid = function Grid<T>(props: GridPropsPartial<T>) {
 
-    const { headerProps, editActions, onReady, columns: columnDefs, editable, defaultColumnWidth, rowSelection: rowSel, size, rowkey } = props
+    const { headerProps, editActions, onReady, columns: columnDefs, editable, defaultColumnWidth, rowSelection: rowSel, size, rowkey, } = props
 
     const apiRef = useRef<GridApi>()
 
@@ -140,6 +149,12 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
         return defaultColumnWidth
     }, [defaultColumnWidth])
 
+    // 自适应宽度
+    const shouldFitCol = useCallback(
+        (api = apiRef.current) => {
+            if (typeof defaultColumnWidth === "undefined") api.sizeColumnsToFit()
+        }, [defaultColumnWidth])
+
     const getRowNodeId = useCallback(
         (data) => {
             if (typeof rowkey === 'string') {
@@ -150,13 +165,24 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
         [rowkey],
     )
 
+
+
+    const editApi = useMemo<Api>(() => {
+        return {
+            undo() {
+                apiRef.current.undoCellEditing()
+            },
+            getModel() { apiRef.current.getModel() }
+        }
+    }, [])
+
     const onGridReady = useCallback((params: GridReadyEvent) => {
         apiRef.current = params.api
         columnsRef.current = params.columnApi
-        onReady && onReady(params.api)
+        onReady && onReady(editApi)
         // 没有设置默认宽度将自动适配
-        if (typeof defaultColumnWidth === "undefined") params.api.sizeColumnsToFit()
-    }, [onReady, defaultColumnWidth])
+        shouldFitCol(params.api)
+    }, [onReady, shouldFitCol, editApi])
 
     const rowSelection = useMemo<NonBool<RowSelection>>(() => {
         if (isbool(rowSel)) {
@@ -170,6 +196,7 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
     useEffect(() => {
         if (apiRef.current) {
             apiRef.current.setColumnDefs(columns)
+            shouldFitCol()
         }
     }, [columns])
 
@@ -187,7 +214,8 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
             resizable,
             filter: floatingFilter ? false : filter,
             // lockPosition,
-            width: defaultWidth
+            width: defaultWidth,
+            // editable: true,
         }
 
         const defaultColGroupDef: ColGroupDef = {
@@ -197,15 +225,16 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
         return {
             rowData,
             columnDefs: columns,
-            onGridReady,
             floatingFilter,
             pagination,
             rowSelection: ["signal", "multiple"][+get(rowSelection, "multiple")],
             paginationAutoPageSize: true,
             defaultColDef,
-            defaultColGroupDef
+            defaultColGroupDef,
+
+            enableCellChangeFlash: true,
         }
-    }, [props, onGridReady, columns, defaultWidth, rowSelection])
+    }, [props, columns, defaultWidth, rowSelection])
 
     const [autoGroupColumnDef, setautoGroupColumnDef] = useState({
         headerName: "Model",
@@ -217,11 +246,12 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
     })
 
     const actions = useMemo(() => {
-        if (editActions) {
-            return editActions({}, [])
+        // if (editActions) {
+        if (editActions && editable) {
+            return editActions(editApi, [])
         }
         return undefined
-    }, [editActions])
+    }, [editActions, editApi, editable])
 
     const mergedHeaderProps = useMemo(() => {
         if (headerProps) {
@@ -256,6 +286,12 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
             <AgGridReact
                 gridOptions={gridOptions}
                 getRowNodeId={getRowNodeId}
+                onGridReady={onGridReady}
+                // undo\redo
+                undoRedoCellEditing={true}
+                enableFillHandle={true}
+                undoRedoCellEditingLimit={5}
+                stopEditingWhenGridLosesFocus
             // rowSelection="multiple"
             // animateRows
             // onGridReady={param => ref.current = param.api}
