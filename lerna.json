@@ -20,6 +20,7 @@
     "packages/smart-table-g",
     "packages/submenu-g",
     "packages/table-g",
+    "packages/keyevent-g",
     "packages/util-g"
   ]
 }

@@ -62,6 +62,9 @@
       "@modal": [
         "packages/modal-g/src"
       ],
+      "@keyevent": [
+        "packages/keyevent-g/src"
+      ],
       "@util/*": [
         "packages/util-g/src/*"
       ]
