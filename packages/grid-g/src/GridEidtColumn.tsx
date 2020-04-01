@@ -7,7 +7,7 @@ const defalutProps = {
 	edit: EditStatus.EDIT,
 }
 export default (WrapperComponent) => forwardRef(function GridEidtColumn(props: any, ref: any) {
-	const { value, stopEditing, api, data, colDef: { field }, size = Size.small, props: fieldProps, changeFormatter, rowKey, rowIndex } = props;
+	const { value, stopEditing, api, data, colDef: { field }, size = Size.small, props: fieldProps, changeFormatter, rowkey, rowIndex } = props;
 	const [cacheValue, setCacheValue] = useState(value);
 	const onChange = useCallback((val) => {
 		let chageVal = val
@@ -15,12 +15,12 @@ export default (WrapperComponent) => forwardRef(function GridEidtColumn(props: a
 		setCacheValue(chageVal)
 	}, [changeFormatter])
 	const onBlur = useCallback(() => {
-		stopEditing()
+		// stopEditing()
 	}, [stopEditing])
 	const rowId = useMemo(() => {
-		if (!rowKey) return rowIndex;
-		return rowKey(data)
-	}, [rowIndex, rowKey, data])
+		if (!rowkey) return rowIndex;
+		return rowkey(data)
+	}, [rowIndex, rowkey, data])
 	useImperativeHandle(ref, () => {
 		return {
 			getValue: () => {

@@ -12,6 +12,7 @@ import { PartRequired, ProtoExtends } from "@util/type"
 import { mapColumns, NonBool, isbool, isstring } from './utils'
 import { Filter, Size, Fixed } from './interface'
 export * from './interface'
+import './style'
 
 // 设置licenseKey才会在列头右侧显示
 // 切换列头显示、固定列的控制栏

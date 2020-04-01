@@ -33,7 +33,10 @@ export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, rowSelec
                     render,
                     rowkey: getRowNodeId
                 },
-                cellRendererFramework: RenderCol
+                cellRendererFramework: RenderCol,
+                cellClass: (params: any) => {
+                    return params.data._rowType ? `gant-grid-cell gant-grid-cell-${params.data._rowType}` : ""
+                }
             } as Col
 
 

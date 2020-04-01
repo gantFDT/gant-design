@@ -75,11 +75,16 @@ const BasicUse = () => {
         extra: (
             <>
                 <Button onClick={edit}>进入编辑</Button>
+                <div onClick={() => {
+                    apiRef.current.undoCellEditing()
+                }} >ssss</div>
             </>
         )
     }), [])
     return (
-        <Gird headerProps={header} columns={columns} editable={editable} dataSource={dataSource} onReady={onReady} rowSelection />
+        <Gird headerProps={header}
+            rowkey="age"
+            columns={columns} editable={editable} dataSource={dataSource} onReady={onReady} rowSelection />
     )
 }
 /*! End !*/
