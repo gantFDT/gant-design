@@ -171,7 +171,7 @@ export default {
     return IDs;
   }
   `,
-  Array2Tree: `
+  array2Tree: `
   // arr转树形结构数据
   export function Array2Tree(data: any[], parentId: string | undefined = undefined, keyName: string = 'key'): any[] {
     const itemArr = [];
