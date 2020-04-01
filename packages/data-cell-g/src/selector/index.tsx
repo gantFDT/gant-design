@@ -6,7 +6,7 @@ import { compose, defaultProps, withProps, withPropsOnChange, withState, mapProp
 import warning from '@util/warning'
 import classnames from 'classnames'
 import { default as withEdit, WithEditInProps } from '../with-edit';
-import { WidthBasicProps } from '../compose/widthbasic';
+import { WithBasicProps } from '../compose/withbasic';
 
 type ProtoExtends<T, U> = U & {
   [K in Exclude<keyof T, keyof U>]?: NonNullable<T[K]>
@@ -64,7 +64,7 @@ type DefaultProps<R> = ProtoExtends<typeof defaultprop, {
 
 type BasicSelectorProps<T, R> = ProtoExtends<SelectProps<T>, DefaultProps<R>>
 
-export type SelectorProps<T, R> = ProtoExtends<WidthBasicProps, BasicSelectorProps<T, R>>
+export type SelectorProps<T, R> = ProtoExtends<WithBasicProps, BasicSelectorProps<T, R>>
 
 type SelectorInnerProps<T, R> = ProtoExtends<BasicSelectorProps<T, R>, {
   setFilter?: (v: string) => void,

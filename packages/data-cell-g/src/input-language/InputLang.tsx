@@ -3,8 +3,8 @@ import { Input, Select } from 'antd';
 import { map, pick, } from 'lodash'
 import { compose, defaultProps, withState, withProps, withHandlers, toClass } from 'recompose'
 import { withEdit } from '../compose'
-import { WidthBasicProps } from '../compose/widthbasic';
-export interface GantInputLangProps extends WidthBasicProps {
+import { WithBasicProps } from '../compose/withbasic';
+export interface GantInputLangProps extends WithBasicProps {
   allowClear?: boolean,
   placeholder?: string,
   onChange?: (val: value) => void

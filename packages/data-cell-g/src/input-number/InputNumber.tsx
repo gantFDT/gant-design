@@ -3,11 +3,11 @@ import { isNil, isNumber } from 'lodash'
 import { InputNumber as AntInputNumber } from 'antd'
 import numeral from 'numeral'
 import { compose, withProps, toClass, mapProps } from 'recompose'
-import { WidthBasicProps } from '../compose/widthbasic';
+import { WithBasicProps } from '../compose/withbasic';
 import { withEdit } from '../compose'
 import { InputNumberProps } from 'antd/lib/input-number'
 import classnames from 'classnames'
-export interface GantInputNumberProps extends WidthBasicProps, InputNumberProps {
+export interface GantInputNumberProps extends WithBasicProps, InputNumberProps {
 
 }
 const withInputNumber = compose(

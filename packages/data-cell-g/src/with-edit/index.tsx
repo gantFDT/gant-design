@@ -2,10 +2,10 @@
 import { compose, branch, mapProps, withProps } from 'recompose';
 import renderText, { GetText } from '../compose/renderText';
 import editwrapper from '../compose/editwrapper';
-import { widthBasic } from '../compose/widthbasic';
-export { WithEditInProps } from '../compose/widthbasic';
+import { withBasic } from '../compose/withbasic';
+export { WithEditInProps } from '../compose/withbasic';
 export default <T extends any>(getText: GetText<T>, popupClassName?: string) => compose(
-  widthBasic(popupClassName),
+  withBasic(popupClassName),
   branch(
     props => !props.computedEdit,   // 读模式
     () => {

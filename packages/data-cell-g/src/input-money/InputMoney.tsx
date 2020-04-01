@@ -6,12 +6,12 @@ import { compose, withProps, toClass, defaultProps } from 'recompose'
 import InputNumber from '../input-number';
 import { withEdit, EditStatus } from '../compose'
 import symbols from './symbol.json'
-import { WidthBasicProps } from '../compose/widthbasic';
+import { WithBasicProps } from '../compose/withbasic';
 interface value {
   key?: string,
   value?: string
 }
-export interface GantInputMoneyProps extends WidthBasicProps {
+export interface GantInputMoneyProps extends WithBasicProps {
   onChange?: (val: value) => void;
   value?: value,
   placeholder?: string,
