@@ -1,8 +1,8 @@
 
 import CodeDecorator from '../_util/CodeDecorator'
 /*! Start !*/
-import React, { useMemo, useEffect, useCallback, useState } from 'react'
-import Gird, { Columns, Filter } from '@grid'
+import React, { useMemo, useEffect, useCallback, useState, useRef } from 'react'
+import Gird, { Columns, Filter, OnReady, GridApi } from '@grid'
 import { Button } from "antd"
 
 /*! Split !*/
@@ -13,14 +13,12 @@ const BasicUse = () => {
             title: '姓名',
             dataIndex: "name",
             checkboxSelection: true,
-            width: 200,
         },
         {
             title: '年龄',
             dataIndex: "age",
             sortable: true,
             filter: Filter.Number,
-            width: 100
         },
         {
             title: '余额',
@@ -52,8 +50,14 @@ const BasicUse = () => {
         ]
     )
 
-    const get = useCallback((e) => {
+    const apiRef = useRef<GridApi>()
 
+    const get = useCallback((e) => {
+        const nodes = apiRef.current.getSelectedNodes()
+        console.log(nodes)
+    }, [])
+    const onReady = useCallback<OnReady>((api) => {
+        apiRef.current = api
     }, [])
 
     const header = useMemo(() => ({
@@ -64,7 +68,7 @@ const BasicUse = () => {
         )
     }), [])
     return (
-        <Gird headerProps={header} columns={columns} dataSource={dataSource} editable />
+        <Gird headerProps={header} columns={columns} dataSource={dataSource} onReady={onReady} rowSelection />
     )
 }
 /*! End !*/
