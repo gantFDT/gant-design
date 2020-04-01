@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { Input, Select } from 'antd';
 import { compose, toClass, withProps, defaultProps, mapProps, withPropsOnChange } from 'recompose'
 import { withEdit } from '../compose';
-import { WidthBasicProps } from '../compose/widthbasic';
+import { WithBasicProps } from '../compose/withbasic';
 import codesList from './codes.json';
-export interface GantTelePhoneProps extends WidthBasicProps {
+export interface GantTelePhoneProps extends WithBasicProps {
   value?: value,
   onChange?: (val: value) => void,
   placeholder?: string,

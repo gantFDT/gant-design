@@ -6,10 +6,10 @@ import { compose, defaultProps, toClass } from 'recompose'
 import { getCurTime } from './_utils'
 import { withEdit } from '../compose'
 import { PickerProps, RangePickerValue, RangePickerPresetRange } from 'antd/lib/date-picker/interface'
-import { WidthBasicProps } from '../compose/widthbasic';
+import { WithBasicProps } from '../compose/withbasic';
 import { TimePickerProps } from 'antd/lib/time-picker';
 type GantRangePickerValue = RangePickerValue | [string] | [undefined, string] | [string, undefined] | [null, string] | [string, null] | [string, string]
-export interface GantRangePickerProps extends PickerProps, WidthBasicProps {
+export interface GantRangePickerProps extends PickerProps, WithBasicProps {
   className?: string;
   tagPrefixCls?: string;
   value?: GantRangePickerValue;

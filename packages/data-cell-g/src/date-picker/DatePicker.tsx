@@ -5,10 +5,10 @@ import classnames from 'classnames'
 import { withEdit } from '../compose'
 import { getCurTime } from './_utils'
 import { PickerProps, DatePickerMode } from 'antd/lib/date-picker/interface'
-import { WidthBasicProps } from '../compose/widthbasic';
+import { WithBasicProps } from '../compose/withbasic';
 import moment from 'moment'
 import RangePicker from './RangePicker'
-export interface GantDatePickerProps extends PickerProps, WidthBasicProps {
+export interface GantDatePickerProps extends PickerProps, WithBasicProps {
   onChange?: (time: string) => void,
   value?: moment.Moment | string | null,
   defaultValue?: moment.Moment | string | null;

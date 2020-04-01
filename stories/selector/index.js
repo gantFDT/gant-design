@@ -145,10 +145,50 @@ const Demo6 = () => {
       value: "EARLY_CONTROL",
       label: '早期受控'
     },
+    {
+      value: "EARLY_CONTROL1",
+      label: '早期受控1'
+    },
+    {
+      value: "EARLY_CONTROL2",
+      label: '早期受控2'
+    },
+    {
+      value: "EARLY_CONTROL3",
+      label: '早期受控3'
+    },
+    {
+      value: "EARLY_CONTROL4",
+      label: '早期受控4'
+    },
+    {
+      value: "EARLY_CONTROL5",
+      label: '早期受控5'
+    },
+    {
+      value: "EARLY_CONTROL6",
+      label: '早期受控6'
+    },
+    {
+      value: "EARLY_CONTROL7",
+      label: '早期受控7'
+    },
+    {
+      value: "EARLY_CONTROL8",
+      label: '早期受控8'
+    },
+    {
+      value: "EARLY_CONTROL9",
+      label: '早期受控9'
+    },
+    {
+      value: "EARLY_CONTROL10",
+      label: '早期受控10'
+    },
   ]);
   const [value, setValue] = useState()
 
-  return <Selector multiple selectorId='multiple' dataSource={list} value={value} onChange={setValue} onSave={(id, value, cb) => cb()} />
+  return <Selector multiple selectorId='multiple'  dataSource={list} value={value} onChange={setValue} onSave={(id, value, cb) => cb()} />
 }
 /*! Split !*/
 const Demo7 = () => {

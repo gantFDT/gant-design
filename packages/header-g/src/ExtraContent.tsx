@@ -38,30 +38,29 @@ export default memo(function ExtraContent({ width = 0, height = 0, tools, prefix
 	const ref = useRef<HTMLDivElement>(null)
 	useLayoutEffect(() => {
 		if (toolsRef.current && (width)) {
-			const toolsRefHeight = toolsRef.current.clientHeight + 1;
+			const toolsRefHeight = toolsRef.current.clientHeight;
+			setToolsHeight(toolsRefHeight);
 			if (width - toolsRefHeight - 20 >= toolsRef.current.clientWidth) {
-				setToolsHeight(toolsRefHeight);
 				setStartIndex(-1);
 			}
 			let toolWidth = 0;
 			const childrenItems = toolsRef.current.children;
 			for (let i = 0; i < childrenItems.length - 1; i++) {
 				const childItem = childrenItems.item(i);
-
 				const { width: styleWidth, marginLeft, marginRight, height } = getComputedStyle(childItem);
 				const itemWidth = parseInt(styleWidth) + parseInt(marginLeft) + parseInt(marginRight);
 				toolWidth += itemWidth;
 				const itemHeight = parseInt(height)
-				setToolsHeight((toolsHeight) => itemHeight > toolsHeight ? itemHeight : toolsHeight);
+				setToolsHeight(itemHeight);
 				if (toolWidth + toolsRefHeight + 20 > width) {
 					return setStartIndex(i)
 				}
 			}
 			return setStartIndex(-1)
 		}
-	}, [toolsRef.current, width])
+	}, [toolsRef.current, width, tools])
 	return (
-		<div className={`${prefixCls}-extra`} style={{ width: width === NaN ? 0 : width }} >
+		<div className={`${prefixCls}-extra`}>
 			<div className={`${prefixCls}-extra-tools`} ref={ref} >
 				{renderExtra}
 				{

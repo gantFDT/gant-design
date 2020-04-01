@@ -2,9 +2,9 @@ import React from 'react'
 import { Input } from 'antd'
 import { withEdit } from '../compose'
 import { PasswordProps } from 'antd/lib/input/Password'
-import { WidthBasicProps } from '../compose/widthbasic';
+import { WithBasicProps } from '../compose/withbasic';
 import { get } from 'lodash'
-export interface GantPasswordProps extends PasswordProps, WidthBasicProps {
+export interface GantPasswordProps extends PasswordProps, WithBasicProps {
   onChange?: (val: any) => void,
 }
 const getText = ({ value }) => (value ? <div>{Array.from(value).fill('\u25cf')}</div> : '')

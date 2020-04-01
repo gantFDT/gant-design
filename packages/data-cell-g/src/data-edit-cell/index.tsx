@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { widthBasic, WithEditInProps } from '../compose/widthbasic'
+import { withBasic, WithEditInProps } from '../compose/withbasic'
 import renderText, { GetText } from '../compose/renderText';
 import Group from '../input/Group';
 import { isEqual } from 'lodash'
@@ -11,7 +11,7 @@ interface DataCellProps extends WithEditInProps<any> {
 	[propsname: string]: any
 
 }
-@widthBasic()
+@withBasic()
 export default class DataEditCell extends Component<DataCellProps> {
 	componentDidUpdate(prevProps) {
 		const { popupClassName, setPopupClassName, disabledBlur, setDisabledBlur } = this.props;

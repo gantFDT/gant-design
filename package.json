@@ -125,6 +125,8 @@
     "@ant-design/colors": "^3.1.0",
     "@ant-design/icons": "2.1.1",
     "@types/react-dom": "^16.9.5",
+    "ag-grid-community": "^23.0.2",
+    "ag-grid-react": "^23.0.2",
     "antd": "^3.22.0",
     "array-move": "^2.2.1",
     "classnames": "^2.2.6",

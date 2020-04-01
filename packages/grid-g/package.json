@@ -1,0 +1,26 @@
+{
+  "name": "grid-g",
+  "version": "0.0.1",
+  "description": "gantd table",
+  "main": "lib/index.js",
+  "keywords": [
+    "React",
+    "gantd",
+    "antd",
+    "table"
+  ],
+  "homepage": "http://www.gant.design",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gantFDT/GantD.git"
+  },
+  "bugs": {
+    "url": "https://github.com/gantFDT/GantD/issues"
+  },
+  "author": "GantFDT",
+  "license": "MIT",
+  "dependencies": {
+    "ag-grid-community": "^23.0.2",
+    "ag-grid-react": "^23.0.2"
+  }
+}

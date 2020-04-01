@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Input as AntInput, Select } from 'antd';
 import { compose, withProps, defaultProps, toClass, mapProps, lifecycle, withHandlers, withPropsOnChange } from 'recompose'
-import { WidthBasicProps } from '../compose/widthbasic';
+import { WithBasicProps } from '../compose/withbasic';
 import { get } from 'lodash'
 import { withEdit } from '../compose'
 import codeTypes from './codes.json';
@@ -9,7 +9,7 @@ interface value {
   key?: string,
   value?: string,
 }
-export interface GantCellPhoneProps extends WidthBasicProps {
+export interface GantCellPhoneProps extends WithBasicProps {
   value?: value,
   onChage?: (val: value) => void,
   placeholder?: string,

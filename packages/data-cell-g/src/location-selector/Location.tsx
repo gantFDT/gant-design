@@ -4,9 +4,9 @@ import classnames from 'classnames'
 import json from './district_zh.json'
 import { withEdit } from '../compose'
 import { compose, defaultProps, toClass } from 'recompose';
-import { WidthBasicProps } from '../compose/widthbasic';
+import { WithBasicProps } from '../compose/withbasic';
 
-export interface LocationProps extends WidthBasicProps {
+export interface LocationProps extends WithBasicProps {
   disabled?: boolean;
   allowClear?: boolean;
   className?: string;

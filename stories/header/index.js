@@ -3,7 +3,7 @@ import '@header/style'
 import CodeDecorator from '../_util/CodeDecorator'
 import code from './code.js'
 /*! Start !*/
-import React, { useState } from 'react'
+import React, { useState,useMemo } from 'react'
 import { message, Icon, Button, Tooltip, Slider } from 'antd';
 import { Header } from '@gantd'
 /*! Split !*/
@@ -57,25 +57,17 @@ function ExtraUse() {
                 </>}
             />
             <Header
-                title="小工具栏"
-                extra={<>
-                    <Tooltip title='新增'>
-                        <Button icon="plus" size="small" type="primary" />
-                    </Tooltip>
-                    <Tooltip title='编辑'>
-                        <Button icon="edit" size="small" />
-                    </Tooltip>
-                    <Tooltip title='保存'>
-                        <Button icon="save" size="small">保存</Button>
-                    </Tooltip>
-                    <Tooltip title='复制'>
-                        <Button icon="copy" size="small">复制</Button>
-                    </Tooltip>
-                    <Tooltip title='删除'>
-                        <Button icon="delete" size="small" type="danger" />
-                    </Tooltip>
-                </>}
-            />
+            title="小工具栏"
+            extra={<>
+                
+                <Tooltip title='复制'>
+                    <Button icon="copy" size="small">复制</Button>
+                </Tooltip>
+                <Tooltip title='删除'>
+                    <Button icon="delete" size="small" type="danger" />
+                </Tooltip>
+            </>}
+        />
         </div>
     </>
 }

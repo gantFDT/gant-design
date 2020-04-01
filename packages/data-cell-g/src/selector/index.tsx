@@ -6,7 +6,7 @@ import { compose, defaultProps, withProps, withPropsOnChange, withState, mapProp
 import warning from '@util/warning'
 import classnames from 'classnames'
 import { default as withEdit, WithEditInProps } from '../with-edit';
-import { WidthBasicProps } from '../compose/widthbasic';
+import { WithBasicProps } from '../compose/withbasic';
 
 type ProtoExtends<T, U> = U & {
   [K in Exclude<keyof T, keyof U>]?: NonNullable<T[K]>
@@ -37,6 +37,7 @@ const defaultprop = {
   onDeselect: _ => _,
   onDropdownVisibleChange: _ => _,
   blurOnSelect: false,
+  wrap: false
 }
 
 type NArray<T> = T | T[];
@@ -58,11 +59,12 @@ type DefaultProps<R> = ProtoExtends<typeof defaultprop, {
   onSelect?: (k: string, item: R) => void,
   selectorId?: string,
   onChange?: (key: SelectValue) => void,
+  wrap?: boolean
 }>
 
 type BasicSelectorProps<T, R> = ProtoExtends<SelectProps<T>, DefaultProps<R>>
 
-export type SelectorProps<T, R> = ProtoExtends<WidthBasicProps, BasicSelectorProps<T, R>>
+export type SelectorProps<T, R> = ProtoExtends<WithBasicProps, BasicSelectorProps<T, R>>
 
 type SelectorInnerProps<T, R> = ProtoExtends<BasicSelectorProps<T, R>, {
   setFilter?: (v: string) => void,
@@ -491,7 +493,7 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
 
   renderSelect = () => {
     const { onSearch, onSelect, onChange, onopen } = this
-    const { multiple, readOnly, renderList, loading, style, addonAfter, setSelectRef, dropdownClassName, children, ...props } = this.props;
+    const { multiple, readOnly, renderList, loading, style, addonAfter, setSelectRef, dropdownClassName, className, wrap, children, ...props } = this.props;
     if (readOnly) {
       props.open = false
       props.showSearch = false
@@ -503,13 +505,14 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
         loading={loading}
         {...props}
         ref={setSelectRef}
-        className={'gant-selector'}
+        className={classnames('gant-selector', className, !wrap && 'gant-selector-no-wrap')}
         onSearch={onSearch}
         onSelect={onSelect}
         onChange={onChange}
         onDropdownVisibleChange={onopen}
         labelInValue
         filterOption={false}
+
         dropdownClassName={classnames(dropdownClassName, 'gant-selector-dropdown')}
       >
         {children || renderList}

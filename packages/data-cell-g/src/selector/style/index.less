@@ -1,17 +1,77 @@
 @import '../../style/index.less';
 @gant-selector: ~'gant-selector';
 :global {
-    // .ant-select {
-    //     font-size: 12px !important;
-    // }
-    // .ant-select-dropdown {
-    //     font-size: 12px !important;
-    // }
     .@{gant-selector}.ant-select {
+        display: block;
         width: 100% !important;
         &:not(:last-child) {
             .ant-select-selection {
                 .input-group-left();
+            }
+        }
+    }
+    .@{gant-selector}-no-wrap {
+        .ant-select-selection--multiple {
+            white-space: nowrap;
+            overflow: hidden;
+            &:hover {
+                overflow-x: auto;
+                overflow-y: hidden;
+            }
+            height: 32px;
+            &::-webkit-scrollbar {
+                /*滚动条整体样式*/
+                width: 0px;
+                /*高宽分别对应横竖滚动条的尺寸*/
+                height: 0px;
+            }
+            &::-webkit-scrollbar-thumb {
+                /*滚动条里面小方块*/
+                border-radius: 8px;
+                -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+                background: #fafafad2;
+            }
+            &::-webkit-scrollbar-track {
+                /*滚动条里面轨道*/
+                background: transparent;
+            }
+            &:hover {
+                &::-webkit-scrollbar {
+                    width: 10px;
+                    height: 8px;
+                    /**/
+                }
+            }
+            .ant-select-selection__rendered {}
+            &::after,
+            .ant-select-selection__rendered::after {
+                display: none;
+            }
+            ul {
+                // padding-top: 1px;;
+                height: 27px;
+            }
+            li,
+            li.ant-select-selection__choice,
+            li.ant-select-search {
+                float: none;
+                display: inline-block;
+                vertical-align: top;
+            }
+        }
+    }
+    .ant-select-sm.@{gant-selector}-no-wrap {
+        .ant-select-selection--multiple {
+            height: 24px;
+            &:hover {
+                &::-webkit-scrollbar {
+                    width: 10px;
+                    height: 6px;
+                    /**/
+                }
+            }
+            ul {
+                height: 17px;
             }
         }
     }

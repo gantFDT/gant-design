@@ -5,8 +5,8 @@ import TextArea from './TextArea'
 import Password from './Password'
 import Search from './Search'
 import { InputProps } from 'antd/lib/input'
-import { WidthBasicProps } from '../compose/widthbasic';
-export interface GantInputProps extends InputProps, WidthBasicProps {
+import { WithBasicProps } from '../compose/withbasic';
+export interface GantInputProps extends InputProps, WithBasicProps {
   strict?: boolean,
   onChange?: (value: any) => void,
 }

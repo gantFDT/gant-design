@@ -131,13 +131,13 @@ function ScriptTask(dirName) {
             next()
           })
         )
-        // .pipe(gulpif(options.env === 'production', uglify({
-        //     warnings: false,
-        //     compress: {
-        //         // drop_console: true,  // 过滤 console
-        //         drop_debugger: true  // 过滤 debugger
-        //     }
-        // })))
+        .pipe(gulpif(options.env === 'production', uglify({
+            warnings: false,
+            compress: {
+                // drop_console: true,  // 过滤 console
+                drop_debugger: true  // 过滤 debugger
+            }
+        })))
         .pipe(dest(`packages/${dirName}/lib/`))
     },
     function compileDTS() {
@@ -274,13 +274,13 @@ function CopileToGantdTask(dirName, targetDir) {
             next()
           })
         )
-        // .pipe(gulpif(options.env === 'production', uglify({
-        //   warnings: false,
-        //   compress: {
-        //       drop_console: true,  // 过滤 console
-        //       drop_debugger: true  // 过滤 debugger
-        //   }
-        // })))
+        .pipe(gulpif(options.env === 'production', uglify({
+          warnings: false,
+          compress: {
+              drop_console: true,  // 过滤 console
+              drop_debugger: true  // 过滤 debugger
+          }
+        })))
         .pipe(dest(`packages/gantd/${targetDir}/${__dirName === 'data-cell' ? '' : (__dirName + '/')}`))
     },
     function compileDTS() {
