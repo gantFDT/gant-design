@@ -1,16 +1,6 @@
 
 import CodeDecorator from '../_util/CodeDecorator'
 /*! Start !*/
-<<<<<<< HEAD
-import Gird from '@grid'
-import React from 'react'
-
-
-/*! Split !*/
-const BasicUse = () => {
-    return (
-        <Gird />
-=======
 import React, { useMemo, useEffect, useCallback, useState, useRef } from 'react'
 import Gird, { Columns, Filter, OnReady, GridApi } from '@grid'
 import { Button } from "antd"
@@ -83,7 +73,6 @@ const BasicUse = () => {
     }), [])
     return (
         <Gird headerProps={header} columns={columns} dataSource={dataSource} onReady={onReady} rowSelection />
->>>>>>> 697de109e1ff10147ecb3ddd6c88e390d588b785
     )
 }
 /*! End !*/
