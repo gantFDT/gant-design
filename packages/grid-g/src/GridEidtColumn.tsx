@@ -15,7 +15,7 @@ export default (WrapperComponent) => forwardRef(function GridEidtColumn(props: a
 		setCacheValue(chageVal)
 	}, [changeFormatter])
 	const onBlur = useCallback(() => {
-		// stopEditing()
+		stopEditing()
 	}, [stopEditing])
 	const rowId = useMemo(() => {
 		if (!rowkey) return rowIndex;
