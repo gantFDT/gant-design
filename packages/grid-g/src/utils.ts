@@ -1,7 +1,10 @@
 
-import { ColGroupDef, ColDef } from 'ag-grid-community'
+import { ColGroupDef, ColDef, IsColumnFuncParams, IsColumnFunc } from 'ag-grid-community'
 import { get, isNumber } from 'lodash'
-import { Columns, RowSelection } from './index'
+import { Columns, RowSelection, ColumnEdiatble } from './index'
+import { Size } from './interface'
+import EditorCol from './GridEidtColumn'
+import RenderCol from './GirdRenderColumn'
 
 type Col = ColGroupDef | ColDef
 
@@ -9,38 +12,57 @@ function itemisgroup(item, children): item is ColGroupDef {
     return !!children
 }
 
-export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, rowSelection: RowSelection): Col[] => {
+function ColEditableFn(fn: ColumnEdiatble<any>): IsColumnFunc {
+    return ({ data }) => fn(data)
+}
+
+export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, rowSelection: RowSelection, size: Size, getRowNodeId: any): Col[] => {
 
     const cheboxIndex = get(rowSelection, "checkboxIndex")
 
-    return columns.map(({ title: headerName, dataIndex: field, children, editable: ColEditable, ...item }, index) => {
-        const colDef = {
-            ...item,
-            headerName,
-            field,
-            editable: editable ? ColEditable : false,
+    function getColumnDefs(columns: Columns<T>[]) {
+        return columns.map(({ title: headerName, dataIndex: field, children, render, editConfig, fixed, ...item }, index) => {
+            const ColEditable = typeof editConfig !== 'undefined'
 
-            cellRendererParams: {
-                // size,
-                // render
-            },
-            cellEditorParams: {
-                // size
-            },
-            // cellEditorFramework: Enhance(Com)
-            // cellRendererFramework
-        } as Col
+            const colDef = {
+                ...item,
+                headerName,
+                field,
+                cellRendererParams: {
+                    size,
+                    render,
+                    rowkey: getRowNodeId
+                },
+                cellRendererFramework: RenderCol
+            } as Col
 
-        if (!itemisgroup(colDef, children)) {
-            colDef.checkboxSelection = typeof cheboxIndex === "number" && cheboxIndex === index
-        }
-        else if (itemisgroup(colDef, children)) {
-            if (children && children.length) {
-                colDef.children = mapColumns(children, editable, rowSelection)
+
+            if (!itemisgroup(colDef, children)) {
+                colDef.checkboxSelection = typeof cheboxIndex === "number" && cheboxIndex === index
+
+                // 当前列允许编辑
+                if (ColEditable) {
+                    colDef.cellEditorParams = {
+                        size,
+                        props: editConfig.props,
+                        format: editConfig.format,
+                        rowkey: getRowNodeId
+                    }
+                    colDef.cellEditorFramework = EditorCol(editConfig.component)
+                    colDef.editable = editable ? ColEditableFn(editConfig.editable) : false
+                }
+                if (fixed) colDef.pinned = fixed
             }
-        }
-        return colDef
-    })
+            else if (itemisgroup(colDef, children)) {
+                if (children && children.length) {
+                    colDef.children = getColumnDefs(children)
+                }
+            }
+            return colDef
+        })
+    }
+
+    return getColumnDefs(columns)
 }
 
 

@@ -21,3 +21,8 @@ export enum DataActions {
     down = "down"
 }
 
+export enum Fixed {
+    left = "left",
+    right = "right"
+}
+

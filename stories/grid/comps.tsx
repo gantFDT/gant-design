@@ -1,34 +1,40 @@
 
 import CodeDecorator from '../_util/CodeDecorator'
 /*! Start !*/
-<<<<<<< HEAD
-import Gird from '@grid'
-import React from 'react'
-
-
-/*! Split !*/
-const BasicUse = () => {
-    return (
-        <Gird />
-=======
 import React, { useMemo, useEffect, useCallback, useState, useRef } from 'react'
-import Gird, { Columns, Filter, OnReady, GridApi } from '@grid'
+import Gird, { Columns, Filter, OnReady, GridApi, Fixed } from '@grid'
 import { Button } from "antd"
+import { Input } from "@data-cell"
 
 /*! Split !*/
 const BasicUse = () => {
 
-    const [columns, setcolumns] = useState<Columns[]>([
+    const [editable, seteditable] = useState(false)
+
+    const [columns, setcolumns] = useState<Columns<{ name: string, age: number }>[]>([
         {
             title: '姓名',
             dataIndex: "name",
             checkboxSelection: true,
+            render: (text, rowIndex) => {
+                return text + "----"
+            },
+            editConfig: {
+                component: Input,
+                format: (v) => {
+                    return v + 1
+                },
+                editable(data) {
+                    return data.age < 100
+                }
+            },
         },
         {
             title: '年龄',
             dataIndex: "age",
             sortable: true,
             filter: Filter.Number,
+            fixed: Fixed.left
         },
         {
             title: '余额',
@@ -62,14 +68,7 @@ const BasicUse = () => {
 
     const apiRef = useRef<GridApi>()
 
-    const get = useCallback((e) => {
-        const nodes = apiRef.current.getSelectedNodes()
-        console.log(nodes)
-
-        // const diff = apiRef.current.getDiff()
-        // // ... 
-        // apiRef.current.getCurrent()
-    }, [])
+    const edit = useCallback((e) => { seteditable(true) }, [])
     const onReady = useCallback<OnReady>((api) => {
         apiRef.current = api
     }, [])
@@ -77,13 +76,12 @@ const BasicUse = () => {
     const header = useMemo(() => ({
         extra: (
             <>
-                <Button onClick={get}>获取</Button>
+                <Button onClick={edit}>进入编辑</Button>
             </>
         )
     }), [])
     return (
-        <Gird headerProps={header} columns={columns} dataSource={dataSource} onReady={onReady} rowSelection />
->>>>>>> 697de109e1ff10147ecb3ddd6c88e390d588b785
+        <Gird headerProps={header} columns={columns} editable={editable} dataSource={dataSource} onReady={onReady} rowSelection />
     )
 }
 /*! End !*/

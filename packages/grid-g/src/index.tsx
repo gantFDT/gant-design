@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef, useMemo } from 'react';
+import React, { useState, useCallback, useRef, useMemo, useEffect } from 'react';
 import { AgGridReact, AgGridReactProps } from 'ag-grid-react';
 import { ColDef, ColGroupDef, GridApi as AgGridApi, GridOptions, ColumnApi, GridReadyEvent, } from "ag-grid-community";
 import 'ag-grid-community/dist/styles/ag-grid.css';
@@ -10,7 +10,7 @@ import key from './license'
 import Header from '@header';
 import { PartRequired, ProtoExtends } from "@util/type"
 import { mapColumns, NonBool, isbool, isstring } from './utils'
-import { Filter } from './interface'
+import { Filter, Size, Fixed } from './interface'
 export * from './interface'
 
 // 设置licenseKey才会在列头右侧显示
@@ -21,15 +21,18 @@ LicenseManager.setLicenseKey(key)
 const defaultProps = {
     resizable: true,
     editable: false,
-    // 单列的过滤器
+    /**单列的过滤器 */
     filter: false,
-    // 禁止调整列顺序
-    lockPosition: true,
-    // 直接在列头下面显示过滤器
+    /**禁止调整列顺序 */
+    // lockPosition: false,
+    /**直接在列头下面显示过滤器 */
     floatingFilter: false,
-    // 分页
+    /**分页 */
     pagination: true,
-    size: "small"
+    /**编辑状态下的尺寸 */
+    size: Size.small,
+    /**rowkey */
+    rowkey: "key"
 }
 
 export type EditActions = (manage: object, keys: Array<string>) => React.ReactElement
@@ -44,34 +47,57 @@ const defaultRowSelection = {
 }
 
 export type RowSelection = {
-    // 是否多选
+    /**是否多选 */
     multiple?: boolean,
-    // checkbox所在索引
+    /**checkbox所在索引 */
     checkboxIndex?: number,
 } | boolean
 
-// Column Api
-export type Columns<T extends {} = {}> = {
-    title: React.ReactNode,
-    dataIndex: string,
-    render?: (record: T) => React.ReactNode,
-    children?: Columns<T>[],
-    width?: React.ReactText,
-    checkboxSelection?: boolean,
-    sortable?: boolean,
-    editable?: boolean,
-    filter?: Filter,
-    hide?: boolean,
-    // render:
-    editConfig?: {
-        // renCom: D
-        // renderProps:()=>{ return {} }
-    }
+type EditComponentProps = {
+    // onChange: (value: any) => void
 }
 
-// 取消 拿到原始值 重新set 然后关闭编辑状态
-// 保存 关闭编辑状态即可
-// 编辑 打开编辑状态
+export type EditConfig<T> = {
+    component: React.ComponentClass<EditComponentProps> | React.FunctionComponent<EditComponentProps>,
+    /**是否开启编辑，当全局editable为true时生效 */
+    editable?: ColumnEdiatble<T>,
+    props?: (record: T, rowIndex: number) => Object
+    format?: (v: any) => any
+}
+
+export type ColumnEdiatble<T> = (record: T) => boolean
+
+export type RowKey<T> = (data: T) => string
+
+// Column Api
+export type Columns<T extends {} = {}> = {
+    /**标题 */
+    title: React.ReactNode,
+    /**索引的字段名 */
+    dataIndex: string,
+    /**单元格渲染函数 */
+    render?: (text: string, rowIndex: number) => React.ReactText,
+    /**子节点 */
+    children?: Columns<T>[],
+    /**当前列宽度,如果没有，将以defaultColumnWidth显示 */
+    width?: React.ReactText,
+    /**是否显示选择器 */
+    checkboxSelection?: boolean,
+    /**当前列是否支持排序 */
+    sortable?: boolean,
+    /**当前列的过滤形式 */
+    filter?: Filter,
+    /**是否隐藏 */
+    hide?: boolean,
+    /**编辑时配置 */
+    editConfig?: EditConfig<T>,
+    /**固定列 */
+    fixed?: Fixed | undefined,
+}
+
+// TODO:取消 拿到原始值 重新set 然后关闭编辑状态
+// TODO:保存 关闭编辑状态即可
+// TODO:编辑 打开编辑状态
 
 // Grid Api
 interface Props<T> {
@@ -85,7 +111,8 @@ interface Props<T> {
     dataSource: T[],
     onReady: OnReady,
     defaultColumnWidth?: React.ReactText,
-    rowSelection: RowSelection
+    rowSelection: RowSelection,
+    rowkey: RowKey<T> | string
 }
 
 type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>
@@ -100,7 +127,7 @@ export type GridPropsPartial<T> = PartRequired<GridProps<T>, "columns" | "dataSo
 
 const Grid = function Grid<T>(props: GridPropsPartial<T>) {
 
-    const { headerProps, editActions, onReady, columns: columnDefs, editable, defaultColumnWidth, rowSelection: rowSel } = props
+    const { headerProps, editActions, onReady, columns: columnDefs, editable, defaultColumnWidth, rowSelection: rowSel, size, rowkey } = props
 
     const apiRef = useRef<GridApi>()
 
@@ -112,6 +139,16 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
         }
         return defaultColumnWidth
     }, [defaultColumnWidth])
+
+    const getRowNodeId = useCallback(
+        (data) => {
+            if (typeof rowkey === 'string') {
+                return get(data, rowkey)
+            }
+            return rowkey(data)
+        },
+        [rowkey],
+    )
 
     const onGridReady = useCallback((params: GridReadyEvent) => {
         apiRef.current = params.api
@@ -128,14 +165,20 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
         return rowSel
     }, [rowSel])
 
-    const columns = useMemo<ColDef[] | ColGroupDef[]>(() => mapColumns<T>(columnDefs, editable, rowSelection), [columnDefs, editable, rowSelection])
+    const columns = useMemo<ColDef[] | ColGroupDef[]>(() => mapColumns<T>(columnDefs, editable, rowSelection, size, getRowNodeId), [columnDefs, editable, rowSelection, size, getRowNodeId])
+
+    useEffect(() => {
+        if (apiRef.current) {
+            apiRef.current.setColumnDefs(columns)
+        }
+    }, [columns])
 
     const gridOptions = useMemo<GridOptions>(() => {
         const {
             dataSource: rowData,
             resizable,
             filter,
-            lockPosition,
+            // lockPosition,
             floatingFilter,
             pagination,
             rowSelection
@@ -143,7 +186,7 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
         const defaultColDef: ColDef = {
             resizable,
             filter: floatingFilter ? false : filter,
-            lockPosition,
+            // lockPosition,
             width: defaultWidth
         }
 
@@ -209,9 +252,10 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
 
     return (
         <div className="ag-theme-balham" style={{ width: 600, height: 320 }}>
-            {header}
+            <div className="gant-grid-header">{header}</div>
             <AgGridReact
                 gridOptions={gridOptions}
+                getRowNodeId={getRowNodeId}
             // rowSelection="multiple"
             // animateRows
             // onGridReady={param => ref.current = param.api}

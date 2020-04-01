@@ -1,1 +1,2 @@
-import './column.less'
+import './column.less';
+import './grid.less';
