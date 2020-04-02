@@ -10,6 +10,7 @@
   ],
   "all": [
     "packages/gantd",
+    "packages/grid-g",
     "packages/anchor-g",
     "packages/auto-reload-g",
     "packages/color-picker-g",
