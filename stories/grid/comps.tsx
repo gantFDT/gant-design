@@ -2,7 +2,8 @@
 import CodeDecorator from '../_util/CodeDecorator'
 /*! Start !*/
 import React, { useMemo, useEffect, useCallback, useState, useRef } from 'react'
-import Gird, { Columns, Filter, OnReady, GridApi, Fixed, Api } from '@grid'
+import Gird, { Columns, Filter, OnReady, GridApi, Fixed, Api } from '@grid';
+import { GridReadyEvent } from 'ag-grid-community'
 import { Button } from "antd"
 import { Input } from "@data-cell"
 
@@ -32,7 +33,6 @@ const BasicUse = () => {
             dataIndex: "age",
             sortable: true,
             filter: Filter.Number,
-            fixed: Fixed.left
         },
         {
             title: '余额',
@@ -47,7 +47,13 @@ const BasicUse = () => {
         [
             {
                 name: "里斯",
-                age: 123
+                age: 123,
+                children: [
+                    {
+                        name: "阿萨的脚后跟",
+                        age: 1
+                    }
+                ]
             },
             {
                 name: "阿斯u",
@@ -64,7 +70,7 @@ const BasicUse = () => {
         ]
     )
 
-    const apiRef = useRef<Api>()
+    const apiRef = useRef<GridReadyEvent>()
 
     const edit = useCallback((e) => { seteditable(true) }, [])
     const onReady = useCallback<OnReady>((api) => {
@@ -75,9 +81,7 @@ const BasicUse = () => {
         extra: !editable ? (
             <>
                 <Button onClick={edit}>进入编辑</Button>
-                <div onClick={() => {
-                    apiRef.current.undoCellEditing()
-                }} >ssss</div>
+
             </>
         ) : undefined
     }), [editable])
@@ -85,15 +89,20 @@ const BasicUse = () => {
     const editActions = useCallback((api: Api) => {
         return (
             <>
-                <Button onClick={api.undo}>undo</Button>
-                {/* <Button onClick={edit}>redo</Button> */}
+                <Button onClick={api.delete}>删除</Button>
+                <Button onClick={api.undo}>撤销</Button>
+                <Button onClick={api.redo}>重做</Button>
+                <Button onClick={api.getModel}>getModel</Button>
+                <Button onClick={api.cancel}>取消编辑</Button>
+                <Button onClick={api.save}>保存</Button>
             </>
         )
     }, [])
     return (
         <Gird headerProps={header}
             rowkey="age"
-            columns={columns} editable={editable} dataSource={dataSource} onReady={onReady} rowSelection />
+            editActions={editActions}
+            columns={columns} editable={editable} onEditableChange={seteditable} dataSource={dataSource} onReady={onReady} rowSelection />
     )
 }
 /*! End !*/
