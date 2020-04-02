@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef, useMemo, useEffect } from 'react';
+import React, { useState, useCallback, useRef, useMemo, useEffect, Dispatch, SetStateAction } from 'react';
 import { AgGridReact, AgGridReactProps } from 'ag-grid-react';
 import { ColDef, ColGroupDef, GridApi as AgGridApi, GridOptions, ColumnApi, GridReadyEvent, ValueFormatterParams } from "ag-grid-community";
 import 'ag-grid-community/dist/styles/ag-grid.css';
@@ -10,7 +10,7 @@ import { get } from 'lodash'
 import key from './license'
 import Header from '@header';
 import { PartRequired, ProtoExtends } from "@util/type"
-import { mapColumns, NonBool, isbool, isstring, isarray, ispromise } from './utils'
+import { mapColumns, NonBool, isbool, isstring, isarray, ispromise, flattenTreeData } from './utils'
 import { Filter, Size, Fixed } from './interface'
 import "./style"
 
@@ -37,7 +37,9 @@ const defaultProps = {
     /**编辑状态下的尺寸 */
     size: Size.small,
     /**rowkey */
-    rowkey: "key"
+    rowkey: "key",
+    width: "100%",
+    height: 400,
 }
 
 namespace API {
@@ -130,7 +132,7 @@ export type onEditableChange = (editable: boolean) => void
 // Grid Api
 interface Props<T> {
     filter?: boolean,
-    headerProps: {
+    headerProps?: {
         extra?: React.ReactNode,
         [key: string]: any
     },
@@ -141,7 +143,10 @@ interface Props<T> {
     defaultColumnWidth?: React.ReactText,
     rowSelection: RowSelection,
     rowkey: RowKey<T> | string,
-    onEditableChange: onEditableChange
+    onEditableChange: onEditableChange,
+    width?: string | number,
+    height?: string | number,
+    treeData?: boolean,
 }
 
 type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>
@@ -157,7 +162,7 @@ export type GridPropsPartial<T> = PartRequired<GridProps<T>, "columns" | "dataSo
 const Grid = function Grid<T>(props: GridPropsPartial<T>) {
 
     const {
-        dataSource: rowData,
+        dataSource: initDataSource,
         headerProps,
         editActions,
         onReady,
@@ -170,13 +175,16 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
         resizable,
         filter,
         onEditableChange,
+        width,
+        height,
+        treeData,
         ...orignProps
     } = props
 
-    const apiRef = useRef<GridApi>()
+    const apiRef = useRef<GridApi>();
 
-    const columnsRef = useRef<ColumnApi>()
-
+    const columnsRef = useRef<ColumnApi>();
+    const [dataSource, setDataSource]: [T[], Dispatch<SetStateAction<T[]>>] = useState([]);
     const defaultWidth = useMemo(() => {
         if (isstring(defaultColumnWidth)) {
             return parseFloat(defaultColumnWidth)
@@ -189,7 +197,6 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
         (api = apiRef.current) => {
             if (typeof defaultColumnWidth === "undefined") api.sizeColumnsToFit()
         }, [defaultColumnWidth])
-
     const getRowNodeId = useCallback(
         (data) => {
             if (typeof rowkey === 'string') {
@@ -199,6 +206,13 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
         },
         [rowkey],
     )
+    useEffect(() => {
+        if (treeData) {
+            setDataSource(flattenTreeData(initDataSource, getRowNodeId))
+        } else {
+            setDataSource(initDataSource)
+        }
+    }, [initDataSource, treeData, getRowNodeId])
 
 
     const originList = useMemo(() => {
@@ -361,19 +375,22 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
         }
         return undefined
     }, [mergedHeaderProps])
-
+    const getDataPath = useCallback((data) => {
+        return data.treeDataPath;
+    }, [])
     return (
-        <div className="ag-theme-balham" style={{ width: 600, height: 320 }}>
+        <div className="ag-theme-balham" style={{ width, height }}>
             <div className="gant-grid-header">{header}</div>
             <AgGridReact
                 {...orignProps}
-                rowData={rowData}
+                // rowData={rowData}
                 columnDefs={columns}
                 rowSelection={["signal", "multiple"][+get(rowSelection, "multiple")]}
 
-                // gridOptions={gridOptions}
+                rowData={dataSource}
                 getRowNodeId={getRowNodeId}
                 onGridReady={onGridReady}
+                treeData={treeData}
                 // undo\redo
                 undoRedoCellEditing
                 enableFillHandle
@@ -383,7 +400,9 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
                     resizable,
                     // sortable: true,
                     filter,
+                    width: 100,
                 }}
+                getDataPath={getDataPath}
             />
         </div>
     )

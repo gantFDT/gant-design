@@ -35,7 +35,7 @@ export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, rowSelec
                 },
                 cellRendererFramework: RenderCol,
                 cellClass: (params: any) => {
-                    // return params.data._rowType ? `gant-grid-cell gant-grid-cell-${params.data._rowType}` : ""
+                    return get(params, 'data._rowType') ? `gant-grid-cell gant-grid-cell-${params.data._rowType}` : ""
                 }
             } as Col
 
@@ -94,7 +94,7 @@ export function ispromise(t: any): t is Promise<any> {
     return t && typeof t.then === "function"
 }
 
-export function trackValueChange(data: any, field: string, cacheValue: any, value: any) {
+export function trackEditValueChange(data: any, field: string, cacheValue: any, value: any) {
     let newRowData: any = data;
     if (data._rowType === DataActions.modify) {
         const rowData = get(data, `_rowData`, {})
@@ -114,4 +114,25 @@ export function trackValueChange(data: any, field: string, cacheValue: any, valu
         newRowData = { _rowData: { [field]: value }, _rowType: DataActions.modify, ...newRowData }
     }
     return newRowData
+}
+
+export function trackRenderValueChange(data: any, field: string, value: any) {
+    const { _rowType, rowData, ...newData } = data;
+    if (_rowType !== DataActions.modify) return false;
+    if (!rowData[field] !== value) return false;
+    return newData
+}
+
+export function flattenTreeData(dataSoruce: any[], getRowNodeId, pathArray: string[] = []): any[] {
+    let treeData: any[] = []
+    dataSoruce.map((item: any) => {
+        const { children, ...itemData } = item;
+        const treeDataPath = [...pathArray, getRowNodeId(itemData)]
+        treeData.push({ ...itemData, treeDataPath })
+        if (children && children.length) {
+            const childrenTreeData = flattenTreeData(children, getRowNodeId, treeDataPath);
+            [].push.apply(treeData, childrenTreeData);
+        }
+    })
+    return treeData
 }
