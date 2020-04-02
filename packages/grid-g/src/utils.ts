@@ -35,7 +35,7 @@ export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, rowSelec
                 },
                 cellRendererFramework: RenderCol,
                 cellClass: (params: any) => {
-                    return params.data._rowType ? `gant-grid-cell gant-grid-cell-${params.data._rowType}` : ""
+                    // return params.data._rowType ? `gant-grid-cell gant-grid-cell-${params.data._rowType}` : ""
                 }
             } as Col
 
@@ -84,6 +84,14 @@ export function isnumber(t: any): t is number {
 // string
 export function isstring(t: any): t is string {
     return typeof t === 'string'
+}
+// array
+export function isarray(t: any): t is Array<any> {
+    return Array.isArray(t)
+}
+// promise
+export function ispromise(t: any): t is Promise<any> {
+    return t && typeof t.then === "function"
 }
 
 export function trackValueChange(data: any, field: string, cacheValue: any, value: any) {

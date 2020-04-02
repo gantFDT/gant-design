@@ -17,14 +17,12 @@ const BasicUse = () => {
             title: '姓名',
             dataIndex: "name",
             checkboxSelection: true,
-            render: (text, rowIndex) => {
-                return text + "----"
-            },
+            width: 150,
             editConfig: {
                 component: Input,
                 // changeFormatter: (e: any) => e.target.value,
                 editable(data) {
-                    return data.age < 100
+                    return !data.age || data.age < 100
                 }
             },
         },
@@ -48,12 +46,10 @@ const BasicUse = () => {
             {
                 name: "里斯",
                 age: 123,
-                children: [
-                    {
-                        name: "阿萨的脚后跟",
-                        age: 1
-                    }
-                ]
+            },
+            {
+                name: "阿萨的脚后跟",
+                age: 1,
             },
             {
                 name: "阿斯u",
@@ -61,7 +57,7 @@ const BasicUse = () => {
             },
             {
                 name: "埃斯珀蒂就",
-                age: 1
+                age: 12
             },
             {
                 name: "撒旦",
@@ -86,23 +82,31 @@ const BasicUse = () => {
         ) : undefined
     }), [editable])
 
+    const deleteRow = useCallback((rows) => {
+        return rows.filter((row) => {
+            return row.age > 10
+        })
+    }, [])
+
     const editActions = useCallback((api: Api) => {
         return (
             <>
-                <Button onClick={api.delete}>删除</Button>
-                <Button onClick={api.undo}>撤销</Button>
-                <Button onClick={api.redo}>重做</Button>
-                <Button onClick={api.getModel}>getModel</Button>
+                <Button onClick={() => api.add()}>添加</Button>
+                <Button onClick={() => api.deleteRow(deleteRow)}>删除</Button>
+                {/* <Button onClick={api.undo}>撤销</Button>
+                <Button onClick={api.redo}>重做</Button> */}
+                <Button onClick={api.map}>getModel</Button>
                 <Button onClick={api.cancel}>取消编辑</Button>
                 <Button onClick={api.save}>保存</Button>
             </>
         )
-    }, [])
+    }, [deleteRow])
     return (
         <Gird headerProps={header}
             rowkey="age"
             editActions={editActions}
-            columns={columns} editable={editable} onEditableChange={seteditable} dataSource={dataSource} onReady={onReady} rowSelection />
+            columns={columns} editable={editable} onEditableChange={seteditable} dataSource={dataSource} onReady={onReady} rowSelection
+        />
     )
 }
 /*! End !*/

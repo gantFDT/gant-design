@@ -10,7 +10,7 @@ import { get } from 'lodash'
 import key from './license'
 import Header from '@header';
 import { PartRequired, ProtoExtends } from "@util/type"
-import { mapColumns, NonBool, isbool, isstring } from './utils'
+import { mapColumns, NonBool, isbool, isstring, isarray, ispromise } from './utils'
 import { Filter, Size, Fixed } from './interface'
 import "./style"
 
@@ -40,14 +40,23 @@ const defaultProps = {
     rowkey: "key"
 }
 
+namespace API {
+    export type deleteRow = (cb?: (selected: any[]) => (Promise<boolean | any[]> | boolean | any[])) => void;
+    export type cancel = () => void
+}
+
 export interface Api {
-    undo(): void,
-    redo(): void,
+    /**撤销 */
+    undo?(): void,
+    /**重做 */
+    redo?(): void,
+    /**添加 */
+    add(index?: number, item?: object): void,
     /**删除 */
-    delete(): void,
+    deleteRow: API.deleteRow,
     getModel(): void,
     /**取消编辑 */
-    cancel(): void,
+    cancel: API.cancel,
     [key: string]: any
 }
 
@@ -88,7 +97,7 @@ export type RowKey<T> = (data: T) => string
 // Column Api
 export type Columns<T extends {} = {}> = {
     /**标题 */
-    title: React.ReactNode,
+    title?: React.ReactNode,
     /**索引的字段名 */
     dataIndex: string,
     /**单元格渲染函数 */
@@ -109,15 +118,14 @@ export type Columns<T extends {} = {}> = {
     editConfig?: EditConfig<T>,
     /**固定列 */
     fixed?: Fixed | undefined,
-    valueFormatter?: (params: ValueFormatterParams) => string
+    valueFormatter?: (params: ValueFormatterParams) => string,
+    rowGroupIndex?: number,
 }
 
 export type onEditableChange = (editable: boolean) => void
 
-// TODO:取消 拿到原始值 重新set 然后关闭编辑状态
-// TODO:保存 关闭编辑状态即可
-// TODO:编辑 打开编辑状态
-// TODO:添加、删除、移动
+// TODO:移动
+// TODO:取消编辑时恢复添加和删除的数据
 
 // Grid Api
 interface Props<T> {
@@ -149,7 +157,7 @@ export type GridPropsPartial<T> = PartRequired<GridProps<T>, "columns" | "dataSo
 const Grid = function Grid<T>(props: GridPropsPartial<T>) {
 
     const {
-        dataSource,
+        dataSource: rowData,
         headerProps,
         editActions,
         onReady,
@@ -159,6 +167,8 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
         rowSelection: rowSel,
         size,
         rowkey,
+        resizable,
+        filter,
         onEditableChange,
         ...orignProps
     } = props
@@ -191,40 +201,114 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
     )
 
 
+    const originList = useMemo(() => {
+        const list = []
+        if (editable) {
+            apiRef.current.forEachNode((node, index) => {
+                list.push(node.data)
+            })
+        }
+        return list
+    }, [editable])
+
+
+
+    /**删除 */
+    const deleteRow = useCallback<API.deleteRow>(
+        (cb) => {
+            let pro: Promise<boolean | any[]>
+            const selected = apiRef.current.getSelectedRows()
+            if (!cb) {
+                apiRef.current.updateRowData({
+                    remove: selected
+                })
+                return;
+            }
+            const back = cb(selected)
+            if (back) {
+                if (ispromise(back)) {
+                    pro = back
+                } else {
+                    pro = new Promise((resolve) => {
+                        resolve(back)
+                    })
+                }
+                pro.then((res) => {
+                    let deletedRows: Array<any> = []
+                    if (isarray(res)) {
+                        if (res.length) deletedRows = res
+                    } else {
+                        deletedRows = selected
+                    }
+                    // 业务层处理之后可能不需要删除
+                    if (deletedRows.length) {
+                        // 执行删除
+                        apiRef.current.updateRowData({
+                            remove: deletedRows
+                        })
+                    }
+
+                })
+            }
+        },
+        [],
+    )
+
+    /**取消编辑 */
+    const cancelEdit = useCallback<API.cancel>(
+        () => {
+            console.log(originList)
+            if (onEditableChange) {
+                apiRef.current.setRowData(originList)
+                onEditableChange(false)
+            }
+        },
+        [originList],
+    )
 
     const editApi = useMemo<Api>(() => {
         return {
-            undo() {
-                apiRef.current.undoCellEditing()
-            },
-            redo() {
-                apiRef.current.redoCellEditing()
-            },
+            // undo() {
+            //     apiRef.current.undoCellEditing()
+            // },
+            // redo() {
+            //     apiRef.current.redoCellEditing()
+            // },
             getModel() {
                 console.log(apiRef.current.getModel())
             },
-            delete() {
-                const selected = apiRef.current.getSelectedRows()
-                console.log(selected)
+            add(index: number = 0, item: object = {}) {
+                const res = apiRef.current.updateRowData({
+                    add: [item],
+                    addIndex: index,
+                })
             },
-            cancel() {
-                if (onEditableChange) {
-                    apiRef.current.setRowData(dataSource)
-                    onEditableChange(false)
-                }
+            getSelected() {
+                console.log(apiRef.current.getSelectedRows())
             },
+            map() {
+                apiRef.current.forEachNode((node, index) => {
+                    console.log(node)
+                })
+            },
+            /**删除 */
+            deleteRow,
+            /**取消 */
+            cancel: cancelEdit,
+            originList,
             save() {
                 if (onEditableChange) {
-                    // const count = apiRef.current.getVirtualRowCount()
-                    // console.log(count)
                     apiRef.current.forEachNode((node, index) => {
-                        console.log(node.data)
+                        const { _rowData, _rowType, ...data } = node.data
+                        if (_rowData) {
+                            node.setData(data)
+                        }
                     })
                     onEditableChange(false)
                 }
             }
         }
-    }, [dataSource])
+    }, [deleteRow, cancelEdit])
 
     const onGridReady = useCallback((params: GridReadyEvent) => {
         apiRef.current = params.api
@@ -232,7 +316,7 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
 
         onReady && onReady(params)
         // 没有设置默认宽度将自动适配
-        shouldFitCol(params.api)
+        // shouldFitCol(params.api)
     }, [onReady, shouldFitCol, editApi])
 
     const rowSelection = useMemo<NonBool<RowSelection>>(() => {
@@ -244,61 +328,7 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
 
     const columns = useMemo<ColDef[] | ColGroupDef[]>(() => mapColumns<T>(columnDefs, editable, rowSelection, size, getRowNodeId), [columnDefs, editable, rowSelection, size, getRowNodeId])
 
-    useEffect(() => {
-        if (apiRef.current) {
-            apiRef.current.setColumnDefs(columns)
-            shouldFitCol()
-        }
-    }, [columns])
-
-    const gridOptions = useMemo<GridOptions>(() => {
-        const {
-            dataSource: rowData,
-            resizable,
-            filter,
-            // lockPosition,
-            floatingFilter,
-            pagination,
-            rowSelection
-        } = props
-        const defaultColDef: ColDef = {
-            resizable,
-            filter: floatingFilter ? false : filter,
-            // lockPosition,
-            width: defaultWidth,
-            // editable: true,
-        }
-
-        const defaultColGroupDef: ColGroupDef = {
-            children: undefined
-        }
-
-        return {
-            rowData,
-            columnDefs: columns,
-            floatingFilter,
-            pagination,
-            rowSelection: ["signal", "multiple"][+get(rowSelection, "multiple")],
-            paginationAutoPageSize: true,
-            defaultColDef,
-            defaultColGroupDef,
-            // treeData: true,
-
-            enableCellChangeFlash: true,
-        }
-    }, [props, columns, defaultWidth, rowSelection])
-
-    const [autoGroupColumnDef, setautoGroupColumnDef] = useState({
-        headerName: "Model",
-        field: 'model',
-        cellRenderer: "agGroupCellRenderer",
-        cellRendererParams: {
-            checkbox: true,
-        }
-    })
-
     const actions = useMemo(() => {
-        // if (editActions) {
         if (editActions && editable) {
             return editActions(editApi, [])
         }
@@ -337,31 +367,23 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
             <div className="gant-grid-header">{header}</div>
             <AgGridReact
                 {...orignProps}
-                gridOptions={gridOptions}
+                rowData={rowData}
+                columnDefs={columns}
+                rowSelection={["signal", "multiple"][+get(rowSelection, "multiple")]}
+
+                // gridOptions={gridOptions}
                 getRowNodeId={getRowNodeId}
                 onGridReady={onGridReady}
                 // undo\redo
-                undoRedoCellEditing={true}
-                enableFillHandle={true}
-                undoRedoCellEditingLimit={5}
+                undoRedoCellEditing
+                enableFillHandle
+                // undoRedoCellEditingLimit
                 stopEditingWhenGridLosesFocus
-            // rowSelection="multiple"
-            // animateRows
-            // onGridReady={param => ref.current = param.api}
-            // autoGroupColumnDef={autoGroupColumnDef}
-            // groupSelectsChildren
-            // componentWrappingElement="span"
-            //  // 行拖拽
-            // rowDragManaged
-            // suppressRowDrag
-            // defaultColDef={{
-            //     sortable: true,
-            //     filter: true,
-            //     // headerComponentFramework: "div",
-            //     headerComponentParams: {
-            //         name: '123'
-            //     }
-            // }}
+                defaultColDef={{
+                    resizable,
+                    // sortable: true,
+                    filter,
+                }}
             />
         </div>
     )
