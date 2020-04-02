@@ -21,7 +21,7 @@ const BasicUse = () => {
             },
             editConfig: {
                 component: Input,
-                changeFormatter: (e: any) => e.target.value,
+                // changeFormatter: (e: any) => e.target.value,
                 editable(data) {
                     return data.age < 100
                 }

@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useRef, useMemo, useEffect } from 'react';
 import { AgGridReact, AgGridReactProps } from 'ag-grid-react';
-import { ColDef, ColGroupDef, GridApi as AgGridApi, GridOptions, ColumnApi, GridReadyEvent, ValueParserParams, ValueFormatterParams } from "ag-grid-community";
+import { ColDef, ColGroupDef, GridApi as AgGridApi, GridOptions, ColumnApi, GridReadyEvent, ValueFormatterParams } from "ag-grid-community";
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import { LicenseManager } from "ag-grid-enterprise"
@@ -86,7 +86,7 @@ export type Columns<T extends {} = {}> = {
     /**索引的字段名 */
     dataIndex: string,
     /**单元格渲染函数 */
-    render?: (text: string, rowIndex: number) => React.ReactText,
+    render?: (text: string, record: any, rowIndex: number) => React.ReactText,
     /**子节点 */
     children?: Columns<T>[],
     /**当前列宽度,如果没有，将以defaultColumnWidth显示 */
@@ -103,7 +103,7 @@ export type Columns<T extends {} = {}> = {
     editConfig?: EditConfig<T>,
     /**固定列 */
     fixed?: Fixed | undefined,
-    valueFormatter?: () => string
+    valueFormatter?: (params: ValueFormatterParams) => string
 }
 
 // TODO:取消 拿到原始值 重新set 然后关闭编辑状态
@@ -233,7 +233,6 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
             paginationAutoPageSize: true,
             defaultColDef,
             defaultColGroupDef,
-
             enableCellChangeFlash: true,
         }
     }, [props, columns, defaultWidth, rowSelection])
