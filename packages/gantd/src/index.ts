@@ -8,7 +8,7 @@ if (
 ) {
   console.warn(
     'You are using a whole package of gantd, ' +
-      'please use https://www.npmjs.com/package/babel-plugin-import to reduce app bundle size.',
+    'please use https://www.npmjs.com/package/babel-plugin-import to reduce app bundle size.',
   );
 }
 
@@ -36,7 +36,8 @@ export {
   LocationSelector
 } from '@data-cell';
 
-
+//grid
+export { default as Grid } from '@grid';
 
 //表单
 export { default as SchemaForm } from '@schema-form';

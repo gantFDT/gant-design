@@ -1,8 +1,8 @@
 
 import { ColGroupDef, ColDef, IsColumnFuncParams, IsColumnFunc } from 'ag-grid-community'
-import { get, isNumber } from 'lodash'
+import { get, isNumber, isEmpty } from 'lodash'
 import { Columns, RowSelection, ColumnEdiatble } from './index'
-import { Size } from './interface'
+import { Size, DataActions } from './interface'
 import EditorCol from './GridEidtColumn'
 import RenderCol from './GirdRenderColumn'
 
@@ -84,4 +84,26 @@ export function isnumber(t: any): t is number {
 // string
 export function isstring(t: any): t is string {
     return typeof t === 'string'
+}
+
+export function trackValueChange(data: any, field: string, cacheValue: any, value: any) {
+    let newRowData: any = data;
+    if (data._rowType === DataActions.modify) {
+        const rowData = get(data, `_rowData`, {})
+        if (cacheValue === rowData[field]) {
+            delete rowData[field];
+        } else if (!rowData[field] && rowData[field] !== value) {
+            rowData[field] = value
+        }
+
+        if (isEmpty(rowData)) {
+            const { _rowType, _rowData, ...newData } = data;
+            newRowData = newData;
+        } else {
+            newRowData = { ...data, _rowData: rowData }
+        }
+    } else if (!data._rowType) {
+        newRowData = { _rowData: { [field]: value }, _rowType: DataActions.modify, ...newRowData }
+    }
+    return newRowData
 }
