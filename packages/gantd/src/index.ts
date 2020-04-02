@@ -8,7 +8,7 @@ if (
 ) {
   console.warn(
     'You are using a whole package of gantd, ' +
-      'please use https://www.npmjs.com/package/babel-plugin-import to reduce app bundle size.',
+    'please use https://www.npmjs.com/package/babel-plugin-import to reduce app bundle size.',
   );
 }
 
@@ -60,3 +60,4 @@ export { default as withKeyevent } from '@keyevent';
 
 //内部使用
 export { default as Card } from './card';
+export { default as Gird } from '@grid';
