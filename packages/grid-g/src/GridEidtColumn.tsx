@@ -1,6 +1,7 @@
 import React, { forwardRef, useImperativeHandle, useState, useCallback, useMemo } from 'react'
 import { EditStatus } from '@data-cell'
 import { get, isEmpty } from 'lodash'
+import { trackEditValueChange } from './utils'
 import { DataActions, Size } from './interface'
 const defalutProps = {
 	autoFocus: true,
@@ -25,30 +26,13 @@ export default (WrapperComponent) => forwardRef(function GridEidtColumn(props: a
 		return {
 			getValue: () => {
 				if (value === cacheValue) return cacheValue;
-				let newRowData: any = data;
-				if (data._rowType === DataActions.modify) {
-					const rowData = get(data, `_rowData`, {})
-					if (cacheValue === rowData[field]) {
-						delete rowData[field];
-					} else if (!rowData[field] && rowData[field] !== value) {
-						rowData[field] = value
-					}
-
-					if (isEmpty(rowData)) {
-						const { _rowType, _rowData, ...newData } = data;
-						newRowData = newData;
-					} else {
-						newRowData = { ...data, _rowData: rowData }
-					}
-				} else if (!data._rowType) {
-					newRowData = { _rowData: { [field]: value }, _rowType: DataActions.modify, ...newRowData }
-				}
+				let newRowData: any = trackEditValueChange(data, field, cacheValue, value)
 				const rowNode = api.getRowNode(rowId);
 				rowNode.setData(newRowData);
 				return cacheValue
 			}
 		};
-	}, [cacheValue, data, value, field, cacheValue,rowId]);
+	}, [cacheValue, data, value, field, cacheValue, rowId]);
 	return (
 		<div className='gant-grid-column-editing'>
 			<WrapperComponent  {...fieldProps} value={cacheValue} {...defalutProps} onChange={onChange} size={size} onBlur={onBlur} />

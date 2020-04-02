@@ -86,7 +86,7 @@ export function isstring(t: any): t is string {
     return typeof t === 'string'
 }
 
-export function trackValueChange(data: any, field: string, cacheValue: any, value: any) {
+export function trackEditValueChange(data: any, field: string, cacheValue: any, value: any) {
     let newRowData: any = data;
     if (data._rowType === DataActions.modify) {
         const rowData = get(data, `_rowData`, {})
@@ -107,3 +107,11 @@ export function trackValueChange(data: any, field: string, cacheValue: any, valu
     }
     return newRowData
 }
+
+export function trackRenderValueChange(data: any, field: string, value: any) {
+    const { _rowType, rowData, ...newData } = data;
+    if (_rowType !== DataActions.modify) return false;
+    if (!rowData[field] !== value) return false;
+    return newData
+}
+
