@@ -2,9 +2,9 @@
 import CodeDecorator from '../_util/CodeDecorator'
 /*! Start !*/
 import React, { useMemo, useEffect, useCallback, useState, useRef } from 'react'
-import Gird, { Columns, Filter, OnReady, GridApi, Fixed } from '@grid'
-import { Button, Input } from "antd"
-// import { Input } from "@data-cell"
+import Gird, { Columns, Filter, OnReady, GridApi, Fixed, Api } from '@grid'
+import { Button } from "antd"
+import { Input } from "@data-cell"
 
 /*! Split !*/
 const BasicUse = () => {
@@ -64,7 +64,7 @@ const BasicUse = () => {
         ]
     )
 
-    const apiRef = useRef<GridApi>()
+    const apiRef = useRef<Api>()
 
     const edit = useCallback((e) => { seteditable(true) }, [])
     const onReady = useCallback<OnReady>((api) => {
@@ -72,15 +72,24 @@ const BasicUse = () => {
     }, [])
 
     const header = useMemo(() => ({
-        extra: (
+        extra: !editable ? (
             <>
                 <Button onClick={edit}>进入编辑</Button>
                 <div onClick={() => {
                     apiRef.current.undoCellEditing()
                 }} >ssss</div>
             </>
+        ) : undefined
+    }), [editable])
+
+    const editActions = useCallback((api: Api) => {
+        return (
+            <>
+                <Button onClick={api.undo}>undo</Button>
+                {/* <Button onClick={edit}>redo</Button> */}
+            </>
         )
-    }), [])
+    }, [])
     return (
         <Gird headerProps={header}
             rowkey="age"

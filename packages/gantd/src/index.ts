@@ -36,7 +36,8 @@ export {
   LocationSelector
 } from '@data-cell';
 
-
+//grid
+export { default as Grid } from '@grid';
 
 //表单
 export { default as SchemaForm } from '@schema-form';
