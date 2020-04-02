@@ -255,12 +255,12 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
 
     const columns = useMemo<ColDef[] | ColGroupDef[]>(() => mapColumns<T>(columnDefs, editable, rowSelection, size, getRowNodeId), [columnDefs, editable, rowSelection, size, getRowNodeId])
 
-    useEffect(() => {
-        if (apiRef.current) {
-            apiRef.current.setColumnDefs(columns)
-            shouldFitCol()
-        }
-    }, [columns])
+    // useEffect(() => {
+    //     if (apiRef.current) {
+    //         apiRef.current.setColumnDefs(columns)
+    //         shouldFitCol()
+    //     }
+    // }, [columns])
 
     const gridOptions = useMemo<GridOptions>(() => {
         const {
@@ -284,7 +284,7 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
         }
 
         return {
-            columnDefs: columns,
+            // columnDefs: columns,
             floatingFilter,
             pagination,
             rowSelection: ["signal", "multiple"][+get(rowSelection, "multiple")],
@@ -348,6 +348,7 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
             <AgGridReact
                 {...orignProps}
                 gridOptions={gridOptions}
+                columnDefs={columns}
                 rowData={dataSource}
                 getRowNodeId={getRowNodeId}
                 onGridReady={onGridReady}

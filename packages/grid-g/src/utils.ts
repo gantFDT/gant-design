@@ -111,7 +111,7 @@ export function trackEditValueChange(data: any, field: string, cacheValue: any, 
 export function trackRenderValueChange(data: any, field: string, value: any) {
     const { _rowType, rowData, ...newData } = data;
     if (_rowType !== DataActions.modify) return false;
-    if (!rowData[field] !== value) return false;
+    if (get(rowData, `${field}`) !== value) return false;
     return newData
 }
 
@@ -120,11 +120,14 @@ export function flattenTreeData(dataSoruce: any[], getRowNodeId, pathArray: stri
     dataSoruce.map((item: any) => {
         const { children, ...itemData } = item;
         const treeDataPath = [...pathArray, getRowNodeId(itemData)]
-        treeData.push({ ...itemData, treeDataPath })
         if (children && children.length) {
+            treeData.push({ ...itemData, treeDataPath, parent: true })
             const childrenTreeData = flattenTreeData(children, getRowNodeId, treeDataPath);
-            [].push.apply(treeData, childrenTreeData);
+            Array.prototype.push.apply(treeData, childrenTreeData);
+        } else {
+            treeData.push({ ...itemData, treeDataPath })
         }
+
     })
     return treeData
 }
