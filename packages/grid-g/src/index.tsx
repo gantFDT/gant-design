@@ -24,6 +24,7 @@ LicenseManager.setLicenseKey(key)
 
 const defaultProps = {
     resizable: true,
+    /**是否处于编辑状态 */
     editable: false,
     /**单列的过滤器 */
     filter: false,
@@ -41,13 +42,18 @@ const defaultProps = {
 
 export interface Api {
     undo(): void,
+    redo(): void,
+    /**删除 */
+    delete(): void,
     getModel(): void,
+    /**取消编辑 */
+    cancel(): void,
     [key: string]: any
 }
 
 export type EditActions = (api: Api, keys: Array<string>) => React.ReactElement
 
-export type OnReady = (api: Api) => void
+export type OnReady = (api: GridReadyEvent) => void
 
 export type GridApi = AgGridApi
 
@@ -106,9 +112,12 @@ export type Columns<T extends {} = {}> = {
     valueFormatter?: () => string
 }
 
+export type onEditableChange = (editable: boolean) => void
+
 // TODO:取消 拿到原始值 重新set 然后关闭编辑状态
 // TODO:保存 关闭编辑状态即可
 // TODO:编辑 打开编辑状态
+// TODO:添加、删除、移动
 
 // Grid Api
 interface Props<T> {
@@ -123,14 +132,15 @@ interface Props<T> {
     onReady: OnReady,
     defaultColumnWidth?: React.ReactText,
     rowSelection: RowSelection,
-    rowkey: RowKey<T> | string
+    rowkey: RowKey<T> | string,
+    onEditableChange: onEditableChange
 }
 
 type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>
 
-export type GridProps<T> = CustomProps<T>
+// export type GridProps<T> = CustomProps<T>
 
-// export type GridProps<T> = ProtoExtends<AgGridReactProps, CustomProps<T>>
+export type GridProps<T> = ProtoExtends<AgGridReactProps, CustomProps<T>>
 
 
 export type GridPropsPartial<T> = PartRequired<GridProps<T>, "columns" | "dataSource">
@@ -138,7 +148,20 @@ export type GridPropsPartial<T> = PartRequired<GridProps<T>, "columns" | "dataSo
 
 const Grid = function Grid<T>(props: GridPropsPartial<T>) {
 
-    const { headerProps, editActions, onReady, columns: columnDefs, editable, defaultColumnWidth, rowSelection: rowSel, size, rowkey, } = props
+    const {
+        dataSource,
+        headerProps,
+        editActions,
+        onReady,
+        columns: columnDefs,
+        editable,
+        defaultColumnWidth,
+        rowSelection: rowSel,
+        size,
+        rowkey,
+        onEditableChange,
+        ...orignProps
+    } = props
 
     const apiRef = useRef<GridApi>()
 
@@ -174,14 +197,40 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
             undo() {
                 apiRef.current.undoCellEditing()
             },
-            getModel() { apiRef.current.getModel() }
+            redo() {
+                apiRef.current.redoCellEditing()
+            },
+            getModel() {
+                console.log(apiRef.current.getModel())
+            },
+            delete() {
+                const selected = apiRef.current.getSelectedRows()
+                console.log(selected)
+            },
+            cancel() {
+                if (onEditableChange) {
+                    apiRef.current.setRowData(dataSource)
+                    onEditableChange(false)
+                }
+            },
+            save() {
+                if (onEditableChange) {
+                    // const count = apiRef.current.getVirtualRowCount()
+                    // console.log(count)
+                    apiRef.current.forEachNode((node, index) => {
+                        console.log(node.data)
+                    })
+                    onEditableChange(false)
+                }
+            }
         }
-    }, [])
+    }, [dataSource])
 
     const onGridReady = useCallback((params: GridReadyEvent) => {
         apiRef.current = params.api
         columnsRef.current = params.columnApi
-        onReady && onReady(editApi)
+
+        onReady && onReady(params)
         // 没有设置默认宽度将自动适配
         shouldFitCol(params.api)
     }, [onReady, shouldFitCol, editApi])
@@ -233,6 +282,7 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
             paginationAutoPageSize: true,
             defaultColDef,
             defaultColGroupDef,
+            // treeData: true,
 
             enableCellChangeFlash: true,
         }
@@ -286,6 +336,7 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
         <div className="ag-theme-balham" style={{ width: 600, height: 320 }}>
             <div className="gant-grid-header">{header}</div>
             <AgGridReact
+                {...orignProps}
                 gridOptions={gridOptions}
                 getRowNodeId={getRowNodeId}
                 onGridReady={onGridReady}
