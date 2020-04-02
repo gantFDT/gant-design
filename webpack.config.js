@@ -43,6 +43,7 @@ module.exports = {
             "@smart-table": path.resolve(__dirname, 'packages/smart-table-g/src'),
             "@submenu": path.resolve(__dirname, 'packages/submenu-g/src'),
             "@table": path.resolve(__dirname, 'packages/table-g/src'),
+            "@grid": path.resolve(__dirname, 'packages/grid-g/src'),
             "@keyevent": path.resolve(__dirname, 'packages/keyevent-g/src'),
             "@util": path.resolve(__dirname, 'packages/util-g/src')
         },

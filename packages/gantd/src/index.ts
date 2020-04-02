@@ -61,4 +61,3 @@ export { default as withKeyevent } from '@keyevent';
 
 //内部使用
 export { default as Card } from './card';
-export { default as Gird } from '@grid';
