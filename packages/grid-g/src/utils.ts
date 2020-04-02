@@ -35,7 +35,7 @@ export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, rowSelec
                 },
                 cellRendererFramework: RenderCol,
                 cellClass: (params: any) => {
-                    return params.data._rowType ? `gant-grid-cell gant-grid-cell-${params.data._rowType}` : ""
+                    return get(params, 'data._rowType') ? `gant-grid-cell gant-grid-cell-${params.data._rowType}` : ""
                 }
             } as Col
 
@@ -115,3 +115,16 @@ export function trackRenderValueChange(data: any, field: string, value: any) {
     return newData
 }
 
+export function flattenTreeData(dataSoruce: any[], getRowNodeId, pathArray: string[] = []): any[] {
+    let treeData: any[] = []
+    dataSoruce.map((item: any) => {
+        const { children, ...itemData } = item;
+        const treeDataPath = [...pathArray, getRowNodeId(itemData)]
+        treeData.push({ ...itemData, treeDataPath })
+        if (children && children.length) {
+            const childrenTreeData = flattenTreeData(children, getRowNodeId, treeDataPath);
+            [].push.apply(treeData, childrenTreeData);
+        }
+    })
+    return treeData
+}
