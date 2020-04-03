@@ -139,6 +139,7 @@
     "smart-table-g": "^0.1.12",
     "submenu-g": "^0.1.4",
     "table-g": "^0.1.12",
+    "grid-g": "^0.0.4",
     "util-g": "^0.1.2"
   },
   "browserslist": [
