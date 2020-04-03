@@ -127,9 +127,12 @@ export type onEditableChange = (editable: boolean) => void
 
 export type OnEdit = (api: Api) => void
 
-export type Pagination = ProtoExtends<PaginationProps, {
-    beginIndex?: number
-}>
+export type Pagination = Omit<
+    ProtoExtends<PaginationProps, {
+        beginIndex?: number
+    }>,
+    "onShowSizeChange"
+>
 
 // TODO:移动
 // TODO:取消编辑时恢复添加和删除的数据

@@ -95,11 +95,11 @@ const TreeGrid = () => {
         apiRef.current = api
     }, [])
 
-    const [current, setcurrent] = useState(1)
+    const [beginIndex, setBeginIndex] = useState(0)
 
     const onPageChange = useCallback(
-        (page) => {
-            setcurrent(page)
+        (beginIndex) => {
+            setBeginIndex(beginIndex)
         },
         [],
     )
@@ -138,10 +138,9 @@ const TreeGrid = () => {
                 onEdit={onEdit}
                 pagination={{
                     pageSize: 2,
-                    beginIndex: 0,
+                    beginIndex,
                     total: 5,
-                    onChange: onPageChange,
-                    onShowSizeChange: onPageChange
+                    onChange: onPageChange
                 }}
             />
         </>
