@@ -1,6 +1,8 @@
 
+import { useCallback } from 'react'
 import { ColGroupDef, ColDef, IsColumnFuncParams, IsColumnFunc } from 'ag-grid-community'
 import { get, isNumber, isEmpty } from 'lodash'
+import { PaginationProps } from 'antd/lib/pagination'
 import { Columns, RowSelection, ColumnEdiatble } from './index'
 import { Size, DataActions } from './interface'
 import EditorCol from './GridEidtColumn'
@@ -12,18 +14,15 @@ function itemisgroup(item, children): item is ColGroupDef {
     return !!children
 }
 
-function ColEditableFn(fn: ColumnEdiatble<any>): IsColumnFunc {
+function ColEditableFn(fn: ColumnEdiatble<any>): IsColumnFunc | boolean {
+    if (isbool(fn)) return fn
     return ({ data }) => fn(data)
 }
 
-export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, rowSelection: RowSelection, size: Size, getRowNodeId: any): Col[] => {
-
-    const cheboxIndex = get(rowSelection, "checkboxIndex")
-
+export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Size, getRowNodeId: any, defaultSelection: boolean, defaultSelectionCol: ColDef): Col[] => {
     function getColumnDefs(columns: Columns<T>[]) {
         return columns.map(({ title: headerName, dataIndex: field, children, render, editConfig, fixed, ...item }, index) => {
             const ColEditable = typeof editConfig !== 'undefined'
-
             const colDef = {
                 ...item,
                 headerName,
@@ -39,10 +38,7 @@ export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, rowSelec
                 }
             } as Col
 
-
             if (!itemisgroup(colDef, children)) {
-                colDef.checkboxSelection = typeof cheboxIndex === "number" && cheboxIndex === index
-
                 // 当前列允许编辑
                 if (ColEditable) {
                     colDef.cellEditorParams = {
@@ -64,8 +60,23 @@ export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, rowSelec
             return colDef
         })
     }
-
-    return getColumnDefs(columns)
+    const defalutSelectionCol: ColDef = {
+        width: 50,
+        checkboxSelection: true,
+        resizable: false,
+        sortable: false,
+        pinned: true,
+        field: "defalutSelection",
+        headerCheckboxSelection: true,
+        minWidth: 50,
+        headerName: "",
+        suppressMenu: true,
+        lockPosition:true,
+        lockVisible:true,
+        ...defaultSelectionCol,
+        
+    }
+    return defaultSelection ? [defalutSelectionCol, ...getColumnDefs(columns)] : getColumnDefs(columns)
 }
 
 
@@ -90,8 +101,12 @@ export function isarray(t: any): t is Array<any> {
     return Array.isArray(t)
 }
 // promise
+export function isfunc(t: any): t is Function {
+    return t && typeof t === "function"
+}
+// promise
 export function ispromise(t: any): t is Promise<any> {
-    return t && typeof t.then === "function"
+    return t && isfunc(t.then)
 }
 
 export function trackEditValueChange(data: any, field: string, cacheValue: any, value: any) {
@@ -138,4 +153,26 @@ export function flattenTreeData(dataSoruce: any[], getRowNodeId, pathArray: stri
 
     })
     return treeData
+}
+
+
+export function isPagitation(p: PaginationProps): p is PaginationProps {
+    return typeof p === 'object'
+}
+
+export function usePagination(pagitation: PaginationProps): PaginationProps {
+    if (isPagitation(pagitation)) {
+        const showTotal = useCallback((total, range) => total > 0 ? `第${range[0]} - ${range[1]}条，共${total}条` : '', [])
+        const defaultPagetation: PaginationProps = {
+            size: 'small',
+            defaultPageSize: 20,
+            defaultCurrent: 1,
+            pageSizeOptions: ["20", "50", "80", "120"],
+            showSizeChanger: true,
+            showQuickJumper: true,
+            showTotal
+        }
+        return { ...defaultPagetation, ...pagitation }
+    }
+
 }
