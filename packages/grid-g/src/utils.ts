@@ -19,14 +19,10 @@ function ColEditableFn(fn: ColumnEdiatble<any>): IsColumnFunc | boolean {
     return ({ data }) => fn(data)
 }
 
-export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, rowSelection: RowSelection, size: Size, getRowNodeId: any): Col[] => {
-
-    const cheboxIndex = get(rowSelection, "checkboxIndex")
-
+export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Size, getRowNodeId: any, defaultSelection: boolean, defaultSelectionCol: ColDef): Col[] => {
     function getColumnDefs(columns: Columns<T>[]) {
         return columns.map(({ title: headerName, fieldName: field, children, render, editConfig, fixed, ...item }, index) => {
             const ColEditable = typeof editConfig !== 'undefined'
-
             const colDef = {
                 ...item,
                 headerName,
@@ -42,10 +38,7 @@ export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, rowSelec
                 }
             } as Col
 
-
             if (!itemisgroup(colDef, children)) {
-                colDef.checkboxSelection = typeof cheboxIndex === "number" && cheboxIndex === index
-
                 // 当前列允许编辑
                 if (ColEditable) {
                     colDef.cellEditorParams = {
@@ -67,8 +60,23 @@ export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, rowSelec
             return colDef
         })
     }
-
-    return getColumnDefs(columns)
+    const defalutSelectionCol: ColDef = {
+        width: 50,
+        checkboxSelection: true,
+        resizable: false,
+        sortable: false,
+        pinned: true,
+        field: "defalutSelection",
+        headerCheckboxSelection: true,
+        minWidth: 50,
+        headerName: "",
+        suppressMenu: true,
+        lockPosition:true,
+        lockVisible:true,
+        ...defaultSelectionCol,
+        
+    }
+    return defaultSelection ? [defalutSelectionCol, ...getColumnDefs(columns)] : getColumnDefs(columns)
 }
 
 
@@ -126,7 +134,7 @@ export function trackEditValueChange(data: any, field: string, cacheValue: any, 
 export function trackRenderValueChange(data: any, field: string, value: any) {
     const { _rowType, rowData, ...newData } = data;
     if (_rowType !== DataActions.modify) return false;
-    if (!rowData[field] !== value) return false;
+    if (get(rowData, `${field}`) !== value) return false;
     return newData
 }
 
@@ -135,11 +143,14 @@ export function flattenTreeData(dataSoruce: any[], getRowNodeId, pathArray: stri
     dataSoruce.map((item: any) => {
         const { children, ...itemData } = item;
         const treeDataPath = [...pathArray, getRowNodeId(itemData)]
-        treeData.push({ ...itemData, treeDataPath })
         if (children && children.length) {
+            treeData.push({ ...itemData, treeDataPath, parent: true })
             const childrenTreeData = flattenTreeData(children, getRowNodeId, treeDataPath);
-            [].push.apply(treeData, childrenTreeData);
+            Array.prototype.push.apply(treeData, childrenTreeData);
+        } else {
+            treeData.push({ ...itemData, treeDataPath })
         }
+
     })
     return treeData
 }

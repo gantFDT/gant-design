@@ -228,7 +228,6 @@ const TreeGrid = () => {
             editable={editable}
             onEditableChange={seteditable}
             dataSource={dataSource} onReady={onReady}
-            rowSelection
             pagination={{
                 pageSize: 20,
                 current,
