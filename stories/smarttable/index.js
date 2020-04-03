@@ -69,6 +69,7 @@ function BasicUse() {
         tableKey="BasicUse"
         schema={tableColumns}
         dataSource={dataSource}
+        withoutAnimation
       />
     </div>
   )

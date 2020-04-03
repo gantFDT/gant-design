@@ -12,6 +12,7 @@ interface ConfigModalProps extends ModalProps {
   originColumns: any;
   views: any;
   onSaveViews: (vals: any) => void;
+  withoutAnimation?: boolean,
   onSaveAs: (vals: any, cb: () => void) => void;
   tableKey?: string;
   onOk?: (config: any) => void;
@@ -31,6 +32,7 @@ function ConfigModal(props: ConfigModalProps) {
     onOk,
     onCancel,
     onViewChange,
+    withoutAnimation,
     ...restProps
   } = props;
 
@@ -98,12 +100,15 @@ function ConfigModal(props: ConfigModalProps) {
   return (
     <>
       <Modal
+        transitionName={withoutAnimation ? "" : undefined}
+        maskTransitionName={withoutAnimation ? "" : undefined}
         title={
           <>
             <Icon type="setting" />
             <Receiver>{(locale) => <span style={{ margin: '0 8px' }}>{locale.config}</span>}</Receiver>
             <ViewPicker
               viewName={fakeView.name}
+              withoutAnimation={withoutAnimation}
               viewId={fakeView.viewId}
               customViews={views.customViews}
               systemViews={views.systemViews}

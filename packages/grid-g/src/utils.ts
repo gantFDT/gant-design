@@ -1,10 +1,10 @@
 
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { ColGroupDef, ColDef, IsColumnFuncParams, IsColumnFunc } from 'ag-grid-community'
 import { get, isNumber, isEmpty } from 'lodash'
 import { PaginationProps } from 'antd/lib/pagination'
 import { Columns, RowSelection, ColumnEdiatble } from './interface'
-import { Size, DataActions } from './interface'
+import { Size, DataActions, Pagination } from './interface'
 import EditorCol from './GridEidtColumn'
 import RenderCol from './GirdRenderColumn'
 
@@ -19,7 +19,7 @@ function ColEditableFn(fn: ColumnEdiatble<any>): IsColumnFunc | boolean {
     return ({ data }) => fn(data)
 }
 
-export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Size, getRowNodeId: any, defaultSelection: boolean, defaultSelectionCol: ColDef): Col[] => {
+export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Size, getRowNodeId: any, defaultSelection: boolean): Col[] => {
     function getColumnDefs(columns: Columns<T>[]) {
         return columns.map(({ title: headerName, fieldName: field, children, render, editConfig, fixed, ...item }, index) => {
             const ColEditable = typeof editConfig !== 'undefined'
@@ -77,7 +77,6 @@ export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Si
             padding: "0px 3px"
         },
         headerClass: "gant-padding-h-3",
-        ...defaultSelectionCol,
 
     }
     return defaultSelection ? [defalutSelectionCol, ...getColumnDefs(columns)] : getColumnDefs(columns)
@@ -160,14 +159,17 @@ export function flattenTreeData(dataSoruce: any[], getRowNodeId, pathArray: stri
 }
 
 
-export function isPagitation(p: PaginationProps): p is PaginationProps {
+export function isPagitation(p: Pagination): p is Pagination {
     return typeof p === 'object'
 }
 
-export function usePagination(pagitation: PaginationProps): PaginationProps {
+export function usePagination(pagitation: Pagination): PaginationProps {
     if (isPagitation(pagitation)) {
+
+        const { onChange, pageSize: size } = pagitation
         const showTotal = useCallback((total, range) => total > 0 ? `第${range[0]} - ${range[1]}条，共${total}条` : '', [])
-        const defaultPagetation: PaginationProps = {
+
+        const defaultPagetation: Pagination = {
             size: 'small',
             defaultPageSize: 20,
             defaultCurrent: 1,
@@ -176,7 +178,29 @@ export function usePagination(pagitation: PaginationProps): PaginationProps {
             showQuickJumper: true,
             showTotal
         }
-        return { ...defaultPagetation, ...pagitation }
+
+        const pageSize = useMemo(() => {
+            if (isnumber(size)) {
+                return size
+            }
+            return defaultPagetation.defaultPageSize
+        }, [size])
+
+        const onPageChange = useCallback(
+            (page, pageSize) => {
+                const beginIndex = (page - 1) * pageSize;
+                if (onChange) {
+                    onChange(beginIndex, pageSize)
+                }
+            },
+            [onChange],
+        )
+        pagitation.onChange = onPageChange
+
+        if (isnumber(pagitation.beginIndex)) {
+            pagitation.current = pagitation.beginIndex / pageSize + 1
+        }
+        return { ...defaultPagetation, ...pagitation, onShowSizeChange: onPageChange }
     }
 
 }

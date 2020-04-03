@@ -6,8 +6,8 @@ import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import { LicenseManager } from "ag-grid-enterprise"
 import 'ag-grid-enterprise';
+import { Pagination, Spin } from 'antd'
 import { get, isEmpty } from 'lodash'
-import { Pagination } from 'antd'
 
 import key from './license'
 import Header from '@header';
@@ -24,6 +24,8 @@ LicenseManager.setLicenseKey(key)
 
 
 export const defaultProps = {
+    /**加载状态 */
+    loading: false,
     resizable: true,
     /**是否处于编辑状态 */
     editable: false,
@@ -69,6 +71,7 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
         treeData,
         pagination,
         onEdit,
+        loading,
         ...orignProps
     } = props
 
@@ -128,14 +131,7 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
             }
             const back = cb(selected)
             if (back) {
-                if (ispromise(back)) {
-                    pro = back
-                } else {
-                    pro = new Promise((resolve) => {
-                        resolve(back)
-                    })
-                }
-                pro.then((res) => {
+                Promise.resolve(back).then((res) => {
                     let deletedRows: Array<any> = []
                     if (isarray(res)) {
                         if (res.length) deletedRows = res
@@ -249,8 +245,7 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
     // 处理selection-end
     //columns
     const defaultSelection = !isEmpty(gantSelection) && showDefalutCheckbox;
-    const columns = useMemo<ColDef[] | ColGroupDef[]>(() => mapColumns<T>(columnDefs, editable, size, getRowNodeId, defaultSelection, defaultSelectionCol), [columnDefs, editable, rowSelection, size, getRowNodeId])
-    console.log("columns", columns)
+    const columns = useMemo<ColDef[] | ColGroupDef[]>(() => mapColumns<T>(columnDefs, editable, size, getRowNodeId, defaultSelection), [columnDefs, editable, rowSelection, size, getRowNodeId])
     //columns-end
     useEffect(() => {
         if (isfunc(onEdit)) {
@@ -263,37 +258,38 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
     }, [])
 
     return (
-        <div style={{ width, height }} className={classnames('gant-grid', `gant-grid-${getSizeClassName(size)}`)}  >
-            {/* <div className="gant-grid-header">{header}</div> */}
-            <div className="ag-theme-balham" style={{ width: '100%', height: computedPagination ? 'calc(100% - 30px)' : '100%' }}>
-
-                <AgGridReact
-                    onSelectionChanged={onSelectionChanged}
-                    {...selection}
-                    {...orignProps}
-                    columnDefs={columns}
-                    rowSelection={rowSelection}
-                    rowData={dataSource}
-                    getRowNodeId={getRowNodeId}
-                    onGridReady={onGridReady}
-                    treeData={treeData}
-                    undoRedoCellEditing
-                    enableFillHandle
-                    defaultColDef={{
-                        resizable,
-                        filter,
-                        minWidth: 100,
-                    }}
-                    headerHeight={24}
-                    floatingFiltersHeight={20}
-                    getDataPath={getDataPath}
-                    rowHeight={size == "small" ? 24 : 32}
-                />
-            </div>
-            {/* 分页高度为30 */}
-            {computedPagination && <Pagination style={{ padding: 3 }} {...computedPagination} />}
-
-        </div>
+        <>
+            <Spin spinning={loading}>
+                <div style={{ width, height }} className={classnames('gant-grid', `gant-grid-${getSizeClassName(size)}`)} >
+                    <div className="ag-theme-balham" style={{ width: '100%', height: computedPagination ? 'calc(100% - 30px)' : '100%' }}>
+                        <AgGridReact
+                            onSelectionChanged={onSelectionChanged}
+                            {...selection}
+                            {...orignProps}
+                            columnDefs={columns}
+                            rowSelection={rowSelection}
+                            rowData={dataSource}
+                            getRowNodeId={getRowNodeId}
+                            onGridReady={onGridReady}
+                            treeData={treeData}
+                            undoRedoCellEditing
+                            enableFillHandle
+                            defaultColDef={{
+                                resizable,
+                                filter,
+                                minWidth: 100,
+                            }}
+                            headerHeight={24}
+                            floatingFiltersHeight={20}
+                            getDataPath={getDataPath}
+                            rowHeight={size == "small" ? 24 : 32}
+                        />
+                    </div>
+                    {/* 分页高度为30 */}
+                    {computedPagination && <Pagination className="gant-grid-pagination" {...computedPagination} />}
+                </div>
+            </Spin>
+        </>
     )
 }
 
