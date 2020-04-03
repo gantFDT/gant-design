@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { Switch, Radio } from 'antd';
-import BlockHeader, { headerType } from '@header';
+import BlockHeader from '@header';
 import { getType } from '@util';
 import Sortable from '../sortable';
 import formatSchema from '../formatschema';
@@ -107,7 +107,7 @@ function UIContent(props: UIContentProps) {
                     case 'wrap':
                       return (
                         <div key={K}>
-                          <BlockHeader type={headerType.num} num={I + 1} title={locale.isWrap} />
+                          <BlockHeader type={'num'} num={I + 1} title={locale.isWrap} />
                           <Switch
                             checked={wrap}
                             disabled={hasFixed}
@@ -120,7 +120,7 @@ function UIContent(props: UIContentProps) {
                     case 'isZebra':
                       return (
                         <div key={K}>
-                          <BlockHeader type={headerType.num} num={I + 1} title={locale.isZebra} />
+                          <BlockHeader type={'num'} num={I + 1} title={locale.isZebra} />
                           <Switch
                             checked={isZebra}
                             onChange={handlerChange.bind(null, 'isZebra')}
@@ -132,7 +132,7 @@ function UIContent(props: UIContentProps) {
                     case 'bordered':
                       return (
                         <div key={K}>
-                          <BlockHeader type={headerType.num} num={I + 1} title={locale.bordered} />
+                          <BlockHeader type={'num'} num={I + 1} title={locale.bordered} />
                           <Switch
                             checked={bordered}
                             onChange={handlerChange.bind(null, 'bordered')}
@@ -144,7 +144,7 @@ function UIContent(props: UIContentProps) {
                     case 'clickable':
                       return (
                         <div key={K}>
-                          <BlockHeader type={headerType.num} num={I + 1} title={locale.clickable} />
+                          <BlockHeader type={'num'} num={I + 1} title={locale.clickable} />
                           <Switch
                             checked={clickable}
                             onChange={handlerChange.bind(null, 'clickable')}
@@ -157,7 +157,7 @@ function UIContent(props: UIContentProps) {
                       return (
                         <div key={K}>
                           <BlockHeader
-                            type={headerType.num}
+                            type={'num'}
                             num={I + 1}
                             title={locale.footerDirection}
                           />
@@ -175,7 +175,7 @@ function UIContent(props: UIContentProps) {
                       return (
                         <div key={K}>
                           <BlockHeader
-                            type={headerType.num}
+                            type={'num'}
                             num={I + 1}
                             title={locale.eightMode}
                           />
