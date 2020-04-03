@@ -9,7 +9,7 @@ import { SmartTableType, SmartTableProps, ViewConfig, ViewListProps } from './in
 import formatSchema from './formatschema';
 import ViewPicker, { DefaultView } from './viewpicker';
 import { useTableConfig, useLocalStorage } from './hooks';
-import { withFocusKeyEvent } from './keyevent';
+import withKeyevent from '@keyevent';
 import { generateUuid } from '@util';
 import Receiver from './locale/Receiver';
 
@@ -47,6 +47,7 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
     totalCount = 0,
     pageSizeOptions,
     emptyDescription,
+    withoutAnimation = false,
     headerProps = {},
     hasExport,
     onViewChange,
@@ -252,6 +253,7 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
           updateView={handlerSaveViews}
           renameLoading={renameLoading}
           loading={updateViewLoading}
+          withoutAnimation={withoutAnimation}
           splitLine={!!title}
           defaultView={defaultView}
           onDefaultViewChange={setDefaultView}
@@ -282,7 +284,9 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
     <div className="gant-smart-table-wrapper">
       {
         renderable ?
-        withFocusKeyEvent(
+        withKeyevent(
+          bindKeys, true
+        )(
           <Receiver>
             {(locale) => <Table
               {...restProps}
@@ -316,8 +320,7 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
               emptyDescription={emptyDescription || locale.empty}
             />
             }
-          </Receiver>,
-          bindKeys,
+          </Receiver>
         ) : <Spin>
           <div style={{
             height:
@@ -329,6 +332,7 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
       <ConfigModal
         visible={configModalVisible}
         originColumns={columns}
+        withoutAnimation={withoutAnimation}
         dataSource={activeView}
         tableKey={tableKey}
         views={viewList}

@@ -71,27 +71,6 @@ export default [
       },
     ],
 
-    // }, {
-    // 	name: "components|Compose 高阶组件",
-    // 	children: [
-    // 		{
-    // 			name: 'anchor',
-    // 			nameZh: '锚点'
-    // 		}
-    // 	]
-    // }, {
-    // 	name: "components|Specific 特殊",
-    // 	children: [
-    // 		,
-    // 		{
-    // 			name: "FiledSchema",
-    // 			nameZh: "属性配置"
-    // 		},
-    // 		{
-    // 			name: "Copy",
-    // 			nameZh: "剪切板"
-    // 		}
-    // 	]
   },
   {
     name: '组件| 表单',
@@ -166,6 +145,10 @@ export default [
   {
     name: '组件|其他',
     children: [
+      {
+        name: 'Keyevent',
+        nameZh: '快捷键'
+      },
       //   {
       //   name: 'Icon',
       //   nameZh: '图标'

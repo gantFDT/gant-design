@@ -8,7 +8,7 @@ if (
 ) {
   console.warn(
     'You are using a whole package of gantd, ' +
-      'please use https://www.npmjs.com/package/babel-plugin-import to reduce app bundle size.',
+    'please use https://www.npmjs.com/package/babel-plugin-import to reduce app bundle size.',
   );
 }
 
@@ -36,7 +36,8 @@ export {
   LocationSelector
 } from '@data-cell';
 
-
+//grid
+export { default as Grid } from '@grid';
 
 //表单
 export { default as SchemaForm } from '@schema-form';
@@ -56,6 +57,7 @@ export { default as Toolbar } from './toolbar'
 export { default as VisibleMenu } from './visible-menu';
 export { default as ProfileCard } from './profile-card'
 export { default as Exception } from './exception';
+export { default as withKeyevent } from '@keyevent';
 
 //内部使用
 export { default as Card } from './card';

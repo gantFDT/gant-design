@@ -62,14 +62,17 @@
       "@modal": [
         "packages/modal-g/src"
       ],
+      "@keyevent": [
+        "packages/keyevent-g/src"
+      ],
       "@util/*": [
         "packages/util-g/src/*"
       ]
     }
   },
   "include": [
-    "packages/*/src",
-    "packages/ag-grid.tsx",
+    "packages/**/*",
+    "stories/**/*"
   ],
   "exclude": [
     "node_modules",
