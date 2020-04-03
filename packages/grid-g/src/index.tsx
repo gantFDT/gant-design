@@ -262,9 +262,10 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
     }, [])
 
     return (
-        <>
+        <div style={{ width, height }}>
             {/* <div className="gant-grid-header">{header}</div> */}
-            <div className="ag-theme-balham" style={{ width, height }}>
+            <div className="ag-theme-balham" style={{ width: '100%', height: computedPagination ? 'calc(100% - 30px)' : '100%' }}>
+
                 <AgGridReact
                     onSelectionChanged={onSelectionChanged}
                     {...selection}
@@ -282,13 +283,16 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
                         filter,
                         minWidth: 100,
                     }}
+                    headerHeight={24}
+                    floatingFiltersHeight={20}
                     getDataPath={getDataPath}
                     rowHeight={size == "small" ? 24 : 32}
                 />
             </div>
-            {computedPagination && <Pagination style={{ marginTop: 4 }} {...computedPagination} />}
+            {/* 分页高度为30 */}
+            {computedPagination && <Pagination style={{ padding: 3 }} {...computedPagination} />}
 
-        </>
+        </div>
     )
 }
 

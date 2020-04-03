@@ -3,7 +3,7 @@ import { useCallback } from 'react'
 import { ColGroupDef, ColDef, IsColumnFuncParams, IsColumnFunc } from 'ag-grid-community'
 import { get, isNumber, isEmpty } from 'lodash'
 import { PaginationProps } from 'antd/lib/pagination'
-import { Columns, RowSelection, ColumnEdiatble } from './index'
+import { Columns, RowSelection, ColumnEdiatble } from './interface'
 import { Size, DataActions } from './interface'
 import EditorCol from './GridEidtColumn'
 import RenderCol from './GirdRenderColumn'
@@ -21,7 +21,7 @@ function ColEditableFn(fn: ColumnEdiatble<any>): IsColumnFunc | boolean {
 
 export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Size, getRowNodeId: any, defaultSelection: boolean, defaultSelectionCol: ColDef): Col[] => {
     function getColumnDefs(columns: Columns<T>[]) {
-        return columns.map(({ title: headerName, dataIndex: field, children, render, editConfig, fixed, ...item }, index) => {
+        return columns.map(({ title: headerName, fieldName: field, children, render, editConfig, fixed, ...item }, index) => {
             const ColEditable = typeof editConfig !== 'undefined'
             const colDef = {
                 ...item,
