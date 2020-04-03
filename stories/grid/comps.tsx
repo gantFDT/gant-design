@@ -15,7 +15,7 @@ const BasicUse = () => {
     const [columns, setcolumns] = useState<Columns<{ name: string, age: number }>[]>([
         {
             title: '姓名',
-            dataIndex: "name",
+            fieldName: "name",
             checkboxSelection: true,
             width: 150,
             editConfig: {
@@ -28,13 +28,13 @@ const BasicUse = () => {
         },
         {
             title: '年龄',
-            dataIndex: "age",
+            fieldName: "age",
             sortable: true,
             filter: Filter.Number,
         },
         {
             title: '余额',
-            dataIndex: "p",
+            fieldName: "p",
             width: 100,
             hide: true
         },
@@ -120,7 +120,7 @@ const TreeGrid = () => {
     const [columns, setcolumns] = useState<Columns<{ name: string, age: number }>[]>([
         {
             title: '姓名',
-            dataIndex: "name",
+            fieldName: "name",
             checkboxSelection: true,
             render: (text, rowIndex) => {
                 return text + "----"
@@ -135,14 +135,14 @@ const TreeGrid = () => {
         },
         {
             title: '年龄',
-            dataIndex: "age",
+            fieldName: "age",
             sortable: true,
             filter: Filter.Number,
             type: "numericColumn"
         },
         {
             title: '余额',
-            dataIndex: "p",
+            fieldName: "p",
             width: 100,
             hide: true
         },

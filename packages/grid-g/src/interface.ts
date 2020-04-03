@@ -88,7 +88,7 @@ export type Columns<T extends {} = {}> = {
     /**标题 */
     title?: React.ReactNode,
     /**索引的字段名 */
-    dataIndex: string,
+    fieldName: string,
     /**单元格渲染函数 */
     render?: (text: string, record: any, rowIndex: number) => React.ReactText,
     /**子节点 */
