@@ -120,7 +120,7 @@ export type OnEdit = (api: Api) => void
 // TODO:取消编辑时恢复添加和删除的数据
 
 // Grid Api
-interface Props<T> {
+export interface Props<T> {
     filter?: boolean,
     // headerProps?: {
     //     extra?: React.ReactNode,
@@ -141,7 +141,7 @@ interface Props<T> {
     onEdit: OnEdit,
 }
 
-type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>
+export type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>
 
 // export type GridProps<T> = CustomProps<T>
 
