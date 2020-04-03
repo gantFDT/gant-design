@@ -15,7 +15,7 @@ const BasicUse = () => {
     const [columns, setcolumns] = useState<Columns<{ name: string, age: number }>[]>([
         {
             title: '姓名',
-            dataIndex: "name",
+            fieldName: "name",
             checkboxSelection: true,
             width: 150,
             editConfig: {
@@ -28,13 +28,13 @@ const BasicUse = () => {
         },
         {
             title: '年龄',
-            dataIndex: "age",
+            fieldName: "age",
             sortable: true,
             filter: Filter.Number,
         },
         {
             title: '余额',
-            dataIndex: "p",
+            fieldName: "p",
             width: 100,
             hide: true
         },
@@ -102,9 +102,10 @@ const BasicUse = () => {
         )
     }, [deleteRow])
     return (
-        <Gird headerProps={header}
+        <Gird
+            // headerProps={header}
             rowkey="age"
-            editActions={editActions}
+            // editActions={editActions}
             columns={columns} editable={editable} onEditableChange={seteditable} dataSource={dataSource} onReady={onReady} rowSelection
         />
     )
@@ -119,7 +120,7 @@ const TreeGrid = () => {
     const [columns, setcolumns] = useState<Columns<{ name: string, age: number }>[]>([
         {
             title: '姓名',
-            dataIndex: "name",
+            fieldName: "name",
             checkboxSelection: true,
             render: (text, rowIndex) => {
                 return text + "----"
@@ -134,13 +135,14 @@ const TreeGrid = () => {
         },
         {
             title: '年龄',
-            dataIndex: "age",
+            fieldName: "age",
             sortable: true,
             filter: Filter.Number,
+            type: "numericColumn"
         },
         {
             title: '余额',
-            dataIndex: "p",
+            fieldName: "p",
             width: 100,
             hide: true
         },
@@ -207,17 +209,33 @@ const TreeGrid = () => {
             </>
         )
     }, [])
+
+    const [current, setcurrent] = useState(1)
+
+    const onPageChange = useCallback(
+        (page) => {
+            setcurrent(page)
+        },
+        [],
+    )
     return (
         <Gird
-            headerProps={header}
+            // headerProps={header}
             rowkey="id"
-            editActions={editActions}
+            // editActions={editActions}
             columns={columns}
             treeData
             editable={editable}
             onEditableChange={seteditable}
             dataSource={dataSource} onReady={onReady}
             rowSelection
+            pagination={{
+                pageSize: 20,
+                current,
+                total: 5,
+                onChange: onPageChange,
+                onShowSizeChange: onPageChange
+            }}
         />
     )
 }
