@@ -61,20 +61,24 @@ export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Si
         })
     }
     const defalutSelectionCol: ColDef = {
-        width: 50,
+        width: 24,
         checkboxSelection: true,
         resizable: false,
         sortable: false,
         pinned: true,
         field: "defalutSelection",
         headerCheckboxSelection: true,
-        minWidth: 50,
+        minWidth: 24,
         headerName: "",
         suppressMenu: true,
-        lockPosition:true,
-        lockVisible:true,
+        lockPosition: true,
+        lockVisible: true,
+        cellStyle: {
+            padding: "0px 3px"
+        },
+        headerClass: "gant-padding-h-3",
         ...defaultSelectionCol,
-        
+
     }
     return defaultSelection ? [defalutSelectionCol, ...getColumnDefs(columns)] : getColumnDefs(columns)
 }
@@ -175,4 +179,12 @@ export function usePagination(pagitation: PaginationProps): PaginationProps {
         return { ...defaultPagetation, ...pagitation }
     }
 
+}
+export function getSizeClassName(size: Size) {
+    switch (size) {
+        case "small":
+            return "sm"
+        default:
+            return ""
+    }
 }

@@ -144,7 +144,8 @@ export interface Props<T> {
     height?: string | number,
     treeData?: boolean,
     pagination: PaginationProps,
-    onEdit: OnEdit
+    onEdit: OnEdit,
+    
 }
 
 export type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>

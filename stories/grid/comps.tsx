@@ -5,7 +5,7 @@ import React, { useMemo, useEffect, useCallback, useState, useRef } from 'react'
 import Gird, { Columns, Filter, OnReady, GridApi, Fixed, Api } from '@grid';
 import { GridReadyEvent } from 'ag-grid-community'
 import { Button } from "antd"
-import { Input } from "@data-cell"
+import { Input, InputCellPhone } from "@data-cell"
 
 /*! Split !*/
 const BasicUse = () => {
@@ -220,13 +220,12 @@ const TreeGrid = () => {
     )
     return (
         <Gird
-            // headerProps={header}
             rowkey="id"
-            // editActions={editActions}
             columns={columns}
             treeData
-            editable={editable}
+            editable
             onEditableChange={seteditable}
+            rowSelection
             dataSource={dataSource} onReady={onReady}
             pagination={{
                 pageSize: 20,

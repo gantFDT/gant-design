@@ -1,8 +1,8 @@
 import React, { forwardRef, useImperativeHandle, useState, useCallback, useMemo } from 'react'
+import classnames from 'classnames';
 import { EditStatus } from '@data-cell'
-import { get, isEmpty } from 'lodash'
-import { trackEditValueChange } from './utils'
-import { DataActions, Size } from './interface'
+import { trackEditValueChange, } from './utils'
+import { Size } from './interface'
 const defalutProps = {
 	autoFocus: true,
 	edit: EditStatus.EDIT,
@@ -34,7 +34,7 @@ export default (WrapperComponent) => forwardRef(function GridEidtColumn(props: a
 		};
 	}, [cacheValue, data, value, field, cacheValue, rowId]);
 	return (
-		<div className='gant-grid-column-editing'>
+		<div className={classnames('gant-grid-cell-editing')}>
 			<WrapperComponent  {...fieldProps} value={cacheValue} {...defalutProps} onChange={onChange} size={size} onBlur={onBlur} />
 		</div>
 	)

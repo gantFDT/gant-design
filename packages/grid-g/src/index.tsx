@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useRef, useMemo, useEffect, Dispatch, SetStateAction } from 'react';
+import classnames from 'classnames'
 import { AgGridReact } from 'ag-grid-react';
 import { ColDef, ColGroupDef, GridApi, GridOptions, ColumnApi, GridReadyEvent, SelectionChangedEvent } from "ag-grid-community";
 import 'ag-grid-community/dist/styles/ag-grid.css';
@@ -10,7 +11,7 @@ import { Pagination } from 'antd'
 
 import key from './license'
 import Header from '@header';
-import { mapColumns, NonBool, isbool, isstring, isarray, ispromise, isfunc, flattenTreeData, usePagination } from './utils'
+import { mapColumns, NonBool, isbool, isstring, isarray, ispromise, isfunc, flattenTreeData, usePagination, getSizeClassName } from './utils'
 import { Filter, Size, Fixed, GridPropsPartial, Api, API, RowSelection } from './interface'
 import "./style"
 
@@ -106,13 +107,13 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
     // 进入编辑时遍历一遍初始数据
     const originList = useMemo(() => {
         const list = []
-        if (editable) {
+        if (editable && apiRef.current) {
             apiRef.current.forEachNode((node, index) => {
                 list.push(node.data)
             })
         }
         return list
-    }, [editable])
+    }, [editable, apiRef.current])
 
     /**删除 */
     const deleteRow = useCallback<API.deleteRow>(
@@ -262,7 +263,7 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
     }, [])
 
     return (
-        <div style={{ width, height }}>
+        <div style={{ width, height }} className={classnames('gant-grid', `gant-grid-${getSizeClassName(size)}`)}  >
             {/* <div className="gant-grid-header">{header}</div> */}
             <div className="ag-theme-balham" style={{ width: '100%', height: computedPagination ? 'calc(100% - 30px)' : '100%' }}>
 
