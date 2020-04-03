@@ -102,9 +102,10 @@ const BasicUse = () => {
         )
     }, [deleteRow])
     return (
-        <Gird headerProps={header}
+        <Gird
+            // headerProps={header}
             rowkey="age"
-            editActions={editActions}
+            // editActions={editActions}
             columns={columns} editable={editable} onEditableChange={seteditable} dataSource={dataSource} onReady={onReady} rowSelection
         />
     )
@@ -137,6 +138,7 @@ const TreeGrid = () => {
             dataIndex: "age",
             sortable: true,
             filter: Filter.Number,
+            type: "numericColumn"
         },
         {
             title: '余额',
@@ -207,17 +209,33 @@ const TreeGrid = () => {
             </>
         )
     }, [])
+
+    const [current, setcurrent] = useState(1)
+
+    const onPageChange = useCallback(
+        (page) => {
+            setcurrent(page)
+        },
+        [],
+    )
     return (
         <Gird
-            headerProps={header}
+            // headerProps={header}
             rowkey="id"
-            editActions={editActions}
+            // editActions={editActions}
             columns={columns}
             treeData
             editable={editable}
             onEditableChange={seteditable}
             dataSource={dataSource} onReady={onReady}
             rowSelection
+            pagination={{
+                pageSize: 20,
+                current,
+                total: 5,
+                onChange: onPageChange,
+                onShowSizeChange: onPageChange
+            }}
         />
     )
 }

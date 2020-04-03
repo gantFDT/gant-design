@@ -1,6 +1,8 @@
 
+import { useCallback } from 'react'
 import { ColGroupDef, ColDef, IsColumnFuncParams, IsColumnFunc } from 'ag-grid-community'
 import { get, isNumber, isEmpty } from 'lodash'
+import { PaginationProps } from 'antd/lib/pagination'
 import { Columns, RowSelection, ColumnEdiatble } from './index'
 import { Size, DataActions } from './interface'
 import EditorCol from './GridEidtColumn'
@@ -12,7 +14,8 @@ function itemisgroup(item, children): item is ColGroupDef {
     return !!children
 }
 
-function ColEditableFn(fn: ColumnEdiatble<any>): IsColumnFunc {
+function ColEditableFn(fn: ColumnEdiatble<any>): IsColumnFunc | boolean {
+    if (isbool(fn)) return fn
     return ({ data }) => fn(data)
 }
 
@@ -90,8 +93,12 @@ export function isarray(t: any): t is Array<any> {
     return Array.isArray(t)
 }
 // promise
+export function isfunc(t: any): t is Function {
+    return t && typeof t === "function"
+}
+// promise
 export function ispromise(t: any): t is Promise<any> {
-    return t && typeof t.then === "function"
+    return t && isfunc(t.then)
 }
 
 export function trackEditValueChange(data: any, field: string, cacheValue: any, value: any) {
@@ -135,4 +142,26 @@ export function flattenTreeData(dataSoruce: any[], getRowNodeId, pathArray: stri
         }
     })
     return treeData
+}
+
+
+export function isPagitation(p: PaginationProps): p is PaginationProps {
+    return typeof p === 'object'
+}
+
+export function usePagination(pagitation: PaginationProps): PaginationProps {
+    if (isPagitation(pagitation)) {
+        const showTotal = useCallback((total, range) => total > 0 ? `第${range[0]} - ${range[1]}条，共${total}条` : '', [])
+        const defaultPagetation: PaginationProps = {
+            size: 'small',
+            defaultPageSize: 20,
+            defaultCurrent: 1,
+            pageSizeOptions: ["20", "50", "80", "120"],
+            showSizeChanger: true,
+            showQuickJumper: true,
+            showTotal
+        }
+        return { ...defaultPagetation, ...pagitation }
+    }
+
 }
