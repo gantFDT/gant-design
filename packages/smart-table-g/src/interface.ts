@@ -87,6 +87,7 @@ export interface SmartTableProps<T> extends GantTableProps<T> {
   onPageChange?: (pageIndex: number, pageSize?: number) => void,
   totalCount?: number,
   hasExport?: boolean,
+  withoutAnimation?: boolean,
 }
 
 export interface SmartTableType {

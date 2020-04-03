@@ -10,6 +10,7 @@ interface EditModalProps {
   initValue: string;
   form: any;
   onSubmit: (name: string) => void;
+  withoutAnimation?: boolean;
 }
 
 const EditModal = (props: EditModalProps) => {
@@ -17,6 +18,7 @@ const EditModal = (props: EditModalProps) => {
     loading,
     showModal,
     setShowModal,
+    withoutAnimation,
     initValue = '',
     form: { getFieldDecorator, validateFieldsAndScroll },
     onSubmit,
@@ -61,6 +63,7 @@ const EditModal = (props: EditModalProps) => {
           confirmLoading={loading}
           okButtonProps={{ size: 'small' }}
           cancelButtonProps={{ size: 'small' }}
+          transitionName={withoutAnimation ? "" : undefined}
         >
           <Form layout="horizontal">
             <Form.Item>

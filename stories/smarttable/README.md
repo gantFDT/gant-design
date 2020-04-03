@@ -20,6 +20,7 @@
 | onPageChange | 页码，每页条数 改变的回调，参数是改变后的pageIndex及每页条数。<br />若不传则为本地分页。<br />若传了 pagination 属性，此属性失效。 | Function(pageIndex, pageSize) | - |
 | totalCount | 数据总数 | number | 0 |
 | pageSizeOptions | 分页条选项 | string[] | ['50', '100', '150', '200'] |
+| withoutAnimation | 是否去掉弹框以及下拉框的动画效果 | boolean | false |
 
 #### 2. Schema
 简洁数据模型对象是一个数组，不应包含UI配置项，包括宽度对齐方式等。每一项的属性为：
