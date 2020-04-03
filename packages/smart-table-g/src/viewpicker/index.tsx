@@ -36,6 +36,7 @@ export interface ViewProps {
   loading?: boolean; // 其他更新loading，例如删除
   config?: ReactNode; // 配置按钮
   getPopupContainer?: () => HTMLElement;
+  withoutAnimation?: boolean;
 }
 
 /**
@@ -58,6 +59,7 @@ export default function View(props: ViewProps) {
     onDefaultViewChange,
     config,
     getPopupContainer,
+    withoutAnimation,
   } = props;
 
   const [showModal, setShowModal] = useState(false);
@@ -173,6 +175,7 @@ export default function View(props: ViewProps) {
         content={views}
         placement="bottomLeft"
         trigger="click"
+        transitionName={withoutAnimation ? "" : undefined}
         overlayStyle={{ zIndex: config ? 11 : 1008 }}
         onVisibleChange={setShowPop}
         getPopupContainer={getPopupContainer}
@@ -192,6 +195,7 @@ export default function View(props: ViewProps) {
         </div>
       </Popover>
       <EditModal
+        withoutAnimation={withoutAnimation}
         loading={renameLoading}
         initValue={editViewName}
         showModal={showModal}

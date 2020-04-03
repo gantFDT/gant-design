@@ -1,12 +1,12 @@
 import React, { useState, useCallback, useRef, useMemo, useEffect, Dispatch, SetStateAction } from 'react';
 import { AgGridReact } from 'ag-grid-react';
-import { ColDef, ColGroupDef, GridApi, GridOptions, ColumnApi, GridReadyEvent, ValueFormatterParams } from "ag-grid-community";
+import { ColDef, ColGroupDef, GridApi, GridOptions, ColumnApi, GridReadyEvent, SelectionChangedEvent } from "ag-grid-community";
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import { LicenseManager } from "ag-grid-enterprise"
 import 'ag-grid-enterprise';
-import { get } from 'lodash'
 import { Pagination, Spin } from 'antd'
+import { get, isEmpty } from 'lodash'
 
 import key from './license'
 import Header from '@header';
@@ -40,11 +40,13 @@ export const defaultProps = {
     rowkey: "key",
     width: "100%",
     height: 400,
+
 }
 
-export const defaultRowSelection = {
-    multiple: true,
-    checkboxIndex: 0
+export const defaultRowSelection: RowSelection = {
+    type: "multiple",
+    checkboxIndex: 0,
+    showDefalutCheckbox: true,
 }
 
 const Grid = function Grid<T>(props: GridPropsPartial<T>) {
@@ -212,17 +214,39 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
         // 没有设置默认宽度将自动适配
         // shouldFitCol(params.api)
     }, [onReady, shouldFitCol, editApi])
-
-    const rowSelection = useMemo<NonBool<RowSelection>>(() => {
-        if (isbool(rowSel)) {
-            if (rowSel) return defaultRowSelection
-            return {}
+    // 处理selection
+    const gantSelection: RowSelection = useMemo(() => {
+        if (rowSel === true) {
+            return defaultRowSelection
         }
-        return rowSel
+        if (rowSel) return { ...defaultRowSelection, ...rowSel }
+        return {}
     }, [rowSel])
-
-    const columns = useMemo<ColDef[] | ColGroupDef[]>(() => mapColumns<T>(columnDefs, editable, rowSelection, size, getRowNodeId), [columnDefs, editable, rowSelection, size, getRowNodeId])
-
+    const { onSelect, selectedKeys, showDefalutCheckbox, type: rowSelection, defaultSelectionCol, ...selection } = gantSelection;
+    const onSelectionChanged = useCallback((event: SelectionChangedEvent) => {
+        const rows = event.api.getSelectedRows();
+        const keys = rows.map(item => getRowNodeId(item))
+        typeof onSelect === "function" && onSelect(keys, rows);
+    }, [onSelect, getRowNodeId])
+    // 处理selection- 双向绑定selectKeys
+    useEffect(() => {
+        if (selectedKeys) {
+            if (selectedKeys.length == 0) {
+                apiRef.current.deselectAll();
+            } else {
+                selectedKeys.map(id => {
+                    const nodeItem = apiRef.current.getRowNode(id);
+                    nodeItem.setSelected(true, rowSelection === 'single')
+                })
+            }
+        }
+    }, [selectedKeys, apiRef.current, rowSelection])
+    // 处理selection-end
+    //columns
+    const defaultSelection = !isEmpty(gantSelection) && showDefalutCheckbox;
+    const columns = useMemo<ColDef[] | ColGroupDef[]>(() => mapColumns<T>(columnDefs, editable, size, getRowNodeId, defaultSelection, defaultSelectionCol), [columnDefs, editable, rowSelection, size, getRowNodeId])
+    console.log("columns", columns)
+    //columns-end
     useEffect(() => {
         if (isfunc(onEdit)) {
             onEdit(editApi)
@@ -236,36 +260,34 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
     return (
         <>
             <Spin spinning={loading}>
-                {/* <div className="gant-grid-header">{header}</div> */}
-                <div className="ag-theme-balham" style={{ width, height }}>
-
-                    <AgGridReact
-                        {...orignProps}
-                        // rowData={rowData}
-                        columnDefs={columns}
-                        rowSelection={["signal", "multiple"][+get(rowSelection, "multiple")]}
-
-                        rowData={dataSource}
-                        getRowNodeId={getRowNodeId}
-                        onGridReady={onGridReady}
-                        treeData={treeData}
-                        // undo\redo
-                        undoRedoCellEditing
-                        enableFillHandle
-                        // undoRedoCellEditingLimit
-                        // stopEditingWhenGridLosesFocus
-                        defaultColDef={{
-                            resizable,
-                            filter,
-                            minWidth: 100,
-                        }}
-                        getDataPath={getDataPath}
-                    // 分页信息
-                    // {...gridPagination}
-                    // deltaColumnMode
-                    />
+                <div style={{ width, height }}>
+                    <div className="ag-theme-balham" style={{ width: '100%', height: computedPagination ? 'calc(100% - 30px)' : '100%' }}>
+                        <AgGridReact
+                            onSelectionChanged={onSelectionChanged}
+                            {...selection}
+                            {...orignProps}
+                            columnDefs={columns}
+                            rowSelection={rowSelection}
+                            rowData={dataSource}
+                            getRowNodeId={getRowNodeId}
+                            onGridReady={onGridReady}
+                            treeData={treeData}
+                            undoRedoCellEditing
+                            enableFillHandle
+                            defaultColDef={{
+                                resizable,
+                                filter,
+                                minWidth: 100,
+                            }}
+                            headerHeight={24}
+                            floatingFiltersHeight={20}
+                            getDataPath={getDataPath}
+                            rowHeight={size == "small" ? 24 : 32}
+                        />
+                    </div>
+                    {/* 分页高度为30 */}
+                    {computedPagination && <Pagination className="gant-grid-pagination" {...computedPagination} />}
                 </div>
-                {computedPagination && <Pagination className="gant-grid-pagination" style={{ marginTop: 4 }} {...computedPagination} />}
             </Spin>
         </>
     )

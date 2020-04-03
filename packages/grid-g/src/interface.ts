@@ -1,5 +1,5 @@
 import { AgGridReactProps } from 'ag-grid-react';
-import { GridApi as AgGridApi, GridReadyEvent, ValueFormatterParams } from "ag-grid-community";
+import { GridApi as AgGridApi, GridReadyEvent, ValueFormatterParams, ColDef } from "ag-grid-community";
 import { defaultProps, defaultRowSelection } from './index'
 
 import { PaginationProps } from 'antd/lib/pagination'
@@ -67,10 +67,16 @@ export type GridApi = AgGridApi
 
 export type RowSelection = {
     /**是否多选 */
-    multiple?: boolean,
+    type?: "single" | "multiple"
     /**checkbox所在索引 */
     checkboxIndex?: number,
-} | boolean
+    onSelect?: (keys: string[], rows: any[]) => void,
+    selectedKeys?: string[],
+    showDefalutCheckbox?: boolean
+    defaultSelectionCol?: ColDef,
+    rowMultiSelectWithClick?: boolean,
+    rowDeselection?: boolean,
+}
 
 type EditComponentProps = {
     // onChange: (value: any) => void
@@ -129,7 +135,7 @@ export type Pagination = ProtoExtends<PaginationProps, {
 // TODO:取消编辑时恢复添加和删除的数据
 
 // Grid Api
-interface Props<T> {
+export interface Props<T> {
     filter?: boolean,
     // headerProps?: {
     //     extra?: React.ReactNode,
@@ -140,7 +146,7 @@ interface Props<T> {
     dataSource: T[],
     onReady: OnReady,
     defaultColumnWidth?: React.ReactText,
-    rowSelection: RowSelection,
+    rowSelection: RowSelection | true,
     rowkey: RowKey<T> | string,
     onEditableChange: onEditableChange,
     width?: string | number,
@@ -151,7 +157,7 @@ interface Props<T> {
     loading: boolean,
 }
 
-type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>
+export type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>
 
 // export type GridProps<T> = CustomProps<T>
 
