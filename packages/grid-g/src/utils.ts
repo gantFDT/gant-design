@@ -2,9 +2,8 @@
 import { useCallback } from 'react'
 import { ColGroupDef, ColDef, IsColumnFuncParams, IsColumnFunc } from 'ag-grid-community'
 import { get, isNumber, isEmpty } from 'lodash'
-import { PaginationProps } from 'antd/lib/pagination'
 import { Columns, RowSelection, ColumnEdiatble } from './interface'
-import { Size, DataActions } from './interface'
+import { Size, DataActions, Pagination } from './interface'
 import EditorCol from './GridEidtColumn'
 import RenderCol from './GirdRenderColumn'
 
@@ -145,14 +144,14 @@ export function flattenTreeData(dataSoruce: any[], getRowNodeId, pathArray: stri
 }
 
 
-export function isPagitation(p: PaginationProps): p is PaginationProps {
+export function isPagitation(p: Pagination): p is Pagination {
     return typeof p === 'object'
 }
 
-export function usePagination(pagitation: PaginationProps): PaginationProps {
+export function usePagination(pagitation: Pagination): Pagination {
     if (isPagitation(pagitation)) {
         const showTotal = useCallback((total, range) => total > 0 ? `第${range[0]} - ${range[1]}条，共${total}条` : '', [])
-        const defaultPagetation: PaginationProps = {
+        const defaultPagetation: Pagination = {
             size: 'small',
             defaultPageSize: 20,
             defaultCurrent: 1,
@@ -160,6 +159,9 @@ export function usePagination(pagitation: PaginationProps): PaginationProps {
             showSizeChanger: true,
             showQuickJumper: true,
             showTotal
+        }
+        if (isnumber(pagitation.beginIndex)) {
+            pagitation.current = pagitation.beginIndex / (pagitation.pageSize || defaultPagetation.defaultPageSize) + 1
         }
         return { ...defaultPagetation, ...pagitation }
     }

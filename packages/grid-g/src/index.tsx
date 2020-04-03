@@ -6,7 +6,7 @@ import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import { LicenseManager } from "ag-grid-enterprise"
 import 'ag-grid-enterprise';
 import { get } from 'lodash'
-import { Pagination } from 'antd'
+import { Pagination, Spin } from 'antd'
 
 import key from './license'
 import Header from '@header';
@@ -23,6 +23,8 @@ LicenseManager.setLicenseKey(key)
 
 
 export const defaultProps = {
+    /**加载状态 */
+    loading: false,
     resizable: true,
     /**是否处于编辑状态 */
     editable: false,
@@ -66,6 +68,7 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
         treeData,
         pagination,
         onEdit,
+        loading,
         ...orignProps
     } = props
 
@@ -125,14 +128,7 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
             }
             const back = cb(selected)
             if (back) {
-                if (ispromise(back)) {
-                    pro = back
-                } else {
-                    pro = new Promise((resolve) => {
-                        resolve(back)
-                    })
-                }
-                pro.then((res) => {
+                Promise.resolve(back).then((res) => {
                     let deletedRows: Array<any> = []
                     if (isarray(res)) {
                         if (res.length) deletedRows = res
@@ -219,7 +215,8 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
 
     const rowSelection = useMemo<NonBool<RowSelection>>(() => {
         if (isbool(rowSel)) {
-            return defaultRowSelection
+            if (rowSel) return defaultRowSelection
+            return {}
         }
         return rowSel
     }, [rowSel])
@@ -238,37 +235,38 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
 
     return (
         <>
-            {/* <div className="gant-grid-header">{header}</div> */}
-            <div className="ag-theme-balham" style={{ width, height }}>
+            <Spin spinning={loading}>
+                {/* <div className="gant-grid-header">{header}</div> */}
+                <div className="ag-theme-balham" style={{ width, height }}>
 
-                <AgGridReact
-                    {...orignProps}
-                    // rowData={rowData}
-                    columnDefs={columns}
-                    rowSelection={["signal", "multiple"][+get(rowSelection, "multiple")]}
+                    <AgGridReact
+                        {...orignProps}
+                        // rowData={rowData}
+                        columnDefs={columns}
+                        rowSelection={["signal", "multiple"][+get(rowSelection, "multiple")]}
 
-                    rowData={dataSource}
-                    getRowNodeId={getRowNodeId}
-                    onGridReady={onGridReady}
-                    treeData={treeData}
-                    // undo\redo
-                    undoRedoCellEditing
-                    enableFillHandle
-                    // undoRedoCellEditingLimit
-                    // stopEditingWhenGridLosesFocus
-                    defaultColDef={{
-                        resizable,
-                        filter,
-                        minWidth: 100,
-                    }}
-                    getDataPath={getDataPath}
-                // 分页信息
-                // {...gridPagination}
-                // deltaColumnMode
-                />
-            </div>
-            {computedPagination && <Pagination style={{ marginTop: 4 }} {...computedPagination} />}
-
+                        rowData={dataSource}
+                        getRowNodeId={getRowNodeId}
+                        onGridReady={onGridReady}
+                        treeData={treeData}
+                        // undo\redo
+                        undoRedoCellEditing
+                        enableFillHandle
+                        // undoRedoCellEditingLimit
+                        // stopEditingWhenGridLosesFocus
+                        defaultColDef={{
+                            resizable,
+                            filter,
+                            minWidth: 100,
+                        }}
+                        getDataPath={getDataPath}
+                    // 分页信息
+                    // {...gridPagination}
+                    // deltaColumnMode
+                    />
+                </div>
+                {computedPagination && <Pagination className="gant-grid-pagination" style={{ marginTop: 4 }} {...computedPagination} />}
+            </Spin>
         </>
     )
 }

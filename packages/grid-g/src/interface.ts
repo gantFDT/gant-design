@@ -45,7 +45,12 @@ export interface Api {
     redo?(): void,
     /**添加 */
     add(index?: number, item?: object): void,
-    /**删除 */
+    /**
+     * 删除选中行，默认全删，可以通过提供callback修改删除的数据
+     * @author chenyl
+     * @param {function} callback 回调方法，可以返回boolean、array或者是一个能够提供boolean、array类型返回值的promise
+     * @returns {undeinfed}
+     */
     deleteRow: API.deleteRow,
     getModel(): void,
     /**取消编辑 */
@@ -116,6 +121,10 @@ export type onEditableChange = (editable: boolean) => void
 
 export type OnEdit = (api: Api) => void
 
+export type Pagination = ProtoExtends<PaginationProps, {
+    beginIndex?: number
+}>
+
 // TODO:移动
 // TODO:取消编辑时恢复添加和删除的数据
 
@@ -137,8 +146,9 @@ interface Props<T> {
     width?: string | number,
     height?: string | number,
     treeData?: boolean,
-    pagination: PaginationProps,
+    pagination: Pagination,
     onEdit: OnEdit,
+    loading: boolean,
 }
 
 type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>
