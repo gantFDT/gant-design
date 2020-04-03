@@ -218,15 +218,9 @@ const TreeGrid = () => {
             onEditableChange={seteditable}
             dataSource={dataSource} onReady={onReady}
             rowSelection
-            autoGroupColumnDef={{
-                headerName: "分组",
-                field: 'name',
-            }}
+            
         />
     )
-}
-const GrouRender = (props) => {
-    return props.value
 }
 /*! End !*/
 const config = {

@@ -397,7 +397,7 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
                 stopEditingWhenGridLosesFocus
                 defaultColDef={{
                     resizable,
-                    // sortable: true,
+                    // sortable: true, 
                     filter,
                     width: 100,
                 }}
