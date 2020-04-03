@@ -224,7 +224,7 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
             return defaultRowSelection
         }
         if (rowSel) return { ...defaultRowSelection, ...rowSel }
-        return rowSel
+        return {}
     }, [rowSel])
     const { onSelect, selectedKeys, showDefalutCheckbox, type: rowSelection, defaultSelectionCol, ...selection } = gantSelection;
     const onSelectionChanged = useCallback((event: SelectionChangedEvent) => {
