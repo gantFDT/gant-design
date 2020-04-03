@@ -217,8 +217,12 @@ const TreeGrid = () => {
             editable={editable}
             onEditableChange={seteditable}
             dataSource={dataSource} onReady={onReady}
-            rowSelection
-            
+            rowSelection={
+                {
+                    checkboxIndex: 0
+                }
+            }
+            rowMultiSelectWithClick
         />
     )
 }

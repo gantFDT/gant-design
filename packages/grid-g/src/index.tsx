@@ -70,7 +70,8 @@ export type GridApi = AgGridApi
 
 const defaultRowSelection = {
     multiple: true,
-    checkboxIndex: 0
+    // checkboxIndex: 0,
+    showDefalutCheckbox: true
 }
 
 export type RowSelection = {
@@ -341,7 +342,6 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
     }, [rowSel])
 
     const columns = useMemo<ColDef[] | ColGroupDef[]>(() => mapColumns<T>(columnDefs, editable, rowSelection, size, getRowNodeId), [columnDefs, editable, rowSelection, size, getRowNodeId])
-
     const actions = useMemo(() => {
         if (editActions && editable) {
             return editActions(editApi, [])
@@ -394,13 +394,15 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
                 undoRedoCellEditing
                 enableFillHandle
                 // undoRedoCellEditingLimit
-                stopEditingWhenGridLosesFocus
+                // stopEditingWhenGridLosesFocus
+                singleClickEdit
                 defaultColDef={{
                     resizable,
                     // sortable: true, 
                     filter,
                     width: 100,
                 }}
+
                 getDataPath={getDataPath}
             />
         </div>
