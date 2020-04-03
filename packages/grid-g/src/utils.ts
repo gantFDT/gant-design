@@ -85,6 +85,14 @@ export function isnumber(t: any): t is number {
 export function isstring(t: any): t is string {
     return typeof t === 'string'
 }
+// array
+export function isarray(t: any): t is Array<any> {
+    return Array.isArray(t)
+}
+// promise
+export function ispromise(t: any): t is Promise<any> {
+    return t && typeof t.then === "function"
+}
 
 export function trackEditValueChange(data: any, field: string, cacheValue: any, value: any) {
     let newRowData: any = data;

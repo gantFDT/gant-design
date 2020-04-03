@@ -1,5 +1,6 @@
 import React, { memo, useEffect, useMemo } from 'react'
 import { DataActions, Size } from './interface'
+import { Icon, EditStatus } from '@data-cell'
 import { trackRenderValueChange } from './utils'
 export default memo(function GirdRenderColumn(props: any) {
 
