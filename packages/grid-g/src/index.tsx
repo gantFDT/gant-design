@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useRef, useMemo, useEffect, Dispatch, SetStateAction } from 'react';
+import classnames from 'classnames'
 import { AgGridReact } from 'ag-grid-react';
 import { ColDef, ColGroupDef, GridApi, GridOptions, ColumnApi, GridReadyEvent, SelectionChangedEvent } from "ag-grid-community";
 import 'ag-grid-community/dist/styles/ag-grid.css';
@@ -9,7 +10,7 @@ import { Pagination, Spin } from 'antd'
 import { get, isEmpty, isEqual } from 'lodash'
 
 import key from './license'
-import { mapColumns, NonBool, isbool, isstring, isarray, ispromise, isfunc, flattenTreeData, usePagination } from './utils'
+import { mapColumns, NonBool, isbool, isstring, isarray, ispromise, isfunc, flattenTreeData, usePagination, getSizeClassName } from './utils'
 import { Filter, Size, Fixed, GridPropsPartial, Api, API, RowSelection, Record } from './interface'
 import "./style"
 import DataManage from './datamanage'
@@ -143,13 +144,13 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     // 进入编辑时遍历一遍初始数据
     const originList = useMemo(() => {
         const list = []
-        if (editable) {
+        if (editable && apiRef.current) {
             apiRef.current.forEachNode((node, index) => {
                 list.push(node.data)
             })
         }
         return list
-    }, [editable])
+    }, [editable, apiRef.current])
 
     /**删除 */
     const remove = useCallback<API.remove>(
@@ -347,7 +348,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     return (
         <>
             <Spin spinning={loading}>
-                <div style={{ width, height }}>
+                <div style={{ width, height }} className={classnames('gant-grid', `gant-grid-${getSizeClassName(size)}`)} >
                     <div className="ag-theme-balham" style={{ width: '100%', height: computedPagination ? 'calc(100% - 30px)' : '100%' }}>
                         <AgGridReact
                             onSelectionChanged={onSelectionChanged}
@@ -363,6 +364,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                             enableFillHandle
                             defaultColDef={{
                                 resizable,
+                                sortable:true,
                                 filter,
                                 minWidth: 100,
                             }}

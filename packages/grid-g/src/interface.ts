@@ -173,6 +173,7 @@ export interface Props<T extends Record> {
     pagination: Pagination,
     onEdit: OnEdit,
     loading: boolean,
+    className?: string
 }
 
 export type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>

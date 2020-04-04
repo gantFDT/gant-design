@@ -1,10 +1,28 @@
 :global {
-    .gant-grid-header{
-        // margin-bottom: 6px;
+    
+    .gant-grid {
+        .gant-padding-h-3 {
+            padding: 0px 4px!important;
+        }
+        .ag-cell-inline-editing {
+            height: 32px;
+            border: none;
+        }
+        .ag-cell {
+            line-height: 32px;
+        }
+        &-sm {
+            .ag-cell {
+                line-height: 22px!important;
+            }
+            .ag-cell-inline-editing {
+                height: 24px;
+            }
+        }
     }
-    .gant-grid-pagination.mini{
-        margin-top: 4px;
-        .ant-pagination-options{
+    .gant-grid-pagination.mini {
+        padding:3px 5px;
+        .ant-pagination-options {
             line-height: 24px;
         }
     }

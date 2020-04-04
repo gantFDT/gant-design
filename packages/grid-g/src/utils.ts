@@ -19,7 +19,7 @@ function ColEditableFn(fn: ColumnEdiatble<any>): IsColumnFunc | boolean {
     return ({ data }) => fn(data)
 }
 
-export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Size, getRowNodeId: any, defaultSelection: boolean, defaultSelectionCol: ColDef): Col[] => {
+export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Size, getRowNodeId: any, defaultSelection: boolean): Col[] => {
     function getColumnDefs(columns: Columns<T>[]) {
         return columns.map(({ title: headerName, fieldName: field, children, render, editConfig, fixed, ...item }, index) => {
             const ColEditable = typeof editConfig !== 'undefined'
@@ -61,19 +61,22 @@ export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Si
         })
     }
     const defalutSelectionCol: ColDef = {
-        width: 50,
+        width: 24,
         checkboxSelection: true,
         resizable: false,
         sortable: false,
         pinned: true,
         field: "defalutSelection",
         headerCheckboxSelection: true,
-        minWidth: 50,
+        minWidth: 24,
         headerName: "",
         suppressMenu: true,
         lockPosition: true,
         lockVisible: true,
-        ...defaultSelectionCol,
+        cellStyle: {
+            padding: "0px 3px"
+        },
+        headerClass: "gant-padding-h-3",
 
     }
     return defaultSelection ? [defalutSelectionCol, ...getColumnDefs(columns)] : getColumnDefs(columns)
@@ -200,4 +203,12 @@ export function usePagination(pagitation: Pagination): PaginationProps {
         return { ...defaultPagetation, ...pagitation, onShowSizeChange: onPageChange }
     }
 
+}
+export function getSizeClassName(size: Size) {
+    switch (size) {
+        case "small":
+            return "sm"
+        default:
+            return ""
+    }
 }

@@ -6,13 +6,9 @@ import ResizeDetector from './ResizeDetector'
 import ExtraContent from './ExtraContent'
 import _ from 'lodash';
 
-export enum headerType {
-  icon = 'icon',
-  line = 'line',
-  num = 'num'
-}
+
 interface HeaderIF {
-  type?: headerType,
+  type?: 'line' | 'num' | 'icon',
   bottomLine?: boolean,
   title?: string | ReactNode,
   beforeExtra?: ReactNode,

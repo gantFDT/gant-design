@@ -20,7 +20,7 @@ export default memo(function GirdRenderColumn(props: any) {
 	}, [rowId, value, data, field])
 	return (
 		<>
-			< span className={`gant-grid-cell-content gant-grid-cell-content-${size}`} > {typeof render == 'function' ? render(value, record, rowIndex) : value}</span >
+			<span className={`gant-grid-cell-content gant-grid-cell-content-${size}`} > {typeof render == 'function' ? render(value, record, rowIndex) : value}</span >
 		</>
 	)
 })

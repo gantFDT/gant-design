@@ -5,7 +5,7 @@ import React, { useMemo, useEffect, useCallback, useState, useRef } from 'react'
 import Gird, { Columns, Filter, OnReady, GridApi, Fixed, Api, OnEdit, RemoveCallBack } from '@grid';
 import { GridReadyEvent } from 'ag-grid-community'
 import { Button, message } from "antd"
-import { Input } from "@data-cell"
+import { Input, InputCellPhone } from "@data-cell"
 import Header from '@header'
 
 /*! Split !*/
