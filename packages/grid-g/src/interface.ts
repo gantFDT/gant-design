@@ -120,7 +120,8 @@ export type Columns<T extends {} = {}> = {
     fixed?: Fixed | undefined,
     valueFormatter?: (params: ValueFormatterParams) => string,
     rowGroupIndex?: number,
-    type?: string | string[]
+    type?: string | string[],
+    [props:string]:any
 }
 
 export type onEditableChange = (editable: boolean) => void
@@ -158,7 +159,10 @@ export interface Props<T> {
     pagination: Pagination,
     onEdit: OnEdit,
     loading: boolean,
-    className?: string
+    className: string,
+    isServer: boolean,
+    isServerSideGroup: (data: any) => boolean,
+    onExpandedRowsChange:(data:any)=>void
 }
 
 export type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>
@@ -168,5 +172,5 @@ export type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>
 export type GridProps<T> = ProtoExtends<AgGridReactProps, CustomProps<T>>
 
 
-export type GridPropsPartial<T> = PartRequired<GridProps<T>, "columns" | "dataSource">
+export type GridPropsPartial<T> = PartRequired<GridProps<T>, "columns" | "dataSource" | "rowkey">
 

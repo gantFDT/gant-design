@@ -2,13 +2,37 @@
 import CodeDecorator from '../_util/CodeDecorator'
 /*! Start !*/
 import React, { useMemo, useEffect, useCallback, useState, useRef } from 'react'
-import Gird, { Columns, Filter, OnReady, GridApi, Fixed, Api, OnEdit } from '@grid';
-import { GridReadyEvent } from 'ag-grid-community'
+import Grid, { Columns, Filter, OnReady, Fixed, Api, OnEdit } from '@grid';
+import { GridReadyEvent, GridApi } from 'ag-grid-community'
 import { Button } from "antd"
-import { Input,InputCellPhone } from "@data-cell"
+import { Input, InputCellPhone } from "@data-cell"
 import Header from '@header'
 
 /*! Split !*/
+
+function getSimpleCellRenderer(): any {
+    function SimpleCellRenderer() { }
+    SimpleCellRenderer.prototype.init = function (params) {
+        console.log(params)
+        var tempDiv = document.createElement('div');
+        if (params.node.group) {
+            tempDiv.innerHTML =
+                '<span style="border-bottom: 1px solid grey; border-left: 1px solid grey; padding: 2px;">' +
+                params.value +
+                '</span>';
+        } else {
+            tempDiv.innerHTML =
+                '<span><img src="https://flags.fmcdn.net/data/flags/mini/ie.png" style="width: 20px; padding-right: 4px;"/>' +
+                params.value +
+                '</span>';
+        }
+        this.eGui = tempDiv.firstChild;
+    };
+    SimpleCellRenderer.prototype.getGui = function () {
+        return this.eGui;
+    };
+    return SimpleCellRenderer;
+}
 const TreeGrid = () => {
 
     const [editable, seteditable] = useState(false)
@@ -25,7 +49,7 @@ const TreeGrid = () => {
         {
             title: '姓名',
             fieldName: "name",
-            checkboxSelection: true,
+            // checkboxSelection: true,
             render: (text, rowIndex) => {
                 return text + "----"
             },
@@ -36,6 +60,8 @@ const TreeGrid = () => {
                     return data.age < 100
                 }
             },
+            enableRowGroup: true,
+            cellRenderer: "agGroupCellRenderer"
         },
         {
             title: '年龄',
@@ -109,6 +135,7 @@ const TreeGrid = () => {
     const deleteCb = useCallback((selected) => {
         return selected.filter(({ data }) => data.age > 120)
     }, [])
+
     return (
         <>
             <Header extra={!editable ? (
@@ -124,10 +151,13 @@ const TreeGrid = () => {
                     </>
                 )
             } />
-            <Gird
+            <Grid
                 // headerProps={header}
-                rowkey="id"
+                components={{
+                    "simpleCellRenderer": getSimpleCellRenderer()
+                }}
                 // editActions={editActions}
+                rowkey="id"
                 loading={loading}
                 columns={columns}
                 treeData
@@ -142,19 +172,70 @@ const TreeGrid = () => {
                     total: 5,
                     onChange: onPageChange
                 }}
+                groupSuppressAutoColumn
             />
         </>
     )
 }
 /*! End !*/
+
+/*! Split !*/
+function ajax(updateData) {
+    const httpRequest = new XMLHttpRequest();
+    httpRequest.open(
+        'GET',
+        'https://raw.githubusercontent.com/ag-grid/ag-grid/master/grid-packages/ag-grid-docs/src/javascript-grid-server-side-model-tree-data/tree-data/data/data.json'
+    );
+    httpRequest.send();
+    httpRequest.onreadystatechange = () => {
+        if (httpRequest.readyState === 4 && httpRequest.status === 200) {
+            updateData(JSON.parse(httpRequest.responseText));
+        }
+    };
+}
+const AsyncTreeData = () => {
+    const [dataSource, setDataSource] = useState([])
+    const columns = [{
+        fieldName: 'employeeId',
+        enableRowGroup: true,
+        cellRenderer: "agGroupCellRenderer",
+    },
+    {
+        fieldName: 'employeeName',
+    },
+    { fieldName: 'jobTitle' },
+    { fieldName: 'employmentType' }]
+    useEffect(() => {
+        ajax(setDataSource)
+    }, [])
+    return <Grid
+        rowkey="employeeId"
+        columns={columns}
+        dataSource={dataSource}
+        treeData
+        isServer
+        isServerSideGroup={(data) => {
+            return Array.isArray(data.children)
+        }}
+        rowSelection
+        onRowGroupOpened={(data) => { console.log(data) }}
+        groupSuppressAutoColumn
+    />
+}
+
 const config = {
     codes: [],
     useage: '',
     children: [
+        // {
+        //     title: "tree",
+        //     describe: "树形结构",
+        //     cmp: TreeGrid
+        // },
         {
-            title: "tree",
-            describe: "树形结构",
-            cmp: TreeGrid
+            title: "async tree",
+            describe: "异步树形",
+            cmp: AsyncTreeData
         }
     ]
 }

@@ -11,7 +11,10 @@ import { get, isEmpty } from 'lodash'
 
 import key from './license'
 import Header from '@header';
-import { mapColumns, NonBool, isbool, isstring, isarray, ispromise, isfunc, flattenTreeData, usePagination, getSizeClassName } from './utils'
+import {
+    mapColumns, NonBool, isbool, isstring, isarray, ispromise, isfunc,
+    flattenTreeData, usePagination, getSizeClassName, createFakeServer, createServerSideDatasource
+} from './utils'
 import { Filter, Size, Fixed, GridPropsPartial, Api, API, RowSelection } from './interface'
 import "./style"
 
@@ -72,13 +75,17 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
         pagination,
         onEdit,
         loading,
+        isServer,
+        isServerSideGroup,
+        getServerSideGroupKey,
+        onExpandedRowsChange,
         ...orignProps
     } = props
 
     const apiRef = useRef<GridApi>();
 
     const columnsRef = useRef<ColumnApi>();
-    const [dataSource, setDataSource]: [T[], Dispatch<SetStateAction<T[]>>] = useState([]);
+
 
     // 分页事件
     const computedPagination = usePagination(pagination)
@@ -88,6 +95,7 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
         (api = apiRef.current) => {
             if (typeof defaultColumnWidth === "undefined") api.sizeColumnsToFit()
         }, [defaultColumnWidth])
+
     const getRowNodeId = useCallback(
         (data) => {
             if (typeof rowkey === 'string') {
@@ -97,16 +105,31 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
         },
         [rowkey],
     )
+    // 判断数据分别处理 treeTable 和普通table
+    const dataSource = useMemo(() => {
+        if (!treeData) return initDataSource;
+        if (!isServer) return flattenTreeData(initDataSource, getRowNodeId);
+        const fakeServer = createFakeServer(initDataSource, getServerSideGroupKey ? getServerSideGroupKey : getRowNodeId);
+        const serverDataSource = createServerSideDatasource(fakeServer)
+
+        return serverDataSource
+
+    }, [initDataSource, treeData, getRowNodeId, isServer, apiRef.current, getServerSideGroupKey])
     useEffect(() => {
-        if (treeData) {
-            setDataSource(flattenTreeData(initDataSource, getRowNodeId))
-        } else {
-            setDataSource(initDataSource)
+        if (initDataSource.length > 0 && apiRef.current && isServer && treeData) apiRef.current.setServerSideDatasource(dataSource)
+    }, [apiRef.current, dataSource, initDataSource, isServer, treeData])
+    const gridPartProps = useMemo(() => {
+        if (treeData && isServer) return {
+            isServerSideGroup,
+            treeData,
+            rowModelType: 'serverSide',
+            getServerSideGroupKey: getServerSideGroupKey ? getServerSideGroupKey : getRowNodeId,
         }
-    }, [initDataSource, treeData, getRowNodeId])
-
-
-
+        return {
+            treeData,
+            rowData: dataSource
+        }
+    }, [dataSource, getRowNodeId, isServerSideGroup, treeData, isServer])
     // 进入编辑时遍历一遍初始数据
     const originList = useMemo(() => {
         const list = []
@@ -244,19 +267,17 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
     }, [selectedKeys, apiRef.current, rowSelection])
     // 处理selection-end
     //columns
-    const defaultSelection = !isEmpty(gantSelection) && showDefalutCheckbox;
-    const columns = useMemo<ColDef[] | ColGroupDef[]>(() => mapColumns<T>(columnDefs, editable, size, getRowNodeId, defaultSelection), [columnDefs, editable, rowSelection, size, getRowNodeId])
+    const defaultSelection = !isEmpty(gantSelection) && showDefalutCheckbox && !(treeData && isServer);
+    const columns = useMemo<ColDef[] | ColGroupDef[]>(() => mapColumns<T>(columnDefs, editable, size, getRowNodeId, defaultSelection,defaultSelectionCol), [columnDefs, editable, rowSelection, size, getRowNodeId,defaultSelectionCol,defaultSelection])
     //columns-end
     useEffect(() => {
         if (isfunc(onEdit)) {
             onEdit(editApi)
         }
     }, [onEdit])
-
     const getDataPath = useCallback((data) => {
         return data.treeDataPath;
     }, [])
-
     return (
         <>
             <Spin spinning={loading}>
@@ -264,14 +285,10 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
                     <div className="ag-theme-balham" style={{ width: '100%', height: computedPagination ? 'calc(100% - 30px)' : '100%' }}>
                         <AgGridReact
                             onSelectionChanged={onSelectionChanged}
-                            {...selection}
-                            {...orignProps}
                             columnDefs={columns}
                             rowSelection={rowSelection}
-                            rowData={dataSource}
                             getRowNodeId={getRowNodeId}
                             onGridReady={onGridReady}
-                            treeData={treeData}
                             undoRedoCellEditing
                             enableFillHandle
                             defaultColDef={{
@@ -279,10 +296,14 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
                                 filter,
                                 minWidth: 100,
                             }}
+                            rowMultiSelectWithClick
                             headerHeight={24}
                             floatingFiltersHeight={20}
                             getDataPath={getDataPath}
                             rowHeight={size == "small" ? 24 : 32}
+                            {...gridPartProps}
+                            {...selection}
+                            {...orignProps}
                         />
                     </div>
                     {/* 分页高度为30 */}
