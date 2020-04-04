@@ -7,6 +7,10 @@
     "rootDir": ".",
     "downlevelIteration": true,
     "target": "ES5", // 指定ECMAScript目标版本 "ES3"（默认）， "ES5"， "ES6"/ "ES2015"， "ES2016"， "ES2017"或 "ESNext"
+    "lib": [
+      "esnext",
+      "dom"
+    ],
     "module": "esnext", // 指定生成哪个模块系统代码
     "declaration": false, // 生成（ *.d.ts）文件
     "allowJs": false, // 允许编译 javascript 文件

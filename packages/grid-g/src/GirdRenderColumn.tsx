@@ -4,7 +4,8 @@ import { Icon, EditStatus } from '@data-cell'
 import { trackRenderValueChange } from './utils'
 export default memo(function GirdRenderColumn(props: any) {
 
-	const { value, rowIndex, render, data, api, colDef: { field }, size = Size.small, rowkey } = props;
+	const { value, rowIndex, render, data: pData, api, colDef: { field }, size = Size.small, rowkey } = props;
+	const data = useMemo(() => (pData || {}), [pData])
 	const rowId = useMemo(() => {
 		if (!rowkey) return rowIndex;
 		return rowkey(data)

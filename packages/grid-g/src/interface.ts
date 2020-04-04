@@ -4,6 +4,7 @@ import { defaultProps, defaultRowSelection } from './index'
 
 import { PaginationProps } from 'antd/lib/pagination'
 import { PartRequired, ProtoExtends } from "@util/type"
+import DataManage from './datamanage'
 // 编辑框大小
 export enum Size {
     small = "small",
@@ -20,7 +21,7 @@ export enum Filter {
 // 数据修改行为
 export enum DataActions {
     add = "add",
-    delete = "delete",
+    remove = "remove",
     modify = "modify",
     up = "up",
     down = "down"
@@ -32,13 +33,21 @@ export enum Fixed {
 }
 
 
+/**删除数据时的回调方法，可以返回boolean、array或者是一个能够提供boolean、array类型返回值的promise */
+export type RemoveCallBack = (selected: any[]) => (Promise<boolean | any[]> | boolean | any[])
 
 export namespace API {
-    export type deleteRow = (cb?: (selected: any[]) => (Promise<boolean | any[]> | boolean | any[])) => void;
+    export type remove = (removeChildren?: boolean, cb?: RemoveCallBack) => Promise<any>;
     export type cancel = () => void
 }
 
 export interface Api {
+    /**是否有改动，没有对值进行校验 */
+    isChanged: boolean,
+    /**是否能够重做 */
+    canRedo,
+    /**是否能够撤回 */
+    canUndo,
     /**撤销 */
     undo?(): void,
     /**重做 */
@@ -48,10 +57,11 @@ export interface Api {
     /**
      * 删除选中行，默认全删，可以通过提供callback修改删除的数据
      * @author chenyl
-     * @param {function} callback 回调方法，可以返回boolean、array或者是一个能够提供boolean、array类型返回值的promise
-     * @returns {undeinfed}
+     * @param {function|boolean|array} callback 回调方法，可以返回boolean、array或者是一个能够提供boolean、array类型返回值的promise
+     * @param {boolean} removeChildren 是否在删除节点的同时删除其子节点，默认为true
+     * @returns {Promise} 
      */
-    deleteRow: API.deleteRow,
+    remove: API.remove,
     getModel(): void,
     /**取消编辑 */
     cancel: API.cancel,
@@ -137,8 +147,13 @@ export type Pagination = Omit<
 // TODO:移动
 // TODO:取消编辑时恢复添加和删除的数据
 
+export type Record = {
+    children?: Record[],
+    isDeleted?: boolean,
+    [key: string]: any
+}
 // Grid Api
-export interface Props<T> {
+export interface Props<T extends Record> {
     filter?: boolean,
     // headerProps?: {
     //     extra?: React.ReactNode,
