@@ -1,6 +1,6 @@
 {
   "name": "keyevent-g",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "gantd keyevent-g",
   "main": "lib/index.js",
   "scripts": {},
@@ -23,8 +23,8 @@
   "author": "GantFDT",
   "license": "MIT",
   "dependencies": {
-    "react": "^16.12.0",
-    "rc-util": "^4.20.3"
+    "rc-util": "^4.20.3",
+    "react": "^16.12.0"
   },
   "devDependencies": {
     "@babel/core": "^7.4.5",

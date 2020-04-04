@@ -293,6 +293,7 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
                             enableFillHandle
                             defaultColDef={{
                                 resizable,
+                                sortable:true,
                                 filter,
                                 minWidth: 100,
                             }}
