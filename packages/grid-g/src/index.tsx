@@ -109,6 +109,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         manager.on("update", (list) => {
             seteditDataSource(list)
         })
+        DataManage.getRowNodeId = getRowNodeId
         return manager
     }, [])
 
@@ -140,7 +141,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     const nowDataSource = useMemo(() => {
         return editable ? editDataSource : initDataSource
     }, [editable, initDataSource, editDataSource])
-    console.log("nowDataSource", nowDataSource, initDataSource)
+
     // 判断数据分别处理 treeTable 和普通table
     const dataSource = useMemo(() => {
         if (!treeData) return nowDataSource;
@@ -354,15 +355,14 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         if (isfunc(onEdit) && editable) {
             onEdit(editApi)
         }
-    }, [onEdit])
+    }, [onEdit, editable, editApi])
     const getDataPath = useCallback((data) => {
         return data.treeDataPath;
     }, [])
 
     const cellValueChanged = useCallback(
         (changed) => {
-            const { rowIndex } = changed
-            console.log(changed)
+            dataManage.modify(changed)
         },
         [],
     )

@@ -141,7 +141,7 @@ const TreeGrid = () => {
                 <Button onClick={edit}>进入编辑</Button>
             ) : (
                     <>
-                        <Button onClick={() => editApi.add(0, { id: "a" })}>新增</Button>
+                        <Button onClick={() => editApi.add(0, { id: Math.random().toString(16), name: Math.random().toString(16) })}>新增</Button>
                         <Button onClick={() => editApi.remove(false, deleteCb).then(e => message.success("删除成功"), e => message.error("删除出错"))}>删除</Button>
                         <Button disabled={!editApi || !editApi.canUndo} onClick={() => editApi.undo()}>撤销</Button>
                         <Button disabled={!editApi || !editApi.canRedo} onClick={() => editApi.redo()}>重做</Button>
@@ -227,16 +227,16 @@ const config = {
     codes: [],
     useage: '',
     children: [
-        // {
-        //     title: "tree",
-        //     describe: "树形结构",
-        //     cmp: TreeGrid
-        // },
         {
-            title: "async tree",
-            describe: "异步树形",
-            cmp: AsyncTreeData
-        }
+            title: "tree",
+            describe: "树形结构",
+            cmp: TreeGrid
+        },
+        // {
+        //     title: "async tree",
+        //     describe: "异步树形",
+        //     cmp: AsyncTreeData
+        // }
     ]
 }
 

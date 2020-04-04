@@ -4,7 +4,7 @@ import { EventEmitter } from 'events'
 
 
 import History from './history'
-import { cloneDeep } from './utils'
+import { cloneDeep, modify } from './utils'
 import { Record } from '../interface'
 import { isnumber } from '../utils'
 
@@ -18,6 +18,7 @@ class DataManage<T extends Record = any> extends EventEmitter {
     private history: History<T>
     private updated = false // 通知getCurrentList当前列表是否发生变化
     private _dataSource: T[]
+    static getRowNodeId: (d: any) => string
 
     constructor(public gridApi: React.MutableRefObject<GridApi>, public columnApi: React.MutableRefObject<ColumnApi>) {
         super();
@@ -150,10 +151,19 @@ class DataManage<T extends Record = any> extends EventEmitter {
     //     if (newState !== this.state) this.updateHistory(this.history.push(newState))
     // }
 
-    // // 修改
-    // modify() {
-
-    // }
+    // 修改
+    modify(changed: any) {
+        const { data } = changed
+        let node = changed.node
+        let keyPath = []
+        while (node.level >= 0) {
+            keyPath.push(node.childIndex)
+            node = node.parent
+        }
+        keyPath = keyPath.reverse().flatMap(key => [key, "children"]).slice(0, -1)
+        const newState = this.state.setIn(keyPath, data)
+        this.history.push(newState)
+    }
 
     // // 移动
     // move() {

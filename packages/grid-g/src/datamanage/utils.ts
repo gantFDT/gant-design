@@ -34,3 +34,25 @@ export const cloneDeep = function cloneDeep<T extends Record>(list: T[]): T[][] 
     })
     return [cloneList, pureList]
 }
+
+export const modify = function modify<T extends Record>(list: any[], rowIndex: number, field: string, value: any): T[] {
+
+    let index = 0
+    const items = [...list]
+
+    while (items.length) {
+        const item = items.shift()
+        if (index === rowIndex) {
+            item[field] = value
+            break;
+        } else {
+            if (item.children && item.children.length) {
+                items.unshift(...item.children as T[])
+            }
+        }
+        index++
+    }
+
+    return list
+
+}
