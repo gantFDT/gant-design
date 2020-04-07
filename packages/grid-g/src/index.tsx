@@ -122,6 +122,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
             seteditDataSource(list)
         })
         DataManage.getRowNodeId = getRowNodeId
+        DataManage.treeDataChildrenName = treeDataChildrenName
         return manager
     }, [])
 
@@ -148,7 +149,6 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     const nowDataSource = useMemo(() => {
         return editable ? editDataSource : initDataSource
     }, [editable, initDataSource, editDataSource])
-
     // 判断数据分别处理 treeTable 和普通table
     const dataSource = useMemo(() => {
         if (!treeData) return nowDataSource;
@@ -156,7 +156,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         const fakeServer = createFakeServer(nowDataSource, getServerSideGroupKey ? getServerSideGroupKey : getRowNodeId);
         const serverDataSource = createServerSideDatasource(fakeServer)
         return serverDataSource
-    }, [nowDataSource, treeData, treeDataChildrenName, getRowNodeId, isServer, apiRef.current, getServerSideGroupKey, editDataSource, editable])
+    }, [nowDataSource, treeData, treeDataChildrenName, getRowNodeId, isServer, apiRef.current, getServerSideGroupKey])
     useEffect(() => {
         if (nowDataSource.length > 0 && apiRef.current && isServer && treeData) apiRef.current.setServerSideDatasource(dataSource)
     }, [apiRef.current, dataSource, nowDataSource, isServer, treeData])
@@ -233,14 +233,6 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
             add(index: number = 0, item) {
                 dataManage.create(index, item as T)
             },
-            getSelected() {
-                console.log(apiRef.current.getSelectedRows())
-            },
-            map() {
-                apiRef.current.forEachNode((node, index) => {
-                    console.log(node)
-                })
-            },
             /**删除 */
             remove,
             /**取消 */
@@ -276,7 +268,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     useEffect(() => {
         if (selectedKeys && apiRef.current) {
             if (selectedKeys.length == 0) {
-                apiRef.current.deselectAll();
+                if (apiRef.current.getSelectedRows().length) apiRef.current.deselectAll();
             } else {
                 selectedKeys.map(id => {
                     const nodeItem = apiRef.current.getRowNode(id);
@@ -341,9 +333,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                             {...orignProps}
                             stopEditingWhenGridLosesFocus
                             suppressRowDrag
-                            /**单元格数据变化 */
                             onCellValueChanged={cellValueChanged}
-                            /** 这个属性可以在数据变化的时候转化一个transaction用于updateRowData,所以可以保持住原有的排序、过滤、选中等状态。同时还能计算出编辑前后的差异 */
                             deltaRowDataMode
                         />
                     </div>

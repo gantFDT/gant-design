@@ -1,6 +1,7 @@
 import { ColumnApi, GridApi, RowNode, RowNodeTransaction } from 'ag-grid-community';
 import { List } from 'immutable'
 import { EventEmitter } from 'events'
+import { groupBy } from 'lodash'
 
 
 import History from './history'
@@ -28,6 +29,7 @@ class DataManage<T extends Record = any> extends EventEmitter {
     private _modify: any[] = []
 
     static getRowNodeId: (d: any) => string
+    static treeDataChildrenName: string = 'children'
 
 
     constructor(public gridApi: React.MutableRefObject<GridApi>, public columnApi: React.MutableRefObject<ColumnApi>) {
@@ -148,18 +150,43 @@ class DataManage<T extends Record = any> extends EventEmitter {
                 res(rows)
             }
         }).then((deleteRows) => {
-            const newState = rows.reduce((state, row) => {
+            const keyPathsArray = rows.map(row => {
                 let currentNode = row
                 let keyPath = []
                 while (currentNode.level >= 0) {
                     keyPath.unshift(currentNode.childIndex)
                     currentNode = currentNode.parent
                 }
+                return keyPath
+            })
+            const keyMap = new Map<string, number[]>();
+            keyPathsArray.forEach((paths) => {
+                const key = paths.join('')
+                if (keyMap.size > 0) {
+                    const pathstr = keyMap.keys()
+                    // 当前节点的父节点已添加到数组中
+                    const hasParent = [...pathstr].some(p => key.startsWith(p))
+                    if (!hasParent) {
+                        keyMap.set(key, paths)
+                    }
+                    // 如果map中有当前节点的子节点，需要删除掉
+                    for (let p of pathstr) {
+                        if (p.startsWith(key)) {
+                            keyMap.delete(p)
+                        }
+                    }
+                } else {
+                    keyMap.set(key, paths)
+                }
+            })
+
+
+            const newState = [...keyMap.values()].reduce((state, keyPath) => {
                 const [startIndex, ...resetPath] = keyPath
                 if (keyPath.length === 1) {
                     return state.delete(startIndex)
                 } else if (keyPath.length >= 2) {
-                    return state.update(startIndex, ({ ...item }) => removeDeepItem<T>(resetPath, item))
+                    return state.update(startIndex, ({ ...item }) => removeDeepItem<T>(DataManage.treeDataChildrenName, resetPath, item))
                 }
                 return state
                 // return state.deleteIn(keyPath)
@@ -181,11 +208,11 @@ class DataManage<T extends Record = any> extends EventEmitter {
             keyPath.push(node.childIndex)
             node = node.parent
         }
-        const [startIndex, ...resetPath] = keyPath
+        const [startIndex, ...resetPath] = keyPath.reverse()
         if (keyPath.length === 1) {
             newState = newState.set(startIndex, data)
         } else if (keyPath.length >= 2) {
-            newState = newState.update(startIndex, ({ ...item }) => removeDeepItem<T>(resetPath, item, data))
+            newState = newState.update(startIndex, ({ ...item }) => removeDeepItem<T>(DataManage.treeDataChildrenName, resetPath, item, data))
         }
         this.history.push(newState)
     }

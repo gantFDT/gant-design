@@ -35,28 +35,6 @@ export const cloneDeep = function cloneDeep<T extends Record>(list: T[]): T[][] 
     return [cloneList, pureList]
 }
 
-// export const modify = function modify<T extends Record>(list: any[], rowIndex: number, field: string, value: any): T[] {
-
-//     let index = 0
-//     const items = [...list]
-
-//     while (items.length) {
-//         const item = items.shift()
-//         if (index === rowIndex) {
-//             item[field] = value
-//             break;
-//         } else {
-//             if (item.children && item.children.length) {
-//                 items.unshift(...item.children as T[])
-//             }
-//         }
-//         index++
-//     }
-
-//     return list
-
-// }
-
 /**找到没有选中的子节点 */
 export const findChildren = function findChildren(node: RowNode): RowNode[] {
     const children: RowNode[] = [] as RowNode[]
@@ -79,11 +57,11 @@ export const findChildren = function findChildren(node: RowNode): RowNode[] {
     return children
 }
 
-export const removeDeepItem = function removeDeepItem<T extends Record>(keyPath: Array<number>, { ...node }: T, newData?: any): T {
+export const removeDeepItem = function removeDeepItem<T extends Record>(treeDataChildrenName: string, keyPath: Array<number>, { ...node }: Record, newData?: any): T {
     let currentKey = keyPath.splice(0, 1)[0]
-    let children = [...node.children]
+    let children = [...node[treeDataChildrenName]]
     if (keyPath.length) {
-        children[currentKey] = removeDeepItem(keyPath, children[currentKey])
+        children[currentKey] = removeDeepItem(treeDataChildrenName, keyPath, children[currentKey])
     } else {
         if (!newData) {
             children = [...children.slice(0, currentKey), ...children.slice(currentKey + 1)]
@@ -91,7 +69,7 @@ export const removeDeepItem = function removeDeepItem<T extends Record>(keyPath:
             children[currentKey] = newData
         }
     }
-    node.children = children
-    return node
+    node[treeDataChildrenName] = children
+    return node as T
 }
 
