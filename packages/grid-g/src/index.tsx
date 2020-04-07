@@ -52,6 +52,7 @@ export const defaultRowSelection: RowSelection = {
     type: "multiple",
     // checkboxIndex: 0,
     showDefalutCheckbox: true,
+    selectedKeys: [],
 }
 
 const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
@@ -94,6 +95,16 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
 
     const [diff, setdiff] = useState({})
 
+    // 处理selection
+    const gantSelection: RowSelection = useMemo(() => {
+        if (rowSel === true) {
+            return defaultRowSelection
+        }
+        if (rowSel) return { ...defaultRowSelection, ...rowSel }
+        return {}
+    }, [rowSel])
+    const { onSelect, selectedKeys, showDefalutCheckbox, type: rowSelection, defaultSelectionCol, ...selection } = gantSelection;
+
     const updateDiff = useCallback(
         (newDiff) => {
             setdiff(diff => {
@@ -106,6 +117,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         [],
     )
 
+    /**管理编辑数据对象 */
     const dataManage = useMemo(() => {
         const manager = new DataManage<T>(apiRef, columnsRef)
         manager.removeAllListeners()
@@ -175,88 +187,32 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     }, [editable, apiRef.current])
 
     /**删除 */
-    const remove = useCallback<API.remove>(
-        (removeChildren, cb) => {
-            const selected = apiRef.current.getSelectedRows()
-            if (!cb) {
-                apiRef.current.updateRowData({
-                    remove: selected
-                })
-                return Promise.resolve()
+    const remove = useCallback<API.remove>((removeChildren, cb) => {
+        const selectedNodes = apiRef.current.getSelectedNodes()
+        const selected = selectedNodes.map(node => node.data)
+        return new Promise((res, rej) => {
+            let allowDelete: boolean | Promise<boolean> = true
+            if (cb) allowDelete = cb(selected)
+            res(allowDelete)
+        }).then(allowDelete => {
+            if (allowDelete) {
+                if (selectedNodes.length) {
+                    return dataManage.remove(selectedNodes, removeChildren).then(rows => {
+                        apiRef.current.updateRowData({
+                            remove: rows.map(node => node.data)
+                        })
+                    })
+                }
             }
-            const back = cb(selected)
-            if (back) {
-                return Promise.resolve(back).then((res) => {
-                    let removedRows: Array<any> = []
-                    if (isarray(res)) {
-                        if (res.length) removedRows = res
-                    } else {
-                        removedRows = selected
-                    }
-                    // 业务层处理之后可能不需要删除+
-                    if (removedRows.length) {
-                        if (!removeChildren) {
-                            let error
-                            for (let item of removedRows) {
-                                apiRef.current.forEachNode((node, index) => {
-                                    if (error) return
-                                    const { treeDataPath = [] } = node.data
-                                    if (treeDataPath.length > item.treeDataPath.length) {
-                                        let isChild = isEqual(treeDataPath.slice(0, item.treeDataPath.length), item.treeDataPath)
-                                        if (isChild) {
-                                            error = true
-                                        }
-                                    }
-                                })
-                            }
-                            if (error) return Promise.reject(error)
-                        } else {
-                            const removeList = []
-                            for (let item of removedRows) {
-                                apiRef.current.forEachNode((node, index) => {
-                                    const { treeDataPath = [] } = node.data
-                                    if (treeDataPath.length >= item.treeDataPath.length) {
-                                        let isChild = isEqual(treeDataPath.slice(0, item.treeDataPath.length), item.treeDataPath)
-                                        if (isChild) {
-                                            removeList.push(node.data)
-                                        }
-                                    }
-
-                                })
-                            }
-                            removedRows = removeList
-                        }
-                        if (removedRows.length) {
-                            // 执行删除
-                            const ids = removedRows.map(getRowNodeId)
-                            console.log(ids)
-                            // const diff = apiRef.current.updateRowData({
-                            //     remove: removedRows
-                            // })
-                            // updateDiff(diff)
-                            // const currentData = []
-                            // apiRef.current.forEachNode((node) => {
-                            //     currentData.push(node.data)
-                            // })
-                            // dataManage.push(currentData)
-                        }
-
-                        return Promise.resolve(back)
-                    }
-
-                })
-            }
-            return Promise.reject(back)
-        },
-        [],
-    )
+            return Promise.reject()
+        })
+    }, [])
 
     /**取消编辑 */
     const cancel = useCallback<API.cancel>(
         () => {
             if (onEditableChange) {
-                const diff = apiRef.current.setRowData(originList)
-                console.log(diff)
+                apiRef.current.setRowData(originList)
                 onEditableChange(false)
             }
         },
@@ -269,14 +225,12 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
             isChanged,
             canRedo,
             canUndo,
+            deletable: selectedKeys.length > 0,
             undo() {
                 dataManage.undo()
             },
             redo() {
                 dataManage.redo()
-            },
-            getModel() {
-                console.log(apiRef.current.getModel())
             },
             add(index: number = 0, item) {
                 dataManage.create(index, item as T)
@@ -306,7 +260,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                 }
             }
         }
-    }, [remove, cancel, editDataSource])
+    }, [remove, cancel, editDataSource, selectedKeys])
 
     const onGridReady = useCallback((params: GridReadyEvent) => {
         apiRef.current = params.api
@@ -314,15 +268,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
 
         onReady && onReady(params)
     }, [onReady])
-    // 处理selection
-    const gantSelection: RowSelection = useMemo(() => {
-        if (rowSel === true) {
-            return defaultRowSelection
-        }
-        if (rowSel) return { ...defaultRowSelection, ...rowSel }
-        return {}
-    }, [rowSel])
-    const { onSelect, selectedKeys, showDefalutCheckbox, type: rowSelection, defaultSelectionCol, ...selection } = gantSelection;
+
     const onSelectionChanged = useCallback((event: SelectionChangedEvent) => {
         const rows = event.api.getSelectedRows();
         const keys = rows.map(item => getRowNodeId(item))
@@ -330,7 +276,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     }, [onSelect, getRowNodeId])
     // 处理selection- 双向绑定selectKeys
     useEffect(() => {
-        if (selectedKeys) {
+        if (selectedKeys && apiRef.current) {
             if (selectedKeys.length == 0) {
                 apiRef.current.deselectAll();
             } else {
