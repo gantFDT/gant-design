@@ -152,7 +152,6 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     const nowDataSource = useMemo(() => {
         return editable ? editDataSource : initDataSource
     }, [editable, initDataSource, editDataSource])
-    console.log("nowDataSource", nowDataSource)
     // 判断数据分别处理 treeTable 和普通table
     const dataSource = useMemo(() => {
         if (!treeData) return nowDataSource;
@@ -161,7 +160,6 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         const serverDataSource = createServerSideDatasource(fakeServer)
         return serverDataSource
     }, [nowDataSource, treeData, treeDataChildrenName, getRowNodeId, isServer, apiRef.current, getServerSideGroupKey])
-    console.log("dataSource", dataSource)
     useEffect(() => {
         if (nowDataSource.length > 0 && apiRef.current && isServer && treeData) apiRef.current.setServerSideDatasource(dataSource)
     }, [apiRef.current, dataSource, nowDataSource, isServer, treeData])
