@@ -131,7 +131,7 @@ export type Columns<T extends {} = {}> = {
     valueFormatter?: (params: ValueFormatterParams) => string,
     rowGroupIndex?: number,
     type?: string | string[],
-    [props:string]:any
+    [props: string]: any
 }
 
 export type onEditableChange = (editable: boolean) => void
@@ -155,18 +155,15 @@ export type Record = {
 }
 // Grid Api
 export interface Props<T extends Record> {
-    filter?: boolean,
-    // headerProps?: {
-    //     extra?: React.ReactNode,
-    //     [key: string]: any
-    // },
-    // editActions: EditActions,
     columns: Columns<T>[],
     dataSource: T[],
+    filter?: boolean,
+    resizable: boolean,
+    sortable: boolean,
     onReady: OnReady,
-    defaultColumnWidth?: React.ReactText,
     rowSelection: RowSelection | true,
     rowkey: RowKey<T> | string,
+    editable: boolean,
     onEditableChange: onEditableChange,
     width?: string | number,
     height?: string | number,
@@ -177,7 +174,8 @@ export interface Props<T extends Record> {
     className: string,
     isServer: boolean,
     isServerSideGroup: (data: any) => boolean,
-    onExpandedRowsChange:(data:any)=>void
+    onExpandedRowsChange: (data: any) => void,
+    treeDataChildrenName: string,
 }
 
 export type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>

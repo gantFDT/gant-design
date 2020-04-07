@@ -21,15 +21,17 @@ function ColEditableFn(fn: ColumnEdiatble<any>): IsColumnFunc | boolean {
 
 export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Size, getRowNodeId: any, defaultSelection: boolean, defaultSelectionCol: ColDef, rowSelection): Col[] => {
     function getColumnDefs(columns: Columns<T>[]) {
-        return columns.map(({ title: headerName, fieldName: field, children, render, editConfig, fixed, ...item }, index) => {
-            console.log("item", item)
-            const ColEditable = typeof editConfig !== 'undefined'
+        return columns.map(({ title: headerName, fieldName: field, children, render, editConfig, cellRenderer = undefined, fixed, ...item }, index) => {
+            const ColEditable = typeof editConfig !== 'undefined';
+            // const cellRender = cellRenderer ? { cellRenderer } : { cellRendererFramework: "gantRenderCol" }
+            // console.log("cellRender", cellRender)
             const colDef = {
                 headerName,
                 field,
                 cellRendererParams: {
                     render
                 },
+
                 cellClass: (params: any) => {
                     const { colDef: { field }, value } = params
                     const data = get(params, 'data', {});
@@ -40,8 +42,11 @@ export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Si
                     }
                     return get(params, 'data._rowType') ? `gant-grid-cell gant-grid-cell-${params.data._rowType}` : ""
                 },
+                cellRenderer: cellRenderer ? cellRenderer : "gantRenderCol",
+                // cellRenderer,
                 ...item,
-            } as Col
+
+            } as ColDef
 
             if (!itemisgroup(colDef, children)) {
                 // 当前列允许编辑
@@ -146,14 +151,14 @@ export function trackRenderValueChange(data: any, field: string, value: any) {
     return newData
 }
 
-export function flattenTreeData(dataSoruce: any[], getRowNodeId, pathArray: string[] = []): any[] {
+export function flattenTreeData(dataSoruce: any[], getRowNodeId, pathArray: string[] = [], treeDataChildrenName = "children"): any[] {
     let treeData: any[] = []
     dataSoruce.map((item: any) => {
-        const { children, ...itemData } = item;
+        const { [treeDataChildrenName]: children, ...itemData } = item;
         const treeDataPath = [...pathArray, getRowNodeId(itemData)]
         if (children && children.length) {
             treeData.push({ ...itemData, treeDataPath, parent: true })
-            const childrenTreeData = flattenTreeData(children, getRowNodeId, treeDataPath);
+            const childrenTreeData = flattenTreeData(children, getRowNodeId, treeDataPath, treeDataChildrenName);
             Array.prototype.push.apply(treeData, childrenTreeData);
         } else {
             treeData.push({ ...itemData, treeDataPath })

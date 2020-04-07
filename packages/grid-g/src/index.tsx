@@ -8,7 +8,7 @@ import { LicenseManager } from "ag-grid-enterprise"
 import 'ag-grid-enterprise';
 import { Pagination, Spin } from 'antd'
 import { get, isEmpty, isEqual } from 'lodash'
-
+import GirdRenderColumn from './GirdRenderColumn'
 import key from './license'
 import Header from '@header';
 import {
@@ -18,7 +18,7 @@ import {
 import { Filter, Size, Fixed, GridPropsPartial, Api, API, RowSelection, Record } from './interface'
 import "./style"
 import DataManage from './datamanage'
-
+import RenderCol, { MedalCellRenderer } from './GirdRenderColumn'
 export * from './interface'
 
 // 设置licenseKey才会在列头右侧显示
@@ -44,7 +44,8 @@ export const defaultProps = {
     rowkey: "key",
     width: "100%",
     height: 400,
-
+    sortable: true,
+    treeDataChildrenName: "children"
 }
 
 export const defaultRowSelection: RowSelection = {
@@ -62,12 +63,12 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         onReady,
         columns: columnDefs,
         editable,
-        defaultColumnWidth,
         rowSelection: rowSel,
         size,
         rowkey,
         resizable,
         filter,
+        sortable,
         onEditableChange,
         width,
         height,
@@ -79,6 +80,8 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         isServerSideGroup,
         getServerSideGroupKey,
         onExpandedRowsChange,
+        components,
+        treeDataChildrenName,
         ...orignProps
     } = props
 
@@ -123,11 +126,6 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     // 分页事件
     const computedPagination = usePagination(pagination)
 
-    // 自适应宽度
-    const shouldFitCol = useCallback(
-        (api = apiRef.current) => {
-            if (typeof defaultColumnWidth === "undefined") api.sizeColumnsToFit()
-        }, [defaultColumnWidth])
 
     const getRowNodeId = useCallback(
         (data) => {
@@ -145,11 +143,11 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     // 判断数据分别处理 treeTable 和普通table
     const dataSource = useMemo(() => {
         if (!treeData) return nowDataSource;
-        if (!isServer) return flattenTreeData(nowDataSource, getRowNodeId);
+        if (!isServer) return flattenTreeData(nowDataSource, getRowNodeId, [], treeDataChildrenName);
         const fakeServer = createFakeServer(nowDataSource, getServerSideGroupKey ? getServerSideGroupKey : getRowNodeId);
         const serverDataSource = createServerSideDatasource(fakeServer)
         return serverDataSource
-    }, [nowDataSource, treeData, getRowNodeId, isServer, apiRef.current, getServerSideGroupKey, editDataSource, editable])
+    }, [nowDataSource, treeData, treeDataChildrenName, getRowNodeId, isServer, apiRef.current, getServerSideGroupKey, editDataSource, editable])
     useEffect(() => {
         if (nowDataSource.length > 0 && apiRef.current && isServer && treeData) apiRef.current.setServerSideDatasource(dataSource)
     }, [apiRef.current, dataSource, nowDataSource, isServer, treeData])
@@ -315,9 +313,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         columnsRef.current = params.columnApi
 
         onReady && onReady(params)
-        // 没有设置默认宽度将自动适配
-        // shouldFitCol(params.api)
-    }, [onReady, shouldFitCol])
+    }, [onReady])
     // 处理selection
     const gantSelection: RowSelection = useMemo(() => {
         if (rowSel === true) {
@@ -374,6 +370,12 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                 <div style={{ width, height }} className={classnames('gant-grid', `gant-grid-${getSizeClassName(size)}`)} >
                     <div className="ag-theme-balham" style={{ width: '100%', height: computedPagination ? 'calc(100% - 30px)' : '100%' }}>
                         <AgGridReact
+                            components={{
+                                "MedalCellRenderer": MedalCellRenderer
+                            }}
+                            frameworkComponents={{
+                                "gantRenderCol": RenderCol
+                            }}
                             onSelectionChanged={onSelectionChanged}
                             columnDefs={columns}
                             rowSelection={rowSelection}
@@ -383,7 +385,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                             enableFillHandle
                             defaultColDef={{
                                 resizable,
-                                sortable: true,
+                                sortable,
                                 filter,
                                 minWidth: 100,
                             }}

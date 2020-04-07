@@ -184,7 +184,7 @@ function ajax(updateData) {
     const httpRequest = new XMLHttpRequest();
     httpRequest.open(
         'GET',
-        'https://raw.githubusercontent.com/ag-grid/ag-grid/master/grid-packages/ag-grid-docs/src/javascript-grid-server-side-model-tree-data/tree-data/data/data.json'
+        'https://raw.githubusercontent.com/ag-grid/ag-grid/master/grid-packages/ag-grid-docs/src/javascript-grid-server-side-model-tree-data/purging-tree-data/data/data.json'
     );
     httpRequest.send();
     httpRequest.onreadystatechange = () => {
@@ -207,6 +207,7 @@ const AsyncTreeData = () => {
     },
     {
         fieldName: 'employeeName',
+        render: () => 111
     },
     { fieldName: 'startDate' },
     { fieldName: 'employmentType' },
@@ -223,6 +224,7 @@ const AsyncTreeData = () => {
         // isServerSideGroup={(data) => {
         //     return Array.isArray(data.children)
         // }}
+        treeDataChildrenName="underlings"
         rowSelection
         editable
         onRowGroupOpened={(data) => { console.log(data) }}
