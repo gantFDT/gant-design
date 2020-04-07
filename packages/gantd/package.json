@@ -1,6 +1,6 @@
 {
   "name": "gantd",
-  "version": "1.1.14",
+  "version": "1.1.15",
   "description": "GantD base on antD",
   "author": "Gant FDT",
   "license": "MIT",
@@ -122,7 +122,7 @@
     "classnames": "^2.2.6",
     "create-react-context": "^0.2.3",
     "data-cell-g": "^0.1.10",
-    "grid-g": "^0.0.5",
+    "grid-g": "^0.0.6",
     "header-g": "^0.1.7",
     "lodash": "^4.17.11",
     "modal-g": "^0.1.5",
