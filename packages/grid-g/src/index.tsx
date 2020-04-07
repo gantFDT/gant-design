@@ -8,9 +8,7 @@ import { LicenseManager } from "ag-grid-enterprise"
 import 'ag-grid-enterprise';
 import { Pagination, Spin } from 'antd'
 import { get, isEmpty, isEqual } from 'lodash'
-import GirdRenderColumn from './GirdRenderColumn'
 import key from './license'
-import Header from '@header';
 import {
     mapColumns, NonBool, isbool, isstring, isarray, ispromise, isfunc,
     flattenTreeData, usePagination, getSizeClassName, createFakeServer, createServerSideDatasource
@@ -79,8 +77,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         isServer,
         isServerSideGroup,
         getServerSideGroupKey,
-        onExpandedRowsChange,
-        components,
+        frameworkComponents,
         treeDataChildrenName,
         ...orignProps
     } = props
@@ -151,6 +148,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     useEffect(() => {
         if (nowDataSource.length > 0 && apiRef.current && isServer && treeData) apiRef.current.setServerSideDatasource(dataSource)
     }, [apiRef.current, dataSource, nowDataSource, isServer, treeData])
+    console.log("dataSource", dataSource)
     const gridPartProps = useMemo(() => {
         if (treeData && isServer) return {
             isServerSideGroup,
@@ -370,7 +368,8 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                     <div className="ag-theme-balham" style={{ width: '100%', height: computedPagination ? 'calc(100% - 30px)' : '100%' }}>
                         <AgGridReact
                             frameworkComponents={{
-                                "gantRenderCol": RenderCol
+                                "gantRenderCol": RenderCol,
+                                ...frameworkComponents
                             }}
                             onSelectionChanged={onSelectionChanged}
                             columnDefs={columns}
@@ -385,7 +384,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                                 filter,
                                 minWidth: 100,
                             }}
-                            rowMultiSelectWithClick
+                            // rowMultiSelectWithClick
                             headerHeight={24}
                             floatingFiltersHeight={20}
                             getDataPath={getDataPath}
@@ -394,6 +393,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                             {...gridPartProps}
                             {...selection}
                             {...orignProps}
+                            stopEditingWhenGridLosesFocus
                             suppressRowDrag
                             /**单元格数据变化 */
                             onCellValueChanged={cellValueChanged}

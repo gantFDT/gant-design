@@ -12,11 +12,12 @@ class Search extends React.Component<GantSearchProps> {
   static defaultProps = {
     style: {}
   }
+
   render() {
     const { onChange, style, ...mapProps } = this.props;
     const _props: any = mapProps;
-    const { onEnter, ...props } = _props;
-    return (<Input.Search onKeyDown={onEnter} {...props} onChange={e => onChange(e.target.value)} />
+    const { onEnter, wrapperRef, ...props } = _props;
+    return (<Input.Search ref={wrapperRef} onKeyDown={onEnter} {...props} onChange={e => onChange(e.target.value)} />
     )
   }
 

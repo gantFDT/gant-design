@@ -17,9 +17,10 @@ class Password extends React.Component<GantPasswordProps> {
   render() {
     const { onChange, ...mapProps } = this.props;
     const _props: any = mapProps;
-    const { onEnter, ...props } = _props
+    const { onEnter, wrapperRef, ...props } = _props
     return (<Input.Password
       onKeyDown={onEnter}
+      ref={wrapperRef}
       {...props} onChange={e => onChange(e.target.value)} />
     )
   }

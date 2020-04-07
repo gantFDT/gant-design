@@ -34,7 +34,8 @@ export default class DataEditCell extends Component<DataCellProps> {
 			allowEdit,
 			setEdit,
 			...props
-		} = this.props
+		} = this.props;
+		console.log("props", props)
 		const child = typeof children == 'function' ? children : (props: any) => children;
 		return <>
 			{
