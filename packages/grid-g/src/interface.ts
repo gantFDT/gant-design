@@ -170,7 +170,6 @@ export interface Props<T extends Record> {
     className: string,
     isServer: boolean,
     isServerSideGroup: (data: any) => boolean,
-    onExpandedRowsChange: (data: any) => void,
     treeDataChildrenName: string,
 }
 

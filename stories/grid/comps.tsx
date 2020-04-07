@@ -52,7 +52,7 @@ const TreeGrid = () => {
             //     return text + "----"
             // },
             editConfig: {
-                component: Input,
+                component: InputCellPhone,
                 // changeFormatter: (e: any) => e.target.value,
                 editable: true
             },
@@ -204,7 +204,7 @@ const AsyncTreeData = () => {
         enableRowGroup: true,
         cellRenderer: "agGroupCellRenderer",
         editConfig: {
-            component: Input,
+            component: InputCellPhone,
             // changeFormatter: (e: any) => e.target.value,
             editable: true
         },

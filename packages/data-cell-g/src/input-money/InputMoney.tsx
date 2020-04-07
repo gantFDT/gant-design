@@ -105,13 +105,13 @@ class InputMoney extends Component<any>{
   }
 
   render() {
-    const { setType, onEnter, onValueChange, precision, format, reg, addonBefore, ...props } = this.props
+    const { setType, onEnter, wrapperRef, onValueChange, precision, format, reg, addonBefore, ...props } = this.props
     const { value } = this.state
 
     return (
       <span className='gant-input-moeny'>
         {addonBefore}
-        <InputNumber {...props} wrapperClassName={'gant-input-moeny-number'} isInner value={props.money || value} min={0} edit={EditStatus.EDIT} onPressEnter={onEnter} onChange={this.onChange} />
+        <InputNumber  {...props} ref={wrapperRef} wrapperClassName={'gant-input-moeny-number'} isInner value={props.money || value} min={0} edit={EditStatus.EDIT} onPressEnter={onEnter} onChange={this.onChange} />
       </span>
     );
   }

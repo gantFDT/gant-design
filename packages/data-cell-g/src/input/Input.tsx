@@ -9,6 +9,7 @@ import { WithBasicProps } from '../compose/withbasic';
 export interface GantInputProps extends InputProps, WithBasicProps {
   strict?: boolean,
   onChange?: (value: any) => void,
+  wrapperRef?: any
 }
 class Input extends React.Component<GantInputProps> {
   static TextArea: typeof TextArea;
@@ -23,15 +24,21 @@ class Input extends React.Component<GantInputProps> {
     onChange && onChange(value)
   }
   render() {
-    const { strict, ...props } = this.props;
+    const { strict, wrapperRef, ...props } = this.props;
+    // console.log("props input ", props)
+
     return (
       <DataEditCell  {...props}    >
         {
-          ({ onEnter, onChange, ...childProps }) => <AntInput
-            {...childProps}
-            onChange={(e: any) => this.onChange(e)}
-            onKeyDown={onEnter}
-          />
+          ({ onEnter, onChange, wrapperRef: ref, ...childProps }) => {
+            return <AntInput
+              {...childProps}
+              autoFocus={true}
+              ref={wrapperRef}
+              onChange={(e: any) => this.onChange(e)}
+              onKeyDown={onEnter}
+            />
+          }
         }
       </DataEditCell>
 

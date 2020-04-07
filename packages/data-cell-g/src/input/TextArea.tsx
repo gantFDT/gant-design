@@ -16,9 +16,9 @@ class TextArea extends React.Component<GantTextAreaProps> {
   render() {
     const { onChange, ...mapProps } = this.props;
     const _props: any = mapProps;
-    const { onEnter, ...props } = _props;
+    const { onEnter, wrapperRef, ...props } = _props;
     return (
-      <Input.TextArea {...props} onChange={e => onChange(e.target.value)} onKeyDown={onEnter} />
+      <Input.TextArea {...props} ref={wrapperRef} onChange={e => onChange(e.target.value)} onKeyDown={onEnter} />
     )
   }
 

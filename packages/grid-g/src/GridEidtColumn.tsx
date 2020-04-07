@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle, useState, useCallback, useMemo } from 'react'
+import React, { forwardRef, useImperativeHandle, useState, useRef, useCallback, useMemo, useEffect } from 'react'
 import classnames from 'classnames';
 import { EditStatus } from '@data-cell'
 import { trackEditValueChange, } from './utils'
@@ -10,6 +10,7 @@ const defalutProps = {
 export default (WrapperComponent) => forwardRef(function GridEidtColumn(props: any, ref: any) {
 	const { value, stopEditing, api, data, colDef: { field }, size = Size.small, props: fieldProps, changeFormatter, rowkey, rowIndex } = props;
 	const [cacheValue, setCacheValue] = useState(value);
+	const inputRef: any = useRef()
 	const onChange = useCallback((val) => {
 		let chageVal = val
 		if (typeof changeFormatter === 'function') chageVal = changeFormatter(val)
@@ -33,9 +34,14 @@ export default (WrapperComponent) => forwardRef(function GridEidtColumn(props: a
 			}
 		};
 	}, [cacheValue, data, value, field, cacheValue, rowId]);
+	useEffect(() => {
+		setTimeout(() => {
+			inputRef.current && inputRef.current.focus()
+		}, 10);
+	}, []);
 	return (
 		<div className={classnames('gant-grid-cell-editing')}>
-			<WrapperComponent  {...fieldProps} value={cacheValue} {...defalutProps} onChange={onChange} size={size} onBlur={onBlur} />
+			<WrapperComponent wrapperRef={inputRef} {...fieldProps} value={cacheValue} {...defalutProps} onChange={onChange} size={size} onBlur={onBlur} />
 		</div>
 	)
 })

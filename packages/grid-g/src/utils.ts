@@ -21,17 +21,14 @@ function ColEditableFn(fn: ColumnEdiatble<any>): IsColumnFunc | boolean {
 
 export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Size, getRowNodeId: any, defaultSelection: boolean, defaultSelectionCol: ColDef, rowSelection): Col[] => {
     function getColumnDefs(columns: Columns<T>[]) {
-        return columns.map(({ title: headerName, fieldName: field, children, render, editConfig, cellRenderer = undefined, fixed, ...item }, index) => {
+        return columns.map(({ title: headerName, fieldName: field, children, render, editConfig, cellRenderer, fixed, ...item }, index) => {
             const ColEditable = typeof editConfig !== 'undefined';
-            // const cellRender = cellRenderer ? { cellRenderer } : { cellRendererFramework: "gantRenderCol" }
-            // console.log("cellRender", cellRender)
             const colDef = {
                 headerName,
                 field,
                 cellRendererParams: {
                     render
                 },
-
                 cellClass: (params: any) => {
                     const { colDef: { field }, value } = params
                     const data = get(params, 'data', {});
@@ -43,7 +40,6 @@ export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Si
                     return get(params, 'data._rowType') ? `gant-grid-cell gant-grid-cell-${params.data._rowType}` : ""
                 },
                 cellRenderer: cellRenderer ? cellRenderer : "gantRenderCol",
-                // cellRenderer,
                 ...item,
 
             } as ColDef
