@@ -4,7 +4,8 @@ import { Icon, EditStatus } from '@data-cell'
 import { trackRenderValueChange } from './utils'
 export default memo(function GirdRenderColumn(props: any) {
 
-	const { value, rowIndex, render, data, api, colDef: { field }, size = Size.small, rowkey } = props;
+	const { value, rowIndex, render, data: pData, api, colDef: { field }, size = Size.small, rowkey } = props;
+	const data = useMemo(() => (pData || {}), [pData])
 	const rowId = useMemo(() => {
 		if (!rowkey) return rowIndex;
 		return rowkey(data)
@@ -19,7 +20,7 @@ export default memo(function GirdRenderColumn(props: any) {
 	}, [rowId, value, data, field])
 	return (
 		<>
-			<span className={`gant-grid-cell-content gant-grid-cell-content-${size}`} > {typeof render == 'function' ? render(value, record, rowIndex) : value}</span >
+			< span className={`gant-grid-cell-content gant-grid-cell-content-${size}`} > {typeof render == 'function' ? render(value, record, rowIndex) : value}</span >
 		</>
 	)
 })

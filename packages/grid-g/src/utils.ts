@@ -19,12 +19,12 @@ function ColEditableFn(fn: ColumnEdiatble<any>): IsColumnFunc | boolean {
     return ({ data }) => fn(data)
 }
 
-export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Size, getRowNodeId: any, defaultSelection: boolean): Col[] => {
+export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Size, getRowNodeId: any, defaultSelection: boolean, defaultSelectionCol: ColDef): Col[] => {
     function getColumnDefs(columns: Columns<T>[]) {
-        return columns.map(({ title: headerName, fieldName: field, children, render, editConfig, fixed, ...item }, index) => {
+        return columns.map(({ title: headerName, fieldName: field, children, render, editConfig, fixed, cellRenderer, ...item }, index) => {
             const ColEditable = typeof editConfig !== 'undefined'
             const colDef = {
-                ...item,
+
                 headerName,
                 field,
                 cellRendererParams: {
@@ -32,10 +32,11 @@ export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Si
                     render,
                     rowkey: getRowNodeId
                 },
-                cellRendererFramework: RenderCol,
+                [cellRenderer ? "cellRenderer" : "cellRendererFramework"]: cellRenderer ? cellRenderer : RenderCol,
                 cellClass: (params: any) => {
                     return get(params, 'data._rowType') ? `gant-grid-cell gant-grid-cell-${params.data._rowType}` : ""
-                }
+                },
+                ...item,
             } as Col
 
             if (!itemisgroup(colDef, children)) {
@@ -60,7 +61,7 @@ export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Si
             return colDef
         })
     }
-    const defalutSelectionCol: ColDef = {
+    const defaultCheckboxColSelectionCol: ColDef = {
         width: 24,
         checkboxSelection: true,
         resizable: false,
@@ -77,9 +78,9 @@ export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Si
             padding: "0px 3px"
         },
         headerClass: "gant-padding-h-3",
-
+        ...defaultSelectionCol
     }
-    return defaultSelection ? [defalutSelectionCol, ...getColumnDefs(columns)] : getColumnDefs(columns)
+    return defaultSelection ? [defaultCheckboxColSelectionCol, ...getColumnDefs(columns)] : getColumnDefs(columns)
 }
 
 
@@ -211,4 +212,37 @@ export function getSizeClassName(size: Size) {
         default:
             return ""
     }
+}
+
+export function createFakeServer(fakeServerData, getRowNodeId) {
+    function FakeServer(allData) {
+        this.data = allData;
+    }
+    FakeServer.prototype.getData = function (request) {
+        function extractRowsFromData(groupKeys, data) {
+            if (groupKeys.length === 0) return data;
+            var key = groupKeys[0];
+            for (var i = 0; i < data.length; i++) {
+                if (getRowNodeId(data[i]) === key) {
+                    const children = data[i].children ? data[i].children.slice() : []
+                    return extractRowsFromData(
+                        groupKeys.slice(1),
+                        children
+                    );
+                }
+            }
+        }
+        return extractRowsFromData(request.groupKeys, this.data);
+    };
+    return new FakeServer(fakeServerData);
+}
+export function createServerSideDatasource(fakeServer) {
+    function ServerSideDatasource(fakeServer) {
+        this.fakeServer = fakeServer;
+    }
+    ServerSideDatasource.prototype.getRows = function (params) {
+        var rows = this.fakeServer.getData(params.request);
+        params.successCallback(rows, rows.length);
+    };
+    return new ServerSideDatasource(fakeServer);
 }
