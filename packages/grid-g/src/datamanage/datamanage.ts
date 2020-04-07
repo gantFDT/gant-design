@@ -28,6 +28,7 @@ class DataManage<T extends Record = any> extends EventEmitter {
     private _modify: any[] = []
 
     static getRowNodeId: (d: any) => string
+    static treeDataChildrenName: string = 'children'
 
 
     constructor(public gridApi: React.MutableRefObject<GridApi>, public columnApi: React.MutableRefObject<ColumnApi>) {
@@ -159,7 +160,7 @@ class DataManage<T extends Record = any> extends EventEmitter {
                 if (keyPath.length === 1) {
                     return state.delete(startIndex)
                 } else if (keyPath.length >= 2) {
-                    return state.update(startIndex, ({ ...item }) => removeDeepItem<T>(resetPath, item))
+                    return state.update(startIndex, ({ ...item }) => removeDeepItem<T>(DataManage.treeDataChildrenName, resetPath, item))
                 }
                 return state
                 // return state.deleteIn(keyPath)
@@ -181,11 +182,11 @@ class DataManage<T extends Record = any> extends EventEmitter {
             keyPath.push(node.childIndex)
             node = node.parent
         }
-        const [startIndex, ...resetPath] = keyPath
+        const [startIndex, ...resetPath] = keyPath.reverse()
         if (keyPath.length === 1) {
             newState = newState.set(startIndex, data)
         } else if (keyPath.length >= 2) {
-            newState = newState.update(startIndex, ({ ...item }) => removeDeepItem<T>(resetPath, item, data))
+            newState = newState.update(startIndex, ({ ...item }) => removeDeepItem<T>(DataManage.treeDataChildrenName, resetPath, item, data))
         }
         this.history.push(newState)
     }
