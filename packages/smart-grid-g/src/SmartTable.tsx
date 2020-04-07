@@ -24,8 +24,6 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
     bindKeys,
     headerRight,
     onReload,
-    // 选择
-    rowSelection,
     dataSource,
     bodyWidth,
     withoutAnimation = false,
@@ -180,9 +178,8 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
     [viewList],
   );
 
-  const [fakeRowSelection, finalColumns] = useTableConfig({
+  const [finalColumns] = useTableConfig({
     tableConfig: panelConfig,
-    rowSelection,
     columns,
 
     tableKey,
@@ -254,16 +251,11 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
         withKeyevent(
           bindKeys, true
         )(
-          <Receiver>
-            {
-              (locale) => <Grid
-                dataSource={dataSource}
-                columns={finalColumns}
-                rowSelection={fakeRowSelection}
-                {...restProps}
-              />
-            }
-          </Receiver>
+          <Grid
+            dataSource={dataSource}
+            columns={finalColumns}
+            {...restProps}
+          />
         )
       }
       <ConfigModal

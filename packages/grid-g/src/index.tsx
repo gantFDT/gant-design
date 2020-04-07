@@ -225,7 +225,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
             isChanged,
             canRedo,
             canUndo,
-            deletable: selectedKeys.length > 0,
+            deletable: selectedKeys && selectedKeys.length > 0,
             undo() {
                 dataManage.undo()
             },
