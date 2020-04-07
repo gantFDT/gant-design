@@ -15,16 +15,15 @@ function itemisgroup(item, children): item is ColGroupDef {
 }
 
 function ColEditableFn(fn: ColumnEdiatble<any>): IsColumnFunc | boolean {
-    if (isbool(fn)) return fn
-    return ({ data }) => fn(data)
+    if (typeof fn === 'function') return ({ data }) => fn(data)
+    return true
 }
 
 export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Size, getRowNodeId: any, defaultSelection: boolean, defaultSelectionCol: ColDef, rowSelection): Col[] => {
     function getColumnDefs(columns: Columns<T>[]) {
-        return columns.map(({ title: headerName, fieldName: field, children, render, editConfig, fixed, cellRenderer, ...item }, index) => {
+        return columns.map(({ title: headerName, fieldName: field, children, render, editConfig, fixed, cellRenderer = "cellRendererFramework", ...item }, index) => {
             const ColEditable = typeof editConfig !== 'undefined'
             const colDef = {
-
                 headerName,
                 field,
                 cellRendererParams: {
@@ -68,7 +67,7 @@ export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Si
         sortable: false,
         pinned: true,
         field: "defalutSelection",
-        headerCheckboxSelectionFilteredOnly: false,
+        headerCheckboxSelectionFilteredOnly: rowSelection === "multiple",
         minWidth: 24,
         headerName: "",
         suppressMenu: true,

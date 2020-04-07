@@ -102,6 +102,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         },
         [],
     )
+
     const dataManage = useMemo(() => {
         const manager = new DataManage<T>(apiRef, columnsRef)
         manager.removeAllListeners()
@@ -127,6 +128,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         (api = apiRef.current) => {
             if (typeof defaultColumnWidth === "undefined") api.sizeColumnsToFit()
         }, [defaultColumnWidth])
+
     const getRowNodeId = useCallback(
         (data) => {
             if (typeof rowkey === 'string') {
@@ -147,7 +149,6 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         const fakeServer = createFakeServer(nowDataSource, getServerSideGroupKey ? getServerSideGroupKey : getRowNodeId);
         const serverDataSource = createServerSideDatasource(fakeServer)
         return serverDataSource
-
     }, [nowDataSource, treeData, getRowNodeId, isServer, apiRef.current, getServerSideGroupKey, editDataSource, editable])
     useEffect(() => {
         if (nowDataSource.length > 0 && apiRef.current && isServer && treeData) apiRef.current.setServerSideDatasource(dataSource)
@@ -319,7 +320,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     }, [onReady, shouldFitCol])
     // 处理selection
     const gantSelection: RowSelection = useMemo(() => {
-        if (typeof rowSel === "boolean" && rowSel === true) {
+        if (rowSel === true) {
             return defaultRowSelection
         }
         if (rowSel) return { ...defaultRowSelection, ...rowSel }
@@ -347,7 +348,9 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     // 处理selection-end
     //columns
     const defaultSelection = !isEmpty(gantSelection) && showDefalutCheckbox && !(treeData && isServer);
-    const columns = useMemo<ColDef[] | ColGroupDef[]>(() => mapColumns<T>(columnDefs, editable, size, getRowNodeId, defaultSelection, defaultSelectionCol, rowSelection), [columnDefs, editable, rowSelection, size, getRowNodeId, defaultSelectionCol, defaultSelection, rowSelection])
+    const columns = useMemo<ColDef[] | ColGroupDef[]>(() => {
+        return mapColumns<T>(columnDefs, editable, size, getRowNodeId, defaultSelection, defaultSelectionCol, rowSelection)
+    }, [columnDefs, editable, rowSelection, size, getRowNodeId, defaultSelectionCol, defaultSelection, rowSelection])
     //columns-end
     useEffect(() => {
         if (isfunc(onEdit) && editable) {
