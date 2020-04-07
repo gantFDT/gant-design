@@ -8,7 +8,7 @@ import { LicenseManager } from "ag-grid-enterprise"
 import 'ag-grid-enterprise';
 import { Pagination, Spin } from 'antd'
 import { get, isEmpty, isEqual } from 'lodash'
-
+import GirdRenderColumn from './GirdRenderColumn'
 import key from './license'
 import Header from '@header';
 import {
@@ -18,7 +18,7 @@ import {
 import { Filter, Size, Fixed, GridPropsPartial, Api, API, RowSelection, Record } from './interface'
 import "./style"
 import DataManage from './datamanage'
-
+import RenderCol from './GirdRenderColumn'
 export * from './interface'
 
 // 设置licenseKey才会在列头右侧显示
@@ -44,7 +44,8 @@ export const defaultProps = {
     rowkey: "key",
     width: "100%",
     height: 400,
-
+    sortable: true,
+    treeDataChildrenName: "children"
 }
 
 export const defaultRowSelection: RowSelection = {
@@ -63,12 +64,12 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         onReady,
         columns: columnDefs,
         editable,
-        defaultColumnWidth,
         rowSelection: rowSel,
         size,
         rowkey,
         resizable,
         filter,
+        sortable,
         onEditableChange,
         width,
         height,
@@ -80,6 +81,8 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         isServerSideGroup,
         getServerSideGroupKey,
         onExpandedRowsChange,
+        components,
+        treeDataChildrenName,
         ...orignProps
     } = props
 
@@ -135,11 +138,6 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     // 分页事件
     const computedPagination = usePagination(pagination)
 
-    // 自适应宽度
-    const shouldFitCol = useCallback(
-        (api = apiRef.current) => {
-            if (typeof defaultColumnWidth === "undefined") api.sizeColumnsToFit()
-        }, [defaultColumnWidth])
 
     const getRowNodeId = useCallback(
         (data) => {
@@ -157,12 +155,11 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     // 判断数据分别处理 treeTable 和普通table
     const dataSource = useMemo(() => {
         if (!treeData) return nowDataSource;
-        if (!isServer) return flattenTreeData(nowDataSource, getRowNodeId);
+        if (!isServer) return flattenTreeData(nowDataSource, getRowNodeId, [], treeDataChildrenName);
         const fakeServer = createFakeServer(nowDataSource, getServerSideGroupKey ? getServerSideGroupKey : getRowNodeId);
         const serverDataSource = createServerSideDatasource(fakeServer)
         return serverDataSource
-
-    }, [nowDataSource, treeData, getRowNodeId, isServer, apiRef.current, getServerSideGroupKey, editDataSource, editable])
+    }, [nowDataSource, treeData, treeDataChildrenName, getRowNodeId, isServer, apiRef.current, getServerSideGroupKey, editDataSource, editable])
     useEffect(() => {
         if (nowDataSource.length > 0 && apiRef.current && isServer && treeData) apiRef.current.setServerSideDatasource(dataSource)
     }, [apiRef.current, dataSource, nowDataSource, isServer, treeData])
@@ -270,9 +267,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         columnsRef.current = params.columnApi
 
         onReady && onReady(params)
-        // 没有设置默认宽度将自动适配
-        // shouldFitCol(params.api)
-    }, [onReady, shouldFitCol])
+    }, [onReady])
 
     const onSelectionChanged = useCallback((event: SelectionChangedEvent) => {
         const rows = event.api.getSelectedRows();
@@ -295,7 +290,9 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     // 处理selection-end
     //columns
     const defaultSelection = !isEmpty(gantSelection) && showDefalutCheckbox && !(treeData && isServer);
-    const columns = useMemo<ColDef[] | ColGroupDef[]>(() => mapColumns<T>(columnDefs, editable, size, getRowNodeId, defaultSelection, defaultSelectionCol), [columnDefs, editable, rowSelection, size, getRowNodeId, defaultSelectionCol, defaultSelection])
+    const columns = useMemo<ColDef[] | ColGroupDef[]>(() => {
+        return mapColumns<T>(columnDefs, editable, size, getRowNodeId, defaultSelection, defaultSelectionCol, rowSelection)
+    }, [columnDefs, editable, rowSelection, size, getRowNodeId, defaultSelectionCol, defaultSelection, rowSelection])
     //columns-end
     useEffect(() => {
         if (isfunc(onEdit) && editable) {
@@ -312,13 +309,15 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         },
         [],
     )
-
     return (
         <>
             <Spin spinning={loading}>
                 <div style={{ width, height }} className={classnames('gant-grid', `gant-grid-${getSizeClassName(size)}`)} >
                     <div className="ag-theme-balham" style={{ width: '100%', height: computedPagination ? 'calc(100% - 30px)' : '100%' }}>
                         <AgGridReact
+                            frameworkComponents={{
+                                "gantRenderCol": RenderCol
+                            }}
                             onSelectionChanged={onSelectionChanged}
                             columnDefs={columns}
                             rowSelection={rowSelection}
@@ -328,7 +327,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                             enableFillHandle
                             defaultColDef={{
                                 resizable,
-                                sortable: true,
+                                sortable,
                                 filter,
                                 minWidth: 100,
                             }}
@@ -337,6 +336,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                             floatingFiltersHeight={20}
                             getDataPath={getDataPath}
                             rowHeight={size == "small" ? 24 : 32}
+                            singleClickEdit
                             {...gridPartProps}
                             {...selection}
                             {...orignProps}

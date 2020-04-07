@@ -50,9 +50,9 @@ const TreeGrid = () => {
             title: '姓名',
             fieldName: "name",
             // checkboxSelection: true,
-            render: (text, rowIndex) => {
-                return text + "----"
-            },
+            // render: (text, rowIndex) => {
+            //     return text + "----"
+            // },
             editConfig: {
                 component: Input,
                 // changeFormatter: (e: any) => e.target.value,
@@ -190,7 +190,7 @@ function ajax(updateData) {
     const httpRequest = new XMLHttpRequest();
     httpRequest.open(
         'GET',
-        'https://raw.githubusercontent.com/ag-grid/ag-grid/master/grid-packages/ag-grid-docs/src/javascript-grid-server-side-model-tree-data/tree-data/data/data.json'
+        'https://raw.githubusercontent.com/ag-grid/ag-grid/master/grid-packages/ag-grid-docs/src/javascript-grid-server-side-model-tree-data/purging-tree-data/data/data.json'
     );
     httpRequest.send();
     httpRequest.onreadystatechange = () => {
@@ -205,12 +205,19 @@ const AsyncTreeData = () => {
         fieldName: 'employeeId',
         enableRowGroup: true,
         cellRenderer: "agGroupCellRenderer",
+        editConfig: {
+            component: Input,
+            // changeFormatter: (e: any) => e.target.value,
+            editable: true
+        },
     },
     {
         fieldName: 'employeeName',
+        // render: () => 111
     },
-    { fieldName: 'jobTitle' },
-    { fieldName: 'employmentType' }]
+    { fieldName: 'startDate' },
+    { fieldName: 'employmentType' },
+    ]
     useEffect(() => {
         ajax(setDataSource)
     }, [])
@@ -219,11 +226,13 @@ const AsyncTreeData = () => {
         columns={columns}
         dataSource={dataSource}
         treeData
-        isServer
-        isServerSideGroup={(data) => {
-            return Array.isArray(data.children)
-        }}
+        // isServer
+        // isServerSideGroup={(data) => {
+        //     return Array.isArray(data.children)
+        // }}
+        treeDataChildrenName="underlings"
         rowSelection
+        editable
         onRowGroupOpened={(data) => { console.log(data) }}
         groupSuppressAutoColumn
     />
@@ -233,16 +242,16 @@ const config = {
     codes: [],
     useage: '',
     children: [
-        {
-            title: "tree",
-            describe: "树形结构",
-            cmp: TreeGrid
-        },
         // {
-        //     title: "async tree",
-        //     describe: "异步树形",
-        //     cmp: AsyncTreeData
-        // }
+        //     title: "tree",
+        //     describe: "树形结构",
+        //     cmp: TreeGrid
+        // },
+        {
+            title: "async tree",
+            describe: "异步树形",
+            cmp: AsyncTreeData
+        }
     ]
 }
 

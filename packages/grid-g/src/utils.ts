@@ -15,29 +15,38 @@ function itemisgroup(item, children): item is ColGroupDef {
 }
 
 function ColEditableFn(fn: ColumnEdiatble<any>): IsColumnFunc | boolean {
-    if (isbool(fn)) return fn
-    return ({ data }) => fn(data)
+    if (typeof fn === 'function') return ({ data }) => fn(data)
+    return fn
 }
 
-export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Size, getRowNodeId: any, defaultSelection: boolean, defaultSelectionCol: ColDef): Col[] => {
+export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Size, getRowNodeId: any, defaultSelection: boolean, defaultSelectionCol: ColDef, rowSelection): Col[] => {
     function getColumnDefs(columns: Columns<T>[]) {
-        return columns.map(({ title: headerName, fieldName: field, children, render, editConfig, fixed, cellRenderer, ...item }, index) => {
-            const ColEditable = typeof editConfig !== 'undefined'
+        return columns.map(({ title: headerName, fieldName: field, children, render, editConfig, cellRenderer = undefined, fixed, ...item }, index) => {
+            const ColEditable = typeof editConfig !== 'undefined';
+            // const cellRender = cellRenderer ? { cellRenderer } : { cellRendererFramework: "gantRenderCol" }
+            // console.log("cellRender", cellRender)
             const colDef = {
-
                 headerName,
                 field,
                 cellRendererParams: {
-                    size,
-                    render,
-                    rowkey: getRowNodeId
+                    render
                 },
-                [cellRenderer ? "cellRenderer" : "cellRendererFramework"]: cellRenderer ? cellRenderer : RenderCol,
+
                 cellClass: (params: any) => {
+                    const { colDef: { field }, value } = params
+                    const data = get(params, 'data', {});
+                    const { _rowType, _rowData = {} } = data;
+                    if (_rowType === DataActions.modify) {
+                        if (get(_rowData, `${field}`) !== value) return "gant-grid-cell gant-grid-cell-modify"
+                        return ""
+                    }
                     return get(params, 'data._rowType') ? `gant-grid-cell gant-grid-cell-${params.data._rowType}` : ""
                 },
+                cellRenderer: cellRenderer ? cellRenderer : "gantRenderCol",
+                // cellRenderer,
                 ...item,
-            } as Col
+
+            } as ColDef
 
             if (!itemisgroup(colDef, children)) {
                 // 当前列允许编辑
@@ -68,7 +77,7 @@ export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Si
         sortable: false,
         pinned: true,
         field: "defalutSelection",
-        headerCheckboxSelection: true,
+        headerCheckboxSelection: rowSelection === "multiple",
         minWidth: 24,
         headerName: "",
         suppressMenu: true,
@@ -142,14 +151,14 @@ export function trackRenderValueChange(data: any, field: string, value: any) {
     return newData
 }
 
-export function flattenTreeData(dataSoruce: any[], getRowNodeId, pathArray: string[] = []): any[] {
+export function flattenTreeData(dataSoruce: any[], getRowNodeId, pathArray: string[] = [], treeDataChildrenName = "children"): any[] {
     let treeData: any[] = []
     dataSoruce.map((item: any) => {
-        const { children, ...itemData } = item;
+        const { [treeDataChildrenName]: children, ...itemData } = item;
         const treeDataPath = [...pathArray, getRowNodeId(itemData)]
         if (children && children.length) {
             treeData.push({ ...itemData, treeDataPath, parent: true })
-            const childrenTreeData = flattenTreeData(children, getRowNodeId, treeDataPath);
+            const childrenTreeData = flattenTreeData(children, getRowNodeId, treeDataPath, treeDataChildrenName);
             Array.prototype.push.apply(treeData, childrenTreeData);
         } else {
             treeData.push({ ...itemData, treeDataPath })
