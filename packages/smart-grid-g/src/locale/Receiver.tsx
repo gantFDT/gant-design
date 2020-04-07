@@ -1,7 +1,7 @@
 import React from 'react';
 import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
-import en from './en-US';
-import zh from './zh-CN';
+import en from '../locale/en-US';
+import zh from '../locale/zh-CN';
 
 export interface LocaleInterface {
     [key: string]: any;

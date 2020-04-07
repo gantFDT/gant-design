@@ -17,7 +17,6 @@ interface RecordProps {
   lock?: boolean;
   clickable?: boolean;
   fixed?: 'left' | 'right';
-  align?: 'left' | 'right' | 'center';
 }
 
 interface SortableProps {
@@ -100,14 +99,6 @@ function Sortable(props: SortableProps) {
     [dataSource],
   );
 
-  const handlerChangeAlign = useCallback(
-    (index, event) => {
-      dataSource[index].align = event.target.value;
-      onChange(dataSource);
-    },
-    [dataSource],
-  );
-
   const handlerFieldVisible = useCallback(
     (index, event) => {
       dataSource[index].checked = event.target.checked;
@@ -119,7 +110,7 @@ function Sortable(props: SortableProps) {
   const DragHandler = SortableHandle(() => <Icon className="dragHandler" type="icon-drag" />);
 
   const SortableItem = SortableElement(
-    ({ record: { title, checked, align }, realIndex, lock }: any) => (
+    ({ record: { title, checked }, realIndex, lock }: any) => (
       <Row type="flex" align="middle" justify="space-between" className="tableRow gant-table-config-row">
         <div style={{ flexGrow: 0 }}>
           <Checkbox checked={checked} onChange={handlerFieldVisible.bind(null, realIndex)} />
@@ -133,23 +124,6 @@ function Sortable(props: SortableProps) {
           }}
         >
           <span style={{ flex: 1 }}>{title}</span>
-          <Radio.Group
-            style={{ flex: 1 }}
-            value={align}
-            onChange={handlerChangeAlign.bind(null, realIndex)}
-            size="small"
-            buttonStyle="solid"
-          >
-            <Radio.Button value="left">
-              <AntdIcon type="align-left" />
-            </Radio.Button>
-            <Radio.Button value="center">
-              <AntdIcon type="align-center" />
-            </Radio.Button>
-            <Radio.Button value="right">
-              <AntdIcon type="align-right" />
-            </Radio.Button>
-          </Radio.Group>
         </div>
         <Receiver>{
           (locale) => <div style={{ flexGrow: 0, display: 'flex', width: 56, flexDirection: 'row-reverse' }}>
@@ -234,7 +208,6 @@ function Sortable(props: SortableProps) {
           <div style={{ flexGrow: 1 }}>
             {locale.checkAll}（{`${selectedRows.length}/${dataSource.length}`}）
         </div>
-          <div style={{ flexGrow: 1 }}>{locale.align}</div>
           <div style={{ flexGrow: 0, width: 56 }}></div>
         </Row>
         <div>

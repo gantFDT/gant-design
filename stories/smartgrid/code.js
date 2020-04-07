@@ -2,7 +2,7 @@ export default [
 `
 import React, { useState, useCallback } from 'react'
 import { Divider, Tag, Radio, Button, message, ConfigProvider, Rate } from 'antd'
-import { SmartTable, EditStatus, SwitchStatus } from 'gantd'
+import { SmartGrid, EditStatus, SwitchStatus } from 'gantd'
 const { Random } = Mock
 
 
@@ -62,7 +62,7 @@ var tableColumns = [
 function BasicUse() {
   return (
     <div style={{ margin: 10 }}>
-      <SmartTable
+      <SmartGrid
         tableKey="BasicUse"
         schema={tableColumns}
         dataSource={dataSource}
@@ -75,7 +75,7 @@ function BasicUse() {
 ReactDOM.render(<BasicUse />, mountNode)`,`
 import React, { useState, useCallback } from 'react'
 import { Divider, Tag, Radio, Button, message, ConfigProvider, Rate } from 'antd'
-import { SmartTable, EditStatus, SwitchStatus } from 'gantd'
+import { SmartGrid, EditStatus, SwitchStatus } from 'gantd'
 const { Random } = Mock
 
 
@@ -165,7 +165,7 @@ function ConfigColumnsUse() {
   }
   return (
     <div style={{ margin: 10 }}>
-      <SmartTable
+      <SmartGrid
         tableKey="ConfigViewUse"
         schema={tableSchema}
         dataSource={dataSource}
@@ -177,7 +177,7 @@ function ConfigColumnsUse() {
 ReactDOM.render(<ConfigColumnsUse />, mountNode)`,`
 import React, { useState, useCallback } from 'react'
 import { Divider, Tag, Radio, Button, message, ConfigProvider, Rate } from 'antd'
-import { SmartTable, EditStatus, SwitchStatus } from 'gantd'
+import { SmartGrid, EditStatus, SwitchStatus } from 'gantd'
 const { Random } = Mock
 
 
@@ -259,7 +259,7 @@ function ConfigDisplayUse() {
   const [pageSize, setPageSize] = useState(5)
   return (
     <div style={{ margin: 10 }}>
-      <SmartTable
+      <SmartGrid
         tableKey="ConfigDisplayUse"
         schema={tableSchema}
         dataSource={dataSource}
@@ -284,7 +284,7 @@ function ConfigDisplayUse() {
 ReactDOM.render(<ConfigDisplayUse />, mountNode)`,`
 import React, { useState, useCallback } from 'react'
 import { Divider, Tag, Radio, Button, message, ConfigProvider, Rate } from 'antd'
-import { SmartTable, EditStatus, SwitchStatus } from 'gantd'
+import { SmartGrid, EditStatus, SwitchStatus } from 'gantd'
 const { Random } = Mock
 
 
@@ -397,7 +397,7 @@ function MultiViewUse() {
   }
   return (
     <div style={{ margin: 10 }}>
-      <SmartTable
+      <SmartGrid
         tableKey="MultiViewUse"
         schema={tableSchema}
         dataSource={dataSource}
@@ -409,7 +409,7 @@ function MultiViewUse() {
 ReactDOM.render(<MultiViewUse />, mountNode)`,`
 import React, { useState, useCallback } from 'react'
 import { Divider, Tag, Radio, Button, message, ConfigProvider, Rate } from 'antd'
-import { SmartTable, EditStatus, SwitchStatus } from 'gantd'
+import { SmartGrid, EditStatus, SwitchStatus } from 'gantd'
 const { Random } = Mock
 
 
@@ -479,7 +479,7 @@ function LocalUse() {
         <Radio.Button value={zhCN}>中文</Radio.Button>
       </Radio.Group>
       <ConfigProvider locale={i18n}>
-        <SmartTable
+        <SmartGrid
           tableKey="BasicUse"
           schema={tableColumns}
           dataSource={dataSource}
@@ -493,11 +493,11 @@ function LocalUse() {
 ReactDOM.render(<LocalUse />, mountNode)`,`
 import React, { useState, useCallback } from 'react'
 import { Divider, Tag, Radio, Button, message, ConfigProvider, Rate } from 'antd'
-import { SmartTable, EditStatus, SwitchStatus } from 'gantd'
+import { SmartGrid, EditStatus, SwitchStatus } from 'gantd'
 const { Random } = Mock
 
 
-SmartTable.setField({ // 拓展componentType字段类型
+SmartGrid.setField({ // 拓展componentType字段类型
   'Rate': Rate
 })
 var editTableColumns = [
@@ -626,7 +626,7 @@ var editTableData = Array(15).fill().map(() => ({
 }))
 function EditInlineUse() {
   const [stateData, setStateData] = useState(editTableData)
-  const [editing, setEditing] = useState(EditStatus.CANCEL);
+  const [editing, setEditing] = useState(false);
   const getDifference = useCallback(
     (current, old) => {
       const result = []
@@ -654,12 +654,12 @@ function EditInlineUse() {
     [stateData],
   )
   const handleSave = useCallback(() => {
-    setEditing(EditStatus.SAVE)
+    setEditing(false)
   }, [])
 
   return (
     <div style={{ margin: 10 }}>
-      <SmartTable
+      <SmartGrid
         tableKey="EditInlineUse"
         rowKey="id"
         title="行内编辑"
@@ -672,13 +672,13 @@ function EditInlineUse() {
         headerRight={
           <>
             <Button
-              icon={editing === EditStatus.EDIT ? "roolback" : "edit"}
+              icon={editing ? "roolback" : "edit"}
               size="small"
-              onClick={() => { if (editing === EditStatus.CANCEL) { message.info('请单击单元格进行编辑') }; setEditing(SwitchStatus) }}
+              onClick={() => { if (!editing) { message.info('请单击单元格进行编辑') }; setEditing(!editing) }}
             >
-              {editing === EditStatus.EDIT ? "结束" : "进入"}编辑
+              {editing ? "结束" : "进入"}编辑
             </Button>
-            {editing === EditStatus.EDIT && <Button
+            {editing && <Button
               icon="save"
               size="small"
               type="primary"

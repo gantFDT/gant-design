@@ -594,7 +594,7 @@ var editTableData = Array(15).fill().map(() => ({
 }))
 function EditInlineUse() {
   const [stateData, setStateData] = useState(editTableData)
-  const [editing, setEditing] = useState(EditStatus.CANCEL);
+  const [editing, setEditing] = useState(false);
   const getDifference = useCallback(
     (current, old) => {
       const result = []
@@ -622,7 +622,7 @@ function EditInlineUse() {
     [stateData],
   )
   const handleSave = useCallback(() => {
-    setEditing(EditStatus.SAVE)
+    setEditing(false)
   }, [])
 
   return (
@@ -640,13 +640,13 @@ function EditInlineUse() {
         headerRight={
           <>
             <Button
-              icon={editing === EditStatus.EDIT ? "roolback" : "edit"}
+              icon={editing ? "roolback" : "edit"}
               size="small"
-              onClick={() => { if (editing === EditStatus.CANCEL) { message.info('请单击单元格进行编辑') }; setEditing(SwitchStatus) }}
+              onClick={() => { if (!editing) { message.info('请单击单元格进行编辑') }; setEditing(!editing) }}
             >
-              {editing === EditStatus.EDIT ? "结束" : "进入"}编辑
+              {editing ? "结束" : "进入"}编辑
             </Button>
-            {editing === EditStatus.EDIT && <Button
+            {editing && <Button
               icon="save"
               size="small"
               type="primary"

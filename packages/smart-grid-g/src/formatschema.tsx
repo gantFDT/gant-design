@@ -17,12 +17,8 @@ import { SchemaProp, PanelConfig, CustomColumnProps, ColumnConfig, Fields } from
 import { getType } from '@util';
 
 const DEFAULT_VIEW: PanelConfig = {
-  wrap: true,
-  isZebra: true,
-  bordered: true,
   clickable: true,
   footerDirection: 'row',
-  heightMode: 'full',
   pageSize: 50,
   columnFields: [],
 };
@@ -47,9 +43,9 @@ function formatColumn<R>(schema: CustomColumnProps<R>) {
   if (!schema.render) {
     if(schema.componentType){
       if(getType(schema.componentType) !== 'String'){
-        fakeColumn.render = () => schema.componentType;
+        fakeColumn.render = () => schema.componentType as React.ReactElement;
       }else{
-        const Cmp = ComponentsMap[schema.componentType];
+        const Cmp = ComponentsMap[schema.componentType as Fields];
         if(Cmp){
           fakeColumn.render = value => React.createElement(Cmp, {
             ...schema.props,
@@ -58,9 +54,8 @@ function formatColumn<R>(schema: CustomColumnProps<R>) {
             style: merge(get(schema.props, 'style'), { display: 'inline-block' })
           })
           fakeColumn.editConfig = {
-            render: () => {
-              return React.createElement(Cmp, schema.props)
-            },
+            component: Cmp,
+            editable: true
           }
         }else{
           try {
@@ -98,7 +93,6 @@ export default function formatSchema<R>(schema: SchemaProp<R> | CustomColumnProp
             columnFields: schema.map(column => ({
               fieldName: column.fieldName,
               width: column.width,
-              align: column.align,
               fixed: column.fixed,
             })),
           },
@@ -118,7 +112,7 @@ export default function formatSchema<R>(schema: SchemaProp<R> | CustomColumnProp
         'SmartTable的schema格式错误，参照：https://gant.yuque.com/fdt/gantreact/hyeday',
       );
     }
-    if (column.width || column.align || column.fixed) {
+    if (column.width || column.fixed) {
       console.warn(
         'SmartTable的schema在简洁模式下，不能包含UI属性，参照：https://gant.yuque.com/fdt/gantreact/hyeday',
       );
@@ -132,7 +126,6 @@ export default function formatSchema<R>(schema: SchemaProp<R> | CustomColumnProp
   const columnConfigs: ColumnConfig[] = columns.map(C => ({
     ...C,
     checked: true,
-    align: 'left',
     lock: false,
   }));
 
@@ -147,7 +140,6 @@ export default function formatSchema<R>(schema: SchemaProp<R> | CustomColumnProp
         ...columnMaps[columnConfig.fieldName],
         ...columnConfig,
         checked: true,
-        align: columnConfig.align || 'left',
         lock: !!columnConfig.fixed || false,
       };
     }
@@ -158,7 +150,6 @@ export default function formatSchema<R>(schema: SchemaProp<R> | CustomColumnProp
       .map(C => ({
         ...C,
         checked: false,
-        align: 'left',
         lock: false,
       }));
     columnConfigs = [...columnConfigs, ...hiddenColumns] as ColumnConfig[];

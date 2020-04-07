@@ -1,27 +1,22 @@
 import React, { useState, useMemo, useCallback, ReactNode, useEffect, useRef } from 'react';
-import { Tooltip, Button, Spin } from 'antd';
+import { Tooltip, Button } from 'antd';
 import moment from 'moment';
-import { isEmpty } from 'lodash';
-import Table from '@table';
+import Grid from '@grid';
 import ConfigModal from './config';
-import CustomExpandIcon from './customexpandicon';
 import { SmartTableType, SmartTableProps, ViewConfig, ViewListProps } from './interface';
 import formatSchema from './formatschema';
 import ViewPicker, { DefaultView } from './viewpicker';
 import { useTableConfig, useLocalStorage } from './hooks';
 import withKeyevent from '@keyevent';
+import Header from '@header';
 import { generateUuid } from '@util';
 import Receiver from './locale/Receiver';
 
-const defaultChildrenColumnName: string = 'children';
-const defaultRowKey: string = 'id';
-const defaultBodyMinHeight: number = 600;
 const viewVersionFormat: string = 'YYYY-MM-DD HH:mm:SSSS';
 const getPrefixCls = (cls, customizePrefixCls) => customizePrefixCls || 'gant' + cls;
 
 function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
   const {
-    searchTableCellResizable,
     tableKey,
     title,
     schema,
@@ -29,27 +24,12 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
     bindKeys,
     headerRight,
     onReload,
-    childrenColumnName = defaultChildrenColumnName,
     // 选择
     rowSelection,
-    bodyStyle,
     dataSource,
-    bodyMinHeight = defaultBodyMinHeight,
-    bodyHeight,
     bodyWidth,
-    rowKey = defaultRowKey,
-    // 分页
-    pagination,
-    pageIndex = 1,
-    pageSize = 50,
-    isGantPageMode = false,
-    onPageChange,
-    totalCount = 0,
-    pageSizeOptions,
-    emptyDescription,
     withoutAnimation = false,
     headerProps = {},
-    hasExport,
     onViewChange,
     prefixCls: customizePrefixCls,
     ...restProps
@@ -78,7 +58,6 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
     systemViews: systemViews,
     customViews: customViews || [],
   });
-  const [renderable, setRenderable] = useState(true);
 
   useEffect(() => {
     if (baseView) {
@@ -90,10 +69,6 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
   }, [baseView]);
 
   const handlerChangeView = useCallback(view => {
-    setRenderable(false);
-    setTimeout(() => {
-      setRenderable(true);
-    });
     setActiveView(view);
   }, []);
 
@@ -205,40 +180,14 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
     [viewList],
   );
 
-  const isTreeTable = useMemo(
-    () => dataSource && dataSource.some((data: T) => data[childrenColumnName]),
-    [dataSource, childrenColumnName],
-  );
-
-  const [fakeRowSelection, finalColumns, fakePagination] = useTableConfig({
+  const [fakeRowSelection, finalColumns] = useTableConfig({
     tableConfig: panelConfig,
     rowSelection,
     columns,
 
-    pagination,
-    pageIndex,
-    pageSize,
-    isGantPageMode,
-    onPageChange,
-    totalCount,
-    pageSizeOptions,
     tableKey,
   });
 
-  const HeaderRight: ReactNode = (
-      <>
-        {headerRight}
-        {onReload && (
-          <Receiver>
-            {
-              (locale) => <Tooltip title={locale.reload}>
-                <Button size="small" icon="reload" className="" onClick={() => onReload()} />
-              </Tooltip>
-            }
-          </Receiver>
-        )}
-      </>
-  );
   const titleRef = useRef(null);
 
   const TableTitle = useMemo(
@@ -274,60 +223,48 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
     [activeView, viewList, renameLoading, updateViewLoading, defaultView, titleRef, title],
   );
 
-  const tableHeight = useMemo(
-    () =>
-      isEmpty(dataSource) ? bodyHeight : panelConfig.heightMode === 'auto' ? 'auto' : bodyHeight,
-    [dataSource, panelConfig.heightMode, bodyHeight],
+
+  const HeaderRightElem: ReactNode = (
+    <>
+      {headerRight}
+      {onReload && (
+        <Receiver>
+          {
+            (locale) => <Tooltip title={locale.reload}>
+              <Button size="small" icon="reload" className="" onClick={() => onReload()} />
+            </Tooltip>
+          }
+        </Receiver>
+      )}
+    </>
   );
 
   return (
     <div className="gant-smart-table-wrapper">
+      <Header 
+        title={
+          <div ref={titleRef}>
+            {title}
+            {TableTitle}
+          </div>
+        }
+        extra={HeaderRightElem}
+      ></Header>
       {
-        renderable ?
         withKeyevent(
           bindKeys, true
         )(
           <Receiver>
-            {(locale) => <Table
-              {...restProps}
-              title={
-                <div ref={titleRef}>
-                  {title}
-                  {TableTitle}
-                </div>
-              }
-              headerRight={HeaderRight}
-              headerProps={headerProps}
-              columns={finalColumns}
-              dataSource={dataSource}
-              resizable={searchTableCellResizable}
-              bordered={panelConfig.bordered}
-              wrap={panelConfig.wrap}
-              isZebra={panelConfig.isZebra}
-              tableKey={`tableKey:${tableKey}`}
-              expandIcon={(_prop: any) => CustomExpandIcon(_prop, isTreeTable)}
-              rowSelection={fakeRowSelection}
-              childrenColumnName={childrenColumnName}
-              footerDirection={panelConfig.footerDirection}
-              bodyStyle={{
-                ...bodyStyle,
-                minHeight:
-                  panelConfig.heightMode === 'auto' || isEmpty(dataSource) ? undefined : bodyHeight,
-              }}
-              scroll={{ y: tableHeight === 'auto' ? undefined : tableHeight, x: bodyWidth }}
-              rowKey={rowKey}
-              pagination={fakePagination}
-              emptyDescription={emptyDescription || locale.empty}
-            />
+            {
+              (locale) => <Grid
+                dataSource={dataSource}
+                columns={finalColumns}
+                rowSelection={fakeRowSelection}
+                {...restProps}
+              />
             }
           </Receiver>
-        ) : <Spin>
-          <div style={{
-            height:
-              bodyHeight ?
-              typeof bodyHeight === 'string' ? `${bodyHeight.slice(0,-1)} + 29px)` : (bodyHeight + 29) : defaultBodyMinHeight
-          }}></div>
-        </Spin>
+        )
       }
       <ConfigModal
         visible={configModalVisible}

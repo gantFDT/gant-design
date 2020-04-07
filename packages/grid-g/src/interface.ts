@@ -111,7 +111,7 @@ export type Columns<T extends {} = {}> = {
     /**索引的字段名 */
     fieldName: string,
     /**单元格渲染函数 */
-    render?: (text: string, record: any, rowIndex: number) => React.ReactText,
+    render?: (text: string, record: any, rowIndex: number) => React.ReactNode,
     /**子节点 */
     children?: Columns<T>[],
     /**当前列宽度,如果没有，将以defaultColumnWidth显示 */
