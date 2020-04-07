@@ -7,16 +7,19 @@ import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import { LicenseManager } from "ag-grid-enterprise"
 import 'ag-grid-enterprise';
 import { Pagination, Spin } from 'antd'
-import { get, isEmpty } from 'lodash'
+import { get, isEmpty, isEqual } from 'lodash'
 
 import key from './license'
 import Header from '@header';
-import { mapColumns, NonBool, isbool, isstring, isarray, ispromise, isfunc, flattenTreeData, usePagination, getSizeClassName } from './utils'
-import { Filter, Size, Fixed, GridPropsPartial, Api, API, RowSelection } from './interface'
+import {
+    mapColumns, NonBool, isbool, isstring, isarray, ispromise, isfunc,
+    flattenTreeData, usePagination, getSizeClassName, createFakeServer, createServerSideDatasource
+} from './utils'
+import { Filter, Size, Fixed, GridPropsPartial, Api, API, RowSelection, Record } from './interface'
 import "./style"
+import DataManage from './datamanage'
 
 export * from './interface'
-import './style'
 
 // 设置licenseKey才会在列头右侧显示
 // 切换列头显示、固定列的控制栏
@@ -46,11 +49,11 @@ export const defaultProps = {
 
 export const defaultRowSelection: RowSelection = {
     type: "multiple",
-    checkboxIndex: 0,
+    // checkboxIndex: 0,
     showDefalutCheckbox: true,
 }
 
-const Grid = function Grid<T>(props: GridPropsPartial<T>) {
+const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
 
     const {
         dataSource: initDataSource,
@@ -72,13 +75,50 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
         pagination,
         onEdit,
         loading,
+        isServer,
+        isServerSideGroup,
+        getServerSideGroupKey,
+        onExpandedRowsChange,
         ...orignProps
     } = props
 
     const apiRef = useRef<GridApi>();
 
     const columnsRef = useRef<ColumnApi>();
-    const [dataSource, setDataSource]: [T[], Dispatch<SetStateAction<T[]>>] = useState([]);
+
+    /**编辑时数据 */
+    const [editDataSource, seteditDataSource] = useState([])
+
+    const [diff, setdiff] = useState({})
+
+    const updateDiff = useCallback(
+        (newDiff) => {
+            setdiff(diff => {
+                return ["remove", "update", "add"].reduce((d, type) => {
+                    d[type] = (newDiff[type] || []).concat(diff[type] || [])
+                    return d
+                }, {})
+            })
+        },
+        [],
+    )
+
+    const dataManage = useMemo(() => {
+        const manager = new DataManage<T>(apiRef, columnsRef)
+        manager.removeAllListeners()
+        manager.on("update", (list) => {
+            seteditDataSource(list)
+        })
+        DataManage.getRowNodeId = getRowNodeId
+        return manager
+    }, [])
+
+    /**出口数据，用于grid显示 */
+    useEffect(() => {
+        if (editable) {
+            dataManage.init(initDataSource)
+        }
+    }, [editable, initDataSource])
 
     // 分页事件
     const computedPagination = usePagination(pagination)
@@ -88,6 +128,7 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
         (api = apiRef.current) => {
             if (typeof defaultColumnWidth === "undefined") api.sizeColumnsToFit()
         }, [defaultColumnWidth])
+
     const getRowNodeId = useCallback(
         (data) => {
             if (typeof rowkey === 'string') {
@@ -97,16 +138,34 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
         },
         [rowkey],
     )
+    const nowDataSource = useMemo(() => {
+        return editable ? editDataSource : initDataSource
+    }, [editable, initDataSource, editDataSource])
+
+    // 判断数据分别处理 treeTable 和普通table
+    const dataSource = useMemo(() => {
+        if (!treeData) return nowDataSource;
+        if (!isServer) return flattenTreeData(nowDataSource, getRowNodeId);
+        const fakeServer = createFakeServer(nowDataSource, getServerSideGroupKey ? getServerSideGroupKey : getRowNodeId);
+        const serverDataSource = createServerSideDatasource(fakeServer)
+        return serverDataSource
+
+    }, [nowDataSource, treeData, getRowNodeId, isServer, apiRef.current, getServerSideGroupKey, editDataSource, editable])
     useEffect(() => {
-        if (treeData) {
-            setDataSource(flattenTreeData(initDataSource, getRowNodeId))
-        } else {
-            setDataSource(initDataSource)
+        if (nowDataSource.length > 0 && apiRef.current && isServer && treeData) apiRef.current.setServerSideDatasource(dataSource)
+    }, [apiRef.current, dataSource, nowDataSource, isServer, treeData])
+    const gridPartProps = useMemo(() => {
+        if (treeData && isServer) return {
+            isServerSideGroup,
+            treeData,
+            rowModelType: 'serverSide',
+            getServerSideGroupKey: getServerSideGroupKey ? getServerSideGroupKey : getRowNodeId,
         }
-    }, [initDataSource, treeData, getRowNodeId])
-
-
-
+        return {
+            treeData,
+            rowData: dataSource
+        }
+    }, [dataSource, getRowNodeId, isServerSideGroup, treeData, isServer])
     // 进入编辑时遍历一遍初始数据
     const originList = useMemo(() => {
         const list = []
@@ -119,44 +178,88 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
     }, [editable, apiRef.current])
 
     /**删除 */
-    const deleteRow = useCallback<API.deleteRow>(
-        (cb) => {
-            let pro: Promise<boolean | any[]>
+    const remove = useCallback<API.remove>(
+        (removeChildren, cb) => {
             const selected = apiRef.current.getSelectedRows()
             if (!cb) {
                 apiRef.current.updateRowData({
                     remove: selected
                 })
-                return;
+                return Promise.resolve()
             }
             const back = cb(selected)
             if (back) {
-                Promise.resolve(back).then((res) => {
-                    let deletedRows: Array<any> = []
+                return Promise.resolve(back).then((res) => {
+                    let removedRows: Array<any> = []
                     if (isarray(res)) {
-                        if (res.length) deletedRows = res
+                        if (res.length) removedRows = res
                     } else {
-                        deletedRows = selected
+                        removedRows = selected
                     }
-                    // 业务层处理之后可能不需要删除
-                    if (deletedRows.length) {
-                        // 执行删除
-                        apiRef.current.updateRowData({
-                            remove: deletedRows
-                        })
+                    // 业务层处理之后可能不需要删除+
+                    if (removedRows.length) {
+                        if (!removeChildren) {
+                            let error
+                            for (let item of removedRows) {
+                                apiRef.current.forEachNode((node, index) => {
+                                    if (error) return
+                                    const { treeDataPath = [] } = node.data
+                                    if (treeDataPath.length > item.treeDataPath.length) {
+                                        let isChild = isEqual(treeDataPath.slice(0, item.treeDataPath.length), item.treeDataPath)
+                                        if (isChild) {
+                                            error = true
+                                        }
+                                    }
+                                })
+                            }
+                            if (error) return Promise.reject(error)
+                        } else {
+                            const removeList = []
+                            for (let item of removedRows) {
+                                apiRef.current.forEachNode((node, index) => {
+                                    const { treeDataPath = [] } = node.data
+                                    if (treeDataPath.length >= item.treeDataPath.length) {
+                                        let isChild = isEqual(treeDataPath.slice(0, item.treeDataPath.length), item.treeDataPath)
+                                        if (isChild) {
+                                            removeList.push(node.data)
+                                        }
+                                    }
+
+                                })
+                            }
+                            removedRows = removeList
+                        }
+                        if (removedRows.length) {
+                            // 执行删除
+                            const ids = removedRows.map(getRowNodeId)
+                            console.log(ids)
+                            // const diff = apiRef.current.updateRowData({
+                            //     remove: removedRows
+                            // })
+                            // updateDiff(diff)
+                            // const currentData = []
+                            // apiRef.current.forEachNode((node) => {
+                            //     currentData.push(node.data)
+                            // })
+                            // dataManage.push(currentData)
+                        }
+
+                        return Promise.resolve(back)
                     }
 
                 })
             }
+            return Promise.reject(back)
         },
         [],
     )
 
     /**取消编辑 */
-    const cancelEdit = useCallback<API.cancel>(
+    const cancel = useCallback<API.cancel>(
         () => {
             if (onEditableChange) {
-                apiRef.current.setRowData(originList)
+                const diff = apiRef.current.setRowData(originList)
+                console.log(diff)
                 onEditableChange(false)
             }
         },
@@ -164,21 +267,22 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
     )
 
     const editApi = useMemo<Api>(() => {
+        const { isChanged, canRedo, canUndo } = dataManage
         return {
-            // undo() {
-            //     apiRef.current.undoCellEditing()
-            // },
-            // redo() {
-            //     apiRef.current.redoCellEditing()
-            // },
+            isChanged,
+            canRedo,
+            canUndo,
+            undo() {
+                dataManage.undo()
+            },
+            redo() {
+                dataManage.redo()
+            },
             getModel() {
                 console.log(apiRef.current.getModel())
             },
-            add(index: number = 0, item: object = {}) {
-                const res = apiRef.current.updateRowData({
-                    add: [item],
-                    addIndex: index,
-                })
+            add(index: number = 0, item) {
+                dataManage.create(index, item as T)
             },
             getSelected() {
                 console.log(apiRef.current.getSelectedRows())
@@ -189,9 +293,9 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
                 })
             },
             /**删除 */
-            deleteRow,
+            remove,
             /**取消 */
-            cancel: cancelEdit,
+            cancel,
             originList,
             save() {
                 if (onEditableChange) {
@@ -205,7 +309,7 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
                 }
             }
         }
-    }, [deleteRow, cancelEdit])
+    }, [remove, cancel, editDataSource])
 
     const onGridReady = useCallback((params: GridReadyEvent) => {
         apiRef.current = params.api
@@ -214,7 +318,7 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
         onReady && onReady(params)
         // 没有设置默认宽度将自动适配
         // shouldFitCol(params.api)
-    }, [onReady, shouldFitCol, editApi])
+    }, [onReady, shouldFitCol])
     // 处理selection
     const gantSelection: RowSelection = useMemo(() => {
         if (rowSel === true) {
@@ -244,18 +348,24 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
     }, [selectedKeys, apiRef.current, rowSelection])
     // 处理selection-end
     //columns
-    const defaultSelection = !isEmpty(gantSelection) && showDefalutCheckbox;
-    const columns = useMemo<ColDef[] | ColGroupDef[]>(() => mapColumns<T>(columnDefs, editable, size, getRowNodeId, defaultSelection), [columnDefs, editable, rowSelection, size, getRowNodeId])
+    const defaultSelection = !isEmpty(gantSelection) && showDefalutCheckbox && !(treeData && isServer);
+    const columns = useMemo<ColDef[] | ColGroupDef[]>(() => mapColumns<T>(columnDefs, editable, size, getRowNodeId, defaultSelection, defaultSelectionCol), [columnDefs, editable, rowSelection, size, getRowNodeId, defaultSelectionCol, defaultSelection])
     //columns-end
     useEffect(() => {
-        if (isfunc(onEdit)) {
+        if (isfunc(onEdit) && editable) {
             onEdit(editApi)
         }
-    }, [onEdit])
-
+    }, [onEdit, editable, editApi])
     const getDataPath = useCallback((data) => {
         return data.treeDataPath;
     }, [])
+
+    const cellValueChanged = useCallback(
+        (changed) => {
+            dataManage.modify(changed)
+        },
+        [],
+    )
 
     return (
         <>
@@ -264,25 +374,31 @@ const Grid = function Grid<T>(props: GridPropsPartial<T>) {
                     <div className="ag-theme-balham" style={{ width: '100%', height: computedPagination ? 'calc(100% - 30px)' : '100%' }}>
                         <AgGridReact
                             onSelectionChanged={onSelectionChanged}
-                            {...selection}
-                            {...orignProps}
                             columnDefs={columns}
                             rowSelection={rowSelection}
-                            rowData={dataSource}
                             getRowNodeId={getRowNodeId}
                             onGridReady={onGridReady}
-                            treeData={treeData}
                             undoRedoCellEditing
                             enableFillHandle
                             defaultColDef={{
                                 resizable,
+                                sortable: true,
                                 filter,
                                 minWidth: 100,
                             }}
+                            rowMultiSelectWithClick
                             headerHeight={24}
                             floatingFiltersHeight={20}
                             getDataPath={getDataPath}
                             rowHeight={size == "small" ? 24 : 32}
+                            {...gridPartProps}
+                            {...selection}
+                            {...orignProps}
+                            suppressRowDrag
+                            /**单元格数据变化 */
+                            onCellValueChanged={cellValueChanged}
+                            /** 这个属性可以在数据变化的时候转化一个transaction用于updateRowData,所以可以保持住原有的排序、过滤、选中等状态。同时还能计算出编辑前后的差异 */
+                            deltaRowDataMode
                         />
                     </div>
                     {/* 分页高度为30 */}
