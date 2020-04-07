@@ -102,7 +102,6 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         },
         [],
     )
-
     const dataManage = useMemo(() => {
         const manager = new DataManage<T>(apiRef, columnsRef)
         manager.removeAllListeners()
@@ -128,7 +127,6 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         (api = apiRef.current) => {
             if (typeof defaultColumnWidth === "undefined") api.sizeColumnsToFit()
         }, [defaultColumnWidth])
-
     const getRowNodeId = useCallback(
         (data) => {
             if (typeof rowkey === 'string') {
@@ -321,7 +319,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     }, [onReady, shouldFitCol])
     // 处理selection
     const gantSelection: RowSelection = useMemo(() => {
-        if (rowSel === true) {
+        if (typeof rowSel === "boolean" && rowSel === true) {
             return defaultRowSelection
         }
         if (rowSel) return { ...defaultRowSelection, ...rowSel }
@@ -349,7 +347,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     // 处理selection-end
     //columns
     const defaultSelection = !isEmpty(gantSelection) && showDefalutCheckbox && !(treeData && isServer);
-    const columns = useMemo<ColDef[] | ColGroupDef[]>(() => mapColumns<T>(columnDefs, editable, size, getRowNodeId, defaultSelection, defaultSelectionCol), [columnDefs, editable, rowSelection, size, getRowNodeId, defaultSelectionCol, defaultSelection])
+    const columns = useMemo<ColDef[] | ColGroupDef[]>(() => mapColumns<T>(columnDefs, editable, size, getRowNodeId, defaultSelection, defaultSelectionCol, rowSelection), [columnDefs, editable, rowSelection, size, getRowNodeId, defaultSelectionCol, defaultSelection, rowSelection])
     //columns-end
     useEffect(() => {
         if (isfunc(onEdit) && editable) {
@@ -366,7 +364,6 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         },
         [],
     )
-
     return (
         <>
             <Spin spinning={loading}>

@@ -164,7 +164,9 @@ const TreeGrid = () => {
                 editable={editable}
                 onEditableChange={seteditable}
                 dataSource={dataSource} onReady={onReady}
-                rowSelection
+                rowSelection={{
+                    type: "single"
+                }}
                 onEdit={setEditApi}
                 pagination={{
                     pageSize: 2,
@@ -217,7 +219,9 @@ const AsyncTreeData = () => {
         isServerSideGroup={(data) => {
             return Array.isArray(data.children)
         }}
-        rowSelection
+        rowSelection={{
+            type: "single"
+        }}
         onRowGroupOpened={(data) => { console.log(data) }}
         groupSuppressAutoColumn
     />

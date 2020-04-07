@@ -19,7 +19,7 @@ function ColEditableFn(fn: ColumnEdiatble<any>): IsColumnFunc | boolean {
     return ({ data }) => fn(data)
 }
 
-export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Size, getRowNodeId: any, defaultSelection: boolean, defaultSelectionCol: ColDef): Col[] => {
+export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Size, getRowNodeId: any, defaultSelection: boolean, defaultSelectionCol: ColDef, rowSelection): Col[] => {
     function getColumnDefs(columns: Columns<T>[]) {
         return columns.map(({ title: headerName, fieldName: field, children, render, editConfig, fixed, cellRenderer, ...item }, index) => {
             const ColEditable = typeof editConfig !== 'undefined'
@@ -68,7 +68,7 @@ export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Si
         sortable: false,
         pinned: true,
         field: "defalutSelection",
-        headerCheckboxSelection: true,
+        headerCheckboxSelectionFilteredOnly: false,
         minWidth: 24,
         headerName: "",
         suppressMenu: true,
