@@ -367,6 +367,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         },
         [],
     )
+    console.log("columns", columns)
     return (
         <>
             <Spin spinning={loading}>
@@ -391,6 +392,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                             floatingFiltersHeight={20}
                             getDataPath={getDataPath}
                             rowHeight={size == "small" ? 24 : 32}
+                            singleClickEdit
                             {...gridPartProps}
                             {...selection}
                             {...orignProps}

@@ -16,23 +16,28 @@ function itemisgroup(item, children): item is ColGroupDef {
 
 function ColEditableFn(fn: ColumnEdiatble<any>): IsColumnFunc | boolean {
     if (typeof fn === 'function') return ({ data }) => fn(data)
-    return true
+    return fn
 }
 
 export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Size, getRowNodeId: any, defaultSelection: boolean, defaultSelectionCol: ColDef, rowSelection): Col[] => {
     function getColumnDefs(columns: Columns<T>[]) {
-        return columns.map(({ title: headerName, fieldName: field, children, render, editConfig, fixed, cellRenderer = "cellRendererFramework", ...item }, index) => {
+        return columns.map(({ title: headerName, fieldName: field, children, render, editConfig, fixed, ...item }, index) => {
+            console.log("item", item)
             const ColEditable = typeof editConfig !== 'undefined'
             const colDef = {
                 headerName,
                 field,
                 cellRendererParams: {
-                    size,
-                    render,
-                    rowkey: getRowNodeId
+                    render
                 },
-                [cellRenderer ? "cellRenderer" : "cellRendererFramework"]: cellRenderer ? cellRenderer : RenderCol,
                 cellClass: (params: any) => {
+                    const { colDef: { field }, value } = params
+                    const data = get(params, 'data', {});
+                    const { _rowType, _rowData = {} } = data;
+                    if (_rowType === DataActions.modify) {
+                        if (get(_rowData, `${field}`) !== value) return "gant-grid-cell gant-grid-cell-modify"
+                        return ""
+                    }
                     return get(params, 'data._rowType') ? `gant-grid-cell gant-grid-cell-${params.data._rowType}` : ""
                 },
                 ...item,
@@ -67,7 +72,7 @@ export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Si
         sortable: false,
         pinned: true,
         field: "defalutSelection",
-        headerCheckboxSelectionFilteredOnly: rowSelection === "multiple",
+        headerCheckboxSelection: rowSelection === "multiple",
         minWidth: 24,
         headerName: "",
         suppressMenu: true,
