@@ -78,7 +78,6 @@ export const useTableConfig = (props: useTableConfigProps) => {
   } = props;
   // 行选中开关
   const {
-    clickable,
     columnFields = []
   } = tableConfig;
   // 列渲染

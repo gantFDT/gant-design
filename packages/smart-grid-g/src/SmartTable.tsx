@@ -220,7 +220,6 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
     [activeView, viewList, renameLoading, updateViewLoading, defaultView, titleRef, title],
   );
 
-
   const HeaderRightElem: ReactNode = (
     <>
       {headerRight}
@@ -254,6 +253,7 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
           <Grid
             dataSource={dataSource}
             columns={finalColumns}
+            suppressRowClickSelection={!panelConfig.clickable}
             {...restProps}
           />
         )
