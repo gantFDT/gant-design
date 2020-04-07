@@ -48,9 +48,9 @@ const TreeGrid = () => {
             title: '姓名',
             fieldName: "name",
             // checkboxSelection: true,
-            render: (text, rowIndex) => {
-                return text + "----"
-            },
+            // render: (text, rowIndex) => {
+            //     return text + "----"
+            // },
             editConfig: {
                 component: Input,
                 // changeFormatter: (e: any) => e.target.value,
@@ -119,12 +119,18 @@ const TreeGrid = () => {
 
     const [beginIndex, setBeginIndex] = useState(0)
 
+    const [selectedKeys, setselectedKeys] = useState([])
+
     const onPageChange = useCallback(
         (beginIndex) => {
             setBeginIndex(beginIndex)
         },
         [],
     )
+
+    const onSelect = useCallback((keys, rows) => {
+        setselectedKeys(keys)
+    }, [])
 
     /**删除年龄大于120的 */
     const deleteCb = useCallback<RemoveCallBack>((selected) => new Promise(res => {
@@ -140,21 +146,18 @@ const TreeGrid = () => {
             ) : (
                     <>
                         <Button onClick={() => editApi.add(0, { id: Math.random().toString(16), name: Math.random().toString(16) })}>新增</Button>
-                        <Button onClick={() => editApi.remove(false, deleteCb).then(e => message.success("删除成功"), e => message.error("删除出错"))}>删除</Button>
-                        <Button disabled={!editApi || !editApi.canUndo} onClick={() => editApi.undo()}>撤销</Button>
-                        <Button disabled={!editApi || !editApi.canRedo} onClick={() => editApi.redo()}>重做</Button>
-                        <Button onClick={() => editApi.getModel()}>getModel</Button>
+                        <Button disabled={!(editApi && editApi.deletable)} onClick={() => editApi.remove(false, deleteCb).then(e => message.success("删除成功"), e => { message.error("删除出错"); throw e })}>删除</Button>
+                        <Button disabled={!(editApi && editApi.canUndo)} onClick={() => editApi.undo()}>撤销</Button>
+                        <Button disabled={!(editApi && editApi.canRedo)} onClick={() => editApi.redo()}>重做</Button>
                         <Button onClick={() => editApi.cancel()}>取消编辑</Button>
                         <Button onClick={() => editApi.save()}>保存</Button>
                     </>
                 )
             } />
             <Grid
-                // headerProps={header}
                 components={{
                     "simpleCellRenderer": getSimpleCellRenderer()
                 }}
-                // editActions={editActions}
                 rowkey="id"
                 loading={loading}
                 columns={columns}
@@ -162,7 +165,10 @@ const TreeGrid = () => {
                 editable={editable}
                 onEditableChange={seteditable}
                 dataSource={dataSource} onReady={onReady}
-                rowSelection
+                rowSelection={{
+                    selectedKeys,
+                    onSelect
+                }}
                 onEdit={setEditApi}
                 pagination={{
                     pageSize: 2,
@@ -182,7 +188,7 @@ function ajax(updateData) {
     const httpRequest = new XMLHttpRequest();
     httpRequest.open(
         'GET',
-        'https://raw.githubusercontent.com/ag-grid/ag-grid/master/grid-packages/ag-grid-docs/src/javascript-grid-server-side-model-tree-data/tree-data/data/data.json'
+        'https://raw.githubusercontent.com/ag-grid/ag-grid/master/grid-packages/ag-grid-docs/src/javascript-grid-server-side-model-tree-data/purging-tree-data/data/data.json'
     );
     httpRequest.send();
     httpRequest.onreadystatechange = () => {
@@ -197,12 +203,19 @@ const AsyncTreeData = () => {
         fieldName: 'employeeId',
         enableRowGroup: true,
         cellRenderer: "agGroupCellRenderer",
+        editConfig: {
+            component: Input,
+            // changeFormatter: (e: any) => e.target.value,
+            editable: true
+        },
     },
     {
         fieldName: 'employeeName',
+        // render: () => 111
     },
-    { fieldName: 'jobTitle' },
-    { fieldName: 'employmentType' }]
+    { fieldName: 'startDate' },
+    { fieldName: 'employmentType' },
+    ]
     useEffect(() => {
         ajax(setDataSource)
     }, [])
@@ -211,11 +224,13 @@ const AsyncTreeData = () => {
         columns={columns}
         dataSource={dataSource}
         treeData
-        isServer
-        isServerSideGroup={(data) => {
-            return Array.isArray(data.children)
-        }}
+        // isServer
+        // isServerSideGroup={(data) => {
+        //     return Array.isArray(data.children)
+        // }}
+        treeDataChildrenName="underlings"
         rowSelection
+        editable
         onRowGroupOpened={(data) => { console.log(data) }}
         groupSuppressAutoColumn
     />
@@ -225,16 +240,16 @@ const config = {
     codes: [],
     useage: '',
     children: [
-        {
-            title: "tree",
-            describe: "树形结构",
-            cmp: TreeGrid
-        },
         // {
-        //     title: "async tree",
-        //     describe: "异步树形",
-        //     cmp: AsyncTreeData
-        // }
+        //     title: "tree",
+        //     describe: "树形结构",
+        //     cmp: TreeGrid
+        // },
+        {
+            title: "async tree",
+            describe: "异步树形",
+            cmp: AsyncTreeData
+        }
     ]
 }
 

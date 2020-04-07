@@ -34,7 +34,7 @@ export enum Fixed {
 
 
 /**删除数据时的回调方法，可以返回boolean、array或者是一个能够提供boolean、array类型返回值的promise */
-export type RemoveCallBack = (selected: any[]) => (Promise<boolean | any[]> | boolean | any[])
+export type RemoveCallBack = (selected: any[]) => (Promise<boolean> | boolean)
 
 export namespace API {
     export type remove = (removeChildren?: boolean, cb?: RemoveCallBack) => Promise<any>;
@@ -48,6 +48,8 @@ export interface Api {
     canRedo,
     /**是否能够撤回 */
     canUndo,
+    /**删除按钮是否可用 */
+    deletable: boolean,
     /**撤销 */
     undo?(): void,
     /**重做 */
@@ -57,18 +59,15 @@ export interface Api {
     /**
      * 删除选中行，默认全删，可以通过提供callback修改删除的数据
      * @author chenyl
-     * @param {function|boolean|array} callback 回调方法，可以返回boolean、array或者是一个能够提供boolean、array类型返回值的promise
      * @param {boolean} removeChildren 是否在删除节点的同时删除其子节点，默认为true
+     * @param {function } callback 回调方法，可以返回boolean或者是一个能够提供boolean类型返回值的promise
      * @returns {Promise} 
      */
     remove: API.remove,
-    getModel(): void,
     /**取消编辑 */
     cancel: API.cancel,
     [key: string]: any
 }
-
-export type EditActions = (api: Api, keys: Array<string>) => React.ReactElement
 
 export type OnReady = (api: GridReadyEvent) => void
 
@@ -131,7 +130,7 @@ export type Columns<T extends {} = {}> = {
     valueFormatter?: (params: ValueFormatterParams) => string,
     rowGroupIndex?: number,
     type?: string | string[],
-    [props:string]:any
+    [props: string]: any
 }
 
 export type onEditableChange = (editable: boolean) => void
@@ -145,9 +144,6 @@ export type Pagination = Omit<
     "onShowSizeChange"
 >
 
-// TODO:移动
-// TODO:取消编辑时恢复添加和删除的数据
-
 export type Record = {
     children?: Record[],
     isDeleted?: boolean,
@@ -155,18 +151,15 @@ export type Record = {
 }
 // Grid Api
 export interface Props<T extends Record> {
-    filter?: boolean,
-    // headerProps?: {
-    //     extra?: React.ReactNode,
-    //     [key: string]: any
-    // },
-    // editActions: EditActions,
     columns: Columns<T>[],
     dataSource: T[],
+    filter?: boolean,
+    resizable: boolean,
+    sortable: boolean,
     onReady: OnReady,
-    defaultColumnWidth?: React.ReactText,
     rowSelection: RowSelection | true,
     rowkey: RowKey<T> | string,
+    editable: boolean,
     onEditableChange: onEditableChange,
     width?: string | number,
     height?: string | number,
@@ -177,7 +170,8 @@ export interface Props<T extends Record> {
     className: string,
     isServer: boolean,
     isServerSideGroup: (data: any) => boolean,
-    onExpandedRowsChange:(data:any)=>void
+    onExpandedRowsChange: (data: any) => void,
+    treeDataChildrenName: string,
 }
 
 export type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>
