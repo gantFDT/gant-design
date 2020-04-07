@@ -3,7 +3,7 @@ import CodeDecorator from '../_util/CodeDecorator'
 /*! Start !*/
 import React, { useMemo, useEffect, useCallback, useState, useRef } from 'react'
 import Grid, { Columns, Filter, OnReady, GridApi, Fixed, Api, OnEdit, RemoveCallBack } from '@grid';
-import { GridReadyEvent } from 'ag-grid-community'
+import { GridReadyEvent, ColDef } from 'ag-grid-community'
 import { Button, message } from "antd"
 import { Input, InputCellPhone } from "@data-cell"
 import Header from '@header'
@@ -51,13 +51,17 @@ const TreeGrid = () => {
             // render: (text, rowIndex) => {
             //     return text + "----"
             // },
+
             editConfig: {
                 component: InputCellPhone,
                 // changeFormatter: (e: any) => e.target.value,
                 editable: true
             },
             enableRowGroup: true,
-            cellRenderer: "agGroupCellRenderer"
+            cellRenderer: "agGroupCellRenderer",
+            cellRendererParams: {
+                innerRenderer: () => 11111,
+            }
         },
         {
             title: '年龄',
@@ -199,6 +203,7 @@ function ajax(updateData) {
 }
 const AsyncTreeData = () => {
     const [dataSource, setDataSource] = useState([])
+    const [selectedKeys, setSelectedKeys] = useState([])
     const columns = [{
         fieldName: 'employeeId',
         enableRowGroup: true,
@@ -206,6 +211,7 @@ const AsyncTreeData = () => {
         editConfig: {
             component: InputCellPhone,
             // changeFormatter: (e: any) => e.target.value,
+
             editable: true
         },
     },
@@ -219,6 +225,7 @@ const AsyncTreeData = () => {
     useEffect(() => {
         ajax(setDataSource)
     }, [])
+    const onSelect = (keys) => setSelectedKeys(keys)
     return <Grid
         rowkey="employeeId"
         columns={columns}
@@ -229,7 +236,13 @@ const AsyncTreeData = () => {
         //     return Array.isArray(data.children)
         // }}
         treeDataChildrenName="underlings"
-        rowSelection
+        rowSelection={{
+            selectedKeys: selectedKeys,
+            onSelect: (keys) => {
+                console.log(keys, 'selected')
+                onSelect(keys)
+            }
+        }}
         editable
         onRowGroupOpened={(data) => { console.log(data) }}
         groupSuppressAutoColumn
