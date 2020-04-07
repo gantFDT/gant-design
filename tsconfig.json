@@ -59,6 +59,9 @@
       "@smart-table": [
         "packages/smart-table-g/src"
       ],
+      "@smart-grid": [
+        "packages/smart-grid-g/src"
+      ],
       "@modal": [
         "packages/modal-g/src"
       ],

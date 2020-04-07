@@ -153,6 +153,7 @@ function BasicUse() {
             edit={edit}
             schema={schema}
             uiSchema={initalUiSchema}
+            withoutAnimation
         />
         <div style={{ float: 'right' }}>
             <Button size="small" type='primary' onClick={onSubmit}>提交</Button>

@@ -41,6 +41,7 @@ module.exports = {
             "@modal": path.resolve(__dirname, 'packages/modal-g/src'),
             "@schema-form": path.resolve(__dirname, 'packages/schema-form-g/src'),
             "@smart-table": path.resolve(__dirname, 'packages/smart-table-g/src'),
+            "@smart-grid": path.resolve(__dirname, 'packages/smart-grid-g/src'),
             "@submenu": path.resolve(__dirname, 'packages/submenu-g/src'),
             "@table": path.resolve(__dirname, 'packages/table-g/src'),
             "@grid": path.resolve(__dirname, 'packages/grid-g/src'),

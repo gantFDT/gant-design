@@ -38,6 +38,7 @@ export {
 
 //grid
 export { default as Grid } from '@grid';
+export { default as SmartGrid } from '@smart-grid';
 
 //表单
 export { default as SchemaForm } from '@schema-form';
