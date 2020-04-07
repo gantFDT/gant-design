@@ -7,9 +7,7 @@ import { GridReadyEvent } from 'ag-grid-community'
 import { Button, message } from "antd"
 import { Input, InputCellPhone } from "@data-cell"
 import Header from '@header'
-
 /*! Split !*/
-
 function getSimpleCellRenderer(): any {
     function SimpleCellRenderer() { }
     SimpleCellRenderer.prototype.init = function (params) {
@@ -54,7 +52,7 @@ const TreeGrid = () => {
             //     return text + "----"
             // },
             editConfig: {
-                component: Input,
+                component: InputCellPhone,
                 // changeFormatter: (e: any) => e.target.value,
                 editable: true
             },
@@ -206,7 +204,7 @@ const AsyncTreeData = () => {
         enableRowGroup: true,
         cellRenderer: "agGroupCellRenderer",
         editConfig: {
-            component: Input,
+            component: InputCellPhone,
             // changeFormatter: (e: any) => e.target.value,
             editable: true
         },

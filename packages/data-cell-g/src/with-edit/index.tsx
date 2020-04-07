@@ -20,5 +20,5 @@ export default <T extends any>(getText: GetText<T>, popupClassName?: string) => 
     setPopupClassName,
     setDisabledBlur,
     ...props
-  }) => (props))
+  }) => ({ ...props }))
 );

@@ -17,7 +17,7 @@ export interface GantEmailProps extends WithBasicProps {
   dropdownClassName?: string,
   className?: string,
   style?: React.CSSProperties,
-  placeholder?:string,
+  placeholder?: string,
 }
 const emails = ['qq.com', '163.com', '126.com', '139.com', 'gmail.com', 'sohu.com', 'sina.com', 'outlook.com', 'amazon.com', 'yahoo.com', 'hotmail.com']
 const emailRegexp = /^[a-zA-Z_\-0-9\u4e00-\u9fa5]+(\.[a-zA-Z_\-0-9\u4e00-\u9fa5]+)?@([a-zA-Z_\-0-9]{2,10}\.){1,3}[a-zA-Z]{2,10}$/
@@ -65,7 +65,7 @@ class Email extends React.Component<any> {
   }
 
   renderSelect = () => {
-    const { dropdownClassName, className, list, ...props } = this.props;
+    const { dropdownClassName, className, list, wrapperRef, ...props } = this.props;
     return (
       <AutoComplete
         className={classnames('gant-select-email', className)}
@@ -74,6 +74,7 @@ class Email extends React.Component<any> {
         dropdownClassName={classnames('gant-select-email-dropdown', dropdownClassName)}
         {...props}
         onSearch={this.onSearch}
+        ref={wrapperRef}
 
       >
         {this.getDataSource()}

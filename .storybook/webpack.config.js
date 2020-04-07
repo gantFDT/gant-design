@@ -67,6 +67,7 @@ module.exports = async ({ config, mode }) => {
 				"@table": path.resolve('packages/table-g/src'),
 				"@grid": path.resolve('packages/grid-g/src'),
 				"@smart-table": path.resolve('packages/smart-table-g/src'),
+				"@smart-grid": path.resolve('packages/smart-grid-g/src'),
 				"@keyevent": path.resolve('packages/keyevent-g/src'),
 			}
 		},

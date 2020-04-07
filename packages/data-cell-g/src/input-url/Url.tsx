@@ -35,8 +35,8 @@ class Url extends React.Component<GantUrlProps> {
   render() {
     const { onChange, ...mapProps } = this.props;
     const _props: any = mapProps;
-    const { onEnter, ...props } = _props;
-    return <Input onChange={(e: any) => onChange(e.target.value)} onKeyDown={onEnter}  {...props} />
+    const { onEnter, wrapperRef, ...props } = _props;
+    return <Input onChange={(e: any) => onChange(e.target.value)} ref={wrapperRef} onKeyDown={onEnter}  {...props} />
   }
 
 }

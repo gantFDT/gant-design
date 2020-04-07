@@ -56,7 +56,7 @@ export default (_popupClassName?: string) => WrapperedComponent =>
       }, [onFocus, isFoucs])
       return (
         <div className={className} ref={divRef} onClick={handleFoucs} style={wrapperStyle}>
-          <div className="gant-input" ref={ref}>
+          <div className="gant-input" ref={ref} >
             {factory({ ...props, setPopupClassName, setDisabledBlur })}
           </div>
         </div>

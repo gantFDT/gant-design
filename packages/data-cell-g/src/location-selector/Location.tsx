@@ -79,13 +79,14 @@ class Location extends React.Component<any> {
 
   render() {
 
-    const { onEnter, className, popupClassName, ...props } = this.props
+    const { onEnter, className, popupClassName, wrapperRef, ...props } = this.props
 
     return (
       <Cascader
         {...props}
         className={classnames('gant-location-cascader', className)}
         changeOnSelect
+        ref={wrapperRef}
         popupClassName={classnames('gant-location-cascader-popup', popupClassName)}
         showSearch={{
           filter: (value, paths) => paths.some((option: any) => (option.label).toLowerCase().indexOf(value.toLowerCase()) > -1)

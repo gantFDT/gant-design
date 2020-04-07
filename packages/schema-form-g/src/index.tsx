@@ -74,6 +74,7 @@ class SchemaForm extends React.Component<Props> {
       backgroundColor,
       className,
       emitDependenciesChange,
+      withoutAnimation = false,
       prefixCls: customizePrefixCls = 'gant',
       size,
     } = this.props;
@@ -88,7 +89,7 @@ class SchemaForm extends React.Component<Props> {
         value={{ form, edit, onSave, data, customFields, emitDependenciesChange, prefixCls, defalutProps }}
       >
         <div className={classnames(className)} style={{ backgroundColor }}>
-          <_SchemaForm schema={schema} uiSchema={uiSchema} titleConfig={titleConfig} />
+          <_SchemaForm schema={schema} uiSchema={uiSchema} titleConfig={titleConfig} withoutAnimation={withoutAnimation}/>
         </div>
       </FormContext.Provider>
     );
