@@ -100,6 +100,11 @@ export default [
         nameZh: '智能表格',
         package: 'smart-table-g',
       },
+      {
+        name: 'SmartGrid',
+        nameZh: '智能表格',
+        package: 'smart-grid-g',
+      },
     ],
   },
   {

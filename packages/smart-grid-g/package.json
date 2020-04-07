@@ -1,0 +1,39 @@
+{
+  "name": "smart-grid-g",
+  "version": "0.1.9",
+  "description": "gantd smart-grid-g",
+  "main": "lib/index.js",
+  "scripts": {},
+  "keywords": [
+    "React",
+    "gantd",
+    "antd",
+    "table",
+    "grid",
+    "smart",
+    "configgable"
+  ],
+  "homepage": "http://www.gant.design",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gantFDT/GantD.git"
+  },
+  "bugs": {
+    "url": "https://github.com/gantFDT/GantD/issues"
+  },
+  "author": "GantFDT",
+  "license": "MIT",
+  "dependencies": {
+    "antd": "^3.26.12",
+    "array-move": "^2.2.1",
+    "data-cell-g": "^0.1.7",
+    "header-g": "^0.1.4",
+    "lodash": "^4.17.15",
+    "modal-g": "^0.1.3",
+    "moment": "^2.24.0",
+    "react": "^16.12.0",
+    "react-sortable-hoc": "^1.11.0",
+    "grid-g": "^0.0.6",
+    "util-g": "^0.1.2"
+  }
+}

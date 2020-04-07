@@ -1,0 +1,98 @@
+@gant-prefix: gant;
+@viewpicker-prefix-cls: ~'@{gant-prefix}-smart-table-viewpicker';
+:root {
+  --border-color-split: hsv(0, 0, 91%);
+  --text-color: fade(#000, 65%);
+  --primary-color: #1890FF;
+  --btn-danger-color: #ff4d4f;
+  --error-8: #a8071a;
+  --item-hover-bg: var(--component-background-5);
+  --item-hover-color: fade(#000, 65%);
+  --border-radius-base: 4px;
+}
+
+:global {
+  .@{viewpicker-prefix-cls}-panel {
+    width: 300px;
+
+    .gant-blockheader {
+      height: auto !important;
+      min-height: auto;
+      border-bottom: 1px solid var(--border-color-split);
+      padding: 0;
+    }
+
+    .content {
+      padding: 5px;
+      margin: 0;
+      border-bottom: 1px solid var(--border-color-split);
+    }
+
+    .header {
+      color: var(--text-color);
+      font-size: 14px !important;
+      font-weight: bold;
+      padding-left: 5px;
+      margin: 5px 0px 5px 0px !important;
+    }
+
+    ul {
+      padding-inline-start: unset;
+      margin-bottom: 0px !important;
+
+      li {
+        padding: 3px 10px;
+        line-height: 30px;
+        font-size: 12px;
+        color: var(--text-color);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .leftContent {
+          flex: 1;
+
+          &:hover {
+            cursor: pointer;
+          }
+        }
+
+        .tag {
+          // color: var(--primary-color);
+          margin-left: 5px;
+        }
+
+        .operates {
+          display: none;
+          font-size: 12px;
+          color: unset;
+
+          .operate {
+            &:hover {
+              color: var(--primary-color);
+              cursor: pointer;
+            }
+          }
+
+          .delete {
+            color: var(--btn-danger-color);
+
+            &:hover {
+              color: var(--error-8);
+            }
+          }
+        }
+
+        &:hover {
+          background: var(--item-hover-bg);
+          color: var(--item-hover-color);
+          border-radius: var(--border-radius-base);
+
+          .operates {
+            display: block;
+          }
+        }
+      }
+    }
+  }
+}

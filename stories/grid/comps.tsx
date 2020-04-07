@@ -7,9 +7,7 @@ import { GridReadyEvent } from 'ag-grid-community'
 import { Button, message } from "antd"
 import { Input, InputCellPhone } from "@data-cell"
 import Header from '@header'
-
 /*! Split !*/
-
 function getSimpleCellRenderer(): any {
     function SimpleCellRenderer() { }
     SimpleCellRenderer.prototype.init = function (params) {
