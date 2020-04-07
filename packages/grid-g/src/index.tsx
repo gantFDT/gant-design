@@ -18,7 +18,7 @@ import {
 import { Filter, Size, Fixed, GridPropsPartial, Api, API, RowSelection, Record } from './interface'
 import "./style"
 import DataManage from './datamanage'
-import RenderCol, { MedalCellRenderer } from './GirdRenderColumn'
+import RenderCol from './GirdRenderColumn'
 export * from './interface'
 
 // 设置licenseKey才会在列头右侧显示
@@ -363,16 +363,12 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         },
         [],
     )
-    console.log("columns", columns)
     return (
         <>
             <Spin spinning={loading}>
                 <div style={{ width, height }} className={classnames('gant-grid', `gant-grid-${getSizeClassName(size)}`)} >
                     <div className="ag-theme-balham" style={{ width: '100%', height: computedPagination ? 'calc(100% - 30px)' : '100%' }}>
                         <AgGridReact
-                            components={{
-                                "MedalCellRenderer": MedalCellRenderer
-                            }}
                             frameworkComponents={{
                                 "gantRenderCol": RenderCol
                             }}
