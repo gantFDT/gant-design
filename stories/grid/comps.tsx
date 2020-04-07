@@ -121,12 +121,18 @@ const TreeGrid = () => {
 
     const [beginIndex, setBeginIndex] = useState(0)
 
+    const [selectedKeys, setselectedKeys] = useState([])
+
     const onPageChange = useCallback(
         (beginIndex) => {
             setBeginIndex(beginIndex)
         },
         [],
     )
+
+    const onSelect = useCallback((keys, rows) => {
+        setselectedKeys(keys)
+    }, [])
 
     /**删除年龄大于120的 */
     const deleteCb = useCallback<RemoveCallBack>((selected) => new Promise(res => {
@@ -142,21 +148,18 @@ const TreeGrid = () => {
             ) : (
                     <>
                         <Button onClick={() => editApi.add(0, { id: Math.random().toString(16), name: Math.random().toString(16) })}>新增</Button>
-                        <Button onClick={() => editApi.remove(false, deleteCb).then(e => message.success("删除成功"), e => message.error("删除出错"))}>删除</Button>
-                        <Button disabled={!editApi || !editApi.canUndo} onClick={() => editApi.undo()}>撤销</Button>
-                        <Button disabled={!editApi || !editApi.canRedo} onClick={() => editApi.redo()}>重做</Button>
-                        <Button onClick={() => editApi.getModel()}>getModel</Button>
+                        <Button disabled={!(editApi && editApi.deletable)} onClick={() => editApi.remove(false, deleteCb).then(e => message.success("删除成功"), e => { message.error("删除出错"); throw e })}>删除</Button>
+                        <Button disabled={!(editApi && editApi.canUndo)} onClick={() => editApi.undo()}>撤销</Button>
+                        <Button disabled={!(editApi && editApi.canRedo)} onClick={() => editApi.redo()}>重做</Button>
                         <Button onClick={() => editApi.cancel()}>取消编辑</Button>
                         <Button onClick={() => editApi.save()}>保存</Button>
                     </>
                 )
             } />
             <Grid
-                // headerProps={header}
                 components={{
                     "simpleCellRenderer": getSimpleCellRenderer()
                 }}
-                // editActions={editActions}
                 rowkey="id"
                 loading={loading}
                 columns={columns}
@@ -164,7 +167,10 @@ const TreeGrid = () => {
                 editable={editable}
                 onEditableChange={seteditable}
                 dataSource={dataSource} onReady={onReady}
-                rowSelection
+                rowSelection={{
+                    selectedKeys,
+                    onSelect
+                }}
                 onEdit={setEditApi}
                 pagination={{
                     pageSize: 2,
