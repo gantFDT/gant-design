@@ -155,11 +155,11 @@ export function flattenTreeData(dataSoruce: any[], getRowNodeId, pathArray: stri
         const { [treeDataChildrenName]: children, ...itemData } = item;
         const treeDataPath = [...pathArray, getRowNodeId(itemData)]
         if (children && children.length) {
-            treeData.push({ ...itemData, treeDataPath, parent: true })
+            treeData.push({ ...item, treeDataPath, parent: true, })
             const childrenTreeData = flattenTreeData(children, getRowNodeId, treeDataPath, treeDataChildrenName);
             Array.prototype.push.apply(treeData, childrenTreeData);
         } else {
-            treeData.push({ ...itemData, treeDataPath })
+            treeData.push({ ...item, treeDataPath })
         }
 
     })

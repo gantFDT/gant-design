@@ -68,29 +68,19 @@ export const usePagination = (props: usePaginationProps): PaginationConfig | und
 // 表格配置相关
 interface useTableConfigProps extends usePaginationProps {
   tableConfig: any,
-  rowSelection: any,
   columns: any[],
   tableKey?: string,
 }
 export const useTableConfig = (props: useTableConfigProps) => {
   const {
     tableConfig,
-    columns,
-
-    rowSelection,
-
-    ...paginationProps
+    columns
   } = props;
   // 行选中开关
   const {
     clickable,
     columnFields = []
   } = tableConfig;
-  const fakeRowSelection = useMemo(() => rowSelection ? ({
-    columnWidth: 35,
-    clickable,
-    ...rowSelection,
-  }) : undefined, [rowSelection, clickable])
   // 列渲染
   const fakeColumns = useMemo(() => columnFields
     .filter((item: any) => item.checked)
@@ -105,11 +95,7 @@ export const useTableConfig = (props: useTableConfigProps) => {
       }
     })
     , [columnFields, columns])
-  // 分页
-  const fakePagination = usePagination(paginationProps);
   return [
-    fakeRowSelection,
-    fakeColumns,
-    fakePagination
+    fakeColumns
   ]
 }

@@ -51,6 +51,8 @@ export const defaultRowSelection: RowSelection = {
     // checkboxIndex: 0,
     showDefalutCheckbox: true,
     selectedKeys: [],
+    rowMultiSelectWithClick: true,
+    rowDeselection:true
 }
 
 const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
@@ -122,6 +124,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
             seteditDataSource(list)
         })
         DataManage.getRowNodeId = getRowNodeId
+        DataManage.treeDataChildrenName = treeDataChildrenName
         return manager
     }, [])
 
@@ -148,7 +151,6 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     const nowDataSource = useMemo(() => {
         return editable ? editDataSource : initDataSource
     }, [editable, initDataSource, editDataSource])
-
     // 判断数据分别处理 treeTable 和普通table
     const dataSource = useMemo(() => {
         if (!treeData) return nowDataSource;
@@ -156,7 +158,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         const fakeServer = createFakeServer(nowDataSource, getServerSideGroupKey ? getServerSideGroupKey : getRowNodeId);
         const serverDataSource = createServerSideDatasource(fakeServer)
         return serverDataSource
-    }, [nowDataSource, treeData, treeDataChildrenName, getRowNodeId, isServer, apiRef.current, getServerSideGroupKey, editDataSource, editable])
+    }, [nowDataSource, treeData, treeDataChildrenName, getRowNodeId, isServer, apiRef.current, getServerSideGroupKey])
     useEffect(() => {
         if (nowDataSource.length > 0 && apiRef.current && isServer && treeData) apiRef.current.setServerSideDatasource(dataSource)
     }, [apiRef.current, dataSource, nowDataSource, isServer, treeData])
@@ -222,7 +224,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
             isChanged,
             canRedo,
             canUndo,
-            deletable: selectedKeys.length > 0,
+            deletable: selectedKeys && selectedKeys.length > 0,
             undo() {
                 dataManage.undo()
             },
@@ -231,14 +233,6 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
             },
             add(index: number = 0, item) {
                 dataManage.create(index, item as T)
-            },
-            getSelected() {
-                console.log(apiRef.current.getSelectedRows())
-            },
-            map() {
-                apiRef.current.forEachNode((node, index) => {
-                    console.log(node)
-                })
             },
             /**删除 */
             remove,
@@ -330,7 +324,6 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                                 filter,
                                 minWidth: 100,
                             }}
-                            rowMultiSelectWithClick
                             headerHeight={24}
                             floatingFiltersHeight={20}
                             getDataPath={getDataPath}
@@ -340,9 +333,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                             {...selection}
                             {...orignProps}
                             suppressRowDrag
-                            /**单元格数据变化 */
                             onCellValueChanged={cellValueChanged}
-                            /** 这个属性可以在数据变化的时候转化一个transaction用于updateRowData,所以可以保持住原有的排序、过滤、选中等状态。同时还能计算出编辑前后的差异 */
                             deltaRowDataMode
                         />
                     </div>
