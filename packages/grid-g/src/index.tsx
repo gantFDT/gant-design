@@ -51,6 +51,8 @@ export const defaultRowSelection: RowSelection = {
     // checkboxIndex: 0,
     showDefalutCheckbox: true,
     selectedKeys: [],
+    rowMultiSelectWithClick: true,
+    rowDeselection:true
 }
 
 const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
@@ -168,16 +170,17 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     // 处理selection- 双向绑定selectKeys
     useEffect(() => {
         if (selectedKeys && apiRef.current) {
-            if (selectedKeys.length == 0) {
-                if (apiRef.current.getSelectedRows().length) apiRef.current.deselectAll();
-            } else {
-                selectedKeys.map(id => {
-                    const nodeItem = apiRef.current.getRowNode(id);
-                    nodeItem.setSelected(true, rowSelection === 'single')
-                })
-            }
+            const gridSelectedKeys = apiRef.current.getSelectedNodes();
+            const allKeys = [...gridSelectedKeys.map(item => getRowNodeId(get(item, 'data', {}))), ...selectedKeys];
+            if (allKeys.length == 0 || isEqual(allKeys) === selectedKeys) return;
+            allKeys.map(id => {
+                const nodeItem = apiRef.current.getRowNode(id);
+                if (!nodeItem) return
+                if (selectedKeys.indexOf(id) >= 0) nodeItem.setSelected(true, rowSelection === 'single');
+                else nodeItem.setSelected(false)
+            })
         }
-    }, [selectedKeys, apiRef.current, rowSelection])
+    }, [selectedKeys, apiRef.current, rowSelection, getRowNodeId])
     // 处理selection-end
     //columns
     const defaultSelection = !isEmpty(gantSelection) && showDefalutCheckbox && !(treeData && isServer);
@@ -218,7 +221,6 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                                 filter,
                                 minWidth: 100,
                             }}
-                            // rowMultiSelectWithClick
                             headerHeight={24}
                             floatingFiltersHeight={20}
                             getDataPath={getDataPath}
@@ -227,7 +229,6 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                             {...gridPartProps}
                             {...selection}
                             {...orignProps}
-                            stopEditingWhenGridLosesFocus
                             suppressRowDrag
                             onCellValueChanged={cellValueChanged}
                             deltaRowDataMode

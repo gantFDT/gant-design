@@ -1,39 +1,38 @@
 
 import CodeDecorator from '../_util/CodeDecorator'
+import codes from './code';
 /*! Start !*/
 import React, { useMemo, useEffect, useCallback, useState, useRef } from 'react'
 import Grid, { Columns, Filter, OnReady, GridApi, Fixed, DataManage, RemoveCallBack } from '@grid';
-import { GridReadyEvent } from 'ag-grid-community'
+import { GridReadyEvent, ColDef } from 'ag-grid-community'
 import { Button, message } from "antd"
 import { Input, InputCellPhone } from "@data-cell"
 import Header from '@header'
 /*! Split !*/
-function getSimpleCellRenderer(): any {
-    function SimpleCellRenderer() { }
-    SimpleCellRenderer.prototype.init = function (params) {
-        console.log(params)
-        var tempDiv = document.createElement('div');
-        if (params.node.group) {
-            tempDiv.innerHTML =
-                '<span style="border-bottom: 1px solid grey; border-left: 1px solid grey; padding: 2px;">' +
-                params.value +
-                '</span>';
-        } else {
-            tempDiv.innerHTML =
-                '<span><img src="https://flags.fmcdn.net/data/flags/mini/ie.png" style="width: 20px; padding-right: 4px;"/>' +
-                params.value +
-                '</span>';
-        }
-        this.eGui = tempDiv.firstChild;
-    };
-    SimpleCellRenderer.prototype.getGui = function () {
-        return this.eGui;
-    };
-    return SimpleCellRenderer;
-}
-
-type Data = { name?: string, age?: number, [key: string]: any }
 const TreeGrid = () => {
+    function getSimpleCellRenderer(): any {
+        function SimpleCellRenderer() { }
+        SimpleCellRenderer.prototype.init = function (params) {
+            console.log(params)
+            var tempDiv = document.createElement('div');
+            if (params.node.group) {
+                tempDiv.innerHTML =
+                    '<span style="border-bottom: 1px solid grey; border-left: 1px solid grey; padding: 2px;">' +
+                    params.value +
+                    '</span>';
+            } else {
+                tempDiv.innerHTML =
+                    '<span><img src="https://flags.fmcdn.net/data/flags/mini/ie.png" style="width: 20px; padding-right: 4px;"/>' +
+                    params.value +
+                    '</span>';
+            }
+            this.eGui = tempDiv.firstChild;
+        };
+        SimpleCellRenderer.prototype.getGui = function () {
+            return this.eGui;
+        };
+        return SimpleCellRenderer;
+    }
 
     const [editable, seteditable] = useState(false)
 
@@ -55,7 +54,10 @@ const TreeGrid = () => {
                 editable: true
             },
             enableRowGroup: true,
-            cellRenderer: "agGroupCellRenderer"
+            cellRenderer: "agGroupCellRenderer",
+            cellRendererParams: {
+                innerRenderer: () => 11111,
+            }
         },
         {
             title: '年龄',
@@ -189,7 +191,6 @@ const TreeGrid = () => {
 }
 /*! End !*/
 
-/*! Split !*/
 function ajax(updateData) {
     const httpRequest = new XMLHttpRequest();
     httpRequest.open(
@@ -205,6 +206,7 @@ function ajax(updateData) {
 }
 const AsyncTreeData = () => {
     const [dataSource, setDataSource] = useState([])
+    const [selectedKeys, setSelectedKeys] = useState([])
     const columns = [{
         fieldName: 'employeeId',
         enableRowGroup: true,
@@ -212,6 +214,7 @@ const AsyncTreeData = () => {
         editConfig: {
             component: InputCellPhone,
             // changeFormatter: (e: any) => e.target.value,
+
             editable: true
         },
     },
@@ -225,6 +228,7 @@ const AsyncTreeData = () => {
     useEffect(() => {
         ajax(setDataSource)
     }, [])
+    const onSelect = (keys) => setSelectedKeys(keys)
     return <Grid
         rowkey="employeeId"
         columns={columns}
@@ -235,7 +239,13 @@ const AsyncTreeData = () => {
         //     return Array.isArray(data.children)
         // }}
         treeDataChildrenName="underlings"
-        rowSelection
+        rowSelection={{
+            selectedKeys: selectedKeys,
+            onSelect: (keys) => {
+                console.log(keys, 'selected')
+                onSelect(keys)
+            }
+        }}
         editable
         onRowGroupOpened={(data) => { console.log(data) }}
         groupSuppressAutoColumn
@@ -243,7 +253,7 @@ const AsyncTreeData = () => {
 }
 
 const config = {
-    codes: [],
+    codes,
     useage: '',
     children: [
         {

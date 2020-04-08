@@ -23,11 +23,13 @@ export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Si
     function getColumnDefs(columns: Columns<T>[]) {
         return columns.map(({ title: headerName, fieldName: field, children, render, editConfig, cellRenderer, fixed, ...item }, index) => {
             const ColEditable = typeof editConfig !== 'undefined';
+            console.log("item", item)
             const colDef = {
                 headerName,
                 field,
                 cellRendererParams: {
-                    render
+                    render,
+                    // innerRenderer: () => 11111,
                 },
                 cellClass: (params: any) => {
                     const { colDef: { field }, value } = params
