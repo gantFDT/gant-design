@@ -52,7 +52,7 @@ export const defaultRowSelection: RowSelection = {
     showDefalutCheckbox: true,
     selectedKeys: [],
     rowMultiSelectWithClick: true,
-    rowDeselection:true
+    rowDeselection: true
 }
 
 const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
@@ -195,9 +195,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     const cellValueChanged = useCallback(
         (changed) => {
             dataManage.modify(changed)
-        },
-        [],
-    )
+        }, [])
     return (
         <>
             <Spin spinning={loading}>

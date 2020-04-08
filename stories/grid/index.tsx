@@ -9,6 +9,7 @@ import { Button, message } from "antd"
 import { Input, InputCellPhone } from "@data-cell"
 import Header from '@header'
 /*! Split !*/
+type Data = { name?: string, age?: number, [key: string]: any }
 const TreeGrid = () => {
     function getSimpleCellRenderer(): any {
         function SimpleCellRenderer() { }
@@ -55,9 +56,6 @@ const TreeGrid = () => {
             },
             enableRowGroup: true,
             cellRenderer: "agGroupCellRenderer",
-            cellRendererParams: {
-                innerRenderer: () => 11111,
-            }
         },
         {
             title: '年龄',
@@ -148,8 +146,8 @@ const TreeGrid = () => {
                     <>
                         <Button onClick={() => editApi.create(0, { id: Math.random().toString(16), name: Math.random().toString(16) })}>新增</Button>
                         <Button disabled={!(editApi && selectedKeys.length)} onClick={() => editApi.remove(deleteCb).then(e => message.success("删除成功"), e => { message.error("删除出错"); throw e })}>删除</Button>
-                        <Button disabled={!(editApi && editApi.canUndo)} onClick={() => editApi.undo()}>撤销</Button>
-                        <Button disabled={!(editApi && editApi.canRedo)} onClick={() => editApi.redo()}>重做</Button>
+                        <Button onClick={() => editApi.undo()}>撤销</Button>
+                        <Button onClick={() => editApi.redo()}>重做</Button>
                         <Button onClick={() => {
                             editApi.cancel()
                             seteditable(false)

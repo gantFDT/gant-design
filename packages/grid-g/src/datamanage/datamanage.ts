@@ -73,6 +73,7 @@ class DataManage<T extends Record = any> extends EventEmitter {
     // 撤销
     undo() {
         this.history.undo()
+        console.log(this.canUndo)
     }
 
     // 前进
@@ -152,7 +153,7 @@ class DataManage<T extends Record = any> extends EventEmitter {
             // 添加到根节点
             const inserIndex = Math.max(Math.min(path, this.state.size), 0)
             this._add.set(DataManage.getRowNodeId(index), index)
-            newState = this.state.insert(inserIndex, index)
+            newState = this.state.insert(inserIndex, { ...index, _rowType: DataActions.add })
         } else if (!isnumber(path) && isnumber(index)) {
             // path, index, item
             let list = this.state;
@@ -174,7 +175,7 @@ class DataManage<T extends Record = any> extends EventEmitter {
                 subList = [...subList]
                 subList.splice(inserIndex, 0, item)
             }
-            this._add.set(DataManage.getRowNodeId(item), item)
+            this._add.set(DataManage.getRowNodeId(item), { ...item, _rowType: DataActions.add })
             newState = this.state.setIn(keyPath, subList);
         }
         // 更新history
@@ -182,7 +183,7 @@ class DataManage<T extends Record = any> extends EventEmitter {
     }
 
 
-    remove(cb: RemoveCallBack, removeChildren?: boolean): Promise<Array<RowNode>> {
+    remove(cb: RemoveCallBack, removeChildren: boolean = true): Promise<Array<RowNode>> {
         const selectedNodes = this.gridApi.current.getSelectedNodes()
         const selected = selectedNodes.map(node => node.data)
         return new Promise((res, rej) => {
