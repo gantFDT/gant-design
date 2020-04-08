@@ -109,7 +109,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     }, [rowkey])
     /**管理编辑数据对象 */
     const dataManage = useMemo(() => {
-        const manager = new DataManage<T>(initDataSource, apiRef, columnsRef)
+        const manager = new DataManage<T>(apiRef, columnsRef)
         manager.removeAllListeners()
         manager.on("update", (list) => {
             setManageData(list)
@@ -122,6 +122,10 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     useEffect(() => {
         dataManage.init(initDataSource)
     }, [initDataSource])
+    /**fix: 解决保存时候标记状态无法清楚的问题 */
+    useEffect(() => {
+        apiRef.current && apiRef.current.refreshCells({ force: true })
+    }, [manageData])
 
     /**出口数据，用于grid显示 */
     useEffect(() => {
@@ -162,7 +166,6 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     const onGridReady = useCallback((params: GridReadyEvent) => {
         apiRef.current = params.api
         columnsRef.current = params.columnApi
-
         onReady && onReady(params, dataManage)
     }, [onReady])
 

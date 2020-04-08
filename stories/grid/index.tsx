@@ -77,30 +77,30 @@ const TreeGrid = () => {
         [
             {
                 name: "里斯",
-                id: "1",
+                idcard: "1",
                 age: 123,
                 children: [
                     {
                         name: "阿萨的脚后跟",
                         age: 1,
-                        id: "11",
+                        idcard: "11",
                     }
                 ]
             },
             {
                 name: "阿斯u",
                 age: 544,
-                id: "2",
+                idcard: "2",
             },
             {
                 name: "埃斯珀蒂就",
                 age: 1,
-                id: "3",
+                idcard: "3",
             },
             {
                 name: "撒旦",
                 age: 45,
-                id: "4",
+                idcard: "4",
             },
         ]
     )
@@ -114,7 +114,7 @@ const TreeGrid = () => {
     const onReady = useCallback<OnReady>((api, manager) => {
         apiRef.current = api
         setEditApi(manager)
-        manager.appendChild(["1", "12"])
+        manager.appendChild(["2"], [{ name: "child", age: 11, id: '111' }, { name: "child2", age: 12, id: '112' }])
     }, [])
 
     const [beginIndex, setBeginIndex] = useState(0)
@@ -145,7 +145,7 @@ const TreeGrid = () => {
                 <Button onClick={edit}>进入编辑</Button>
             ) : (
                     <>
-                        <Button onClick={() => editApi.create(0, { id: Math.random().toString(16), name: Math.random().toString(16) })}>新增</Button>
+                        <Button onClick={() => editApi.create(0, { idcard: Math.random().toString(16), name: Math.random().toString(16) })}>新增</Button>
                         <Button disabled={!(editApi && selectedKeys.length)} onClick={() => editApi.remove(deleteCb).then(e => message.success("删除成功"), e => { message.error("删除出错"); throw e })}>删除</Button>
                         <Button onClick={() => editApi.undo()}>撤销</Button>
                         <Button onClick={() => editApi.redo()}>重做</Button>
@@ -157,7 +157,6 @@ const TreeGrid = () => {
                             const { list, diff } = editApi.save()
                             setdataSource(list)
                             seteditable(false)
-                            console.log("diff数据", diff)
                         }}>保存</Button>
                     </>
                 )
@@ -166,7 +165,7 @@ const TreeGrid = () => {
                 components={{
                     "simpleCellRenderer": getSimpleCellRenderer()
                 }}
-                rowkey="id"
+                rowkey="idcard"
                 loading={loading}
                 columns={columns}
                 treeData
