@@ -64,7 +64,7 @@ class History<T extends DataRecord> extends EventEmitter {
     replace(indexPaths: number[], children: T[]) {
         const item = this.currentState.get(indexPaths[0])
         item.children = children
-        console.log(item)
+        this.emit("manager:update")
     }
 
     // 添加新状态

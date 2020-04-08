@@ -310,8 +310,6 @@ class DataManage<T extends Record = any> extends EventEmitter {
     appendChild(idPaths: string[], children: T[]) {
         const indexPaths: number[] = idPaths.map(id => this.gridApi.current.getRowNode(id).childIndex)
         this.history.replace(indexPaths, children)
-
-        this.gridApi.current.refreshCells({ force: true })
     }
 
     // // 移动
