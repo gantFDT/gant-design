@@ -57,6 +57,7 @@ export const findChildren = function findChildren(node: RowNode): RowNode[] {
     return children
 }
 
+/**根据keyPath移除深层节点 */
 export const removeDeepItem = function removeDeepItem<T extends Record>(treeDataChildrenName: string, keyPath: Array<number>, { ...node }: Record, newData?: any): T {
     let currentKey = keyPath.splice(0, 1)[0]
     let children = [...node[treeDataChildrenName]]
@@ -73,3 +74,6 @@ export const removeDeepItem = function removeDeepItem<T extends Record>(treeData
     return node as T
 }
 
+export const getPureRecord = function getPureRecord(data: any) {
+    return _.omit(data, ["treeDataPath", "_rowData", "_rowType", "__origin"])
+}

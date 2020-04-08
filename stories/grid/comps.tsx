@@ -2,7 +2,7 @@
 import CodeDecorator from '../_util/CodeDecorator'
 /*! Start !*/
 import React, { useMemo, useEffect, useCallback, useState, useRef } from 'react'
-import Grid, { Columns, Filter, OnReady, GridApi, Fixed, Api, OnEdit, RemoveCallBack } from '@grid';
+import Grid, { Columns, Filter, OnReady, GridApi, Fixed, DataManage, RemoveCallBack } from '@grid';
 import { GridReadyEvent } from 'ag-grid-community'
 import { Button, message } from "antd"
 import { Input, InputCellPhone } from "@data-cell"
@@ -31,6 +31,8 @@ function getSimpleCellRenderer(): any {
     };
     return SimpleCellRenderer;
 }
+
+type Data = { name?: string, age?: number, [key: string]: any }
 const TreeGrid = () => {
 
     const [editable, seteditable] = useState(false)
@@ -43,16 +45,12 @@ const TreeGrid = () => {
         }, 2000)
     }, [])
 
-    const [columns, setcolumns] = useState<Columns<{ name: string, age: number }>[]>([
+    const [columns, setcolumns] = useState<Columns<Data>[]>([
         {
             title: '姓名',
             fieldName: "name",
-            // checkboxSelection: true,
-            // render: (text, rowIndex) => {
-            //     return text + "----"
-            // },
             editConfig: {
-                component: InputCellPhone,
+                component: Input,
                 // changeFormatter: (e: any) => e.target.value,
                 editable: true
             },
@@ -75,7 +73,7 @@ const TreeGrid = () => {
     ])
 
 
-    const [dataSource, setdataSource] = useState(
+    const [dataSource, setdataSource] = useState<Data[]>(
         [
             {
                 name: "里斯",
@@ -111,10 +109,11 @@ const TreeGrid = () => {
 
     const edit = useCallback((e) => { seteditable(true) }, [])
 
-    const [editApi, setEditApi] = useState<Api>()
+    const [editApi, setEditApi] = useState<DataManage<Data>>()
 
-    const onReady = useCallback<OnReady>((api) => {
+    const onReady = useCallback<OnReady>((api, manager) => {
         apiRef.current = api
+        setEditApi(manager)
     }, [])
 
     const [beginIndex, setBeginIndex] = useState(0)
@@ -145,12 +144,20 @@ const TreeGrid = () => {
                 <Button onClick={edit}>进入编辑</Button>
             ) : (
                     <>
-                        <Button onClick={() => editApi.add(0, { id: Math.random().toString(16), name: Math.random().toString(16) })}>新增</Button>
-                        <Button disabled={!(editApi && editApi.deletable)} onClick={() => editApi.remove(false, deleteCb).then(e => message.success("删除成功"), e => { message.error("删除出错"); throw e })}>删除</Button>
+                        <Button onClick={() => editApi.create(0, { id: Math.random().toString(16), name: Math.random().toString(16) })}>新增</Button>
+                        <Button disabled={!(editApi && selectedKeys.length)} onClick={() => editApi.remove(deleteCb).then(e => message.success("删除成功"), e => { message.error("删除出错"); throw e })}>删除</Button>
                         <Button disabled={!(editApi && editApi.canUndo)} onClick={() => editApi.undo()}>撤销</Button>
                         <Button disabled={!(editApi && editApi.canRedo)} onClick={() => editApi.redo()}>重做</Button>
-                        <Button onClick={() => editApi.cancel()}>取消编辑</Button>
-                        <Button onClick={() => editApi.save()}>保存</Button>
+                        <Button onClick={() => {
+                            editApi.cancel()
+                            seteditable(false)
+                        }}>取消编辑</Button>
+                        <Button onClick={() => {
+                            const { list, diff } = editApi.save()
+                            setdataSource(list)
+                            seteditable(false)
+                            console.log("diff数据", diff)
+                        }}>保存</Button>
                     </>
                 )
             } />
@@ -163,13 +170,12 @@ const TreeGrid = () => {
                 columns={columns}
                 treeData
                 editable={editable}
-                onEditableChange={seteditable}
-                dataSource={dataSource} onReady={onReady}
+                dataSource={dataSource}
+                onReady={onReady}
                 rowSelection={{
                     selectedKeys,
                     onSelect
                 }}
-                onEdit={setEditApi}
                 pagination={{
                     pageSize: 2,
                     beginIndex,

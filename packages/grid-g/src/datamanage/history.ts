@@ -48,6 +48,14 @@ class History<T extends DataRecord> extends EventEmitter {
         return this.list.get(this.index)
     }
 
+    get first() {
+        return this.list.first()
+    }
+
+    get last() {
+        return this.list.last()
+    }
+
     init(state: List<T>) {
         return this.merge(initstate, true).push(state)
     }
