@@ -408,7 +408,7 @@ task('code', function code(){
 })
 
 task('watch:code', function () {
-  watch([`stories/*/index.js`, `stories/*/index.ts`], series('code'));
+  watch([`stories/*/index.js`, `stories/*/index.ts`, `stories/*/index.jsx`, `stories/*/index.tsx`], series('code'));
 })
 
 task('default', series('clean', 'lib'))

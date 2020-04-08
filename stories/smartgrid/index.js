@@ -232,12 +232,8 @@ function ConfigDisplayUse() {
         name: "系统视图1",
         version: '2020-02-10 09:45:37',
         panelConfig: {
-          wrap: false,
-          isZebra: false,
-          bordered: false,
           clickable: false,
           footerDirection: 'row-reverse',
-          heightMode: 'auto',
           columnFields: tableColumns.map(column => ({ fieldName: column.fieldName }))
         }
       }
@@ -533,7 +529,6 @@ var editTableSchema = {
       name: "系统视图",
       version: '2020-02-20 02:20:02',
       panelConfig: {
-        wrap: false,
         columnFields: [
           {
             fieldName: 'name',
