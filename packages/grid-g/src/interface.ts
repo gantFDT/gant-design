@@ -32,6 +32,11 @@ export enum Fixed {
     right = "right"
 }
 
+export enum Move {
+    up = 'up',
+    down = "down"
+}
+
 
 /**删除数据时的回调方法，可以返回boolean、array或者是一个能够提供boolean、array类型返回值的promise */
 export type RemoveCallBack = (selected: any[]) => (Promise<boolean> | boolean)

@@ -114,6 +114,7 @@ const TreeGrid = () => {
     const onReady = useCallback<OnReady>((api, manager) => {
         apiRef.current = api
         setEditApi(manager)
+        manager.appendChild(["1", "12"])
     }, [])
 
     const [beginIndex, setBeginIndex] = useState(0)

@@ -305,6 +305,11 @@ class DataManage<T extends Record = any> extends EventEmitter {
         this.history.push(newState)
     }
 
+    /**添加子级节点 */
+    appendChild(idPaths: string[], children: T[]) {
+
+    }
+
     // // 移动
     // move() {
 
@@ -317,16 +322,6 @@ class DataManage<T extends Record = any> extends EventEmitter {
             update: [...this._modify.values()]
         }
     }
-
-
-    /**添加状态 */
-    // push(list: T[]) {
-    //     const state = List(list)
-    //     // 添加一个新状态并且不触发更新
-    //     this.history.push(state)
-    // }
-
-
 
 }
 

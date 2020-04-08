@@ -119,6 +119,10 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         return manager
     }, [])
 
+    useEffect(() => {
+        dataManage.init(initDataSource)
+    }, [initDataSource])
+
     /**出口数据，用于grid显示 */
     useEffect(() => {
         if (editable) {
