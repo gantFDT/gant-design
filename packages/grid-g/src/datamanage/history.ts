@@ -1,7 +1,9 @@
 import { List, Record } from 'immutable'
 import { EventEmitter } from 'events'
+import { RowNode } from 'ag-grid-community'
 
 import { Record as DataRecord } from '../interface'
+import { updateStateByKey } from "./utils"
 
 const initstate = {
     index: -1,
@@ -60,10 +62,14 @@ class History<T extends DataRecord> extends EventEmitter {
         return this.merge(initstate, true).push(state)
     }
 
+
     /**替换状态 */
-    addpenChild(indexPaths: number[], children: T[]) {
-        const item = this.currentState.get(indexPaths[0])
-        item.children = children
+    appendChild(groupKeys: (number | string)[], key: string, children: List<T>, getGroupKey: (d: any) => string | number) {
+
+        this.list = this.list.map(state => updateStateByKey(state, groupKeys, key, children, getGroupKey)) as List<List<T>>
+        if (this.canRedo) {
+            this.trash = this.trash.map(state => updateStateByKey(state, groupKeys, key, children, getGroupKey)) as List<List<T>>
+        }
         this.emit("manager:update")
     }
 
@@ -78,7 +84,6 @@ class History<T extends DataRecord> extends EventEmitter {
 
     // 撤销
     undo() {
-        console.log(this)
         if (this.canUndo) {
             const popedState = this.list.last()
             return this.merge({

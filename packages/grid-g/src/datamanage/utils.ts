@@ -1,10 +1,11 @@
 import _ from 'lodash'
 import { ColumnApi, GridApi, RowNode } from 'ag-grid-community';
+import { List, Map } from 'immutable'
 import { Record } from '../interface'
 
 export const originKey = "__origin"
 export const cloneDeep = function cloneDeep<T extends Record>(list: T[]): T[][] {
-    if (!list.length) return []
+    if (!list.length) return [[], []]
     const pureList = []
     const cloneList = list.map((item: T) => {
 
@@ -86,4 +87,39 @@ export const getPureList = function getPureList<T extends Record>(list: T[]): T[
         return record
     })
     return cloneList
+}
+
+/**找到grid rownode的节点path */
+export const getIndexPath = function (node: RowNode): number[] {
+    const paths = []
+    let currentNode = node
+    while (currentNode.level >= 0) {
+        paths.unshift(currentNode.childIndex)
+        currentNode = currentNode.parent
+    }
+    return paths
+}
+
+/**
+ * 
+ * @param state 要修改的状态
+ * @param keyPaths 修改的路径
+ * @param key 修改的字段
+ * @param children 修改的子级节点数据
+ * @param getKey 获取key的方法
+ */
+export function updateStateByKey<T>(state: List<any>, keyPaths: (string | number)[], key: string, children: List<T>, getKey: (d: any) => string | number) {
+
+    function innerUpdate(state: List<any>, paths = [...keyPaths]) {
+        let newState = children
+        if (paths.length) {
+            const groupKey = paths.shift()
+            const index = state.findIndex(row => getKey(row.toJS()) === groupKey)
+            const subState = innerUpdate(state.getIn([index, key]), paths)
+            newState = state.setIn([index, key], subState)
+        }
+        return newState
+    }
+
+    return innerUpdate(state)
 }

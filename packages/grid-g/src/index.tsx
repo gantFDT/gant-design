@@ -120,13 +120,14 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     }, [rowkey])
     /**管理编辑数据对象 */
     const dataManage = useMemo(() => {
-        const manager = new DataManage<T>(apiRef, columnsRef)
+        const manager = new DataManage<T>()
         manager.removeAllListeners()
         manager.on("update", (list) => {
             setManageData(list)
         })
-        DataManage.getRowNodeId = getRowNodeId
-        DataManage.treeDataChildrenName = treeDataChildrenName
+        manager.getRowNodeId = getRowNodeId
+        manager.childrenName = treeDataChildrenName
+        manager.getServerSideGroupKey = getServerSideGroupKey ? getServerSideGroupKey : getRowNodeId
         return manager
     }, [])
 
@@ -157,15 +158,15 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     const serverModel = useMemo(() => {
         return isServer && treeData
     }, [isServer && treeData])
-    const serverDataCallback = useCallback((groupkeys, successCallback) => {
+    const serverDataCallback = useCallback((groupKeys, successCallback) => {
         return (rows) => {
             successCallback(rows, rows.length);
-            dataManage.appendChild(groupkeys, rows)
+            dataManage.appendChild(groupKeys, rows)
         }
     }, [])
-    const serverDataRequest = useCallback((groupkeys, successCallback) => {
+    const serverDataRequest = useCallback((groupKeys, successCallback) => {
         if (serverGroupExpend) {
-            return serverGroupExpend(serverDataCallback(groupkeys, successCallback))
+            return serverGroupExpend(serverDataCallback(groupKeys, successCallback))
         }
         return successCallback([], 0)
     }, [serverGroupExpend])
@@ -178,6 +179,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     }, [serverModel, treeDataChildrenName, serverDataRequest, apiRef.current])
 
     const gridPartProps = useMemo(() => {
+
         if (treeData && isServer) return {
             isServerSideGroup,
             treeData,
@@ -194,6 +196,9 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         apiRef.current = params.api
         columnsRef.current = params.columnApi
         onReady && onReady(params, dataManage)
+
+        dataManage.gridApi = params.api
+        dataManage.columnApi = params.columnApi
     }, [onReady])
 
     const onSelectionChanged = useCallback((event: SelectionChangedEvent) => {
