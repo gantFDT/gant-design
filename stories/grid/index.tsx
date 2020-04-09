@@ -77,30 +77,30 @@ const TreeGrid = () => {
         [
             {
                 name: "里斯",
-                id: "1",
+                idcard: "1",
                 age: 123,
                 children: [
                     {
                         name: "阿萨的脚后跟",
                         age: 1,
-                        id: "11",
+                        idcard: "11",
                     }
                 ]
             },
             {
                 name: "阿斯u",
                 age: 544,
-                id: "2",
+                idcard: "2",
             },
             {
                 name: "埃斯珀蒂就",
                 age: 1,
-                id: "3",
+                idcard: "3",
             },
             {
                 name: "撒旦",
                 age: 45,
-                id: "4",
+                idcard: "4",
             },
         ]
     )
@@ -109,12 +109,11 @@ const TreeGrid = () => {
 
     const edit = useCallback((e) => { seteditable(true) }, [])
 
-    const [editApi, setEditApi] = useState<DataManage<Data>>()
+    const [manager, setManager] = useState<DataManage<Data>>()
 
     const onReady = useCallback<OnReady>((api, manager) => {
         apiRef.current = api
-        setEditApi(manager)
-        // manager.appendChild(["1", "12"])
+        setManager(manager)
     }, [])
 
     const [beginIndex, setBeginIndex] = useState(0)
@@ -139,25 +138,33 @@ const TreeGrid = () => {
             res(true)
         }, 500)
     }), [])
+
+    const append = useCallback(
+        () => {
+            manager.appendChild(["2"], [{ name: "child", age: 11, idcard: '111' }, { name: "child2", age: 12, idcard: '112' }])
+        },
+        [manager],
+    )
+
     return (
         <>
             <Header extra={!editable ? (
                 <Button onClick={edit}>进入编辑</Button>
             ) : (
                     <>
-                        <Button onClick={() => editApi.create(0, { id: Math.random().toString(16), name: Math.random().toString(16) })}>新增</Button>
-                        <Button disabled={!(editApi && selectedKeys.length)} onClick={() => editApi.remove(deleteCb).then(e => message.success("删除成功"), e => { message.error("删除出错"); throw e })}>删除</Button>
-                        <Button onClick={() => editApi.undo()}>撤销</Button>
-                        <Button onClick={() => editApi.redo()}>重做</Button>
+                        <Button onClick={() => manager.create(0, { idcard: Math.random().toString(16), name: Math.random().toString(16) })}>新增</Button>
+                        <Button disabled={!(manager && selectedKeys.length)} onClick={() => manager.remove(deleteCb).then(e => message.success("删除成功"), e => { message.error("删除出错"); throw e })}>删除</Button>
+                        <Button onClick={append}>添加子节点</Button>
+                        <Button onClick={() => manager.undo()}>撤销</Button>
+                        <Button onClick={() => manager.redo()}>重做</Button>
                         <Button onClick={() => {
-                            editApi.cancel()
+                            manager.cancel()
                             seteditable(false)
                         }}>取消编辑</Button>
                         <Button onClick={() => {
-                            const { list, diff } = editApi.save()
+                            const { list, diff } = manager.save()
                             setdataSource(list)
                             seteditable(false)
-                            console.log("diff数据", diff)
                         }}>保存</Button>
                     </>
                 )
@@ -166,7 +173,7 @@ const TreeGrid = () => {
                 components={{
                     "simpleCellRenderer": getSimpleCellRenderer()
                 }}
-                rowkey="id"
+                rowkey="idcard"
                 loading={loading}
                 columns={columns}
                 treeData

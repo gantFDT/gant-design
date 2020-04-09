@@ -4,7 +4,7 @@ import { EventEmitter } from 'events'
 
 
 import History from './history'
-import { originKey, cloneDeep, findChildren, removeDeepItem, getPureRecord } from './utils'
+import { originKey, cloneDeep, findChildren, removeDeepItem, getPureRecord, getPureList } from './utils'
 import { Record, DataActions, RemoveCallBack } from '../interface'
 import { isnumber } from '../utils'
 
@@ -25,17 +25,16 @@ class DataManage<T extends Record = any> extends EventEmitter {
     private _removed = new Map<string, any>()
     private _add = new Map<string, any>()
     private _modify = new Map<string, any>()
+    private _dataSource: T[]
 
     static getRowNodeId: (d: any) => string
     static treeDataChildrenName: string = 'children'
 
 
-    constructor(private _dataSource: T[], public gridApi: React.MutableRefObject<GridApi>, public columnApi: React.MutableRefObject<ColumnApi>) {
+    constructor(public gridApi: React.MutableRefObject<GridApi>, public columnApi: React.MutableRefObject<ColumnApi>) {
         super();
         this.history = new History()
         this.history.on("manager:update", this.update.bind(this))
-
-        this.init(this._dataSource)
     }
 
     /**是否有变更 */
@@ -101,9 +100,10 @@ class DataManage<T extends Record = any> extends EventEmitter {
     /**保存, 清空历史栈 */
     save() {
         const lastList = this.history.last
-        const list = this.renderList
+        const list = getPureList(this.renderList)
         const diff = this.getDiff()
         this.history.init(lastList)
+
         return {
             list,
             diff
@@ -277,9 +277,10 @@ class DataManage<T extends Record = any> extends EventEmitter {
 
     // 修改
     modify(changed: any) {
-        const { data } = changed
+        console.log(changed)
+        const { data, node: { id } } = changed
         // 添加到对应的modify数组
-        const id = DataManage.getRowNodeId(data)
+        // const id = DataManage.getRowNodeId(data)
         if (data[originKey]) {
             this._modify.set(id, getPureRecord(data))
         } else {
@@ -307,7 +308,8 @@ class DataManage<T extends Record = any> extends EventEmitter {
 
     /**添加子级节点 */
     appendChild(idPaths: string[], children: T[]) {
-
+        const indexPaths: number[] = idPaths.map(id => this.gridApi.current.getRowNode(id).childIndex)
+        this.history.replace(indexPaths, children)
     }
 
     // // 移动
@@ -317,9 +319,9 @@ class DataManage<T extends Record = any> extends EventEmitter {
 
     getDiff(): RowNodeTransaction {
         return {
-            add: [...this._add.values()],
-            remove: [...this._removed.values()],
-            update: [...this._modify.values()]
+            add: getPureList([...this._add.values()]),
+            remove: getPureList([...this._removed.values()]),
+            update: getPureList([...this._modify.values()])
         }
     }
 

@@ -13,7 +13,7 @@ export default (WrapperComponent) => forwardRef(function GridEidtColumn(props: a
 	const inputRef: any = useRef()
 	const onChange = useCallback((val) => {
 		let chageVal = val
-		if (typeof changeFormatter === 'function') chageVal = changeFormatter(val)
+		if (typeof changeFormatter === 'function') chageVal = changeFormatter(val, data)
 		setCacheValue(chageVal)
 	}, [changeFormatter])
 	const onBlur = useCallback(() => {

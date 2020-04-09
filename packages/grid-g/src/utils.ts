@@ -30,15 +30,11 @@ export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Si
                     render,
                     // innerRenderer: () => 11111,
                 },
-                cellClass: (params: any) => {
-                    const { colDef: { field }, value } = params
-                    const data = get(params, 'data', {});
-                    const { _rowType, _rowData = {} } = data;
-                    if (_rowType === DataActions.modify) {
-                        if (get(_rowData, `${field}`) !== value) return "gant-grid-cell gant-grid-cell-modify"
-                        return ""
-                    }
-                    return get(params, 'data._rowType') ? `gant-grid-cell gant-grid-cell-${params.data._rowType}` : ""
+                cellClass: ["gant-grid-cell"],
+                cellClassRules: {
+                    "gant-grid-cell-modify": params => params.data._rowType === DataActions.modify,
+                    "gant-grid-cell-add": params => params.data._rowType === DataActions.add,
+                    "gant-grid-cell-delete": params => params.data._rowType === DataActions.remove,
                 },
                 cellRenderer: cellRenderer ? cellRenderer : "gantRenderCol",
                 ...item,
@@ -55,7 +51,7 @@ export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Si
                         rowkey: getRowNodeId
                     }
                     colDef.cellEditorFramework = EditorCol(editConfig.component)
-                    colDef.editable = editable ? ColEditableFn(editConfig.editable) : false
+                    colDef.editable = ColEditableFn(editConfig.editable)
                 }
                 if (fixed) colDef.pinned = fixed
             }

@@ -74,6 +74,18 @@ export const removeDeepItem = function removeDeepItem<T extends Record>(treeData
     return node as T
 }
 
-export const getPureRecord = function getPureRecord(data: any) {
+export const getPureRecord = function getPureRecord<T>(data: T): T {
     return _.omit(data, ["treeDataPath", "_rowData", "_rowType", "__origin"])
+}
+
+export const getPureList = function getPureList<T extends Record>(list: T[]): T[] {
+    if (!list.length) return []
+    const cloneList = list.map((item: T) => {
+        const record = getPureRecord<T>(item)
+        if (item.children && item.children.length) {
+            record.children = getPureList(item.children)
+        }
+        return record
+    })
+    return cloneList
 }
