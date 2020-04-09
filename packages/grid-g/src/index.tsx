@@ -21,8 +21,16 @@ import RenderCol from './GirdRenderColumn'
 export * from './interface'
 export { default as DataManage } from './datamanage'
 
+import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver'
+import en from './locale/en-US'
+import zh from './locale/zh-CN'
+
 LicenseManager.setLicenseKey(key)
 
+const langs = {
+    'en': en,
+    'zh-cn': zh
+}
 
 export const defaultProps = {
     /**加载状态 */
@@ -80,6 +88,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         getServerSideGroupKey,
         frameworkComponents,
         treeDataChildrenName,
+        locale: customLocale,
         ...orignProps
     } = props
 
@@ -204,46 +213,51 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
             dataManage.modify(changed)
         }, [])
     return (
-        <>
-            <Spin spinning={loading}>
-                <div style={{ width, height }} className={classnames('gant-grid', `gant-grid-${getSizeClassName(size)}`)} >
-                    <div className="ag-theme-balham" style={{ width: '100%', height: computedPagination ? 'calc(100% - 30px)' : '100%' }}>
-                        <AgGridReact
-                            frameworkComponents={{
-                                "gantRenderCol": RenderCol,
-                                ...frameworkComponents
-                            }}
-                            onSelectionChanged={onSelectionChanged}
-                            columnDefs={columns}
-                            rowSelection={rowSelection}
-                            getRowNodeId={getRowNodeId}
-                            onGridReady={onGridReady}
-                            undoRedoCellEditing
-                            enableFillHandle
-                            defaultColDef={{
-                                resizable,
-                                sortable,
-                                filter,
-                                minWidth: 100,
-                            }}
-                            headerHeight={24}
-                            floatingFiltersHeight={20}
-                            getDataPath={getDataPath}
-                            rowHeight={size == "small" ? 24 : 32}
-                            singleClickEdit
-                            {...gridPartProps}
-                            {...selection}
-                            {...orignProps}
-                            suppressRowDrag
-                            onCellValueChanged={cellValueChanged}
-                            deltaRowDataMode
-                        />
+        <LocaleReceiver>
+            {(local, localeCode = 'zh-cn') => {
+                let lang = langs[localeCode] || langs['zh-cn']
+                const locale = { ...lang, ...customLocale }
+                return <Spin spinning={loading}>
+                    <div style={{ width, height }} className={classnames('gant-grid', `gant-grid-${getSizeClassName(size)}`)} >
+                        <div className="ag-theme-balham" style={{ width: '100%', height: computedPagination ? 'calc(100% - 30px)' : '100%' }}>
+                            <AgGridReact
+                                frameworkComponents={{
+                                    "gantRenderCol": RenderCol,
+                                    ...frameworkComponents
+                                }}
+                                onSelectionChanged={onSelectionChanged}
+                                columnDefs={columns}
+                                rowSelection={rowSelection}
+                                getRowNodeId={getRowNodeId}
+                                onGridReady={onGridReady}
+                                undoRedoCellEditing
+                                enableFillHandle
+                                defaultColDef={{
+                                    resizable,
+                                    sortable,
+                                    filter,
+                                    minWidth: 100,
+                                }}
+                                headerHeight={24}
+                                floatingFiltersHeight={20}
+                                getDataPath={getDataPath}
+                                rowHeight={size == "small" ? 24 : 32}
+                                singleClickEdit
+                                {...gridPartProps}
+                                {...selection}
+                                {...orignProps}
+                                suppressRowDrag
+                                onCellValueChanged={cellValueChanged}
+                                deltaRowDataMode
+                                localeText={locale}
+                            />
+                        </div>
+                        {/* 分页高度为30 */}
+                        {computedPagination && <Pagination className="gant-grid-pagination" {...computedPagination} />}
                     </div>
-                    {/* 分页高度为30 */}
-                    {computedPagination && <Pagination className="gant-grid-pagination" {...computedPagination} />}
-                </div>
-            </Spin>
-        </>
+                </Spin>
+            }}
+        </LocaleReceiver>
     )
 }
 
