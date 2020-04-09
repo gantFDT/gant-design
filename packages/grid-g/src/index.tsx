@@ -80,6 +80,8 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         getServerSideGroupKey,
         frameworkComponents,
         treeDataChildrenName,
+        serverGroupExpend,
+        groupDefaultExpanded,
         ...orignProps
     } = props
 
@@ -133,18 +135,34 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     // 分页事件
     const computedPagination = usePagination(pagination)
 
-
     // 判断数据分别处理 treeTable 和普通table
     const dataSource = useMemo(() => {
         if (!treeData) return manageData;
         if (!isServer) return flattenTreeData(manageData, getRowNodeId, [], treeDataChildrenName);
-        const fakeServer = createFakeServer(manageData, getServerSideGroupKey ? getServerSideGroupKey : getRowNodeId);
-        const serverDataSource = createServerSideDatasource(fakeServer)
-        return serverDataSource
-    }, [manageData, treeData, treeDataChildrenName, getRowNodeId, isServer, apiRef.current, getServerSideGroupKey])
+        return []
+    }, [manageData, treeData, treeDataChildrenName, getRowNodeId])
+    const serverModel = useMemo(() => {
+        return isServer && treeData
+    }, [isServer && treeData])
+    const serverDataCallback = useCallback((groupkeys, successCallback) => {
+        return (rows) => {
+            successCallback(rows, rows.length);
+            dataManage.appendChild(groupkeys, rows)
+        }
+    }, [])
+    const serverDataRequest = useCallback((groupkeys, successCallback) => {
+        if (serverGroupExpend) {
+            return serverGroupExpend(serverDataCallback(groupkeys, successCallback))
+        }
+        return successCallback([], 0)
+    }, [serverGroupExpend])
+
     useEffect(() => {
-        if (manageData.length > 0 && apiRef.current && isServer && treeData) apiRef.current.setServerSideDatasource(dataSource)
-    }, [apiRef.current, dataSource, manageData, isServer, treeData])
+        if (!serverModel) return
+        const fakeServer = createFakeServer(dataManage, getServerSideGroupKey ? getServerSideGroupKey : getRowNodeId, treeDataChildrenName);
+        const serverDataSource = createServerSideDatasource(fakeServer, serverDataRequest)
+        apiRef.current && apiRef.current.setServerSideDatasource(serverDataSource)
+    }, [serverModel, treeDataChildrenName, serverDataRequest, apiRef.current])
 
     const gridPartProps = useMemo(() => {
         if (treeData && isServer) return {
@@ -187,7 +205,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     }, [selectedKeys, apiRef.current, rowSelection, getRowNodeId])
     // 处理selection-end
     //columns
-    const defaultSelection = !isEmpty(gantSelection) && showDefalutCheckbox && !(treeData && isServer);
+    const defaultSelection = !isEmpty(gantSelection) && showDefalutCheckbox
     const columns = useMemo<ColDef[] | ColGroupDef[]>(() => {
         return mapColumns<T>(columnDefs, editable, size, getRowNodeId, defaultSelection, defaultSelectionCol, rowSelection)
     }, [columnDefs, editable, rowSelection, size, getRowNodeId, defaultSelectionCol, defaultSelection, rowSelection])
@@ -234,6 +252,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                             suppressRowDrag
                             onCellValueChanged={cellValueChanged}
                             deltaRowDataMode
+                            groupDefaultExpanded={groupDefaultExpanded}
                         />
                     </div>
                     {/* 分页高度为30 */}

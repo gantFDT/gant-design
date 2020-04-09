@@ -23,7 +23,6 @@ export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Si
     function getColumnDefs(columns: Columns<T>[]) {
         return columns.map(({ title: headerName, fieldName: field, children, render, editConfig, cellRenderer, fixed, ...item }, index) => {
             const ColEditable = typeof editConfig !== 'undefined';
-            console.log("item", item)
             const colDef = {
                 headerName,
                 field,
@@ -221,9 +220,9 @@ export function getSizeClassName(size: Size) {
     }
 }
 
-export function createFakeServer(fakeServerData, getRowNodeId) {
-    function FakeServer(allData) {
-        this.data = allData;
+export function createFakeServer(dataManage, getRowNodeId, treeDataChildrenName) {
+    function FakeServer(dataManage) {
+        this.data = dataManage.renderList;
     }
     FakeServer.prototype.getData = function (request) {
         function extractRowsFromData(groupKeys, data) {
@@ -231,25 +230,28 @@ export function createFakeServer(fakeServerData, getRowNodeId) {
             var key = groupKeys[0];
             for (var i = 0; i < data.length; i++) {
                 if (getRowNodeId(data[i]) === key) {
-                    const children = data[i].children ? data[i].children.slice() : []
+                    if (!data[i][treeDataChildrenName]) return false
+                    const children = get(data, `[${i}][${treeDataChildrenName}]`, [])
                     return extractRowsFromData(
                         groupKeys.slice(1),
-                        children
+                        children.slice()
                     );
                 }
             }
         }
         return extractRowsFromData(request.groupKeys, this.data);
     };
-    return new FakeServer(fakeServerData);
+    return new FakeServer(dataManage);
 }
-export function createServerSideDatasource(fakeServer) {
+export function createServerSideDatasource(fakeServer, asyncCallback) {
     function ServerSideDatasource(fakeServer) {
         this.fakeServer = fakeServer;
     }
     ServerSideDatasource.prototype.getRows = function (params) {
-        var rows = this.fakeServer.getData(params.request);
-        params.successCallback(rows, rows.length);
-    };
+        const { request, successCallback } = params
+        var rows = this.fakeServer.getData(request);
+        if (Array.isArray(rows)) successCallback(rows, rows.length);
+        asyncCallback(request.groupKeys, successCallback)
+    }
     return new ServerSideDatasource(fakeServer);
 }
