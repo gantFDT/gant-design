@@ -73,7 +73,8 @@ export interface Props extends OptionalProps {
 	prefixCls?: string,
 	onSave: (id: any, value: any, cb: any) => any,
 	form: WrappedFormUtils,
-	emitDependenciesChange: (key: string, value: any) => void,
+  emitDependenciesChange: (key: string, value: any) => void,
+  withoutAnimation?: boolean,
 }
 export interface UISchema {
 	"ui:orders"?: string[],

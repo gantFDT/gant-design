@@ -141,13 +141,14 @@ class CellPhone extends Component<any> {
     }
   }
   render() {
-    const { onPhoneChange, validateValue, onEnter, ...props } = this.props
+    const { onPhoneChange, validateValue, onEnter, wrapperRef, ...props } = this.props
     const { value } = this.state
     let computedValue = get(props, 'phone', value)
     return (
       <AntInput
         {...props}
         value={computedValue}
+        ref={wrapperRef}
         onKeyDown={this.onKeyDown}
         onChange={this.onChange} />
     );

@@ -85,6 +85,7 @@ type SelectorInnerProps<T, R> = ProtoExtends<BasicSelectorProps<T, R>, {
   renderList: React.ReactElement[],
   storageToReal: <T>(v: T) => T,
   isMultiple: boolean,
+  wrapperRef?: any
 }>
 
 
@@ -493,7 +494,7 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
 
   renderSelect = () => {
     const { onSearch, onSelect, onChange, onopen } = this
-    const { multiple, readOnly, renderList, loading, style, addonAfter, setSelectRef, dropdownClassName, className, wrap, children, ...props } = this.props;
+    const { multiple, readOnly, renderList, loading, style, wrapperRef, addonAfter, setSelectRef, dropdownClassName, className, wrap, children, ...props } = this.props;
     if (readOnly) {
       props.open = false
       props.showSearch = false
@@ -512,7 +513,6 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
         onDropdownVisibleChange={onopen}
         labelInValue
         filterOption={false}
-
         dropdownClassName={classnames(dropdownClassName, 'gant-selector-dropdown')}
       >
         {children || renderList}

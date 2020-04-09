@@ -104,10 +104,10 @@ class TelePhone extends Component<any> {
   }
 
   render() {
-    const { onEnter, onPhoneChange, onCodeChange, phone, ...props } = this.props
+    const { onEnter, onPhoneChange, onCodeChange, phone, wrapperRef, ...props } = this.props
 
     return (
-      <Input {...props} value={phone} onKeyDown={this.onKeyDown} onChange={this.onChange} />
+      <Input {...props} value={phone} ref={wrapperRef} onKeyDown={this.onKeyDown} onChange={this.onChange} />
     );
   }
 }

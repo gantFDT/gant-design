@@ -1,5 +1,5 @@
 import _ from 'lodash'
-
+import { ColumnApi, GridApi, RowNode } from 'ag-grid-community';
 import { Record } from '../interface'
 
 export const originKey = "__origin"
@@ -35,24 +35,57 @@ export const cloneDeep = function cloneDeep<T extends Record>(list: T[]): T[][] 
     return [cloneList, pureList]
 }
 
-export const modify = function modify<T extends Record>(list: any[], rowIndex: number, field: string, value: any): T[] {
+/**找到没有选中的子节点 */
+export const findChildren = function findChildren(node: RowNode): RowNode[] {
+    const children: RowNode[] = [] as RowNode[]
 
-    let index = 0
-    const items = [...list]
+    const { childrenMapped } = node
 
-    while (items.length) {
-        const item = items.shift()
-        if (index === rowIndex) {
-            item[field] = value
-            break;
-        } else {
-            if (item.children && item.children.length) {
-                items.unshift(...item.children as T[])
+    const sub = Object.values(childrenMapped)
+
+    for (let subNode of sub) {
+        // 处理没有选中的子节点
+        if (!subNode) continue;
+        if (!subNode.selected) {
+            children.push(subNode)
+            const subChildren = findChildren(subNode)
+            if (subChildren.length) {
+                children.push.apply(children, subChildren)
             }
         }
-        index++
     }
+    return children
+}
 
-    return list
+/**根据keyPath移除深层节点，如果有newData则是修改 */
+export const removeDeepItem = function removeDeepItem<T extends Record>(treeDataChildrenName: string, keyPath: Array<number>, { ...node }: Record, newData?: any): T {
+    let currentKey = keyPath.splice(0, 1)[0]
+    let children = [...node[treeDataChildrenName]]
+    if (keyPath.length) {
+        children[currentKey] = removeDeepItem(treeDataChildrenName, keyPath, children[currentKey])
+    } else {
+        if (!newData) {
+            children = [...children.slice(0, currentKey), ...children.slice(currentKey + 1)]
+        } else {
+            children[currentKey] = newData
+        }
+    }
+    node[treeDataChildrenName] = children
+    return node as T
+}
 
+export const getPureRecord = function getPureRecord<T>(data: T): T {
+    return _.omit(data, ["treeDataPath", "_rowData", "_rowType", "__origin"])
+}
+
+export const getPureList = function getPureList<T extends Record>(list: T[]): T[] {
+    if (!list.length) return []
+    const cloneList = list.map((item: T) => {
+        const record = getPureRecord<T>(item)
+        if (item.children && item.children.length) {
+            record.children = getPureList(item.children)
+        }
+        return record
+    })
+    return cloneList
 }

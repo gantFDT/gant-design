@@ -1,33 +1,32 @@
 :global {
     .gant-grid {
-        .gant-padding-h-3 {
-            padding: 0px 4px;
-            .ag-header-select-all {
-                display: flex !important;
-            }
-            padding: 0px 4px !important;
+        .ag-header-cell.gant-padding-h-3 {
+            padding: 0px 3px;
         }
-    }
-    .ag-cell.ag-cell-inline-editing {
-        height: 32px;
-        border: none;
-        line-height: 32px;
-    }
-    &-sm {
-        .ag-cell.ag-cell-inline-editing {
-            .ag-cell {
-                line-height: 22px !important;
+        .ag-center-cols-container .ag-cell.ag-cell-inline-editing,
+        .ag-cell {
+            height: 31px;
+            border: none;
+            line-height: 32px;
+            .ag-cell-wrapper>*:not(.ag-cell-value):not(.ag-group-value) {
+                height: 31px;
             }
-            .ag-cell-inline-editing {
-                height: 24px;
+        }
+        &-sm {
+            .ag-center-cols-container .ag-cell.ag-cell-inline-editing,
+            .ag-cell {
+                height: 23px;
+                line-height: 24px!important;
+                .ag-cell-wrapper>*:not(.ag-cell-value):not(.ag-group-value) {
+                    height: 24px;
+                }
+            }
+        }
+        .gant-grid-pagination.mini {
+            padding: 3px 5px;
+            .ant-pagination-options {
                 line-height: 24px;
             }
-        }
-    }
-    .gant-grid-pagination.mini {
-        padding: 3px 5px;
-        .ant-pagination-options {
-            line-height: 24px;
         }
     }
 }

@@ -371,7 +371,7 @@ task('code', function code(){
   const CODE_SPLIT = '/*! Split !*/';
   const REGEX = /function\s+([\w\-]+)\s*\(\S*\)\s*\{[\s\S]+\}|const\s+([\w\-]+)\s*=(\s\(\S*\)\s*=>\s*\{[\s\S]+\})?/;
 
-  return src([`stories/*/index.js`, `stories/*/index.ts`])
+  return src([`stories/*/index.js`, `stories/*/index.ts`, `stories/*/index.jsx`, `stories/*/index.tsx`])
     .pipe(
       through2.obj(function (file, enc, next) {
         let content = file.contents.toString();
@@ -408,7 +408,7 @@ task('code', function code(){
 })
 
 task('watch:code', function () {
-  watch([`stories/*/index.js`, `stories/*/index.ts`], series('code'));
+  watch([`stories/*/index.js`, `stories/*/index.ts`, `stories/*/index.jsx`, `stories/*/index.tsx`], series('code'));
 })
 
 task('default', series('clean', 'lib'))

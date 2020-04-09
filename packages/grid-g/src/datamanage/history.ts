@@ -24,7 +24,7 @@ class History<T extends DataRecord> extends EventEmitter {
     private merge(obj: typeof initstate, init: boolean = false) {
         this.index = obj.index
         this.list = obj.list
-        this.trash = obj.trash
+        this.trash = obj.trash || this.trash
         !init && this.emit("manager:update")
         return this
     }
@@ -48,8 +48,23 @@ class History<T extends DataRecord> extends EventEmitter {
         return this.list.get(this.index)
     }
 
+    get first() {
+        return this.list.first()
+    }
+
+    get last() {
+        return this.list.last()
+    }
+
     init(state: List<T>) {
         return this.merge(initstate, true).push(state)
+    }
+
+    /**替换状态 */
+    addpenChild(indexPaths: number[], children: T[]) {
+        const item = this.currentState.get(indexPaths[0])
+        item.children = children
+        this.emit("manager:update")
     }
 
     // 添加新状态
@@ -63,6 +78,7 @@ class History<T extends DataRecord> extends EventEmitter {
 
     // 撤销
     undo() {
+        console.log(this)
         if (this.canUndo) {
             const popedState = this.list.last()
             return this.merge({

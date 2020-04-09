@@ -7,8 +7,17 @@ import './index.css'
 pages.map(page => {
 	const storiresPage = storiesOf(page.name, module)
 	page.children.map(item => {
-		const dirname = item.name.toLocaleLowerCase();
-		const Component = require('./' + dirname + "/index.js").default;
+    const dirname = item.name.toLocaleLowerCase();
+    let Component;
+    try {
+      Component = require('./' + dirname + "/index.js").default;
+    } catch (e) {}
+    try {
+      Component = require('./' + dirname + "/index.tsx").default;
+    } catch (e) {}
+
+
+		
 		let marked = ``
 		let config = {};
 		let title = `${item.name} ${item.nameZh} ${item.package ? '📦' : ''}`;

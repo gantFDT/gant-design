@@ -15,29 +15,34 @@ function itemisgroup(item, children): item is ColGroupDef {
 }
 
 function ColEditableFn(fn: ColumnEdiatble<any>): IsColumnFunc | boolean {
-    if (isbool(fn)) return fn
-    return ({ data }) => fn(data)
+    if (typeof fn === 'function') return ({ data }) => fn(data)
+    return fn
 }
 
-export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Size, getRowNodeId: any, defaultSelection: boolean, defaultSelectionCol: ColDef): Col[] => {
+export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Size, getRowNodeId: any, defaultSelection: boolean, defaultSelectionCol: ColDef, rowSelection): Col[] => {
     function getColumnDefs(columns: Columns<T>[]) {
-        return columns.map(({ title: headerName, fieldName: field, children, render, editConfig, fixed, cellRenderer, ...item }, index) => {
-            const ColEditable = typeof editConfig !== 'undefined'
+        return columns.map(({ title: headerName, fieldName: field, children, render, editConfig, cellRenderer, fixed, ...item }, index) => {
+            const ColEditable = typeof editConfig !== 'undefined';
             const colDef = {
-
                 headerName,
                 field,
                 cellRendererParams: {
-                    size,
                     render,
-                    rowkey: getRowNodeId
+                    // innerRenderer: () => 11111,
                 },
-                [cellRenderer ? "cellRenderer" : "cellRendererFramework"]: cellRenderer ? cellRenderer : RenderCol,
-                cellClass: (params: any) => {
-                    return get(params, 'data._rowType') ? `gant-grid-cell gant-grid-cell-${params.data._rowType}` : ""
+                cellClass: ["gant-grid-cell"],
+                cellClassRules: {
+                    "gant-grid-cell-modify": params => {
+                        const { data: { _rowType, _rowData }, colDef: { field }, value } = params
+                        return _rowType === DataActions.modify && value !== get(_rowData, field, value)
+                    },
+                    "gant-grid-cell-add": params => params.data._rowType === DataActions.add,
+                    "gant-grid-cell-delete": params => params.data._rowType === DataActions.remove,
                 },
+                cellRenderer: cellRenderer ? cellRenderer : "gantRenderCol",
                 ...item,
-            } as Col
+
+            } as ColDef
 
             if (!itemisgroup(colDef, children)) {
                 // 当前列允许编辑
@@ -68,7 +73,7 @@ export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Si
         sortable: false,
         pinned: true,
         field: "defalutSelection",
-        headerCheckboxSelection: true,
+        headerCheckboxSelection: rowSelection === "multiple",
         minWidth: 24,
         headerName: "",
         suppressMenu: true,
@@ -142,17 +147,17 @@ export function trackRenderValueChange(data: any, field: string, value: any) {
     return newData
 }
 
-export function flattenTreeData(dataSoruce: any[], getRowNodeId, pathArray: string[] = []): any[] {
+export function flattenTreeData(dataSoruce: any[], getRowNodeId, pathArray: string[] = [], treeDataChildrenName = "children"): any[] {
     let treeData: any[] = []
     dataSoruce.map((item: any) => {
-        const { children, ...itemData } = item;
+        const { [treeDataChildrenName]: children, ...itemData } = item;
         const treeDataPath = [...pathArray, getRowNodeId(itemData)]
         if (children && children.length) {
-            treeData.push({ ...itemData, treeDataPath, parent: true })
-            const childrenTreeData = flattenTreeData(children, getRowNodeId, treeDataPath);
+            treeData.push({ ...item, treeDataPath, parent: true, })
+            const childrenTreeData = flattenTreeData(children, getRowNodeId, treeDataPath, treeDataChildrenName);
             Array.prototype.push.apply(treeData, childrenTreeData);
         } else {
-            treeData.push({ ...itemData, treeDataPath })
+            treeData.push({ ...item, treeDataPath })
         }
 
     })
@@ -214,9 +219,9 @@ export function getSizeClassName(size: Size) {
     }
 }
 
-export function createFakeServer(fakeServerData, getRowNodeId) {
-    function FakeServer(allData) {
-        this.data = allData;
+export function createFakeServer(dataManage, getRowNodeId, treeDataChildrenName) {
+    function FakeServer(dataManage) {
+        this.data = dataManage.renderList;
     }
     FakeServer.prototype.getData = function (request) {
         function extractRowsFromData(groupKeys, data) {
@@ -224,25 +229,28 @@ export function createFakeServer(fakeServerData, getRowNodeId) {
             var key = groupKeys[0];
             for (var i = 0; i < data.length; i++) {
                 if (getRowNodeId(data[i]) === key) {
-                    const children = data[i].children ? data[i].children.slice() : []
+                    if (!data[i][treeDataChildrenName]) return false
+                    const children = get(data, `[${i}][${treeDataChildrenName}]`, [])
                     return extractRowsFromData(
                         groupKeys.slice(1),
-                        children
+                        children.slice()
                     );
                 }
             }
         }
         return extractRowsFromData(request.groupKeys, this.data);
     };
-    return new FakeServer(fakeServerData);
+    return new FakeServer(dataManage);
 }
-export function createServerSideDatasource(fakeServer) {
+export function createServerSideDatasource(fakeServer, asyncCallback) {
     function ServerSideDatasource(fakeServer) {
         this.fakeServer = fakeServer;
     }
     ServerSideDatasource.prototype.getRows = function (params) {
-        var rows = this.fakeServer.getData(params.request);
-        params.successCallback(rows, rows.length);
-    };
+        const { request, successCallback } = params
+        var rows = this.fakeServer.getData(request);
+        if (Array.isArray(rows)) successCallback(rows, rows.length);
+        asyncCallback(request.groupKeys, successCallback)
+    }
     return new ServerSideDatasource(fakeServer);
 }

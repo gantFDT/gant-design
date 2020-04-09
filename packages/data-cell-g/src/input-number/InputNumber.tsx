@@ -46,8 +46,9 @@ const withInputNumber = compose(
 class InputNumber extends React.Component<GantInputNumberProps>{
   render() {
     const { className, ...props } = this.props;
+    const numberProps: any = props;
     return (
-      <AntInputNumber {...props} className={classnames('gant-input-number', className)} />
+      <AntInputNumber  {...props} ref={numberProps.wrapperRef} className={classnames('gant-input-number', className)} />
     )
   }
 
