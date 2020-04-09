@@ -84,8 +84,9 @@ function UIContent(props: UIContentProps) {
           <Radio.Group
             value={tabKey}
             onChange={handlerChangeTabKey}
-            style={{ marginBottom: 16, width: '100%', display: 'flex' }}
+            style={{ marginBottom: 10, width: '100%', display: 'flex' }}
             buttonStyle="solid"
+            size="small"
           >
             <Radio.Button style={{ flex: 1, textAlign: 'center' }} value="field">
               {locale.fieldConfig}

@@ -1,6 +1,6 @@
 {
     "name": "modal-g",
-    "version": "0.1.6",
+    "version": "0.1.7",
     "description": "gantd modal",
     "main": "lib/index.js",
     "scripts": {},
