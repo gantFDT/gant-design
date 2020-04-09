@@ -223,7 +223,7 @@ const IconSelector = compose(
     };
   }),
   withEdit(
-    ({ value, style, theme, spin, rotate, component, twoToneColor, controlMode, perfix, className }) => {
+    ({ value, style, theme, spin, rotate, component, twoToneColor, controlMode, perfix, className, onClick }) => {
       const element = (
         <Icon
           type={value}
@@ -235,6 +235,7 @@ const IconSelector = compose(
           component={component}
           twoToneColor={twoToneColor}
           className={className}
+          onClick={onClick}
         />
       );
       if (!controlMode) {

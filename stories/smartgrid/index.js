@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import '@packages/smart-table-g/src/style'
+import '@packages/smart-grid-g/src/style'
 import CodeDecorator from '../_util/CodeDecorator'
 import code from './code.js'
 import Mock from 'mockjs'

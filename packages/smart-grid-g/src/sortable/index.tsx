@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { Checkbox, Icon as AntdIcon, Row, Radio, notification, Tooltip } from 'antd';
+import { Checkbox, Row, notification, Tooltip } from 'antd';
 import {
   SortableContainer,
   SortableElement,
@@ -9,6 +9,8 @@ import {
 import arrayMove from 'array-move';
 import { Icon } from '@data-cell';
 import Receiver from '../locale/Receiver';
+
+Icon.updateFromIconfontCN({ scriptUrl: '//at.alicdn.com/t/font_1252237_yp35yr9jf6.js'})
 
 interface RecordProps {
   dataIndex: string;
@@ -73,6 +75,7 @@ function Sortable(props: SortableProps) {
 
   const handlerLock = useCallback(
     index => {
+      console.log('handlerLock', index)
       if (dataSource[index].clickable) {
         dataSource[index].lock = true;
         onChange(dataSource);
@@ -87,6 +90,7 @@ function Sortable(props: SortableProps) {
 
   const handlerUnlock = useCallback(
     index => {
+      console.log('handlerUnlock', index)
       if (dataSource[index].clickable) {
         dataSource[index].lock = false;
         onChange(dataSource);
@@ -130,11 +134,11 @@ function Sortable(props: SortableProps) {
             {!lock && <DragHandler />}
             {lock ? (
               <Tooltip style={{ flex: 0 }} placement="top" title={locale.setNormalColumn}>
-                <AntdIcon type="lock" onClick={() => handlerUnlock(realIndex)} className="disabledIcon" />
+                <Icon type="lock" onClick={() => handlerUnlock(realIndex)} className="disabledIcon" />
               </Tooltip>
             ) : (
                 <Tooltip placement="top" title={locale.setFixedColumn}>
-                  <AntdIcon type="unlock" onClick={() => handlerLock(realIndex)} className="disabledIcon" />
+                  <Icon type="unlock" onClick={() => handlerLock(realIndex)} className="disabledIcon" />
                 </Tooltip>
               )}
           </div>}

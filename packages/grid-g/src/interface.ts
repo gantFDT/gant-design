@@ -137,6 +137,7 @@ export interface Props<T extends Record> {
     isServer: boolean,
     isServerSideGroup: (data: any) => boolean,
     treeDataChildrenName: string,
+    locale: object,
     serverGroupExpend: (cd: (row: any[]) => void) => void
 }
 
