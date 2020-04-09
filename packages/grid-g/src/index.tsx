@@ -236,43 +236,43 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                 let lang = langs[localeCode] || langs['zh-cn']
                 const locale = { ...lang, ...customLocale }
                 return <Spin spinning={loading}>
-                <div style={{ width, height }} className={classnames('gant-grid', `gant-grid-${getSizeClassName(size)}`)} >
-                    <div className="ag-theme-balham" style={{ width: '100%', height: computedPagination ? 'calc(100% - 30px)' : '100%' }}>
-                        <AgGridReact
-                            frameworkComponents={{
-                                "gantRenderCol": RenderCol,
-                                ...frameworkComponents
-                            }}
-                            onSelectionChanged={onSelectionChanged}
-                            columnDefs={columns}
-                            rowSelection={rowSelection}
-                            getRowNodeId={getRowNodeId}
-                            onGridReady={onGridReady}
-                            undoRedoCellEditing
-                            enableFillHandle
-                            defaultColDef={{
-                                resizable,
-                                sortable,
-                                filter,
-                                minWidth: 100,
-                            }}
-                            headerHeight={24}
-                            floatingFiltersHeight={20}
-                            getDataPath={getDataPath}
-                            rowHeight={size == "small" ? 24 : 32}
-                            singleClickEdit
-                            {...gridPartProps}
-                            {...selection}
-                            {...orignProps}
-                            suppressRowDrag
-                            onCellValueChanged={cellValueChanged}
-                            deltaRowDataMode
-                            groupDefaultExpanded={groupDefaultExpanded}
-                            localeText={locale}
-                        />
-                    </div>
-                    {/* 分页高度为30 */}
-                    {computedPagination && <Pagination className="gant-grid-pagination" {...computedPagination} />}
+                    <div style={{ width, height }} className={classnames('gant-grid', `gant-grid-${getSizeClassName(size)}`)} >
+                        <div className="ag-theme-balham" style={{ width: '100%', height: computedPagination ? 'calc(100% - 30px)' : '100%' }}>
+                            <AgGridReact
+                                frameworkComponents={{
+                                    "gantRenderCol": RenderCol,
+                                    ...frameworkComponents
+                                }}
+                                onSelectionChanged={onSelectionChanged}
+                                columnDefs={columns}
+                                rowSelection={rowSelection}
+                                getRowNodeId={getRowNodeId}
+                                onGridReady={onGridReady}
+                                undoRedoCellEditing
+                                enableFillHandle
+                                defaultColDef={{
+                                    resizable,
+                                    sortable,
+                                    filter,
+                                    minWidth: 100,
+                                }}
+                                headerHeight={24}
+                                floatingFiltersHeight={20}
+                                getDataPath={getDataPath}
+                                rowHeight={size == "small" ? 24 : 32}
+                                singleClickEdit
+                                {...gridPartProps}
+                                {...selection}
+                                {...orignProps}
+                                suppressRowDrag
+                                onCellValueChanged={cellValueChanged}
+                                deltaRowDataMode
+                                groupDefaultExpanded={groupDefaultExpanded}
+                                localeText={locale}
+                            />
+                        </div>
+                        {/* 分页高度为30 */}
+                        {computedPagination && <Pagination className="gant-grid-pagination" {...computedPagination} />}
                     </div>
                 </Spin>
             }}
