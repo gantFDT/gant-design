@@ -61,7 +61,7 @@ class History<T extends DataRecord> extends EventEmitter {
     }
 
     /**替换状态 */
-    replace(indexPaths: number[], children: T[]) {
+    addpenChild(indexPaths: number[], children: T[]) {
         const item = this.currentState.get(indexPaths[0])
         item.children = children
         this.emit("manager:update")
@@ -78,6 +78,7 @@ class History<T extends DataRecord> extends EventEmitter {
 
     // 撤销
     undo() {
+        console.log(this)
         if (this.canUndo) {
             const popedState = this.list.last()
             return this.merge({

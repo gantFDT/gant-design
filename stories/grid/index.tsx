@@ -52,7 +52,7 @@ const TreeGrid = () => {
             editConfig: {
                 component: Input,
                 // changeFormatter: (e: any) => e.target.value,
-                editable: true
+                editable: true,
             },
             enableRowGroup: true,
             cellRenderer: "agGroupCellRenderer",
@@ -264,16 +264,16 @@ const config = {
     codes,
     useage: '',
     children: [
-        // {
-        //     title: "tree",
-        //     describe: "树形结构",
-        //     cmp: TreeGrid
-        // },
         {
-            title: "async tree",
-            describe: "异步树形",
-            cmp: AsyncTreeData
-        }
+            title: "tree",
+            describe: "树形结构",
+            cmp: TreeGrid
+        },
+        // {
+        //     title: "async tree",
+        //     describe: "异步树形",
+        //     cmp: AsyncTreeData
+        // }
     ]
 }
 

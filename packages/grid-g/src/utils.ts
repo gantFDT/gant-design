@@ -32,7 +32,10 @@ export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Si
                 },
                 cellClass: ["gant-grid-cell"],
                 cellClassRules: {
-                    "gant-grid-cell-modify": params => params.data._rowType === DataActions.modify,
+                    "gant-grid-cell-modify": params => {
+                        const { data: { _rowType, _rowData }, colDef: { field }, value } = params
+                        return _rowType === DataActions.modify && value !== get(_rowData, field, value)
+                    },
                     "gant-grid-cell-add": params => params.data._rowType === DataActions.add,
                     "gant-grid-cell-delete": params => params.data._rowType === DataActions.remove,
                 },
