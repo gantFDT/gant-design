@@ -54,7 +54,7 @@ export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Si
                         rowkey: getRowNodeId
                     }
                     colDef.cellEditorFramework = EditorCol(editConfig.component)
-                    colDef.editable = ColEditableFn(editConfig.editable)
+                    colDef.editable = editable ? ColEditableFn(editConfig.editable) : false
                 }
                 if (fixed) colDef.pinned = fixed
             }
