@@ -575,7 +575,8 @@ var editTableSchema = {
     }
   ]
 }
-var editTableData = Array(15).fill().map(() => ({
+var editTableData = Array(15).fill().map((_, idx) => ({
+  id: 'id-' + idx,
   name: Random.cname(),
   age: Random.natural(20, 70),
   domain: Random.url(),
