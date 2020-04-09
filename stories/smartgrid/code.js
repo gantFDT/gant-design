@@ -149,14 +149,12 @@ function ConfigColumnsUse() {
             },
             {
               fieldName: 'name',
-              align: 'right'
             },
             {
               fieldName: 'address',
             },
             {
               fieldName: 'action',
-              align: 'center'
             },
           ]
         }
@@ -354,14 +352,12 @@ function MultiViewUse() {
             },
             {
               fieldName: 'name',
-              align: 'right'
             },
             {
               fieldName: 'address',
             },
             {
               fieldName: 'action',
-              align: 'center'
             },
           ]
         }
@@ -374,7 +370,6 @@ function MultiViewUse() {
           columnFields: [
             {
               fieldName: 'name',
-              align: 'right'
             },
             {
               fieldName: 'address',
@@ -607,7 +602,8 @@ var editTableSchema = {
     }
   ]
 }
-var editTableData = Array(15).fill().map(() => ({
+var editTableData = Array(15).fill().map((_, idx) => ({
+  id: 'id-' + idx,
   name: Random.cname(),
   age: Random.natural(20, 70),
   domain: Random.url(),

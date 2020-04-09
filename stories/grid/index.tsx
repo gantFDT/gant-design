@@ -52,7 +52,7 @@ const TreeGrid = () => {
             editConfig: {
                 component: Input,
                 // changeFormatter: (e: any) => e.target.value,
-                editable: true
+                editable: true,
             },
             enableRowGroup: true,
             cellRenderer: "agGroupCellRenderer",

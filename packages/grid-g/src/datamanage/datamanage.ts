@@ -72,7 +72,6 @@ class DataManage<T extends Record = any> extends EventEmitter {
     // 撤销
     undo() {
         this.history.undo()
-        console.log(this.canUndo)
     }
 
     // 前进
@@ -277,7 +276,6 @@ class DataManage<T extends Record = any> extends EventEmitter {
 
     // 修改
     modify(changed: any) {
-        console.log(changed)
         const { data, node: { id } } = changed
         // 添加到对应的modify数组
         // const id = DataManage.getRowNodeId(data)
@@ -309,7 +307,7 @@ class DataManage<T extends Record = any> extends EventEmitter {
     /**添加子级节点 */
     appendChild(idPaths: string[], children: T[]) {
         const indexPaths: number[] = idPaths.map(id => this.gridApi.current.getRowNode(id).childIndex)
-        this.history.replace(indexPaths, children)
+        this.history.addpenChild(indexPaths, children)
     }
 
     // // 移动
