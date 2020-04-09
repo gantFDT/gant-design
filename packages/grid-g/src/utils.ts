@@ -27,17 +27,14 @@ export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Si
                 headerName,
                 field,
                 cellRendererParams: {
-                    render
+                    render,
+                    // innerRenderer: () => 11111,
                 },
-                cellClass: (params: any) => {
-                    const { colDef: { field }, value } = params
-                    const data = get(params, 'data', {});
-                    const { _rowType, _rowData = {} } = data;
-                    if (_rowType === DataActions.modify) {
-                        if (get(_rowData, `${field}`) !== value) return "gant-grid-cell gant-grid-cell-modify"
-                        return ""
-                    }
-                    return get(params, 'data._rowType') ? `gant-grid-cell gant-grid-cell-${params.data._rowType}` : ""
+                cellClass: ["gant-grid-cell"],
+                cellClassRules: {
+                    "gant-grid-cell-modify": params => params.data._rowType === DataActions.modify,
+                    "gant-grid-cell-add": params => params.data._rowType === DataActions.add,
+                    "gant-grid-cell-delete": params => params.data._rowType === DataActions.remove,
                 },
                 cellRenderer: cellRenderer ? cellRenderer : "gantRenderCol",
                 ...item,
@@ -54,7 +51,7 @@ export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Si
                         rowkey: getRowNodeId
                     }
                     colDef.cellEditorFramework = EditorCol(editConfig.component)
-                    colDef.editable = editable ? ColEditableFn(editConfig.editable) : false
+                    colDef.editable = ColEditableFn(editConfig.editable)
                 }
                 if (fixed) colDef.pinned = fixed
             }
@@ -219,9 +216,9 @@ export function getSizeClassName(size: Size) {
     }
 }
 
-export function createFakeServer(fakeServerData, getRowNodeId) {
-    function FakeServer(allData) {
-        this.data = allData;
+export function createFakeServer(dataManage, getRowNodeId, treeDataChildrenName) {
+    function FakeServer(dataManage) {
+        this.data = dataManage.renderList;
     }
     FakeServer.prototype.getData = function (request) {
         function extractRowsFromData(groupKeys, data) {
@@ -229,25 +226,28 @@ export function createFakeServer(fakeServerData, getRowNodeId) {
             var key = groupKeys[0];
             for (var i = 0; i < data.length; i++) {
                 if (getRowNodeId(data[i]) === key) {
-                    const children = data[i].children ? data[i].children.slice() : []
+                    if (!data[i][treeDataChildrenName]) return false
+                    const children = get(data, `[${i}][${treeDataChildrenName}]`, [])
                     return extractRowsFromData(
                         groupKeys.slice(1),
-                        children
+                        children.slice()
                     );
                 }
             }
         }
         return extractRowsFromData(request.groupKeys, this.data);
     };
-    return new FakeServer(fakeServerData);
+    return new FakeServer(dataManage);
 }
-export function createServerSideDatasource(fakeServer) {
+export function createServerSideDatasource(fakeServer, asyncCallback) {
     function ServerSideDatasource(fakeServer) {
         this.fakeServer = fakeServer;
     }
     ServerSideDatasource.prototype.getRows = function (params) {
-        var rows = this.fakeServer.getData(params.request);
-        params.successCallback(rows, rows.length);
-    };
+        const { request, successCallback } = params
+        var rows = this.fakeServer.getData(request);
+        if (Array.isArray(rows)) successCallback(rows, rows.length);
+        asyncCallback(request.groupKeys, successCallback)
+    }
     return new ServerSideDatasource(fakeServer);
 }

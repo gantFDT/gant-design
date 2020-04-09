@@ -32,44 +32,16 @@ export enum Fixed {
     right = "right"
 }
 
+export enum Move {
+    up = 'up',
+    down = "down"
+}
+
 
 /**删除数据时的回调方法，可以返回boolean、array或者是一个能够提供boolean、array类型返回值的promise */
 export type RemoveCallBack = (selected: any[]) => (Promise<boolean> | boolean)
 
-export namespace API {
-    export type remove = (removeChildren?: boolean, cb?: RemoveCallBack) => Promise<any>;
-    export type cancel = () => void
-}
-
-export interface Api {
-    /**是否有改动，没有对值进行校验 */
-    isChanged: boolean,
-    /**是否能够重做 */
-    canRedo,
-    /**是否能够撤回 */
-    canUndo,
-    /**删除按钮是否可用 */
-    deletable: boolean,
-    /**撤销 */
-    undo?(): void,
-    /**重做 */
-    redo?(): void,
-    /**添加 */
-    add(index?: number, item?: object): void,
-    /**
-     * 删除选中行，默认全删，可以通过提供callback修改删除的数据
-     * @author chenyl
-     * @param {boolean} removeChildren 是否在删除节点的同时删除其子节点，默认为true
-     * @param {function } callback 回调方法，可以返回boolean或者是一个能够提供boolean类型返回值的promise
-     * @returns {Promise} 
-     */
-    remove: API.remove,
-    /**取消编辑 */
-    cancel: API.cancel,
-    [key: string]: any
-}
-
-export type OnReady = (api: GridReadyEvent) => void
+export type OnReady = (api: GridReadyEvent, manager: DataManage) => void
 
 export type GridApi = AgGridApi
 
@@ -96,7 +68,7 @@ export type EditConfig<T> = {
     /**是否开启编辑，当全局editable为true时生效 */
     editable?: ColumnEdiatble<T>,
     props?: (record: T, rowIndex: number) => Object
-    changeFormatter?: (v: any) => any
+    changeFormatter?: (v: any, record: any) => any
 }
 
 export type ColumnEdiatble<T> = boolean | ((record: T) => boolean)
@@ -133,10 +105,6 @@ export type Columns<T extends {} = {}> = {
     [props: string]: any
 }
 
-export type onEditableChange = (editable: boolean) => void
-
-export type OnEdit = (api: Api) => void
-
 export type Pagination = Omit<
     ProtoExtends<PaginationProps, {
         beginIndex?: number
@@ -160,17 +128,17 @@ export interface Props<T extends Record> {
     rowSelection: RowSelection | true,
     rowkey: RowKey<T> | string,
     editable: boolean,
-    onEditableChange: onEditableChange,
     width?: string | number,
     height?: string | number,
     treeData?: boolean,
     pagination: Pagination,
-    onEdit: OnEdit,
     loading: boolean,
     className: string,
     isServer: boolean,
     isServerSideGroup: (data: any) => boolean,
     treeDataChildrenName: string,
+    locale: object,
+    serverGroupExpend: (cd: (row: any[]) => void) => void
 }
 
 export type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>
