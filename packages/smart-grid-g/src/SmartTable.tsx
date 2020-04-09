@@ -245,6 +245,7 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
           </div>
         }
         extra={HeaderRightElem}
+        {...headerProps}
       ></Header>
       {
         withKeyevent(
