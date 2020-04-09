@@ -32,7 +32,7 @@ const FlipOverFooter = (props: FlipOverFooterProps) => {
             onClick={onFooterChangePage.bind(null, 'before')}
             style={{ display: currentIndex == 0 ? 'none' : 'block' }}
         >
-            <span style={{ display: 'inline-block', fontSize: 16, color: 'rgba(128,128,128,1)', margin: 5 }}><Icon type="left-circle" /></span>
+            <span style={{ display: 'inline-block', fontSize: 16, color: 'rgba(128,128,128,1)', margin: '0 5px' }}><Icon type="left-circle" /></span>
             <p style={{ display: 'inline-block', color: 'rgba(128,128,128,1)', margin: 0 }}>{currentIndex == 0 ? '' : data[currentIndex - 1].title}</p>
         </div>
         <div className={`${prefixCls}-footerdiv`}
@@ -40,7 +40,7 @@ const FlipOverFooter = (props: FlipOverFooterProps) => {
             style={{ textAlign: 'right', display: currentIndex + 1 == data.length ? 'none' : 'block' }}
         >
             <p style={{ display: 'inline-block', color: 'rgba(128,128,128,1)', margin: 0 }}>{currentIndex + 1 == data.length ? '' : data[currentIndex + 1].title}</p>
-            <span style={{ display: 'inline-block', fontSize: 16, color: 'rgba(128,128,128,1)', margin: 5 }}><Icon type="right-circle" /></span>
+            <span style={{ display: 'inline-block', fontSize: 16, color: 'rgba(128,128,128,1)', margin: '0 5px' }}><Icon type="right-circle" /></span>
         </div>
     </div>
 }

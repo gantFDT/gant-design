@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { isEqual } from 'lodash';
 import classnames from 'classnames';
 import { Menu, Badge } from 'antd';
@@ -43,7 +43,7 @@ export default class Submenu extends React.Component<any, Partial<SubmenuIF>> {
     mode: 'inline',
     width: 200,
     fixedTopHeight: 0,
-    collapsedWidth: 40,
+    collapsedWidth: 30,
     subMinHeight: 112,
     selectedKey: '',
     menuData: [],
@@ -63,6 +63,8 @@ export default class Submenu extends React.Component<any, Partial<SubmenuIF>> {
   }
 
   componentDidMount() {
+    const { collapsedWidth } = this.props;
+    document.body.style.setProperty('--submenu-collapsed-width', collapsedWidth + 'px');
     this.props.showMenuMagnet && window.addEventListener('scroll', this.handleScroll); //监听滚动
   }
 
@@ -188,8 +190,9 @@ export default class Submenu extends React.Component<any, Partial<SubmenuIF>> {
         <div className={`${prefixCls}-wrap`} style={{ width: 'calc(100% - 1px)' }}>
           <div
             className={`${prefixCls}-collapsebtn`}
-            style={{ width: collapsed ? collapsedWidth : '100%' }}
+            style={{ width: collapsed ? collapsedWidth : '100%', lineHeight: collapsedWidth + 'px', textAlign: 'right' }}
           >
+
             <Icon.Ant
               type={collapsed ? 'menu-unfold' : 'menu-fold'}
               onClick={this.toggleCollapsed}
@@ -209,7 +212,7 @@ export default class Submenu extends React.Component<any, Partial<SubmenuIF>> {
       <div
         ref={setMenuBoxRef}
         className={`${prefixCls}-menubox ${prefixCls}-menuboxhor`}
-        style={{ width: '100%', height: collapsedWidth, ...style }}
+        style={{ width: '100%', height: 30, ...style }}
       >
         <div className={`${prefixCls}-wrap`} style={{ width: 'calc(100% - 1px)' }}>
           <div className={`${prefixCls}-menuinternal`}>
@@ -266,3 +269,5 @@ export default class Submenu extends React.Component<any, Partial<SubmenuIF>> {
     );
   }
 }
+
+
