@@ -9,19 +9,17 @@ export const cloneDeep = function cloneDeep<T extends Record>(list: T[]): T[][] 
     const cloneList = list.map((item: T) => {
 
         const { children } = item
-        let copyItem = null
+        let copyItem = _.cloneDeep(item);
         // 获取纯净item,保留children
         const pureItem = _.cloneDeep(item)// getPureRecord(item, ["children"])
 
-
         if (_.get(children, "length")) {
             const [cloneChildren, originChildren] = cloneDeep(children)
-            item.children = cloneChildren;
+            copyItem.children = cloneChildren;
 
             Object.freeze(originChildren)
             pureItem.children = originChildren
         }
-        copyItem = _.cloneDeep(item);
 
         // freezeObj有2个作用
         // 1是追加到新数据中
