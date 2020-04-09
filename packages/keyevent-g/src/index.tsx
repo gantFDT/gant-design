@@ -16,6 +16,7 @@ const withKeyEvent = (bindKeys: Object, needFouce?: boolean) => {
     return false
   }, []);
 
+  
   return (WrapedComponent: React.ReactNode) => {
     if (!bindKeys) return WrapedComponent;
 
