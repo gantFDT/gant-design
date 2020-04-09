@@ -145,14 +145,12 @@ function ConfigColumnsUse() {
             },
             {
               fieldName: 'name',
-              align: 'right'
             },
             {
               fieldName: 'address',
             },
             {
               fieldName: 'action',
-              align: 'center'
             },
           ]
         }
@@ -336,14 +334,12 @@ function MultiViewUse() {
             },
             {
               fieldName: 'name',
-              align: 'right'
             },
             {
               fieldName: 'address',
             },
             {
               fieldName: 'action',
-              align: 'center'
             },
           ]
         }
@@ -356,7 +352,6 @@ function MultiViewUse() {
           columnFields: [
             {
               fieldName: 'name',
-              align: 'right'
             },
             {
               fieldName: 'address',
