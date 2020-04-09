@@ -89,6 +89,8 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         frameworkComponents,
         treeDataChildrenName,
         locale: customLocale,
+        serverGroupExpend,
+        groupDefaultExpanded,
         ...orignProps
     } = props
 
@@ -146,18 +148,34 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     // 分页事件
     const computedPagination = usePagination(pagination)
 
-
     // 判断数据分别处理 treeTable 和普通table
     const dataSource = useMemo(() => {
         if (!treeData) return manageData;
         if (!isServer) return flattenTreeData(manageData, getRowNodeId, [], treeDataChildrenName);
-        const fakeServer = createFakeServer(manageData, getServerSideGroupKey ? getServerSideGroupKey : getRowNodeId);
-        const serverDataSource = createServerSideDatasource(fakeServer)
-        return serverDataSource
-    }, [manageData, treeData, treeDataChildrenName, getRowNodeId, isServer, apiRef.current, getServerSideGroupKey])
+        return []
+    }, [manageData, treeData, treeDataChildrenName, getRowNodeId])
+    const serverModel = useMemo(() => {
+        return isServer && treeData
+    }, [isServer && treeData])
+    const serverDataCallback = useCallback((groupkeys, successCallback) => {
+        return (rows) => {
+            successCallback(rows, rows.length);
+            dataManage.appendChild(groupkeys, rows)
+        }
+    }, [])
+    const serverDataRequest = useCallback((groupkeys, successCallback) => {
+        if (serverGroupExpend) {
+            return serverGroupExpend(serverDataCallback(groupkeys, successCallback))
+        }
+        return successCallback([], 0)
+    }, [serverGroupExpend])
+
     useEffect(() => {
-        if (manageData.length > 0 && apiRef.current && isServer && treeData) apiRef.current.setServerSideDatasource(dataSource)
-    }, [apiRef.current, dataSource, manageData, isServer, treeData])
+        if (!serverModel) return
+        const fakeServer = createFakeServer(dataManage, getServerSideGroupKey ? getServerSideGroupKey : getRowNodeId, treeDataChildrenName);
+        const serverDataSource = createServerSideDatasource(fakeServer, serverDataRequest)
+        apiRef.current && apiRef.current.setServerSideDatasource(serverDataSource)
+    }, [serverModel, treeDataChildrenName, serverDataRequest, apiRef.current])
 
     const gridPartProps = useMemo(() => {
         if (treeData && isServer) return {
@@ -199,7 +217,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     }, [selectedKeys, apiRef.current, rowSelection, getRowNodeId])
     // 处理selection-end
     //columns
-    const defaultSelection = !isEmpty(gantSelection) && showDefalutCheckbox && !(treeData && isServer);
+    const defaultSelection = !isEmpty(gantSelection) && showDefalutCheckbox
     const columns = useMemo<ColDef[] | ColGroupDef[]>(() => {
         return mapColumns<T>(columnDefs, editable, size, getRowNodeId, defaultSelection, defaultSelectionCol, rowSelection)
     }, [columnDefs, editable, rowSelection, size, getRowNodeId, defaultSelectionCol, defaultSelection, rowSelection])
@@ -218,42 +236,43 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                 let lang = langs[localeCode] || langs['zh-cn']
                 const locale = { ...lang, ...customLocale }
                 return <Spin spinning={loading}>
-                    <div style={{ width, height }} className={classnames('gant-grid', `gant-grid-${getSizeClassName(size)}`)} >
-                        <div className="ag-theme-balham" style={{ width: '100%', height: computedPagination ? 'calc(100% - 30px)' : '100%' }}>
-                            <AgGridReact
-                                frameworkComponents={{
-                                    "gantRenderCol": RenderCol,
-                                    ...frameworkComponents
-                                }}
-                                onSelectionChanged={onSelectionChanged}
-                                columnDefs={columns}
-                                rowSelection={rowSelection}
-                                getRowNodeId={getRowNodeId}
-                                onGridReady={onGridReady}
-                                undoRedoCellEditing
-                                enableFillHandle
-                                defaultColDef={{
-                                    resizable,
-                                    sortable,
-                                    filter,
-                                    minWidth: 100,
-                                }}
-                                headerHeight={24}
-                                floatingFiltersHeight={20}
-                                getDataPath={getDataPath}
-                                rowHeight={size == "small" ? 24 : 32}
-                                singleClickEdit
-                                {...gridPartProps}
-                                {...selection}
-                                {...orignProps}
-                                suppressRowDrag
-                                onCellValueChanged={cellValueChanged}
-                                deltaRowDataMode
-                                localeText={locale}
-                            />
-                        </div>
-                        {/* 分页高度为30 */}
-                        {computedPagination && <Pagination className="gant-grid-pagination" {...computedPagination} />}
+                <div style={{ width, height }} className={classnames('gant-grid', `gant-grid-${getSizeClassName(size)}`)} >
+                    <div className="ag-theme-balham" style={{ width: '100%', height: computedPagination ? 'calc(100% - 30px)' : '100%' }}>
+                        <AgGridReact
+                            frameworkComponents={{
+                                "gantRenderCol": RenderCol,
+                                ...frameworkComponents
+                            }}
+                            onSelectionChanged={onSelectionChanged}
+                            columnDefs={columns}
+                            rowSelection={rowSelection}
+                            getRowNodeId={getRowNodeId}
+                            onGridReady={onGridReady}
+                            undoRedoCellEditing
+                            enableFillHandle
+                            defaultColDef={{
+                                resizable,
+                                sortable,
+                                filter,
+                                minWidth: 100,
+                            }}
+                            headerHeight={24}
+                            floatingFiltersHeight={20}
+                            getDataPath={getDataPath}
+                            rowHeight={size == "small" ? 24 : 32}
+                            singleClickEdit
+                            {...gridPartProps}
+                            {...selection}
+                            {...orignProps}
+                            suppressRowDrag
+                            onCellValueChanged={cellValueChanged}
+                            deltaRowDataMode
+                            groupDefaultExpanded={groupDefaultExpanded}
+                            localeText={locale}
+                        />
+                    </div>
+                    {/* 分页高度为30 */}
+                    {computedPagination && <Pagination className="gant-grid-pagination" {...computedPagination} />}
                     </div>
                 </Spin>
             }}

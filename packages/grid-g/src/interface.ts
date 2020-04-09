@@ -68,7 +68,7 @@ export type EditConfig<T> = {
     /**是否开启编辑，当全局editable为true时生效 */
     editable?: ColumnEdiatble<T>,
     props?: (record: T, rowIndex: number) => Object
-    changeFormatter?: (v: any) => any
+    changeFormatter?: (v: any, record: any) => any
 }
 
 export type ColumnEdiatble<T> = boolean | ((record: T) => boolean)
@@ -138,6 +138,7 @@ export interface Props<T extends Record> {
     isServerSideGroup: (data: any) => boolean,
     treeDataChildrenName: string,
     locale: object,
+    serverGroupExpend: (cd: (row: any[]) => void) => void
 }
 
 export type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>
