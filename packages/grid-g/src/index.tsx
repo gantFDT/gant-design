@@ -227,6 +227,25 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                 <div style={{ width, height }} className={classnames('gant-grid', `gant-grid-${getSizeClassName(size)}`)} >
                     <div className="ag-theme-balham" style={{ width: '100%', height: computedPagination ? 'calc(100% - 30px)' : '100%' }}>
                         <AgGridReact
+
+                            defaultColDef={{
+                                resizable,
+                                sortable,
+                                filter,
+                                minWidth: 100,
+                            }}
+                            headerHeight={24}
+                            floatingFiltersHeight={20}
+                            undoRedoCellEditing
+                            enableFillHandle
+                            suppressRowDrag
+                            deltaRowDataMode
+                            {...gridPartProps}
+                            {...selection}
+                            {...orignProps}
+                            getDataPath={getDataPath}
+                            rowHeight={size == "small" ? 24 : 32}
+                            singleClickEdit
                             frameworkComponents={{
                                 "gantRenderCol": RenderCol,
                                 ...frameworkComponents
@@ -236,25 +255,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                             rowSelection={rowSelection}
                             getRowNodeId={getRowNodeId}
                             onGridReady={onGridReady}
-                            undoRedoCellEditing
-                            enableFillHandle
-                            defaultColDef={{
-                                resizable,
-                                sortable,
-                                filter,
-                                minWidth: 100,
-                            }}
-                            headerHeight={24}
-                            floatingFiltersHeight={20}
-                            getDataPath={getDataPath}
-                            rowHeight={size == "small" ? 24 : 32}
-                            singleClickEdit
-                            {...gridPartProps}
-                            {...selection}
-                            {...orignProps}
-                            suppressRowDrag
                             onCellValueChanged={cellValueChanged}
-                            deltaRowDataMode
                             groupDefaultExpanded={groupDefaultExpanded}
                         />
                     </div>
