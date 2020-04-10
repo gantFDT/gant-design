@@ -497,7 +497,7 @@ import { SmartTable, EditStatus, SwitchStatus } from 'gantd'
 const { Random } = Mock
 
 
-SmartTable.setField({ // 拓展componentType字段类型
+SmartTable.setFields({ // 拓展componentType字段类型
   'Rate': Rate
 })
 var editTableColumns = [

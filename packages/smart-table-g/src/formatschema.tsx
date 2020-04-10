@@ -80,7 +80,7 @@ function formatColumn<R>(schema: CustomColumnProps<R>) {
   return fakeColumn;
 }
 
-export const setField = (cmpMap) => {
+export const setFields = (cmpMap) => {
   ComponentsMap = {...ComponentsMap, ...cmpMap }
 }
 

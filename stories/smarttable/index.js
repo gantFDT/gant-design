@@ -465,7 +465,7 @@ function LocalUse() {
   )
 }
 /*! Split !*/
-SmartTable.setField({ // 拓展componentType字段类型
+SmartTable.setFields({ // 拓展componentType字段类型
   'Rate': Rate
 })
 var editTableColumns = [
