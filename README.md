@@ -1,6 +1,6 @@
 # Gantd 
 
-[![Build Status](https://travis-ci.org/cntsw/gant-design.svg?branch=master)](https://travis-ci.org/cntsw/gant-design)
+[![Build Status](https://travis-ci.org/gantFDT/gant-design.svg?branch=master)](https://travis-ci.org/gantFDT/gant-design)
 
 GantD是面向B端管理型软件、专注于数据密集型业务场景、基于Antd聚合型React组件库
 在Antd的基础上做了不同程度的针对性的强化，亦可以视作为Antd的补充，可以和Antd同时使用
