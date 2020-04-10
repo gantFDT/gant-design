@@ -9,9 +9,8 @@ import { Button, message, Dropdown, Menu } from "antd"
 import { Input, InputCellPhone } from "@data-cell"
 import Header from '@header'
 /*! Split !*/
-type Data = { name?: string, age?: number, [key: string]: any }
 const TreeGrid = () => {
-    function getSimpleCellRenderer(): any {
+    function getSimpleCellRenderer() {
         function SimpleCellRenderer() { }
         SimpleCellRenderer.prototype.init = function (params) {
             console.log(params)
@@ -45,7 +44,7 @@ const TreeGrid = () => {
         }, 2000)
     }, [])
 
-    const [columns, setcolumns] = useState<Columns<Data>[]>([
+    const [columns, setcolumns] = useState([
         {
             title: '姓名',
             fieldName: "name",
@@ -73,7 +72,7 @@ const TreeGrid = () => {
     ])
 
 
-    const [dataSource, setdataSource] = useState<Data[]>(
+    const [dataSource, setdataSource] = useState(
         [
             {
                 name: "里斯",
@@ -105,13 +104,13 @@ const TreeGrid = () => {
         ]
     )
 
-    const apiRef = useRef<GridReadyEvent>()
+    const apiRef = useRef()
 
     const edit = useCallback((e) => { seteditable(true) }, [])
 
-    const [manager, setManager] = useState<DataManage<Data>>()
+    const [manager, setManager] = useState()
 
-    const onReady = useCallback<OnReady>((params, manager) => {
+    const onReady = useCallback((params, manager) => {
         apiRef.current = params
         setManager(manager)
     }, [])
@@ -132,7 +131,7 @@ const TreeGrid = () => {
     }, [])
 
     /**删除年龄大于120的 */
-    const deleteCb = useCallback<RemoveCallBack>((selected) => new Promise(res => {
+    const deleteCb = useCallback((selected) => new Promise(res => {
         message.info("0.5s后删除")
         setTimeout(() => {
             res(true)
