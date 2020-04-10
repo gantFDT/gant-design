@@ -249,6 +249,7 @@ function ajax(updateData) {
 const AsyncTreeData = () => {
     const [dataSource, setDataSource] = useState([])
     const [selectedKeys, setSelectedKeys] = useState([])
+    const [editable, seteditable] = useState(false)
     const columns = [{
         fieldName: 'employeeId',
         enableRowGroup: true,
@@ -262,7 +263,7 @@ const AsyncTreeData = () => {
     },
     {
         fieldName: 'employeeName',
-        render: (val) => <Input val={val+"111"} />
+        render: (val) => <Input value={val+"111"} />
     },
     { fieldName: 'startDate' },
     { fieldName: 'employmentType' },
@@ -271,13 +272,26 @@ const AsyncTreeData = () => {
         ajax(setDataSource)
     }, [])
     const onSelect = (keys) => setSelectedKeys(keys)
+
     return <>
+    <Header extra={!editable ? (
+                <Button onClick={()=>seteditable(true)}>进入编辑</Button>
+            ) : (
+                    <>
+                        <Button onClick={() => {
+                            // const { list, diff } = manager.save()
+                            // setdataSource(list)
+                            seteditable(false)
+                        }}>保存</Button>
+                    </>
+                )
+            } />
         <Grid
             rowkey="employeeId"
             columns={columns}
             dataSource={dataSource}
             treeData
-            isServer
+            // isServer
             isServerSideGroup={(data) => {
                 return Array.isArray(data.underlings)
             }}
@@ -289,7 +303,7 @@ const AsyncTreeData = () => {
                     onSelect(keys)
                 }
             }}
-            editable
+            editable={editable}
             onRowGroupOpened={(data) => { console.log(data) }}
             groupSuppressAutoColumn
         />
@@ -300,11 +314,11 @@ const config = {
     codes,
     useage: '',
     children: [
-        {
-            title: "tree",
-            describe: "树形结构",
-            cmp: TreeGrid
-        },
+        // {
+        //     title: "tree",
+        //     describe: "树形结构",
+        //     cmp: TreeGrid
+        // },
         {
             title: "async tree",
             describe: "异步树形",
