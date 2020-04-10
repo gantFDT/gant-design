@@ -259,7 +259,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                                     resizable,
                                     sortable,
                                     filter,
-                                    minWidth: 100,
+                                    minWidth: 30,
                                 }}
                                 headerHeight={24}
                                 floatingFiltersHeight={20}
