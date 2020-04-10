@@ -10,7 +10,6 @@ import _ from 'lodash'
 import * as math from 'mathjs'
 
 import warning from '@util/warning'
-import { ProtoExtends, PartRequired } from '@util/type'
 import {
     renderColumnItem,
     useRowSelection,
@@ -76,7 +75,11 @@ export type Record = {
 
 export type RowKey<T> = (record: T, index?: number) => string
 
+export type ProtoExtends<T, U> = U & {
+    [K in Exclude<keyof T, keyof U>]?: NonNullable<T[K]>
+}
 
+export type PartRequired<T, U extends keyof T> = Required<Pick<T, U>> & Partial<Omit<T, U>>
 
 // 重写RowSelection类型
 export type RowSelection<T> = ProtoExtends<TableRowSelection<T>, {

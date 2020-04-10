@@ -65,7 +65,7 @@ export default {
     toolPanelButton: '工具面板',
 
     // other
-    noRowsToShow: '没有数据',
+    noRowsToShow: '暂无数据',
     enabled: '开启',
 
     // enterprise menu

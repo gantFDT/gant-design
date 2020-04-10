@@ -5,7 +5,7 @@ import { EventEmitter } from 'events'
 
 import History from './history'
 import { originKey, cloneDeep, findChildren, removeDeepItem, getPureRecord, getPureList, getIndexPath } from './utils'
-import { Record, DataActions, RemoveCallBack } from '../interface'
+import { Record, DataActions, RemoveCallBack, Move } from '../interface'
 import { isnumber, isbool } from '../utils'
 
 
@@ -18,8 +18,6 @@ class DataManage<T extends Record = any> extends EventEmitter {
 
     // private _state: List<T>
     private _originList: T[]
-    private _pureList: T[]
-    private _currentPureList: T[]
     private history: History<T>
     private updated = false // 通知getCurrentList当前列表是否发生变化
     private _removed = new Map<string, any>()
@@ -70,10 +68,9 @@ class DataManage<T extends Record = any> extends EventEmitter {
 
     /**
      * 获取原始纯净数据、不会包含新增的数据
-     * @deprecated
      */
     get purelist() {
-        return this._pureList
+        return getPureList(this.renderList)
     }
 
     // 撤销
@@ -128,8 +125,6 @@ class DataManage<T extends Record = any> extends EventEmitter {
         const [list, pureList] = cloneDeep(dataSource)
         // 重置的时候使用的原始数据
         this._originList = list
-        this._pureList = pureList
-        this._currentPureList = pureList
         this.reset()
         /**清空diff数据 */
         this._add = new Map<string, any>()
@@ -258,8 +253,8 @@ class DataManage<T extends Record = any> extends EventEmitter {
     // 修改
     modify(changed: any) {
         const { data, node: { id } } = changed
-        // 添加到对应的modify数组
-        // const id = DataManage.getRowNodeId(data)
+
+
         if (data[originKey]) {
             this._modify.set(id, getPureRecord(data))
         } else {
@@ -280,10 +275,10 @@ class DataManage<T extends Record = any> extends EventEmitter {
         this.history.appendChild(groupKeys, this.childrenName, fromJS(children), this.getServerSideGroupKey)
     }
 
-    // // 移动
-    // move() {
+    // 移动节点
+    move(node: RowNode, action: Move = Move.down) {
 
-    // }
+    }
 
     getDiff(): RowNodeTransaction {
         return {
