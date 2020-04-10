@@ -1,0 +1,20 @@
+language: node_js
+node_js:
+  - 12
+
+before_script:
+  - npm i
+script: npm run build-storybook
+
+cache:
+  npm: false
+  
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN 
+  keep_history: true
+  local_dir: docs
+  on:
+    branch: master
+
