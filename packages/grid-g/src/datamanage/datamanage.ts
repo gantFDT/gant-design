@@ -157,7 +157,6 @@ class DataManage<T extends Record = any> extends EventEmitter {
         let newState = null
         const id = this.getRowNodeId(item)
         this._add.set(id, item)
-        // const indexPath = getIndexPath()
         if (isnumber(node)) {
             const index = node
             newState = this.state.insert(index, itemNode)
@@ -244,21 +243,13 @@ class DataManage<T extends Record = any> extends EventEmitter {
             })
 
 
+            /**处理state */
             const newState = [...keyMap.values()].reduce((state, keyPath) => {
-                const [startIndex, ...resetPath] = keyPath
-                if (keyPath.length === 1) {
-                    return state.delete(startIndex)
-                } else if (keyPath.length >= 2) {
-                    return state.update(startIndex, ({ ...item }) => removeDeepItem<T>(this.childrenName, resetPath, item))
-                }
-                return state
+                const paths = keyPath.flatMap((key, index) => index === 0 ? key : [this.childrenName, key])
+                return state.deleteIn(paths)
             }, this.state)
-            // 添加history数据
+            // // 添加history数据
             this.history.push(newState)
-            // 调用api删除数据
-            this.gridApi.updateRowData({
-                remove: deleteRows.map(node => node.data)
-            })
             return deleteRows
         })
 
@@ -277,16 +268,10 @@ class DataManage<T extends Record = any> extends EventEmitter {
             this._add.set(id, getPureRecord(data))
         }
 
-
         let keyPath = getIndexPath(changed.node)
-        let newState = this.state
 
-        const [startIndex, ...resetPath] = keyPath
-        if (keyPath.length === 1) {
-            newState = newState.set(startIndex, data)
-        } else if (keyPath.length >= 2) {
-            newState = newState.update(startIndex, ({ ...item }) => removeDeepItem<T>(this.childrenName, resetPath, item, data))
-        }
+        const paths = keyPath.flatMap((key, index) => index === 0 ? key : [this.childrenName, key])
+        const newState = this.state.updateIn(paths, node => fromJS(data))
         this.history.push(newState)
     }
 
