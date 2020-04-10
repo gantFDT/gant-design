@@ -262,7 +262,7 @@ const AsyncTreeData = () => {
     },
     {
         fieldName: 'employeeName',
-        // render: () => 111
+        render: (val) => <Input val={val+"111"} />
     },
     { fieldName: 'startDate' },
     { fieldName: 'employmentType' },
