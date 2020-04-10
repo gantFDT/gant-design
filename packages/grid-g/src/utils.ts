@@ -179,7 +179,7 @@ export function usePagination(pagitation: Pagination): PaginationProps {
             size: 'small',
             defaultPageSize: 20,
             defaultCurrent: 1,
-            pageSizeOptions: ["20", "50", "80", "120"],
+            pageSizeOptions: ["20", "50", "100", "150", "200", "500"],
             showSizeChanger: true,
             showQuickJumper: true,
             showTotal
