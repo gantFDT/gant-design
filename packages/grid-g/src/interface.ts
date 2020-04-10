@@ -1,9 +1,8 @@
 import { AgGridReactProps } from 'ag-grid-react';
-import { GridApi as AgGridApi, GridReadyEvent, ValueFormatterParams, ColDef } from "ag-grid-community";
+import { GridApi as AgGridApi, GridReadyEvent, ValueFormatterParams, ColDef, IServerSideGetRowsParams } from "ag-grid-community";
 import { defaultProps, defaultRowSelection } from './index'
 
 import { PaginationProps } from 'antd/lib/pagination'
-import { PartRequired, ProtoExtends } from "@util/type"
 import DataManage from './datamanage'
 // 编辑框大小
 export enum Size {
@@ -37,6 +36,11 @@ export enum Move {
     down = "down"
 }
 
+export type ProtoExtends<T, U> = U & {
+    [K in Exclude<keyof T, keyof U>]?: NonNullable<T[K]>
+}
+
+export type PartRequired<T, U extends keyof T> = Required<Pick<T, U>> & Partial<Omit<T, U>>
 
 /**删除数据时的回调方法，可以返回boolean、array或者是一个能够提供boolean、array类型返回值的promise */
 export type RemoveCallBack = (selected: any[]) => (Promise<boolean> | boolean)
@@ -138,7 +142,7 @@ export interface Props<T extends Record> {
     isServerSideGroup: (data: any) => boolean,
     treeDataChildrenName: string,
     locale: object,
-    serverGroupExpend: (cd: (row: any[]) => void) => void
+    serverGroupExpend: (param: IServerSideGetRowsParams, cd: (row: any[]) => void) => void
 }
 
 export type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>

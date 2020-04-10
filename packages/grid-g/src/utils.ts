@@ -1,6 +1,6 @@
 
 import { useCallback, useMemo } from 'react'
-import { ColGroupDef, ColDef, IsColumnFuncParams, IsColumnFunc } from 'ag-grid-community'
+import { ColGroupDef, ColDef, IsColumnFuncParams, IsColumnFunc, IServerSideGetRowsParams } from 'ag-grid-community'
 import { get, isNumber, isEmpty } from 'lodash'
 import { PaginationProps } from 'antd/lib/pagination'
 import { Columns, RowSelection, ColumnEdiatble } from './interface'
@@ -33,11 +33,11 @@ export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Si
                 cellClass: ["gant-grid-cell"],
                 cellClassRules: {
                     "gant-grid-cell-modify": params => {
-                        const { data: { _rowType, _rowData }, colDef: { field }, value } = params
+                        const { data: { _rowType, _rowData } = {} as any, colDef: { field }, value } = params
                         return _rowType === DataActions.modify && value !== get(_rowData, field, value)
                     },
-                    "gant-grid-cell-add": params => params.data._rowType === DataActions.add,
-                    "gant-grid-cell-delete": params => params.data._rowType === DataActions.remove,
+                    "gant-grid-cell-add": params => get(params, "data._rowType") === DataActions.add,
+                    "gant-grid-cell-delete": params => get(params, "data._rowType") === DataActions.remove,
                 },
                 cellRenderer: cellRenderer ? cellRenderer : "gantRenderCol",
                 ...item,
@@ -179,7 +179,7 @@ export function usePagination(pagitation: Pagination): PaginationProps {
             size: 'small',
             defaultPageSize: 20,
             defaultCurrent: 1,
-            pageSizeOptions: ["20", "50", "80", "120"],
+            pageSizeOptions: ["20", "50", "100", "150", "200", "500"],
             showSizeChanger: true,
             showQuickJumper: true,
             showTotal
@@ -201,12 +201,11 @@ export function usePagination(pagitation: Pagination): PaginationProps {
             },
             [onChange],
         )
-        pagitation.onChange = onPageChange
 
         if (isnumber(pagitation.beginIndex)) {
             pagitation.current = pagitation.beginIndex / pageSize + 1
         }
-        return { ...defaultPagetation, ...pagitation, onShowSizeChange: onPageChange }
+        return { ...defaultPagetation, ...pagitation, onChange: onPageChange, onShowSizeChange: onPageChange }
     }
 
 }
@@ -221,7 +220,7 @@ export function getSizeClassName(size: Size) {
 
 export function createFakeServer(dataManage, getRowNodeId, treeDataChildrenName) {
     function FakeServer(dataManage) {
-        this.data = dataManage.renderList;
+        this.data = dataManage;
     }
     FakeServer.prototype.getData = function (request) {
         function extractRowsFromData(groupKeys, data) {
@@ -229,8 +228,8 @@ export function createFakeServer(dataManage, getRowNodeId, treeDataChildrenName)
             var key = groupKeys[0];
             for (var i = 0; i < data.length; i++) {
                 if (getRowNodeId(data[i]) === key) {
-                    if (!data[i][treeDataChildrenName]) return false
-                    const children = get(data, `[${i}][${treeDataChildrenName}]`, [])
+                    const children = get(data, `[${i}][${treeDataChildrenName}]`, false)
+                    if (!children) return false
                     return extractRowsFromData(
                         groupKeys.slice(1),
                         children.slice()
@@ -238,19 +237,24 @@ export function createFakeServer(dataManage, getRowNodeId, treeDataChildrenName)
                 }
             }
         }
-        return extractRowsFromData(request.groupKeys, this.data);
+        return extractRowsFromData(request.groupKeys, this.data.renderList);
     };
     return new FakeServer(dataManage);
 }
-export function createServerSideDatasource(fakeServer, asyncCallback) {
+export function createServerSideDatasource(fakeServer, asyncCallback, cb?: (params: IServerSideGetRowsParams) => void) {
     function ServerSideDatasource(fakeServer) {
         this.fakeServer = fakeServer;
     }
+
     ServerSideDatasource.prototype.getRows = function (params) {
-        const { request, successCallback } = params
+        const { request, successCallback, parentNode } = params
         var rows = this.fakeServer.getData(request);
-        if (Array.isArray(rows)) successCallback(rows, rows.length);
-        asyncCallback(request.groupKeys, successCallback)
+        function requestSuccessCallBack(rows: any[], len: number) {
+            successCallback(rows, len);
+            cb && cb(params)
+        }
+        if (Array.isArray(rows)) return requestSuccessCallBack(rows, rows.length);
+        asyncCallback(params, request.groupKeys, requestSuccessCallBack)
     }
     return new ServerSideDatasource(fakeServer);
 }

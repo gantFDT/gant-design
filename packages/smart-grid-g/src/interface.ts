@@ -75,7 +75,7 @@ export interface SmartTableProps<T> extends GantTableProps<T> {
 
 export interface SmartTableType {
   <T>(props: SmartTableProps<T>): React.ReactElement,
-  setField?: (field:Object) => void;
+  setFields?: (field:Object) => void;
 }
 
 export enum langEnum {
