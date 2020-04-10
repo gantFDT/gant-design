@@ -230,7 +230,7 @@ export function createFakeServer(dataManage, getRowNodeId, treeDataChildrenName)
             for (var i = 0; i < data.length; i++) {
                 if (getRowNodeId(data[i]) === key) {
                     const children = get(data, `[${i}][${treeDataChildrenName}]`, false)
-                    if (!treeDataChildrenName) return false
+                    if (!children) return false
                     return extractRowsFromData(
                         groupKeys.slice(1),
                         children.slice()
@@ -255,7 +255,7 @@ export function createServerSideDatasource(fakeServer, asyncCallback, cb?: (para
             cb && cb(params)
         }
         if (Array.isArray(rows)) return requestSuccessCallBack(rows, rows.length);
-        asyncCallback(request.groupKeys, requestSuccessCallBack)
+        asyncCallback(params, request.groupKeys, requestSuccessCallBack)
     }
     return new ServerSideDatasource(fakeServer);
 }

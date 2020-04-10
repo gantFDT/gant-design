@@ -1,5 +1,5 @@
 import { AgGridReactProps } from 'ag-grid-react';
-import { GridApi as AgGridApi, GridReadyEvent, ValueFormatterParams, ColDef } from "ag-grid-community";
+import { GridApi as AgGridApi, GridReadyEvent, ValueFormatterParams, ColDef, IServerSideGetRowsParams } from "ag-grid-community";
 import { defaultProps, defaultRowSelection } from './index'
 
 import { PaginationProps } from 'antd/lib/pagination'
@@ -138,7 +138,7 @@ export interface Props<T extends Record> {
     isServerSideGroup: (data: any) => boolean,
     treeDataChildrenName: string,
     locale: object,
-    serverGroupExpend: (cd: (row: any[]) => void) => void
+    serverGroupExpend: (param: IServerSideGetRowsParams, cd: (row: any[]) => void) => void
 }
 
 export type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>
