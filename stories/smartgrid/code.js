@@ -488,7 +488,7 @@ import { SmartGrid, EditStatus, SwitchStatus } from 'gantd'
 const { Random } = Mock
 
 
-SmartGrid.setField({ // 拓展componentType字段类型
+SmartGrid.setFields({ // 拓展componentType字段类型
   'Rate': Rate
 })
 var editTableColumns = [

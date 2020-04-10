@@ -89,8 +89,7 @@ export const useTableConfig = (props: useTableConfigProps) => {
       return {
         ...columnItem,
         width: finalWidth || (ck.fixed ? 120 : undefined),
-        fixed: ck.fixed,
-        align: ck.align,
+        fixed: ck.fixed
       }
     })
     , [columnFields, columns])

@@ -13,10 +13,8 @@ pages.map(page => {
       Component = require('./' + dirname + "/index.js").default;
     } catch (e) {}
     try {
-      Component = require('./' + dirname + "/index.tsx").default;
+      Component = require('./' + dirname + "/index.jsx").default;
     } catch (e) {}
-
-
 		
 		let marked = ``
 		let config = {};

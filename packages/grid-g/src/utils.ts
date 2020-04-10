@@ -33,11 +33,11 @@ export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Si
                 cellClass: ["gant-grid-cell"],
                 cellClassRules: {
                     "gant-grid-cell-modify": params => {
-                        const { data: { _rowType, _rowData }, colDef: { field }, value } = params
+                        const { data: { _rowType, _rowData } = {} as any, colDef: { field }, value } = params
                         return _rowType === DataActions.modify && value !== get(_rowData, field, value)
                     },
-                    "gant-grid-cell-add": params => params.data._rowType === DataActions.add,
-                    "gant-grid-cell-delete": params => params.data._rowType === DataActions.remove,
+                    "gant-grid-cell-add": params => get(params, "data._rowType") === DataActions.add,
+                    "gant-grid-cell-delete": params => get(params, "data._rowType") === DataActions.remove,
                 },
                 cellRenderer: cellRenderer ? cellRenderer : "gantRenderCol",
                 ...item,
@@ -248,17 +248,14 @@ export function createServerSideDatasource(fakeServer, asyncCallback, cb?: (para
     }
 
     ServerSideDatasource.prototype.getRows = function (params) {
-        const { request, successCallback } = params
+        const { request, successCallback, parentNode } = params
         var rows = this.fakeServer.getData(request);
         function requestSuccessCallBack(rows: any[], len: number) {
             successCallback(rows, len);
-            console.log("params", params)
             cb && cb(params)
         }
-        if (Array.isArray(rows)) {
-            successCallback(rows, rows.length);
-        }
-        asyncCallback(request.groupKeys, successCallback)
+        if (Array.isArray(rows)) return requestSuccessCallBack(rows, rows.length);
+        asyncCallback(request.groupKeys, requestSuccessCallBack)
     }
     return new ServerSideDatasource(fakeServer);
 }

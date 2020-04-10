@@ -95,4 +95,4 @@ ColumnField:
 
 ## FAQ
 #### 1.如何拓展自定义组件？
-导出的默认组件, 包含静态属性 setField, setField接收一个类型为 {\[componentType\]: React.ReactElement} 的对象, 即可扩展schema的componentType类型, 详情参考 示例(行内编辑用法)
+导出的默认组件, 包含静态属性 setFields, setFields接收一个类型为 {\[componentType\]: React.ReactElement} 的对象, 即可扩展schema的componentType类型, 详情参考 示例(行内编辑用法)

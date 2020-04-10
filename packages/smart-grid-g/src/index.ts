@@ -1,7 +1,7 @@
 import SmartTable from './SmartTable';
-import { setField } from './formatschema';
+import { setFields } from './formatschema';
 
 export { default as TableConfig } from './config/UIContent'
 
-SmartTable.setField = setField;
+SmartTable.setFields = setFields;
 export default SmartTable;

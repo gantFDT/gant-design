@@ -456,7 +456,7 @@ function LocalUse() {
   )
 }
 /*! Split !*/
-SmartGrid.setField({ // 拓展componentType字段类型
+SmartGrid.setFields({ // 拓展componentType字段类型
   'Rate': Rate
 })
 var editTableColumns = [
