@@ -39,7 +39,7 @@ let ComponentsMap = {
 }
 
 function formatColumn<R>(schema: CustomColumnProps<R>) {
-  let fakeColumn = { dataIndex: schema.fieldName, ...schema };
+  let fakeColumn = { ...schema };
   if (!schema.render) {
     if(schema.componentType){
       if(getType(schema.componentType) !== 'String'){
@@ -66,6 +66,7 @@ function formatColumn<R>(schema: CustomColumnProps<R>) {
         }
       }
     }
+    delete fakeColumn.componentType;
   }
   if (fakeColumn.children && !isEmpty(fakeColumn.children)) {
     fakeColumn.children = fakeColumn.children.map((childColumn: CustomColumnProps<R>) =>

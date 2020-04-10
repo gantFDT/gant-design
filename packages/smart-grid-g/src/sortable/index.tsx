@@ -13,7 +13,6 @@ import Receiver from '../locale/Receiver';
 Icon.updateFromIconfontCN({ scriptUrl: '//at.alicdn.com/t/font_1252237_yp35yr9jf6.js'})
 
 interface RecordProps {
-  dataIndex: string;
   title: string;
   checked: boolean;
   lock?: boolean;
@@ -158,7 +157,7 @@ function Sortable(props: SortableProps) {
                 disabled={value.lock}
                 lock={value.lock}
                 index={index}
-                key={value.dataIndex}
+                key={value.fieldName}
                 realIndex={value.realIndex}
                 record={value}
               />

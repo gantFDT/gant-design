@@ -3,7 +3,7 @@ export default [
 import React, { useMemo, useEffect, useCallback, useState, useRef } from 'react'
 import Grid, { Columns, Filter, OnReady, GridApi, Fixed, DataManage, RemoveCallBack } from 'grid';
 import { GridReadyEvent, ColDef } from 'ag-grid-community'
-import { Button, message } from "antd"
+import { Button, message, Dropdown, Menu } from "antd"
 import { Input, InputCellPhone } from "data-cell"
 import Header from 'header'
 
@@ -110,8 +110,8 @@ const TreeGrid = () => {
 
     const [manager, setManager] = useState<DataManage<Data>>()
 
-    const onReady = useCallback<OnReady>((api, manager) => {
-        apiRef.current = api
+    const onReady = useCallback<OnReady>((params, manager) => {
+        apiRef.current = params
         setManager(manager)
     }, [])
 
@@ -145,13 +145,49 @@ const TreeGrid = () => {
         [manager],
     )
 
+    const menu = useMemo(() => {
+        return (
+            <Menu>
+                <Menu.Item>
+                    <a onClick={() => manager.create({ idcard: Math.random().toString(16), name: Math.random().toString(16) })}>新增</a>
+                </Menu.Item>
+                <Menu.Item>
+                    <a onClick={() => {
+                        const selected = apiRef.current.api.getSelectedNodes()
+                        if (selected.length) {
+                            manager.create(
+                                { idcard: Math.random().toString(16), name: Math.random().toString(16) },
+                                selected[0]
+                            )
+                        }
+                    }}>新增子节点</a>
+                </Menu.Item>
+                <Menu.Item>
+                    <a onClick={() => {
+                        const selected = apiRef.current.api.getSelectedNodes()
+                        if (selected.length) {
+                            manager.create(
+                                { idcard: Math.random().toString(16), name: Math.random().toString(16) },
+                                selected[0],
+                                false
+                            )
+                        }
+                    }}>新增同级节点</a>
+                </Menu.Item>
+            </Menu>
+        )
+    }, [manager])
+
     return (
         <>
             <Header extra={!editable ? (
                 <Button onClick={edit}>进入编辑</Button>
             ) : (
                     <>
-                        <Button onClick={() => manager.create(0, { idcard: Math.random().toString(16), name: Math.random().toString(16) })}>新增</Button>
+
+                        <Dropdown overlay={menu} placement="bottomLeft">
+                            <Button>添加节点</Button>
+                        </Dropdown>
                         <Button disabled={!(manager && selectedKeys.length)} onClick={() => manager.remove(deleteCb).then(e => message.success("删除成功"), e => { message.error("删除出错"); throw e })}>删除</Button>
                         <Button onClick={append}>添加子节点</Button>
                         <Button onClick={() => manager.undo()}>撤销</Button>
