@@ -3,7 +3,6 @@ import { GridApi as AgGridApi, GridReadyEvent, ValueFormatterParams, ColDef } fr
 import { defaultProps, defaultRowSelection } from './index'
 
 import { PaginationProps } from 'antd/lib/pagination'
-import { PartRequired, ProtoExtends } from "@util/type"
 import DataManage from './datamanage'
 // 编辑框大小
 export enum Size {
@@ -37,6 +36,11 @@ export enum Move {
     down = "down"
 }
 
+export type ProtoExtends<T, U> = U & {
+    [K in Exclude<keyof T, keyof U>]?: NonNullable<T[K]>
+}
+
+export type PartRequired<T, U extends keyof T> = Required<Pick<T, U>> & Partial<Omit<T, U>>
 
 /**删除数据时的回调方法，可以返回boolean、array或者是一个能够提供boolean、array类型返回值的promise */
 export type RemoveCallBack = (selected: any[]) => (Promise<boolean> | boolean)
