@@ -1,6 +1,6 @@
 {
     "name": "table-g",
-    "version": "0.1.15",
+    "version": "0.1.16",
     "description": "gantd table",
     "main": "lib/index.js",
     "scripts": {},
