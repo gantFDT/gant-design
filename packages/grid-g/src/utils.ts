@@ -201,12 +201,11 @@ export function usePagination(pagitation: Pagination): PaginationProps {
             },
             [onChange],
         )
-        pagitation.onChange = onPageChange
 
         if (isnumber(pagitation.beginIndex)) {
             pagitation.current = pagitation.beginIndex / pageSize + 1
         }
-        return { ...defaultPagetation, ...pagitation, onShowSizeChange: onPageChange }
+        return { ...defaultPagetation, ...pagitation, onChange: onPageChange, onShowSizeChange: onPageChange }
     }
 
 }
