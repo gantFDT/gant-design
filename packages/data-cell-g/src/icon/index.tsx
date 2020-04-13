@@ -61,6 +61,7 @@ const IconHouse: React.FC<IconHouseProps<string>> = ({
   allowEdit,
   onEnter,
   perfix,
+  size="normal",
   controlMode,
   ...props
 }) => {
@@ -137,7 +138,7 @@ const IconHouse: React.FC<IconHouseProps<string>> = ({
 
   return (
     <>
-      <div className="gant-icon-select" onClick={toggleVisible}>
+      <div className={classnames('gant-icon-select', size)} onClick={toggleVisible}>
         {
           currentId ? <Icon type={currentId} title={tr('点击切换')} perfix={perfix} {...props} /> : <span className={prefixCls + '-btn'}>{tr('点击选择')}</span>
         }

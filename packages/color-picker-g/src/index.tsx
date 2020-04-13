@@ -27,7 +27,8 @@ function ColorPicker(props) {
     width = 'auto',
     edit = true,
     disabled = false,
-    placement = 'top'
+    placement = 'top',
+    size = 'normal'
   } = props;
 
   const [visibleStatus, setVisibleStatus] = useState('');
@@ -54,7 +55,7 @@ function ColorPicker(props) {
 
 
   const showText = fillText(currentColor);
-  const prefixCls = customizePrefixCls + '-color-picker';
+  const prefixCls = customizePrefixCls + '-color-picker' + (size==='small'?'-small':'');
   const { l } = hsl;
 
   return (
@@ -65,7 +66,7 @@ function ColorPicker(props) {
         <div className={`${prefixCls}-preview`}
           onMouseEnter={()=>!disabled && setPickerVisible(true)}
           onMouseLeave={()=>!disabled && setPickerVisible(false)}
-          style={{backgroundColor:currentColor, color: l < 0.8 ? '#fff' : '#000'}}>
+          style={{backgroundColor: currentColor, color: l < 0.8 ? '#fff' : '#000'}}>
           {
             disabled ? <div className={`${prefixCls}-preview-text`}>#{showText}</div> :
             <>
@@ -124,14 +125,19 @@ function ColorPicker(props) {
                     cursor: disabled ? 'not-allowed' : 'pointer'
                   }}
                 ></div>
-                {!disabled && visibleStatus===id && (
-                  <div className={`${prefixCls}-picker`} style={placement === 'top' ? { bottom: 29, paddingBottom: 10 } : { top: 27, paddingTop: 10 }}>
+                {!disabled && id === visibleStatus &&(
+                  <div className={`${prefixCls}-picker`} style={
+                    placement === 'top' ? 
+                    { bottom: 29 - (size === 'small' ? 5 : 0), paddingBottom: 10 } : 
+                    { top: 27 - (size === 'small' ? 5 : 0), paddingTop: 10 }
+                  }>
                     <SubPicker
                       prefixCls={prefixCls}
                       placement={placement}
                       color={currentColor}
                       colors={children}
                       onChange={modifyColor}
+                      size={size}
                     />
                   </div>
                 )}

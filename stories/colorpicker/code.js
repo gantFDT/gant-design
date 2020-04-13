@@ -25,6 +25,26 @@ const { PurePicker } = ColorPicker;
 // import { ColorPicker } = 'color-picker-g'; 此处的ColorPicker同PurePicker，即不添加读写分离的选择器
 
 
+function SizeUse() {
+  const [color, setColor] = useState('#EB2F96');
+
+  return <>
+    <h3 style={{ color }}>颜色选择器(迷你大小)</h3>
+    <PurePicker
+      size="small"
+      value={color}
+      onChange={setColor.bind(null)}
+    />
+  </>
+}
+
+ReactDOM.render(<SizeUse />, mountNode)`,`
+import React, { useState } from 'react';
+import { ColorPicker } from 'gantd';
+const { PurePicker } = ColorPicker;
+// import { ColorPicker } = 'color-picker-g'; 此处的ColorPicker同PurePicker，即不添加读写分离的选择器
+
+
 function BottomUse() {
   const [color, setColor] = useState('#EB2F96');
 

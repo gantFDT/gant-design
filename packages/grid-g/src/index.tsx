@@ -164,9 +164,9 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
             dataManage.appendChild(groupKeys, rows)
         }
     }, [])
-    const serverDataRequest = useCallback((groupKeys, successCallback) => {
+    const serverDataRequest = useCallback((params, groupKeys, successCallback) => {
         if (serverGroupExpend) {
-            return serverGroupExpend(serverDataCallback(groupKeys, successCallback))
+            return serverGroupExpend(params, serverDataCallback(groupKeys, successCallback))
         }
         return successCallback([], 0)
     }, [serverGroupExpend])
@@ -259,7 +259,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                                     resizable,
                                     sortable,
                                     filter,
-                                    minWidth: 100,
+                                    minWidth: 30,
                                 }}
                                 headerHeight={24}
                                 floatingFiltersHeight={20}

@@ -223,6 +223,7 @@ const TreeGrid = () => {
                 dataSource={dataSource}
                 onReady={onReady}
                 rowSelection={{
+                    type:'single',
                     selectedKeys,
                     onSelect
                 }}
