@@ -19,6 +19,19 @@ function BasicUse() {
   </>
 }
 /*! Split !*/
+function SizeUse() {
+  const [color, setColor] = useState('#EB2F96');
+
+  return <>
+    <h3 style={{ color }}>颜色选择器(迷你大小)</h3>
+    <PurePicker
+      size="small"
+      value={color}
+      onChange={setColor.bind(null)}
+    />
+  </>
+}
+/*! Split !*/
 function BottomUse() {
   const [color, setColor] = useState('#EB2F96');
 
@@ -86,6 +99,11 @@ const config = {
       title: '基本用法',
       describe: '最简单的用法',
       cmp: BasicUse
+    },
+    {
+      title: '尺寸用法',
+      describe: '修改尺寸的用法',
+      cmp: SizeUse
     },
     {
       title: '向下弹出用法',
