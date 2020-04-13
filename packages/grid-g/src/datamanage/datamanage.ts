@@ -9,7 +9,10 @@ import { cloneDeep, findChildren, removeDeepItem, getPureRecord, getPureList, ge
 import { Record, DataActions, RemoveCallBack, Move } from '../interface'
 import { isnumber, isbool } from '../utils'
 
-
+interface RemoveOptions {
+    removeChildren: boolean,
+    showLine: boolean
+}
 
 class DataManage<T extends Record = any> extends EventEmitter {
 
@@ -174,7 +177,9 @@ class DataManage<T extends Record = any> extends EventEmitter {
         if (newState !== this.state) this.history.push(newState)
     }
 
-    remove(cb: RemoveCallBack, removeChildren: boolean = true): Promise<Array<RowNode>> {
+    remove(cb: RemoveCallBack, options: RemoveOptions): Promise<Array<RowNode>> {
+        const { showLine = true, removeChildren = true } = options || {}
+
         const selectedNodes = this.gridApi.getSelectedNodes()
         const selected = selectedNodes.map(node => node.data)
         let _this = this
@@ -199,8 +204,10 @@ class DataManage<T extends Record = any> extends EventEmitter {
             }
             return Promise.reject()
         }).then((deleteRows) => {
-            /**处理diff数据 */
-            deleteRows.forEach(({ data, id }) => {
+
+            const keyPathsArray = deleteRows.map(node => {
+                const { data, id } = node
+                /**处理diff数据 */
                 if (data._rowType === DataActions.add) {
                     // 添加的节点
                     if (this._add.has(id)) this._add.delete(id)
@@ -211,15 +218,27 @@ class DataManage<T extends Record = any> extends EventEmitter {
                     }
                     this._removed.set(id, getPureRecord({ ...data, ...data._rowData }))
                 }
-            })
 
-            const keyPathsArray = selectedNodes.map(node => {
                 const paths = getIndexPath(node)
-                return [node.id, ...paths.slice(0, -1)]
+                return {
+                    id: node.id,
+                    paths
+                }
             })
 
             /**处理state */
-            const newState = keyPathsArray.reduce((state, [id, ...parentPath]) => state.updateIn(parentPath, (parentState) => parentState.filter(item => _this.getRowNodeId(item.toJS()) !== id)), this.state)
+            const newState = keyPathsArray.reduce((state, { id, paths }) => {
+                const fullPath = paths.flatMap((key, index) => index === 0 ? key : [this.childrenName, key])
+
+                if (showLine) {
+                    // 显示删除线
+                    return state.updateIn(fullPath, item => item.set('isDeleted', true))
+                } else {
+                    const parentPath = fullPath.slice(0, -1)
+                    return state.updateIn(parentPath, (parentState) => parentState.filter(item => _this.getRowNodeId(item.toJS()) !== id))
+                }
+
+            }, this.state)
             // // 添加history数据
             this.history.push(newState)
             return deleteRows
@@ -230,7 +249,6 @@ class DataManage<T extends Record = any> extends EventEmitter {
     // 修改
     modify(changed: any) {
         const { data, node: { id }, colDef: { field }, value } = changed
-
         const listProxy = new ListProxy(this)
         this.cellEvents.emit(field, value, data, listProxy.list)
 

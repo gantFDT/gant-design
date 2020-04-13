@@ -11,7 +11,7 @@ import { get, isEmpty, isEqual } from 'lodash'
 import key from './license'
 import {
     mapColumns, NonBool, isbool, isstring, isarray, ispromise, isfunc,
-    flattenTreeData, usePagination, getSizeClassName, createFakeServer, createServerSideDatasource
+    flattenTreeData, usePagination, getSizeClassName, createFakeServer, createServerSideDatasource,
 } from './utils'
 import { Filter, Size, Fixed, GridPropsPartial, RowSelection, Record } from './interface'
 import "./style"
@@ -274,6 +274,9 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                                 deltaRowDataMode
                                 groupDefaultExpanded={groupDefaultExpanded}
                                 localeText={locale}
+                                rowClassRules={{
+                                    "gant-grid-row-isdeleted": params => get(params, "data.isDeleted")
+                                }}
                             />
                         </div>
                         {/* 分页高度为30 */}
