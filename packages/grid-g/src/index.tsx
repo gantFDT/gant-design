@@ -224,7 +224,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     //columns
     const defaultSelection = !isEmpty(gantSelection) && showDefalutCheckbox
     const columns = useMemo<ColDef[] | ColGroupDef[]>(() => {
-        return mapColumns<T>(columnDefs, editable, size, getRowNodeId, defaultSelection, defaultSelectionCol, rowSelection)
+        return mapColumns<T>(columnDefs, editable, size, getRowNodeId, defaultSelection, defaultSelectionCol, rowSelection, dataManage.cellEvents)
     }, [columnDefs, editable, rowSelection, size, getRowNodeId, defaultSelectionCol, defaultSelection, rowSelection])
     //columns-end
     const getDataPath = useCallback((data) => {

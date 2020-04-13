@@ -52,6 +52,12 @@ const TreeGrid = () => {
                 component: Input,
                 // changeFormatter: (e: any) => e.target.value,
                 editable: true,
+                onCellChange(value, data, list) {
+                    data.name = data.name.repeat(2)
+                    // list.forEach((item, index) => {
+                    //     item.age = index + item.age
+                    // })
+                }
             },
             enableRowGroup: true,
             cellRenderer: "agGroupCellRenderer",
@@ -200,6 +206,7 @@ const TreeGrid = () => {
                             const { list, diff } = manager.save()
                             setdataSource(list)
                             seteditable(false)
+                            console.log(diff)
                         }}>保存</Button>
                     </>
                 )
@@ -304,11 +311,11 @@ const config = {
             describe: "树形结构",
             cmp: TreeGrid
         },
-        {
-            title: "async tree",
-            describe: "异步树形",
-            cmp: AsyncTreeData
-        }
+        // {
+        //     title: "async tree",
+        //     describe: "异步树形",
+        //     cmp: AsyncTreeData
+        // }
     ]
 }
 

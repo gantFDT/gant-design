@@ -1,12 +1,14 @@
-import { ColumnApi, GridApi, RowNode, RowNodeTransaction } from 'ag-grid-community';
-import { List, fromJS } from 'immutable'
+import { ColumnApi, GridApi, RowNode, RowNodeTransaction, ColDef } from 'ag-grid-community';
+import { List, fromJS, Map as ImMap } from 'immutable'
 import { EventEmitter } from 'events'
 
 
 import History from './history'
+import ListProxy from './listproxy'
 import { originKey, cloneDeep, findChildren, removeDeepItem, getPureRecord, getPureList, getIndexPath } from './utils'
 import { Record, DataActions, RemoveCallBack, Move } from '../interface'
 import { isnumber, isbool } from '../utils'
+
 
 
 // TODO:移动
@@ -20,10 +22,12 @@ class DataManage<T extends Record = any> extends EventEmitter {
     private _originList: T[]
     private history: History<T>
     private updated = false // 通知getCurrentList当前列表是否发生变化
-    private _removed = new Map<string, any>()
-    private _add = new Map<string, any>()
-    private _modify = new Map<string, any>()
+    _removed = new Map<string, any>()
+    _add = new Map<string, any>()
+    _modify = new Map<string, any>()
     private _dataSource: T[]
+
+    cellEvents: EventEmitter = new EventEmitter()
 
     gridApi: GridApi
     columnApi: ColumnApi
@@ -230,22 +234,30 @@ class DataManage<T extends Record = any> extends EventEmitter {
 
     // 修改
     modify(changed: any) {
-        const { data, node: { id } } = changed
+        const { data, node: { id }, colDef: { field }, value } = changed
+
+        const listProxy = new ListProxy(this)
+        this.cellEvents.emit(field, value, data, listProxy.list)
 
 
-        if (data[originKey]) {
-            this._modify.set(id, getPureRecord(data))
+        if (listProxy.isChanged) {
+            const newList = getPureList(listProxy.originList)
+            this.history.push(fromJS(newList))
         } else {
-            // 添加到add数组
-            data._rowType = DataActions.add
-            this._add.set(id, getPureRecord(data))
+            if (data[originKey]) {
+                this._modify.set(id, getPureRecord(data))
+            } else {
+                // 添加到add数组
+                data._rowType = DataActions.add
+                this._add.set(id, getPureRecord(data))
+            }
+
+            let keyPath = getIndexPath(changed.node)
+
+            const paths = keyPath.flatMap((key, index) => index === 0 ? key : [this.childrenName, key])
+            const newState = this.state.updateIn(paths, node => fromJS(data))
+            this.history.push(newState)
         }
-
-        let keyPath = getIndexPath(changed.node)
-
-        const paths = keyPath.flatMap((key, index) => index === 0 ? key : [this.childrenName, key])
-        const newState = this.state.updateIn(paths, node => fromJS(data))
-        this.history.push(newState)
     }
 
     /**添加子级节点 */
@@ -254,9 +266,9 @@ class DataManage<T extends Record = any> extends EventEmitter {
     }
 
     // 移动节点
-    move(node: RowNode, action: Move = Move.down) {
+    // move(node: RowNode, action: Move = Move.down) {
 
-    }
+    // }
 
     getDiff(): RowNodeTransaction {
         return {

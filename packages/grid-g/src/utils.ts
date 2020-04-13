@@ -1,5 +1,6 @@
 
 import { useCallback, useMemo } from 'react'
+import { EventEmitter } from 'events'
 import { ColGroupDef, ColDef, IsColumnFuncParams, IsColumnFunc } from 'ag-grid-community'
 import { get, isNumber, isEmpty } from 'lodash'
 import { PaginationProps } from 'antd/lib/pagination'
@@ -19,9 +20,13 @@ function ColEditableFn(fn: ColumnEdiatble<any>): IsColumnFunc | boolean {
     return fn
 }
 
-export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Size, getRowNodeId: any, defaultSelection: boolean, defaultSelectionCol: ColDef, rowSelection): Col[] => {
+export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Size, getRowNodeId: any, defaultSelection: boolean, defaultSelectionCol: ColDef, rowSelection, cellEvents: EventEmitter): Col[] => {
+
+    // 移除所有已添加事件
+    cellEvents.removeAllListeners()
     function getColumnDefs(columns: Columns<T>[]) {
         return columns.map(({ title: headerName, fieldName: field, children, render, editConfig, cellRenderer, fixed, ...item }, index) => {
+
             const ColEditable = typeof editConfig !== 'undefined';
             const colDef = {
                 headerName,
@@ -47,14 +52,18 @@ export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Si
             if (!itemisgroup(colDef, children)) {
                 // 当前列允许编辑
                 if (ColEditable) {
+                    const { props, changeFormatter, component, onCellChange } = editConfig
                     colDef.cellEditorParams = {
                         size,
-                        props: editConfig.props,
-                        changeFormatter: editConfig.changeFormatter,
+                        props,
+                        changeFormatter,
                         rowkey: getRowNodeId
                     }
-                    colDef.cellEditorFramework = EditorCol(editConfig.component)
+                    colDef.cellEditorFramework = EditorCol(component)
                     colDef.editable = editable ? ColEditableFn(editConfig.editable) : false
+                    if (onCellChange && isfunc(onCellChange)) {
+                        cellEvents.on(field, onCellChange)
+                    }
                 }
                 if (fixed) colDef.pinned = fixed
             }
