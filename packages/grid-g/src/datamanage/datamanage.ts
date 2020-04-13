@@ -177,6 +177,7 @@ class DataManage<T extends Record = any> extends EventEmitter {
     remove(cb: RemoveCallBack, removeChildren: boolean = true): Promise<Array<RowNode>> {
         const selectedNodes = this.gridApi.getSelectedNodes()
         const selected = selectedNodes.map(node => node.data)
+        let _this = this
         return new Promise((res, rej) => {
             let allowDelete: boolean | Promise<boolean> = true
             if (cb) allowDelete = cb(selected)
@@ -213,36 +214,13 @@ class DataManage<T extends Record = any> extends EventEmitter {
                 }
             })
 
-            const keyPathsArray = selectedNodes.map(getIndexPath)
-            /**处理删除的节点中同时包含子父节点时，从keyPathsArray去掉子节点id */
-            // [[0,2],[0,3], [0,3,4]] ===> [[0,2], [0,3]]
-            const keyMap = new Map<string, number[]>();
-            keyPathsArray.forEach((paths) => {
-                const key = paths.join('')
-                if (keyMap.size > 0) {
-                    const pathstr = keyMap.keys()
-                    // 当前节点的父节点已添加到数组中
-                    const hasParent = [...pathstr].some(p => key.startsWith(p))
-                    if (!hasParent) {
-                        keyMap.set(key, paths)
-                    }
-                    // 如果map中有当前节点的子节点，需要删除掉
-                    for (let p of pathstr) {
-                        if (p.startsWith(key)) {
-                            keyMap.delete(p)
-                        }
-                    }
-                } else {
-                    keyMap.set(key, paths)
-                }
+            const keyPathsArray = selectedNodes.map(node => {
+                const paths = getIndexPath(node)
+                return [node.id, ...paths.slice(0, -1)]
             })
 
-
             /**处理state */
-            const newState = [...keyMap.values()].reduce((state, keyPath) => {
-                const paths = keyPath.flatMap((key, index) => index === 0 ? key : [this.childrenName, key])
-                return state.deleteIn(paths)
-            }, this.state)
+            const newState = keyPathsArray.reduce((state, [id, ...parentPath]) => state.updateIn(parentPath, (parentState) => parentState.filter(item => _this.getRowNodeId(item.toJS()) !== id)), this.state)
             // // 添加history数据
             this.history.push(newState)
             return deleteRows
