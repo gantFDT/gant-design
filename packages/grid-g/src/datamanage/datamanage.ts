@@ -5,16 +5,12 @@ import { EventEmitter } from 'events'
 
 import History from './history'
 import ListProxy from './listproxy'
-import { originKey, cloneDeep, findChildren, removeDeepItem, getPureRecord, getPureList, getIndexPath } from './utils'
+import { cloneDeep, findChildren, removeDeepItem, getPureRecord, getPureList, getIndexPath } from './utils'
 import { Record, DataActions, RemoveCallBack, Move } from '../interface'
 import { isnumber, isbool } from '../utils'
 
 
 
-// TODO:移动
-// TODO:取消编辑时恢复添加和删除的数据
-// TODO:保存时返回diff数据，并且清空
-// TODO:修改添加功能API
 class DataManage<T extends Record = any> extends EventEmitter {
 
 
@@ -126,7 +122,7 @@ class DataManage<T extends Record = any> extends EventEmitter {
 
     init(dataSource: T[]) {
         // 添加__origin属性
-        const [list, pureList] = cloneDeep(dataSource)
+        const list = cloneDeep(dataSource)
         // 重置的时候使用的原始数据
         this._originList = list
         this.reset()
@@ -204,17 +200,16 @@ class DataManage<T extends Record = any> extends EventEmitter {
             return Promise.reject()
         }).then((deleteRows) => {
             /**处理diff数据 */
-            deleteRows.forEach(({ data }) => {
-                const rowKey = this.getRowNodeId(data)
-                if (!data[originKey]) {
+            deleteRows.forEach(({ data, id }) => {
+                if (data._rowType === DataActions.add) {
                     // 添加的节点
-                    if (this._add.has(rowKey)) this._add.delete(rowKey)
+                    if (this._add.has(id)) this._add.delete(id)
                 } else {
-                    if (data._rowType === DataActions.modify && this._modify.has(rowKey)) {
+                    if (data._rowType === DataActions.modify && this._modify.has(id)) {
                         // 移除修改的节点
-                        this._modify.delete(rowKey)
+                        this._modify.delete(id)
                     }
-                    this._removed.set(rowKey, data[originKey])
+                    this._removed.set(id, getPureRecord({ ...data, ...data._rowData }))
                 }
             })
 
@@ -244,12 +239,16 @@ class DataManage<T extends Record = any> extends EventEmitter {
             const newList = getPureList(listProxy.originList)
             this.history.push(fromJS(newList))
         } else {
-            if (data[originKey]) {
-                this._modify.set(id, getPureRecord(data))
-            } else {
-                // 添加到add数组
+            if (data._rowType === DataActions.add) {
                 data._rowType = DataActions.add
                 this._add.set(id, getPureRecord(data))
+            }
+            else {
+                if (data._rowData) {
+                    this._modify.set(id, getPureRecord(data))
+                } else {
+                    this._modify.delete(id)
+                }
             }
 
             let keyPath = getIndexPath(changed.node)
@@ -265,10 +264,16 @@ class DataManage<T extends Record = any> extends EventEmitter {
         this.history.appendChild(groupKeys, this.childrenName, fromJS(children), this.getServerSideGroupKey)
     }
 
-    // 移动节点
-    // move(node: RowNode, action: Move = Move.down) {
 
-    // }
+    /**遍历所有节点 */
+    mapNodes(cb: (node: any) => void) {
+        const proxy = new ListProxy(this)
+        proxy.list.forEach(cb)
+        if (proxy.isChanged) {
+            const newList = getPureList(proxy.originList)
+            this.history.push(fromJS(newList))
+        }
+    }
 
     getDiff(): RowNodeTransaction {
         return {

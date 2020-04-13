@@ -1,6 +1,6 @@
 import DataManage from './datamanage'
 
-import { originKey, getPureRecord } from './utils'
+import { getPureRecord } from './utils'
 import { DataActions } from '../interface'
 
 class ListProxy<T extends object>{
@@ -27,13 +27,16 @@ class ListProxy<T extends object>{
                         _this.isChanged = true
                         Reflect.set(target, key, value, receiver)
                         const id = manager.getRowNodeId(target)
-                        console.log(target)
-                        if (target[originKey]) {
-                            manager._modify.set(id, getPureRecord(target))
-                        } else {
-                            // 添加到add数组
+                        if (target._rowType === DataActions.add) {
                             target._rowType = DataActions.add
-                            manager._add.set(id, getPureRecord(target))
+                            this._add.set(id, getPureRecord(target))
+                        }
+                        else {
+                            if (target._rowData) {
+                                this._modify.set(id, getPureRecord(target))
+                            } else {
+                                this._modify.delete(id)
+                            }
                         }
                     }
 

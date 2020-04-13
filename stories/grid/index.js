@@ -52,12 +52,12 @@ const TreeGrid = () => {
                 component: Input,
                 // changeFormatter: (e: any) => e.target.value,
                 editable: true,
-                onCellChange(value, data, list) {
-                    data.name = data.name.repeat(2)
-                    // list.forEach((item, index) => {
-                    //     item.age = index + item.age
-                    // })
-                }
+                // onCellChange(value, data, list) {
+                //     data.name = data.name.repeat(2)
+                //     // list.forEach((item, index) => {
+                //     //     item.age = index + item.age
+                //     // })
+                // }
             },
             enableRowGroup: true,
             cellRenderer: "agGroupCellRenderer",
@@ -67,7 +67,11 @@ const TreeGrid = () => {
             fieldName: "age",
             sortable: true,
             filter: Filter.Number,
-            type: "numericColumn"
+            type: "numericColumn",
+            editConfig: {
+                component: Input,
+                editable: true,
+            }
         },
         {
             title: '余额',
@@ -184,6 +188,13 @@ const TreeGrid = () => {
         )
     }, [manager])
 
+    const mapNodes = useCallback(
+        (node) => {
+            node.name = node.idcard
+        },
+        [],
+    )
+
     return (
         <>
             <Header extra={!editable ? (
@@ -196,6 +207,7 @@ const TreeGrid = () => {
                         </Dropdown>
                         <Button disabled={!(manager && selectedKeys.length)} onClick={() => manager.remove(deleteCb).then(e => message.success("删除成功"), e => { message.error("删除出错"); throw e })}>删除</Button>
                         <Button onClick={append}>添加子节点</Button>
+                        <Button onClick={() => manager.mapNodes(mapNodes)}>遍历节点</Button>
                         <Button onClick={() => manager.undo()}>撤销</Button>
                         <Button onClick={() => manager.redo()}>重做</Button>
                         <Button onClick={() => {
@@ -223,7 +235,7 @@ const TreeGrid = () => {
                 dataSource={dataSource}
                 onReady={onReady}
                 rowSelection={{
-                    type:'single',
+                    type: 'multiple',
                     selectedKeys,
                     onSelect
                 }}
