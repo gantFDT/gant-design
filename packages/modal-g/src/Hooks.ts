@@ -10,7 +10,7 @@ function useDrag(x: number, y: number, onDrag = (c: { x: number, y: number }) =>
     })
 
     const onMouseDown = useCallback((e: React.MouseEvent) => {
-        e.preventDefault()
+        e.stopPropagation()
         setInitialDragState({
             initX: x,
             initY: y,
@@ -61,7 +61,7 @@ function useResize(x: number, y: number, width: number, height: number, onResize
 
     const onMouseDown = useCallback(
         (e) => {
-            e.preventDefault()
+            e.stopPropagation()
             setInitialDragState({
                 initX: x,
                 initY: y,
