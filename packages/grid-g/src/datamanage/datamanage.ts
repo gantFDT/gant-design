@@ -236,15 +236,15 @@ class DataManage<T extends Record = any> extends EventEmitter {
             /**处理state */
             const newState = keyPathsArray.reduce((state, { id, paths }) => {
                 const fullPath = paths.flatMap((key, index) => index === 0 ? key : [this.childrenName, key])
+                const parentPath = fullPath.slice(0, -1)
 
-                if (showLine) {
-                    // 显示删除线
-                    return state.updateIn(fullPath, item => item.set('isDeleted', true))
-                } else {
-                    const parentPath = fullPath.slice(0, -1)
+                const item = state.getIn(fullPath)
+                const rowType = item.get("_rowType")
+                if (!showLine || rowType === DataActions.add) {
                     return state.updateIn(parentPath, (parentState) => parentState.filter(item => _this.getRowNodeId(item.toJS()) !== id))
+                } else {
+                    return state.updateIn(fullPath, item => item.set('isDeleted', true))
                 }
-
             }, this.state)
             // 添加history数据
             this.history.push(newState)
