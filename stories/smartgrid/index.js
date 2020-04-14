@@ -256,7 +256,7 @@ function ConfigDisplayUse() {
         }
         pageIndex={page}
         pageSize={pageSize}
-        onPageChange={(page,pageSize)=>{console.log(page, pageSize);setPage(page);setPageSize(pageSize)}}
+        onPageChange={(page,pageSize)=>{setPage(page);setPageSize(pageSize)}}
         totalCount={10}
         pageSizeOptions={['5', '10', '15', '20']}
       />
@@ -608,7 +608,7 @@ function EditInlineUse() {
     (newStateData) => {
       const diff = getDifference(newStateData, stateData)
       setStateData(newStateData)
-      console.log('差异数据：', diff)
+      // console.log('差异数据：', diff)
     },
     [stateData],
   )
@@ -625,8 +625,8 @@ function EditInlineUse() {
         schema={editTableSchema}
         dataSource={stateData}
         editable={editing}
-        bodyHeight={300}
-        bodyWidth={1630}
+        // bodyHeight={300}
+        // bodyWidth={1630}
         onSave={onSave}
         headerRight={
           <>
@@ -647,6 +647,7 @@ function EditInlineUse() {
             </Button>}
           </>
         }
+        height={'calc(300px - 30px)'}
       />
     </div>
   )

@@ -177,7 +177,9 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         const serverDataSource = createServerSideDatasource(fakeServer, serverDataRequest)
         apiRef.current && apiRef.current.setServerSideDatasource(serverDataSource)
     }, [serverModel, treeDataChildrenName, serverDataRequest, apiRef.current])
-
+    const getDataPath = useCallback((data) => {
+        return data.treeDataPath;
+    }, [])
     const gridPartProps = useMemo(() => {
 
         if (treeData && isServer) return {
@@ -188,7 +190,8 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         }
         return {
             treeData,
-            rowData: dataSource
+            rowData: dataSource,
+            getDataPath
         }
     }, [dataSource, getRowNodeId, isServerSideGroup, treeData, isServer])
 
@@ -227,14 +230,13 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         return mapColumns<T>(columnDefs, editable, size, getRowNodeId, defaultSelection, defaultSelectionCol, rowSelection, dataManage.cellEvents)
     }, [columnDefs, editable, rowSelection, size, getRowNodeId, defaultSelectionCol, defaultSelection, rowSelection])
     //columns-end
-    const getDataPath = useCallback((data) => {
-        return data.treeDataPath;
-    }, [])
+
 
     const cellValueChanged = useCallback(
         (changed) => {
             dataManage.modify(changed)
         }, [])
+    console.log("gridPartProps", gridPartProps)
     return (
         <LocaleReceiver>
             {(local, localeCode = 'zh-cn') => {

@@ -152,7 +152,8 @@ function BasicUse() {
             wrappedComponentRef={formRef}
             edit={edit}
             schema={schema}
-            uiSchema={initalUiSchema}
+            size="default"
+            uiSchema={{...initalUiSchema}}
             withoutAnimation
         />
         <div style={{ float: 'right' }}>
@@ -311,7 +312,8 @@ function EditStatusUse() {
         "field:col": 24,
         "field:labelCol": 24,
         "field:wrapperCol": 24,
-        "field:labelAlign": "left"
+        "field:labelAlign": "left",
+        
     }
 
     const schema = useMemo(() => {

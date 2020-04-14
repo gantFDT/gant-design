@@ -6,7 +6,7 @@ import React, { useMemo, useEffect, useCallback, useState, useRef } from 'react'
 import Grid, { Columns, Filter, OnReady, GridApi, Fixed, DataManage, RemoveCallBack } from '@grid';
 import { GridReadyEvent, ColDef } from 'ag-grid-community'
 import { Button, message, Dropdown, Menu } from "antd"
-import { Input, InputCellPhone } from "@data-cell"
+import { Input, InputCellPhone, } from "@data-cell"
 import Header from '@header'
 /*! Split !*/
 const TreeGrid = () => {
@@ -272,6 +272,9 @@ function ajax(updateData) {
 const AsyncTreeData = () => {
     const [dataSource, setDataSource] = useState([])
     const [selectedKeys, setSelectedKeys] = useState([])
+    const [editable, seteditable] = useState(false)
+    const [size, setSize] = useState("defalut");
+    const [treeData,setTreeData]=useState(false)
     const columns = [{
         fieldName: 'employeeId',
         enableRowGroup: true,
@@ -285,7 +288,7 @@ const AsyncTreeData = () => {
     },
     {
         fieldName: 'employeeName',
-        // render: () => 111
+        render: (val) => <Input value={val}  />
     },
     { fieldName: 'startDate' },
     { fieldName: 'employmentType' },
@@ -294,16 +297,39 @@ const AsyncTreeData = () => {
         ajax(setDataSource)
     }, [])
     const onSelect = (keys) => setSelectedKeys(keys)
+    const onReady = useCallback((params, manager) => {
+        // apiRef.current = params
+        // setManager(manager)
+    }, [])
     return <>
+    <Header extra={!editable ? (
+                <Button onClick={()=>{
+                    seteditable(true);
+                    setSize("small");
+                }}>进入编辑</Button>
+            ) : (
+                    <>
+                        <Button onClick={() => {
+                            // const { list, diff } = manager.save()
+                            // setdataSource(list)
+                            seteditable(false)
+                            setSize("defualt");
+                        }}>保存</Button>
+                    </>
+                )
+            } />
+            <Button onClick={() => {
+                setTreeData(tree=>!tree)
+            }}>切换</Button>
         <Grid
             rowkey="employeeId"
             columns={columns}
             dataSource={dataSource}
-            treeData
-            isServer
-            isServerSideGroup={(data) => {
-                return Array.isArray(data.underlings)
-            }}
+            treeData={treeData}
+            // isServer
+            // isServerSideGroup={(data) => {
+            //     return Array.isArray(data.underlings)
+            // }}
             treeDataChildrenName="underlings"
             rowSelection={{
                 selectedKeys: selectedKeys,
@@ -312,7 +338,9 @@ const AsyncTreeData = () => {
                     onSelect(keys)
                 }
             }}
-            editable
+            size={size}
+            onReady={onReady}
+            editable={editable}
             onRowGroupOpened={(data) => { console.log(data) }}
             groupSuppressAutoColumn
         />
@@ -323,16 +351,16 @@ const config = {
     codes,
     useage: '',
     children: [
-        {
-            title: "tree",
-            describe: "树形结构",
-            cmp: TreeGrid
-        },
         // {
-        //     title: "async tree",
-        //     describe: "异步树形",
-        //     cmp: AsyncTreeData
-        // }
+        //     title: "tree",
+        //     describe: "树形结构",
+        //     cmp: TreeGrid
+        // },
+        {
+            title: "async tree",
+            describe: "异步树形",
+            cmp: AsyncTreeData
+        }
     ]
 }
 
