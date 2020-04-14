@@ -244,7 +244,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                 const locale = { ...lang, ...customLocale }
                 return <Spin spinning={loading}>
                     <div style={{ width, height }} className={classnames('gant-grid', `gant-grid-${getSizeClassName(size)}`)} >
-                        <div className="ag-theme-balham" style={{ width: '100%', height: computedPagination ? 'calc(100% - 30px)' : '100%' }}>
+                        <div className="ag-theme-balham" style={{ width: '100%', height: computedPagination ? 'calc(100% - 30px)' : 'calc(100% - 3px)' }}>
                             <AgGridReact
                                 frameworkComponents={{
                                     "gantRenderCol": RenderCol,
