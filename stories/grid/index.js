@@ -220,9 +220,11 @@ const TreeGrid = () => {
                         }}>取消编辑</Button>
                         <Button onClick={() => {
                             const { list, diff } = manager.save()
+                            const isChanged = manager.isChanged
                             setdataSource(list)
                             seteditable(false)
                             console.log(diff)
+                            console.log("changed", isChanged)
                         }}>保存</Button>
                     </>
                 )
@@ -274,7 +276,7 @@ const AsyncTreeData = () => {
     const [selectedKeys, setSelectedKeys] = useState([])
     const [editable, seteditable] = useState(false)
     const [size, setSize] = useState("defalut");
-    const [treeData,setTreeData]=useState(false)
+    const [treeData, setTreeData] = useState(false)
     const columns = [{
         fieldName: 'employeeId',
         enableRowGroup: true,
@@ -288,7 +290,7 @@ const AsyncTreeData = () => {
     },
     {
         fieldName: 'employeeName',
-        render: (val) => <Input value={val}  />
+        render: (val) => <Input value={val} />
     },
     { fieldName: 'startDate' },
     { fieldName: 'employmentType' },
@@ -302,25 +304,25 @@ const AsyncTreeData = () => {
         // setManager(manager)
     }, [])
     return <>
-    <Header extra={!editable ? (
-                <Button onClick={()=>{
-                    seteditable(true);
-                    setSize("small");
-                }}>进入编辑</Button>
-            ) : (
-                    <>
-                        <Button onClick={() => {
-                            // const { list, diff } = manager.save()
-                            // setdataSource(list)
-                            seteditable(false)
-                            setSize("defualt");
-                        }}>保存</Button>
-                    </>
-                )
-            } />
+        <Header extra={!editable ? (
             <Button onClick={() => {
-                setTreeData(tree=>!tree)
-            }}>切换</Button>
+                seteditable(true);
+                setSize("small");
+            }}>进入编辑</Button>
+        ) : (
+                <>
+                    <Button onClick={() => {
+                        // const { list, diff } = manager.save()
+                        // setdataSource(list)
+                        seteditable(false)
+                        setSize("defualt");
+                    }}>保存</Button>
+                </>
+            )
+        } />
+        <Button onClick={() => {
+            setTreeData(tree => !tree)
+        }}>切换</Button>
         <Grid
             rowkey="employeeId"
             columns={columns}
@@ -351,16 +353,16 @@ const config = {
     codes,
     useage: '',
     children: [
-        // {
-        //     title: "tree",
-        //     describe: "树形结构",
-        //     cmp: TreeGrid
-        // },
         {
-            title: "async tree",
-            describe: "异步树形",
-            cmp: AsyncTreeData
-        }
+            title: "tree",
+            describe: "树形结构",
+            cmp: TreeGrid
+        },
+        // {
+        //     title: "async tree",
+        //     describe: "异步树形",
+        //     cmp: AsyncTreeData
+        // }
     ]
 }
 
