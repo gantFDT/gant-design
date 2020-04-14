@@ -130,7 +130,6 @@ export const withBasic = (popupClassName?: string) => compose(
 		disabledBlur,
 		onCancelCache,
 		popupClassName,
-		emptyText,
 		...props
 	}) => (props))
 )

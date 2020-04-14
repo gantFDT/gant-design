@@ -12,7 +12,7 @@ const Use1 = () => {
     cb()
   }
   return <>
-    <Input placeholder='不可编辑' allowEdit={false} value='不可编辑' />
+    <Input placeholder='不可编辑' allowEdit={false} value="" emptyText="  " />
     <Input placeholder='可编辑' onSave={onSave} value={value} onChange={setValue} />
   </>
 }
