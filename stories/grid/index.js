@@ -119,6 +119,7 @@ const TreeGrid = () => {
     const edit = useCallback((e) => { seteditable(true) }, [])
 
     const [manager, setManager] = useState()
+    const [isTree, setIsTree] = useState(true)
 
     const onReady = useCallback((params, manager) => {
         apiRef.current = params
@@ -198,7 +199,10 @@ const TreeGrid = () => {
     return (
         <>
             <Header extra={!editable ? (
-                <Button onClick={edit}>进入编辑</Button>
+                <>
+                    <Button onClick={edit}>进入编辑</Button>
+                    {/* <Button onClick={() => setIsTree(false)}>切换</Button> */}
+                </>
             ) : (
                     <>
 
@@ -230,7 +234,7 @@ const TreeGrid = () => {
                 rowkey="idcard"
                 loading={loading}
                 columns={columns}
-                treeData
+                treeData={isTree}
                 editable={editable}
                 dataSource={dataSource}
                 onReady={onReady}

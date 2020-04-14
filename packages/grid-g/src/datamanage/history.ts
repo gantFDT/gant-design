@@ -1,33 +1,50 @@
-import { List, Record } from 'immutable'
+import { List, Record, Map, fromJS } from 'immutable'
 import { EventEmitter } from 'events'
 import { RowNode } from 'ag-grid-community'
 
-import { Record as DataRecord } from '../interface'
+import { Record as DataRecord, DataActions } from '../interface'
 import { updateStateByKey } from "./utils"
+import { isList } from "../utils"
 
-const initstate = {
-    index: -1,
-    list: List([]),
-    trash: List([])
+
+interface State<T> {
+    index: number,
+    list?: List<List<T>>,
+    trash?: List<List<T>>,
+    diff?: List<Map<string, T>>
 }
 
-const HistoryRecord = Record(initstate, "[[History]]")
+interface DiffItem {
+    add: object,
+    modify: object,
+    remove: object
+}
+const initstate: State<any> = {
+    index: -1,
+    list: List([]),
+    trash: List([]),
+    diff: List([])
+}
 
 class History<T extends DataRecord> extends EventEmitter {
 
     private index: number = initstate.index
     private list: List<List<T>> = initstate.list
     private trash: List<List<T>> = initstate.trash
+    private diff: List<Map<string, any>> = initstate.diff
 
     constructor() {
         super()
     }
 
-    private merge(obj: typeof initstate, init: boolean = false) {
+    private merge(obj: State<T>, init: boolean = false) {
         this.index = obj.index
-        this.list = obj.list
+        this.list = obj.list || this.list
         this.trash = obj.trash || this.trash
-        !init && this.emit("manager:update")
+        this.diff = obj.diff || this.diff
+        if (!init) {
+            this.emit("manager:update")
+        }
         return this
     }
 
@@ -48,6 +65,10 @@ class History<T extends DataRecord> extends EventEmitter {
     /**获取当前状态 */
     public get currentState() {
         return this.list.get(this.index)
+    }
+
+    get currentDiff() {
+        return this.diff.get(this.index)
     }
 
     get first() {
@@ -75,6 +96,7 @@ class History<T extends DataRecord> extends EventEmitter {
 
     // 添加新状态
     push(state: List<T>) {
+        this.emit("manager:diff")
         return this.merge({
             index: this.index + 1,
             list: this.list.push(state),
@@ -109,6 +131,18 @@ class History<T extends DataRecord> extends EventEmitter {
         return this
     }
 
+    handleDiff(diff: DiffItem) {
+        if (this.diff.size - 1 > this.index) {
+            // 有回撤的情况、需要将垃圾数据清除
+            const newList = this.diff.filter((item, index) => index <= this.index)
+            if (isList<Map<string, any>>(newList)) {
+                this.diff = newList
+            }
+        }
+        this.diff = this.diff.push(fromJS(diff))
+    }
+
 }
+
 
 export default History

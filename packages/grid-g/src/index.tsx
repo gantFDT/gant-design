@@ -140,11 +140,11 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     }, [manageData])
 
     /**出口数据，用于grid显示 */
-    useEffect(() => {
-        if (editable) {
-            dataManage.edit()
-        }
-    }, [editable])
+    // useEffect(() => {
+    //     if (editable) {
+    //         dataManage.edit()
+    //     }
+    // }, [editable])
 
     // 分页事件
     const computedPagination = usePagination(pagination)

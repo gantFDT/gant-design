@@ -21,9 +21,7 @@ export enum Filter {
 export enum DataActions {
     add = "add",
     remove = "remove",
-    modify = "modify",
-    up = "up",
-    down = "down"
+    modify = "modify"
 }
 
 export enum Fixed {
