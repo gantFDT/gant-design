@@ -47,7 +47,8 @@ export interface WithBasicProps {
 	confirmable?: boolean,
 	wrapperStyle?: React.CSSProperties,
 	wrapperClassName?: string,
-	autoFocus?: boolean
+	autoFocus?: boolean,
+	emptyText?: string
 }
 
 // 通过withEdit高阶函数包裹的组件可以接受的参数
@@ -115,7 +116,7 @@ export const withBasic = (popupClassName?: string) => compose(
 			</React.Fragment>
 		)
 		return {
-			editAfter: selfEdit === EditStatus.EDIT ? addonAfter:null
+			editAfter: selfEdit === EditStatus.EDIT ? addonAfter : null
 		}
 	}),
 	mapProps(({
@@ -129,6 +130,7 @@ export const withBasic = (popupClassName?: string) => compose(
 		disabledBlur,
 		onCancelCache,
 		popupClassName,
+		emptyText,
 		...props
 	}) => (props))
 )

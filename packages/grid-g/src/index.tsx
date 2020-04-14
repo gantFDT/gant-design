@@ -236,7 +236,6 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         (changed) => {
             dataManage.modify(changed)
         }, [])
-    console.log("gridPartProps", gridPartProps)
     return (
         <LocaleReceiver>
             {(local, localeCode = 'zh-cn') => {
