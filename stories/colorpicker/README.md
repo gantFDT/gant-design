@@ -6,6 +6,7 @@
 | 属性          | 说明             | 类型             | 默认值  |
 | ------------- | ---------------- | ---------------- | ------- |
 | value         | 当前色值     | string | `#1890FF`       |
+| size         | 尺寸 | `normal`、`small`        | `auto`       |
 | width         | 宽度 | string        | `auto`       |
 | edit | 是否可编辑     | edit          | `true` |
 | placement | 子选择框位置     | `top` 、 `bottom`          | `top` |

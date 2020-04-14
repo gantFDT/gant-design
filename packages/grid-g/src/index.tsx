@@ -11,7 +11,7 @@ import { get, isEmpty, isEqual } from 'lodash'
 import key from './license'
 import {
     mapColumns, NonBool, isbool, isstring, isarray, ispromise, isfunc,
-    flattenTreeData, usePagination, getSizeClassName, createFakeServer, createServerSideDatasource
+    flattenTreeData, usePagination, getSizeClassName, createFakeServer, createServerSideDatasource,
 } from './utils'
 import { Filter, Size, Fixed, GridPropsPartial, RowSelection, Record } from './interface'
 import "./style"
@@ -177,7 +177,9 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         const serverDataSource = createServerSideDatasource(fakeServer, serverDataRequest)
         apiRef.current && apiRef.current.setServerSideDatasource(serverDataSource)
     }, [serverModel, treeDataChildrenName, serverDataRequest, apiRef.current])
-
+    const getDataPath = useCallback((data) => {
+        return data.treeDataPath;
+    }, [])
     const gridPartProps = useMemo(() => {
 
         if (treeData && isServer) return {
@@ -188,7 +190,8 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         }
         return {
             treeData,
-            rowData: dataSource
+            rowData: dataSource,
+            getDataPath
         }
     }, [dataSource, getRowNodeId, isServerSideGroup, treeData, isServer])
 
@@ -224,17 +227,16 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     //columns
     const defaultSelection = !isEmpty(gantSelection) && showDefalutCheckbox
     const columns = useMemo<ColDef[] | ColGroupDef[]>(() => {
-        return mapColumns<T>(columnDefs, editable, size, getRowNodeId, defaultSelection, defaultSelectionCol, rowSelection)
+        return mapColumns<T>(columnDefs, editable, size, getRowNodeId, defaultSelection, defaultSelectionCol, rowSelection, dataManage.cellEvents)
     }, [columnDefs, editable, rowSelection, size, getRowNodeId, defaultSelectionCol, defaultSelection, rowSelection])
     //columns-end
-    const getDataPath = useCallback((data) => {
-        return data.treeDataPath;
-    }, [])
+
 
     const cellValueChanged = useCallback(
         (changed) => {
             dataManage.modify(changed)
         }, [])
+    console.log("gridPartProps", gridPartProps)
     return (
         <LocaleReceiver>
             {(local, localeCode = 'zh-cn') => {
@@ -259,7 +261,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                                     resizable,
                                     sortable,
                                     filter,
-                                    minWidth: 100,
+                                    minWidth: 30,
                                 }}
                                 headerHeight={24}
                                 floatingFiltersHeight={20}
@@ -274,6 +276,9 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                                 deltaRowDataMode
                                 groupDefaultExpanded={groupDefaultExpanded}
                                 localeText={locale}
+                                rowClassRules={{
+                                    "gant-grid-row-isdeleted": params => get(params, "data.isDeleted")
+                                }}
                             />
                         </div>
                         {/* 分页高度为30 */}

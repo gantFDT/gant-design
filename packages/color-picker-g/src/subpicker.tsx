@@ -1,47 +1,5 @@
-import React, { CSSProperties } from 'react';
+import React, { CSSProperties, useMemo } from 'react';
 import { Swatch } from 'react-color/lib/components/common';
-
-const styles: {[clsName: string]: CSSProperties} = {
-  card: {
-    border: '0 solid rgba(0,0,0,0.25)',
-    boxShadow: '0 1px 4px rgba(0,0,0,0.25)',
-    borderRadius: '3px',
-    position: 'relative',
-  },
-  body: {
-    padding: '3px 0 0 3px',
-  },
-  triangle: {
-    width: '0px',
-    height: '0px',
-    borderStyle: 'solid',
-    borderWidth: '0 9px 10px 9px',
-    borderColor: 'transparent transparent #fff transparent',
-    position: 'absolute',
-    top: '-10px',
-    left: '7px'
-  },
-  triangleShadow: {
-    width: '0px',
-    height: '0px',
-    borderStyle: 'solid',
-    borderWidth: '0 9px 10px 9px',
-    borderColor: 'transparent transparent rgba(0,0,0,.1) transparent',
-    position: 'absolute',
-    top: '-11px',
-    left: '7px'
-  },
-  swatch: {
-    width: '26px',
-    height: '26px',
-    float: 'left',
-    borderRadius: '3px',
-    margin: '0 3px 3px 0',
-  },
-  clear: {
-    clear: 'both',
-  },
-}
 
 const SubPicker = props => {
   const {
@@ -49,8 +7,51 @@ const SubPicker = props => {
     width = 148,
     colors = ['#1890FF'],
     placement,
-    prefixCls
+    prefixCls,
+    size
   } = props;
+
+  const styles = useMemo<{[clsName: string]: CSSProperties}>(() => ({
+    card: {
+      border: '0 solid rgba(0,0,0,0.25)',
+      boxShadow: '0 1px 4px rgba(0,0,0,0.25)',
+      borderRadius: '3px',
+      position: 'relative',
+    },
+    body: {
+      padding: '3px 0 0 3px',
+    },
+    triangle: {
+      width: '0px',
+      height: '0px',
+      borderStyle: 'solid',
+      borderWidth: '0 9px 10px 9px',
+      borderColor: 'transparent transparent #fff transparent',
+      position: 'absolute',
+      top: '-10px',
+      left: '7px'
+    },
+    triangleShadow: {
+      width: '0px',
+      height: '0px',
+      borderStyle: 'solid',
+      borderWidth: '0 9px 10px 9px',
+      borderColor: 'transparent transparent rgba(0,0,0,.1) transparent',
+      position: 'absolute',
+      top: '-11px',
+      left: '7px'
+    },
+    swatch: {
+      width: size === 'small' ? '18px' : '26px',
+      height: size === 'small' ? '18px' : '26px',
+      float: 'left',
+      borderRadius: '3px',
+      margin: '0 3px 3px 0',
+    },
+    clear: {
+      clear: 'both',
+    },
+  }),[size])
   
   const handleChange = (color, ev) => {
 		ev.stopPropagation();
@@ -58,7 +59,7 @@ const SubPicker = props => {
   }
 
   return (
-    <div style={{...styles.card, width }} className={`${prefixCls}-subpicker`}>
+    <div style={{...styles.card, width: size === 'small' ? (width - 40) : width }} className={`${prefixCls}-subpicker`}>
       <div style={ placement === 'top' ? {
         ...styles.triangleShadow,
         borderWidth: '10px 9px 0 9px',

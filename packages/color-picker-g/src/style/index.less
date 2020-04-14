@@ -4,7 +4,7 @@
 
 
 :global{
-  .gant-color-picker {
+  .gant-color-picker,.gant-color-picker-small {
     &-mainwrap{
       box-sizing: content-box;
       display: flex;
@@ -98,8 +98,35 @@
       background: var(--component-background),
     }
   }
+  .gant-color-picker-small {
+    &-mainwrap{
+      box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 3px;
+      border-radius: 3px;
+      padding: 2px 0 0px 83px;
+    }
+
+    &-preview{
+      line-height: 24px;
+      border-radius: 3px 0 0 3px;
+    }
+
+    &-onlypreview{
+      height: 24px;
+      border-radius: 3px;
+      box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 3px;
+    }
+
+    &-mainitem{
+      height: 18px;
+      width: 18px;
+    }
+
+    &-picker{
+      left: -7px;
+    }
+  }
   .gant-input-group {
-    .gant-color-picker {
+    .gant-color-picker,.gant-color-picker-small {
       &-mainwrap{
         box-shadow: none;
         border: 1px solid #d9d9d9;
@@ -109,6 +136,9 @@
         margin: -1px 0 -1px -1px;
         height: calc(100% + 2px);
       }
+    }
+    .gant-color-picker-small-mainwrap {
+      border-radius: 3px 0 0 3px;
     }
   }
 }

@@ -1,18 +1,19 @@
-import { ColumnApi, GridApi, RowNode, RowNodeTransaction } from 'ag-grid-community';
-import { List, fromJS } from 'immutable'
+import { ColumnApi, GridApi, RowNode, RowNodeTransaction, ColDef } from 'ag-grid-community';
+import { List, fromJS, Map as ImMap } from 'immutable'
 import { EventEmitter } from 'events'
 
 
 import History from './history'
-import { originKey, cloneDeep, findChildren, removeDeepItem, getPureRecord, getPureList, getIndexPath } from './utils'
+import ListProxy from './listproxy'
+import { cloneDeep, findChildren, removeDeepItem, getPureRecord, getPureList, getIndexPath } from './utils'
 import { Record, DataActions, RemoveCallBack, Move } from '../interface'
 import { isnumber, isbool } from '../utils'
 
+interface RemoveOptions {
+    removeChildren: boolean,
+    showLine: boolean
+}
 
-// TODO:移动
-// TODO:取消编辑时恢复添加和删除的数据
-// TODO:保存时返回diff数据，并且清空
-// TODO:修改添加功能API
 class DataManage<T extends Record = any> extends EventEmitter {
 
 
@@ -20,10 +21,12 @@ class DataManage<T extends Record = any> extends EventEmitter {
     private _originList: T[]
     private history: History<T>
     private updated = false // 通知getCurrentList当前列表是否发生变化
-    private _removed = new Map<string, any>()
-    private _add = new Map<string, any>()
-    private _modify = new Map<string, any>()
+    _removed = new Map<string, any>()
+    _add = new Map<string, any>()
+    _modify = new Map<string, any>()
     private _dataSource: T[]
+
+    cellEvents: EventEmitter = new EventEmitter()
 
     gridApi: GridApi
     columnApi: ColumnApi
@@ -122,7 +125,7 @@ class DataManage<T extends Record = any> extends EventEmitter {
 
     init(dataSource: T[]) {
         // 添加__origin属性
-        const [list, pureList] = cloneDeep(dataSource)
+        const list = cloneDeep(dataSource)
         // 重置的时候使用的原始数据
         this._originList = list
         this.reset()
@@ -174,9 +177,12 @@ class DataManage<T extends Record = any> extends EventEmitter {
         if (newState !== this.state) this.history.push(newState)
     }
 
-    remove(cb: RemoveCallBack, removeChildren: boolean = true): Promise<Array<RowNode>> {
+    remove(cb: RemoveCallBack, options: RemoveOptions): Promise<Array<RowNode>> {
+        const { showLine = true, removeChildren = true } = options || {}
+
         const selectedNodes = this.gridApi.getSelectedNodes()
         const selected = selectedNodes.map(node => node.data)
+        let _this = this
         return new Promise((res, rej) => {
             let allowDelete: boolean | Promise<boolean> = true
             if (cb) allowDelete = cb(selected)
@@ -198,50 +204,40 @@ class DataManage<T extends Record = any> extends EventEmitter {
             }
             return Promise.reject()
         }).then((deleteRows) => {
-            /**处理diff数据 */
-            deleteRows.forEach(({ data }) => {
-                const rowKey = this.getRowNodeId(data)
-                if (!data[originKey]) {
+
+            const keyPathsArray = deleteRows.map(node => {
+                const { data, id } = node
+                /**处理diff数据 */
+                if (data._rowType === DataActions.add) {
                     // 添加的节点
-                    if (this._add.has(rowKey)) this._add.delete(rowKey)
+                    if (this._add.has(id)) this._add.delete(id)
                 } else {
-                    if (data._rowType === DataActions.modify && this._modify.has(rowKey)) {
+                    if (data._rowType === DataActions.modify && this._modify.has(id)) {
                         // 移除修改的节点
-                        this._modify.delete(rowKey)
+                        this._modify.delete(id)
                     }
-                    this._removed.set(rowKey, data[originKey])
+                    this._removed.set(id, getPureRecord({ ...data, ...data._rowData }))
+                }
+
+                const paths = getIndexPath(node)
+                return {
+                    id: node.id,
+                    paths
                 }
             })
-
-            const keyPathsArray = selectedNodes.map(getIndexPath)
-            /**处理删除的节点中同时包含子父节点时，从keyPathsArray去掉子节点id */
-            // [[0,2],[0,3], [0,3,4]] ===> [[0,2], [0,3]]
-            const keyMap = new Map<string, number[]>();
-            keyPathsArray.forEach((paths) => {
-                const key = paths.join('')
-                if (keyMap.size > 0) {
-                    const pathstr = keyMap.keys()
-                    // 当前节点的父节点已添加到数组中
-                    const hasParent = [...pathstr].some(p => key.startsWith(p))
-                    if (!hasParent) {
-                        keyMap.set(key, paths)
-                    }
-                    // 如果map中有当前节点的子节点，需要删除掉
-                    for (let p of pathstr) {
-                        if (p.startsWith(key)) {
-                            keyMap.delete(p)
-                        }
-                    }
-                } else {
-                    keyMap.set(key, paths)
-                }
-            })
-
 
             /**处理state */
-            const newState = [...keyMap.values()].reduce((state, keyPath) => {
-                const paths = keyPath.flatMap((key, index) => index === 0 ? key : [this.childrenName, key])
-                return state.deleteIn(paths)
+            const newState = keyPathsArray.reduce((state, { id, paths }) => {
+                const fullPath = paths.flatMap((key, index) => index === 0 ? key : [this.childrenName, key])
+
+                if (showLine) {
+                    // 显示删除线
+                    return state.updateIn(fullPath, item => item.set('isDeleted', true))
+                } else {
+                    const parentPath = fullPath.slice(0, -1)
+                    return state.updateIn(parentPath, (parentState) => parentState.filter(item => _this.getRowNodeId(item.toJS()) !== id))
+                }
+
             }, this.state)
             // // 添加history数据
             this.history.push(newState)
@@ -252,22 +248,33 @@ class DataManage<T extends Record = any> extends EventEmitter {
 
     // 修改
     modify(changed: any) {
-        const { data, node: { id } } = changed
+        const { data, node: { id }, colDef: { field }, value } = changed
+        const listProxy = new ListProxy(this)
+        this.cellEvents.emit(field, value, data, listProxy.list)
 
 
-        if (data[originKey]) {
-            this._modify.set(id, getPureRecord(data))
+        if (listProxy.isChanged) {
+            const newList = getPureList(listProxy.originList)
+            this.history.push(fromJS(newList))
         } else {
-            // 添加到add数组
-            data._rowType = DataActions.add
-            this._add.set(id, getPureRecord(data))
+            if (data._rowType === DataActions.add) {
+                data._rowType = DataActions.add
+                this._add.set(id, getPureRecord(data))
+            }
+            else {
+                if (data._rowData) {
+                    this._modify.set(id, getPureRecord(data))
+                } else {
+                    this._modify.delete(id)
+                }
+            }
+
+            let keyPath = getIndexPath(changed.node)
+
+            const paths = keyPath.flatMap((key, index) => index === 0 ? key : [this.childrenName, key])
+            const newState = this.state.updateIn(paths, node => fromJS(data))
+            this.history.push(newState)
         }
-
-        let keyPath = getIndexPath(changed.node)
-
-        const paths = keyPath.flatMap((key, index) => index === 0 ? key : [this.childrenName, key])
-        const newState = this.state.updateIn(paths, node => fromJS(data))
-        this.history.push(newState)
     }
 
     /**添加子级节点 */
@@ -275,9 +282,15 @@ class DataManage<T extends Record = any> extends EventEmitter {
         this.history.appendChild(groupKeys, this.childrenName, fromJS(children), this.getServerSideGroupKey)
     }
 
-    // 移动节点
-    move(node: RowNode, action: Move = Move.down) {
 
+    /**遍历所有节点 */
+    mapNodes(cb: (node: any) => void) {
+        const proxy = new ListProxy(this)
+        proxy.list.forEach(cb)
+        if (proxy.isChanged) {
+            const newList = getPureList(proxy.originList)
+            this.history.push(fromJS(newList))
+        }
     }
 
     getDiff(): RowNodeTransaction {
