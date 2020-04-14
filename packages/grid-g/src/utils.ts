@@ -205,7 +205,7 @@ export function usePagination(pagitation: Pagination): PaginationProps {
             (page, pageSize) => {
                 const beginIndex = (page - 1) * pageSize;
                 if (onChange) {
-                    onChange(beginIndex, pageSize)
+                    onChange(beginIndex, pageSize, page)
                 }
             },
             [onChange],
