@@ -24,7 +24,7 @@ export default (WrapperComponent) => forwardRef(function GridEidtColumn(props: a
 		return rowkey(data)
 	}, [rowIndex, rowkey, data])
 	const compoentProps = useMemo(() => {
-		if (typeof fieldProps === 'function') return compoentProps(data);
+		if (typeof fieldProps === 'function') return fieldProps(data);
 		return fieldProps
 	}, [fieldProps, data])
 	useImperativeHandle(ref, () => {
