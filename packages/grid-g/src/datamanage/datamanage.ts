@@ -147,7 +147,7 @@ class DataManage<T extends Record = any> extends EventEmitter {
      * @param item 添加的数据
      * @param index 添加的位置
      */
-    create(item: T, index?: number): void;
+    create(item: T | T[], index?: number): void;
     /**
      * 
      * @param item 添加的数据
@@ -155,15 +155,17 @@ class DataManage<T extends Record = any> extends EventEmitter {
      * @param index 添加的位置
      * @param isChild 是否是作为子节点插入
      */
-    create(item: T, node: RowNode, index?: number, isChild?: boolean): void
-    create(item: T, node: RowNode, isChild?: boolean, index?: number): void
-    create(item: T, node: RowNode | number = 0, index: number | boolean = 0, isChild?: number | boolean) {
-        const itemNode = fromJS({ ...item, _rowType: DataActions.add })
+    create(item: T | T[], node: RowNode, index?: number, isChild?: boolean): void
+    create(item: T | T[], node: RowNode, isChild?: boolean, index?: number): void
+    create(item: T | T[], node: RowNode | number = 0, index: number | boolean = 0, isChild?: number | boolean) {
+        const isArray = Array.isArray(item)
+        const itemNodes = isArray ? item : [item]
+        const immuNodes = itemNodes.map(item => fromJS({ ...item, _rowType: DataActions.add }))
         let newState = null
-        const id = this.getRowNodeId(item)
         if (isnumber(node)) {
             const index = node
-            newState = this.state.insert(index, itemNode)
+            // newState = this.state.insert(index, itemNode)
+            newState = this.state.splice(index, 0, ...immuNodes)
         } else {
             const indexPath = getIndexPath(node).flatMap(index => [index, this.childrenName])
             let addIndex: number, append: boolean
@@ -177,10 +179,15 @@ class DataManage<T extends Record = any> extends EventEmitter {
                 else addIndex = 0 // undefined
             }
             const paths = append ? indexPath : indexPath.slice(0, -2)
-            newState = this.state.updateIn(paths, children => children ? children.insert(addIndex, itemNode) : List([]).push(itemNode))
+            // newState = this.state.updateIn(paths, children => children ? children.insert(addIndex, itemNode) : List([]).push(itemNode))
+            newState = this.state.updateIn(paths, children => children ? children.splice(addIndex, 0, ...immuNodes) : List([]).concat(immuNodes))
         }
 
-        this._add = this._add.set(id, item)
+        itemNodes.forEach(item => {
+            const id = this.getRowNodeId(item)
+            this._add = this._add.set(id, item)
+        })
+
         if (newState !== this.state) this.history.push(newState)
     }
 
