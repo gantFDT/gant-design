@@ -21,9 +21,7 @@ export enum Filter {
 export enum DataActions {
     add = "add",
     remove = "remove",
-    modify = "modify",
-    up = "up",
-    down = "down"
+    modify = "modify"
 }
 
 export enum Fixed {
@@ -112,7 +110,8 @@ export type Columns<T extends {} = {}> = {
 
 export type Pagination = Omit<
     ProtoExtends<PaginationProps, {
-        beginIndex?: number
+        beginIndex?: number,
+        onChange?: (beginIndex: number, pageSize?: number, current?: number) => void;
     }>,
     "onShowSizeChange"
 >

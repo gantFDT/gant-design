@@ -23,6 +23,10 @@ export default (WrapperComponent) => forwardRef(function GridEidtColumn(props: a
 		if (!rowkey) return rowIndex;
 		return rowkey(data)
 	}, [rowIndex, rowkey, data])
+	const compoentProps = useMemo(() => {
+		if (typeof fieldProps === 'function') return compoentProps(data);
+		return fieldProps
+	}, [fieldProps, data])
 	useImperativeHandle(ref, () => {
 		return {
 			getValue: () => {
@@ -41,7 +45,7 @@ export default (WrapperComponent) => forwardRef(function GridEidtColumn(props: a
 	}, []);
 	return (
 		<div className={classnames('gant-grid-cell-editing')}>
-			<WrapperComponent wrapperRef={inputRef} {...fieldProps} value={cacheValue} {...defalutProps} onChange={onChange} size={size} onBlur={onBlur} />
+			<WrapperComponent wrapperRef={inputRef} {...compoentProps} value={cacheValue} {...defalutProps} onChange={onChange} size={size} onBlur={onBlur} />
 		</div>
 	)
 })

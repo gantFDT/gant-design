@@ -3,6 +3,8 @@ import { useCallback, useMemo } from 'react'
 import { ColGroupDef, ColDef, IsColumnFuncParams, IsColumnFunc, IServerSideGetRowsParams } from 'ag-grid-community'
 import { EventEmitter } from 'events'
 import { get, isNumber, isEmpty } from 'lodash'
+import { List } from 'immutable'
+
 import { PaginationProps } from 'antd/lib/pagination'
 import { Columns, RowSelection, ColumnEdiatble } from './interface'
 import { Size, DataActions, Pagination } from './interface'
@@ -127,6 +129,11 @@ export function ispromise(t: any): t is Promise<any> {
     return t && isfunc(t.then)
 }
 
+
+export const isList = function isList<T>(list: any): list is List<T> {
+    return List.isList(list)
+}
+
 export function trackEditValueChange(data: any, field: string, cacheValue: any, value: any) {
     let newRowData: any = data;
     if (data._rowType === DataActions.modify) {
@@ -205,7 +212,7 @@ export function usePagination(pagitation: Pagination): PaginationProps {
             (page, pageSize) => {
                 const beginIndex = (page - 1) * pageSize;
                 if (onChange) {
-                    onChange(beginIndex, pageSize)
+                    onChange(beginIndex, pageSize, page)
                 }
             },
             [onChange],

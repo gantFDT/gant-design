@@ -68,9 +68,10 @@ export interface SmartTableProps<T> extends GantTableProps<T> {
 
   bindKeys?: any,
   onReload?: () => void,
-  bodyWidth?: number | string,
 
   withoutAnimation?: boolean,
+  height?:number | string,
+  style?: object
 }
 
 export interface SmartTableType {
