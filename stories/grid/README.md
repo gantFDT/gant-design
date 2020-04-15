@@ -96,6 +96,8 @@ sibiling、parent是通过gridApi调用getSelectedNodes方法得到的节点
 
 **需要注意的是新增的数据item中也需要有rowkey所指向的字段**
 
+**批量新增只需要在item处传递一个数组即可，同样还是需要每一项都有一个唯一的rowkey**
+
 e.g
 
 ```js
@@ -110,21 +112,21 @@ item={id: "asdihdsfp", name: "tom"}
 - 基础用法
 
 ```js
-manager.delete()
+manager.remove()
 ```
 
 - 异步删除
 
-delete方法接收一个删除的回调方法，该方法会获得选中的节点数据
+remove方法接收一个删除的回调方法，该方法会获得选中的节点数据
 
-delete方法根据这个回调方法的返回值来确定行为
+remove方法根据这个回调方法的返回值来确定行为
 
 返回值可以是一个*布尔值*或者是一个*Promise<boolean>*，用于表示删除是否执行。
 
 ```js
-manager.delete((selected)=> false)
+manager.remove((selected)=> false)
 
-manager.delete((selected)=>new Promise(res => {
+manager.remove((selected)=>new Promise(res => {
         message.info("0.5s后删除")
         setTimeout(() => {
             res(true)
@@ -134,14 +136,14 @@ manager.delete((selected)=>new Promise(res => {
 
 - 返回值
 
-delete方法返回一个Promise，可以在此获得是否删除成功的信息，用于部分场景下的反馈
+remove方法返回一个Promise，可以在此获得是否删除成功的信息，用于部分场景下的反馈
 
 *promise.resolved*表示操作成功
 
 *promise.rejected*表示操作失败
 
 ```js
-manager.delete().then(()=>{
+manager.remove().then(()=>{
     /**操作成功 */
 },()=>{
     /**操作失败 */
@@ -157,7 +159,7 @@ manager.delete().then(()=>{
 |showLine| 否 | boolean | true | 是否显示删除线
 |removeChildren| 否 | boolean | true | 是否删除子节点
 
-manager.delete(false, options)
+manager.remove(false, options)
 
 ```js
 options:{
@@ -205,15 +207,9 @@ manager.mapNodes((row)=>{
 
 
 ### 注意事项：
-<<<<<<< HEAD
- 1.rowkey必须设置，否则会影响很多功能！！！;
- 2.树形treeData开启后，grid会自动生成一列，设置该列属性请使用autoGroupColumnDef设置;
- 3.异步treeData,ag-grid可以为异步树形设置一个独立与nodeId的groupKey;这是将会影响内部获取唯一id的方式，建议不要设置 getServerSideGroupKey;
-=======
 
  1.rowkey必须设置，否则会影响很多功能！！！
 
  2.树形treeData开启后，grid会自动生成一列，设置该列属性请使用autoGroupColumnDef设置;
 
  3.异步treeData,ag-grid可以为异步树形设置一个独立与nodeId的groupKey;这是将会影响内部获取唯一id的方式，建议不要设置 getServerSideGroupKey
->>>>>>> faf9a3b2c53317321d960d2d8fd4ab6404a31ecb
