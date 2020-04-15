@@ -6,12 +6,15 @@ import React, { useState } from 'react';
 import { InputLanguage } from '@gantd'
 /*! Split !*/
 const Use = () => {
-  const [value, setValue] = useState([
-    {
-      value: "中文文本",
-      locale: 'zh-CN'
-    }
-  ])
+  // const [value, setValue] = useState([
+  //   {
+  //     value: "中文文本",
+  //     locale: 'zh-CN'
+  //   }
+  // ])
+  const [value, setValue] = useState({
+    "zh-CN": "中文"
+  })
   const onSave = (id, value, cb) => {
     cb()
   }
