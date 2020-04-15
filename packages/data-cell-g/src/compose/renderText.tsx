@@ -3,17 +3,13 @@ import { Icon } from 'antd'
 
 import EditStatus from '../edit-status'
 import classnames from 'classnames'
-
-const emptyText = '暂无'
-
 const undef = (a => a)() // 防止undefined被修改
 const emptyTextArray = [undef, null, NaN, ''] // 出现哪些值，显示暂无。
 
 export type GetText<P> = (p?: P) => any
 
 const renderText = <P extends any>(getText?: GetText<P>) => (props) => {
-
-  const { setEdit, allowEdit } = props
+  const { setEdit, allowEdit,emptyText = '暂无' } = props;
 
   const TextNode = React.memo(() => {
     const text = getText ? getText(props) : props.value;

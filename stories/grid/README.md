@@ -205,9 +205,15 @@ manager.mapNodes((row)=>{
 
 
 ### 注意事项：
+<<<<<<< HEAD
+ 1.rowkey必须设置，否则会影响很多功能！！！;
+ 2.树形treeData开启后，grid会自动生成一列，设置该列属性请使用autoGroupColumnDef设置;
+ 3.异步treeData,ag-grid可以为异步树形设置一个独立与nodeId的groupKey;这是将会影响内部获取唯一id的方式，建议不要设置 getServerSideGroupKey;
+=======
 
  1.rowkey必须设置，否则会影响很多功能！！！
 
  2.树形treeData开启后，grid会自动生成一列，设置该列属性请使用autoGroupColumnDef设置;
 
  3.异步treeData,ag-grid可以为异步树形设置一个独立与nodeId的groupKey;这是将会影响内部获取唯一id的方式，建议不要设置 getServerSideGroupKey
+>>>>>>> faf9a3b2c53317321d960d2d8fd4ab6404a31ecb
