@@ -176,7 +176,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         const fakeServer = createFakeServer(dataManage, getServerSideGroupKey ? getServerSideGroupKey : getRowNodeId, treeDataChildrenName);
         const serverDataSource = createServerSideDatasource(fakeServer, serverDataRequest)
         apiRef.current && apiRef.current.setServerSideDatasource(serverDataSource)
-    }, [serverModel, treeDataChildrenName, serverDataRequest, apiRef.current])
+    }, [serverModel, treeDataChildrenName, serverDataRequest, apiRef.current, dataManage])
     const getDataPath = useCallback((data) => {
         return data.treeDataPath;
     }, [])
