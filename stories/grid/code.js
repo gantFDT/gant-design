@@ -162,6 +162,14 @@ const TreeGrid = () => {
                     <a onClick={() => manager.create({ idcard: Math.random().toString(16), name: Math.random().toString(16) })}>新增</a>
                 </Menu.Item>
                 <Menu.Item>
+                    <a onClick={() => manager.create(
+                        [
+                            { idcard: Math.random().toString(16), name: "新增1" },
+                            { idcard: Math.random().toString(16), name: "新增2" },
+                        ]
+                    )}>批量新增</a>
+                </Menu.Item>
+                <Menu.Item>
                     <a onClick={() => {
                         const selected = apiRef.current.api.getSelectedNodes()
                         if (selected.length) {
@@ -219,9 +227,11 @@ const TreeGrid = () => {
                         }}>取消编辑</Button>
                         <Button onClick={() => {
                             const { list, diff } = manager.save()
+                            const isChanged = manager.isChanged
                             setdataSource(list)
                             seteditable(false)
                             console.log(diff)
+                            console.log("changed", isChanged)
                         }}>保存</Button>
                     </>
                 )
