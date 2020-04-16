@@ -75,10 +75,13 @@ const TreeGrid = () => {
             }
         },
         {
-            title: '余额',
-            fieldName: "p",
-            width: 100,
-            hide: true
+            title: '地址',
+            fieldName: "address",
+            width: 400,
+            editConfig: {
+                component: Input,
+                editable: true
+            }
         },
     ])
 
