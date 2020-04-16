@@ -2,7 +2,7 @@
 import { useCallback, useMemo } from 'react'
 import { ColGroupDef, ColDef, IsColumnFuncParams, IsColumnFunc, IServerSideGetRowsParams } from 'ag-grid-community'
 import { EventEmitter } from 'events'
-import { get, isNumber, isEmpty } from 'lodash'
+import { get, isNumber, isEmpty, isNil, omit, isEqual } from 'lodash'
 import { List } from 'immutable'
 
 import { PaginationProps } from 'antd/lib/pagination'
@@ -40,8 +40,8 @@ export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Si
                 cellClass: ["gant-grid-cell"],
                 cellClassRules: {
                     "gant-grid-cell-modify": params => {
-                        const { data: { _rowType, _rowData } = {} as any, colDef: { field }, value } = params
-                        return _rowType === DataActions.modify && value !== get(_rowData, field, value)
+                        const { data: { _rowType, _rowData, idcard } = {} as any, colDef: { field }, value } = params
+                        return _rowType === DataActions.modify && Reflect.has(_rowData, field) && value != get(_rowData, field)
                     },
                     "gant-grid-cell-add": params => get(params, "data._rowType") === DataActions.add,
                     "gant-grid-cell-delete": params => get(params, "data._rowType") === DataActions.remove,
@@ -134,15 +134,34 @@ export const isList = function isList<T>(list: any): list is List<T> {
     return List.isList(list)
 }
 
+const nil = [null, undefined, '']
+
 export function trackEditValueChange(data: any, field: string, cacheValue: any, value: any) {
     let newRowData: any = data;
+
     if (data._rowType === DataActions.modify) {
-        const rowData = get(data, `_rowData`, {})
-        if (cacheValue === rowData[field]) {
-            delete rowData[field];
-        } else if (!rowData[field] && rowData[field] !== value) {
+        let rowData = get(data, `_rowData`, {})
+        const fieldHasChanged = Reflect.has(rowData, field)
+        if (fieldHasChanged) {
+            const originValue = Reflect.get(rowData, field)
+            const originIsNil = ~~nil.includes(originValue)
+            const currinIsNil = ~~nil.includes(cacheValue)
+            const sum = originIsNil + currinIsNil
+            if (sum === 2 || (sum === 0 && originValue == cacheValue)) {
+                // 认定值没有改变
+                // 比如之前undefined --> ""
+                // 123 --> "123"
+                rowData = omit(rowData, [field])
+            }
+        } else {
             rowData[field] = value
         }
+
+        // if (cacheValue === rowData[field]) {
+        //     delete rowData[field];
+        // } else if (!rowData[field] && rowData[field] !== value) {
+        //     rowData[field] = value
+        // }
 
         if (isEmpty(rowData)) {
             const { _rowType, _rowData, ...newData } = data;
