@@ -41,6 +41,8 @@ const getMergeLocale = (list) => {
         label, locale
       })
     }
+
+    return localeList
   }
   return defaultLocaleList
 }
@@ -54,7 +56,7 @@ const withLangSelect = compose(
   }),
   withProps(({ localeList }) => {
     return {
-      language: map(getMergeLocale(localeList), item => pick(item, ['locale', 'label'])),
+      language: localeList.length ? map(localeList, item => pick(item, ['locale', 'label'])) : defaultLocaleList,
     }
   }),
   withState("currentLocale", "setCurrentLocale", ({ value = [], language }) => language[0].locale),
