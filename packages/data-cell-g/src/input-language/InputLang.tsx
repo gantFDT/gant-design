@@ -59,7 +59,7 @@ const withLangSelect = compose(
       language: localeList.length ? map(localeList, item => pick(item, ['locale', 'label'])) : defaultLocaleList,
     }
   }),
-  withState("currentLocale", "setCurrentLocale", ({ value = [], language }) => language[0].locale),
+  withState("currentLocale", "setCurrentLocale", ({ language, defalutLocale }) => defalutLocale || language[0].locale),
   withHandlers({
     onLocaleChange: ({ setCurrentLocale }) => (locale) => {
       setCurrentLocale(locale)
