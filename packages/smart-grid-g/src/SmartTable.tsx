@@ -238,13 +238,9 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
 
   const gridHeight = useMemo(() => {
     let result: string | number
-    if(!height){return}
+    if (!height) { return }
     if (typeof height !== 'number') {
-      if (height.indexOf('calc') >= 0) {
-        result = height.substring(0, height.length - 1) + ' - 30px)'
-      } else {
-        result = Number(height) - 30 + 'px'
-      }
+      result = `calc(${height} - 30px)`
     } else {
       result = height - 30
     }

@@ -384,7 +384,6 @@ function CustomOptions() {
         setUiSchema(uiSchema => ({ ...uiSchema, ...newData }))
     }
     const Reset = () => setUiSchema(initalUiSchema)
-    console.log("data", data)
     return (
         <div>
             <Row>
@@ -424,8 +423,10 @@ function GridLayout() {
             sm: 18,
             xs: 24
         },
-        "field:labelAlign": "left"
-
+        "field:labelAlign": "left",
+        "key_1":{
+            "field:extra":"tipss"
+        }
     }
     return <div style={{ margin: 10 }} >
         <SchemaForm uiSchema={uiSchema} schema={schema}  />

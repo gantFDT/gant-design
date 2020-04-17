@@ -60,7 +60,7 @@ const TreeGrid = () => {
                 // }
             },
             enableRowGroup: true,
-            cellRenderer: "agGroupCellRenderer",
+            cellRenderer: "gantGroupCellRenderer",
         },
         {
             title: '年龄',
@@ -68,6 +68,8 @@ const TreeGrid = () => {
             sortable: true,
             filter: Filter.Number,
             type: "numericColumn",
+            enableRowGroup: true,
+            cellRenderer: "agGroupCellRenderer",
             editConfig: {
                 component: Input,
                 editable: true,
@@ -291,13 +293,14 @@ const AsyncTreeData = () => {
     const columns = [{
         fieldName: 'employeeId',
         enableRowGroup: true,
-        cellRenderer: "agGroupCellRenderer",
+        cellRenderer: "gantGroupCellRenderer",
         editConfig: {
             component: InputCellPhone,
             // changeFormatter: (e: any) => e.target.value,
 
             editable: true
         },
+        filter:true,
     },
     {
         fieldName: 'employeeName',
@@ -331,16 +334,14 @@ const AsyncTreeData = () => {
                 </>
             )
         } />
-        <Button onClick={() => {
-            setTreeData(tree => !tree)
-        }}>切换</Button>
         <Grid
             rowkey="employeeId"
             columns={columns}
             dataSource={dataSource}
-            treeData={treeData}
+            treeData
             // isServer
             // isServerSideGroup={(data) => {
+            //     console.log("isServerSideGroup",data)
             //     return Array.isArray(data.underlings)
             // }}
             treeDataChildrenName="underlings"
@@ -356,6 +357,19 @@ const AsyncTreeData = () => {
             editable={editable}
             onRowGroupOpened={(data) => { console.log(data) }}
             groupSuppressAutoColumn
+            sideBar={{
+                toolPanels: [
+                    {
+                        id: 'filters',
+                        labelKey: 'VPPS导航',
+                        labelDefault: 'VPPS导航',
+                        iconKey: 'filter',
+                        toolPanel: 'agFiltersToolPanel',
+                    }
+                ],
+                defaultToolPanel: 'filters',
+                position: "left"
+            }}
         />
     </>
 }

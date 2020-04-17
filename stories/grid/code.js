@@ -59,7 +59,7 @@ const TreeGrid = () => {
                 // }
             },
             enableRowGroup: true,
-            cellRenderer: "agGroupCellRenderer",
+            cellRenderer: "gantGroupCellRenderer",
         },
         {
             title: '年龄',
@@ -67,16 +67,21 @@ const TreeGrid = () => {
             sortable: true,
             filter: Filter.Number,
             type: "numericColumn",
+            enableRowGroup: true,
+            cellRenderer: "agGroupCellRenderer",
             editConfig: {
                 component: Input,
                 editable: true,
             }
         },
         {
-            title: '余额',
-            fieldName: "p",
-            width: 100,
-            hide: true
+            title: '地址',
+            fieldName: "address",
+            width: 400,
+            editConfig: {
+                component: Input,
+                editable: true
+            }
         },
     ])
 
