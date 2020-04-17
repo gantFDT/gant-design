@@ -2,7 +2,7 @@
 import { useCallback, useMemo } from 'react'
 import { ColGroupDef, ColDef, IsColumnFuncParams, IsColumnFunc, IServerSideGetRowsParams } from 'ag-grid-community'
 import { EventEmitter } from 'events'
-import { get, isNumber, isEmpty } from 'lodash'
+import { get, isNumber, isEmpty, isNil, omit, isEqual } from 'lodash'
 import { List } from 'immutable'
 
 import { PaginationProps } from 'antd/lib/pagination'
@@ -22,12 +22,15 @@ function ColEditableFn(fn: ColumnEdiatble<any>): IsColumnFunc | boolean {
     return fn
 }
 
-export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Size, getRowNodeId: any, defaultSelection: boolean, defaultSelectionCol: ColDef, rowSelection, cellEvents: EventEmitter): Col[] => {
+export const mapColumns = <T>(columns: Columns<T>[], editable: boolean,
+    size: Size, getRowNodeId: any, defaultSelection: boolean, defaultSelectionCol: ColDef,
+    rowSelection, cellEvents: EventEmitter,
+     isServerSideGroup: (data: any) => boolean,serverDataRequest:(params: any, groupKeys: any, successCallback: any) => any): Col[] => {
 
     // 移除所有已添加事件
     cellEvents.removeAllListeners()
     function getColumnDefs(columns: Columns<T>[]) {
-        return columns.map(({ title: headerName, fieldName: field, children, render, editConfig, cellRenderer, fixed, ...item }, index) => {
+        return columns.map(({ title: headerName, fieldName: field, children, render, editConfig, cellRenderer, fixed, cellRendererParams, ...item }, index) => {
 
             const ColEditable = typeof editConfig !== 'undefined';
             const colDef = {
@@ -35,13 +38,15 @@ export const mapColumns = <T>(columns: Columns<T>[], editable: boolean, size: Si
                 field,
                 cellRendererParams: {
                     render,
-                    // innerRenderer: () => 11111,
+                    isServerSideGroup,
+                    serverDataRequest,
+                    ...cellRendererParams,
                 },
                 cellClass: ["gant-grid-cell"],
                 cellClassRules: {
                     "gant-grid-cell-modify": params => {
-                        const { data: { _rowType, _rowData } = {} as any, colDef: { field }, value } = params
-                        return _rowType === DataActions.modify && value !== get(_rowData, field, value)
+                        const { data: { _rowType, _rowData, idcard } = {} as any, colDef: { field }, value } = params
+                        return _rowType === DataActions.modify && Reflect.has(_rowData, field) && value != get(_rowData, field)
                     },
                     "gant-grid-cell-add": params => get(params, "data._rowType") === DataActions.add,
                     "gant-grid-cell-delete": params => get(params, "data._rowType") === DataActions.remove,
@@ -134,15 +139,34 @@ export const isList = function isList<T>(list: any): list is List<T> {
     return List.isList(list)
 }
 
+const nil = [null, undefined, '']
+
 export function trackEditValueChange(data: any, field: string, cacheValue: any, value: any) {
     let newRowData: any = data;
+
     if (data._rowType === DataActions.modify) {
-        const rowData = get(data, `_rowData`, {})
-        if (cacheValue === rowData[field]) {
-            delete rowData[field];
-        } else if (!rowData[field] && rowData[field] !== value) {
+        let rowData = get(data, `_rowData`, {})
+        const fieldHasChanged = Reflect.has(rowData, field)
+        if (fieldHasChanged) {
+            const originValue = Reflect.get(rowData, field)
+            const originIsNil = ~~nil.includes(originValue)
+            const currinIsNil = ~~nil.includes(cacheValue)
+            const sum = originIsNil + currinIsNil
+            if (sum === 2 || (sum === 0 && originValue == cacheValue)) {
+                // 认定值没有改变
+                // 比如之前undefined --> ""
+                // 123 --> "123"
+                rowData = omit(rowData, [field])
+            }
+        } else {
             rowData[field] = value
         }
+
+        // if (cacheValue === rowData[field]) {
+        //     delete rowData[field];
+        // } else if (!rowData[field] && rowData[field] !== value) {
+        //     rowData[field] = value
+        // }
 
         if (isEmpty(rowData)) {
             const { _rowType, _rowData, ...newData } = data;

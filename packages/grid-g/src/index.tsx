@@ -17,7 +17,7 @@ import { Filter, Size, Fixed, GridPropsPartial, RowSelection, Record } from './i
 import "./style"
 import DataManage from './datamanage'
 import RenderCol from './GirdRenderColumn'
-
+import GantGroupCellRenderer from './GantGroupCellRenderer'
 export * from './interface'
 export { default as DataManage } from './datamanage'
 
@@ -31,7 +31,6 @@ const langs = {
     'en': en,
     'zh-cn': zh
 }
-
 export const defaultProps = {
     /**加载状态 */
     loading: false,
@@ -91,6 +90,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         locale: customLocale,
         serverGroupExpend,
         groupDefaultExpanded,
+        defaultColDef,
         ...orignProps
     } = props
 
@@ -136,7 +136,8 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     }, [initDataSource])
     /**fix: 解决保存时候标记状态无法清楚的问题 */
     useEffect(() => {
-        apiRef.current && apiRef.current.refreshCells({ force: true })
+        apiRef.current && apiRef.current.refreshCells({ force: true });
+
     }, [manageData])
 
     /**出口数据，用于grid显示 */
@@ -153,7 +154,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     const dataSource = useMemo(() => {
         if (!treeData) return manageData;
         if (!isServer) return flattenTreeData(manageData, getRowNodeId, [], treeDataChildrenName);
-        return []
+        return manageData
     }, [manageData, treeData, treeDataChildrenName, getRowNodeId])
     const serverModel = useMemo(() => {
         return isServer && treeData
@@ -176,7 +177,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         const fakeServer = createFakeServer(dataManage, getServerSideGroupKey ? getServerSideGroupKey : getRowNodeId, treeDataChildrenName);
         const serverDataSource = createServerSideDatasource(fakeServer, serverDataRequest)
         apiRef.current && apiRef.current.setServerSideDatasource(serverDataSource)
-    }, [serverModel, treeDataChildrenName, serverDataRequest, apiRef.current])
+    }, [serverModel, treeDataChildrenName, serverDataRequest, apiRef.current, initDataSource, getServerSideGroupKey, getRowNodeId])
     const getDataPath = useCallback((data) => {
         return data.treeDataPath;
     }, [])
@@ -186,6 +187,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
             isServerSideGroup,
             treeData,
             rowModelType: 'serverSide',
+            rowData: dataSource,
             getServerSideGroupKey: getServerSideGroupKey ? getServerSideGroupKey : getRowNodeId,
         }
         return {
@@ -199,7 +201,6 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         apiRef.current = params.api
         columnsRef.current = params.columnApi
         onReady && onReady(params, dataManage)
-
         dataManage.gridApi = params.api
         dataManage.columnApi = params.columnApi
     }, [onReady])
@@ -227,16 +228,17 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     //columns
     const defaultSelection = !isEmpty(gantSelection) && showDefalutCheckbox
     const columns = useMemo<ColDef[] | ColGroupDef[]>(() => {
-        return mapColumns<T>(columnDefs, editable, size, getRowNodeId, defaultSelection, defaultSelectionCol, rowSelection, dataManage.cellEvents)
-    }, [columnDefs, editable, rowSelection, size, getRowNodeId, defaultSelectionCol, defaultSelection, rowSelection])
+        return mapColumns<T>(columnDefs, editable, size, getRowNodeId,
+            
+            defaultSelection, defaultSelectionCol, rowSelection, dataManage.cellEvents, isServerSideGroup,serverDataRequest)
+    }, [columnDefs, editable, rowSelection, size, getRowNodeId, defaultSelectionCol,
+        isServerSideGroup,
+        defaultSelection, rowSelection,serverDataRequest])
     //columns-end
-
-
     const cellValueChanged = useCallback(
         (changed) => {
             dataManage.modify(changed)
         }, [])
-    console.log("gridPartProps", gridPartProps)
     return (
         <LocaleReceiver>
             {(local, localeCode = 'zh-cn') => {
@@ -244,10 +246,11 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                 const locale = { ...lang, ...customLocale }
                 return <Spin spinning={loading}>
                     <div style={{ width, height }} className={classnames('gant-grid', `gant-grid-${getSizeClassName(size)}`)} >
-                        <div className="ag-theme-balham" style={{ width: '100%', height: computedPagination ? 'calc(100% - 30px)' : '100%' }}>
+                        <div className="ag-theme-balham" style={{ width: '100%', height: computedPagination ? 'calc(100% - 30px)' : 'calc(100% - 3px)' }}>
                             <AgGridReact
                                 frameworkComponents={{
                                     "gantRenderCol": RenderCol,
+                                    "gantGroupCellRenderer": GantGroupCellRenderer,
                                     ...frameworkComponents
                                 }}
                                 onSelectionChanged={onSelectionChanged}
@@ -257,12 +260,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                                 onGridReady={onGridReady}
                                 undoRedoCellEditing
                                 enableFillHandle
-                                defaultColDef={{
-                                    resizable,
-                                    sortable,
-                                    filter,
-                                    minWidth: 30,
-                                }}
+
                                 headerHeight={24}
                                 floatingFiltersHeight={20}
                                 getDataPath={getDataPath}
@@ -271,6 +269,13 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                                 {...gridPartProps}
                                 {...selection}
                                 {...orignProps}
+                                defaultColDef={{
+                                    resizable,
+                                    sortable,
+                                    filter,
+                                    minWidth: 30,
+                                    ...defaultColDef
+                                }}
                                 suppressRowDrag
                                 onCellValueChanged={cellValueChanged}
                                 deltaRowDataMode

@@ -56,7 +56,7 @@ const schema = {
       },
       key_6: {
           title: "语言",
-          type: "string",
+          type: "object",
           componentType: "InputLanguage",
           props:{
             placeholder:"输入提示"
@@ -219,7 +219,7 @@ const schema = {
       },
       key_6: {
           title: "语言",
-          type: "string",
+          type: "object",
           componentType: "InputLanguage",
           props:{
             placeholder:"输入提示"
@@ -440,7 +440,7 @@ const schema = {
       },
       key_6: {
           title: "语言",
-          type: "string",
+          type: "object",
           componentType: "InputLanguage",
           props:{
             placeholder:"输入提示"
@@ -630,7 +630,7 @@ const schema = {
       },
       key_6: {
           title: "语言",
-          type: "string",
+          type: "object",
           componentType: "InputLanguage",
           props:{
             placeholder:"输入提示"
@@ -800,7 +800,6 @@ function CustomOptions() {
         setUiSchema(uiSchema => ({ ...uiSchema, ...newData }))
     }
     const Reset = () => setUiSchema(initalUiSchema)
-    console.log("data", data)
     return (
         <div>
             <Row>
@@ -876,7 +875,7 @@ const schema = {
       },
       key_6: {
           title: "语言",
-          type: "string",
+          type: "object",
           componentType: "InputLanguage",
           props:{
             placeholder:"输入提示"
@@ -979,8 +978,10 @@ function GridLayout() {
             sm: 18,
             xs: 24
         },
-        "field:labelAlign": "left"
-
+        "field:labelAlign": "left",
+        "key_1":{
+            "field:extra":"tipss"
+        }
     }
     return <div style={{ margin: 10 }} >
         <SchemaForm uiSchema={uiSchema} schema={schema}  />
@@ -1044,7 +1045,7 @@ const schema = {
       },
       key_6: {
           title: "语言",
-          type: "string",
+          type: "object",
           componentType: "InputLanguage",
           props:{
             placeholder:"输入提示"
@@ -1224,7 +1225,7 @@ const schema = {
       },
       key_6: {
           title: "语言",
-          type: "string",
+          type: "object",
           componentType: "InputLanguage",
           props:{
             placeholder:"输入提示"
@@ -1402,7 +1403,7 @@ const schema = {
       },
       key_6: {
           title: "语言",
-          type: "string",
+          type: "object",
           componentType: "InputLanguage",
           props:{
             placeholder:"输入提示"
@@ -1569,7 +1570,7 @@ const schema = {
       },
       key_6: {
           title: "语言",
-          type: "string",
+          type: "object",
           componentType: "InputLanguage",
           props:{
             placeholder:"输入提示"

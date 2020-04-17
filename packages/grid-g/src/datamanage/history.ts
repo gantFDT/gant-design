@@ -59,7 +59,7 @@ class History<T extends DataRecord> extends EventEmitter {
     }
 
     public get isChanged() {
-        return this.index > 0
+        return this.currentDiff.some(d => d.size > 0)
     }
 
     /**获取当前状态 */

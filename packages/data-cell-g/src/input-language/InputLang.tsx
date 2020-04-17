@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
 import { Input, Select } from 'antd';
-import { map, pick, } from 'lodash'
-import { compose, defaultProps, withState, withProps, withHandlers, toClass } from 'recompose'
+import { map, pick, cloneDeep } from 'lodash'
+import { compose, defaultProps, withState, withProps, withHandlers, toClass, withPropsOnChange } from 'recompose'
 import { withEdit } from '../compose'
 import { WithBasicProps } from '../compose/withbasic';
 export interface GantInputLangProps extends WithBasicProps {
   allowClear?: boolean,
   placeholder?: string,
   onChange?: (val: value) => void
-  value?: value,
-  localeList?: localeItem[]
+  value?: value | {},
+  localeList?: localeItem[],
+  [props:string]:any
 }
 interface value {
   locale: string,
@@ -41,6 +42,8 @@ const getMergeLocale = (list) => {
         label, locale
       })
     }
+
+    return localeList
   }
   return defaultLocaleList
 }
@@ -52,27 +55,12 @@ const withLangSelect = compose(
     onChange: () => { },
     localeList: [],
   }),
-  withState('cacheMap', 'setCacheMap', ({ value = [] }) => {
-    if (Array.isArray(value) && value.length) {
-      const cacheEntries = map(value, item => ([item.locale, item.value]))
-      return new Map(cacheEntries)
-    }
-    return new Map()
-
-  }),
-  withProps(({ localeList, cacheMap, onChange }) => {
+  withProps(({ localeList }) => {
     return {
-      language: map(getMergeLocale(localeList), item => pick(item, ['locale', 'label'])),
-      onChange() {
-        const newValue = []
-        for (const [locale, value] of cacheMap.entries()) {
-          newValue.push({ locale, value })
-        }
-        onChange(newValue)
-      }
+      language: localeList.length ? map(localeList, item => pick(item, ['locale', 'label'])) : defaultLocaleList,
     }
   }),
-  withState("currentLocale", "setCurrentLocale", ({ value = [], language }) => (value[0] || language[0]).locale),
+  withState("currentLocale", "setCurrentLocale", ({ language, defalutLocale }) => defalutLocale || language[0].locale),
   withHandlers({
     onLocaleChange: ({ setCurrentLocale }) => (locale) => {
       setCurrentLocale(locale)
@@ -84,8 +72,8 @@ const withLangSelect = compose(
 @compose(
   toClass,
   withLangSelect,
-  withEdit(({ currentLocale, cacheMap }) => cacheMap.get(currentLocale), "gantd-input-lang-addonBefore"),
-  withProps(({ onLocaleChange, language, cacheMap, currentLocale, size }) => {
+  withEdit(({ currentLocale, value }) => value[currentLocale], "gantd-input-lang-addonBefore"),
+  withProps(({ onLocaleChange, language, currentLocale, size, value }) => {
     return {
       addonBefore: (
         <Select dropdownClassName="gantd-input-lang-addonBefore" style={{ width: 75 }}
@@ -94,20 +82,21 @@ const withLangSelect = compose(
           {language.map(item => <Select.Option value={item.locale} key={item.locale}>{item.label}</Select.Option>)}
         </Select>
       ),
-      currentValue: cacheMap.get(currentLocale)
+      currentValue: value[currentLocale]
     }
   })
 )
 class InputLang extends Component<any> {
   onInputChange = (e) => {
-    const { value } = e.target;
-    const { currentLocale, onChange, cacheMap } = this.props
-    cacheMap.set(currentLocale, value)
-    onChange()
+    const { value: v } = e.target;
+    const { currentLocale, onChange, value } = this.props
+    const cv = cloneDeep(value)
+    cv[currentLocale] = v
+    onChange(cv)
   }
 
   render() {
-    const { onEnter, setlocale, cacheId, cacheMap, localeList, wrapperRef, setCurrentLocale, onLocaleChange, currentValue, setCacheMap, currentLocale, ...props } = this.props
+    const { onEnter, setlocale, cacheId, localeList, wrapperRef, setCurrentLocale, onLocaleChange, currentValue, currentLocale, ...props } = this.props
     return (
       <Input {...props} value={currentValue}
         ref={wrapperRef}

@@ -41,7 +41,7 @@ const TreeGrid = () => {
     useEffect(() => {
         setTimeout(() => {
             setLoading(false)
-        }, 2000)
+        }, 0)
     }, [])
 
     const [columns, setcolumns] = useState([
@@ -60,7 +60,7 @@ const TreeGrid = () => {
                 // }
             },
             enableRowGroup: true,
-            cellRenderer: "agGroupCellRenderer",
+            cellRenderer: "gantGroupCellRenderer",
         },
         {
             title: '年龄',
@@ -68,16 +68,21 @@ const TreeGrid = () => {
             sortable: true,
             filter: Filter.Number,
             type: "numericColumn",
+            enableRowGroup: true,
+            cellRenderer: "agGroupCellRenderer",
             editConfig: {
                 component: Input,
                 editable: true,
             }
         },
         {
-            title: '余额',
-            fieldName: "p",
-            width: 100,
-            hide: true
+            title: '地址',
+            fieldName: "address",
+            width: 400,
+            editConfig: {
+                component: Input,
+                editable: true
+            }
         },
     ])
 
@@ -163,6 +168,14 @@ const TreeGrid = () => {
                     <a onClick={() => manager.create({ idcard: Math.random().toString(16), name: Math.random().toString(16) })}>新增</a>
                 </Menu.Item>
                 <Menu.Item>
+                    <a onClick={() => manager.create(
+                        [
+                            { idcard: Math.random().toString(16), name: "新增1" },
+                            { idcard: Math.random().toString(16), name: "新增2" },
+                        ]
+                    )}>批量新增</a>
+                </Menu.Item>
+                <Menu.Item>
                     <a onClick={() => {
                         const selected = apiRef.current.api.getSelectedNodes()
                         if (selected.length) {
@@ -200,33 +213,39 @@ const TreeGrid = () => {
         <>
             <Header extra={!editable ? (
                 <>
-                    <Button onClick={edit}>进入编辑</Button>
+                    <Button size="small" onClick={edit}>进入编辑</Button>
                     {/* <Button onClick={() => setIsTree(false)}>切换</Button> */}
                 </>
+
             ) : (
                     <>
 
                         <Dropdown overlay={menu} placement="bottomLeft">
-                            <Button>添加节点</Button>
+                            <Button size="small">添加节点</Button>
                         </Dropdown>
-                        <Button disabled={!(manager && selectedKeys.length)} onClick={() => manager.remove(deleteCb).then(e => message.success("删除成功"), e => { message.error("删除出错"); throw e })}>删除</Button>
-                        <Button onClick={append}>添加子节点</Button>
-                        <Button onClick={() => manager.mapNodes(mapNodes)}>遍历节点</Button>
-                        <Button onClick={() => manager.undo()}>撤销</Button>
-                        <Button onClick={() => manager.redo()}>重做</Button>
-                        <Button onClick={() => {
+                        <Button size="small" disabled={!(manager && selectedKeys.length)} onClick={() => manager.remove(deleteCb).then(e => message.success("删除成功"), e => { message.error("删除出错"); throw e })}>删除</Button>
+                        <Button size="small" onClick={append}>添加子节点</Button>
+                        <Button size="small" onClick={() => manager.mapNodes(mapNodes)}>遍历节点</Button>
+                        <Button size="small" onClick={() => manager.undo()}>撤销</Button>
+                        <Button size="small" onClick={() => manager.redo()}>重做</Button>
+                        <Button size="small" onClick={() => {
                             manager.cancel()
                             seteditable(false)
                         }}>取消编辑</Button>
-                        <Button onClick={() => {
+                        <Button size="small" onClick={() => {
                             const { list, diff } = manager.save()
+                            const isChanged = manager.isChanged
                             setdataSource(list)
                             seteditable(false)
                             console.log(diff)
+                            console.log("changed", isChanged)
                         }}>保存</Button>
                     </>
                 )
-            } />
+            }
+                title="树形"
+                type="line"
+            />
             <Grid
                 components={{
                     "simpleCellRenderer": getSimpleCellRenderer()
@@ -274,21 +293,22 @@ const AsyncTreeData = () => {
     const [selectedKeys, setSelectedKeys] = useState([])
     const [editable, seteditable] = useState(false)
     const [size, setSize] = useState("defalut");
-    const [treeData,setTreeData]=useState(false)
+    const [treeData, setTreeData] = useState(false)
     const columns = [{
         fieldName: 'employeeId',
         enableRowGroup: true,
-        cellRenderer: "agGroupCellRenderer",
+        cellRenderer: "gantGroupCellRenderer",
         editConfig: {
             component: InputCellPhone,
             // changeFormatter: (e: any) => e.target.value,
 
             editable: true
         },
+        filter: true,
     },
     {
         fieldName: 'employeeName',
-        render: (val) => <Input value={val}  />
+        render: (val) => <Input value={val} />
     },
     { fieldName: 'startDate' },
     { fieldName: 'employmentType' },
@@ -302,8 +322,11 @@ const AsyncTreeData = () => {
         // setManager(manager)
     }, [])
     return <>
-    <Header extra={!editable ? (
-                <Button onClick={()=>{
+        <Header
+            title="树形"
+            type="line"
+            extra={!editable ? (
+                <Button onClick={() => {
                     seteditable(true);
                     setSize("small");
                 }}>进入编辑</Button>
@@ -318,16 +341,14 @@ const AsyncTreeData = () => {
                     </>
                 )
             } />
-            <Button onClick={() => {
-                setTreeData(tree=>!tree)
-            }}>切换</Button>
         <Grid
             rowkey="employeeId"
             columns={columns}
             dataSource={dataSource}
-            treeData={treeData}
+            treeData
             // isServer
             // isServerSideGroup={(data) => {
+            //     console.log("isServerSideGroup",data)
             //     return Array.isArray(data.underlings)
             // }}
             treeDataChildrenName="underlings"
@@ -343,24 +364,42 @@ const AsyncTreeData = () => {
             editable={editable}
             onRowGroupOpened={(data) => { console.log(data) }}
             groupSuppressAutoColumn
+            sideBar={{
+                toolPanels: [
+                    {
+                        id: 'filters',
+                        labelKey: 'VPPS导航',
+                        labelDefault: 'VPPS导航',
+                        iconKey: 'filter',
+                        toolPanel: 'agFiltersToolPanel',
+                    }
+                ],
+                defaultToolPanel: 'filters',
+                position: "left"
+            }}
         />
     </>
 }
 
 const config = {
     codes,
-    useage: '',
+    useage: <div>
+        <div>依赖于ag-grid的高性能表格</div>
+        <div style={{fontWeight:'bold'}}>ag-grid-enterprise需商业授权，如需使用ag-grid-enterprise功能，请自行获得LicenseKey</div>
+        <div><a href="https://www.ag-grid.com/" target="_blank">Ag-Grid官网</a></div>
+        <div><a href="https://github.com/ag-grid/ag-grid/blob/master/LICENSE.txt" target="_blank">LICENSE</a></div>
+    </div>,
     children: [
-        // {
-        //     title: "tree",
-        //     describe: "树形结构",
-        //     cmp: TreeGrid
-        // },
         {
-            title: "async tree",
-            describe: "异步树形",
-            cmp: AsyncTreeData
-        }
+            title: "树形数据单元格编辑",
+            describe: "树形结构的单元格编辑，对节点的操作、撤销、重做等",
+            cmp: TreeGrid
+        },
+        // {
+        //     title: "async tree",
+        //     describe: "异步树形",
+        //     cmp: AsyncTreeData
+        // }
     ]
 }
 
