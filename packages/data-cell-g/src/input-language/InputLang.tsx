@@ -8,8 +8,9 @@ export interface GantInputLangProps extends WithBasicProps {
   allowClear?: boolean,
   placeholder?: string,
   onChange?: (val: value) => void
-  value?: value,
-  localeList?: localeItem[]
+  value?: value | {},
+  localeList?: localeItem[],
+  [props:string]:any
 }
 interface value {
   locale: string,
@@ -73,7 +74,6 @@ const withLangSelect = compose(
   withLangSelect,
   withEdit(({ currentLocale, value }) => value[currentLocale], "gantd-input-lang-addonBefore"),
   withProps(({ onLocaleChange, language, currentLocale, size, value }) => {
-    console.log("value", value)
     return {
       addonBefore: (
         <Select dropdownClassName="gantd-input-lang-addonBefore" style={{ width: 75 }}
