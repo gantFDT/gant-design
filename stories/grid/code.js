@@ -40,7 +40,7 @@ const TreeGrid = () => {
     useEffect(() => {
         setTimeout(() => {
             setLoading(false)
-        }, 2000)
+        }, 0)
     }, [])
 
     const [columns, setcolumns] = useState([
@@ -212,25 +212,26 @@ const TreeGrid = () => {
         <>
             <Header extra={!editable ? (
                 <>
-                    <Button onClick={edit}>进入编辑</Button>
+                    <Button size="small" onClick={edit}>进入编辑</Button>
                     {/* <Button onClick={() => setIsTree(false)}>切换</Button> */}
                 </>
+
             ) : (
                     <>
 
                         <Dropdown overlay={menu} placement="bottomLeft">
-                            <Button>添加节点</Button>
+                            <Button size="small">添加节点</Button>
                         </Dropdown>
-                        <Button disabled={!(manager && selectedKeys.length)} onClick={() => manager.remove(deleteCb).then(e => message.success("删除成功"), e => { message.error("删除出错"); throw e })}>删除</Button>
-                        <Button onClick={append}>添加子节点</Button>
-                        <Button onClick={() => manager.mapNodes(mapNodes)}>遍历节点</Button>
-                        <Button onClick={() => manager.undo()}>撤销</Button>
-                        <Button onClick={() => manager.redo()}>重做</Button>
-                        <Button onClick={() => {
+                        <Button size="small" disabled={!(manager && selectedKeys.length)} onClick={() => manager.remove(deleteCb).then(e => message.success("删除成功"), e => { message.error("删除出错"); throw e })}>删除</Button>
+                        <Button size="small" onClick={append}>添加子节点</Button>
+                        <Button size="small" onClick={() => manager.mapNodes(mapNodes)}>遍历节点</Button>
+                        <Button size="small" onClick={() => manager.undo()}>撤销</Button>
+                        <Button size="small" onClick={() => manager.redo()}>重做</Button>
+                        <Button size="small" onClick={() => {
                             manager.cancel()
                             seteditable(false)
                         }}>取消编辑</Button>
-                        <Button onClick={() => {
+                        <Button size="small" onClick={() => {
                             const { list, diff } = manager.save()
                             const isChanged = manager.isChanged
                             setdataSource(list)
@@ -240,7 +241,10 @@ const TreeGrid = () => {
                         }}>保存</Button>
                     </>
                 )
-            } />
+            }
+                title="树形"
+                type="line"
+            />
             <Grid
                 components={{
                     "simpleCellRenderer": getSimpleCellRenderer()
