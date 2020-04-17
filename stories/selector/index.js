@@ -38,9 +38,9 @@ const Demo1 = () => {
       <Selector dataSource={dataSource} style={{ margin: '5px 0' }} value={value} onChange={setValue} onSave={(id, value, cb) => cb()} />
       2、传递对象作为选项列表<br />
       <>
-        <Button onClick={() => { setedit2(SwitchStatus) }}>编辑</Button>
-        <Button onClick={() => { setedit2(SwitchStatus) }}>取消</Button>
-        <Button onClick={() => { setedit2(EditStatus.SAVE) }}>保存</Button>
+        <Button size="small" onClick={() => { setedit2(SwitchStatus) }}>编辑</Button>
+        <Button size="small" onClick={() => { setedit2(SwitchStatus) }}>取消</Button>
+        <Button size="small" onClick={() => { setedit2(EditStatus.SAVE) }}>保存</Button>
       </>
 
       <Selector dataSource={dataSource2} selectorId='language' edit={edit2} style={{ margin: '5px 0' }} value={value2} onChange={setValue2} onSave={(id, value, cb) => cb()} />
