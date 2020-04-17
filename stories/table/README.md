@@ -1,7 +1,3 @@
-# Table-表格组件
-
-# 甘棠软件 React - Gantd - Table
-
 
 ## API
 
