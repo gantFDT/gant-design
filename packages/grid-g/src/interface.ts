@@ -125,6 +125,7 @@ export type Record = {
 export interface Props<T extends Record> {
     columns: Columns<T>[],
     dataSource: T[],
+    removeShowLine: boolean,
     filter?: boolean,
     resizable: boolean,
     sortable: boolean,

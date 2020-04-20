@@ -2,6 +2,7 @@ import _ from 'lodash'
 import { ColumnApi, GridApi, RowNode } from 'ag-grid-community';
 import { List, Map } from 'immutable'
 import { Record } from '../interface'
+import { isDeleted } from '../utils'
 
 export const originKey = "__origin"
 export const cloneDeep = function cloneDeep<T extends Record>(list: T[]): T[] {
@@ -62,13 +63,17 @@ export const removeDeepItem = function removeDeepItem<T extends Record>(treeData
 export const getPureRecord = function getPureRecord<T>(data: T): T {
     return _.omit(data, ["treeDataPath", "_rowData", "_rowType", "__origin"])
 }
-
-export const getPureList = function getPureList<T extends Record>(list: T[]): T[] {
+/**
+ * 
+ * @param list 当前渲染list
+ * @param save 是否是保存状态，在save状态下会过滤掉isDeleted的数据
+ */
+export const getPureList = function getPureList<T extends Record>(list: T[], save: boolean = false): T[] {
     if (!list.length) return []
-    const cloneList = list.map((item: T) => {
+    const cloneList = list.filter(node => !isDeleted(node)).map((item: T) => {
         const record = getPureRecord<T>(item)
         if (item.children && item.children.length) {
-            record.children = getPureList(item.children)
+            record.children = getPureList(item.children, save)
         }
         return record
     })

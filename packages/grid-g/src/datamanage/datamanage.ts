@@ -8,7 +8,7 @@ import History from './history'
 import ListProxy from './listproxy'
 import { findChildren, removeDeepItem, getPureRecord, getPureList, getIndexPath } from './utils'
 import { Record, DataActions, RemoveCallBack, Move } from '../interface'
-import { isnumber, isbool } from '../utils'
+import { isnumber, isbool, isDeleted } from '../utils'
 
 interface RemoveOptions {
     removeChildren: boolean,
@@ -29,6 +29,7 @@ class DataManage<T extends Record = any> extends EventEmitter {
     _modify = _modify
     _removed = _removed
     private _dataSource: T[]
+    removeShowLine: boolean
 
     cellEvents: EventEmitter = new EventEmitter()
 
@@ -40,6 +41,7 @@ class DataManage<T extends Record = any> extends EventEmitter {
     // 获取group key path
     getServerSideGroupKey: (d: any) => string
     childrenName: string = 'children'
+
 
 
     constructor() {
@@ -118,7 +120,7 @@ class DataManage<T extends Record = any> extends EventEmitter {
     /**保存, 清空历史栈 */
     save() {
         const lastList = this.history.last
-        const list = getPureList(this.renderList)
+        const list = getPureList(this.renderList, true)
         const diff = this.diff
         this.history.init(lastList)
 
@@ -192,11 +194,10 @@ class DataManage<T extends Record = any> extends EventEmitter {
     }
 
     remove(cb: RemoveCallBack, options: RemoveOptions): Promise<Array<RowNode>> {
-        const { showLine = true, removeChildren = true } = options || {}
+        const { showLine = this.removeShowLine, removeChildren = true } = options || {}
 
         const selectedNodes = this.gridApi.getSelectedNodes()
         const selected = selectedNodes.map(node => node.data)
-        let _this = this
         return new Promise((res, rej) => {
             let allowDelete: boolean | Promise<boolean> = true
             if (cb) allowDelete = cb(selected)
@@ -221,7 +222,7 @@ class DataManage<T extends Record = any> extends EventEmitter {
             let rows = deleteRows
             if (showLine) {
                 // 在showLine模式下可能出现的问题,过滤掉之前删除过的数据
-                rows = deleteRows.filter(({ data: { _rowType, isDeleted } }) => !isDeleted) // || _rowType !== DataActions.remove)
+                rows = deleteRows.filter(data => !isDeleted(data))
             }
             if (!rows.length) return []
             const keyPathsArray = rows.map(node => {
@@ -247,22 +248,33 @@ class DataManage<T extends Record = any> extends EventEmitter {
 
             /**处理state */
             const newState = keyPathsArray.reduce((state, { id, paths }) => {
-                const fullPath = paths.flatMap((key, index) => index === 0 ? key : [this.childrenName, key])
-                const parentPath = fullPath.slice(0, -1)
-
-                const item = state.getIn(fullPath)
-                const rowType = item.get("_rowType")
-                if (!showLine || rowType === DataActions.add) {
-                    return state.updateIn(parentPath, (parentState) => parentState.filter(item => _this.getRowNodeId(item.toJS()) !== id))
-                } else {
-                    return state.updateIn(fullPath, item => item.set('isDeleted', true))
-                }
+                // const fullPath = paths.flatMap((key, index) => index === 0 ? key : [this.childrenName, key])
+                return this.removeInner(state, paths, id, showLine)
             }, this.state)
             // 添加history数据
             this.history.push(newState)
             return deleteRows
         })
 
+    }
+
+    private removeInner<T>(state: List<T>, keyPath: (string | number)[], id: string, showLine: boolean): List<T> {
+        const _this = this
+        const fullPath = keyPath.flatMap((key, index) => index === 0 ? key : [this.childrenName, key])
+        const parentPath = fullPath.slice(0, -1);
+        const item = state.getIn(fullPath)
+        const rowType = item.get("_rowType")
+        if (!showLine || rowType === DataActions.add) {
+            return state.updateIn(parentPath, (parentState) => parentState.filter(item => _this.getRowNodeId(item.toJS()) !== id))
+        } else {
+            return state.updateIn(fullPath, item => {
+                // return item.set('isDeleted', true)
+                return item.merge({
+                    isDeleted: true,
+                    _rowType: DataActions.remove
+                })
+            })
+        }
     }
 
     // 修改
@@ -277,7 +289,6 @@ class DataManage<T extends Record = any> extends EventEmitter {
             this.history.push(fromJS(newList))
         } else {
             if (data._rowType === DataActions.add) {
-                data._rowType = DataActions.add
                 this._add = this._add.set(id, getPureRecord(data))
             }
             else {
@@ -306,8 +317,20 @@ class DataManage<T extends Record = any> extends EventEmitter {
         const proxy = new ListProxy(this)
         proxy.list.forEach(cb)
         if (proxy.isChanged) {
-            const newList = getPureList(proxy.originList)
-            this.history.push(fromJS(newList))
+            let newList = fromJS(proxy.originList)
+            if (proxy.modifyNodes.length) {
+                newList = proxy.modifyNodes.reduce((state, { keyPath, node }) => {
+                    const fullPath = keyPath.flatMap((key, index) => index === 0 ? key : [this.childrenName, key])
+                    return state.setIn(fullPath, node)
+                }, newList)
+            }
+            if (proxy.removedNodes.length) {
+                newList = proxy.removedNodes.reduce((state, { keyPath, id }) => {
+                    // const fullPath = keyPath.flatMap((key, index) => index === 0 ? key : [this.childrenName, key])
+                    return this.removeInner(state, keyPath, id, this.removeShowLine)
+                }, newList)
+            }
+            this.history.push(newList)
         }
     }
 

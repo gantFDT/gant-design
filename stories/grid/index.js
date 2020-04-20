@@ -115,6 +115,7 @@ const TreeGrid = () => {
                 name: "撒旦",
                 age: 45,
                 idcard: "4",
+                address: "123"
             },
         ]
     )
@@ -156,7 +157,7 @@ const TreeGrid = () => {
 
     const append = useCallback(
         () => {
-            manager.appendChild(["2"], [{ name: "child", age: 11, idcard: '111' }, { name: "child2", age: 12, idcard: '112' }])
+            // manager.appendChild(["2"], [{ name: "child", age: 11, idcard: '111' }, { name: "child2", age: 12, idcard: '112' }])
         },
         [manager],
     )
@@ -203,12 +204,19 @@ const TreeGrid = () => {
     }, [manager])
 
     const mapNodes = useCallback(
-        (node) => {
-            node.name = node.idcard
+        (node, index) => {
+            // if (index === 0) {
+            //     node.isDeleted = true
+            // }
+            if (node.idcard === "3") {
+                node.isDeleted = true
+            }
+            // if (node.idcard === "4") {
+            //     node.name = '修改节点'
+            // }
         },
         [],
     )
-
     return (
         <>
             <Header extra={!editable ? (
@@ -218,7 +226,6 @@ const TreeGrid = () => {
                 </>
             ) : (
                     <>
-
                         <Dropdown overlay={menu} placement="bottomLeft">
                             <Button>添加节点</Button>
                         </Dropdown>
@@ -300,7 +307,7 @@ const AsyncTreeData = () => {
 
             editable: true
         },
-        filter:true,
+        filter: true,
     },
     {
         fieldName: 'employeeName',

@@ -11,7 +11,7 @@ import { get, isEmpty, isEqual } from 'lodash'
 import key from './license'
 import {
     mapColumns, NonBool, isbool, isstring, isarray, ispromise, isfunc,
-    flattenTreeData, usePagination, getSizeClassName, createFakeServer, createServerSideDatasource,
+    flattenTreeData, usePagination, getSizeClassName, createFakeServer, createServerSideDatasource, isDeleted,
 } from './utils'
 import { Filter, Size, Fixed, GridPropsPartial, RowSelection, Record } from './interface'
 import "./style"
@@ -24,6 +24,7 @@ export { default as DataManage } from './datamanage'
 import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver'
 import en from './locale/en-US'
 import zh from './locale/zh-CN'
+import { DataActions } from '../lib';
 
 LicenseManager.setLicenseKey(key)
 
@@ -50,7 +51,9 @@ export const defaultProps = {
     width: "100%",
     height: 400,
     sortable: true,
-    treeDataChildrenName: "children"
+    treeDataChildrenName: "children",
+    /** 默认的删除行为 */
+    removeShowLine: true,
 }
 
 export const defaultRowSelection: RowSelection = {
@@ -91,6 +94,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         serverGroupExpend,
         groupDefaultExpanded,
         defaultColDef,
+        removeShowLine,
         ...orignProps
     } = props
 
@@ -128,6 +132,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         manager.getRowNodeId = getRowNodeId
         manager.childrenName = treeDataChildrenName
         manager.getServerSideGroupKey = getServerSideGroupKey ? getServerSideGroupKey : getRowNodeId
+        manager.removeShowLine = removeShowLine
         return manager
     }, [])
 
@@ -229,11 +234,11 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     const defaultSelection = !isEmpty(gantSelection) && showDefalutCheckbox
     const columns = useMemo<ColDef[] | ColGroupDef[]>(() => {
         return mapColumns<T>(columnDefs, editable, size, getRowNodeId,
-            
-            defaultSelection, defaultSelectionCol, rowSelection, dataManage.cellEvents, isServerSideGroup,serverDataRequest)
+
+            defaultSelection, defaultSelectionCol, rowSelection, dataManage.cellEvents, isServerSideGroup, serverDataRequest)
     }, [columnDefs, editable, rowSelection, size, getRowNodeId, defaultSelectionCol,
         isServerSideGroup,
-        defaultSelection, rowSelection,serverDataRequest])
+        defaultSelection, rowSelection, serverDataRequest])
     //columns-end
     const cellValueChanged = useCallback(
         (changed) => {
@@ -282,7 +287,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                                 groupDefaultExpanded={groupDefaultExpanded}
                                 localeText={locale}
                                 rowClassRules={{
-                                    "gant-grid-row-isdeleted": params => get(params, "data.isDeleted")
+                                    "gant-grid-row-isdeleted": isDeleted
                                 }}
                             />
                         </div>

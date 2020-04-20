@@ -25,7 +25,7 @@ function ColEditableFn(fn: ColumnEdiatble<any>): IsColumnFunc | boolean {
 export const mapColumns = <T>(columns: Columns<T>[], editable: boolean,
     size: Size, getRowNodeId: any, defaultSelection: boolean, defaultSelectionCol: ColDef,
     rowSelection, cellEvents: EventEmitter,
-     isServerSideGroup: (data: any) => boolean,serverDataRequest:(params: any, groupKeys: any, successCallback: any) => any): Col[] => {
+    isServerSideGroup: (data: any) => boolean, serverDataRequest: (params: any, groupKeys: any, successCallback: any) => any): Col[] => {
 
     // 移除所有已添加事件
     cellEvents.removeAllListeners()
@@ -49,7 +49,7 @@ export const mapColumns = <T>(columns: Columns<T>[], editable: boolean,
                         return _rowType === DataActions.modify && Reflect.has(_rowData, field) && value != get(_rowData, field)
                     },
                     "gant-grid-cell-add": params => get(params, "data._rowType") === DataActions.add,
-                    "gant-grid-cell-delete": params => get(params, "data._rowType") === DataActions.remove,
+                    // "gant-grid-cell-delete": params => get(params, "data._rowType") === DataActions.remove,
                 },
                 cellRenderer: cellRenderer ? cellRenderer : "gantRenderCol",
                 ...item,
@@ -297,4 +297,8 @@ export function createServerSideDatasource(fakeServer, asyncCallback, cb?: (para
         asyncCallback(params, request.groupKeys, requestSuccessCallBack)
     }
     return new ServerSideDatasource(fakeServer);
+}
+
+export function isDeleted(data) {
+    return get(data, "data.isDeleted") || get(data, "data._rowType") === DataActions.remove
 }
