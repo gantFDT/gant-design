@@ -68,7 +68,6 @@ const TreeGrid = () => {
             filter: Filter.Number,
             type: "numericColumn",
             enableRowGroup: true,
-            cellRenderer: "agGroupCellRenderer",
             editConfig: {
                 component: Input,
                 editable: true,
@@ -252,7 +251,8 @@ const TreeGrid = () => {
                 rowkey="idcard"
                 loading={loading}
                 columns={columns}
-                treeData={isTree}
+                // treeData={isTree}
+                treeData
                 editable={editable}
                 dataSource={dataSource}
                 onReady={onReady}

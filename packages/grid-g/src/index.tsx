@@ -100,7 +100,6 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
 
     /**编辑时数据 */
     const [manageData, setManageData] = useState(initDataSource)
-
     // 处理selection
     const gantSelection: RowSelection = useMemo(() => {
         if (rowSel === true) {
@@ -123,6 +122,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         const manager = new DataManage<T>()
         manager.removeAllListeners()
         manager.on("update", (list) => {
+            console.log("update-->dataSource")
             setManageData(list)
         })
         manager.getRowNodeId = getRowNodeId
@@ -136,8 +136,8 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     }, [initDataSource])
     /**fix: 解决保存时候标记状态无法清楚的问题 */
     useEffect(() => {
-        apiRef.current && apiRef.current.refreshCells({ force: true });
-
+        console.log("2222", 333)
+        // apiRef.current && apiRef.current.refreshCells({ force: true });
     }, [manageData])
 
     /**出口数据，用于grid显示 */
@@ -223,17 +223,17 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                 else nodeItem.setSelected(false)
             })
         }
-    }, [selectedKeys, apiRef.current, rowSelection, getRowNodeId])
+    }, [selectedKeys, apiRef.current, rowSelection, getRowNodeId, manageData])
     // 处理selection-end
     //columns
     const defaultSelection = !isEmpty(gantSelection) && showDefalutCheckbox
     const columns = useMemo<ColDef[] | ColGroupDef[]>(() => {
         return mapColumns<T>(columnDefs, editable, size, getRowNodeId,
-            
-            defaultSelection, defaultSelectionCol, rowSelection, dataManage.cellEvents, isServerSideGroup,serverDataRequest)
+
+            defaultSelection, defaultSelectionCol, rowSelection, dataManage.cellEvents, isServerSideGroup, serverDataRequest)
     }, [columnDefs, editable, rowSelection, size, getRowNodeId, defaultSelectionCol,
         isServerSideGroup,
-        defaultSelection, rowSelection,serverDataRequest])
+        defaultSelection, rowSelection, serverDataRequest])
     //columns-end
     const cellValueChanged = useCallback(
         (changed) => {
@@ -260,7 +260,6 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                                 onGridReady={onGridReady}
                                 undoRedoCellEditing
                                 enableFillHandle
-
                                 headerHeight={24}
                                 floatingFiltersHeight={20}
                                 getDataPath={getDataPath}

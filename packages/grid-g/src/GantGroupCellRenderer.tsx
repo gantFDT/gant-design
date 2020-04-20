@@ -15,7 +15,7 @@ export default class GantGroupCellRenderer extends Component<GantGroupCellRender
 		this.state = {
 			expanded
 		}
-
+		console.log("GantGroupCellRenderer")
 	}
 	onExpend = (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
 		const { node, isServerSideGroup, serverDataRequest, data: { treeDataPath }, api } = this.props;
