@@ -2,13 +2,12 @@ import React, { forwardRef, useImperativeHandle, useState, useRef, useCallback, 
 import classnames from 'classnames';
 import { EditStatus } from '@data-cell'
 import { trackEditValueChange, } from './utils'
-import { Size } from './interface'
 const defalutProps = {
 	autoFocus: true,
 	edit: EditStatus.EDIT,
 }
 export default (WrapperComponent) => forwardRef(function GridEidtColumn(props: any, ref: any) {
-	const { value, stopEditing, api, data, colDef: { field }, size = Size.small, props: fieldProps, changeFormatter, rowkey, rowIndex } = props;
+	const { value, stopEditing, api, data, colDef: { field }, props: fieldProps, changeFormatter, rowkey, rowIndex, context: { size } } = props;
 	const [cacheValue, setCacheValue] = useState(value);
 	const inputRef: any = useRef()
 	const onChange = useCallback((val) => {

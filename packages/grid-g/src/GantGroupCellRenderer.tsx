@@ -2,8 +2,6 @@ import React, { Component } from 'react'
 import classnames from 'classnames'
 import { ICellRendererParams, RowNode } from 'ag-grid-community'
 interface GantGroupCellRendererProps extends ICellRendererParams {
-	isServerSideGroup: (data: any) => boolean,
-	serverDataRequest: (params: any, groupKeys: any, successCallback: any) => void
 }
 interface GantGroupCellRendererState {
 	expanded: boolean
@@ -15,10 +13,9 @@ export default class GantGroupCellRenderer extends Component<GantGroupCellRender
 		this.state = {
 			expanded
 		}
-		console.log("GantGroupCellRenderer")
 	}
 	onExpend = (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
-		const { node, isServerSideGroup, serverDataRequest, data: { treeDataPath }, api } = this.props;
+		const { node, context: { serverDataRequest }, data: { treeDataPath }, api } = this.props;
 		event.stopPropagation();
 		if (node.childrenAfterFilter.length > 0) {
 			return node.setExpanded(true)
@@ -47,7 +44,7 @@ export default class GantGroupCellRenderer extends Component<GantGroupCellRender
 	}
 	render() {
 		const { expanded = false } = this.state
-		const { value, node: { childrenAfterFilter, level }, data, isServerSideGroup } = this.props;
+		const { value, node: { childrenAfterFilter, level }, data, context: { isServerSideGroup } } = this.props;
 		const hasChildren = childrenAfterFilter.length > 0 || (isServerSideGroup && isServerSideGroup(data))
 		return <span className={classnames('ag-cell-wrapper', ' ag-row-group', ` ag-row-group-indent-${level + 1}`)}>
 			{

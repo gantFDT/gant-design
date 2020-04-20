@@ -52,7 +52,7 @@ export const defaultProps = {
     sortable: true,
     treeDataChildrenName: "children"
 }
-
+let gobalEditable: any;
 export const defaultRowSelection: RowSelection = {
     type: "multiple",
     // checkboxIndex: 0,
@@ -91,6 +91,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         serverGroupExpend,
         groupDefaultExpanded,
         defaultColDef,
+        context,
         ...orignProps
     } = props
 
@@ -122,7 +123,6 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         const manager = new DataManage<T>()
         manager.removeAllListeners()
         manager.on("update", (list) => {
-            console.log("update-->dataSource")
             setManageData(list)
         })
         manager.getRowNodeId = getRowNodeId
@@ -135,17 +135,6 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         dataManage.init(initDataSource)
     }, [initDataSource])
     /**fix: 解决保存时候标记状态无法清楚的问题 */
-    useEffect(() => {
-        console.log("2222", 333)
-        // apiRef.current && apiRef.current.refreshCells({ force: true });
-    }, [manageData])
-
-    /**出口数据，用于grid显示 */
-    // useEffect(() => {
-    //     if (editable) {
-    //         dataManage.edit()
-    //     }
-    // }, [editable])
 
     // 分页事件
     const computedPagination = usePagination(pagination)
@@ -211,6 +200,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         typeof onSelect === "function" && onSelect(keys, rows);
     }, [onSelect, getRowNodeId])
     // 处理selection- 双向绑定selectKeys
+    gobalEditable = editable
     useEffect(() => {
         if (selectedKeys && apiRef.current) {
             const gridSelectedKeys = apiRef.current.getSelectedNodes();
@@ -228,12 +218,9 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     //columns
     const defaultSelection = !isEmpty(gantSelection) && showDefalutCheckbox
     const columns = useMemo<ColDef[] | ColGroupDef[]>(() => {
-        return mapColumns<T>(columnDefs, editable, size, getRowNodeId,
-
-            defaultSelection, defaultSelectionCol, rowSelection, dataManage.cellEvents, isServerSideGroup, serverDataRequest)
-    }, [columnDefs, editable, rowSelection, size, getRowNodeId, defaultSelectionCol,
-        isServerSideGroup,
-        defaultSelection, rowSelection, serverDataRequest])
+        return mapColumns<T>(columnDefs, getRowNodeId,
+            defaultSelection, defaultSelectionCol, rowSelection, dataManage.cellEvents)
+    }, [columnDefs, getRowNodeId])
     //columns-end
     const cellValueChanged = useCallback(
         (changed) => {
@@ -265,16 +252,26 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                                 getDataPath={getDataPath}
                                 rowHeight={size == "small" ? 24 : 32}
                                 singleClickEdit
+                                context={{
+                                    golbalEditable: editable,
+                                    serverDataRequest,
+                                    isServerSideGroup,
+                                    size,
+                                    ...context,
+
+
+                                }}
                                 {...gridPartProps}
                                 {...selection}
                                 {...orignProps}
+
                                 defaultColDef={{
                                     resizable,
                                     sortable,
                                     filter,
                                     minWidth: 30,
                                     ...defaultColDef
-                                }}
+                                } as any}
                                 suppressRowDrag
                                 onCellValueChanged={cellValueChanged}
                                 deltaRowDataMode

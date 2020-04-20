@@ -70,7 +70,7 @@ const TreeGrid = () => {
             enableRowGroup: true,
             editConfig: {
                 component: Input,
-                editable: true,
+                editable: ()=>true
             }
         },
         {
@@ -79,7 +79,7 @@ const TreeGrid = () => {
             width: 400,
             editConfig: {
                 component: Input,
-                editable: true
+                editable: ()=>true
             }
         },
     ])
