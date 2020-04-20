@@ -1,14 +1,14 @@
 import { ColumnApi, GridApi, RowNode, RowNodeTransaction, ColDef } from 'ag-grid-community';
 import { List, fromJS, Map } from 'immutable'
 import { EventEmitter } from 'events'
-import { cloneDeep } from 'lodash'
+import { cloneDeep, get } from 'lodash'
 
 
 import History from './history'
 import ListProxy from './listproxy'
 import { findChildren, removeDeepItem, getPureRecord, getPureList, getIndexPath } from './utils'
 import { Record, DataActions, RemoveCallBack, Move } from '../interface'
-import { isnumber, isbool, isDeleted } from '../utils'
+import { isnumber, isbool, isDeleted, trackEditValueChange } from '../utils'
 
 interface RemoveOptions {
     removeChildren: boolean,
@@ -258,6 +258,13 @@ class DataManage<T extends Record = any> extends EventEmitter {
 
     }
 
+    /**
+     * 根据showLine来执行对对应的操作
+     * @param state 当前state
+     * @param keyPath 节点的keypath
+     * @param id 节点id
+     * @param showLine 是否显示删除线
+     */
     private removeInner<T>(state: List<T>, keyPath: (string | number)[], id: string, showLine: boolean): List<T> {
         const _this = this
         const fullPath = keyPath.flatMap((key, index) => index === 0 ? key : [this.childrenName, key])
@@ -283,10 +290,8 @@ class DataManage<T extends Record = any> extends EventEmitter {
         const listProxy = new ListProxy(this)
         this.cellEvents.emit(field, value, data, listProxy.list)
 
-
         if (listProxy.isChanged) {
-            const newList = getPureList(listProxy.originList)
-            this.history.push(fromJS(newList))
+            this.updateWithListProxy(listProxy)
         } else {
             if (data._rowType === DataActions.add) {
                 this._add = this._add.set(id, getPureRecord(data))
@@ -316,25 +321,74 @@ class DataManage<T extends Record = any> extends EventEmitter {
     mapNodes(cb: (node: any) => void) {
         const proxy = new ListProxy(this)
         proxy.list.forEach(cb)
+        this.updateWithListProxy(proxy)
+    }
+
+    updateWithListProxy(proxy: ListProxy) {
         if (proxy.isChanged) {
             let newList = fromJS(proxy.originList)
             if (proxy.modifyNodes.length) {
+                // 保证与编辑输入框的行为一致
                 newList = proxy.modifyNodes.reduce((state, { keyPath, node }) => {
                     const fullPath = keyPath.flatMap((key, index) => index === 0 ? key : [this.childrenName, key])
-                    return state.setIn(fullPath, node)
+                    return state.setIn(fullPath, fromJS(node))
                 }, newList)
             }
             if (proxy.removedNodes.length) {
-                newList = proxy.removedNodes.reduce((state, { keyPath, id }) => {
-                    // const fullPath = keyPath.flatMap((key, index) => index === 0 ? key : [this.childrenName, key])
-                    return this.removeInner(state, keyPath, id, this.removeShowLine)
-                }, newList)
+                newList = proxy.removedNodes.reduce((state, { keyPath, id }) => this.removeInner(state, keyPath, id, this.removeShowLine), newList)
             }
             this.history.push(newList)
         }
     }
 
-    /**将当前diff推送到history */
+    /**遍历选中的节点 */
+    /**
+     * 
+     * @param cb 对每个节点的回调
+     * @param isSignal 是否只遍历第一个节点
+     */
+    mapSelectedNodes(cb: (node: any) => void, isSignal: boolean = false) {
+        const selected = this.gridApi.getSelectedNodes()
+        console.log(selected)
+        const _this = this
+        if (selected.length) {
+            selected.forEach(node => {
+                const indexPath = getIndexPath(node)
+                const pureRecord = getPureRecord(node.data)
+                const id = node.id
+                const proxy = new Proxy(pureRecord, {
+                    set(target, key, value, receiver) {
+                        const prevValue = get(target, key)
+                        if (key === "isDeleted") {
+                            if (value) {
+                                if (_this._add.has(id)) {
+                                    _this._add = _this._add.delete(id)
+                                }
+                                else if (_this._modify.has(id)) {
+                                    _this._modify = _this._modify.delete(id)
+                                }
+                                _this._removed = _this._removed.set(id, pureRecord)
+                            } else {
+                                _this._removed = _this._removed.delete(id)
+                            }
+                        }
+                        else {
+                            const newData = trackEditValueChange(target, key as string, value, prevValue)
+                            if (Reflect.has(get(newData, "_rowData", {}), key)) {
+                                _this._modify = _this._modify.set(id, pureRecord)
+                            } else {
+                                _this._modify = _this._modify.delete(id)
+                            }
+                        }
+                        return true
+                    }
+                })
+                cb(proxy)
+            })
+        }
+    }
+
+    /**将当前diff推送到history,在每次history.push的时候会执行 */
     pushDiff() {
         this.history.handleDiff({
             add: this._add,
@@ -343,6 +397,7 @@ class DataManage<T extends Record = any> extends EventEmitter {
         })
     }
 
+    /**撤销重做的时候执行 */
     updateDiff() {
         const diff = this.history.currentDiff
         this._add = diff.get("add")

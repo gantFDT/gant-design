@@ -13,7 +13,7 @@ import {
     mapColumns, NonBool, isbool, isstring, isarray, ispromise, isfunc,
     flattenTreeData, usePagination, getSizeClassName, createFakeServer, createServerSideDatasource, isDeleted,
 } from './utils'
-import { Filter, Size, Fixed, GridPropsPartial, RowSelection, Record } from './interface'
+import { Filter, Size, Fixed, GridPropsPartial, RowSelection, Record, DataActions } from './interface'
 import "./style"
 import DataManage from './datamanage'
 import RenderCol from './GirdRenderColumn'
@@ -24,7 +24,6 @@ export { default as DataManage } from './datamanage'
 import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver'
 import en from './locale/en-US'
 import zh from './locale/zh-CN'
-import { DataActions } from '../lib';
 
 LicenseManager.setLicenseKey(key)
 

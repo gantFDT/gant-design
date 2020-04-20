@@ -6,7 +6,7 @@ import { getPureRecord } from './utils'
 import { DataActions } from '../interface'
 import { trackEditValueChange, isDeleted } from '../utils'
 
-class ListProxy<T extends object>{
+class ListProxy {
 
     originList: any[]
 
