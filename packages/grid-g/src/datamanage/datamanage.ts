@@ -218,8 +218,13 @@ class DataManage<T extends Record = any> extends EventEmitter {
             }
             return Promise.reject()
         }).then((deleteRows) => {
-
-            const keyPathsArray = deleteRows.map(node => {
+            let rows = deleteRows
+            if (showLine) {
+                // 在showLine模式下可能出现的问题,过滤掉之前删除过的数据
+                rows = deleteRows.filter(({ data: { _rowType, isDeleted } }) => !isDeleted) // || _rowType !== DataActions.remove)
+            }
+            if (!rows.length) return []
+            const keyPathsArray = rows.map(node => {
                 const { data, id } = node
                 /**处理diff数据 */
                 if (data._rowType === DataActions.add) {

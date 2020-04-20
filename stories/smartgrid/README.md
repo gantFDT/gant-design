@@ -1,11 +1,11 @@
 ## API
 
-#### 1. SmartTable
+#### 1. smartGrid
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | tableKey | 本地存储配置的键名，必填。 | string | - |
 | title | 表格标题 | string &#124; ReactNode | - |
-| schema | 表格模型的配置描述，具体项见下表 | SmartTableSchema[] | - |
+| schema | 表格模型的配置描述，具体项见下表 | smartGridSchema[] | - |
 | viewConfig | 当前配置 | viewConfig | - |
 | bindKeys | 绑定的快捷键配置 | {[事件名]: 事件句柄} | - |
 | onViewChange | 当前配置改变的回调函数，初始化以及改变的时候都会调用 | Function() | - |
@@ -72,7 +72,7 @@ ColumnField:
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | viewConfig | 当前配置 | ViewConfig | - |
-| schema | 表格模型的配置描述，具体项见下表 | SmartTableSchema[] | - |
+| schema | 表格模型的配置描述，具体项见下表 | smartGridSchema[] | - |
 | uiFields | 可配置字段 | string[] | ['wrap', 'isZebra', 'bordered', 'clickable', 'footerDirection', 'heightMode'] |
 | onChange | 改变配置回调 | Function(viewConfig: ViewConfig) {} | - |
 

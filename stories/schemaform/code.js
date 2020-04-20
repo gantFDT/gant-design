@@ -56,7 +56,7 @@ const schema = {
       },
       key_6: {
           title: "语言",
-          type: "string",
+          type: "object",
           componentType: "InputLanguage",
           props:{
             placeholder:"输入提示"
@@ -219,7 +219,7 @@ const schema = {
       },
       key_6: {
           title: "语言",
-          type: "string",
+          type: "object",
           componentType: "InputLanguage",
           props:{
             placeholder:"输入提示"
@@ -440,7 +440,7 @@ const schema = {
       },
       key_6: {
           title: "语言",
-          type: "string",
+          type: "object",
           componentType: "InputLanguage",
           props:{
             placeholder:"输入提示"
@@ -630,7 +630,7 @@ const schema = {
       },
       key_6: {
           title: "语言",
-          type: "string",
+          type: "object",
           componentType: "InputLanguage",
           props:{
             placeholder:"输入提示"
@@ -875,7 +875,7 @@ const schema = {
       },
       key_6: {
           title: "语言",
-          type: "string",
+          type: "object",
           componentType: "InputLanguage",
           props:{
             placeholder:"输入提示"
@@ -1045,7 +1045,7 @@ const schema = {
       },
       key_6: {
           title: "语言",
-          type: "string",
+          type: "object",
           componentType: "InputLanguage",
           props:{
             placeholder:"输入提示"
@@ -1225,7 +1225,7 @@ const schema = {
       },
       key_6: {
           title: "语言",
-          type: "string",
+          type: "object",
           componentType: "InputLanguage",
           props:{
             placeholder:"输入提示"
@@ -1403,7 +1403,7 @@ const schema = {
       },
       key_6: {
           title: "语言",
-          type: "string",
+          type: "object",
           componentType: "InputLanguage",
           props:{
             placeholder:"输入提示"
@@ -1570,7 +1570,7 @@ const schema = {
       },
       key_6: {
           title: "语言",
-          type: "string",
+          type: "object",
           componentType: "InputLanguage",
           props:{
             placeholder:"输入提示"
