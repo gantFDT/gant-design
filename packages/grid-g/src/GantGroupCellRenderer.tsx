@@ -20,7 +20,7 @@ export default class GantGroupCellRenderer extends Component<GantGroupCellRender
 		if (node.childrenAfterFilter.length > 0) {
 			return node.setExpanded(true)
 		}
-		api.showNoRowsOverlay()
+		api.showLoadingOverlay()
 		serverDataRequest(this.props, treeDataPath, () => {
 			node.setExpanded(true);
 			api.hideOverlay()
