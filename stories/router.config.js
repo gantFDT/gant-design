@@ -91,6 +91,11 @@ export default [
         package: "grid-g"
       },
       {
+        name: 'SmartGrid',
+        nameZh: '智能表格',
+        package: 'smart-grid-g',
+      },
+      {
         name: 'Table',
         nameZh: '表格',
         package: 'table-g',
@@ -99,12 +104,7 @@ export default [
         name: 'SmartTable',
         nameZh: '智能表格',
         package: 'smart-table-g',
-      },
-      {
-        name: 'SmartGrid',
-        nameZh: '智能表格',
-        package: 'smart-grid-g',
-      },
+      }
     ],
   },
   {

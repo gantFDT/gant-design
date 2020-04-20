@@ -18,19 +18,19 @@ function itemisgroup(item, children): item is ColGroupDef {
 }
 
 function ColEditableFn(fn: ColumnEdiatble<any>): IsColumnFunc | boolean {
-    if (typeof fn === 'function') return ({ data }) => fn(data)
-    return fn
+    return ({ data, context: { golbalEditable } }) => {
+        if (typeof fn === 'function') return golbalEditable ? fn(data) : false
+        return golbalEditable ? fn : false
+    }
 }
 
-export const mapColumns = <T>(columns: Columns<T>[], editable: boolean,
-    size: Size, getRowNodeId: any, defaultSelection: boolean, defaultSelectionCol: ColDef,
-    rowSelection, cellEvents: EventEmitter,
-    isServerSideGroup: (data: any) => boolean, serverDataRequest: (params: any, groupKeys: any, successCallback: any) => any): Col[] => {
+export const mapColumns = <T>(columns: Columns<T>[], getRowNodeId: any, defaultSelection: boolean, defaultSelectionCol: ColDef,
+    rowSelection, cellEvents: EventEmitter): Col[] => {
 
     // 移除所有已添加事件
     cellEvents.removeAllListeners()
     function getColumnDefs(columns: Columns<T>[]) {
-        return columns.map(({ title: headerName, fieldName: field, children, render, editConfig, cellRenderer, fixed, cellRendererParams, ...item }, index) => {
+        return columns.map(({ title: headerName, fieldName: field, children, render, editConfig, fixed, cellRendererParams, ...item }, index) => {
 
             const ColEditable = typeof editConfig !== 'undefined';
             const colDef = {
@@ -38,8 +38,7 @@ export const mapColumns = <T>(columns: Columns<T>[], editable: boolean,
                 field,
                 cellRendererParams: {
                     render,
-                    isServerSideGroup,
-                    serverDataRequest,
+
                     ...cellRendererParams,
                 },
                 cellClass: ["gant-grid-cell"],
@@ -51,7 +50,7 @@ export const mapColumns = <T>(columns: Columns<T>[], editable: boolean,
                     "gant-grid-cell-add": params => get(params, "data._rowType") === DataActions.add,
                     // "gant-grid-cell-delete": params => get(params, "data._rowType") === DataActions.remove,
                 },
-                cellRenderer: cellRenderer ? cellRenderer : "gantRenderCol",
+                cellRenderer: "gantRenderCol",
                 ...item,
 
             } as ColDef
@@ -61,13 +60,12 @@ export const mapColumns = <T>(columns: Columns<T>[], editable: boolean,
                 if (ColEditable) {
                     const { props, changeFormatter, component, onCellChange } = editConfig
                     colDef.cellEditorParams = {
-                        size,
                         props,
                         changeFormatter,
                         rowkey: getRowNodeId
                     }
                     colDef.cellEditorFramework = EditorCol(component)
-                    colDef.editable = editable ? ColEditableFn(editConfig.editable) : false
+                    colDef.editable = ColEditableFn(editConfig.editable)
                     if (onCellChange && isfunc(onCellChange)) {
                         cellEvents.on(field, onCellChange)
                     }
