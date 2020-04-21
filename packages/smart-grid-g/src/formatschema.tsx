@@ -55,7 +55,8 @@ function formatColumn<R>(schema: CustomColumnProps<R>) {
           })
           fakeColumn.editConfig = {
             component: Cmp,
-            editable: true
+            editable: true,
+            ...fakeColumn.editConfig
           }
         }else{
           try {

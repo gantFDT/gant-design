@@ -129,11 +129,10 @@ export const mapColumns = <T>(
     ...defaultSelectionCol,
   };
   const serialNumberCol: ColDef = {
-    width: 60,
-    resizable: false,
+    width: 50,
     sortable: false,
     pinned: true,
-    minWidth: 660,
+    minWidth: 50,
     headerName: '序号',
     suppressMenu: true,
     lockPosition: true,
@@ -355,5 +354,5 @@ export function createServerSideDatasource(
 }
 
 export function isDeleted(data) {
-  return get(data, 'data.isDeleted') || get(data, 'data._rowType') === DataActions.remove;
+    return get(data, "isDeleted") || get(data, "_rowType") === DataActions.remove
 }
