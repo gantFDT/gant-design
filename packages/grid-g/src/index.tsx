@@ -38,8 +38,17 @@ import {
   getSizeClassName,
   createFakeServer,
   createServerSideDatasource,
+  isDeleted,
 } from './utils';
-import { Filter, Size, Fixed, GridPropsPartial, RowSelection, Record } from './interface';
+import {
+  Filter,
+  Size,
+  Fixed,
+  GridPropsPartial,
+  RowSelection,
+  Record,
+  DataActions,
+} from './interface';
 import './style';
 import DataManage from './datamanage';
 import RenderCol from './GirdRenderColumn';
@@ -50,10 +59,11 @@ import { getAllComponentsMaps } from './maps';
 import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
 import en from './locale/en-US';
 import zh from './locale/zh-CN';
-
-LicenseManager.setLicenseKey(key);
 export { setComponentsMaps, setFrameworkComponentsMaps } from './maps';
+LicenseManager.setLicenseKey(key);
+
 export { default as GantPromiseCellRender } from './GantPromiseCellRender';
+
 const langs = {
   en: en,
   'zh-cn': zh,
@@ -78,7 +88,10 @@ export const defaultProps = {
   height: 400,
   sortable: true,
   treeDataChildrenName: 'children',
+  /** 默认的删除行为 */
+  removeShowLine: true,
 };
+let gobalEditable: any;
 export const defaultRowSelection: RowSelection = {
   type: 'multiple',
   // checkboxIndex: 0,
@@ -118,11 +131,10 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     defaultColDef,
     context,
     components,
+    removeShowLine,
     ...orignProps
   } = props;
-
   const apiRef = useRef<GridApi>();
-
   const columnsRef = useRef<ColumnApi>();
 
   /**编辑时数据 */
@@ -163,6 +175,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     manager.getRowNodeId = getRowNodeId;
     manager.childrenName = treeDataChildrenName;
     manager.getServerSideGroupKey = getServerSideGroupKey ? getServerSideGroupKey : getRowNodeId;
+    manager.removeShowLine = removeShowLine;
     return manager;
   }, []);
 
@@ -343,15 +356,13 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                   {...gridPartProps}
                   {...selection}
                   {...orignProps}
-                  defaultColDef={
-                    {
-                      resizable,
-                      sortable,
-                      filter,
-                      minWidth: 30,
-                      ...defaultColDef,
-                    } as any
-                  }
+                  defaultColDef={{
+                    resizable,
+                    sortable,
+                    filter,
+                    minWidth: 30,
+                    ...defaultColDef,
+                  }}
                   suppressRowDrag
                   onCellValueChanged={cellValueChanged}
                   deltaRowDataMode

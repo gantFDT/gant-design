@@ -46,7 +46,7 @@ export const mapColumns = <T>(columns: Columns<T>[], getRowNodeId: any, defaultS
                         return _rowType === DataActions.modify && Reflect.has(_rowData, field) && value != get(_rowData, field)
                     },
                     "gant-grid-cell-add": params => get(params, "data._rowType") === DataActions.add,
-                    "gant-grid-cell-delete": params => get(params, "data._rowType") === DataActions.remove,
+                    // "gant-grid-cell-delete": params => get(params, "data._rowType") === DataActions.remove,
                 },
                 cellRenderer: render ? "gantRenderCol" : undefined,
                 ...item,
@@ -294,28 +294,6 @@ export function createServerSideDatasource(fakeServer, asyncCallback, cb?: (para
     return new ServerSideDatasource(fakeServer);
 }
 
-export var __extends$e =
-  (function () {
-    var extendStatics = function (d, b) {
-      extendStatics =
-        Object.setPrototypeOf ||
-        ({__proto__: []} instanceof Array &&
-          function (d, b) {
-            d.__proto__ = b;
-          }) ||
-        function (d, b) {
-          for (var p in b)
-            if (b.hasOwnProperty (p)) d[p] = b[p];
-        };
-      return extendStatics (d, b);
-    };
-    return function (d, b) {
-      extendStatics (d, b);
-      function __ () {
-        this.constructor = d;
-      }
-      d.prototype = b === null
-        ? Object.create (b)
-        : ((__.prototype = b.prototype), new __ ());
-    };
-  }) ();
+export function isDeleted(data) {
+    return get(data, "data.isDeleted") || get(data, "data._rowType") === DataActions.remove
+}
