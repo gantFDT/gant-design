@@ -99,7 +99,7 @@ function EditorTable() {
   const [address] = useState([{ value: '1', label: '地址1' }, { value: '2', label: '地址2' }])
   const getKey = useCallback(() => Math.random().toString('16').slice(2), [])
 
-  const [dataSource, setDataSource] = useState(() => getEditList(21), [])
+  const [dataSource, setDataSource] = useState(() => getEditList(30), [])
   const [keys, setKeys] = useState();
 
   const editorColumns = [
@@ -663,11 +663,11 @@ const config = {
 		<b>3、级联选择</b><br/>`
   ),
   children: [
-    // {
-    //   title: '可缩放列',
-    //   describe: '通过columns指定显示的列，通过dataSource显示数据，缩放列的功能默认开启，通过设置resizable来修改配置',
-    //   cmp: BasicTable
-    // },
+    {
+      title: '可缩放列',
+      describe: '通过columns指定显示的列，通过dataSource显示数据，缩放列的功能默认开启，通过设置resizable来修改配置',
+      cmp: BasicTable
+    },
     {
       title: '可编辑表格',
       describe: `单元格编辑功能，
@@ -678,55 +678,55 @@ const config = {
       除了data-cell-g中的组件，如何实现自定义的用于表格编辑的组件请参看NOTES`,
       cmp: EditorTable
     },
+    {
+      title: '虚拟滚动',
+      describe: '虚拟滚动模式下，并不会直接渲染所有数据。通过virtualScroll开启，必须指定scroll.y控制高度。也可以仅设置virtualScroll为true，使用内置的参数。一般情况下也不需要修改',
+      cmp: VirtualScrollTable
+    },
+    {
+      title: '嵌套表头',
+      describe: '',
+      cmp: NestTable
+    },
+    {
+      title: '滚动加载',
+      describe: 'wheel指定滚动回调',
+      cmp: ScrollTable
+    },
+    {
+      title: '拖动排序',
+      describe: '',
+      cmp: DragTable
+    },
     // {
-    //   title: '虚拟滚动',
-    //   describe: '虚拟滚动模式下，并不会直接渲染所有数据。通过virtualScroll开启，必须指定scroll.y控制高度。也可以仅设置virtualScroll为true，使用内置的参数。一般情况下也不需要修改',
-    //   cmp: VirtualScrollTable
+    //   title: '宽表格',
+    //   describe: '在小屏幕上出现滚动条,设置fixed的列必须设置宽度，试试缩小屏幕。同时，因为有固定列，所以wrap使文本折行的属性不能生效',
+    //   cmp: WideTable
     // },
-    // {
-    //   title: '嵌套表头',
-    //   describe: '',
-    //   cmp: NestTable
-    // },
-    // {
-    //   title: '滚动加载',
-    //   describe: 'wheel指定滚动回调',
-    //   cmp: ScrollTable
-    // },
-    // {
-    //   title: '拖动排序',
-    //   describe: '',
-    //   cmp: DragTable
-    // },
-    // // {
-    // //   title: '宽表格',
-    // //   describe: '在小屏幕上出现滚动条,设置fixed的列必须设置宽度，试试缩小屏幕。同时，因为有固定列，所以wrap使文本折行的属性不能生效',
-    // //   cmp: WideTable
-    // // },
-    // {
-    //   title: '树形表格、级联选择',
-    //   describe: '树形表格,级联选择, 与antd组件相比，多选情况下onSelect第一个参数修改为了数组。datasource中有children属性自动开启树形结构, rowSelection为对象开启选择，增强选择的时候判断是否有子节点并一起选中,clickable: false用于关闭行选功能',
-    //   cmp: TreeTable
-    // },
-    // {
-    //   title: '带分页组件的table',
-    //   describe: 'footerDirection=row-reverse控制分页和tail的顺序',
-    //   cmp: PaginationTable
-    // },
-    // {
-    //   title: 'table明亮模式',
-    //   describe: '设置light,spacing设置行间距,cellPadding设置单元格内边距',
-    //   cmp: () => (
-    //     <div style={{ padding: 10, backgroundColor: 'rgba(230,230,230,.5)' }}>
-    //       <LightTable></LightTable>
-    //     </div>
-    //   )
-    // },
-    // {
-    //   title: '无数据Table',
-    //   describe: 'emptyDescription可自定义无数据时的文案',
-    //   cmp: EmptyTable
-    // },
+    {
+      title: '树形表格、级联选择',
+      describe: '树形表格,级联选择, 与antd组件相比，多选情况下onSelect第一个参数修改为了数组。datasource中有children属性自动开启树形结构, rowSelection为对象开启选择，增强选择的时候判断是否有子节点并一起选中,clickable: false用于关闭行选功能',
+      cmp: TreeTable
+    },
+    {
+      title: '带分页组件的table',
+      describe: 'footerDirection=row-reverse控制分页和tail的顺序',
+      cmp: PaginationTable
+    },
+    {
+      title: 'table明亮模式',
+      describe: '设置light,spacing设置行间距,cellPadding设置单元格内边距',
+      cmp: () => (
+        <div style={{ padding: 10, backgroundColor: 'rgba(230,230,230,.5)' }}>
+          <LightTable></LightTable>
+        </div>
+      )
+    },
+    {
+      title: '无数据Table',
+      describe: 'emptyDescription可自定义无数据时的文案',
+      cmp: EmptyTable
+    },
   ]
 };
 export default () => <CodeDecorator config={config} />

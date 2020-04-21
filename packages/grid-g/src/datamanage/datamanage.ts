@@ -349,85 +349,29 @@ class DataManage<T extends Record = any> extends EventEmitter {
      */
     mapSelectedNodes(cb: (node: any) => void, isSignal: boolean = false) {
         const selected = this.gridApi.getSelectedNodes()
-        console.log(selected)
         const _this = this
         if (selected.length) {
             const list = selected.map(node => {
                 const indexPath = getIndexPath(node)
-                const pureRecord = getPureRecord(node.data)
-                const id = node.id
-                // 控制操作行为
-                let action = null
-                // 修改之后的新值、保证脏标识能正确显示隐藏
-                let newData = null
                 const dataProxy = new DataProxy(node.data, this)
-                // const proxy = new Proxy(node.data, {
-                //     set(target, key, value, receiver) {
-                //         const prevValue = get(target, key)
-                //         const isChanged = value != prevValue
-                //         if (isChanged) {
-                //             if (isDeleted(target) && key !== 'isDeleted') {
-                //                 throw new Error('不允许修改一个被删除的节点')
-                //             }
-
-                //             Reflect.set(target, key, value, receiver)
-                //             if (target._rowType === DataActions.add) {
-                //                 if (key === "isDeleted" && value) {
-                //                     _this._add = _this._add.delete(id)
-                //                     action = DataActions.remove
-                //                 } else {
-                //                     _this._add = _this._add.set(id, target)
-                //                     // modify行为下，需要设置newData
-                //                     action = DataActions.modify
-                //                     newData = target
-                //                 }
-                //             }
-                //             else if (key === "isDeleted") {
-                //                 if (value) {
-                //                     if (_this._add.has(id)) {
-                //                         _this._add = _this._add.delete(id)
-                //                     }
-                //                     else if (_this._modify.has(id)) {
-                //                         _this._modify = _this._modify.delete(id)
-                //                     }
-                //                     console.log(target)
-                //                     _this._removed = _this._removed.set(id, target)
-                //                     action = DataActions.remove
-                //                 } else {
-                //                     _this._removed = _this._removed.delete(id)
-                //                 }
-                //             }
-                //             else {
-                //                 newData = trackEditValueChange(target, key as string, value, prevValue)
-                //                 if (Reflect.has(get(newData, "_rowData", {}), key)) {
-                //                     _this._modify = _this._modify.set(id, target)
-                //                 } else {
-                //                     _this._modify = _this._modify.delete(id)
-                //                 }
-                //                 action = DataActions.modify
-                //             }
-                //         }
-
-                //         return true
-                //     }
-                // })
                 cb(dataProxy.proxy)
-                console.log(dataProxy)
-                // return { proxy, action, indexPath, id, target: pureRecord, newData }
+                return {
+                    ...dataProxy,
+                    indexPath
+                }
             })
 
-            // const newState = list.reduce((state, { proxy, action, target, indexPath, id, newData }) => {
-            //     if (action === DataActions.remove) return this.removeInner(state, indexPath, id)
-            //     else if (action === DataActions.modify) {
-            //         const fullPath = this.getFlatKey(indexPath)
-            //         return state.updateIn(fullPath, record => {
-            //             return fromJS(newData)
-            //         })
-            //     }
-            //     return state
-            // }, this.state)
-            // console.log(newState)
-            // this.history.push(newState)
+            const newState = list.reduce((state, { action, indexPath, id, newData }) => {
+                if (action === DataActions.remove) return this.removeInner(state, indexPath, id)
+                else if (action === DataActions.modify) {
+                    const fullPath = this.getFlatKey(indexPath)
+                    return state.updateIn(fullPath, record => {
+                        return fromJS(newData)
+                    })
+                }
+                return state
+            }, this.state)
+            this.history.push(newState)
         }
     }
 
