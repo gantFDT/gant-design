@@ -70,7 +70,7 @@ export const getPureRecord = function getPureRecord<T>(data: T): T {
  */
 export const getPureList = function getPureList<T extends Record>(list: T[], save: boolean = false): T[] {
     if (!list.length) return []
-    let dataList = save ? list.filter(node => !isDeleted({ data: node })) : list
+    let dataList = save ? list.filter(node => !isDeleted(node)) : list
     const cloneList = dataList.map((item: T) => {
         const record = getPureRecord<T>(item)
         if (item.children && item.children.length) {
