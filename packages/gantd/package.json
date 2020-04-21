@@ -138,6 +138,7 @@
     "recompose": "^0.30.0",
     "schema-form-g": "^0.1.17",
     "smart-table-g": "^0.1.19",
+    "smart-grid-g": "^0.1.17",
     "submenu-g": "^0.1.8",
     "table-g": "^0.1.18",
     "util-g": "^0.1.2"
