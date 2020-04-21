@@ -361,6 +361,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                     sortable,
                     filter,
                     minWidth: 30,
+                    
                     ...defaultColDef,
                   }}
                   suppressRowDrag

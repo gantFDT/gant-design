@@ -59,7 +59,7 @@ export const mapColumns = <T>(columns: Columns<T>[], getRowNodeId: any, defaultS
                     colDef.cellEditorParams = {
                         props,
                         changeFormatter,
-                        rowkey: getRowNodeId
+                        rowkey: getRowNodeId,
                     }
                     colDef.cellEditorFramework = EditorCol(component)
                     colDef.editable = ColEditableFn(editConfig.editable)
