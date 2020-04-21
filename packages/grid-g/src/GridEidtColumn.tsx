@@ -8,7 +8,6 @@ const defalutProps = {
 }
 export default (WrapperComponent) => forwardRef(function GridEidtColumn(props: any, ref: any) {
 	const { value, stopEditing, api, data, colDef: { field }, props: fieldProps, changeFormatter, rowkey, rowIndex, context: { size } } = props;
-	console.log("GridEidtColumn",props)
 	const [cacheValue, setCacheValue] = useState(value);
 	const inputRef: any = useRef()
 	const onChange = useCallback((val) => {
