@@ -50,7 +50,6 @@ import { getAllComponentsMaps } from './maps';
 import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
 import en from './locale/en-US';
 import zh from './locale/zh-CN';
-const { componentsMaps, frameworkComponentsMaps } = getAllComponentsMaps();
 
 LicenseManager.setLicenseKey(key);
 export { setComponentsMaps, setFrameworkComponentsMaps } from './maps';
@@ -199,7 +198,9 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     },
     [serverGroupExpend],
   );
-
+  const { componentsMaps, frameworkComponentsMaps } = useMemo(() => {
+    return getAllComponentsMaps();
+  }, []);
   useEffect(() => {
     if (!serverModel) return;
     const fakeServer = createFakeServer(
