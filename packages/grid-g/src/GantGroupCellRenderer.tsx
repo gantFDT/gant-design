@@ -13,10 +13,10 @@ export default class GantGroupCellRenderer extends Component<
   constructor(props) {
     super(props);
     const {
-      node: { expanded },
+      node: { expanded, isExpandable },
     } = this.props;
     this.state = {
-      expanded,
+      expanded: expanded && isExpandable(),
     };
   }
   onExpend = (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
@@ -67,6 +67,7 @@ export default class GantGroupCellRenderer extends Component<
     } = this.props;
     const hasChildren =
       childrenAfterFilter.length > 0 || (isServerSideGroup && isServerSideGroup(data));
+
     const showValue = valueFormatted ? this.props.formatValue(this.props) : value;
     return (
       <span

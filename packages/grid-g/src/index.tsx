@@ -132,6 +132,9 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     context,
     components,
     removeShowLine,
+    serialNumber,
+    onRowGroupOpened,
+    rowClassRules,
     ...orignProps
   } = props;
   const apiRef = useRef<GridApi>();
@@ -297,6 +300,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
       defaultSelection,
       defaultSelectionCol,
       rowSelection,
+      serialNumber,
       dataManage.cellEvents,
     );
   }, [columnDefs, getRowNodeId]);
@@ -304,6 +308,37 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
   const cellValueChanged = useCallback(changed => {
     dataManage.modify(changed);
   }, []);
+  const refreshRowBufferCells = useCallback(
+    rowIndex => {
+      let rowBuffer = orignProps.rowBuffer == 0 ? 100 : orignProps.rowBuffer;
+      rowBuffer = rowBuffer ? rowBuffer : 10;
+      const rowNodes: any[] = [];
+      for (let index = 0; index < 10; index++) {
+        const indexRowNode = apiRef.current.getDisplayedRowAtIndex(index + rowIndex);
+        if (indexRowNode) rowNodes.push(indexRowNode);
+      }
+      apiRef.current.refreshCells({
+        rowNodes,
+        force: true,
+        columns:["g-index"]
+      });
+    },
+    [orignProps.rowBuffer, apiRef.current],
+  );
+  const onGantRowGroupOpened = useCallback(
+    params => {
+      if (apiRef.current && serialNumber) {
+        const {
+          rowIndex,
+          node: { expanded },
+        } = params;
+        if (!expanded) return;
+        refreshRowBufferCells(rowIndex);
+      }
+      onRowGroupOpened && onRowGroupOpened(params);
+    },
+    [onRowGroupOpened, serialNumber],
+  );
   return (
     <LocaleReceiver>
       {(local, localeCode = 'zh-cn') => {
@@ -353,6 +388,8 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                     size,
                     ...context,
                   }}
+                  suppressAnimationFrame
+                  suppressRowDrag
                   {...gridPartProps}
                   {...selection}
                   {...orignProps}
@@ -361,17 +398,18 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                     sortable,
                     filter,
                     minWidth: 30,
-                    
                     ...defaultColDef,
                   }}
-                  suppressRowDrag
                   onCellValueChanged={cellValueChanged}
                   deltaRowDataMode
                   groupDefaultExpanded={groupDefaultExpanded}
+                  onRowGroupOpened={onGantRowGroupOpened}
                   localeText={locale}
                   rowClassRules={{
                     'gant-grid-row-isdeleted': params => get(params, 'data.isDeleted'),
+                    ...rowClassRules,
                   }}
+                  
                 />
               </div>
               {/* 分页高度为30 */}

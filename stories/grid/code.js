@@ -273,6 +273,7 @@ const TreeGrid = () => {
                 editable={editable}
                 dataSource={dataSource}
                 onReady={onReady}
+                serialNumber
                 rowSelection={{
                     type: 'multiple',
                     selectedKeys,
