@@ -295,5 +295,5 @@ export function createServerSideDatasource(fakeServer, asyncCallback, cb?: (para
 }
 
 export function isDeleted(data) {
-    return get(data, "data.isDeleted") || get(data, "data._rowType") === DataActions.remove
+    return get(data, "isDeleted") || get(data, "_rowType") === DataActions.remove
 }
