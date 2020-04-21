@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import classnames from 'classnames'
-import { ICellRendererParams, RowNode } from 'ag-grid-community'
+import { ICellRendererParams, IComponent, RowNode, GroupCellRenderer } from 'ag-grid-community'
+
 interface GantGroupCellRendererProps extends ICellRendererParams {
 }
 interface GantGroupCellRendererState {
@@ -13,29 +14,30 @@ export default class GantGroupCellRenderer extends Component<GantGroupCellRender
 		this.state = {
 			expanded
 		}
+		console.log("props", props)
 	}
-	onExpend = (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
-		const { node, context: { serverDataRequest }, data: { treeDataPath }, api } = this.props;
-		event.stopPropagation();
-		if (node.childrenAfterFilter.length > 0) {
-			return node.setExpanded(true)
-		}
-		api.showLoadingOverlay()
-		serverDataRequest(this.props, treeDataPath, () => {
-			node.setExpanded(true);
-			api.hideOverlay()
-		})
+onExpend = (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+	const { node, context: { serverDataRequest }, data: { treeDataPath }, api } = this.props;
+	event.stopPropagation();
+	if (node.childrenAfterFilter.length > 0) {
+		return node.setExpanded(true)
 	}
-	onClose = (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
-		event.stopPropagation();
-		const { node } = this.props;
-		node.setExpanded(false)
+	api.showLoadingOverlay()
+	serverDataRequest(this.props, treeDataPath, () => {
+		node.setExpanded(true);
+		api.hideOverlay()
+	})
+}
+onClose = (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+	event.stopPropagation();
+	const { node } = this.props;
+	node.setExpanded(false)
 
-	}
-	selectionChangedCallback = (params) => {
-		const { node: { expanded } } = params;
-		this.setState({ expanded })
-	}
+}
+selectionChangedCallback = (params) => {
+	const { node: { expanded } } = params;
+	this.setState({ expanded })
+}
 	componentDidMount() {
 		this.props.node.addEventListener(RowNode.EVENT_EXPANDED_CHANGED, this.selectionChangedCallback)
 	}
@@ -62,3 +64,5 @@ export default class GantGroupCellRenderer extends Component<GantGroupCellRender
 		</span >
 	}
 }
+
+

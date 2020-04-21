@@ -31,14 +31,12 @@ export const mapColumns = <T>(columns: Columns<T>[], getRowNodeId: any, defaultS
     cellEvents.removeAllListeners()
     function getColumnDefs(columns: Columns<T>[]) {
         return columns.map(({ title: headerName, fieldName: field, children, render, editConfig, fixed, cellRendererParams, ...item }, index) => {
-
             const ColEditable = typeof editConfig !== 'undefined';
             const colDef = {
                 headerName,
                 field,
                 cellRendererParams: {
                     render,
-
                     ...cellRendererParams,
                 },
                 cellClass: ["gant-grid-cell"],
@@ -50,9 +48,8 @@ export const mapColumns = <T>(columns: Columns<T>[], getRowNodeId: any, defaultS
                     "gant-grid-cell-add": params => get(params, "data._rowType") === DataActions.add,
                     "gant-grid-cell-delete": params => get(params, "data._rowType") === DataActions.remove,
                 },
-                cellRenderer: "gantRenderCol",
+                cellRenderer: render ? "gantRenderCol" : undefined,
                 ...item,
-
             } as ColDef
 
             if (!itemisgroup(colDef, children)) {
@@ -296,3 +293,29 @@ export function createServerSideDatasource(fakeServer, asyncCallback, cb?: (para
     }
     return new ServerSideDatasource(fakeServer);
 }
+
+export var __extends$e =
+  (function () {
+    var extendStatics = function (d, b) {
+      extendStatics =
+        Object.setPrototypeOf ||
+        ({__proto__: []} instanceof Array &&
+          function (d, b) {
+            d.__proto__ = b;
+          }) ||
+        function (d, b) {
+          for (var p in b)
+            if (b.hasOwnProperty (p)) d[p] = b[p];
+        };
+      return extendStatics (d, b);
+    };
+    return function (d, b) {
+      extendStatics (d, b);
+      function __ () {
+        this.constructor = d;
+      }
+      d.prototype = b === null
+        ? Object.create (b)
+        : ((__.prototype = b.prototype), new __ ());
+    };
+  }) ();

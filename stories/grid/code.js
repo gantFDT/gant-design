@@ -71,7 +71,8 @@ const TreeGrid = () => {
             editConfig: {
                 component: Input,
                 editable: ()=>true
-            }
+            },
+            cellRenderer: "agGroupCellRenderer",
         },
         {
             title: '地址',
