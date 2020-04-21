@@ -71,7 +71,7 @@ const TreeGrid = () => {
             enableRowGroup: true,
             editConfig: {
                 component: Input,
-                editable: ()=>true
+                editable: () => true
             }
         },
         {
@@ -80,7 +80,7 @@ const TreeGrid = () => {
             width: 400,
             editConfig: {
                 component: Input,
-                editable: ()=>true
+                editable: () => true
             }
         },
     ])
@@ -114,6 +114,7 @@ const TreeGrid = () => {
                 name: "撒旦",
                 age: 45,
                 idcard: "4",
+                address: "123"
             },
         ]
     )
@@ -155,7 +156,7 @@ const TreeGrid = () => {
 
     const append = useCallback(
         () => {
-            manager.appendChild(["2"], [{ name: "child", age: 11, idcard: '111' }, { name: "child2", age: 12, idcard: '112' }])
+            // manager.appendChild(["2"], [{ name: "child", age: 11, idcard: '111' }, { name: "child2", age: 12, idcard: '112' }])
         },
         [manager],
     )
@@ -202,12 +203,27 @@ const TreeGrid = () => {
     }, [manager])
 
     const mapNodes = useCallback(
-        (node) => {
-            node.name = node.idcard
+        (node, index) => {
+            if (node.idcard === "3") {
+                node.isDeleted = true
+            }
+            if (node.idcard === "4") {
+                node.name = '修改节点'
+            }
         },
         [],
     )
-
+    const mapSelectedNodes = useCallback(
+        (node, index) => {
+            if (node.idcard === "3") {
+                node.isDeleted = true
+            }
+            if (node.idcard === "4") {
+                node.name = '修改节点'
+            }
+        },
+        [],
+    )
     return (
         <>
             <Header extra={!editable ? (
@@ -218,13 +234,13 @@ const TreeGrid = () => {
 
             ) : (
                     <>
-
                         <Dropdown overlay={menu} placement="bottomLeft">
                             <Button size="small">添加节点</Button>
                         </Dropdown>
                         <Button size="small" disabled={!(manager && selectedKeys.length)} onClick={() => manager.remove(deleteCb).then(e => message.success("删除成功"), e => { message.error("删除出错"); throw e })}>删除</Button>
                         <Button size="small" onClick={append}>添加子节点</Button>
-                        <Button size="small" onClick={() => manager.mapNodes(mapNodes)}>遍历节点</Button>
+                        <Button size="small" onClick={() => manager.mapNodes(mapNodes)}>遍历所有节点</Button>
+                        <Button size="small" onClick={() => manager.mapSelectedNodes(mapSelectedNodes)}>遍历选中节点</Button>
                         <Button size="small" onClick={() => manager.undo()}>撤销</Button>
                         <Button size="small" onClick={() => manager.redo()}>重做</Button>
                         <Button size="small" onClick={() => {
@@ -236,6 +252,7 @@ const TreeGrid = () => {
                             const isChanged = manager.isChanged
                             setdataSource(list)
                             seteditable(false)
+                            console.log(list)
                             console.log(diff)
                             console.log("changed", isChanged)
                         }}>保存</Button>
@@ -385,7 +402,7 @@ const config = {
     codes,
     useage: <div>
         <div>依赖于ag-grid的高性能表格</div>
-        <div style={{fontWeight:'bold'}}>ag-grid-enterprise需商业授权，如需使用ag-grid-enterprise功能，请自行获得LicenseKey</div>
+        <div style={{ fontWeight: 'bold' }}>ag-grid-enterprise需商业授权，如需使用ag-grid-enterprise功能，请自行获得LicenseKey</div>
         <div><a href="https://www.ag-grid.com/" target="_blank">Ag-Grid官网</a></div>
         <div><a href="https://github.com/ag-grid/ag-grid/blob/master/LICENSE.txt" target="_blank">LICENSE</a></div>
     </div>,
