@@ -31,14 +31,12 @@ export const mapColumns = <T>(columns: Columns<T>[], getRowNodeId: any, defaultS
     // cellEvents.removeAllListeners()
     function getColumnDefs(columns: Columns<T>[]) {
         return columns.map(({ title: headerName, fieldName: field, children, render, editConfig, fixed, cellRendererParams, ...item }, index) => {
-
             const ColEditable = typeof editConfig !== 'undefined';
             const colDef = {
                 headerName,
                 field,
                 cellRendererParams: {
                     render,
-
                     ...cellRendererParams,
                 },
                 cellClass: ["gant-grid-cell"],
@@ -50,9 +48,8 @@ export const mapColumns = <T>(columns: Columns<T>[], getRowNodeId: any, defaultS
                     "gant-grid-cell-add": params => get(params, "data._rowType") === DataActions.add,
                     // "gant-grid-cell-delete": params => get(params, "data._rowType") === DataActions.remove,
                 },
-                cellRenderer: "gantRenderCol",
+                cellRenderer: render ? "gantRenderCol" : undefined,
                 ...item,
-
             } as ColDef
 
             if (!itemisgroup(colDef, children)) {
@@ -62,7 +59,7 @@ export const mapColumns = <T>(columns: Columns<T>[], getRowNodeId: any, defaultS
                     colDef.cellEditorParams = {
                         props,
                         changeFormatter,
-                        rowkey: getRowNodeId
+                        rowkey: getRowNodeId,
                     }
                     colDef.cellEditorFramework = EditorCol(component)
                     colDef.editable = ColEditableFn(editConfig.editable)
