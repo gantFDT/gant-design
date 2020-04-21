@@ -28,7 +28,7 @@ export const mapColumns = <T>(columns: Columns<T>[], getRowNodeId: any, defaultS
     rowSelection, cellEvents: EventEmitter): Col[] => {
 
     // 移除所有已添加事件
-    cellEvents.removeAllListeners()
+    // cellEvents.removeAllListeners()
     function getColumnDefs(columns: Columns<T>[]) {
         return columns.map(({ title: headerName, fieldName: field, children, render, editConfig, fixed, cellRendererParams, ...item }, index) => {
 

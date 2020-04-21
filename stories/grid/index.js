@@ -209,17 +209,19 @@ const TreeGrid = () => {
             }
             if (node.idcard === "4") {
                 node.name = '修改节点'
+                node.isDeleted = true
             }
         },
         [],
     )
     const mapSelectedNodes = useCallback(
-        (node, index) => {
-            if (node.idcard === "3") {
+        (node) => {
+            try {
+                node.name = "mapSelectedNodes"
                 node.isDeleted = true
             }
-            if (node.idcard === "4") {
-                node.name = '修改节点'
+            catch (e) {
+                console.error(e)
             }
         },
         [],

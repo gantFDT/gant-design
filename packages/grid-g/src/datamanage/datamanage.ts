@@ -6,6 +6,7 @@ import { cloneDeep, get } from 'lodash'
 
 import History from './history'
 import ListProxy from './listproxy'
+import DataProxy from './dataproxy'
 import { findChildren, removeDeepItem, getPureRecord, getPureList, getIndexPath } from './utils'
 import { Record, DataActions, RemoveCallBack, Move } from '../interface'
 import { isnumber, isbool, isDeleted, trackEditValueChange } from '../utils'
@@ -248,7 +249,6 @@ class DataManage<T extends Record = any> extends EventEmitter {
 
             /**处理state */
             const newState = keyPathsArray.reduce((state, { id, paths }) => {
-                // const fullPath = paths.flatMap((key, index) => index === 0 ? key : [this.childrenName, key])
                 return this.removeInner(state, paths, id, showLine)
             }, this.state)
             // 添加history数据
@@ -265,9 +265,9 @@ class DataManage<T extends Record = any> extends EventEmitter {
      * @param id 节点id
      * @param showLine 是否显示删除线
      */
-    private removeInner<T>(state: List<T>, keyPath: (string | number)[], id: string, showLine: boolean): List<T> {
+    private removeInner<T>(state: List<T>, keyPath: (string | number)[], id: string, showLine: boolean = this.removeShowLine): List<T> {
         const _this = this
-        const fullPath = keyPath.flatMap((key, index) => index === 0 ? key : [this.childrenName, key])
+        const fullPath = this.getFlatKey(keyPath)
         const parentPath = fullPath.slice(0, -1);
         const item = state.getIn(fullPath)
         const rowType = item.get("_rowType")
@@ -305,7 +305,7 @@ class DataManage<T extends Record = any> extends EventEmitter {
             }
             let keyPath = getIndexPath(changed.node)
 
-            const paths = keyPath.flatMap((key, index) => index === 0 ? key : [this.childrenName, key])
+            const paths = this.getFlatKey(keyPath)
             const newState = this.state.updateIn(paths, node => fromJS(data))
             this.history.push(newState)
         }
@@ -330,7 +330,7 @@ class DataManage<T extends Record = any> extends EventEmitter {
             if (proxy.modifyNodes.length) {
                 // 保证与编辑输入框的行为一致
                 newList = proxy.modifyNodes.reduce((state, { keyPath, node }) => {
-                    const fullPath = keyPath.flatMap((key, index) => index === 0 ? key : [this.childrenName, key])
+                    const fullPath = this.getFlatKey(keyPath)
                     return state.setIn(fullPath, fromJS(node))
                 }, newList)
             }
@@ -352,39 +352,82 @@ class DataManage<T extends Record = any> extends EventEmitter {
         console.log(selected)
         const _this = this
         if (selected.length) {
-            selected.forEach(node => {
+            const list = selected.map(node => {
                 const indexPath = getIndexPath(node)
                 const pureRecord = getPureRecord(node.data)
                 const id = node.id
-                const proxy = new Proxy(pureRecord, {
-                    set(target, key, value, receiver) {
-                        const prevValue = get(target, key)
-                        if (key === "isDeleted") {
-                            if (value) {
-                                if (_this._add.has(id)) {
-                                    _this._add = _this._add.delete(id)
-                                }
-                                else if (_this._modify.has(id)) {
-                                    _this._modify = _this._modify.delete(id)
-                                }
-                                _this._removed = _this._removed.set(id, pureRecord)
-                            } else {
-                                _this._removed = _this._removed.delete(id)
-                            }
-                        }
-                        else {
-                            const newData = trackEditValueChange(target, key as string, value, prevValue)
-                            if (Reflect.has(get(newData, "_rowData", {}), key)) {
-                                _this._modify = _this._modify.set(id, pureRecord)
-                            } else {
-                                _this._modify = _this._modify.delete(id)
-                            }
-                        }
-                        return true
-                    }
-                })
-                cb(proxy)
+                // 控制操作行为
+                let action = null
+                // 修改之后的新值、保证脏标识能正确显示隐藏
+                let newData = null
+                const dataProxy = new DataProxy(node.data, this)
+                // const proxy = new Proxy(node.data, {
+                //     set(target, key, value, receiver) {
+                //         const prevValue = get(target, key)
+                //         const isChanged = value != prevValue
+                //         if (isChanged) {
+                //             if (isDeleted(target) && key !== 'isDeleted') {
+                //                 throw new Error('不允许修改一个被删除的节点')
+                //             }
+
+                //             Reflect.set(target, key, value, receiver)
+                //             if (target._rowType === DataActions.add) {
+                //                 if (key === "isDeleted" && value) {
+                //                     _this._add = _this._add.delete(id)
+                //                     action = DataActions.remove
+                //                 } else {
+                //                     _this._add = _this._add.set(id, target)
+                //                     // modify行为下，需要设置newData
+                //                     action = DataActions.modify
+                //                     newData = target
+                //                 }
+                //             }
+                //             else if (key === "isDeleted") {
+                //                 if (value) {
+                //                     if (_this._add.has(id)) {
+                //                         _this._add = _this._add.delete(id)
+                //                     }
+                //                     else if (_this._modify.has(id)) {
+                //                         _this._modify = _this._modify.delete(id)
+                //                     }
+                //                     console.log(target)
+                //                     _this._removed = _this._removed.set(id, target)
+                //                     action = DataActions.remove
+                //                 } else {
+                //                     _this._removed = _this._removed.delete(id)
+                //                 }
+                //             }
+                //             else {
+                //                 newData = trackEditValueChange(target, key as string, value, prevValue)
+                //                 if (Reflect.has(get(newData, "_rowData", {}), key)) {
+                //                     _this._modify = _this._modify.set(id, target)
+                //                 } else {
+                //                     _this._modify = _this._modify.delete(id)
+                //                 }
+                //                 action = DataActions.modify
+                //             }
+                //         }
+
+                //         return true
+                //     }
+                // })
+                cb(dataProxy.proxy)
+                console.log(dataProxy)
+                // return { proxy, action, indexPath, id, target: pureRecord, newData }
             })
+
+            // const newState = list.reduce((state, { proxy, action, target, indexPath, id, newData }) => {
+            //     if (action === DataActions.remove) return this.removeInner(state, indexPath, id)
+            //     else if (action === DataActions.modify) {
+            //         const fullPath = this.getFlatKey(indexPath)
+            //         return state.updateIn(fullPath, record => {
+            //             return fromJS(newData)
+            //         })
+            //     }
+            //     return state
+            // }, this.state)
+            // console.log(newState)
+            // this.history.push(newState)
         }
     }
 
@@ -411,6 +454,10 @@ class DataManage<T extends Record = any> extends EventEmitter {
             remove: getPureList([...this._removed.toArray()]),
             update: getPureList([...this._modify.toArray()])
         }
+    }
+
+    getFlatKey(indexPath: any[]) {
+        return indexPath.flatMap((key, index) => index === 0 ? key : [this.childrenName, key])
     }
 
 }

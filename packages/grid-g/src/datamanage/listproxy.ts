@@ -32,7 +32,7 @@ class ListProxy {
                 const proxy = new Proxy(nodeItem, {
                     set(target, key, value, receiver) {
                         const prevValue = Reflect.get(target, key)
-                        const isChanged = prevValue !== value
+                        const isChanged = prevValue != value
                         if (isChanged) {
                             _this.isChanged = true
                             const id = manager.getRowNodeId(target)
