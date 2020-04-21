@@ -14,7 +14,6 @@ export default class GantGroupCellRenderer extends Component<GantGroupCellRender
 		this.state = {
 			expanded
 		}
-		console.log("props", props)
 	}
 onExpend = (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
 	const { node, context: { serverDataRequest }, data: { treeDataPath }, api } = this.props;
@@ -48,7 +47,8 @@ selectionChangedCallback = (params) => {
 		const { expanded = false } = this.state
 		const { value, node: { childrenAfterFilter, level }, data, context: { isServerSideGroup } } = this.props;
 		const hasChildren = childrenAfterFilter.length > 0 || (isServerSideGroup && isServerSideGroup(data))
-		return <span className={classnames('ag-cell-wrapper', ' ag-row-group', ` ag-row-group-indent-${level + 1}`)}>
+		
+		return <span className={classnames('ag-cell-wrapper', ' ag-row-group', ` ag-row-group-indent-${level}`)}>
 			{
 				hasChildren &&
 				(expanded ? <span className="ag-group-expanded" onClick={this.onClose} ref="eExpanded">
