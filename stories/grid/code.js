@@ -58,14 +58,6 @@ const TreeGrid = () => {
                 //     // })
                 // }
             },
-            valueGetter:(params)=>{
-                console.log("valueParser",params);
-                return "valueParser"
-            },
-            valueFormatter:(params)=>{
-                console.log("valueFormatter",params);
-                return "valueFormatter"
-            },
             enableRowGroup: true,
             cellRenderer: "gantGroupCellRenderer",
         },
