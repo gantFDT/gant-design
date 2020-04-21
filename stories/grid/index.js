@@ -60,7 +60,7 @@ const TreeGrid = () => {
                 // }
             },
             enableRowGroup: true,
-            cellRenderer: "gantGroupCellRenderer",
+            cellRenderer: "agGroupCellRenderer",
         },
         {
             title: '年龄',
@@ -224,6 +224,12 @@ const TreeGrid = () => {
         },
         [],
     )
+    const mapNodesIds = useCallback(
+        (node) => {
+            node.name = "mapNodesIds"
+        },
+        [],
+    )
     return (
         <>
             <Header extra={!editable ? (
@@ -238,8 +244,9 @@ const TreeGrid = () => {
                             <Button size="small">添加节点</Button>
                         </Dropdown>
                         <Button size="small" disabled={!(manager && selectedKeys.length)} onClick={() => manager.remove(deleteCb).then(e => message.success("删除成功"), e => { message.error("删除出错"); throw e })}>删除</Button>
-                        <Button size="small" onClick={append}>添加子节点</Button>
+                        {/* <Button size="small" onClick={append}>添加子节点</Button> */}
                         <Button size="small" onClick={() => manager.mapNodes(mapNodes)}>遍历所有节点</Button>
+                        <Button size="small" onClick={() => manager.mapNodesIds(['3'], mapNodesIds)}>遍历指定节点</Button>
                         <Button size="small" onClick={() => manager.mapSelectedNodes(mapSelectedNodes)}>遍历选中节点</Button>
                         <Button size="small" onClick={() => manager.undo()}>撤销</Button>
                         <Button size="small" onClick={() => manager.redo()}>重做</Button>
@@ -274,6 +281,7 @@ const TreeGrid = () => {
                 editable={editable}
                 dataSource={dataSource}
                 onReady={onReady}
+                serialNumber
                 rowSelection={{
                     type: 'multiple',
                     selectedKeys,

@@ -223,7 +223,7 @@ class DataManage<T extends Record = any> extends EventEmitter {
             let rows = deleteRows
             if (showLine) {
                 // 在showLine模式下可能出现的问题,过滤掉之前删除过的数据
-                rows = deleteRows.filter(data => !isDeleted(data))
+                rows = deleteRows.filter(row => !isDeleted(row.data))
             }
             if (!rows.length) return []
             const keyPathsArray = rows.map(node => {
@@ -349,30 +349,35 @@ class DataManage<T extends Record = any> extends EventEmitter {
      */
     mapSelectedNodes(cb: (node: any) => void, isSignal: boolean = false) {
         const selected = this.gridApi.getSelectedNodes()
-        const _this = this
-        if (selected.length) {
-            const list = selected.map(node => {
-                const indexPath = getIndexPath(node)
-                const dataProxy = new DataProxy(node.data, this)
-                cb(dataProxy.proxy)
-                return {
-                    ...dataProxy,
-                    indexPath
-                }
-            })
+        const selectedList = isSignal ? selected.slice(0, 1) : selected
+        const ids = selectedList.map(node => node.id)
+        this.mapNodesIds(ids, cb)
+    }
 
-            const newState = list.reduce((state, { action, indexPath, id, newData }) => {
-                if (action === DataActions.remove) return this.removeInner(state, indexPath, id)
-                else if (action === DataActions.modify) {
-                    const fullPath = this.getFlatKey(indexPath)
-                    return state.updateIn(fullPath, record => {
-                        return fromJS(newData)
-                    })
-                }
-                return state
-            }, this.state)
-            this.history.push(newState)
-        }
+    mapNodesIds(ids: any[], cb: (node: any) => void) {
+        const keys = Array.isArray(ids) ? ids : [ids]
+        if (!keys.length) return
+        const actionList = keys.map(key => {
+            const node = this.gridApi.getRowNode(key)
+            const indexPath = getIndexPath(node)
+            const dataProxy = new DataProxy(node.data, this)
+            cb(dataProxy.proxy)
+            return {
+                ...dataProxy,
+                indexPath
+            }
+        })
+        const newState = actionList.reduce((state, { action, indexPath, id, newData }) => {
+            if (action === DataActions.remove) return this.removeInner(state, indexPath, id)
+            else if (action === DataActions.modify) {
+                const fullPath = this.getFlatKey(indexPath)
+                return state.updateIn(fullPath, record => {
+                    return fromJS(newData)
+                })
+            }
+            return state
+        }, this.state)
+        this.history.push(newState)
     }
 
     /**将当前diff推送到history,在每次history.push的时候会执行 */

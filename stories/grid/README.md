@@ -191,7 +191,26 @@ manager.mapNodes((row)=>{
 })
 ```
 
-5、其他API
+5、 指定修改数据
+
+根据选中所有节点来获得proxy对象进行数据的修改，用法如下:
+
+```js
+manager.mapSelectedNodes((row)=>{
+    row.age = row.age + 1
+})
+```
+5、 修改指定id的数据
+
+根据传递的ids数组，来传递对应的与历史记录绑定的数据对象
+
+```js
+manager.maoNodesIds(ids,(row)=>{
+    row.age = row.age + 1
+})
+```
+
+6、其他API
 
 | 属性 | 类型 | 说明 |
 |:-:|:-:|:-:|
