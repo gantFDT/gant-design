@@ -210,12 +210,11 @@ export default class Submenu extends React.Component<any, Partial<SubmenuIF>> {
     const { collapsedWidth, setMenuBoxRef, style } = this.props;
     return (
       <div
-        ref={setMenuBoxRef}
         className={`${prefixCls}-menubox ${prefixCls}-menuboxhor`}
         style={{ width: '100%', height: 30, ...style }}
       >
         <div className={`${prefixCls}-wrap`} style={{ width: 'calc(100% - 1px)' }}>
-          <div className={`${prefixCls}-menuinternal`}>
+          <div ref={setMenuBoxRef} className={`${prefixCls}-menuinternal`}>
             <div className={`${prefixCls}-menuleft`}>
               <div className={`${prefixCls}-horMenu`}>{this.renderSubMenu(prefixCls)}</div>
             </div>
