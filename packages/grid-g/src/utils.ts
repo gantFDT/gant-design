@@ -138,8 +138,15 @@ export const mapColumns = <T>(
     lockPosition: true,
     lockVisible: true,
     field: 'g-index',
-    valueFormatter: ({ node: { rowIndex } }: any) => {
-      return rowIndex + 1;
+    valueFormatter: (parmas: any) => {
+      const {
+        node: { rowIndex },
+        context,
+      } = parmas;
+      const computedPagination = get(context, 'computedPagination', {});
+      const { pageSize = 0, beginIndex = 0 } = computedPagination;
+
+      return parseInt(rowIndex + 1 + pageSize * beginIndex) + '';
     },
   };
   const cols = serialNumber ? [serialNumberCol, ...getColumnDefs(columns)] : getColumnDefs(columns);
@@ -354,5 +361,5 @@ export function createServerSideDatasource(
 }
 
 export function isDeleted(data) {
-    return get(data, "isDeleted") || get(data, "_rowType") === DataActions.remove
+  return get(data, 'isDeleted') || get(data, '_rowType') === DataActions.remove;
 }
