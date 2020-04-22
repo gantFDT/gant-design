@@ -189,7 +189,6 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
 
   // 分页事件
   const computedPagination = usePagination(pagination);
-
   // 判断数据分别处理 treeTable 和普通table
   const dataSource = useMemo(() => {
     if (!treeData) return manageData;
@@ -310,20 +309,12 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
   }, []);
   const refreshRowBufferCells = useCallback(
     rowIndex => {
-      let rowBuffer = orignProps.rowBuffer == 0 ? 100 : orignProps.rowBuffer;
-      rowBuffer = rowBuffer ? rowBuffer : 10;
-      const rowNodes: any[] = [];
-      for (let index = 0; index < 10; index++) {
-        const indexRowNode = apiRef.current.getDisplayedRowAtIndex(index + rowIndex);
-        if (indexRowNode) rowNodes.push(indexRowNode);
-      }
       apiRef.current.refreshCells({
-        rowNodes,
         force: true,
-        columns:["g-index"]
+        columns: ['g-index'],
       });
     },
-    [orignProps.rowBuffer, apiRef.current],
+    [apiRef.current],
   );
   const onGantRowGroupOpened = useCallback(
     params => {
@@ -386,6 +377,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                     serverDataRequest,
                     isServerSideGroup,
                     size,
+                    computedPagination,
                     ...context,
                   }}
                   suppressAnimationFrame
@@ -409,7 +401,6 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                     'gant-grid-row-isdeleted': params => get(params, 'data.isDeleted'),
                     ...rowClassRules,
                   }}
-                  
                 />
               </div>
               {/* 分页高度为30 */}

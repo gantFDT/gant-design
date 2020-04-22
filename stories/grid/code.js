@@ -59,7 +59,7 @@ const TreeGrid = () => {
                 // }
             },
             enableRowGroup: true,
-            cellRenderer: "agGroupCellRenderer",
+            cellRenderer: "gantGroupCellRenderer",
         },
         {
             title: '年龄',
@@ -286,6 +286,7 @@ const TreeGrid = () => {
                     selectedKeys,
                     onSelect
                 }}
+                isServerSideGroup={(data)=>data.children}
                 pagination={{
                     pageSize: 2,
                     beginIndex,
