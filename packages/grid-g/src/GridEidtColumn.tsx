@@ -30,7 +30,6 @@ export default WrapperComponent =>
     } = props;
     const [cacheValue, setCacheValue] = useState(value);
     const inputRef: any = useRef();
-    const divRef: React.LegacyRef<HTMLDivElement> = useRef();
     const onChange = useCallback(
       val => {
         console.log('val', val);
@@ -40,11 +39,12 @@ export default WrapperComponent =>
       },
       [changeFormatter],
     );
-    const onBlur = useCallback((event:React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-		console.log(event.target)
-      console.log('onBlur');
-      //   stopEditing();
-    }, [stopEditing]);
+    const onBlur = useCallback(
+      (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+          stopEditing();
+      },
+      [stopEditing],
+    );
     const rowId = useMemo(() => {
       if (!rowkey) return rowIndex;
       return rowkey(data);
@@ -75,14 +75,11 @@ export default WrapperComponent =>
     }, []);
     const wrapperClick = useCallback((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
       event.stopPropagation();
-	  event.nativeEvent.stopImmediatePropagation();
-	  event.cancelable=true
+      event.nativeEvent.stopImmediatePropagation();
+      event.cancelable = true;
     }, []);
-    // useEffect(() => {
-    //   divRef.current.addEventListener('click', e => e.stopPropagation());
-    // }, [divRef.current]);
     return (
-      <div className={classnames('gant-grid-cell-editing')} ref={divRef} onClick={wrapperClick}>
+      <div className={classnames('gant-grid-cell-editing')} onClick={wrapperClick}>
         <WrapperComponent
           wrapperRef={inputRef}
           ref={inputRef}

@@ -91,7 +91,7 @@ export const defaultProps = {
   /** 默认的删除行为 */
   removeShowLine: true,
   /**是否执行treeDataPath计算 */
-  isCompute: true
+  isCompute: true,
 };
 let gobalEditable: any;
 export const defaultRowSelection: RowSelection = {
@@ -182,6 +182,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     manager.childrenName = treeDataChildrenName;
     manager.getServerSideGroupKey = getServerSideGroupKey ? getServerSideGroupKey : getRowNodeId;
     manager.removeShowLine = removeShowLine;
+    manager.isCompute = isCompute;
     return manager;
   }, []);
 
@@ -195,16 +196,17 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
   // 判断数据分别处理 treeTable 和普通table
   const dataSource = useMemo(() => {
     if (!treeData) return manageData;
-    if (!isServer && isCompute) return flattenTreeData(manageData, getRowNodeId, [], treeDataChildrenName);
+    if (!isServer && isCompute)
+      return flattenTreeData(manageData, getRowNodeId, [], treeDataChildrenName);
     return manageData;
   }, [manageData, treeData, treeDataChildrenName, getRowNodeId]);
   const serverModel = useMemo(() => isServer && treeData, [isServer && treeData]);
   const serverDataCallback = useCallback((groupKeys, successCallback) => {
     return rows => {
       successCallback(rows, rows.length);
-      dataManage.appendChild(groupKeys, rows, isCompute);
+      dataManage.appendChild(groupKeys, rows);
     };
-  }, [isCompute]);
+  }, []);
   const serverDataRequest = useCallback(
     (params, groupKeys, successCallback) => {
       if (serverGroupExpend) {
@@ -378,12 +380,12 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                     serverDataRequest,
                     isServerSideGroup,
                     size,
+                    getDataPath: orignProps.getDataPath ? orignProps.getDataPath : getDataPath,
                     computedPagination,
                     ...context,
                   }}
                   deltaRowDataMode
                   suppressAnimationFrame
-                  suppressRowDrag
                   stopEditingWhenGridLosesFocus={false}
                   {...gridPartProps}
                   {...selection}
@@ -403,7 +405,6 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                     'gant-grid-row-isdeleted': params => get(params, 'data.isDeleted'),
                     ...rowClassRules,
                   }}
-                  
                 />
               </div>
               {/* 分页高度为30 */}
