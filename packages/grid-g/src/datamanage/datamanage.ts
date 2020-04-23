@@ -42,6 +42,7 @@ class DataManage<T extends Record = any> extends EventEmitter {
     // 获取group key path
     getServerSideGroupKey: (d: any) => string
     childrenName: string = 'children'
+    isCompute: boolean
 
 
 
@@ -99,11 +100,7 @@ class DataManage<T extends Record = any> extends EventEmitter {
     // 初始化
     reset() {
         const state = fromJS(this._originList)
-        /**清空diff数据 */
-        this._add = _add
-        this._modify = _modify
-        this._removed = _removed
-
+        this.clearDiff()
         this.history.init(state)
     }
 
@@ -115,6 +112,7 @@ class DataManage<T extends Record = any> extends EventEmitter {
     /**取消编辑 */
     cancel() {
         const firstList = this.history.first
+        this.clearDiff()
         this.history.init(firstList)
     }
 
@@ -123,6 +121,8 @@ class DataManage<T extends Record = any> extends EventEmitter {
         const lastList = this.history.last
         const list = getPureList(this.renderList, true)
         const diff = this.diff
+
+        this.clearDiff()
         this.history.init(lastList)
 
         return {
@@ -165,26 +165,30 @@ class DataManage<T extends Record = any> extends EventEmitter {
         const itemNodes = isArray ? item : [item]
         const immuNodes = itemNodes.map(item => fromJS({ ...item, _rowType: DataActions.add }))
         let newState = null
-        if (isnumber(node)) {
-            const index = node
-            // newState = this.state.insert(index, itemNode)
-            newState = this.state.splice(index, 0, ...immuNodes)
-        } else {
-            const indexPath = getIndexPath(node).flatMap(index => [index, this.childrenName])
-            let addIndex: number, append: boolean
-            if (isnumber(index)) {
-                addIndex = index
-                if (isbool(isChild)) append = isChild
-                else append = true // undefined
+        if (this.isCompute) {
+            if (isnumber(node)) {
+                const index = node
+                newState = this.state.splice(index, 0, ...immuNodes)
             } else {
-                append = index
-                if (isnumber(isChild)) addIndex = isChild
-                else addIndex = 0 // undefined
+                const indexPath = getIndexPath(node).flatMap(index => [index, this.childrenName])
+                let addIndex: number, append: boolean
+                if (isnumber(index)) {
+                    addIndex = index
+                    if (isbool(isChild)) append = isChild
+                    else append = true // undefined
+                } else {
+                    append = index
+                    if (isnumber(isChild)) addIndex = isChild
+                    else addIndex = 0 // undefined
+                }
+                const paths = append ? indexPath : indexPath.slice(0, -2)
+                // newState = this.state.updateIn(paths, children => children ? children.insert(addIndex, itemNode) : List([]).push(itemNode))
+                newState = this.state.updateIn(paths, children => children ? children.splice(addIndex, 0, ...immuNodes) : List([]).concat(immuNodes))
             }
-            const paths = append ? indexPath : indexPath.slice(0, -2)
-            // newState = this.state.updateIn(paths, children => children ? children.insert(addIndex, itemNode) : List([]).push(itemNode))
-            newState = this.state.updateIn(paths, children => children ? children.splice(addIndex, 0, ...immuNodes) : List([]).concat(immuNodes))
+        } else {
+            newState = this.state.concat(immuNodes)
         }
+
 
         itemNodes.forEach(item => {
             const id = this.getRowNodeId(item)
@@ -312,8 +316,8 @@ class DataManage<T extends Record = any> extends EventEmitter {
     }
 
     /**添加子级节点 */
-    appendChild(groupKeys: (string | number)[], children: T[], isCompute: boolean) {
-        this.history.appendChild(groupKeys, this.childrenName, fromJS(children), this.getServerSideGroupKey, isCompute)
+    appendChild(groupKeys: (string | number)[], children: T[]) {
+        this.history.appendChild(groupKeys, this.childrenName, fromJS(children), this.getServerSideGroupKey, this.isCompute)
     }
 
 
@@ -395,6 +399,14 @@ class DataManage<T extends Record = any> extends EventEmitter {
         this._add = diff.get("add")
         this._modify = diff.get("modify")
         this._removed = diff.get("remove")
+    }
+
+    /**保存取消的时候清除diff数据 */
+    clearDiff() {
+        /**清空diff数据 */
+        this._add = _add
+        this._modify = _modify
+        this._removed = _removed
     }
 
     get diff() {

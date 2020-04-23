@@ -182,6 +182,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     manager.childrenName = treeDataChildrenName;
     manager.getServerSideGroupKey = getServerSideGroupKey ? getServerSideGroupKey : getRowNodeId;
     manager.removeShowLine = removeShowLine;
+    manager.isCompute = isCompute;
     return manager;
   }, []);
 
@@ -202,9 +203,9 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
   const serverDataCallback = useCallback((groupKeys, successCallback) => {
     return rows => {
       successCallback(rows, rows.length);
-      dataManage.appendChild(groupKeys, rows, isCompute);
+      dataManage.appendChild(groupKeys, rows);
     };
-  }, [isCompute]);
+  }, []);
   const serverDataRequest = useCallback(
     (params, groupKeys, successCallback) => {
       if (serverGroupExpend) {
@@ -382,7 +383,6 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                     ...context,
                   }}
                   suppressAnimationFrame
-                  suppressRowDrag
                   stopEditingWhenGridLosesFocus={false}
                   {...gridPartProps}
                   {...selection}
@@ -403,7 +403,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                     'gant-grid-row-isdeleted': params => get(params, 'data.isDeleted'),
                     ...rowClassRules,
                   }}
-                  
+
                 />
               </div>
               {/* 分页高度为30 */}
