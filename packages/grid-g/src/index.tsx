@@ -381,6 +381,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                     computedPagination,
                     ...context,
                   }}
+                  deltaRowDataMode
                   suppressAnimationFrame
                   suppressRowDrag
                   stopEditingWhenGridLosesFocus={false}
@@ -395,7 +396,6 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                     ...defaultColDef,
                   }}
                   onCellValueChanged={cellValueChanged}
-                  deltaRowDataMode
                   groupDefaultExpanded={groupDefaultExpanded}
                   onRowGroupOpened={onGantRowGroupOpened}
                   localeText={locale}
