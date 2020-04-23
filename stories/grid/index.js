@@ -5,7 +5,7 @@ import codes from './code';
 import React, { useMemo, useEffect, useCallback, useState, useRef } from 'react'
 import Grid, { Columns, Filter, OnReady, GridApi, Fixed, DataManage, RemoveCallBack } from '@grid';
 import { GridReadyEvent, ColDef } from 'ag-grid-community'
-import { Button, message, Dropdown, Menu } from "antd"
+import { Button, message, Dropdown, Menu ,Switch,Checkbox} from "antd"
 import { Input, InputCellPhone, } from "@data-cell"
 import Header from '@header'
 /*! Split !*/
@@ -70,8 +70,8 @@ const TreeGrid = () => {
             type: "numericColumn",
             enableRowGroup: true,
             editConfig: {
-                component: Input,
-                editable: () => true
+                component: Checkbox,
+                editable: true
             }
         },
         {
@@ -232,6 +232,7 @@ const TreeGrid = () => {
     )
     return (
         <>
+         <Switch onBulr={()=>console.log("onBulr")} />
             <Header extra={!editable ? (
                 <>
                     <Button size="small" onClick={edit}>进入编辑</Button>
