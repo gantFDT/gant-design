@@ -383,6 +383,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                   }}
                   suppressAnimationFrame
                   suppressRowDrag
+                  stopEditingWhenGridLosesFocus={false}
                   {...gridPartProps}
                   {...selection}
                   {...orignProps}
@@ -402,6 +403,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                     'gant-grid-row-isdeleted': params => get(params, 'data.isDeleted'),
                     ...rowClassRules,
                   }}
+                  
                 />
               </div>
               {/* 分页高度为30 */}

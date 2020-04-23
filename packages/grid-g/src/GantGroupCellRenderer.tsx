@@ -16,6 +16,7 @@ export default class GantGroupCellRenderer extends Component<
   constructor(props) {
     super(props);
     this.state = this.getTreeDataInfo(props.node, props.data);
+    props.node.setExpanded(this.state.expanded);
   }
 
   getTreeDataInfo(node: RowNode, data) {
@@ -54,7 +55,6 @@ export default class GantGroupCellRenderer extends Component<
     api.showLoadingOverlay();
     serverDataRequest(this.props, treeDataPath, () => {
       node.setExpanded(true);
-      this.setState(state => ({ ...state, expanded: true }));
       api.hideOverlay();
     });
   };
@@ -62,20 +62,35 @@ export default class GantGroupCellRenderer extends Component<
     event.stopPropagation();
     const { node } = this.props;
     node.setExpanded(false);
-    this.setState(state => ({ ...state, expanded: false }));
   };
-  cellChangedCallback = params => {
-    const { newData, node, update } = params;
+  selectionChangedCallback = params => {
+    const {
+      node: { expanded },
+    } = params;
+    this.setState({ expanded });
+  };
+  dataChangedCallback = params => {
+    const { oldData, newData, node, update } = params;
+    if (isEqual(oldData, newData)) return;
     this.props.api.refreshCells({
-	  rowNodes: [node],
-	  force:update
+      rowNodes: [node],
+      force: update,
     });
   };
+  test = params => {
+	  console.log(params)
+  };
   componentDidMount() {
-    this.props.node.addEventListener(RowNode.EVENT_DATA_CHANGED, this.cellChangedCallback);
+    this.props.node.addEventListener(RowNode.EVENT_EXPANDED_CHANGED, this.selectionChangedCallback);
+	this.props.node.addEventListener(RowNode.EVENT_DATA_CHANGED, this.dataChangedCallback);
   }
+
   componentWillUnmount() {
-    this.props.node.removeEventListener(RowNode.EVENT_DATA_CHANGED, this.cellChangedCallback);
+    this.props.node.removeEventListener(
+      RowNode.EVENT_EXPANDED_CHANGED,
+      this.selectionChangedCallback,
+    );
+    this.props.node.removeEventListener(RowNode.EVENT_DATA_CHANGED, this.dataChangedCallback);
   }
   render() {
     const {
@@ -85,7 +100,6 @@ export default class GantGroupCellRenderer extends Component<
     } = this.props;
     const { hasChildren, expanded } = this.state;
     const showValue = valueFormatted ? this.props.formatValue(this.props) : value;
-
     return (
       <span
         className={classnames('ag-cell-wrapper', ' ag-row-group', ` ag-row-group-indent-${level}`)}
