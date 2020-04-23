@@ -342,6 +342,7 @@ const ComputeGrid = () => {
         {
             title: '姓名',
             fieldName: "name",
+         
             editConfig: {
                 component: Input,
                 // changeFormatter: (e: any) => e.target.value,
@@ -353,6 +354,7 @@ const ComputeGrid = () => {
                 //     // })
                 // }
             },
+           
             enableRowGroup: true,
             cellRenderer: "gantGroupCellRenderer",
         },
@@ -360,9 +362,11 @@ const ComputeGrid = () => {
             title: '年龄',
             fieldName: "age",
             sortable: true,
-            filter: Filter.Number,
+            // filter: Filter.Number,
             type: "numericColumn",
-            enableRowGroup: true,
+            // enableRowGroup: true,
+            // valueFormatter:(params)=>2222,
+            render:()=>222,
             editConfig: {
                 component: Checkbox,
                 editable: true
@@ -385,8 +389,12 @@ const ComputeGrid = () => {
             {
                 name: "里斯",
                 idcard: "1",
-                age: 123,
-                path: ["1"]
+                // age: 123,
+                path: ["1"],
+                age: [{
+                    "111":222
+                }],
+                
             },
             {
                 name: "阿萨的脚后跟",
@@ -396,7 +404,7 @@ const ComputeGrid = () => {
             },
             {
                 name: "山坡地覅还是大佛i",
-                age: 1,
+               
                 idcard: "12",
                 path: ["1", "12"]
             },

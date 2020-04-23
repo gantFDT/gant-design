@@ -96,7 +96,8 @@ export default class GantGroupCellRenderer extends Component<
       node: { level },
     } = this.props;
     const { hasChildren, expanded } = this.state;
-    const showValue = valueFormatted ? this.props.formatValue(this.props) : value;
+    const showValue =
+    valueFormatted && valueFormatted !== '[object Object]' ? valueFormatted : value;
     return (
       <span
         className={classnames('ag-cell-wrapper', ' ag-row-group', ` ag-row-group-indent-${level}`)}
