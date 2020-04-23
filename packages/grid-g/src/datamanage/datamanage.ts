@@ -8,24 +8,26 @@ import History from './history'
 import ListProxy from './listproxy'
 import DataProxy from './dataproxy'
 import { findChildren, removeDeepItem, getPureRecord, getPureList, getIndexPath } from './utils'
-import { Record, DataActions, RemoveCallBack, Move } from '../interface'
-import { isnumber, isbool, isDeleted, trackEditValueChange } from '../utils'
+import { DataActions, RemoveCallBack, Move } from '../interface'
+import { isnumber, isbool, isDeleted, isarray } from '../utils'
 
 interface RemoveOptions {
     removeChildren: boolean,
     showLine: boolean
 }
 
+type Record = Map<string, any>
+
 const _add = Map<string, any>()
 const _modify = Map<string, any>()
 const _removed = Map<string, any>()
 
-class DataManage<T extends Record = any> extends EventEmitter {
+class DataManage<T = any> extends EventEmitter {
 
 
     // private _state: List<T>
     private _originList: T[]
-    private history: History<T>
+    private history: History<Record>
     _add = _add
     _modify = _modify
     _removed = _removed
@@ -48,7 +50,7 @@ class DataManage<T extends Record = any> extends EventEmitter {
 
     constructor() {
         super();
-        this.history = new History()
+        this.history = new History<Record>()
         this.history.on("manager:update", this.update.bind(this))
         this.history.on("manager:diff", this.pushDiff.bind(this))
     }
@@ -161,8 +163,12 @@ class DataManage<T extends Record = any> extends EventEmitter {
     create(item: T | T[], node: RowNode, index?: number, isChild?: boolean): void
     create(item: T | T[], node: RowNode, isChild?: boolean, index?: number): void
     create(item: T | T[], node: RowNode | number = 0, index: number | boolean = 0, isChild?: number | boolean) {
-        const isArray = Array.isArray(item)
-        const itemNodes = isArray ? item : [item]
+        let itemNodes: T[]
+        if (isarray(item)) {
+            itemNodes = item
+        } else {
+            itemNodes = [item]
+        }
         const immuNodes = itemNodes.map(item => fromJS({ ...item, _rowType: DataActions.add }))
         let newState = null
         if (this.isCompute) {
@@ -269,23 +275,44 @@ class DataManage<T extends Record = any> extends EventEmitter {
      * @param id 节点id
      * @param showLine 是否显示删除线
      */
-    private removeInner<T>(state: List<T>, keyPath: (string | number)[], id: string, showLine: boolean = this.removeShowLine): List<T> {
+    private removeInner(state, keyPath: (string | number)[], id: string, showLine: boolean = this.removeShowLine): List<Record> {
         const _this = this
-        const fullPath = this.getFlatKey(keyPath)
-        const parentPath = fullPath.slice(0, -1);
-        const item = state.getIn(fullPath)
-        const rowType = item.get("_rowType")
-        if (!showLine || rowType === DataActions.add) {
-            return state.updateIn(parentPath, (parentState) => parentState.filter(item => _this.getRowNodeId(item.toJS()) !== id))
+        if (this.isCompute) {
+            const fullPath = this.getFlatKey(keyPath)
+            const parentPath = fullPath.slice(0, -1);
+            const item = state.getIn(fullPath)
+            const rowType = item.get("_rowType")
+            if (!showLine || rowType === DataActions.add) {
+                return state.updateIn(parentPath, (parentState) => parentState.filter(item => _this.getRowNodeId(item.toJS()) !== id))
+            } else {
+                return state.updateIn(fullPath, item => {
+                    // return item.set('isDeleted', true)
+                    return item.merge({
+                        isDeleted: true,
+                        _rowType: DataActions.remove
+                    })
+                })
+            }
         } else {
-            return state.updateIn(fullPath, item => {
-                // return item.set('isDeleted', true)
-                return item.merge({
+            let index = -1;
+            const item = state.find((row, ind) => {
+                const find = _this.getRowNodeId(row.toJS()) === id
+                if (find) {
+                    index = ind
+                }
+                return find
+            })
+            const rowType = item.get("_rowType")
+            if (!showLine || rowType === DataActions.add) {
+                return state.filter(item => _this.getRowNodeId(item.toJS()) !== id)
+            } else {
+                return state.update(index, item => item.merge({
                     isDeleted: true,
                     _rowType: DataActions.remove
-                })
-            })
+                }))
+            }
         }
+
     }
 
     // 修改

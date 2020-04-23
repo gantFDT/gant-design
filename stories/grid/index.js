@@ -586,6 +586,7 @@ const ComputeGrid = () => {
                     selectedKeys,
                     onSelect
                 }}
+                removeShowLine={false}
                 isServerSideGroup={(data) => data.children}
                 groupSuppressAutoColumn
                 isCompute={false}

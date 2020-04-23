@@ -1,8 +1,5 @@
 import { List, Record, Map, fromJS } from 'immutable'
 import { EventEmitter } from 'events'
-import { RowNode } from 'ag-grid-community'
-
-import { Record as DataRecord, DataActions } from '../interface'
 import { updateStateByKey } from "./utils"
 import { isList } from "../utils"
 
@@ -26,7 +23,7 @@ const initstate: State<any> = {
     diff: List([])
 }
 
-class History<T extends DataRecord> extends EventEmitter {
+class History<T> extends EventEmitter {
 
     private index: number = initstate.index
     private list: List<List<T>> = initstate.list
@@ -99,6 +96,8 @@ class History<T extends DataRecord> extends EventEmitter {
                 this.trash = this.trash.map(state => state.concat(children)) as List<List<T>>
             }
         }
+
+
         this.emit("manager:update")
     }
 
