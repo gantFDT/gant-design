@@ -15,12 +15,12 @@ export default class GantGroupCellRenderer extends Component<
 > {
   constructor(props) {
     super(props);
-    this.state = this.getTreeDataInfo(props.node, props.data);
+    this.state = this.getTreeDataInfo(props.node);
     props.node.setExpanded(this.state.expanded);
   }
 
-  getTreeDataInfo(node: RowNode, data) {
-    const { expanded: nodeExpanded, childrenAfterFilter } = node;
+  getTreeDataInfo(node: RowNode) {
+    const { expanded: nodeExpanded, childrenAfterFilter, data } = node;
     const {
       context: { isServerSideGroup },
     } = this.props;
@@ -43,23 +43,25 @@ export default class GantGroupCellRenderer extends Component<
   onExpend = (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
     const {
       node,
-      context: { serverDataRequest },
-      data: { treeDataPath },
+      context: { serverDataRequest, getDataPath },
+      data,
       api,
     } = this.props;
     event.stopPropagation();
+    event.nativeEvent.stopImmediatePropagation();
     if (node.childrenAfterFilter.length > 0) {
       this.setState(state => ({ ...state, expanded: true }));
       return node.setExpanded(true);
     }
     api.showLoadingOverlay();
-    serverDataRequest(this.props, treeDataPath, () => {
+    serverDataRequest(this.props, getDataPath(data), () => {
       node.setExpanded(true);
       api.hideOverlay();
     });
   };
   onClose = (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
     event.stopPropagation();
+    event.nativeEvent.stopImmediatePropagation()
     const { node } = this.props;
     node.setExpanded(false);
   };
@@ -70,19 +72,14 @@ export default class GantGroupCellRenderer extends Component<
     this.setState({ expanded });
   };
   dataChangedCallback = params => {
-    const { oldData, newData, node, update } = params;
-    if (isEqual(oldData, newData)) return;
-    this.props.api.refreshCells({
-      rowNodes: [node],
-      force: update,
-    });
-  };
-  test = params => {
-	  console.log(params)
+    this.setState({ ...this.getTreeDataInfo(params.node) });
   };
   componentDidMount() {
     this.props.node.addEventListener(RowNode.EVENT_EXPANDED_CHANGED, this.selectionChangedCallback);
-	this.props.node.addEventListener(RowNode.EVENT_DATA_CHANGED, this.dataChangedCallback);
+    this.props.node.addEventListener(
+      RowNode.EVENT_ALL_CHILDREN_COUNT_CHANGED,
+      this.dataChangedCallback,
+    );
   }
 
   componentWillUnmount() {
