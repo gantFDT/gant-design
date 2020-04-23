@@ -312,8 +312,8 @@ class DataManage<T extends Record = any> extends EventEmitter {
     }
 
     /**添加子级节点 */
-    appendChild(groupKeys: (string | number)[], children: T[]) {
-        this.history.appendChild(groupKeys, this.childrenName, fromJS(children), this.getServerSideGroupKey)
+    appendChild(groupKeys: (string | number)[], children: T[], isCompute: boolean) {
+        this.history.appendChild(groupKeys, this.childrenName, fromJS(children), this.getServerSideGroupKey, isCompute)
     }
 
 

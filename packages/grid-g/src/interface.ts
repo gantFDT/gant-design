@@ -154,6 +154,7 @@ export interface Props<T extends Record> {
   locale: object;
   serverGroupExpend: (param: IServerSideGetRowsParams, cd: (row: any[]) => void) => void;
   serialNumber?: boolean;
+  isCompute?: boolean;
 }
 
 export type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>;

@@ -156,7 +156,7 @@ const TreeGrid = () => {
 
     const append = useCallback(
         () => {
-            // manager.appendChild(["2"], [{ name: "child", age: 11, idcard: '111' }, { name: "child2", age: 12, idcard: '112' }])
+            manager.appendChild(["2"], [{ name: "child", age: 11, idcard: '111' }, { name: "child2", age: 12, idcard: '112' }])
         },
         [manager],
     )
@@ -244,7 +244,7 @@ const TreeGrid = () => {
                             <Button size="small">添加节点</Button>
                         </Dropdown>
                         <Button size="small" disabled={!(manager && selectedKeys.length)} onClick={() => manager.remove(deleteCb).then(e => message.success("删除成功"), e => { message.error("删除出错"); throw e })}>删除</Button>
-                        {/* <Button size="small" onClick={append}>添加子节点</Button> */}
+                        <Button size="small" onClick={append}>添加子节点</Button>
                         <Button size="small" onClick={() => manager.mapNodes(mapNodes)}>遍历所有节点</Button>
                         <Button size="small" onClick={() => manager.mapNodesIds(['3'], mapNodesIds)}>遍历指定节点</Button>
                         <Button size="small" onClick={() => manager.mapSelectedNodes(mapSelectedNodes)}>遍历选中节点</Button>
@@ -287,7 +287,7 @@ const TreeGrid = () => {
                     selectedKeys,
                     onSelect
                 }}
-                isServerSideGroup={(data)=>data.children}
+                isServerSideGroup={(data) => data.children}
                 pagination={{
                     pageSize: 2,
                     beginIndex,

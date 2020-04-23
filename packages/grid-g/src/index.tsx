@@ -90,6 +90,8 @@ export const defaultProps = {
   treeDataChildrenName: 'children',
   /** 默认的删除行为 */
   removeShowLine: true,
+  /**是否执行treeDataPath计算 */
+  isCompute: true
 };
 let gobalEditable: any;
 export const defaultRowSelection: RowSelection = {
@@ -135,6 +137,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     serialNumber,
     onRowGroupOpened,
     rowClassRules,
+    isCompute,
     ...orignProps
   } = props;
   const apiRef = useRef<GridApi>();
@@ -192,18 +195,16 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
   // 判断数据分别处理 treeTable 和普通table
   const dataSource = useMemo(() => {
     if (!treeData) return manageData;
-    if (!isServer) return flattenTreeData(manageData, getRowNodeId, [], treeDataChildrenName);
+    if (!isServer && isCompute) return flattenTreeData(manageData, getRowNodeId, [], treeDataChildrenName);
     return manageData;
   }, [manageData, treeData, treeDataChildrenName, getRowNodeId]);
-  const serverModel = useMemo(() => {
-    return isServer && treeData;
-  }, [isServer && treeData]);
+  const serverModel = useMemo(() => isServer && treeData, [isServer && treeData]);
   const serverDataCallback = useCallback((groupKeys, successCallback) => {
     return rows => {
       successCallback(rows, rows.length);
-      dataManage.appendChild(groupKeys, rows);
+      dataManage.appendChild(groupKeys, rows, isCompute);
     };
-  }, []);
+  }, [isCompute]);
   const serverDataRequest = useCallback(
     (params, groupKeys, successCallback) => {
       if (serverGroupExpend) {

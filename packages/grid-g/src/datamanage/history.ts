@@ -85,11 +85,19 @@ class History<T extends DataRecord> extends EventEmitter {
 
 
     /**替换状态 */
-    appendChild(groupKeys: (number | string)[], key: string, children: List<T>, getGroupKey: (d: any) => string | number) {
-
-        this.list = this.list.map(state => updateStateByKey(state, groupKeys, key, children, getGroupKey)) as List<List<T>>
-        if (this.canRedo) {
-            this.trash = this.trash.map(state => updateStateByKey(state, groupKeys, key, children, getGroupKey)) as List<List<T>>
+    appendChild(groupKeys: (number | string)[], key: string, children: List<T>, getGroupKey: (d: any) => string | number, isCompute: boolean) {
+        if (isCompute) {
+            //计算模型下
+            this.list = this.list.map(state => updateStateByKey(state, groupKeys, key, children, getGroupKey)) as List<List<T>>
+            if (this.canRedo) {
+                this.trash = this.trash.map(state => updateStateByKey(state, groupKeys, key, children, getGroupKey)) as List<List<T>>
+            }
+        } else {
+            // 非计算模型下直接插入数据
+            this.list = this.list.map(state => state.concat(children)) as List<List<T>>
+            if (this.canRedo) {
+                this.trash = this.trash.map(state => state.concat(children)) as List<List<T>>
+            }
         }
         this.emit("manager:update")
     }
