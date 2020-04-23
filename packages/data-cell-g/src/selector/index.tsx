@@ -15,10 +15,21 @@ type ProtoExtends<T, U> = U & {
 const selectorCache = new Map()
 const { Option } = Select
 
+export enum ValueType {
+  number = "number",
+  string = "string"
+}
+
+const valueFormatter = {
+  [ValueType.number]: Number,
+  [ValueType.string]: String,
+}
+
 
 const defaultprop = {
   query: null, // 组合使用的时候,query方法作为查询数据的Promise方法, 需要返回数据列表
   valueProp: 'value', // 告诉组件作为value的值是哪一个字段, 为空将取整个值
+  valuePropType: "string",
   labelProp: 'label',
   style: {},
   dataSource: [],
@@ -136,7 +147,7 @@ const withSelector = compose(
       }
       return value
     },
-    getValue: ({ valueProp }) => data => valueProp && isPlainObject(data) ? data[valueProp] : data, // 获取选项的value
+    getValue: ({ valueProp }) => data => String(valueProp && isPlainObject(data) ? data[valueProp] : data), // 获取选项的value
     getLabel: ({ labelProp }) => data => labelProp && isPlainObject(data) ? data[labelProp] : data, // 获取选项的label
     setLabel: ({ setLabel: originSetLabel }) => labels => originSetLabel(Array.isArray(labels) ? labels.filter(Boolean).join('、') : labels), // 重置setlabel方法,增加格式化的功能
   }),
@@ -168,7 +179,8 @@ const withSelector = compose(
       }
       const isArray = Array.isArray(value)
       let cValue = isArray ? value : [value]
-      const transormedValue = cValue.map(v => {
+      const transormedValue = cValue.map(cv => {
+        const v = String(cv)
         const isInList = dataList.find(item => getValue(item) === v)
         const isInStorage = storageList.find(item => getValue(item) === v)
         // 选择的缓存中的数据，需要做一层转化
@@ -184,15 +196,15 @@ const withSelector = compose(
   ),
   withHandlers({
     // 依赖转化后的value
-    transformDataToList: ({ labelProp, valueProp, renderItem, hideSelected, isMultiple, getValue, value: comValue }) => list => list.map(item => {
+    transformDataToList: ({ getLabel, getValue, renderItem, hideSelected, isMultiple, value: comValue }) => list => list.map(item => {
       if (renderItem) {
         return renderItem(item, Option)
       }
       if (isPlainObject(item)) {
         const { disabled, title, className } = item
-        const value = item[valueProp] || item.value;
+        const value = getValue(item);
         const key = value || item.key;
-        const label = item[labelProp]
+        const label = getLabel(item)
         let show = true, style
         if (hideSelected) {
           if (isMultiple) {
@@ -203,8 +215,6 @@ const withSelector = compose(
         }
 
         if (!show) style = { display: 'none' }
-
-
         return <Option key={key} value={value} disabled={disabled} title={title} style={style} className={className}>{label}</Option>
       }
       return <Option key={item} value={item}>{item}</Option>
@@ -231,6 +241,7 @@ const withSelector = compose(
   withHandlers({
     updateStorage: ({ selectorId, selectorStorageId, storageList, getValue, valueProp, setStorageList, useStorage }) => (data, update) => {
       if (!useStorage) return; // 不启用缓存
+
       const id = `${selectorId}-${getValue(data)}`
       let isUpdate = update // 为true表示从最近选择的项里面选择,只更新
       if (!isUpdate) { // 
@@ -419,7 +430,7 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
 
   onChange = (...args) => {
     const [value] = args
-    const { onChange, setCacheLabel, storageToReal } = this.props
+    const { onChange, setCacheLabel, storageToReal, valuePropType } = this.props
     let keys: SelectValue = undefined
     let labels: NArray<string> = undefined
     if (value) {
@@ -435,11 +446,11 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
           }
         })
         if (keyMap.size) {
-          keys = [...keyMap.keys()]
+          keys = [...keyMap.keys()].map(key => valueFormatter[valuePropType](key))
           labels = [...keyMap.values()]
         }
       } else {
-        keys = storageToReal(value.key)
+        keys = valueFormatter[valuePropType](storageToReal(value.key))
         labels = value.label
       }
     }
