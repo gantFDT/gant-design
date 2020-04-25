@@ -15,11 +15,12 @@ export default class GantGroupCellRenderer extends Component<
 > {
   constructor(props) {
     super(props);
-    this.state = this.getTreeDataInfo(props.node, props.data);
+    this.state = this.getTreeDataInfo(props.node);
+    props.node.setExpanded(this.state.expanded);
   }
 
-  getTreeDataInfo(node: RowNode, data) {
-    const { expanded: nodeExpanded, childrenAfterFilter } = node;
+  getTreeDataInfo(node: RowNode) {
+    const { expanded: nodeExpanded, childrenAfterFilter, data } = node;
     const {
       context: { isServerSideGroup },
     } = this.props;
@@ -42,40 +43,51 @@ export default class GantGroupCellRenderer extends Component<
   onExpend = (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
     const {
       node,
-      context: { serverDataRequest },
-      data: { treeDataPath },
+      context: { serverDataRequest, getDataPath },
+      data,
       api,
     } = this.props;
     event.stopPropagation();
+    event.nativeEvent.stopImmediatePropagation();
     if (node.childrenAfterFilter.length > 0) {
       this.setState(state => ({ ...state, expanded: true }));
       return node.setExpanded(true);
     }
     api.showLoadingOverlay();
-    serverDataRequest(this.props, treeDataPath, () => {
+    serverDataRequest(this.props, getDataPath(data), () => {
       node.setExpanded(true);
-      this.setState(state => ({ ...state, expanded: true }));
       api.hideOverlay();
     });
   };
   onClose = (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
     event.stopPropagation();
+    event.nativeEvent.stopImmediatePropagation()
     const { node } = this.props;
     node.setExpanded(false);
-    this.setState(state => ({ ...state, expanded: false }));
   };
-  cellChangedCallback = params => {
-    const { newData, node, update } = params;
-    this.props.api.refreshCells({
-	  rowNodes: [node],
-	  force:update
-    });
+  selectionChangedCallback = params => {
+    const {
+      node: { expanded },
+    } = params;
+    this.setState({ expanded });
+  };
+  dataChangedCallback = params => {
+    this.setState({ ...this.getTreeDataInfo(params.node) });
   };
   componentDidMount() {
-    this.props.node.addEventListener(RowNode.EVENT_DATA_CHANGED, this.cellChangedCallback);
+    this.props.node.addEventListener(RowNode.EVENT_EXPANDED_CHANGED, this.selectionChangedCallback);
+    this.props.node.addEventListener(
+      RowNode.EVENT_ALL_CHILDREN_COUNT_CHANGED,
+      this.dataChangedCallback,
+    );
   }
+
   componentWillUnmount() {
-    this.props.node.removeEventListener(RowNode.EVENT_DATA_CHANGED, this.cellChangedCallback);
+    this.props.node.removeEventListener(
+      RowNode.EVENT_EXPANDED_CHANGED,
+      this.selectionChangedCallback,
+    );
+    this.props.node.removeEventListener(RowNode.EVENT_DATA_CHANGED, this.dataChangedCallback);
   }
   render() {
     const {
@@ -84,8 +96,8 @@ export default class GantGroupCellRenderer extends Component<
       node: { level },
     } = this.props;
     const { hasChildren, expanded } = this.state;
-    const showValue = valueFormatted ? this.props.formatValue(this.props) : value;
-
+    const showValue =
+    valueFormatted && valueFormatted !== '[object Object]' ? valueFormatted : value;
     return (
       <span
         className={classnames('ag-cell-wrapper', ' ag-row-group', ` ag-row-group-indent-${level}`)}

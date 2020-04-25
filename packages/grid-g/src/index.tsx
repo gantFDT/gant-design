@@ -91,6 +91,8 @@ export const defaultProps = {
   treeDataChildrenName: 'children',
   /** 默认的删除行为 */
   removeShowLine: true,
+  /**是否执行treeDataPath计算 */
+  isCompute: true,
 };
 let gobalEditable: any;
 export const defaultRowSelection: RowSelection = {
@@ -136,6 +138,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     serialNumber,
     onRowGroupOpened,
     rowClassRules,
+    isCompute,
     ...orignProps
   } = props;
   const apiRef = useRef<GridApi>();
@@ -180,6 +183,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     manager.childrenName = treeDataChildrenName;
     manager.getServerSideGroupKey = getServerSideGroupKey ? getServerSideGroupKey : getRowNodeId;
     manager.removeShowLine = removeShowLine;
+    manager.isCompute = isCompute;
     return manager;
   }, []);
 
@@ -193,12 +197,11 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
   // 判断数据分别处理 treeTable 和普通table
   const dataSource = useMemo(() => {
     if (!treeData) return manageData;
-    if (!isServer) return flattenTreeData(manageData, getRowNodeId, [], treeDataChildrenName);
+    if (!isServer && isCompute)
+      return flattenTreeData(manageData, getRowNodeId, [], treeDataChildrenName);
     return manageData;
   }, [manageData, treeData, treeDataChildrenName, getRowNodeId]);
-  const serverModel = useMemo(() => {
-    return isServer && treeData;
-  }, [isServer && treeData]);
+  const serverModel = useMemo(() => isServer && treeData, [isServer && treeData]);
   const serverDataCallback = useCallback((groupKeys, successCallback) => {
     return rows => {
       successCallback(rows, rows.length);
@@ -378,11 +381,13 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                     serverDataRequest,
                     isServerSideGroup,
                     size,
+                    getDataPath: orignProps.getDataPath ? orignProps.getDataPath : getDataPath,
                     computedPagination,
                     ...context,
                   }}
+                  deltaRowDataMode
                   suppressAnimationFrame
-                  suppressRowDrag
+                  stopEditingWhenGridLosesFocus={false}
                   {...gridPartProps}
                   {...selection}
                   {...orignProps}
@@ -394,7 +399,6 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                     ...defaultColDef,
                   }}
                   onCellValueChanged={cellValueChanged}
-                  deltaRowDataMode
                   groupDefaultExpanded={groupDefaultExpanded}
                   onRowGroupOpened={onGantRowGroupOpened}
                   localeText={locale}

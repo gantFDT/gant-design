@@ -52,28 +52,28 @@ const Demo2 = () => {
   const dataSource = useMemo(() => [
     {
       label: '任务一',
-      value: 'task1',
+      value: 1,
       group: '已完成'
     },
     {
       label: '任务二',
-      value: 'task2',
+      value: 2,
       group: '计划中'
     },
     {
       label: '任务三',
-      value: 'task3',
+      value: 3,
       group: '已完成'
     },
     {
       label: '任务四',
-      value: 'task4',
+      value: 4,
       group: '准备中'
     },
   ], [])
-  const [value, setValue] = useState('task1')
+  const [value, setValue] = useState(1)
 
-  return <Selector selectorId='tasks' edit={EditStatus.EDIT} dataSource={dataSource} value={value} onChange={setValue} onSave={(id, value, cb) => cb()} />
+  return <Selector selectorId='tasks' edit={EditStatus.EDIT} dataSource={dataSource} value={value} valuePropType="number" onChange={v => { console.log(v); setValue(v) }} onSave={(id, value, cb) => cb()} />
 }
 /*! Split !*/
 const Demo3 = () => {
@@ -188,7 +188,7 @@ const Demo6 = () => {
   ]);
   const [value, setValue] = useState()
 
-  return <Selector multiple selectorId='multiple'  dataSource={list} value={value} onChange={setValue} onSave={(id, value, cb) => cb()} />
+  return <Selector multiple selectorId='multiple' dataSource={list} value={value} onChange={setValue} onSave={(id, value, cb) => cb()} />
 }
 /*! Split !*/
 const Demo7 = () => {

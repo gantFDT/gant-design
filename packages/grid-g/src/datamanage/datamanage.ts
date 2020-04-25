@@ -8,24 +8,26 @@ import History from './history'
 import ListProxy from './listproxy'
 import DataProxy from './dataproxy'
 import { findChildren, removeDeepItem, getPureRecord, getPureList, getIndexPath } from './utils'
-import { Record, DataActions, RemoveCallBack, Move } from '../interface'
-import { isnumber, isbool, isDeleted, trackEditValueChange } from '../utils'
+import { DataActions, RemoveCallBack, Move } from '../interface'
+import { isnumber, isbool, isDeleted, isarray } from '../utils'
 
 interface RemoveOptions {
     removeChildren: boolean,
     showLine: boolean
 }
 
+type Record = Map<string, any>
+
 const _add = Map<string, any>()
 const _modify = Map<string, any>()
 const _removed = Map<string, any>()
 
-class DataManage<T extends Record = any> extends EventEmitter {
+class DataManage<T = any> extends EventEmitter {
 
 
     // private _state: List<T>
     private _originList: T[]
-    private history: History<T>
+    private history: History<Record>
     _add = _add
     _modify = _modify
     _removed = _removed
@@ -42,12 +44,13 @@ class DataManage<T extends Record = any> extends EventEmitter {
     // 获取group key path
     getServerSideGroupKey: (d: any) => string
     childrenName: string = 'children'
+    isCompute: boolean
 
 
 
     constructor() {
         super();
-        this.history = new History()
+        this.history = new History<Record>()
         this.history.on("manager:update", this.update.bind(this))
         this.history.on("manager:diff", this.pushDiff.bind(this))
     }
@@ -99,11 +102,7 @@ class DataManage<T extends Record = any> extends EventEmitter {
     // 初始化
     reset() {
         const state = fromJS(this._originList)
-        /**清空diff数据 */
-        this._add = _add
-        this._modify = _modify
-        this._removed = _removed
-
+        this.clearDiff()
         this.history.init(state)
     }
 
@@ -115,6 +114,7 @@ class DataManage<T extends Record = any> extends EventEmitter {
     /**取消编辑 */
     cancel() {
         const firstList = this.history.first
+        this.clearDiff()
         this.history.init(firstList)
     }
 
@@ -123,6 +123,8 @@ class DataManage<T extends Record = any> extends EventEmitter {
         const lastList = this.history.last
         const list = getPureList(this.renderList, true)
         const diff = this.diff
+
+        this.clearDiff()
         this.history.init(lastList)
 
         return {
@@ -161,30 +163,38 @@ class DataManage<T extends Record = any> extends EventEmitter {
     create(item: T | T[], node: RowNode, index?: number, isChild?: boolean): void
     create(item: T | T[], node: RowNode, isChild?: boolean, index?: number): void
     create(item: T | T[], node: RowNode | number = 0, index: number | boolean = 0, isChild?: number | boolean) {
-        const isArray = Array.isArray(item)
-        const itemNodes = isArray ? item : [item]
+        let itemNodes: T[]
+        if (isarray(item)) {
+            itemNodes = item
+        } else {
+            itemNodes = [item]
+        }
         const immuNodes = itemNodes.map(item => fromJS({ ...item, _rowType: DataActions.add }))
         let newState = null
-        if (isnumber(node)) {
-            const index = node
-            // newState = this.state.insert(index, itemNode)
-            newState = this.state.splice(index, 0, ...immuNodes)
-        } else {
-            const indexPath = getIndexPath(node).flatMap(index => [index, this.childrenName])
-            let addIndex: number, append: boolean
-            if (isnumber(index)) {
-                addIndex = index
-                if (isbool(isChild)) append = isChild
-                else append = true // undefined
+        if (this.isCompute) {
+            if (isnumber(node)) {
+                const index = node
+                newState = this.state.splice(index, 0, ...immuNodes)
             } else {
-                append = index
-                if (isnumber(isChild)) addIndex = isChild
-                else addIndex = 0 // undefined
+                const indexPath = getIndexPath(node).flatMap(index => [index, this.childrenName])
+                let addIndex: number, append: boolean
+                if (isnumber(index)) {
+                    addIndex = index
+                    if (isbool(isChild)) append = isChild
+                    else append = true // undefined
+                } else {
+                    append = index
+                    if (isnumber(isChild)) addIndex = isChild
+                    else addIndex = 0 // undefined
+                }
+                const paths = append ? indexPath : indexPath.slice(0, -2)
+                // newState = this.state.updateIn(paths, children => children ? children.insert(addIndex, itemNode) : List([]).push(itemNode))
+                newState = this.state.updateIn(paths, children => children ? children.splice(addIndex, 0, ...immuNodes) : List([]).concat(immuNodes))
             }
-            const paths = append ? indexPath : indexPath.slice(0, -2)
-            // newState = this.state.updateIn(paths, children => children ? children.insert(addIndex, itemNode) : List([]).push(itemNode))
-            newState = this.state.updateIn(paths, children => children ? children.splice(addIndex, 0, ...immuNodes) : List([]).concat(immuNodes))
+        } else {
+            newState = this.state.concat(immuNodes)
         }
+
 
         itemNodes.forEach(item => {
             const id = this.getRowNodeId(item)
@@ -265,23 +275,47 @@ class DataManage<T extends Record = any> extends EventEmitter {
      * @param id 节点id
      * @param showLine 是否显示删除线
      */
-    private removeInner<T>(state: List<T>, keyPath: (string | number)[], id: string, showLine: boolean = this.removeShowLine): List<T> {
+    private removeInner(state, keyPath: (string | number)[], id: string, showLine: boolean = this.removeShowLine): List<Record> {
         const _this = this
-        const fullPath = this.getFlatKey(keyPath)
-        const parentPath = fullPath.slice(0, -1);
-        const item = state.getIn(fullPath)
-        const rowType = item.get("_rowType")
-        if (!showLine || rowType === DataActions.add) {
-            return state.updateIn(parentPath, (parentState) => parentState.filter(item => _this.getRowNodeId(item.toJS()) !== id))
+        if (this.isCompute) {
+            const fullPath = this.getFlatKey(keyPath)
+            const parentPath = fullPath.slice(0, -1);
+            const item = state.getIn(fullPath)
+            if (!item) return state // 没有找到节点
+            const rowId = this.getRowNodeId(item.toJS())
+            if (rowId !== id) return state // 找到节点，但是节点已经发生变化。这种情况发生在直接移除节点的模式下
+            const rowType = item.get("_rowType")
+            if (!showLine || rowType === DataActions.add) {
+                return state.updateIn(parentPath, (parentState) => parentState.filter(item => _this.getRowNodeId(item.toJS()) !== id))
+            } else {
+                return state.updateIn(fullPath, item => {
+                    // return item.set('isDeleted', true)
+                    return item.merge({
+                        isDeleted: true,
+                        _rowType: DataActions.remove
+                    })
+                })
+            }
         } else {
-            return state.updateIn(fullPath, item => {
-                // return item.set('isDeleted', true)
-                return item.merge({
+            let index = -1;
+            const item = state.find((row, ind) => {
+                const find = _this.getRowNodeId(row.toJS()) === id
+                if (find) {
+                    index = ind
+                }
+                return find
+            })
+            const rowType = item.get("_rowType")
+            if (!showLine || rowType === DataActions.add) {
+                return state.filter(item => _this.getRowNodeId(item.toJS()) !== id)
+            } else {
+                return state.update(index, item => item.merge({
                     isDeleted: true,
                     _rowType: DataActions.remove
-                })
-            })
+                }))
+            }
         }
+
     }
 
     // 修改
@@ -303,17 +337,24 @@ class DataManage<T extends Record = any> extends EventEmitter {
                     this._modify = this._modify.delete(id)
                 }
             }
-            let keyPath = getIndexPath(changed.node)
+            let newState = this.state
+            if (this.isCompute) {
+                let keyPath = getIndexPath(changed.node)
 
-            const paths = this.getFlatKey(keyPath)
-            const newState = this.state.updateIn(paths, node => fromJS(data))
-            this.history.push(newState)
+                const paths = this.getFlatKey(keyPath)
+                newState = this.state.updateIn(paths, node => fromJS(data))
+            } else {
+                const index = this.state.findIndex(row => this.getRowNodeId(row.toJS()) === id)
+                newState = this.state.update(index, node => fromJS(data))
+            }
+            if (newState !== this.state) this.history.push(newState)
+
         }
     }
 
     /**添加子级节点 */
     appendChild(groupKeys: (string | number)[], children: T[]) {
-        this.history.appendChild(groupKeys, this.childrenName, fromJS(children), this.getServerSideGroupKey)
+        this.history.appendChild(groupKeys, this.childrenName, fromJS(children), this.getServerSideGroupKey, this.isCompute)
     }
 
 
@@ -364,20 +405,23 @@ class DataManage<T extends Record = any> extends EventEmitter {
             cb(dataProxy.proxy)
             return {
                 ...dataProxy,
-                indexPath
+                indexPath,
             }
-        })
-        const newState = actionList.reduce((state, { action, indexPath, id, newData }) => {
-            if (action === DataActions.remove) return this.removeInner(state, indexPath, id)
-            else if (action === DataActions.modify) {
-                const fullPath = this.getFlatKey(indexPath)
-                return state.updateIn(fullPath, record => {
-                    return fromJS(newData)
-                })
-            }
-            return state
-        }, this.state)
-        this.history.push(newState)
+        }).filter(actions => actions.isChanged)
+        if (actionList.length) {
+            const newState = actionList.reduce((state, { action, indexPath, id, newData }) => {
+                if (action === DataActions.remove) return this.removeInner(state, indexPath, id)
+                else if (action === DataActions.modify) {
+                    const fullPath = this.getFlatKey(indexPath)
+                    return state.updateIn(fullPath, record => {
+                        return fromJS(newData)
+                    })
+                }
+                return state
+            }, this.state)
+            this.history.push(newState)
+        }
+
     }
 
     /**将当前diff推送到history,在每次history.push的时候会执行 */
@@ -395,6 +439,14 @@ class DataManage<T extends Record = any> extends EventEmitter {
         this._add = diff.get("add")
         this._modify = diff.get("modify")
         this._removed = diff.get("remove")
+    }
+
+    /**保存取消的时候清除diff数据 */
+    clearDiff() {
+        /**清空diff数据 */
+        this._add = _add
+        this._modify = _modify
+        this._removed = _removed
     }
 
     get diff() {
