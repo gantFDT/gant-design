@@ -36,7 +36,7 @@ class Input extends React.Component<GantInputProps> {
               autoFocus={true}
               ref={wrapperRef}
               onChange={(e: any) => this.onChange(e)}
-              onKeyDown={onEnter}
+              onPressEnter={onEnter}
             />
           }
         }
