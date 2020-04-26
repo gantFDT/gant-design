@@ -288,6 +288,7 @@ const TreeGrid = () => {
                     selectedKeys,
                     onSelect
                 }}
+                // removeShowLine={false}
                 isServerSideGroup={(data) => data.children}
                 pagination={{
                     pageSize: 2,
@@ -533,7 +534,7 @@ const ComputeGrid = () => {
     )
     const mapNodesIds = useCallback(
         (node) => {
-            node.name = "mapNodesIds"
+            node.isDeleted = true
         },
         [],
     )
@@ -553,7 +554,7 @@ const ComputeGrid = () => {
                         <Button size="small" disabled={!(manager && selectedKeys.length)} onClick={() => manager.remove(deleteCb).then(e => message.success("删除成功"), e => { message.error("删除出错"); throw e })}>删除</Button>
                         <Button size="small" onClick={append}>添加子节点</Button>
                         <Button size="small" onClick={() => manager.mapNodes(mapNodes)}>遍历所有节点</Button>
-                        <Button size="small" onClick={() => manager.mapNodesIds(['3'], mapNodesIds)}>遍历指定节点</Button>
+                        <Button size="small" onClick={() => manager.mapNodesIds(['1'], mapNodesIds)}>遍历指定节点</Button>
                         <Button size="small" onClick={() => manager.mapSelectedNodes(mapSelectedNodes)}>遍历选中节点</Button>
                         <Button size="small" onClick={() => manager.undo()}>撤销</Button>
                         <Button size="small" onClick={() => manager.redo()}>重做</Button>
@@ -720,11 +721,11 @@ const config = {
         <div><a href="https://github.com/ag-grid/ag-grid/blob/master/LICENSE.txt" target="_blank">LICENSE</a></div>
     </div>,
     children: [
-        // {
-        //     title: "树形数据单元格编辑",
-        //     describe: "树形结构的单元格编辑，对节点的操作、撤销、重做等",
-        //     cmp: TreeGrid
-        // },
+        {
+            title: "树形数据单元格编辑",
+            describe: "树形结构的单元格编辑，对节点的操作、撤销、重做等",
+            cmp: TreeGrid
+        },
         {
             title: "isCompute模式",
             describe: "isCompute模式下提供平行结构的原始数据，如果要转化成树状结构，需要注意添加treeData、getDataPath",
