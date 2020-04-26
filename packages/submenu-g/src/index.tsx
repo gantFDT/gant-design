@@ -23,6 +23,7 @@ export interface SubmenuIF {
   selectedKey?: string;
   width: number | string;
   fixedTopHeight?: number;
+  zIndex?: number,
   subMinHeight: number | string;
   collapsedWidth: number | string;
   extra?: React.ReactNode;
@@ -93,7 +94,7 @@ export default class Submenu extends React.Component<any, Partial<SubmenuIF>> {
   };
 
   handleScroll = () => {
-    const { fixedTopHeight, showFixedBoxShadow } = this.props;
+    const { fixedTopHeight, showFixedBoxShadow, zIndex } = this.props;
     const { mode } = this.state;
     if (!this.warpRef) return;
     const fixedEle: any = this.warpRef.querySelector(`.${this.prefixCls}-wrap`); //定位元素
@@ -104,6 +105,7 @@ export default class Submenu extends React.Component<any, Partial<SubmenuIF>> {
     if (parentClientTop <= fixedTopHeight) {
       fixedEle.classList.add(`${this.prefixCls}-fixed`);
       fixedEle.style.top = `${fixedTopHeight}px`;
+      zIndex && (fixedEle.style.zIndex = zIndex);
       fixedEle.style.width = `${fixedEleParent.offsetWidth - (mode == 'inline' ? 1 : 0)}px`;
       if (showFixedBoxShadow && horEle) {
         fixedEle.classList.add(`${this.prefixCls}-boxShow`);
@@ -207,7 +209,7 @@ export default class Submenu extends React.Component<any, Partial<SubmenuIF>> {
   }
   // 渲染水平菜单
   renderHorMenu(prefixCls) {
-    const { collapsedWidth, setMenuBoxRef, style } = this.props;
+    const { setMenuBoxRef, style } = this.props;
     return (
       <div
         className={`${prefixCls}-menubox ${prefixCls}-menuboxhor`}
