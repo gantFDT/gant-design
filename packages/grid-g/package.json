@@ -28,6 +28,7 @@
     "classnames": "^2.2.6",
     "data-cell-g": "^0.0.11",
     "lodash": "^4.17.11",
+    
     "moment": "^2.24.0",
     "prop-types": "^15.6.0",
     "react": "^16.12.0",

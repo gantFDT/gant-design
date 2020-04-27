@@ -10,30 +10,6 @@ import { Input, InputCellPhone, } from "@data-cell"
 import Header from '@header'
 /*! Split !*/
 const TreeGrid = () => {
-    function getSimpleCellRenderer() {
-        function SimpleCellRenderer() { }
-        SimpleCellRenderer.prototype.init = function (params) {
-            console.log(params)
-            var tempDiv = document.createElement('div');
-            if (params.node.group) {
-                tempDiv.innerHTML =
-                    '<span style="border-bottom: 1px solid grey; border-left: 1px solid grey; padding: 2px;">' +
-                    params.value +
-                    '</span>';
-            } else {
-                tempDiv.innerHTML =
-                    '<span><img src="https://flags.fmcdn.net/data/flags/mini/ie.png" style="width: 20px; padding-right: 4px;"/>' +
-                    params.value +
-                    '</span>';
-            }
-            this.eGui = tempDiv.firstChild;
-        };
-        SimpleCellRenderer.prototype.getGui = function () {
-            return this.eGui;
-        };
-        return SimpleCellRenderer;
-    }
-
     const [editable, seteditable] = useState(false)
 
     const [loading, setLoading] = useState(true)
@@ -60,14 +36,14 @@ const TreeGrid = () => {
                 // }
             },
             enableRowGroup: true,
-            cellRenderer: "gantGroupCellRenderer",
+            // cellRenderer: "gantGroupCellRenderer",
         },
         {
             title: '年龄',
             fieldName: "age",
             sortable: true,
             filter: Filter.Number,
-            type: "numericColumn",
+            // type: "numericColumn",
             enableRowGroup: true,
             editConfig: {
                 component: Checkbox,
@@ -92,13 +68,13 @@ const TreeGrid = () => {
                 name: "里斯",
                 idcard: "1",
                 age: 123,
-                children: [
-                    {
-                        name: "阿萨的脚后跟",
-                        age: 1,
-                        idcard: "11",
-                    }
-                ]
+                // children: [
+                //     {
+                //         name: "阿萨的脚后跟",
+                //         age: 1,
+                //         idcard: "11",
+                //     }
+                // ]
             },
             {
                 name: "阿斯u",
@@ -127,7 +103,8 @@ const TreeGrid = () => {
     const [isTree, setIsTree] = useState(true)
 
     const onReady = useCallback((params, manager) => {
-        apiRef.current = params
+        apiRef.current = params;
+        console.log("manager",manager.getRowData())
         setManager(manager)
     }, [])
 
@@ -230,9 +207,9 @@ const TreeGrid = () => {
         },
         [],
     )
+
     return (
         <>
-            <Switch onBulr={() => console.log("onBulr")} />
             <Header extra={!editable ? (
                 <>
                     <Button size="small" onClick={edit}>进入编辑</Button>
@@ -271,32 +248,29 @@ const TreeGrid = () => {
                 type="line"
             />
             <Grid
-                components={{
-                    "simpleCellRenderer": getSimpleCellRenderer()
-                }}
                 rowkey="idcard"
-                loading={loading}
+                // loading={loading}
                 columns={columns}
                 // treeData={isTree}
                 // treeData
-                editable={editable}
-                dataSource={dataSource}
-                onReady={onReady}
-                serialNumber
-                rowSelection={{
-                    type: 'multiple',
-                    selectedKeys,
-                    onSelect
-                }}
+                // editable={editable}
+                rowData={dataSource}
+                // onReady={onReady}
+                // serialNumber
+                // rowSelection={{
+                //     type: 'multiple',
+                //     selectedKeys,
+                //     onSelect
+                // }}
                 // removeShowLine={false}
-                isServerSideGroup={(data) => data.children}
-                pagination={{
-                    pageSize: 2,
-                    beginIndex,
-                    total: 5,
-                    onChange: onPageChange,
-                }}
-                groupSuppressAutoColumn
+                // isServerSideGroup={(data) => data.children}
+                // pagination={{
+                //     pageSize: 2,
+                //     beginIndex,
+                //     total: 5,
+                //     onChange: onPageChange,
+                // }}
+                // groupSuppressAutoColumn
             />
         </>
     )
@@ -733,11 +707,11 @@ const config = {
             describe: "树形结构的单元格编辑，对节点的操作、撤销、重做等",
             cmp: TreeGrid
         },
-        {
-            title: "isCompute模式",
-            describe: "isCompute模式下提供平行结构的原始数据，如果要转化成树状结构，需要注意添加treeData、getDataPath",
-            cmp: ComputeGrid
-        },
+        // {
+        //     title: "isCompute模式",
+        //     describe: "isCompute模式下提供平行结构的原始数据，如果要转化成树状结构，需要注意添加treeData、getDataPath",
+        //     cmp: ComputeGrid
+        // },
         // {
         //     title: "async tree",
         //     describe: "异步树形",

@@ -189,8 +189,9 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
   const computedPagination = usePagination(pagination);
   // 判断数据分别处理 treeTable 和普通table
   const dataSource = useMemo(() => {
-    if (!treeData && isCompute) return initDataSource;
-    return flattenTreeData(initDataSource, getRowNodeId, treeDataChildrenName);
+    if (treeData && isCompute)
+      return flattenTreeData(initDataSource, getRowNodeId, treeDataChildrenName);
+    return initDataSource;
   }, [initDataSource, treeData, treeDataChildrenName, getRowNodeId]);
   useEffect(() => {
     gridManager.reset({ dataSource, getRowNodeId });
@@ -327,7 +328,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                   suppressAnimationFrame
                   stopEditingWhenGridLosesFocus={false}
                   rowData={dataSource}
-                  treeData
+                  treeData={treeData}
                   getDataPath={getDataPath}
                   {...selection}
                   {...orignProps}
