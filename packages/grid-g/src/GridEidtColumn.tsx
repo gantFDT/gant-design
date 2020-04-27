@@ -26,22 +26,21 @@ export default WrapperComponent =>
       changeFormatter,
       rowkey,
       rowIndex,
-      context: { size },
+      context: { size, editRowDataChanged },
     } = props;
-    const [cacheValue, setCacheValue] = useState(value);
+    const [newValue, setNewValue] = useState(value);
     const inputRef: any = useRef();
     const onChange = useCallback(
       val => {
-        console.log('val', val);
         let chageVal = val;
         if (typeof changeFormatter === 'function') chageVal = changeFormatter(val, data);
-        setCacheValue(chageVal);
+        setNewValue(chageVal);
       },
       [changeFormatter],
     );
     const onBlur = useCallback(
       (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-          stopEditing();
+        stopEditing();
       },
       [stopEditing],
     );
@@ -58,33 +57,30 @@ export default WrapperComponent =>
       () => {
         return {
           getValue: () => {
-            if (value === cacheValue) return cacheValue;
-            let newRowData: any = trackEditValueChange(data, field, cacheValue, value);
-            const rowNode = api.getRowNode(rowId);
-            rowNode.setData(newRowData);
-            return cacheValue;
+            if (value === newValue) return newValue;
+            editRowDataChanged({ ...data, [field]: newValue });
+            return value;
           },
         };
       },
-      [cacheValue, data, value, field, cacheValue, rowId],
+      [newValue, data, value, field, newValue, rowId],
     );
     useEffect(() => {
       setTimeout(() => {
+        console.log("inputRef.current",inputRef.current)
         inputRef.current && inputRef.current.focus();
       }, 10);
     }, []);
     const wrapperClick = useCallback((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
       event.stopPropagation();
       event.nativeEvent.stopImmediatePropagation();
-      event.cancelable = true;
     }, []);
     return (
-      <div className={classnames('gant-grid-cell-editing')} onClick={wrapperClick}>
+      <div className={classnames('gant-grid-cell-editing')}  onClick={wrapperClick}>
         <WrapperComponent
           wrapperRef={inputRef}
-          ref={inputRef}
           {...compoentProps}
-          value={cacheValue}
+          value={newValue}
           {...defalutProps}
           onChange={onChange}
           size={size}

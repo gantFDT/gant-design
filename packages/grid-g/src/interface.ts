@@ -10,6 +10,7 @@ import { defaultProps, defaultRowSelection } from './index';
 
 import { PaginationProps } from 'antd/lib/pagination';
 import DataManage from './datamanage';
+import GridManager from './gridManager';
 // 编辑框大小
 export enum Size {
   small = 'small',
@@ -28,6 +29,7 @@ export enum DataActions {
   add = 'add',
   remove = 'remove',
   modify = 'modify',
+  removeTag = 'remove_tag',
 }
 
 export enum Fixed {
@@ -50,7 +52,7 @@ export type PartRequired<T, U extends keyof T> = Required<Pick<T, U>> & Partial<
 /**删除数据时的回调方法，可以返回boolean、array或者是一个能够提供boolean、array类型返回值的promise */
 export type RemoveCallBack = (selected: any[]) => Promise<boolean> | boolean;
 
-export type OnReady = (api: GridReadyEvent, manager: DataManage) => void;
+export type OnReady = (api: GridReadyEvent, gridManager: GridManager) => void;
 
 export type GridApi = AgGridApi;
 
@@ -155,6 +157,7 @@ export interface Props<T extends Record> {
   serverGroupExpend: (param: IServerSideGetRowsParams, cd: (row: any[]) => void) => void;
   serialNumber?: boolean;
   isCompute?: boolean;
+  onCellEditChange: (record: any) => any[];
 }
 
 export type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>;

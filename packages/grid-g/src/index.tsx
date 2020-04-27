@@ -50,15 +50,15 @@ import {
   DataActions,
 } from './interface';
 import './style';
-import DataManage from './datamanage';
 import RenderCol from './GirdRenderColumn';
 import GantGroupCellRenderer from './GantGroupCellRenderer';
+import GridManager from './gridManager';
 export * from './interface';
-export { default as DataManage } from './datamanage';
 import { getAllComponentsMaps } from './maps';
 import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
 import en from './locale/en-US';
 import zh from './locale/zh-CN';
+import { generateUuid } from '@util';
 export { setComponentsMaps, setFrameworkComponentsMaps } from './maps';
 LicenseManager.setLicenseKey(key);
 
@@ -135,16 +135,18 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     components,
     removeShowLine,
     serialNumber,
-    onRowGroupOpened,
     rowClassRules,
     isCompute,
+    getDataPath: orignGetDataPath,
+    onCellEditChange,
     ...orignProps
   } = props;
   const apiRef = useRef<GridApi>();
   const columnsRef = useRef<ColumnApi>();
+  const gridManager = useMemo(() => {
+    return new GridManager();
+  }, []);
 
-  /**编辑时数据 */
-  const [manageData, setManageData] = useState(initDataSource);
   // 处理selection
   const gantSelection: RowSelection = useMemo(() => {
     if (rowSel === true) {
@@ -162,6 +164,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     ...selection
   } = gantSelection;
 
+  // getRowNodeId;
   const getRowNodeId = useCallback(
     data => {
       if (typeof rowkey === 'string') {
@@ -171,40 +174,30 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     },
     [rowkey],
   );
-  /**管理编辑数据对象 */
-  const dataManage = useMemo(() => {
-    const manager = new DataManage<T>();
-    manager.removeAllListeners();
-    manager.on('update', list => {
-      setManageData(list);
-    });
-    manager.getRowNodeId = getRowNodeId;
-    manager.childrenName = treeDataChildrenName;
-    manager.getServerSideGroupKey = getServerSideGroupKey ? getServerSideGroupKey : getRowNodeId;
-    manager.removeShowLine = removeShowLine;
-    manager.isCompute = isCompute;
-    return manager;
-  }, []);
-
-  useEffect(() => {
-    dataManage.init(initDataSource);
-  }, [initDataSource]);
+  //
+  const getDataPath = useCallback(
+    data => {
+      if (orignGetDataPath) return orignGetDataPath(data);
+      return data.treeDataPath;
+    },
+    [orignGetDataPath],
+  );
   /**fix: 解决保存时候标记状态无法清楚的问题 */
 
   // 分页事件
   const computedPagination = usePagination(pagination);
   // 判断数据分别处理 treeTable 和普通table
   const dataSource = useMemo(() => {
-    if (!treeData) return manageData;
-    if (!isServer && isCompute)
-      return flattenTreeData(manageData, getRowNodeId, [], treeDataChildrenName);
-    return manageData;
-  }, [manageData, treeData, treeDataChildrenName, getRowNodeId]);
-  const serverModel = useMemo(() => isServer && treeData, [isServer && treeData]);
+    if (!treeData && isCompute) return initDataSource;
+    return flattenTreeData(initDataSource, getRowNodeId, treeDataChildrenName);
+  }, [initDataSource, treeData, treeDataChildrenName, getRowNodeId]);
+  useEffect(() => {
+    gridManager.reset({ dataSource, getRowNodeId });
+  }, [dataSource, getRowNodeId]);
   const serverDataCallback = useCallback((groupKeys, successCallback) => {
     return rows => {
       successCallback(rows, rows.length);
-      dataManage.appendChild(groupKeys, rows);
+      gridManager.appendChild(groupKeys, rows);
     };
   }, []);
   const serverDataRequest = useCallback(
@@ -216,57 +209,20 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     },
     [serverGroupExpend],
   );
+
   const { componentsMaps, frameworkComponentsMaps } = useMemo(() => {
     return getAllComponentsMaps();
   }, []);
-  useEffect(() => {
-    if (!serverModel) return;
-    const fakeServer = createFakeServer(
-      dataManage,
-      getServerSideGroupKey ? getServerSideGroupKey : getRowNodeId,
-      treeDataChildrenName,
-    );
-    const serverDataSource = createServerSideDatasource(fakeServer, serverDataRequest);
-    apiRef.current && apiRef.current.setServerSideDatasource(serverDataSource);
-  }, [
-    serverModel,
-    treeDataChildrenName,
-    serverDataRequest,
-    apiRef.current,
-    initDataSource,
-    getServerSideGroupKey,
-    getRowNodeId,
-  ]);
-  const getDataPath = useCallback(data => {
-    return data.treeDataPath;
-  }, []);
-  const gridPartProps = useMemo(() => {
-    if (treeData && isServer)
-      return {
-        isServerSideGroup,
-        treeData,
-        rowModelType: 'serverSide',
-        rowData: dataSource,
-        getServerSideGroupKey: getServerSideGroupKey ? getServerSideGroupKey : getRowNodeId,
-      };
-    return {
-      treeData,
-      rowData: dataSource,
-      getDataPath,
-    };
-  }, [dataSource, getRowNodeId, isServerSideGroup, treeData, isServer]);
 
   const onGridReady = useCallback(
     (params: GridReadyEvent) => {
       apiRef.current = params.api;
       columnsRef.current = params.columnApi;
-      onReady && onReady(params, dataManage);
-      dataManage.gridApi = params.api;
-      dataManage.columnApi = params.columnApi;
+      gridManager.agGridApi = params.api;
+      onReady && onReady(params, gridManager);
     },
     [onReady],
   );
-
   const onSelectionChanged = useCallback(
     (event: SelectionChangedEvent) => {
       const rows = event.api.getSelectedRows();
@@ -291,7 +247,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         else nodeItem.setSelected(false);
       });
     }
-  }, [selectedKeys, apiRef.current, rowSelection, getRowNodeId, manageData]);
+  }, [selectedKeys, apiRef.current, rowSelection, getRowNodeId]);
   // 处理selection-end
   //columns
   const defaultSelection = !isEmpty(gantSelection) && showDefalutCheckbox;
@@ -303,36 +259,19 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
       defaultSelectionCol,
       rowSelection,
       serialNumber,
-      dataManage.cellEvents,
     );
   }, [columnDefs, getRowNodeId]);
+
   //columns-end
-  const cellValueChanged = useCallback(changed => {
-    dataManage.modify(changed);
-  }, []);
-  const refreshRowBufferCells = useCallback(
-    rowIndex => {
-      apiRef.current.refreshCells({
-        force: true,
-        columns: ['g-index'],
-      });
+  const editRowDataChanged = useCallback(
+    record => {
+      if (typeof onCellEditChange === 'function')
+        return gridManager.modify(onCellEditChange(record));
+      return gridManager.modify([record]);
     },
-    [apiRef.current],
+    [onCellEditChange],
   );
-  const onGantRowGroupOpened = useCallback(
-    params => {
-      if (apiRef.current && serialNumber) {
-        const {
-          rowIndex,
-          node: { expanded },
-        } = params;
-        if (!expanded) return;
-        refreshRowBufferCells(rowIndex);
-      }
-      onRowGroupOpened && onRowGroupOpened(params);
-    },
-    [onRowGroupOpened, serialNumber],
-  );
+
   return (
     <LocaleReceiver>
       {(local, localeCode = 'zh-cn') => {
@@ -359,7 +298,6 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                     ...frameworkComponents,
                   }}
                   components={{
-                    // "gantGroupCellRenderer": GantGroupCellRenderer as any,
                     ...componentsMaps,
                     ...components,
                   }}
@@ -372,22 +310,24 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                   enableFillHandle
                   headerHeight={24}
                   floatingFiltersHeight={20}
-                  getDataPath={getDataPath}
                   rowHeight={size == 'small' ? 24 : 32}
                   singleClickEdit
+                  deltaRowDataMode
                   context={{
                     golbalEditable: editable,
                     serverDataRequest,
                     isServerSideGroup,
                     size,
-                    getDataPath: orignProps.getDataPath ? orignProps.getDataPath : getDataPath,
+                    getDataPath: getDataPath,
+                    editRowDataChanged,
                     computedPagination,
                     ...context,
                   }}
-                  deltaRowDataMode
                   suppressAnimationFrame
                   stopEditingWhenGridLosesFocus={false}
-                  {...gridPartProps}
+                  rowData={dataSource}
+                  treeData
+                  getDataPath={getDataPath}
                   {...selection}
                   {...orignProps}
                   defaultColDef={{
@@ -397,12 +337,11 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                     minWidth: 30,
                     ...defaultColDef,
                   }}
-                  onCellValueChanged={cellValueChanged}
                   groupDefaultExpanded={groupDefaultExpanded}
-                  onRowGroupOpened={onGantRowGroupOpened}
                   localeText={locale}
                   rowClassRules={{
-                    'gant-grid-row-isdeleted': params => get(params, 'data.isDeleted'),
+                    'gant-grid-row-isdeleted': params =>
+                      get(params, 'data._rowType') === DataActions.removeTag,
                     ...rowClassRules,
                   }}
                 />
