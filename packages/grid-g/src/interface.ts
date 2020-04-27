@@ -5,6 +5,7 @@ import {
   ValueFormatterParams,
   ColDef,
   IServerSideGetRowsParams,
+  ColumnApi as AgColumnApi
 } from 'ag-grid-community';
 import { defaultProps, defaultRowSelection } from './index';
 
@@ -55,6 +56,8 @@ export type RemoveCallBack = (selected: any[]) => Promise<boolean> | boolean;
 export type OnReady = (api: GridReadyEvent, gridManager: GridManager) => void;
 
 export type GridApi = AgGridApi;
+
+export type ColumnApi = AgColumnApi
 
 export type RowSelection = {
   /**是否多选 */
