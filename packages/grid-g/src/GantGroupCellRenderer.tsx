@@ -1,6 +1,13 @@
 import React, { Component } from 'react';
 import classnames from 'classnames';
-import { ICellRendererParams, IComponent, RowNode, GroupCellRenderer } from 'ag-grid-community';
+import {
+  ICellRendererParams,
+  IComponent,
+  RowNode,
+  GroupCellRenderer,
+  Utils,
+} from 'ag-grid-community';
+import { BindAll } from 'lodash-decorators';
 import { isEqual } from 'lodash';
 interface GantGroupCellRendererProps extends ICellRendererParams {}
 interface GantGroupCellRendererState {
@@ -9,6 +16,7 @@ interface GantGroupCellRendererState {
   hasChildren: boolean;
 }
 
+@BindAll()
 export default class GantGroupCellRenderer extends Component<
   GantGroupCellRendererProps,
   GantGroupCellRendererState
@@ -20,7 +28,7 @@ export default class GantGroupCellRenderer extends Component<
   }
 
   getTreeDataInfo(node: RowNode) {
-    const { expanded: nodeExpanded, childrenAfterFilter, data } = node;
+    const { expanded: nodeExpanded, childrenAfterFilter = [], data } = node;
     const {
       context: { isServerSideGroup },
     } = this.props;
@@ -40,16 +48,15 @@ export default class GantGroupCellRenderer extends Component<
     };
   }
 
-  onExpend = (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+  onExpend(event: MouseEvent) {
     const {
       node,
       context: { serverDataRequest, getDataPath },
       data,
       api,
     } = this.props;
-    event.stopPropagation();
-    event.nativeEvent.stopImmediatePropagation();
-    if (node.childrenAfterFilter.length > 0) {
+    Utils.stopPropagationForAgGrid(event);
+    if (node.childrenAfterFilter && node.childrenAfterFilter.length > 0) {
       this.setState(state => ({ ...state, expanded: true }));
       return node.setExpanded(true);
     }
@@ -58,28 +65,45 @@ export default class GantGroupCellRenderer extends Component<
       node.setExpanded(true);
       api.hideOverlay();
     });
-  };
-  onClose = (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
-    event.stopPropagation();
-    event.nativeEvent.stopImmediatePropagation()
+  }
+  onClose(event: MouseEvent) {
+    Utils.stopPropagationForAgGrid(event);
     const { node } = this.props;
     node.setExpanded(false);
-  };
-  selectionChangedCallback = params => {
+  }
+  selectionChangedCallback(params) {
     const {
       node: { expanded },
     } = params;
     this.setState({ expanded });
-  };
-  dataChangedCallback = params => {
+  }
+  dataChangedCallback(params) {
     this.setState({ ...this.getTreeDataInfo(params.node) });
-  };
+  }
+  rowIndexChanged(params) {
+    const node = params.node;
+    const { allLeafChildren = [node] } = node;
+    node.gridApi.refreshCells({
+      rowNodes:allLeafChildren,
+      columns: ['g-index'],
+      force: true,
+    });
+  }
+  eContracted: any;
+  eExpanded: any;
   componentDidMount() {
+    if (this.eContracted) {
+      this.eContracted.addEventListener('click', this.onExpend);
+    }
+    if (this.eExpanded) {
+      this.eExpanded.addEventListener('click', this.onClose);
+    }
     this.props.node.addEventListener(RowNode.EVENT_EXPANDED_CHANGED, this.selectionChangedCallback);
     this.props.node.addEventListener(
       RowNode.EVENT_ALL_CHILDREN_COUNT_CHANGED,
       this.dataChangedCallback,
     );
+    this.props.node.addEventListener(RowNode.EVENT_ROW_INDEX_CHANGED, this.rowIndexChanged);
   }
 
   componentWillUnmount() {
@@ -88,6 +112,14 @@ export default class GantGroupCellRenderer extends Component<
       this.selectionChangedCallback,
     );
     this.props.node.removeEventListener(RowNode.EVENT_DATA_CHANGED, this.dataChangedCallback);
+    this.props.node.addEventListener(RowNode.EVENT_ROW_INDEX_CHANGED, this.rowIndexChanged);
+    if (this.eContracted) {
+      this.eContracted.removeEventListener('click', this.onExpend);
+    }
+    if (this.eExpanded) {
+      this.eExpanded.removeEventListener('click', this.onClose);
+    }
+    this.props.node.removeEventListener(RowNode.EVENT_ROW_INDEX_CHANGED, this.rowIndexChanged);
   }
   render() {
     const {
@@ -97,21 +129,27 @@ export default class GantGroupCellRenderer extends Component<
     } = this.props;
     const { hasChildren, expanded } = this.state;
     const showValue =
-    valueFormatted && valueFormatted !== '[object Object]' ? valueFormatted : value;
+      valueFormatted && valueFormatted !== '[object Object]' ? valueFormatted : value;
     return (
       <span
         className={classnames('ag-cell-wrapper', ' ag-row-group', ` ag-row-group-indent-${level}`)}
       >
-        {hasChildren &&
-          (expanded ? (
-            <span className="ag-group-expanded" onClick={this.onClose} ref="eExpanded">
-              <span className="ag-icon ag-icon-tree-open" unselectable="on"></span>
-            </span>
-          ) : (
-            <span className="ag-group-contracted" onClick={this.onExpend} ref="eContracted">
-              <span className="ag-icon ag-icon-tree-closed" unselectable="on"></span>
-            </span>
-          ))}
+        <span
+          className={classnames('ag-group-expanded', {
+            ['ag-hidden']: hasChildren ? !expanded : true,
+          })}
+          ref={ref => (this.eExpanded = ref)}
+        >
+          <span className="ag-icon ag-icon-tree-open" unselectable="on"></span>
+        </span>
+        <span
+          className={classnames('ag-group-contracted', {
+            ['ag-hidden']: hasChildren ? expanded : true,
+          })}
+          ref={ref => (this.eContracted = ref)}
+        >
+          <span className="ag-icon ag-icon-tree-closed" unselectable="on"></span>
+        </span>
         <span className="ag-group-value" ref="eValue">
           {showValue}
         </span>

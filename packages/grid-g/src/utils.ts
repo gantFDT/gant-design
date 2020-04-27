@@ -36,10 +36,8 @@ export const mapColumns = <T>(
   defaultSelectionCol: ColDef,
   rowSelection,
   serialNumber,
-  cellEvents: EventEmitter,
 ): Col[] => {
   // 移除所有已添加事件
-  cellEvents.removeAllListeners();
   function getColumnDefs(columns: Columns<T>[]) {
     return columns.map(
       (
@@ -67,15 +65,15 @@ export const mapColumns = <T>(
           cellClassRules: {
             'gant-grid-cell-modify': params => {
               const {
-                data: { _rowType, _rowData, idcard } = {} as any,
+                data: { _rowType, ...itemData } = {} as any,
                 colDef: { field },
                 value,
               } = params;
-              return (
-                _rowType === DataActions.modify &&
-                Reflect.has(_rowData, field) &&
-                value != get(_rowData, field)
-              );
+              const originValue = get(itemData, `_rowData.${field}`);
+              const originIsNil = ~~nil.includes(originValue);
+              const currinIsNil = ~~nil.includes(value);
+              const sum = originIsNil + currinIsNil;
+              return _rowType === DataActions.modify && (value != originValue || sum == 2);
             },
             'gant-grid-cell-add': params => get(params, 'data._rowType') === DataActions.add,
             // "gant-grid-cell-delete": params => get(params, "data._rowType") === DataActions.remove,
@@ -87,7 +85,7 @@ export const mapColumns = <T>(
         if (!itemisgroup(colDef, children)) {
           // 当前列允许编辑
           if (ColEditable) {
-            const { props, changeFormatter, component, onCellChange } = editConfig;
+            const { props, changeFormatter, component } = editConfig;
             colDef.cellEditorParams = {
               props,
               changeFormatter,
@@ -95,9 +93,6 @@ export const mapColumns = <T>(
             };
             colDef.cellEditorFramework = EditorCol(component);
             colDef.editable = ColEditableFn(editConfig.editable);
-            if (onCellChange && isfunc(onCellChange)) {
-              cellEvents.on(field, onCellChange);
-            }
           }
           if (fixed) colDef.pinned = fixed;
         } else if (itemisgroup(colDef, children)) {
@@ -236,8 +231,8 @@ export function trackRenderValueChange(data: any, field: string, value: any) {
 export function flattenTreeData(
   dataSoruce: any[],
   getRowNodeId,
-  pathArray: string[] = [],
   treeDataChildrenName = 'children',
+  pathArray: string[] = [],
 ): any[] {
   let treeData: any[] = [];
   dataSoruce.map((item: any) => {
@@ -248,8 +243,8 @@ export function flattenTreeData(
       const childrenTreeData = flattenTreeData(
         children,
         getRowNodeId,
-        treeDataPath,
         treeDataChildrenName,
+        treeDataPath,
       );
       Array.prototype.push.apply(treeData, childrenTreeData);
     } else {

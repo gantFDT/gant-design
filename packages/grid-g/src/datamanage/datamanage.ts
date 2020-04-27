@@ -101,7 +101,7 @@ class DataManage<T = any> extends EventEmitter {
 
     // 初始化
     reset() {
-        const state = fromJS(this._originList)
+        const state:any = List(this._originList)
         this.clearDiff()
         this.history.init(state)
     }
@@ -141,9 +141,8 @@ class DataManage<T = any> extends EventEmitter {
 
     init(dataSource: T[]) {
         // 添加__origin属性
-        const list = cloneDeep(dataSource)
         // 重置的时候使用的原始数据
-        this._originList = list
+        this._originList = dataSource
         this.reset()
     }
 
