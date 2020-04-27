@@ -278,7 +278,7 @@ const TreeGrid = () => {
                 loading={loading}
                 columns={columns}
                 // treeData={isTree}
-                treeData
+                // treeData
                 editable={editable}
                 dataSource={dataSource}
                 onReady={onReady}
@@ -386,20 +386,24 @@ const ComputeGrid = () => {
     const [dataSource, setdataSource] = useState(
         [
             {
-                name: "里斯",
-                idcard: "1",
-                // age: 123,
-                path: ["1"],
-                age: [{
-                    "111":222
-                }],
-                
-            },
-            {
                 name: "阿萨的脚后跟",
                 age: 1,
                 idcard: "11",
                 path: ["1", "11"]
+            },
+            {
+                name: "阿萨的脚后跟",
+                age: 1,
+                idcard: "111",
+                path: ["1", "11",'111']
+            },
+            {
+                name: "里斯",
+                idcard: "1",
+                // age: 123,
+                path: ["1"],
+                age: 222
+                
             },
             {
                 name: "山坡地覅还是大佛i",
@@ -475,39 +479,44 @@ const ComputeGrid = () => {
         return (
             <Menu>
                 <Menu.Item>
-                    <a onClick={() => manager.create({ idcard: Math.random().toString(16), name: Math.random().toString(16), path: [Math.random().toString(16)] })}>新增</a>
+                    <a onClick={() => manager.create({ idcard: Math.random().toString(16), name: Math.random().toString(16), path: [Math.random().toString(16)] })}>同级-新增</a>
                 </Menu.Item>
                 <Menu.Item>
-                    <a onClick={() => manager.create(
-                        [
-                            { idcard: Math.random().toString(16), name: "新增1", path: [Math.random().toString(16)] },
-                            { idcard: Math.random().toString(16), name: "新增2", path: [Math.random().toString(16)] },
-                        ],
-                    )}>批量新增</a>
+                     <a 
+                     onClick={() => manager.create({ idcard: Math.random().toString(16), 
+                        name: Math.random().toString(16),
+                         path: [Math.random().toString(16)]
+                        },selectedKeys[0])}>同级-批量新增选中位置</a>
+                 </Menu.Item>
+                <Menu.Item>
+                    <a onClick={() => {
+                        const selected = apiRef.current.api.getSelectedNodes()
+                        if (selected.length) {
+                            const records=selectedKeys.map(()=>( { idcard: Math.random().toString(16), name: Math.random().toString(16), path: [Math.random().toString(16)] }))
+                            manager.create(
+                                records,
+                                selectedKeys
+                            )
+                        }
+                    }}>同级-新增到多个节点上</a>
                 </Menu.Item>
                 <Menu.Item>
                     <a onClick={() => {
                         const selected = apiRef.current.api.getSelectedNodes()
                         if (selected.length) {
                             manager.create(
-                                { idcard: Math.random().toString(16), name: Math.random().toString(16), path: [...selected[0].data.path, Math.random().toString(16)] },
+                                { idcard: Math.random().toString(16), 
+                                    name: Math.random().toString(16),
+                                     path: [selectedKeys[0], Math.random().toString(16)] },
+                                selectedKeys[0],
+                                false
                             )
                         }
-                    }}>新增子节点</a>
-                </Menu.Item>
-                <Menu.Item>
-                    <a onClick={() => {
-                        const selected = apiRef.current.api.getSelectedNodes()
-                        if (selected.length) {
-                            manager.create(
-                                { idcard: Math.random().toString(16), name: Math.random().toString(16), path: [...selected[0].data.path.slice(0, -1), Math.random().toString(16)] },
-                            )
-                        }
-                    }}>新增同级节点</a>
+                    }}>子级-新增子节点</a>
                 </Menu.Item>
             </Menu>
         )
-    }, [manager])
+    }, [manager,selectedKeys])
 
     const mapNodes = useCallback(
         (node, index) => {
@@ -550,25 +559,23 @@ const ComputeGrid = () => {
                         <Dropdown overlay={menu} placement="bottomLeft">
                             <Button size="small">添加节点</Button>
                         </Dropdown>
-                        <Button size="small" disabled={!(manager && selectedKeys.length)} onClick={() => manager.remove(deleteCb).then(e => message.success("删除成功"), e => { message.error("删除出错"); throw e })}>删除</Button>
-                        <Button size="small" onClick={append}>添加子节点</Button>
-                        <Button size="small" onClick={() => manager.mapNodes(mapNodes)}>遍历所有节点</Button>
-                        <Button size="small" onClick={() => manager.mapNodesIds(['3'], mapNodesIds)}>遍历指定节点</Button>
-                        <Button size="small" onClick={() => manager.mapSelectedNodes(mapSelectedNodes)}>遍历选中节点</Button>
-                        <Button size="small" onClick={() => manager.undo()}>撤销</Button>
+                        <Button size="small" disabled={!(manager && selectedKeys.length)} onClick={() => manager.remove(selectedKeys)}>删除</Button>
+                        <Button size="small"  disabled={!(manager && selectedKeys.length)}  onClick={()=>manager.removeTag(selectedKeys)}>删除标记</Button>
+                        <Button size="small"  onClick={() => manager.undo()}>撤销</Button>
                         <Button size="small" onClick={() => manager.redo()}>重做</Button>
                         <Button size="small" onClick={() => {
                             manager.cancel()
-                            seteditable(false)
-                        }}>取消编辑</Button>
+                        }}>diff</Button>
                         <Button size="small" onClick={() => {
+                             const isChanged = manager.isChanged;
+                             console.log("changed", isChanged)
                             const { list, diff } = manager.save()
-                            const isChanged = manager.isChanged
-                            setdataSource(list)
-                            seteditable(false)
-                            console.log(list)
-                            console.log(diff)
-                            console.log("changed", isChanged)
+                           
+                            // setdataSource(list)
+                            // seteditable(false)
+                            // console.log(list)
+                            // console.log(diff)
+                            // console.log("changed", isChanged)
                         }}>保存</Button>
                     </>
                 )
