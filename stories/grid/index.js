@@ -288,6 +288,7 @@ const TreeGrid = () => {
                     selectedKeys,
                     onSelect
                 }}
+                // removeShowLine={false}
                 isServerSideGroup={(data) => data.children}
                 pagination={{
                     pageSize: 2,
@@ -542,7 +543,7 @@ const ComputeGrid = () => {
     )
     const mapNodesIds = useCallback(
         (node) => {
-            node.name = "mapNodesIds"
+            node.isDeleted = true
         },
         [],
     )
@@ -727,11 +728,11 @@ const config = {
         <div><a href="https://github.com/ag-grid/ag-grid/blob/master/LICENSE.txt" target="_blank">LICENSE</a></div>
     </div>,
     children: [
-        // {
-        //     title: "树形数据单元格编辑",
-        //     describe: "树形结构的单元格编辑，对节点的操作、撤销、重做等",
-        //     cmp: TreeGrid
-        // },
+        {
+            title: "树形数据单元格编辑",
+            describe: "树形结构的单元格编辑，对节点的操作、撤销、重做等",
+            cmp: TreeGrid
+        },
         {
             title: "isCompute模式",
             describe: "isCompute模式下提供平行结构的原始数据，如果要转化成树状结构，需要注意添加treeData、getDataPath",

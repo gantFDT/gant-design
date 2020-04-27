@@ -31,6 +31,7 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
     prefixCls: customizePrefixCls,
     height,
     style,
+    hideHeader = false,
     ...restProps
   } = props;
 
@@ -237,6 +238,7 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
   );
 
   const gridHeight = useMemo(() => {
+    if (hideHeader) { return height }
     let result: string | number
     if (!height) { return }
     if (typeof height !== 'number') {
@@ -245,11 +247,11 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
       result = height - 30
     }
     return result
-  }, [height])
+  }, [height, hideHeader])
 
   return (
     <div className="gant-smart-table-wrapper" style={{ ...style, height }}>
-      <Header
+      {!hideHeader && <Header
         title={
           <div ref={titleRef}>
             {title}
@@ -258,7 +260,7 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
         }
         extra={HeaderRightElem}
         {...headerProps}
-      ></Header>
+      ></Header>}
       {
         withKeyevent(
           bindKeys, true

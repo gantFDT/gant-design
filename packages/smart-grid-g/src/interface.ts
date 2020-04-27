@@ -64,19 +64,20 @@ export interface SmartTableProps<T> extends GantTableProps<T> {
   onViewChange?: (viewSchema: any) => void,
   emptyDescription?: string,
   prefixCls?: string,
-  
+
 
   bindKeys?: any,
   onReload?: () => void,
 
   withoutAnimation?: boolean,
-  height?:number | string,
+  hideHeader?: boolean,
+  height?: number | string,
   style?: object
 }
 
 export interface SmartTableType {
   <T>(props: SmartTableProps<T>): React.ReactElement,
-  setFields?: (field:Object) => void;
+  setFields?: (field: Object) => void;
 }
 
 export enum langEnum {

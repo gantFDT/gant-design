@@ -280,6 +280,9 @@ class DataManage<T = any> extends EventEmitter {
             const fullPath = this.getFlatKey(keyPath)
             const parentPath = fullPath.slice(0, -1);
             const item = state.getIn(fullPath)
+            if (!item) return state // 没有找到节点
+            const rowId = this.getRowNodeId(item.toJS())
+            if (rowId !== id) return state // 找到节点，但是节点已经发生变化。这种情况发生在直接移除节点的模式下
             const rowType = item.get("_rowType")
             if (!showLine || rowType === DataActions.add) {
                 return state.updateIn(parentPath, (parentState) => parentState.filter(item => _this.getRowNodeId(item.toJS()) !== id))
@@ -333,11 +336,18 @@ class DataManage<T = any> extends EventEmitter {
                     this._modify = this._modify.delete(id)
                 }
             }
-            let keyPath = getIndexPath(changed.node)
+            let newState = this.state
+            if (this.isCompute) {
+                let keyPath = getIndexPath(changed.node)
 
-            const paths = this.getFlatKey(keyPath)
-            const newState = this.state.updateIn(paths, node => fromJS(data))
-            this.history.push(newState)
+                const paths = this.getFlatKey(keyPath)
+                newState = this.state.updateIn(paths, node => fromJS(data))
+            } else {
+                const index = this.state.findIndex(row => this.getRowNodeId(row.toJS()) === id)
+                newState = this.state.update(index, node => fromJS(data))
+            }
+            if (newState !== this.state) this.history.push(newState)
+
         }
     }
 
@@ -394,20 +404,23 @@ class DataManage<T = any> extends EventEmitter {
             cb(dataProxy.proxy)
             return {
                 ...dataProxy,
-                indexPath
+                indexPath,
             }
-        })
-        const newState = actionList.reduce((state, { action, indexPath, id, newData }) => {
-            if (action === DataActions.remove) return this.removeInner(state, indexPath, id)
-            else if (action === DataActions.modify) {
-                const fullPath = this.getFlatKey(indexPath)
-                return state.updateIn(fullPath, record => {
-                    return fromJS(newData)
-                })
-            }
-            return state
-        }, this.state)
-        this.history.push(newState)
+        }).filter(actions => actions.isChanged)
+        if (actionList.length) {
+            const newState = actionList.reduce((state, { action, indexPath, id, newData }) => {
+                if (action === DataActions.remove) return this.removeInner(state, indexPath, id)
+                else if (action === DataActions.modify) {
+                    const fullPath = this.getFlatKey(indexPath)
+                    return state.updateIn(fullPath, record => {
+                        return fromJS(newData)
+                    })
+                }
+                return state
+            }, this.state)
+            this.history.push(newState)
+        }
+
     }
 
     /**将当前diff推送到history,在每次history.push的时候会执行 */

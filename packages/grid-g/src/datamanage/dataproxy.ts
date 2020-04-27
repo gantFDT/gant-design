@@ -16,6 +16,8 @@ export default class DataProxy<T extends object = any> extends EventEmitter {
 
     id: string
 
+    isChanged: boolean = false
+
     constructor(private data: T, private manager: DataManage<T>) {
         super()
         this.id = manager.getRowNodeId(data)
@@ -31,6 +33,7 @@ export default class DataProxy<T extends object = any> extends EventEmitter {
                 const prevValue = get(target, key)
                 const isChanged = value != prevValue
                 if (isChanged) {
+                    _this.isChanged = true
                     if (isDeleted(target) && key !== 'isDeleted') {
                         throw new Error('不允许修改一个被删除的节点')
                     }

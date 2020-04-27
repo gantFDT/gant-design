@@ -83,8 +83,8 @@ export const withBasic = (popupClassName?: string) => compose(
 		onEnter: ({ onConfirm, onEnter }) => e => {
 			if (e.key === "Enter" && e.keyCode === 13) {
 				onConfirm()
+				onEnter(e)
 			}
-			onEnter(e)
 		}
 	}),
 	computed,

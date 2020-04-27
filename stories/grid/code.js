@@ -287,6 +287,7 @@ const TreeGrid = () => {
                     selectedKeys,
                     onSelect
                 }}
+                // removeShowLine={false}
                 isServerSideGroup={(data) => data.children}
                 pagination={{
                     pageSize: 2,
@@ -550,7 +551,7 @@ const ComputeGrid = () => {
     )
     const mapNodesIds = useCallback(
         (node) => {
-            node.name = "mapNodesIds"
+            node.isDeleted = true
         },
         [],
     )
