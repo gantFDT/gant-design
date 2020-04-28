@@ -66,6 +66,7 @@ export default class GantGroupCellRenderer extends Component<
       api.hideOverlay();
     });
   }
+
   onClose(event: MouseEvent) {
     Utils.stopPropagationForAgGrid(event);
     const { node } = this.props;
@@ -84,7 +85,7 @@ export default class GantGroupCellRenderer extends Component<
     const node = params.node;
     const { allLeafChildren = [node] } = node;
     node.gridApi.refreshCells({
-      rowNodes:allLeafChildren,
+      rowNodes: allLeafChildren,
       columns: ['g-index'],
       force: true,
     });

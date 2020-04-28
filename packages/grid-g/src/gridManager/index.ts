@@ -1,5 +1,15 @@
 import { GridReadyEvent, RowDataTransaction, GridApi } from 'ag-grid-community';
-import { get, isEmpty, isEqual, findIndex, flatten, isFunction, isString, debounce } from 'lodash';
+import {
+  get,
+  isEmpty,
+  isEqual,
+  findIndex,
+  flatten,
+  isFunction,
+  isString,
+  reverse,
+  colneDeep,
+} from 'lodash';
 import { getModifyData, removeTagData, isEqualObj } from './utils';
 import { DataActions } from '../interface';
 import { bindAll, Debounce } from 'lodash-decorators';
@@ -305,7 +315,8 @@ export default class GridManage {
       origin: [],
       removeTag: [],
     };
-    this.historyStack.reverse().map(hisItem => {
+    const nowHistoryStack = colneDeep(this.historyStack);
+    nowHistoryStack.reverse().map(hisItem => {
       const { type, recordsIndex, records } = hisItem;
       records.map((recordItem, recordItemIndex) => {
         const isRecorded = diffRecords.indexOf(getRowNodeId(recordItem)) >= 0;

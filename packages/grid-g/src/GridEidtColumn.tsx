@@ -59,7 +59,7 @@ export default WrapperComponent =>
           getValue: () => {
             if (value === newValue) return newValue;
             const { data } = api.getRowNode(rowId);
-            editRowDataChanged({ ...data, [field]: newValue });
+            editRowDataChanged({ ...data, [field]: newValue }, field, newValue, value);
             return value;
           },
         };

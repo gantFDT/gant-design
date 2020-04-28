@@ -12,7 +12,6 @@ export function getModifyData(records, getRowItemData) {
       return console.warn('Cannot modify deleted data');
     _rowData = isEmpty(_rowData) ? oldData : _rowData;
     const hasChange = !isEqualObj(_rowData, newData);
-    console.log('hasChange', _rowData, newData);
     _rowType =
       !_rowType || _rowType === DataActions.modify
         ? hasChange

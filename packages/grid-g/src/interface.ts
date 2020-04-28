@@ -5,7 +5,7 @@ import {
   ValueFormatterParams,
   ColDef,
   IServerSideGetRowsParams,
-  ColumnApi as AgColumnApi
+  ColumnApi as AgColumnApi,
 } from 'ag-grid-community';
 import { defaultProps, defaultRowSelection } from './index';
 
@@ -57,7 +57,7 @@ export type OnReady = (api: GridReadyEvent, gridManager: GridManager) => void;
 
 export type GridApi = AgGridApi;
 
-export type ColumnApi = AgColumnApi
+export type ColumnApi = AgColumnApi;
 
 export type RowSelection = {
   /**是否多选 */
@@ -159,7 +159,7 @@ export interface Props<T extends Record> {
   serverGroupExpend: (param: IServerSideGetRowsParams, cd: (row: any[]) => void) => void;
   serialNumber?: boolean;
   isCompute?: boolean;
-  onCellEditChange: (record: any) => any[];
+  onCellEditChange: (record: any, fieldName: string, newValue: any,oldValue:any) => any[]; 
 }
 
 export type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>;
