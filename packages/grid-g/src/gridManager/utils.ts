@@ -1,4 +1,4 @@
-import { get, isEmpty, isEqual } from 'lodash';
+import { get, isEmpty, isEqual, findIndex } from 'lodash';
 import { DataActions } from '../interface';
 export function getModifyData(records, getRowItemData) {
   const hisRecords: any[] = [],
@@ -12,7 +12,6 @@ export function getModifyData(records, getRowItemData) {
       return console.warn('Cannot modify deleted data');
     _rowData = isEmpty(_rowData) ? oldData : _rowData;
     const hasChange = !isEqualObj(_rowData, newData);
-    console.log('hasChange', _rowData, newData);
     _rowType =
       !_rowType || _rowType === DataActions.modify
         ? hasChange
@@ -27,18 +26,25 @@ export function getModifyData(records, getRowItemData) {
   return { newRecords, hisRecords };
 }
 
-export function removeTagData(records) {
+export function removeTagData(records, rowData, getRowNodeId) {
   const hisRecords: any[] = [],
-    newRecords: any[] = [];
+    newRecords: any[] = [],
+    removeRecords: any[] = [],
+    removeIndexs: any[] = [];
   records.map(itemData => {
     let recordItem = { ...itemData, _rowType: DataActions.removeTag };
     if (itemData._rowType === DataActions.removeTag || itemData._rowType === DataActions.remove)
       return console.warn('Deleted data cannot be deleted');
+    const removeIndex = findIndex(rowData, data => getRowNodeId(data) === getRowNodeId(itemData));
     let hisRecordItem = { ...itemData, _nextRowData: recordItem };
-    newRecords.push(recordItem);
-    hisRecords.push(hisRecordItem);
+    itemData._rowType !== DataActions.add
+      ? newRecords.push(recordItem)
+      : removeRecords.push(itemData);
+
+    removeIndexs.unshift(removeIndex);
+    hisRecords.unshift(hisRecordItem);
   });
-  return { newRecords, hisRecords };
+  return { newRecords, hisRecords, removeIndexs, removeRecords };
 }
 
 const isEmptyObj = value => {
