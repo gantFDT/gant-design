@@ -57,6 +57,7 @@ export const mapColumns = <T>(
         const colDef = {
           headerName,
           field,
+          header
           cellRendererParams: {
             render,
             ...cellRendererParams,
