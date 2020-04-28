@@ -159,7 +159,7 @@ export interface Props<T extends Record> {
   serverGroupExpend: (param: IServerSideGetRowsParams, cd: (row: any[]) => void) => void;
   serialNumber?: boolean;
   isCompute?: boolean;
-  onCellEditChange: (record: any, fieldName: string, newValue: any,oldValue:any) => any[];
+  onCellEditChange: (record: any, fieldName: string, newValue: any,oldValue:any) => any[]; 
 }
 
 export type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>;
