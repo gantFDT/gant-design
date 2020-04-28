@@ -8,7 +8,8 @@ import {
   isFunction,
   isString,
   reverse,
-  colneDeep,
+  cloneDeep,
+  
 } from 'lodash';
 import { getModifyData, removeTagData, isEqualObj } from './utils';
 import { DataActions } from '../interface';
@@ -315,7 +316,7 @@ export default class GridManage {
       origin: [],
       removeTag: [],
     };
-    const nowHistoryStack = colneDeep(this.historyStack);
+    const nowHistoryStack = cloneDeep(this.historyStack);
     nowHistoryStack.reverse().map(hisItem => {
       const { type, recordsIndex, records } = hisItem;
       records.map((recordItem, recordItemIndex) => {
