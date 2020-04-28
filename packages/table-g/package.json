@@ -21,7 +21,7 @@
     "author": "GantFDT",
     "license": "MIT",
     "dependencies": {
-        "antd": "^3.26.5",
+        "antd": "3.26.5",
         "classnames": "^2.2.6",
         "data-cell-g": "^0.0.11",
         "header-g": "^0.1.13",
