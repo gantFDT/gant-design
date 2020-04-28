@@ -172,13 +172,8 @@ const ComputeGrid = () => {
                         <Button size="small" onClick={() => {
                              const isChanged = manager.isChanged;
                              console.log("changed", isChanged)
-                            const { list, diff } = manager.save()
+                             manager.save()
                            
-                            // setdataSource(list)
-                            // seteditable(false)
-                            // console.log(list)
-                            // console.log(diff)
-                            // console.log("changed", isChanged)
                         }}>保存</Button>
                     </>
                 )

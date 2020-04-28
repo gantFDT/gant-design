@@ -47,7 +47,7 @@ function loadingDecorator(target, name, descriptor): any {
 export default class GridManage {
   public agGridApi: GridApi;
   public agGridConfig: AgGridConfig;
-  private historyStack: OperationAction[] = [];
+  historyStack: OperationAction[] = [];
   private redoStack: OperationAction[] = [];
   private loading: boolean = false;
   private getRowItemData = itemData => {
