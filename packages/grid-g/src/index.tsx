@@ -288,7 +288,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                 className="ag-theme-balham"
                 style={{
                   width: '100%',
-                  height: computedPagination ? 'calc(100% - 30px)' : 'calc(100% - 3px)',
+                  height: computedPagination ? 'calc(100% - 30px)' : '100%',
                 }}
               >
                 <AgGridReact
