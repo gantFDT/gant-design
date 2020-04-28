@@ -153,7 +153,6 @@ export interface Props<T extends Record> {
   pagination: Pagination;
   loading: boolean;
   className: string;
-  isServer: boolean;
   isServerSideGroup: (data: any) => boolean;
   treeDataChildrenName: string;
   locale: object;

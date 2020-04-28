@@ -543,7 +543,7 @@ const ComputeGrid = () => {
                             <Button size="small">添加节点</Button>
                         </Dropdown>
                         <Button size="small" disabled={!(manager && selectedKeys.length)} onClick={() => manager.remove(selectedKeys)}>删除</Button>
-                        <Button size="small"  disabled={!(manager && selectedKeys.length)}  onClick={()=>manager.removeTag(selectedKeys)}>删除标记</Button>
+                        <Button size="small"  disabled={!(manager && selectedKeys.length)}  onClick={()=>manager.tagRemove(selectedKeys)}>删除标记</Button>
                         <Button size="small"  onClick={() => manager.undo()}>撤销</Button>
                         <Button size="small" onClick={() => manager.redo()}>重做</Button>
                         <Button size="small" onClick={() => {

@@ -123,7 +123,6 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     treeData,
     pagination,
     loading,
-    isServer,
     isServerSideGroup,
     getServerSideGroupKey,
     frameworkComponents,
@@ -315,6 +314,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                   rowHeight={size == 'small' ? 24 : 32}
                   singleClickEdit
                   deltaRowDataMode
+                  
                   context={{
                     golbalEditable: editable,
                     serverDataRequest,
@@ -330,6 +330,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                   rowData={dataSource}
                   treeData={treeData}
                   getDataPath={getDataPath}
+                
                   {...selection}
                   {...orignProps}
                   defaultColDef={{

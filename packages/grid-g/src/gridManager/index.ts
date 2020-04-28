@@ -109,6 +109,7 @@ export default class GridManage {
       targetIndex = isSub ? targetIndex + 1 : targetIndex;
       let addTarget = get(addRecords, `[${index}]`, addRecords);
       addTarget = Array.isArray(addTarget) ? addTarget : [addTarget];
+      addTarget = addTarget.map(item => ({ ...item, _rowType: DataActions.add }));
       rowData = [...rowData.slice(0, targetIndex), ...addTarget, ...rowData.slice(targetIndex)];
       hisRecords = [...hisRecords, ...addTarget];
     });
@@ -158,11 +159,13 @@ export default class GridManage {
   }
   //移除标记;
   //
-  removeTag(targetKeys: string | number | string[] | number[]) {
+  tagRemove(targetKeys: string | number | string[] | number[]) {
     const { getRowNodeId } = this.agGridConfig;
+    let rowData = this.getRowData();
     if (!Array.isArray(targetKeys) && typeof targetKeys === 'object') return;
     const targetArray = Array.isArray(targetKeys) ? targetKeys : [targetKeys];
     const removeRecords: any[] = [];
+    const removeTagRecords: any[] = [];
     targetArray.map(itemId => {
       const itemNode = this.agGridApi.getRowNode(itemId + '');
       const { allLeafChildren = [itemNode] } = itemNode;
@@ -173,15 +176,20 @@ export default class GridManage {
         if (removeIndex < 0) removeRecords.push(childNode.data);
       });
     });
-    const { hisRecords, newRecords } = removeTagData(removeRecords);
-    this.batchUpdateGrid({ update: newRecords });
+    const { hisRecords, newRecords, removeIndexs, removeRecords: remove } = removeTagData(
+      removeRecords,
+      rowData,
+      getRowNodeId,
+    );
+    this.batchUpdateGrid({ update: newRecords, remove });
     this.historyStack.push({
       type: DataActions.removeTag,
       records: hisRecords,
+      recordsIndex: removeIndexs,
     });
   }
 
-  private toggleUndoRedo(hisStack) {
+  private toggleUndoRedo(hisStack: OperationAction, undo: boolean = true) {
     const { getRowNodeId } = this.agGridConfig;
     let rowData = this.getRowData();
     let { records, recordsIndex, type } = hisStack;
@@ -207,7 +215,7 @@ export default class GridManage {
       this.batchUpdateGrid({
         remove: records,
       });
-    } else {
+    } else if (type === DataActions.modify) {
       const hisRecords: any[] = [];
       const newRecords = records.map(item => {
         const { _nextRowData, ...data } = item;
@@ -216,6 +224,29 @@ export default class GridManage {
       });
       records = hisRecords;
       this.batchUpdateGrid({ update: newRecords });
+    } else {
+      const hisRecords: any[] = [];
+      recordsIndex.map((removeIndex, index) => {
+        const item = records[index];
+        const { _nextRowData, ...data } = item;
+        if (data._rowType === DataActions.add) {
+          if (undo) {
+            rowData = [...rowData.slice(0, removeIndex), item, ...rowData.slice(removeIndex)];
+          } else {
+            rowData = [...rowData.slice(0, removeIndex), ...rowData.slice(removeIndex + 1)];
+          }
+
+          hisRecords.push(item);
+        } else {
+          rowData = [...rowData.slice(0, removeIndex), data, ...rowData.slice(removeIndex + 1)];
+          hisRecords.push({ ..._nextRowData, _nextRowData: data });
+        }
+      });
+
+      records = hisRecords.reverse();
+      recordsIndex = recordsIndex.reverse();
+
+      this.agGridApi.setRowData(rowData);
     }
     return { type, records, recordsIndex };
   }
@@ -224,16 +255,14 @@ export default class GridManage {
   undo() {
     let hisStack = this.historyStack.pop();
     if (isEmpty(hisStack)) return;
-    const newhisStack = this.toggleUndoRedo(hisStack);
-    console.log('undo', newhisStack);
+    const newhisStack = this.toggleUndoRedo(hisStack, true);
     this.redoStack.push(newhisStack);
   }
 
   redo() {
     let hisStack = this.redoStack.pop();
     if (isEmpty(hisStack)) return;
-    const newhisStack = this.toggleUndoRedo(hisStack);
-    console.log('redo', newhisStack);
+    const newhisStack = this.toggleUndoRedo(hisStack, false);
     this.historyStack.push(newhisStack);
   }
   get isChanged() {

@@ -58,16 +58,17 @@ export default WrapperComponent =>
         return {
           getValue: () => {
             if (value === newValue) return newValue;
+            const { data } = api.getRowNode(rowId);
             editRowDataChanged({ ...data, [field]: newValue });
             return value;
           },
         };
       },
-      [newValue, data, value, field, newValue, rowId],
+      [value, field, newValue, rowId],
     );
     useEffect(() => {
       setTimeout(() => {
-        console.log("inputRef.current",inputRef.current)
+        console.log('inputRef.current', inputRef.current);
         inputRef.current && inputRef.current.focus();
       }, 10);
     }, []);
@@ -76,7 +77,7 @@ export default WrapperComponent =>
       event.nativeEvent.stopImmediatePropagation();
     }, []);
     return (
-      <div className={classnames('gant-grid-cell-editing')}  onClick={wrapperClick}>
+      <div className={classnames('gant-grid-cell-editing')} onClick={wrapperClick}>
         <WrapperComponent
           wrapperRef={inputRef}
           {...compoentProps}

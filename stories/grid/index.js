@@ -535,7 +535,7 @@ const ComputeGrid = () => {
                             <Button size="small">添加节点</Button>
                         </Dropdown>
                         <Button size="small" disabled={!(manager && selectedKeys.length)} onClick={() => manager.remove(selectedKeys)}>删除</Button>
-                        <Button size="small"  disabled={!(manager && selectedKeys.length)}  onClick={()=>manager.removeTag(selectedKeys)}>删除标记</Button>
+                        <Button size="small"  disabled={!(manager && selectedKeys.length)}  onClick={()=>manager.tagRemove(selectedKeys)}>删除标记</Button>
                         <Button size="small"  onClick={() => manager.undo()}>撤销</Button>
                         <Button size="small" onClick={() => manager.redo()}>重做</Button>
                         <Button size="small" onClick={() => {
@@ -620,7 +620,10 @@ const AsyncTreeData = () => {
     },
     {
         fieldName: 'employeeName',
-        render: (val) => <Input value={val} />
+        render: (val,record,index,params) => {
+            const {context:{size}}=params;
+            return <Input value={val} />
+        }
     },
     { fieldName: 'startDate' },
     { fieldName: 'employmentType' },
@@ -663,6 +666,9 @@ const AsyncTreeData = () => {
             //     console.log("isServerSideGroup",data)
             //     return Array.isArray(data.underlings)
             // }}
+            context={{
+                size
+            }}
             treeDataChildrenName="underlings"
             rowSelection={{
                 selectedKeys: selectedKeys,
@@ -702,16 +708,16 @@ const config = {
         <div><a href="https://github.com/ag-grid/ag-grid/blob/master/LICENSE.txt" target="_blank">LICENSE</a></div>
     </div>,
     children: [
-        {
-            title: "树形数据单元格编辑",
-            describe: "树形结构的单元格编辑，对节点的操作、撤销、重做等",
-            cmp: TreeGrid
-        },
         // {
-        //     title: "isCompute模式",
-        //     describe: "isCompute模式下提供平行结构的原始数据，如果要转化成树状结构，需要注意添加treeData、getDataPath",
-        //     cmp: ComputeGrid
+        //     title: "树形数据单元格编辑",
+        //     describe: "树形结构的单元格编辑，对节点的操作、撤销、重做等",
+        //     cmp: TreeGrid
         // },
+        {
+            title: "isCompute模式",
+            describe: "isCompute模式下提供平行结构的原始数据，如果要转化成树状结构，需要注意添加treeData、getDataPath",
+            cmp: ComputeGrid
+        },
         // {
         //     title: "async tree",
         //     describe: "异步树形",
