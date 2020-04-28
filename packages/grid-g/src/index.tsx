@@ -99,7 +99,6 @@ export const defaultRowSelection: RowSelection = {
   type: 'multiple',
   // checkboxIndex: 0,
   showDefalutCheckbox: true,
-  selectedKeys: [],
   rowMultiSelectWithClick: true,
   rowDeselection: true,
 };
@@ -165,15 +164,12 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
   } = gantSelection;
 
   // getRowNodeId;
-  const getRowNodeId = useCallback(
-    data => {
-      if (typeof rowkey === 'string') {
-        return get(data, rowkey);
-      }
-      return rowkey(data);
-    },
-    [rowkey],
-  );
+  const getRowNodeId = useCallback(data => {
+    if (typeof rowkey === 'string') {
+      return get(data, rowkey);
+    }
+    return rowkey(data);
+  }, []);
   //
   const getDataPath = useCallback(
     data => {
@@ -265,9 +261,9 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
 
   //columns-end
   const editRowDataChanged = useCallback(
-    record => {
+    (record: any, fieldName: string, newValue: any,oldValue:any) => {
       if (typeof onCellEditChange === 'function')
-        return gridManager.modify(onCellEditChange(record));
+        return gridManager.modify(onCellEditChange(record, fieldName, newValue,oldValue));
       return gridManager.modify([record]);
     },
     [onCellEditChange],
@@ -314,7 +310,6 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                   rowHeight={size == 'small' ? 24 : 32}
                   singleClickEdit
                   deltaRowDataMode
-                  
                   context={{
                     golbalEditable: editable,
                     serverDataRequest,
@@ -330,7 +325,6 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                   rowData={dataSource}
                   treeData={treeData}
                   getDataPath={getDataPath}
-                
                   {...selection}
                   {...orignProps}
                   defaultColDef={{
