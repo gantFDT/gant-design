@@ -87,6 +87,7 @@ export default class GridManage {
   // 修改;
   // @loadingDecorator
   public modify(records: any | any[]) {
+  
     records = Array.isArray(records) ? records : [records];
     const { hisRecords, newRecords } = getModifyData(records, this.getRowItemData);
     this.batchUpdateGrid({ update: newRecords });
