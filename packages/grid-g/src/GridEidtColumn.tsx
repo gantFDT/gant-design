@@ -10,6 +10,7 @@ import React, {
 import classnames from 'classnames';
 import { EditStatus } from '@data-cell';
 import { trackEditValueChange } from './utils';
+import { set,cloneDeep } from 'lodash';
 const defalutProps = {
   autoFocus: true,
   edit: EditStatus.EDIT,
@@ -31,6 +32,9 @@ export default WrapperComponent =>
       valuePropName = 'value',
     } = props;
     const [newValue, setNewValue] = useState(value);
+    useEffect(() => {
+      setNewValue(value);
+    }, [value]);
     const inputRef: any = useRef();
     const onChange = useCallback(
       val => {
@@ -61,8 +65,9 @@ export default WrapperComponent =>
           getValue: () => {
             if (value === newValue) return newValue;
             setTimeout(() => {
-              const { data } = api.getRowNode(rowId);
-              editRowDataChanged({ ...data, [field]: newValue }, field, newValue, value);
+              let { data } = api.getRowNode(rowId);
+              data=cloneDeep(data)
+              editRowDataChanged(set(data, field, newValue), field, newValue, value);
             }, 10);
             return value;
           },

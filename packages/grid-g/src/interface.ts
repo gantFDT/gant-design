@@ -85,6 +85,7 @@ export type EditConfig<T> = {
   onCellChange?: (value: any, record: T, records: T[]) => void;
   refName?: string;
   valuePropName?: string;
+  required?: boolean;
 };
 
 export type ColumnEdiatble<T> = boolean | ((record: T) => boolean);
@@ -162,6 +163,7 @@ export interface Props<T extends Record> {
   serialNumber?: boolean;
   isCompute?: boolean;
   onCellEditChange: (record: any, fieldName: string, newValue: any, oldValue: any) => any[];
+  onCellEditingChange:(record: any, fieldName: string, newValue: any, oldValue: any) => any[];
 }
 
 export type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>;

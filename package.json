@@ -127,6 +127,7 @@
     "ag-grid-react": "^23.0.2",
     "antd": "^3.22.0",
     "array-move": "^2.2.1",
+    "async-validate": "^1.0.1",
     "classnames": "^2.2.6",
     "create-react-context": "^0.2.3",
     "lodash": "^4.17.11",

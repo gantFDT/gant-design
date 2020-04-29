@@ -138,6 +138,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     isCompute,
     getDataPath: orignGetDataPath,
     onCellEditChange,
+    onCellEditingChange,
     ...orignProps
   } = props;
   const apiRef = useRef<GridApi>();
@@ -341,6 +342,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                       get(params, 'data._rowType') === DataActions.removeTag,
                     ...rowClassRules,
                   }}
+                  
                 />
               </div>
               {/* 分页高度为30 */}

@@ -55,6 +55,10 @@ const isEmptyObj = value => {
 export const isEqualObj = (obj, obj2) => {
   let _EqualObj = true;
   const newObj = { ...obj, ...obj2 };
+  if (Array.isArray(obj) || typeof obj !== 'object') {
+    if (isEmptyObj(obj) && isEmptyObj(obj2)) return true;
+    return isEqual(obj,obj2);
+  }
   for (let i in newObj) {
     let value1 = get(obj, i),
       value2 = get(obj2, i);
@@ -70,7 +74,6 @@ export const isEqualObj = (obj, obj2) => {
         value2 = typeof value2 == 'number' ? value2 : value2 + '';
         value1 = typeof value1 == 'number' ? value1 : value1 + '';
         _EqualObj = isEqual(value2, value1);
-        console.log('value3', i, value2, value1, _EqualObj);
       }
     }
     if (!_EqualObj) return _EqualObj;

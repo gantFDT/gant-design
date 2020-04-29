@@ -54,19 +54,20 @@ const ComputeGrid = () => {
               editable: true,
             },
             cellRenderer: "gantGroupCellRenderer",
+            valueSetter: function(params) {
+                params.data.createDate = params.newValue;
+                params.data.createdBy = params.newValue;
+                return false;
+            }
           },
           {
             fieldName: 'typeName',
             title: "产品类型名称",
             width: 300,
             editConfig: {
-              component: Checkbox,
+              component: Input,
               editable: true,
-              refName:"ref",
-              valuePropName:"checked",
-              changeFormatter:(e)=>{
-               return e.target.checked
-              }
+              required:true,
             }
           }
     ])
@@ -115,7 +116,6 @@ const ComputeGrid = () => {
         path.pop()
         return [...path]
       }
-      console.log("selectedRows",selectedRows)
     const createBrother=()=>{
         const createRecord=[];
         selectedRows.map(item=>{
@@ -134,7 +134,6 @@ const ComputeGrid = () => {
           let path=getDataPath(item);
             createRecord.push({...sourceDataList,id:rowid,path:path.join("/")?path.join("/")+"/"+rowid+"/":rowid+"/"})
         })
-        console.log("createSub",createRecord,selectedKeys)
         manager.create(createRecord,selectedKeys,true);
     }
     const menu = (<Menu>
@@ -168,8 +167,9 @@ const ComputeGrid = () => {
                         <Button size="small"  onClick={() => manager.undo()}>撤销</Button>
                         <Button size="small" onClick={() => manager.redo()}>重做</Button>
                         <Button size="small" onClick={() => {
-                            console.log(manager.diff)
-                        }}>diff</Button>
+                            manager.cancel()
+                            seteditable(false)
+                        }}>取消</Button>
                         <Button size="small" onClick={() => {
                              const isChanged = manager.isChanged;
                              console.log("changed", isChanged)
@@ -186,7 +186,8 @@ const ComputeGrid = () => {
                 rowkey={(data)=>data.id}
                 loading={loading}
                 columns={columns}
-                // treeData={isTree}
+                onCellValueChanged={(data)=>console.log('onCellValueChanged',data)}
+                onCellEditChange={(record)=>[{...record,typeName:true}]}
                 treeData
                 editable={editable}
                 dataSource={dataSource}
@@ -197,6 +198,7 @@ const ComputeGrid = () => {
                     selectedKeys,
                     onSelect
                 }}
+                
                 removeShowLine={false}
                 isServerSideGroup={(data) => data.children}
                 groupSuppressAutoColumn
