@@ -10,7 +10,7 @@ import React, {
 import classnames from 'classnames';
 import { EditStatus } from '@data-cell';
 import { trackEditValueChange } from './utils';
-import { set,cloneDeep } from 'lodash';
+import { set, cloneDeep } from 'lodash';
 const defalutProps = {
   autoFocus: true,
   edit: EditStatus.EDIT,
@@ -39,7 +39,7 @@ export default WrapperComponent =>
     const onChange = useCallback(
       val => {
         let chageVal = val;
-        if (typeof changeFormatter === 'function') chageVal = changeFormatter(val, data);
+        if (typeof changeFormatter === 'function') chageVal = changeFormatter(val, cloneDeep(data));
         setNewValue(chageVal);
       },
       [changeFormatter],
@@ -66,7 +66,7 @@ export default WrapperComponent =>
             if (value === newValue) return newValue;
             setTimeout(() => {
               let { data } = api.getRowNode(rowId);
-              data=cloneDeep(data)
+              data = cloneDeep(data);
               editRowDataChanged(set(data, field, newValue), field, newValue, value);
             }, 10);
             return value;

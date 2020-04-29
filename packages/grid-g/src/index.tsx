@@ -185,13 +185,14 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
   const computedPagination = usePagination(pagination);
   // 判断数据分别处理 treeTable 和普通table
   const dataSource = useMemo(() => {
+    
     if (treeData && isCompute)
       return flattenTreeData(initDataSource, getRowNodeId, treeDataChildrenName);
     return initDataSource;
-  }, [initDataSource, treeData, treeDataChildrenName, getRowNodeId]);
+  }, [initDataSource, treeData, treeDataChildrenName]);
   useEffect(() => {
     gridManager.reset({ dataSource, getRowNodeId });
-  }, [dataSource, getRowNodeId]);
+  }, [dataSource]);
   const serverDataCallback = useCallback((groupKeys, successCallback) => {
     return rows => {
       successCallback(rows, rows.length);
@@ -217,9 +218,10 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
       apiRef.current = params.api;
       columnsRef.current = params.columnApi;
       gridManager.agGridApi = params.api;
+      params.api.setRowData(dataSource)
       onReady && onReady(params, gridManager);
     },
-    [onReady],
+    [onReady, dataSource],
   );
   const onSelectionChanged = useCallback(
     (event: SelectionChangedEvent) => {
@@ -323,7 +325,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                   }}
                   suppressAnimationFrame
                   stopEditingWhenGridLosesFocus={false}
-                  rowData={dataSource}
+                  // rowData={[]}
                   treeData={treeData}
                   getDataPath={getDataPath}
                   {...selection}
@@ -342,7 +344,6 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                       get(params, 'data._rowType') === DataActions.removeTag,
                     ...rowClassRules,
                   }}
-                  
                 />
               </div>
               {/* 分页高度为30 */}

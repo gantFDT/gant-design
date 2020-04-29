@@ -72,7 +72,7 @@ export const mapColumns = <T>(
               } = params;
               const _rowData = get(itemData, `_rowData`, itemData);
               const originValue = get(_rowData, field);
-              if(isEqualObj(value, originValue)) console.log(params,originValue)
+              if (isEqualObj(value, originValue)) console.log(params, originValue);
               return _rowType === DataActions.modify && !isEqualObj(value, originValue);
             },
             'gant-grid-cell-add': params => get(params, 'data._rowType') === DataActions.add,
@@ -143,9 +143,9 @@ export const mapColumns = <T>(
         context,
       } = parmas;
       const computedPagination = get(context, 'computedPagination', {});
-      const { pageSize = 0, beginIndex = 0 } = computedPagination;
+      const { pageSize = 0, beginIndex = 0 }: any = computedPagination;
 
-      return parseInt(rowIndex + 1 + pageSize * beginIndex) + '';
+      return parseInt(rowIndex + 1 + parseInt(pageSize * beginIndex + '')) + '';
     },
   };
   const cols = serialNumber ? [serialNumberCol, ...getColumnDefs(columns)] : getColumnDefs(columns);

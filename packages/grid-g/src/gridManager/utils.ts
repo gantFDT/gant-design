@@ -57,7 +57,7 @@ export const isEqualObj = (obj, obj2) => {
   const newObj = { ...obj, ...obj2 };
   if (Array.isArray(obj) || typeof obj !== 'object') {
     if (isEmptyObj(obj) && isEmptyObj(obj2)) return true;
-    return isEqual(obj,obj2);
+    return isEqual(obj, obj2);
   }
   for (let i in newObj) {
     let value1 = get(obj, i),
@@ -80,5 +80,3 @@ export const isEqualObj = (obj, obj2) => {
   }
   return true;
 };
-
-export function replaceRecord() {}

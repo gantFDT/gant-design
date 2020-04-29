@@ -13,6 +13,7 @@ import {
 import { getModifyData, removeTagData, isEqualObj } from './utils';
 import { DataActions } from '../interface';
 import { bindAll, Debounce } from 'lodash-decorators';
+import {} from '../utils';
 interface OperationAction {
   type: DataActions;
   recordsIndex?: number[];
@@ -66,13 +67,11 @@ export default class GridManage {
     this.agGridConfig = agGridConfig;
     this.historyStack = [];
     this.redoStack = [];
-    this.agGridApi &&
-      this.agGridApi.refreshCells({
-        force: true,
-      });
+    this.agGridApi && this.agGridApi.setRowData(agGridConfig.dataSource);
   }
   getRowData() {
     var rowData = [];
+    if (!this.agGridApi) return [];
     this.agGridApi.forEachNode(function(node) {
       rowData.push(node.data);
     });
@@ -298,12 +297,8 @@ export default class GridManage {
     }
     const allDiff = this.changeDiff();
     const { modify, add, removeTag } = allDiff;
-    this.historyStack = [];
-    this.redoStack = [];
-    this.batchUpdateGrid({
-      update: [...modify, ...add],
-      remove: removeTag,
-    });
+    const data = this.getPureData();
+    this.agGridApi.setRowData(data);
   }
   private changeDiff() {
     const { getRowNodeId } = this.agGridConfig;
@@ -356,5 +351,14 @@ export default class GridManage {
       });
     });
     return diff;
+  }
+  getPureData() {
+    const data: any[] = [];
+    if (!this.agGridApi) return data;
+    this.agGridApi.forEachNode(function(node) {
+      const { _rowType, _rowData, ...itemData } = cloneDeep(node.data);
+      if (_rowType !== DataActions.removeTag) data.push(itemData);
+    });
+    return data;
   }
 }
