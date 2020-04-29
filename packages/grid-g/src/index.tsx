@@ -230,7 +230,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
   );
   // 处理selection- 双向绑定selectKeys
   useEffect(() => {
-    if (selectedKeys && apiRef.current) {
+    if (selectedKeys && apiRef.current && dataSource && dataSource.length > 0) {
       const gridSelectedKeys = apiRef.current.getSelectedNodes();
       const allKeys = [
         ...gridSelectedKeys.map(item => getRowNodeId(get(item, 'data', {}))),
@@ -244,7 +244,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         else nodeItem.setSelected(false);
       });
     }
-  }, [selectedKeys, apiRef.current, rowSelection, getRowNodeId]);
+  }, [selectedKeys, apiRef.current, rowSelection, getRowNodeId, dataSource]);
   // 处理selection-end
   //columns
   const defaultSelection = !isEmpty(gantSelection) && showDefalutCheckbox;
@@ -261,9 +261,9 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
 
   //columns-end
   const editRowDataChanged = useCallback(
-    (record: any, fieldName: string, newValue: any,oldValue:any) => {
+    (record: any, fieldName: string, newValue: any, oldValue: any) => {
       if (typeof onCellEditChange === 'function')
-        return gridManager.modify(onCellEditChange(record, fieldName, newValue,oldValue));
+        return gridManager.modify(onCellEditChange(record, fieldName, newValue, oldValue));
       return gridManager.modify([record]);
     },
     [onCellEditChange],

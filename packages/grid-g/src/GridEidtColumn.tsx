@@ -27,6 +27,8 @@ export default WrapperComponent =>
       rowkey,
       rowIndex,
       context: { size, editRowDataChanged },
+      refName = 'wrapperRef',
+      valuePropName = 'value',
     } = props;
     const [newValue, setNewValue] = useState(value);
     const inputRef: any = useRef();
@@ -58,8 +60,10 @@ export default WrapperComponent =>
         return {
           getValue: () => {
             if (value === newValue) return newValue;
-            const { data } = api.getRowNode(rowId);
-            editRowDataChanged({ ...data, [field]: newValue }, field, newValue, value);
+            setTimeout(() => {
+              const { data } = api.getRowNode(rowId);
+              editRowDataChanged({ ...data, [field]: newValue }, field, newValue, value);
+            }, 10);
             return value;
           },
         };
@@ -76,13 +80,19 @@ export default WrapperComponent =>
       event.stopPropagation();
       event.nativeEvent.stopImmediatePropagation();
     }, []);
+    const wrapperProps = useMemo(() => {
+      return {
+        [refName]: inputRef,
+        [valuePropName]: newValue,
+      };
+    }, [valuePropName, refName, newValue]);
     return (
       <div className={classnames('gant-grid-cell-editing')} onClick={wrapperClick}>
         <WrapperComponent
           wrapperRef={inputRef}
           {...compoentProps}
-          value={newValue}
           {...defalutProps}
+          {...wrapperProps}
           onChange={onChange}
           size={size}
           onBlur={onBlur}

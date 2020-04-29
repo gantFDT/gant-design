@@ -8,7 +8,8 @@ import {
   isFunction,
   isString,
   reverse,
-  colneDeep,
+  cloneDeep,
+  
 } from 'lodash';
 import { getModifyData, removeTagData, isEqualObj } from './utils';
 import { DataActions } from '../interface';
@@ -47,7 +48,7 @@ function loadingDecorator(target, name, descriptor): any {
 export default class GridManage {
   public agGridApi: GridApi;
   public agGridConfig: AgGridConfig;
-  private historyStack: OperationAction[] = [];
+  historyStack: OperationAction[] = [];
   private redoStack: OperationAction[] = [];
   private loading: boolean = false;
   private getRowItemData = itemData => {
@@ -86,6 +87,7 @@ export default class GridManage {
   // 修改;
   // @loadingDecorator
   public modify(records: any | any[]) {
+  
     records = Array.isArray(records) ? records : [records];
     const { hisRecords, newRecords } = getModifyData(records, this.getRowItemData);
     this.batchUpdateGrid({ update: newRecords });
@@ -315,7 +317,7 @@ export default class GridManage {
       origin: [],
       removeTag: [],
     };
-    const nowHistoryStack = colneDeep(this.historyStack);
+    const nowHistoryStack = cloneDeep(this.historyStack);
     nowHistoryStack.reverse().map(hisItem => {
       const { type, recordsIndex, records } = hisItem;
       records.map((recordItem, recordItemIndex) => {

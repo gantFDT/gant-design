@@ -85,11 +85,12 @@ export const mapColumns = <T>(
         if (!itemisgroup(colDef, children)) {
           // 当前列允许编辑
           if (ColEditable) {
-            const { props, changeFormatter, component } = editConfig;
+            const { props, changeFormatter, component,...params} = editConfig;
             colDef.cellEditorParams = {
               props,
               changeFormatter,
               rowkey: getRowNodeId,
+              ...params,
             };
             colDef.cellEditorFramework = EditorCol(component);
             colDef.editable = ColEditableFn(editConfig.editable);
