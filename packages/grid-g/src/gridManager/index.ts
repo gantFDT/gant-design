@@ -295,8 +295,6 @@ export default class GridManage {
       const cansave = await cb();
       if (!cansave) return;
     }
-    const allDiff = this.changeDiff();
-    const { modify, add, removeTag } = allDiff;
     const data = this.getPureData();
     this.agGridApi.setRowData(data);
   }
