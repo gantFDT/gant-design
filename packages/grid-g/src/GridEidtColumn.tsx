@@ -9,8 +9,7 @@ import React, {
 } from 'react';
 import classnames from 'classnames';
 import { EditStatus } from '@data-cell';
-import { trackEditValueChange } from './utils';
-import { set, cloneDeep } from 'lodash';
+import { set, cloneDeep, get } from 'lodash';
 const defalutProps = {
   autoFocus: true,
   edit: EditStatus.EDIT,
@@ -27,22 +26,27 @@ export default WrapperComponent =>
       changeFormatter,
       rowkey,
       rowIndex,
-      context: { size, editRowDataChanged },
+      context: { size, editRowDataChanged, editingRowDataChange },
       refName = 'wrapperRef',
       valuePropName = 'value',
+      node,
     } = props;
     const [newValue, setNewValue] = useState(value);
-    useEffect(() => {
-      setNewValue(value);
-    }, [value]);
     const inputRef: any = useRef();
+    const rowId = useMemo(() => {
+      if (!rowkey) return rowIndex;
+      return rowkey(data);
+    }, [rowIndex, rowkey, data]);
     const onChange = useCallback(
       val => {
         let chageVal = val;
-        if (typeof changeFormatter === 'function') chageVal = changeFormatter(val, cloneDeep(data));
+        let { data } = node;
+        data = cloneDeep(data);
+        if (typeof changeFormatter === 'function') chageVal = changeFormatter(val, data);
         setNewValue(chageVal);
+        editingRowDataChange(set(data, field, chageVal), field, chageVal, value);
       },
-      [changeFormatter],
+      [changeFormatter, editingRowDataChange, field, node],
     );
     const onBlur = useCallback(
       (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -50,10 +54,7 @@ export default WrapperComponent =>
       },
       [stopEditing],
     );
-    const rowId = useMemo(() => {
-      if (!rowkey) return rowIndex;
-      return rowkey(data);
-    }, [rowIndex, rowkey, data]);
+
     const compoentProps = useMemo(() => {
       if (typeof fieldProps === 'function') return fieldProps(data);
       return fieldProps;
@@ -63,17 +64,15 @@ export default WrapperComponent =>
       () => {
         return {
           getValue: () => {
-            if (value === newValue) return newValue;
-            setTimeout(() => {
-              let { data } = api.getRowNode(rowId);
-              data = cloneDeep(data);
-              editRowDataChanged(set(data, field, newValue), field, newValue, value);
-            }, 10);
+            let { data } = node;
+            data = cloneDeep(data);
+            if (get(data, field) === newValue) return newValue;
+            editRowDataChanged(set(data, field, newValue), field, newValue, value);
             return value;
           },
         };
       },
-      [value, field, newValue, rowId],
+      [value, field, newValue, node],
     );
     useEffect(() => {
       setTimeout(() => {

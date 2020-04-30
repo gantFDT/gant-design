@@ -185,7 +185,6 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
   const computedPagination = usePagination(pagination);
   // 判断数据分别处理 treeTable 和普通table
   const dataSource = useMemo(() => {
-    
     if (treeData && isCompute)
       return flattenTreeData(initDataSource, getRowNodeId, treeDataChildrenName);
     return initDataSource;
@@ -218,7 +217,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
       apiRef.current = params.api;
       columnsRef.current = params.columnApi;
       gridManager.agGridApi = params.api;
-      params.api.setRowData(dataSource)
+      params.api.setRowData(dataSource);
       onReady && onReady(params, gridManager);
     },
     [onReady, dataSource],
@@ -265,13 +264,22 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
   //columns-end
   const editRowDataChanged = useCallback(
     (record: any, fieldName: string, newValue: any, oldValue: any) => {
+      console.log("editRowDataChanged")
       if (typeof onCellEditChange === 'function')
         return gridManager.modify(onCellEditChange(record, fieldName, newValue, oldValue));
       return gridManager.modify([record]);
     },
     [onCellEditChange],
   );
-
+  const editingRowDataChange = useCallback(
+    (record, fieldName, newValue, oldValue) => {
+      console.log("editingRowDataChange")
+      if (typeof onCellEditingChange === 'function') {
+        gridManager.modify(onCellEditingChange(record, fieldName, newValue, oldValue));
+      }
+    },
+    [onCellEditingChange],
+  );
   return (
     <LocaleReceiver>
       {(local, localeCode = 'zh-cn') => {
@@ -320,6 +328,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                     size,
                     getDataPath: getDataPath,
                     editRowDataChanged,
+                    editingRowDataChange,
                     computedPagination,
                     ...context,
                   }}
