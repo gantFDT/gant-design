@@ -6,9 +6,7 @@ export default class GirdRenderColumn extends Component<any, any> {
       valueFormatted && valueFormatted !== '[object Object]' ? valueFormatted : value;
     return (
       <>
-        <span className={`gant-grid-cell-content`}>
-          {typeof render == 'function' ? render(showValue, data, rowIndex, this.props) : showValue}
-        </span>
+         {typeof render == 'function' ? render(showValue, data, rowIndex, this.props) : showValue}
       </>
     );
   }
