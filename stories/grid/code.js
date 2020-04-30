@@ -213,7 +213,7 @@ const ComputeGrid = () => {
                     selectedKeys,
                     onSelect
                 }}
-                
+                openEditSign
                 removeShowLine={false}
                 isServerSideGroup={(data) => data.children}
                 groupSuppressAutoColumn
