@@ -84,8 +84,8 @@ export default class GantGroupCellRenderer extends Component<
   rowIndexChanged(params) {
     const node = params.node;
     const { allLeafChildren = [node] } = node;
+    console.log("rowIndexChanged")
     node.gridApi.refreshCells({
-      rowNodes: allLeafChildren,
       columns: ['g-index'],
       force: true,
     });

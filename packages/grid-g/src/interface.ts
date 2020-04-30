@@ -83,6 +83,9 @@ export type EditConfig<T> = {
   props?: (record: T, rowIndex: number) => Object;
   changeFormatter?: (v: any, record: any) => any;
   onCellChange?: (value: any, record: T, records: T[]) => void;
+  refName?: string;
+  valuePropName?: string;
+  required?: boolean;
 };
 
 export type ColumnEdiatble<T> = boolean | ((record: T) => boolean);
@@ -159,7 +162,8 @@ export interface Props<T extends Record> {
   serverGroupExpend: (param: IServerSideGetRowsParams, cd: (row: any[]) => void) => void;
   serialNumber?: boolean;
   isCompute?: boolean;
-  onCellEditChange: (record: any, fieldName: string, newValue: any,oldValue:any) => any[]; 
+  onCellEditChange: (record: any, fieldName: string, newValue: any, oldValue: any) => any[];
+  onCellEditingChange:(record: any, fieldName: string, newValue: any, oldValue: any) => any[];
 }
 
 export type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>;

@@ -26,7 +26,7 @@ const sourceDataList = {
     path: '',
     productTypeExt: {id: null},
     typeCode: '',
-    typeName: '',
+    typeName: false,
     updateDate: null,
     updatedBy: null,
     updatedByName: '',
@@ -51,11 +51,14 @@ const ComputeGrid = () => {
             width: 300,
             editConfig: {
               component: Input,
-              editable: (record)=>{
-                return record.createDate?false:true
-              }
+              editable: true,
             },
             cellRenderer: "gantGroupCellRenderer",
+            valueSetter: function(params) {
+                params.data.createDate = params.newValue;
+                params.data.createdBy = params.newValue;
+                return false;
+            }
           },
           {
             fieldName: 'typeName',
@@ -63,9 +66,8 @@ const ComputeGrid = () => {
             width: 300,
             editConfig: {
               component: Input,
-              editable: (record)=>{
-                return record.createDate?false:true
-              }
+              editable: true,
+              required:true,
             }
           }
     ])
@@ -76,7 +78,7 @@ const ComputeGrid = () => {
             {"optCounter":1,"createdBy":1,"createDate":"2020-04-27 17:38:52","updatedBy":1,
             "updateDate":"2020-04-27 17:38:52","isDeleted":false,"path":"313/","expanded":true,
             "children":[{"optCounter":1,"createdBy":1,"createDate":"2020-04-28 14:23:11","updatedBy":1,
-            "updateDate":"2020-04-28 14:23:11","isDeleted":false,"parentId":313,"path":"313/314/","expanded":true,"leaf":true,"id":314,"typeCode":"AAAA","typeName":"AAAAA","productTypeExt":{"id":314,"updatedBy":1}}],"leaf":false,"id":313,"typeCode":"222222","typeName":"22222","productTypeExt":{"id":313,"updatedBy":1}}]
+            "updateDate":"2020-04-28 14:23:11","isDeleted":false,"parentId":313,"path":"313/314/","expanded":true,"leaf":true,"id":314,"typeCode":"AAAA","typeName":false,"productTypeExt":{"id":314,"updatedBy":1}}],"leaf":false,"id":313,"typeCode":"222222","typeName":false,"productTypeExt":{"id":313,"updatedBy":1}}]
     )
 
     const apiRef = useRef()
@@ -109,12 +111,22 @@ const ComputeGrid = () => {
         let rowid = new Date().valueOf();
         manager.create({...sourceDataList,id:rowid,path:rowid+"/"});
     }
+    const btachCreateBrother=()=>{
+        const createRecord=[]
+        new Array(2).fill("").map(item=>{
+            let rowid = new Date().valueOf();
+          let path=getDataPath(selectedRows[0]);
+            path.pop()
+            path=path?path:[];
+            createRecord.push({...sourceDataList,id:rowid,path:path.join("/")?path.join("/")+"/"+rowid+"/":rowid+"/"})
+        })
+        manager.create(createRecord,selectedKeys[0]);
+    }
     const getDataPath=(data) => {
         const path = data.path.split('/');
         path.pop()
         return [...path]
       }
-      console.log("selectedRows",selectedRows)
     const createBrother=()=>{
         const createRecord=[];
         selectedRows.map(item=>{
@@ -133,13 +145,16 @@ const ComputeGrid = () => {
           let path=getDataPath(item);
             createRecord.push({...sourceDataList,id:rowid,path:path.join("/")?path.join("/")+"/"+rowid+"/":rowid+"/"})
         })
-        console.log("createSub",createRecord,selectedKeys)
         manager.create(createRecord,selectedKeys,true);
     }
     const menu = (<Menu>
         <Menu.Item>
             <a onClick={createRoot}>创建跟节点</a>
         </Menu.Item>
+        <Menu.Item>
+        <a 
+        onClick={btachCreateBrother}>批量同级节点</a>
+    </Menu.Item>
         <Menu.Item>
              <a 
              onClick={createBrother}>创建同级节点</a>
@@ -167,18 +182,14 @@ const ComputeGrid = () => {
                         <Button size="small"  onClick={() => manager.undo()}>撤销</Button>
                         <Button size="small" onClick={() => manager.redo()}>重做</Button>
                         <Button size="small" onClick={() => {
-                            console.log(manager.diff)
-                        }}>diff</Button>
+                            manager.cancel()
+                            seteditable(false)
+                        }}>取消</Button>
                         <Button size="small" onClick={() => {
                              const isChanged = manager.isChanged;
                              console.log("changed", isChanged)
-                            const { list, diff } = manager.save()
+                             manager.save()
                            
-                            // setdataSource(list)
-                            // seteditable(false)
-                            // console.log(list)
-                            // console.log(diff)
-                            // console.log("changed", isChanged)
                         }}>保存</Button>
                     </>
                 )
@@ -190,7 +201,8 @@ const ComputeGrid = () => {
                 rowkey={(data)=>data.id}
                 loading={loading}
                 columns={columns}
-                // treeData={isTree}
+                onCellValueChanged={(data)=>console.log('onCellValueChanged',data)}
+                onCellEditingChange={(record)=>[{...record,typeName:true}]}
                 treeData
                 editable={editable}
                 dataSource={dataSource}
@@ -201,6 +213,7 @@ const ComputeGrid = () => {
                     selectedKeys,
                     onSelect
                 }}
+                
                 removeShowLine={false}
                 isServerSideGroup={(data) => data.children}
                 groupSuppressAutoColumn

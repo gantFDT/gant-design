@@ -1,4 +1,19 @@
 :global {
+    .gant-header-cell-required{
+        .ag-header-cell-text::before{
+            content: "*";
+            margin-right: 2px;
+            color: #ff4d4f;
+        }
+    }
+    .gant-header-cell-edit{
+        .ag-header-cell-text::before{
+            content: "*";
+            margin-right: 2px;
+            color:#1890ff;
+        }
+    }
+    
     .gant-grid-cell-editing {
         margin-top: -1px;
         >.gant-input-wrapper {

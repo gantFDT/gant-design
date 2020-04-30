@@ -138,6 +138,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     isCompute,
     getDataPath: orignGetDataPath,
     onCellEditChange,
+    onCellEditingChange,
     ...orignProps
   } = props;
   const apiRef = useRef<GridApi>();
@@ -187,10 +188,10 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     if (treeData && isCompute)
       return flattenTreeData(initDataSource, getRowNodeId, treeDataChildrenName);
     return initDataSource;
-  }, [initDataSource, treeData, treeDataChildrenName, getRowNodeId]);
+  }, [initDataSource, treeData, treeDataChildrenName]);
   useEffect(() => {
     gridManager.reset({ dataSource, getRowNodeId });
-  }, [dataSource, getRowNodeId]);
+  }, [dataSource]);
   const serverDataCallback = useCallback((groupKeys, successCallback) => {
     return rows => {
       successCallback(rows, rows.length);
@@ -216,9 +217,10 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
       apiRef.current = params.api;
       columnsRef.current = params.columnApi;
       gridManager.agGridApi = params.api;
+      params.api.setRowData(dataSource);
       onReady && onReady(params, gridManager);
     },
-    [onReady],
+    [onReady, dataSource],
   );
   const onSelectionChanged = useCallback(
     (event: SelectionChangedEvent) => {
@@ -230,7 +232,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
   );
   // 处理selection- 双向绑定selectKeys
   useEffect(() => {
-    if (selectedKeys && apiRef.current) {
+    if (selectedKeys && apiRef.current && dataSource && dataSource.length > 0) {
       const gridSelectedKeys = apiRef.current.getSelectedNodes();
       const allKeys = [
         ...gridSelectedKeys.map(item => getRowNodeId(get(item, 'data', {}))),
@@ -244,7 +246,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
         else nodeItem.setSelected(false);
       });
     }
-  }, [selectedKeys, apiRef.current, rowSelection, getRowNodeId]);
+  }, [selectedKeys, apiRef.current, rowSelection, getRowNodeId, dataSource]);
   // 处理selection-end
   //columns
   const defaultSelection = !isEmpty(gantSelection) && showDefalutCheckbox;
@@ -261,14 +263,23 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
 
   //columns-end
   const editRowDataChanged = useCallback(
-    (record: any, fieldName: string, newValue: any,oldValue:any) => {
+    (record: any, fieldName: string, newValue: any, oldValue: any) => {
+      console.log("editRowDataChanged")
       if (typeof onCellEditChange === 'function')
-        return gridManager.modify(onCellEditChange(record, fieldName, newValue,oldValue));
+        return gridManager.modify(onCellEditChange(record, fieldName, newValue, oldValue));
       return gridManager.modify([record]);
     },
     [onCellEditChange],
   );
-
+  const editingRowDataChange = useCallback(
+    (record, fieldName, newValue, oldValue) => {
+      console.log("editingRowDataChange")
+      if (typeof onCellEditingChange === 'function') {
+        gridManager.modify(onCellEditingChange(record, fieldName, newValue, oldValue));
+      }
+    },
+    [onCellEditingChange],
+  );
   return (
     <LocaleReceiver>
       {(local, localeCode = 'zh-cn') => {
@@ -317,12 +328,13 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                     size,
                     getDataPath: getDataPath,
                     editRowDataChanged,
+                    editingRowDataChange,
                     computedPagination,
                     ...context,
                   }}
                   suppressAnimationFrame
                   stopEditingWhenGridLosesFocus={false}
-                  rowData={dataSource}
+                  // rowData={[]}
                   treeData={treeData}
                   getDataPath={getDataPath}
                   {...selection}

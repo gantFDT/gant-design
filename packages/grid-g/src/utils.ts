@@ -9,7 +9,7 @@ import {
 import { EventEmitter } from 'events';
 import { get, isNumber, isEmpty, isNil, omit, isEqual } from 'lodash';
 import { List } from 'immutable';
-
+import { isEqualObj } from './gridManager/utils';
 import { PaginationProps } from 'antd/lib/pagination';
 import { Columns, RowSelection, ColumnEdiatble } from './interface';
 import { Size, DataActions, Pagination } from './interface';
@@ -57,6 +57,7 @@ export const mapColumns = <T>(
         const colDef = {
           headerName,
           field,
+
           cellRendererParams: {
             render,
             ...cellRendererParams,
@@ -69,14 +70,11 @@ export const mapColumns = <T>(
                 colDef: { field },
                 value,
               } = params;
-              const originValue = get(itemData, `_rowData.${field}`);
-              const originIsNil = ~~nil.includes(originValue);
-              const currinIsNil = ~~nil.includes(value);
-              const sum = originIsNil + currinIsNil;
-              return _rowType === DataActions.modify && (value != originValue || sum == 2);
+              const _rowData = get(itemData, `_rowData`, itemData);
+              const originValue = get(_rowData, field);
+              return _rowType === DataActions.modify && !isEqualObj(value, originValue);
             },
             'gant-grid-cell-add': params => get(params, 'data._rowType') === DataActions.add,
-            // "gant-grid-cell-delete": params => get(params, "data._rowType") === DataActions.remove,
           },
           cellRenderer: render ? 'gantRenderCol' : undefined,
           ...item,
@@ -85,14 +83,18 @@ export const mapColumns = <T>(
         if (!itemisgroup(colDef, children)) {
           // 当前列允许编辑
           if (ColEditable) {
-            const { props, changeFormatter, component } = editConfig;
+            const { props, changeFormatter, component, ...params } = editConfig;
             colDef.cellEditorParams = {
               props,
               changeFormatter,
               rowkey: getRowNodeId,
+              ...params,
             };
             colDef.cellEditorFramework = EditorCol(component);
             colDef.editable = ColEditableFn(editConfig.editable);
+            colDef.headerClass = params.required
+              ? 'gant-header-cell-required'
+              : 'gant-header-cell-edit';
           }
           if (fixed) colDef.pinned = fixed;
         } else if (itemisgroup(colDef, children)) {
@@ -139,9 +141,9 @@ export const mapColumns = <T>(
         context,
       } = parmas;
       const computedPagination = get(context, 'computedPagination', {});
-      const { pageSize = 0, beginIndex = 0 } = computedPagination;
+      const { pageSize = 0, beginIndex = 0 }: any = computedPagination;
 
-      return parseInt(rowIndex + 1 + pageSize * beginIndex) + '';
+      return parseInt(rowIndex + 1 + parseInt(pageSize * beginIndex + '')) + '';
     },
   };
   const cols = serialNumber ? [serialNumberCol, ...getColumnDefs(columns)] : getColumnDefs(columns);
