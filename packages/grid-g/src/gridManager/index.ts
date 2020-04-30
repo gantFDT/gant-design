@@ -296,6 +296,9 @@ export default class GridManage {
       if (!cansave) return;
     }
     const data = this.getPureData();
+    this.agGridConfig.dataSource = data;
+    this.historyStack=[];
+    this.redoStack=[];
     this.agGridApi.setRowData(data);
   }
   private changeDiff() {

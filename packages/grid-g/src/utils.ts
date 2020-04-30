@@ -72,11 +72,9 @@ export const mapColumns = <T>(
               } = params;
               const _rowData = get(itemData, `_rowData`, itemData);
               const originValue = get(_rowData, field);
-              if (isEqualObj(value, originValue)) console.log(params, originValue);
               return _rowType === DataActions.modify && !isEqualObj(value, originValue);
             },
             'gant-grid-cell-add': params => get(params, 'data._rowType') === DataActions.add,
-            // "gant-grid-cell-delete": params => get(params, "data._rowType") === DataActions.remove,
           },
           cellRenderer: render ? 'gantRenderCol' : undefined,
           ...item,
