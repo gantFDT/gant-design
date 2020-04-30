@@ -1,4 +1,5 @@
 import { useCallback, useMemo } from 'react';
+import classnames from 'classnames';
 import {
   ColGroupDef,
   ColDef,
@@ -48,6 +49,9 @@ export const mapColumns = <T>(
           render,
           editConfig,
           fixed,
+          headerClass,
+          cellClassRules,
+          cellClass,
           cellRendererParams,
           ...item
         },
@@ -57,12 +61,11 @@ export const mapColumns = <T>(
         const colDef = {
           headerName,
           field,
-
           cellRendererParams: {
             render,
             ...cellRendererParams,
           },
-          cellClass: ['gant-grid-cell'],
+          cellClass: classnames('gant-grid-cell', cellClass),
           cellClassRules: {
             'gant-grid-cell-modify': params => {
               const {
@@ -75,8 +78,10 @@ export const mapColumns = <T>(
               return _rowType === DataActions.modify && !isEqualObj(value, originValue);
             },
             'gant-grid-cell-add': params => get(params, 'data._rowType') === DataActions.add,
+            ...cellClassRules,
           },
           cellRenderer: render ? 'gantRenderCol' : undefined,
+          headerClass,
           ...item,
         } as ColDef;
 
@@ -92,9 +97,10 @@ export const mapColumns = <T>(
             };
             colDef.cellEditorFramework = EditorCol(component);
             colDef.editable = ColEditableFn(editConfig.editable);
-            colDef.headerClass = params.required
-              ? 'gant-header-cell-required'
-              : 'gant-header-cell-edit';
+            colDef.headerClass = classnames(
+              headerClass,
+              params.required ? 'gant-header-cell-required' : 'gant-header-cell-edit',
+            );
           }
           if (fixed) colDef.pinned = fixed;
         } else if (itemisgroup(colDef, children)) {
