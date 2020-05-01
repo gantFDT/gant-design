@@ -23,7 +23,7 @@
   "author": "GantFDT",
   "license": "MIT",
   "dependencies": {
-    "antd": "^3.26.12",
+    "antd": "3.26.12",
     "array-move": "^2.2.1",
     "data-cell-g": "^0.1.21",
     "header-g": "^0.1.15",
