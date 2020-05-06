@@ -86,6 +86,7 @@ export default class GridManage {
   // @loadingDecorator
   public modify(records: any | any[]) {
     records = Array.isArray(records) ? records : [records];
+    if (records.length <= 0) return;
     const { hisRecords, newRecords } = getModifyData(records, this.getRowItemData);
     if (newRecords.length <= 0) return;
     this.batchUpdateGrid({ update: newRecords });
@@ -100,6 +101,7 @@ export default class GridManage {
   public create(records: any, targetId?: string | string[], isSub?: boolean) {
     const { getRowNodeId } = this.agGridConfig;
     let addRecords = Array.isArray(records) ? records : [records];
+    if (addRecords.length <= 0) return;
     let rowData = this.getRowData();
     this.agGridApi.setSortModel([]);
     if (typeof targetId !== 'number' && !targetId) {
@@ -118,7 +120,7 @@ export default class GridManage {
       let targetIndex = findIndex(rowData, data => getRowNodeId(data) === itemId);
       targetIndex = isSub ? targetIndex + 1 : targetIndex;
       let addTarget = get(addRecords, `[${index}]`, addRecords);
-      addTarget = Array.isArray(addTarget) ? addTarget : [addTarget];
+      addTarget = Array.isArray(addTarget) ? addTarget : addRecords;
       addTarget = addTarget.map(item => ({ ...item, _rowType: DataActions.add }));
       rowData = [...rowData.slice(0, targetIndex), ...addTarget, ...rowData.slice(targetIndex)];
       hisRecords = [...hisRecords, ...addTarget];
@@ -134,6 +136,7 @@ export default class GridManage {
   remove(targetid) {
     const { getRowNodeId } = this.agGridConfig;
     let targetArray = Array.isArray(targetid) ? targetid : [targetid];
+    if (targetArray.length <= 0) return;
     let rowData = this.getRowData();
     const recordsIndex: number[] = [];
     const records: any[] = [];
@@ -174,6 +177,7 @@ export default class GridManage {
     let rowData = this.getRowData();
     if (!Array.isArray(targetKeys) && typeof targetKeys === 'object') return;
     const targetArray = Array.isArray(targetKeys) ? targetKeys : [targetKeys];
+    if (targetArray.length <= 0) return;
     const removeRecords: any[] = [];
     const removeTagRecords: any[] = [];
     targetArray.map(itemId => {
@@ -296,6 +300,9 @@ export default class GridManage {
       if (!cansave) return;
     }
     const data = this.getPureData();
+    this.agGridConfig.dataSource = data;
+    this.historyStack = [];
+    this.redoStack = [];
     this.agGridApi.setRowData(data);
   }
   private changeDiff() {
@@ -354,8 +361,12 @@ export default class GridManage {
     const data: any[] = [];
     if (!this.agGridApi) return data;
     this.agGridApi.forEachNode(function(node) {
-      const { _rowType, _rowData, ...itemData } = cloneDeep(node.data);
-      if (_rowType !== DataActions.removeTag) data.push(itemData);
+      let cloneData = cloneDeep(get(node, 'data', {}));
+      if (!isEmpty(cloneData)){
+        const { _rowType, _rowData, ...itemData } = cloneData;
+        if (_rowType !== DataActions.removeTag) data.push(itemData);
+      }
+     
     });
     return data;
   }

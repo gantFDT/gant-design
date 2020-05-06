@@ -25,31 +25,8 @@ import 'ag-grid-enterprise';
 import { Pagination, Spin } from 'antd';
 import { get, isEmpty, isEqual } from 'lodash';
 import key from './license';
-
-import {
-  mapColumns,
-  NonBool,
-  isbool,
-  isstring,
-  isarray,
-  ispromise,
-  isfunc,
-  flattenTreeData,
-  usePagination,
-  getSizeClassName,
-  createFakeServer,
-  createServerSideDatasource,
-  isDeleted,
-} from './utils';
-import {
-  Filter,
-  Size,
-  Fixed,
-  GridPropsPartial,
-  RowSelection,
-  Record,
-  DataActions,
-} from './interface';
+import { mapColumns, flattenTreeData, usePagination, getSizeClassName } from './utils';
+import { Size, GridPropsPartial, RowSelection, DataActions } from './interface';
 import './style';
 import RenderCol from './GirdRenderColumn';
 import GantGroupCellRenderer from './GantGroupCellRenderer';
@@ -59,7 +36,6 @@ import { getAllComponentsMaps } from './maps';
 import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
 import en from './locale/en-US';
 import zh from './locale/zh-CN';
-import { generateUuid } from '@util';
 export { setComponentsMaps, setFrameworkComponentsMaps } from './maps';
 LicenseManager.setLicenseKey(key);
 
@@ -90,11 +66,9 @@ export const defaultProps = {
   sortable: true,
   treeDataChildrenName: 'children',
   /** 默认的删除行为 */
-  removeShowLine: true,
   /**是否执行treeDataPath计算 */
   isCompute: true,
 };
-let gobalEditable: any;
 export const defaultRowSelection: RowSelection = {
   type: 'multiple',
   // checkboxIndex: 0,
@@ -103,7 +77,7 @@ export const defaultRowSelection: RowSelection = {
   rowDeselection: true,
 };
 
-const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
+const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   const {
     dataSource: initDataSource,
     // headerProps,
@@ -132,13 +106,13 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
     defaultColDef,
     context,
     components,
-    removeShowLine,
     serialNumber,
     rowClassRules,
     isCompute,
     getDataPath: orignGetDataPath,
     onCellEditChange,
     onCellEditingChange,
+    openEditSign,
     ...orignProps
   } = props;
   const apiRef = useRef<GridApi>();
@@ -185,7 +159,6 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
   const computedPagination = usePagination(pagination);
   // 判断数据分别处理 treeTable 和普通table
   const dataSource = useMemo(() => {
-    
     if (treeData && isCompute)
       return flattenTreeData(initDataSource, getRowNodeId, treeDataChildrenName);
     return initDataSource;
@@ -218,7 +191,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
       apiRef.current = params.api;
       columnsRef.current = params.columnApi;
       gridManager.agGridApi = params.api;
-      params.api.setRowData(dataSource)
+      params.api.setRowData(dataSource);
       onReady && onReady(params, gridManager);
     },
     [onReady, dataSource],
@@ -265,13 +238,22 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
   //columns-end
   const editRowDataChanged = useCallback(
     (record: any, fieldName: string, newValue: any, oldValue: any) => {
+      console.log('editRowDataChanged');
       if (typeof onCellEditChange === 'function')
         return gridManager.modify(onCellEditChange(record, fieldName, newValue, oldValue));
       return gridManager.modify([record]);
     },
     [onCellEditChange],
   );
-
+  const editingRowDataChange = useCallback(
+    (record, fieldName, newValue, oldValue) => {
+      console.log('editingRowDataChange');
+      if (typeof onCellEditingChange === 'function') {
+        gridManager.modify(onCellEditingChange(record, fieldName, newValue, oldValue));
+      }
+    },
+    [onCellEditingChange],
+  );
   return (
     <LocaleReceiver>
       {(local, localeCode = 'zh-cn') => {
@@ -281,7 +263,11 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
           <Spin spinning={loading}>
             <div
               style={{ width, height }}
-              className={classnames('gant-grid', `gant-grid-${getSizeClassName(size)}`)}
+              className={classnames(
+                'gant-grid',
+                `gant-grid-${getSizeClassName(size)}`,
+                openEditSign && `gant-grid-edit`,
+              )}
             >
               <div
                 className="ag-theme-balham"
@@ -320,6 +306,7 @@ const Grid = function Grid<T extends Record>(props: GridPropsPartial<T>) {
                     size,
                     getDataPath: getDataPath,
                     editRowDataChanged,
+                    editingRowDataChange,
                     computedPagination,
                     ...context,
                   }}

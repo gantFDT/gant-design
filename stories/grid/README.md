@@ -1,235 +1,184 @@
-
 ## API
 
-| 属性                    | 是否必传 | 类型                         | 默认值 | 说明                                                    |
-|-------------------------|----------|------------------------------|--------|---------------------------------------------------------|
-| columns                 | 是       | Column[]                     | []     |                                                         |
-| dataSource              | 否       | any[]                        | []     | 数据源                                                  |
-| rowkey                  | 是       | string 或 (data:any)=>string | -      | 唯一标示                                                |
-| rowSelection            | 否       | boolean 或 RowSelection      | false  | selection配置                                           |
-| pagination              | 否       | Pagination                   | -      | Pagination配置                                          |
-| onReady                 | 否       | (params,dataManage)=>void    | -      | gird初始完成回调 传递grid的params和控制数据的dataManage，参考manager API |
-| editable                | 否       | boolean                      | false  | 是否进入编辑状态                                        |
-| groupSuppressAutoColumn | 否       | boolean                      | false  | 是否禁止开启自动生成group列                             |
-| serverGroupExpend       | 否       | (params,cb)=>void            | -      | 异步tree当加载异步children时调用                        |
-| treeData                | 否       | boolean                      | false  | 是否开启树形渲染模式                                    |
-| isServer                | 否       | boolean                      | false  | 是否开启树异步形渲染模式                                |
-| loading                 | 否       | boolean                      | false  | grid loading状态                                        |
-| className               | 否       | string                       | -      | className                                               |
-| filter                  | 否       | boolean                      | false  | 默认单列过滤                                            |
-| resizable               | 否       | boolean                      | true   | 默认单列伸缩                                            |
-| sortable                | 否       | boolean                      | true   | 默认单列排序                                            |
-| width                   | 否       | string 或 number             | "100%" | grid 宽度                                               |
-| height                  | 否       | string 或 number             | 400    | grid 宽度                                               |
+| 属性 | 是否必传 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| columns | 是 | Column[] | [] |  |
+| dataSource | 否 | any[] | [] | 数据源 |
+| rowkey | 是 | string 或 (data:any)=>string | - | 唯一标示 |
+| rowSelection | 否 | boolean 或 RowSelection | false | selection 配置 |
+| pagination | 否 | Pagination | - | Pagination 配置 |
+| onReady | 否 | (params,dataManage)=>void | - | gird 初始完成回调 传递 grid 的 params 和控制数据的 dataManage，参考 manager API |
+| editable | 否 | boolean | false | 是否进入编辑状态 |
+| groupSuppressAutoColumn | 否 | boolean | false | 是否禁止开启自动生成 group 列 |
+| isServerSideGroup | 否 | (data:any)=>boolean | null | 判断是否是子节点 |
+| serverGroupExpend | 否 | (params,cb)=>void | - | 异步 tree 当加载异步 children 时调用 |
+| treeDataChildrenName | 否 | string | "children" | 树形数据打平计算的 children 数据字段名称 |
+| treeData | 否 | boolean | false | 是否开启树形渲染模式 |
+| serialNumber | 否 | boolean | false | 添加序号列 序号要与 gantGroupCellRenderer 联用 |
+| isCompute | 否 | boolean | true | treeData 为 true 情况下 是否要需要转换为平行数据并在数据中添加 treeDataPath 字段 |
+| onCellEditChange | 否 | （newData,filedName,newValue,oldValue）=>record / record[] | - | 在结束编辑时调用，返回需要修改的数据 |
+| onCellEditingChange | 否 | （newData,filedName,newValue,oldValue）=>record / record[] | - | 在编辑过程中时调用，返回需要修改的数据 |
+| getDataPath | 否 | (data:any)=>array | (data)=>data.treeDataPath | treeData 下判断树形结构路径 ，默认根据数据中的 treeDataPath 字段判断，若数据中没该字段需自己添加获取路径方法 |
+| openEditSign | 否 | boolean | false | 是否在 grid header 添加编辑标示 |
+| loading | 否 | boolean | false | grid loading 状态 |
+| className | 否 | string | - | className |
+| filter | 否 | boolean | false | 默认单列过滤 |
+| resizable | 否 | boolean | true | 默认单列伸缩 |
+| sortable | 否 | boolean | true | 默认单列排序 |
+| width | 否 | string 或 number | "100%" | grid 宽度 |
+| height | 否 | string 或 number | 400 | grid 宽度 |
+
 更多属性参考 [ag-grid](https://www.ag-grid.com/documentation-main/documentation.php)
 
 ### RowSelection
 
-| 属性                    | 是否必传 | 类型                 | 默认值     | 说明                                           |
-|-------------------------|----------|----------------------|------------|------------------------------------------------|
-| type                    | 否       | "single"或"multiple" | "multiple" | selection类型                                  |
-| checkboxIndex           | 否       | number               | -          | checkbox出现在哪列                             |
-| selectedKeys            | 否       | string[]             | -          | 双向绑定选择keys                               |
-| onSelect                | 否       | (keys,rows)=>void    | -          | selection change变化回调                       |
-| showDefalutCheckbox     | 否       | boolean              | true       | 开启默认selection列                            |
-| defaultSelectionCol     | 否       | ColDef               | -          | 默认selection列配置                            |
-| rowMultiSelectWithClick | 否       | boolean              | true       | 是否允许单击选择多个行                         |
-| rowDeselection          | 否       | boolean              | true       | 是否可在按住Ctrl键并单击该行的情况下取消选择行 |
+| 属性 | 是否必传 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| type | 否 | "single"或"multiple" | "multiple" | selection 类型 |
+| checkboxIndex | 否 | number | - | checkbox 出现在哪列 |
+| selectedKeys | 否 | string[] | - | 双向绑定选择 keys |
+| onSelect | 否 | (keys,rows)=>void | - | selection change 变化回调 |
+| showDefalutCheckbox | 否 | boolean | true | 开启默认 selection 列 |
+| defaultSelectionCol | 否 | ColDef | - | 默认 selection 列配置 |
+| rowMultiSelectWithClick | 否 | boolean | true | 是否允许单击选择多个行 |
+| rowDeselection | 否 | boolean | true | 是否可在按住 Ctrl 键并单击该行的情况下取消选择行 |
 
 ### Pagination
 
 | 属性       | 是否必传 | 类型   | 默认值 | 说明         |
-|------------|----------|--------|--------|--------------|
+| ---------- | -------- | ------ | ------ | ------------ |
 | beginIndex | 否       | number | 0      | 开始分页位置 |
 
 其他属性参考 [antd-Pagination](https://3x.ant.design/components/pagination-cn/#API?target=_blank)
 
 ### Column
-| 属性              | 是否必传 | 类型                              | 默认值 | 说明                 |
-|-------------------|----------|-----------------------------------|--------|----------------------|
-| fieldName         | 否       | string                            | -      | 字段名               |
-| title             | 否       | string                            | -      | header列名           |
-| render            | 否       | （text,record,index）=>React.Node | -      | 自定义render         |
-| editConfig        | 否       | EditConfig                        | -      | 行内编辑配置         |
-| width             | 否       | string   或number                 | 150    | 列宽                 |
-| checkboxSelection | 否       | boolean                           | false  | 该列是否显示checkbox |
-| sortable          | 否       | boolean                           | true   | 该列是否可排序       |
-| filter            | 否       | boolean                           | true   | 该列是否过滤         |
-| hide              | 否       | boolean                           | false  | 该列是否隐藏         |
-| fixed             | 否       | "left"、"right"、 undefined       | -      | 该列是否固定         |
 
-更多Column 属性 [ag-grid Columns](https://www.ag-grid.com/javascript-grid-column-properties/)
+| 属性 | 是否必传 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| fieldName | 否 | string | - | 字段名 |
+| title | 否 | string | - | header 列名 |
+| render | 否 | （text,record,index，params）=>React.Node | - | 自定义 render |
+| editConfig | 否 | EditConfig | - | 行内编辑配置 |
+| width | 否 | string 或 number | 150 | 列宽 |
+| checkboxSelection | 否 | boolean | false | 该列是否显示 checkbox |
+| sortable | 否 | boolean | true | 该列是否可排序 |
+| filter | 否 | boolean | true | 该列是否过滤 |
+| hide | 否 | boolean | false | 该列是否隐藏 |
+| fixed | 否 | "left"、"right"、 undefined | - | 该列是否固定 |
+
+更多 Column 属性 [ag-grid Columns](https://www.ag-grid.com/javascript-grid-column-properties/)
 
 ### EditConfig
-| 属性            | 是否必传 | 类型                     | 默认值 | 说明                                                |
-|-----------------|----------|--------------------------|--------|-----------------------------------------------------|
-| component       | 是       | Compoent                 | -      | 数据单元组件                                        |
-| editable        | 是       | boolean或(data)=>boolean | false  | 单元格是否能编辑                                    |
-| props           | 否       | any                      | -      | 传递数据单元组件属性                                |
-| changeFormatter | 否       | (val,recrod)=>val        | -      | 单元格onChange时调用 必须要返回一个数作为该单元的值 |
-| onCellChange    | 否       | (val,recrod, list)=>void | -      | 单元格变化时的响应函数，用于修改同行其他列数据，或者修改其他行数据 |
+
+| 属性 | 是否必传 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- | --- |
+| component | 是 | Compoent | - | 数据单元组件 |
+| editable | 是 | boolean 或(data)=>boolean | false | 单元格是否能编辑 |
+| props | 否 | any | - | 传递数据单元组件属性 |
+| changeFormatter | 否 | (val,recrod)=>val | - | 单元格 onChange 时调用 必须要返回一个数作为该单元的值 |
+| required | 否 | booleann | - | 必填标识 |
+| refName | 否 | string | "warpperRef" | 设置 ref 字段 key 名 (Antd ref) |
+| valuePropName | 否 | string | "value" | 设置 value 字段 key 名 （Switch: checked） |
 
 ### manager API
 
-**manager对象用于提供对于编辑情况下的数据操作**
+**manager 对象用于提供对于编辑情况下的数据操作**
 
 #### 如何获得
 
 ```js
-<Grid onReady={(param, manager)=> { /**保存manager */ }} />
+<Grid
+  onReady={(param, manager) => {
+    /**保存manager */
+  }}
+/>
 ```
 
-一般而言，再一个组件生命周期内，manager不会改变
+一般而言，再一个组件生命周期内，manager 不会改变
 
 #### 常用方法及属性
 
 1、新增
 
 ```js
-manager.create(item, index)
-manager.create(item, sibiling, index)
-manager.create(item, parent, index, append)
+// 根节点上新增数据
+manager.create(item);
+
+// 在某个节点上面新增数据;
+manager.create(item, id);
+
+// 在某个节点下面新增数据;
+manager.create(item, id, false);
+
+//  根节点上新增多个数据
+manager.create([item1, item2]);
+
+// 在某个节点上面新增多个数据;
+manager.create([item1, item2], id);
+
+// 在多个节点上面新增多个数据;
+manager.create([[item1, item2], [[item1, item2]]], [id, id2]); // 在多个节点上面新增多个数据;
 ```
 
-sibiling、parent是通过gridApi调用getSelectedNodes方法得到的节点
+**需要注意的是新增的数据 item 中也需要有 rowkey 所指向的字段**
 
-**需要注意的是新增的数据item中也需要有rowkey所指向的字段**
-
-**批量新增只需要在item处传递一个数组即可，同样还是需要每一项都有一个唯一的rowkey**
-
-e.g
-
-```js
-rowkey=id
-item={id: "asdihdsfp", name: "tom"}
-```
+**新增树形数据时注意路径**
 
 2、删除
 
-**删除功能用于删除当前选中的节点**
-
-- 基础用法
+**删除功能用于删除指定节点**
 
 ```js
-manager.remove()
+manager.remove(id|id[]);
 ```
 
-- 异步删除
+3、标记删除
 
-remove方法接收一个删除的回调方法，该方法会获得选中的节点数据
-
-remove方法根据这个回调方法的返回值来确定行为
-
-返回值可以是一个*布尔值*或者是一个*Promise<boolean>*，用于表示删除是否执行。
+**标记删除功能用于标记删除指定节点**
 
 ```js
-manager.remove((selected)=> false)
-
-manager.remove((selected)=>new Promise(res => {
-        message.info("0.5s后删除")
-        setTimeout(() => {
-            res(true)
-        }, 500)
-    }))
+manager.tagRemove(id|id[]);
 ```
 
-- 返回值
+4、修改
 
-remove方法返回一个Promise，可以在此获得是否删除成功的信息，用于部分场景下的反馈
-
-*promise.resolved*表示操作成功
-
-*promise.rejected*表示操作失败
+**修改功能用于修改指定节点**
 
 ```js
-manager.remove().then(()=>{
-    /**操作成功 */
-},()=>{
-    /**操作失败 */
-}).catch(()=>{
-    /**操作失败 */
-})
+manager.modify(item|item[]);
 ```
 
-- 其他参数 - options
+5、保存
 
-| 属性 | 是否必传 | 类型  | 默认值 | 说明 |
-|:-:|:-:|:-:|:-:|:-:|
-|showLine| 否 | boolean | true | 是否显示删除线
-|removeChildren| 否 | boolean | true | 是否删除子节点
-
-manager.remove(false, options)
+保存操作，可以获得当前列表数据和调整的所有数据 1.基本使用
 
 ```js
-options:{
-    showLine: true ,
-    removeChildren: true
-}
+manager.save()
+manager.save(()=>true｜false)
+manager.save(async ()=>true｜false)
 ```
 
-**需要注意的是**，在removeChildren为false的条件下，如果选中某个节点而其子节点没有被选中的话，会导致删除操作失败
+6、其他 API
 
-3、保存
+|    属性     |   类型   |                        说明                        |
+| :---------: | :------: | :------------------------------------------------: |
+|  isChanged  | boolean  |                 表格数据是否有变化                 |
+|    undo     | function |                        回退                        |
+|    redo     | function |                        重做                        |
+|   cancel    | function |                      取消编辑                      |
+|    reset    | function | 重做操作，删除前面所有操作的历史记录，回到最初状态 |
+|    diff     |  object  |                   获取 diff 数据                   |
+| getRowData  | function |            获取 grid 最新数据带有脏标示            |
+| getPureData | function |                获取最新数据纯净数据                |
 
-保存操作，可以获得当前列表数据和调整的所有数据
-
-```js
-const { list, diff } = manager.save()
-```
-
-4、遍历
-
-遍历当前状态下的所有行数据、用于修改行数据
-
-接受一个回调函数作为参数、不需要返回值
-
-e.g
-
-```js
-manager.mapNodes((row)=>{
-    row.age = row.age + 1
-})
-```
-
-5、 指定修改数据
-
-根据选中所有节点来获得proxy对象进行数据的修改，用法如下:
-
-```js
-manager.mapSelectedNodes((row)=>{
-    row.age = row.age + 1
-})
-```
-5、 修改指定id的数据
-
-根据传递的ids数组，来传递对应的与历史记录绑定的数据对象
-
-```js
-manager.maoNodesIds(ids,(row)=>{
-    row.age = row.age + 1
-})
-```
-
-6、其他API
-
-| 属性 | 类型 | 说明 |
-|:-:|:-:|:-:|
-|isChanged|boolean| 表格数据是否有变化
-|undo|function|回退|
-|redo|function|重做|
-|cancel|function|取消编辑|
-|reset|function|重做操作，删除前面所有操作的历史记录，回到最初状态|
-
-**cancel、save方法需要在业务层手动修改editable来禁止编辑**
-
-
+**cancel、save 方法需要在业务层手动修改 editable 来禁止编辑**
 
 ### 注意事项：
 
- 1.rowkey必须设置，否则会影响很多功能！！！
+1.rowkey 必须设置，否则会影响很多功能，如果 rowkey 对应字段不能为 number！！！
 
- 2.树形treeData开启后，grid会自动生成一列，设置该列属性请使用autoGroupColumnDef设置;
+2.树形 treeData 开启后，grid 会自动生成一列，设置该列属性请使用 autoGroupColumnDef 设置;
 
- 3.异步treeData,ag-grid可以为异步树形设置一个独立与nodeId的groupKey;这是将会影响内部获取唯一id的方式，建议不要设置 getServerSideGroupKey
+3.异步 treeData,ag-grid 可以为异步树形设置一个独立与 nodeId 的 groupKey;这是将会影响内部获取唯一 id 的方式，建议不要设置 getServerSideGroupKey
 
-其他API请参阅<a href="https://www.ag-grid.com/react-grid" target="_blank">ag-grid官网</a>
+其他 API 请参阅<a href="https://www.ag-grid.com/react-grid" target="_blank">ag-grid 官网</a>

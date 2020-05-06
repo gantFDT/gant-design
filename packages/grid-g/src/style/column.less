@@ -1,67 +1,62 @@
 :global {
-    .gant-header-cell-required{
-        .ag-header-cell-text::before{
-            content: "*";
-            margin-right: 2px;
-            color: #ff4d4f;
-        }
+  .gant-grid-edit {
+    .gant-header-cell-required {
+      .ag-header-cell-text::before {
+        content: '*';
+        margin-right: 2px;
+        color: #ff4d4f;
+      }
     }
-    .gant-header-cell-edit{
-        .ag-header-cell-text::before{
-            content: "*";
-            margin-right: 2px;
-            color:#1890ff;
-        }
+    .gant-header-cell-edit {
+      .ag-header-cell-text::before {
+        content: '*';
+        margin-right: 2px;
+        color: #1890ff;
+      }
     }
-    
-    .gant-grid-cell-editing {
-        margin-top: -1px;
-        >.gant-input-wrapper {
-            display: block;
-        }
-        .gant-input .gant-input-group.ant-input-group {
-            .gant-input-group-inner {
-                &>* {
-                    border-radius: 0px;
-                }
-            }
-        }
+  }
+
+  .gant-grid-cell-editing {
+    margin-top: -1px;
+    > .gant-input-wrapper {
+      display: block;
     }
-    .gant-grid-cell-content {
-        font-size: 12px;
-        &-small {
-            font-size: 12px;
+    .gant-input .gant-input-group.ant-input-group {
+      .gant-input-group-inner {
+        & > * {
+          border-radius: 0px;
         }
+      }
     }
-    
-    .gant-grid-cell {
-        &::after {
-            content: "";
-            display: block;
-            width: 0;
-            height: 0;
-            // border-width: 4px;
-            // border-color： transparent;
-            // border-style: solid;
-            border: 4px solid transparent;
-            position: absolute;
-            left: 0px;
-            top: 0px;
-        }
-        &-modify {
-            &::after {
-                border-color: #ff4d4f transparent transparent #ff4d4f;
-            }
-        }
-        &-add {
-            &::after {
-                border-color: #52c41a transparent transparent #52c41a;
-            }
-        }
-        &-delete {
-            &::after {
-                border-color: #faad14 transparent transparent #faad14;
-            }
-        }
+  }
+  .gant-grid-cell {
+    &::after {
+      content: '';
+      display: block;
+      width: 0;
+      height: 0;
+      // border-width: 4px;
+      // border-color： transparent;
+      // border-style: solid;
+      border: 4px solid transparent;
+      position: absolute;
+      left: 0px;
+      top: 0px;
     }
+    &-modify {
+      &::after {
+        border-color: #ff4d4f transparent transparent #ff4d4f;
+      }
+    }
+    &-add {
+      &::after {
+        border-color: #52c41a transparent transparent #52c41a;
+      }
+    }
+    &-delete {
+      &::after {
+        border-color: #faad14 transparent transparent #faad14;
+      }
+    }
+  }
 }

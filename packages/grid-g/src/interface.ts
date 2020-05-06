@@ -10,7 +10,6 @@ import {
 import { defaultProps, defaultRowSelection } from './index';
 
 import { PaginationProps } from 'antd/lib/pagination';
-import DataManage from './datamanage';
 import GridManager from './gridManager';
 // 编辑框大小
 export enum Size {
@@ -93,7 +92,7 @@ export type ColumnEdiatble<T> = boolean | ((record: T) => boolean);
 export type RowKey<T> = (data: T) => string;
 
 // Column Api
-export type Columns<T extends {} = {}> = {
+export interface Columns<T extends {} = {}> extends ColDef {
   /**标题 */
   title?: React.ReactNode;
   /**索引的字段名 */
@@ -103,7 +102,6 @@ export type Columns<T extends {} = {}> = {
   /**子节点 */
   children?: Columns<T>[];
   /**当前列宽度,如果没有，将以defaultColumnWidth显示 */
-  width?: React.ReactText;
   /**是否显示选择器 */
   checkboxSelection?: boolean;
   /**当前列是否支持排序 */
@@ -120,7 +118,19 @@ export type Columns<T extends {} = {}> = {
   rowGroupIndex?: number;
   type?: string | string[];
   [props: string]: any;
-};
+  /** Group ID */
+  groupId?: string;
+  /** Open by Default */
+  openByDefault?: boolean;
+  /** If true, group cannot be broken up by column moving, child columns will always appear side by side, however you can rearrange child columns within the group */
+  marryChildren?: boolean;
+  /** The custom header group component to be used for rendering the component header. If none specified the default ag-Grid is used**/
+  headerGroupComponent?:string
+  /** The custom header group component to be used for rendering the component header in the hosting framework (ie: React/Angular). If none specified the default ag-Grid is used**/
+  headerGroupComponentFramework?: any;
+  /** The custom header group component to be used for rendering the component header. If none specified the default ag-Grid is used**/
+  headerGroupComponentParams?: any;
+}
 
 export type Pagination = Omit<
   ProtoExtends<
@@ -133,13 +143,8 @@ export type Pagination = Omit<
   'onShowSizeChange'
 >;
 
-export type Record = {
-  children?: Record[];
-  isDeleted?: boolean;
-  [key: string]: any;
-};
 // Grid Api
-export interface Props<T extends Record> {
+export interface Props<T extends any> {
   columns: Columns<T>[];
   dataSource: T[];
   removeShowLine: boolean;
@@ -162,8 +167,9 @@ export interface Props<T extends Record> {
   serverGroupExpend: (param: IServerSideGetRowsParams, cd: (row: any[]) => void) => void;
   serialNumber?: boolean;
   isCompute?: boolean;
-  onCellEditChange: (record: any, fieldName: string, newValue: any, oldValue: any) => any[];
-  onCellEditingChange:(record: any, fieldName: string, newValue: any, oldValue: any) => any[];
+  onCellEditChange: (record: any, fieldName: string, newValue: any, oldValue: any) => any;
+  onCellEditingChange: (record: any, fieldName: string, newValue: any, oldValue: any) => any;
+  openEditSign: boolean;
 }
 
 export type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>;

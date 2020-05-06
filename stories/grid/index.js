@@ -112,6 +112,17 @@ const ComputeGrid = () => {
         let rowid = new Date().valueOf();
         manager.create({...sourceDataList,id:rowid,path:rowid+"/"});
     }
+    const btachCreateBrother=()=>{
+        const createRecord=[]
+        new Array(2).fill("").map(item=>{
+            let rowid = new Date().valueOf();
+          let path=getDataPath(selectedRows[0]);
+            path.pop()
+            path=path?path:[];
+            createRecord.push({...sourceDataList,id:rowid,path:path.join("/")?path.join("/")+"/"+rowid+"/":rowid+"/"})
+        })
+        manager.create(createRecord,selectedKeys[0]);
+    }
     const getDataPath=(data) => {
         const path = data.path.split('/');
         path.pop()
@@ -141,6 +152,10 @@ const ComputeGrid = () => {
         <Menu.Item>
             <a onClick={createRoot}>创建跟节点</a>
         </Menu.Item>
+        <Menu.Item>
+        <a 
+        onClick={btachCreateBrother}>批量同级节点</a>
+    </Menu.Item>
         <Menu.Item>
              <a 
              onClick={createBrother}>创建同级节点</a>
@@ -188,7 +203,7 @@ const ComputeGrid = () => {
                 loading={loading}
                 columns={columns}
                 onCellValueChanged={(data)=>console.log('onCellValueChanged',data)}
-                onCellEditChange={(record)=>[{...record,typeName:true}]}
+                onCellEditingChange={(record)=>[{...record,typeName:true}]}
                 treeData
                 editable={editable}
                 dataSource={dataSource}
@@ -199,7 +214,7 @@ const ComputeGrid = () => {
                     selectedKeys,
                     onSelect
                 }}
-                
+                openEditSign
                 removeShowLine={false}
                 isServerSideGroup={(data) => data.children}
                 groupSuppressAutoColumn

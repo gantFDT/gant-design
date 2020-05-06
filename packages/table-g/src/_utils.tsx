@@ -2,7 +2,8 @@ import React, { useMemo, useCallback, useState, useEffect } from 'react'
 import moment from 'moment'
 import _, { isNumber } from 'lodash'
 import { Tooltip, Checkbox } from 'antd'
-import { measureScrollbar } from 'rc-table/es/utils'
+// import { measureScrollbar } from 'rc-table/es/utils'// 新版本的rc-table没有这个方法
+import {measureScrollbar} from './_rc-table-utils'
 import CSS from 'csstype'
 import { RowSelection, Record, RowKey } from './index'
 
