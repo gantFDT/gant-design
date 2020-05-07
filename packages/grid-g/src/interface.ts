@@ -85,8 +85,12 @@ export type EditConfig<T> = {
   refName?: string;
   valuePropName?: string;
   required?: boolean;
+  rules?: ValidateRules[];
+  type?: ValidateTypes | ValidateTypes[];
 };
-
+export type ValidateRules = {
+  [index: number]: ValidateRule | Validateor;
+};
 export type ColumnEdiatble<T> = boolean | ((record: T) => boolean);
 
 export type RowKey<T> = (data: T) => string;
@@ -125,7 +129,7 @@ export interface Columns<T extends {} = {}> extends ColDef {
   /** If true, group cannot be broken up by column moving, child columns will always appear side by side, however you can rearrange child columns within the group */
   marryChildren?: boolean;
   /** The custom header group component to be used for rendering the component header. If none specified the default ag-Grid is used**/
-  headerGroupComponent?:string
+  headerGroupComponent?: string;
   /** The custom header group component to be used for rendering the component header in the hosting framework (ie: React/Angular). If none specified the default ag-Grid is used**/
   headerGroupComponentFramework?: any;
   /** The custom header group component to be used for rendering the component header. If none specified the default ag-Grid is used**/
@@ -179,3 +183,34 @@ export type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>;
 export type GridProps<T> = ProtoExtends<AgGridReactProps, CustomProps<T>>;
 
 export type GridPropsPartial<T> = PartRequired<GridProps<T>, 'columns' | 'dataSource' | 'rowkey'>;
+
+type ValidateTypes =
+  | 'enum'
+  | 'array'
+  | 'string'
+  | 'object'
+  | 'boolean'
+  | 'date'
+  | 'number'
+  | 'float'
+  | 'integer'
+  | String
+  | Number
+  | Object;
+export interface ValidateRule {
+  message?: string;
+  type?: ValidateTypes | ValidateTypes[];
+  len?: number;
+  max?: number;
+  min?: number;
+  pattern?: RegExp;
+  required?: boolean;
+  whitespace?: boolean;
+  transform?: (value: any) => any;
+}
+export type Validateor = (
+  value,
+  data,
+  callBack: (message?: string) => void,
+  rules: ValidateRule[],
+) => void;

@@ -1,22 +1,11 @@
 import { useCallback, useMemo } from 'react';
 import classnames from 'classnames';
-import {
-  ColGroupDef,
-  ColDef,
-  IsColumnFuncParams,
-  IsColumnFunc,
-  IServerSideGetRowsParams,
-} from 'ag-grid-community';
-import { EventEmitter } from 'events';
-import { get, isNumber, isEmpty, isNil, omit, isEqual } from 'lodash';
-import { List } from 'immutable';
+import { ColGroupDef, ColDef, IsColumnFunc, IServerSideGetRowsParams } from 'ag-grid-community';
+import { get } from 'lodash';
 import { isEqualObj } from './gridManager/utils';
 import { PaginationProps } from 'antd/lib/pagination';
-import { Columns, RowSelection, ColumnEdiatble } from './interface';
-import { Size, DataActions, Pagination } from './interface';
+import { Size, DataActions, Pagination, ColumnEdiatble, Columns, ValidateRules } from './interface';
 import EditorCol from './GridEidtColumn';
-import RenderCol from './GirdRenderColumn';
-
 type Col = ColGroupDef | ColDef;
 
 function itemisgroup(item, children): item is ColGroupDef {
@@ -37,10 +26,18 @@ export const mapColumns = <T>(
   defaultSelectionCol: ColDef,
   rowSelection,
   serialNumber,
-): Col[] => {
+): {
+  columnDefs: Col[];
+  validateFields: {
+    [name: string]: ValidateRules;
+  };
+} => {
   // 移除所有已添加事件
   function getColumnDefs(columns: Columns<T>[]) {
-    return columns.map(
+    let validateFields: {
+      [name: string]: ValidateRules;
+    } = {};
+    const columnDefs = columns.map(
       (
         {
           title: headerName,
@@ -83,12 +80,19 @@ export const mapColumns = <T>(
           cellRenderer: render ? 'gantRenderCol' : undefined,
           headerClass,
           ...item,
-        } as ColDef;
+        } as Col;
 
         if (!itemisgroup(colDef, children)) {
           // 当前列允许编辑
           if (ColEditable) {
             const { props, changeFormatter, component, ...params } = editConfig;
+            let { required, rules = [], type } = params;
+            const fieldsRules = rules.map(item => {
+              const hasRequired = Reflect.has(item, 'required');
+              required = hasRequired ? Reflect.get(item, 'required') : required;
+              return { type, ...item };
+            });
+            validateFields[field] = required ? [{ required, type }, ...fieldsRules] : fieldsRules;
             colDef.cellEditorParams = {
               props,
               changeFormatter,
@@ -99,18 +103,21 @@ export const mapColumns = <T>(
             colDef.editable = ColEditableFn(editConfig.editable);
             colDef.headerClass = classnames(
               headerClass,
-              params.required ? 'gant-header-cell-required' : 'gant-header-cell-edit',
+              required ? 'gant-header-cell-required' : 'gant-header-cell-edit',
             );
           }
           if (fixed) colDef.pinned = fixed;
         } else if (itemisgroup(colDef, children)) {
           if (children && children.length) {
-            colDef.children = getColumnDefs(children);
+            const groupChildren = getColumnDefs(children);
+            colDef.children = groupChildren.columnDefs;
+            validateFields = { ...validateFields, ...groupChildren.validateFields };
           }
         }
         return colDef;
       },
     );
+    return { columnDefs, validateFields };
   }
   const defaultCheckboxColSelectionCol: ColDef = {
     width: 24,
@@ -152,8 +159,10 @@ export const mapColumns = <T>(
       return parseInt(rowIndex + 1 + parseInt(pageSize * beginIndex + '')) + '';
     },
   };
-  const cols = serialNumber ? [serialNumberCol, ...getColumnDefs(columns)] : getColumnDefs(columns);
-  return defaultSelection ? [defaultCheckboxColSelectionCol, ...cols] : cols;
+  let { columnDefs, validateFields } = getColumnDefs(columns);
+  columnDefs = serialNumber ? [serialNumberCol, ...columnDefs] : columnDefs;
+  columnDefs ? [defaultCheckboxColSelectionCol, ...columnDefs] : columnDefs;
+  return { columnDefs, validateFields };
 };
 
 // 去除掉boolean类型
@@ -183,59 +192,6 @@ export function isfunc(t: any): t is Function {
 export function ispromise(t: any): t is Promise<any> {
   return t && isfunc(t.then);
 }
-
-export const isList = function isList<T>(list: any): list is List<T> {
-  return List.isList(list);
-};
-
-const nil = [null, undefined, ''];
-
-export function trackEditValueChange(data: any, field: string, cacheValue: any, value: any) {
-  let newRowData: any = data;
-
-  if (data._rowType === DataActions.modify) {
-    let rowData = get(data, `_rowData`, {});
-    const fieldHasChanged = Reflect.has(rowData, field);
-    if (fieldHasChanged) {
-      const originValue = Reflect.get(rowData, field);
-      const originIsNil = ~~nil.includes(originValue);
-      const currinIsNil = ~~nil.includes(cacheValue);
-      const sum = originIsNil + currinIsNil;
-      if (sum === 2 || (sum === 0 && originValue == cacheValue)) {
-        // 认定值没有改变
-        // 比如之前undefined --> ""
-        // 123 --> "123"
-        rowData = omit(rowData, [field]);
-      }
-    } else {
-      rowData[field] = value;
-    }
-
-    // if (cacheValue === rowData[field]) {
-    //     delete rowData[field];
-    // } else if (!rowData[field] && rowData[field] !== value) {
-    //     rowData[field] = value
-    // }
-
-    if (isEmpty(rowData)) {
-      const { _rowType, _rowData, ...newData } = data;
-      newRowData = newData;
-    } else {
-      newRowData = { ...data, _rowData: rowData };
-    }
-  } else if (!data._rowType) {
-    newRowData = { _rowData: { [field]: value }, _rowType: DataActions.modify, ...newRowData };
-  }
-  return newRowData;
-}
-
-export function trackRenderValueChange(data: any, field: string, value: any) {
-  const { _rowType, rowData, ...newData } = data;
-  if (_rowType !== DataActions.modify) return false;
-  if (get(rowData, `${field}`) !== value) return false;
-  return newData;
-}
-
 export function flattenTreeData(
   dataSoruce: any[],
   getRowNodeId,
@@ -319,50 +275,4 @@ export function getSizeClassName(size: Size) {
     default:
       return '';
   }
-}
-
-export function createFakeServer(dataManage, getRowNodeId, treeDataChildrenName) {
-  function FakeServer(dataManage) {
-    this.data = dataManage;
-  }
-  FakeServer.prototype.getData = function(request) {
-    function extractRowsFromData(groupKeys, data) {
-      if (groupKeys.length === 0) return data;
-      var key = groupKeys[0];
-      for (var i = 0; i < data.length; i++) {
-        if (getRowNodeId(data[i]) === key) {
-          const children = get(data, `[${i}][${treeDataChildrenName}]`, false);
-          if (!children) return false;
-          return extractRowsFromData(groupKeys.slice(1), children.slice());
-        }
-      }
-    }
-    return extractRowsFromData(request.groupKeys, this.data.renderList);
-  };
-  return new FakeServer(dataManage);
-}
-export function createServerSideDatasource(
-  fakeServer,
-  asyncCallback,
-  cb?: (params: IServerSideGetRowsParams) => void,
-) {
-  function ServerSideDatasource(fakeServer) {
-    this.fakeServer = fakeServer;
-  }
-
-  ServerSideDatasource.prototype.getRows = function(params) {
-    const { request, successCallback, parentNode } = params;
-    var rows = this.fakeServer.getData(request);
-    function requestSuccessCallBack(rows: any[], len: number) {
-      successCallback(rows, len);
-      cb && cb(params);
-    }
-    if (Array.isArray(rows)) return requestSuccessCallBack(rows, rows.length);
-    asyncCallback(params, request.groupKeys, requestSuccessCallBack);
-  };
-  return new ServerSideDatasource(fakeServer);
-}
-
-export function isDeleted(data) {
-  return get(data, 'isDeleted') || get(data, '_rowType') === DataActions.remove;
 }
