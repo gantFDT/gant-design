@@ -385,7 +385,11 @@ const withSelector = compose(
   // 下列属性变化的时候重新根据value值设置label
   withPropsOnChange(['value', 'optionLabel', 'dataList'], ({ setLabelWithValue }) => setLabelWithValue()),
   // 监听label
-  withPropsOnChange(['optionLabel'], ({ optionLabel, setCacheLabel }) => setCacheLabel(optionLabel)),
+  withPropsOnChange(['optionLabel'], ({ optionLabel }) => {
+    return {
+      cacheLabel: optionLabel
+    }
+  }),
   // 去支持只传递dataSource，并且希望更新dataSource的情况
   withPropsOnChange(['dataSource'], ({ dataSource, setDataList }) => setDataList(dataSource)),
   mapProps(({ dataSource, transformDataToList, ...props }) => props)
@@ -400,10 +404,10 @@ const withChange = withPropsOnChange( // 外部value到内部value对象形式�
       if (Array.isArray(cacheLabel)) {
         sValue = zipWith(value, cacheLabel, (key, label) => ({ key, label }))
       } else {
-        sValue = value.map(key => ({ key, label: '' }))
+        sValue = value.map(key => ({ key, label: cacheLabel }))
       }
       return {
-        value: sValue
+        value: sValue.slice(0, value.length)
       }
     }
     return {
@@ -526,6 +530,7 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
     }
 
     if (multiple) props.mode = 'multiple'
+
     const select = (
       <Select
         loading={loading}
