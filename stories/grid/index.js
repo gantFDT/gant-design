@@ -25,13 +25,13 @@ const sourceDataList = {
     optCounter: null,
     parentId: null,
     path: '',
-    productTypeExt: {id: null},
+    productTypeExt: { id: null },
     typeCode: '',
     typeName: false,
     updateDate: null,
     updatedBy: null,
     updatedByName: '',
-  };
+};
 const ComputeGrid = () => {
 
 
@@ -51,35 +51,44 @@ const ComputeGrid = () => {
             title: "产品类型编码",
             width: 300,
             editConfig: {
-              component: Input,
-              editable: true,
+                component: Input,
+                editable: true,
+                rules: [
+                    {
+                        required: true,
+                        message: "产品类型编码必填"
+                    },
+                    {
+                        max: 2,
+                        min: 1,
+                        message: "产品类型编码范围2-10"
+                    },
+                ]
             },
             cellRenderer: "gantGroupCellRenderer",
-            valueSetter: function(params) {
-                params.data.createDate = params.newValue;
-                params.data.createdBy = params.newValue;
-                return false;
-            }
-          },
-          {
+        },
+        {
             fieldName: 'typeName',
             title: "产品类型名称",
             width: 300,
             editConfig: {
-              component: Input,
-              editable: true,
-              required:true,
+                component: Input,
+                editable: true,
             }
-          }
+        }
     ])
 
 
     const [dataSource, setdataSource] = useState(
         [
-            {"optCounter":1,"createdBy":1,"createDate":"2020-04-27 17:38:52","updatedBy":1,
-            "updateDate":"2020-04-27 17:38:52","isDeleted":false,"path":"313/","expanded":true,
-            "children":[{"optCounter":1,"createdBy":1,"createDate":"2020-04-28 14:23:11","updatedBy":1,
-            "updateDate":"2020-04-28 14:23:11","isDeleted":false,"parentId":313,"path":"313/314/","expanded":true,"leaf":true,"id":314,"typeCode":"AAAA","typeName":false,"productTypeExt":{"id":314,"updatedBy":1}}],"leaf":false,"id":313,"typeCode":"222222","typeName":false,"productTypeExt":{"id":313,"updatedBy":1}}]
+            {
+                "path": "313/", "expanded": true,
+                "leaf": false, "id": 313, "typeCode": "22", "typeName": "false",
+                "children": [{
+                    "parentId": 313, "path": "313/314/", "id": 314, "typeCode": "AAAA", "typeName": "false",
+                    children: [{ "parentId": 314, "path": "313/314/315/", "id": 315, "typeCode": "bbb", "typeName": "false", }]
+                }],
+            }]
     )
 
     const apiRef = useRef()
@@ -96,7 +105,7 @@ const ComputeGrid = () => {
     const [beginIndex, setBeginIndex] = useState(0)
 
     const [selectedKeys, setselectedKeys] = useState([]);
-    const [selectedRows,setSelectedRows]=useState([])
+    const [selectedRows, setSelectedRows] = useState([])
     const onPageChange = useCallback(
         (beginIndex) => {
             setBeginIndex(beginIndex)
@@ -108,61 +117,61 @@ const ComputeGrid = () => {
         setselectedKeys(keys)
         setSelectedRows(rows)
     }, [])
-    const createRoot=()=>{
+    const createRoot = () => {
         let rowid = new Date().valueOf();
-        manager.create({...sourceDataList,id:rowid,path:rowid+"/"});
+        manager.create({ ...sourceDataList, id: rowid, path: rowid + "/" });
     }
-    const btachCreateBrother=()=>{
-        const createRecord=[]
-        new Array(2).fill("").map(item=>{
+    const btachCreateBrother = () => {
+        const createRecord = []
+        new Array(2).fill("").map(item => {
             let rowid = new Date().valueOf();
-          let path=getDataPath(selectedRows[0]);
+            let path = getDataPath(selectedRows[0]);
             path.pop()
-            path=path?path:[];
-            createRecord.push({...sourceDataList,id:rowid,path:path.join("/")?path.join("/")+"/"+rowid+"/":rowid+"/"})
+            path = path ? path : [];
+            createRecord.push({ ...sourceDataList, id: rowid, path: path.join("/") ? path.join("/") + "/" + rowid + "/" : rowid + "/" })
         })
-        manager.create(createRecord,selectedKeys[0]);
+        manager.create(createRecord, selectedKeys[0]);
     }
-    const getDataPath=(data) => {
+    const getDataPath = (data) => {
         const path = data.path.split('/');
         path.pop()
         return [...path]
-      }
-    const createBrother=()=>{
-        const createRecord=[];
-        selectedRows.map(item=>{
-            let rowid = new Date().valueOf();
-          let path=getDataPath(item);
-            path.pop()
-            path=path?path:[];
-            createRecord.push({...sourceDataList,id:rowid,path:path.join("/")?path.join("/")+"/"+rowid+"/":rowid+"/"})
-        })
-        manager.create(createRecord,selectedKeys);
     }
-    const createSub=()=>{
-        const createRecord=[];
-        selectedRows.map(item=>{
+    const createBrother = () => {
+        const createRecord = [];
+        selectedRows.map(item => {
             let rowid = new Date().valueOf();
-          let path=getDataPath(item);
-            createRecord.push({...sourceDataList,id:rowid,path:path.join("/")?path.join("/")+"/"+rowid+"/":rowid+"/"})
+            let path = getDataPath(item);
+            path.pop()
+            path = path ? path : [];
+            createRecord.push({ ...sourceDataList, id: rowid, path: path.join("/") ? path.join("/") + "/" + rowid + "/" : rowid + "/" })
         })
-        manager.create(createRecord,selectedKeys,true);
+        manager.create(createRecord, selectedKeys);
+    }
+    const createSub = () => {
+        const createRecord = [];
+        selectedRows.map(item => {
+            let rowid = new Date().valueOf();
+            let path = getDataPath(item);
+            createRecord.push({ ...sourceDataList, id: rowid, path: path.join("/") ? path.join("/") + "/" + rowid + "/" : rowid + "/" })
+        })
+        manager.create(createRecord, selectedKeys, true);
     }
     const menu = (<Menu>
         <Menu.Item>
             <a onClick={createRoot}>创建跟节点</a>
         </Menu.Item>
         <Menu.Item>
-        <a 
-        onClick={btachCreateBrother}>批量同级节点</a>
-    </Menu.Item>
+            <a
+                onClick={btachCreateBrother}>批量同级节点</a>
+        </Menu.Item>
         <Menu.Item>
-             <a 
-             onClick={createBrother}>创建同级节点</a>
-         </Menu.Item>
+            <a
+                onClick={createBrother}>创建同级节点</a>
+        </Menu.Item>
         <Menu.Item>
-        <a 
-        onClick={createSub}>创建子级节点</a>
+            <a
+                onClick={createSub}>创建子级节点</a>
         </Menu.Item>
     </Menu>)
     return (
@@ -179,18 +188,22 @@ const ComputeGrid = () => {
                             <Button size="small">添加节点</Button>
                         </Dropdown>
                         <Button size="small" disabled={!(manager && selectedKeys.length)} onClick={() => manager.remove(selectedKeys)}>删除</Button>
-                        <Button size="small"  disabled={!(manager && selectedKeys.length)}  onClick={()=>manager.tagRemove(selectedKeys)}>删除标记</Button>
-                        <Button size="small"  onClick={() => manager.undo()}>撤销</Button>
+                        <Button size="small" disabled={!(manager && selectedKeys.length)} onClick={() => manager.tagRemove(selectedKeys)}>删除标记</Button>
+                        <Button size="small" onClick={() => manager.undo()}>撤销</Button>
                         <Button size="small" onClick={() => manager.redo()}>重做</Button>
+                        <Button size="small" onClick={async () => {
+                            const errs = await manager.validate();
+                            console.log(errs)
+                        }}>验证</Button>
                         <Button size="small" onClick={() => {
                             manager.cancel()
                             seteditable(false)
                         }}>取消</Button>
                         <Button size="small" onClick={() => {
-                             const isChanged = manager.isChanged;
-                             console.log("changed", isChanged)
-                             manager.save()
-                           
+                            const isChanged = manager.isChanged;
+                            console.log("changed", isChanged)
+                            manager.save()
+
                         }}>保存</Button>
                     </>
                 )
@@ -199,11 +212,10 @@ const ComputeGrid = () => {
                 type="line"
             />
             <Grid
-                rowkey={(data)=>data.id}
+                rowkey={(data) => data.id}
                 loading={loading}
                 columns={columns}
-                onCellValueChanged={(data)=>console.log('onCellValueChanged',data)}
-                onCellEditingChange={(record)=>[{...record,typeName:true}]}
+                onCellEditingChange={(record) => [{ ...record, typeName: true }]}
                 treeData
                 editable={editable}
                 dataSource={dataSource}
@@ -258,8 +270,8 @@ const AsyncTreeData = () => {
     },
     {
         fieldName: 'employeeName',
-        render: (val,record,index,params) => {
-            const {context:{size}}=params;
+        render: (val, record, index, params) => {
+            const { context: { size } } = params;
             return <Input value={val} />
         }
     },
@@ -299,7 +311,7 @@ const AsyncTreeData = () => {
             columns={columns}
             dataSource={dataSource}
             treeData
-           
+
             // isServer
             // isServerSideGroup={(data) => {
             //     console.log("isServerSideGroup",data)

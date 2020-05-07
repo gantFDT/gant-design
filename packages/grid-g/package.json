@@ -32,6 +32,7 @@
     "prop-types": "^15.6.0",
     "react": "^16.12.0",
     "recompose": "^0.30.0",
-    "util-g": "^0.1.2"
+    "util-g": "^0.1.2",
+    "async-validate": "^1.0.1"
   }
 }
