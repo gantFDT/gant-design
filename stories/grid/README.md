@@ -206,7 +206,11 @@ manager.validate()
 
 manager.validate(data)
 ```
+验证不通过时，返回一个errors对象 key代表gird该数据对应的序号，value则是错误数组；
 
+```js
+ {0:[{field: "typeCode", message: "产品类型编码必填"}]}
+```
 7、其他 API
 
 |    属性     |   类型   |                        说明                        |
