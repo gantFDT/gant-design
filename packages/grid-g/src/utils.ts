@@ -84,7 +84,7 @@ export const mapColumns = <T>(
           // 当前列允许编辑
           if (ColEditable) {
             const { props, changeFormatter, component, rules, ...params } = editConfig;
-            let required = false
+            let required = false;
             if (Array.isArray(rules)) {
               const fieldsRules: RuleItem[] = rules.map(item => {
                 const hasRequired = Reflect.has(item, 'required');
@@ -94,8 +94,8 @@ export const mapColumns = <T>(
               validateFields[field] = fieldsRules;
             } else {
               if (!isEmpty(rules)) {
-                validateFields[field] = { ...rules }
-                required = rules['required']
+                validateFields[field] = { ...rules };
+                required = rules['required'];
               }
             }
 
@@ -168,7 +168,7 @@ export const mapColumns = <T>(
   };
   let { columnDefs, validateFields } = getColumnDefs(columns);
   columnDefs = serialNumber ? [serialNumberCol, ...columnDefs] : columnDefs;
-  columnDefs ? [defaultCheckboxColSelectionCol, ...columnDefs] : columnDefs;
+  columnDefs = defaultSelection ? [defaultCheckboxColSelectionCol, ...columnDefs] : columnDefs;
   return { columnDefs, validateFields };
 };
 
