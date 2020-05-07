@@ -1,6 +1,6 @@
 import React, { PureComponent, Component } from 'react'
 import { Select } from 'antd'
-import SelectC, { SelectProps, SelectValue as AntSelectValue } from 'antd/lib/select'
+import AntSelect, { SelectProps, SelectValue as AntSelectValue } from 'antd/lib/select'
 import { debounce, isPlainObject, isNil, cloneDeep, isEqual, zipWith, groupBy, pick } from 'lodash'
 import { compose, defaultProps, withProps, withPropsOnChange, withState, mapProps, withHandlers, lifecycle, toClass, setDisplayName } from 'recompose'
 import warning from '@util/warning'
@@ -87,8 +87,8 @@ type SelectorInnerProps<T, R> = ProtoExtends<BasicSelectorProps<T, R>, {
   storageList?: R[],
   getValue?: (v: R) => string,
   updateStorage?: (d: R, u: boolean) => void,
-  selectRef?: SelectC,
-  setSelectRef?: (c: SelectC) => void,
+  selectRef?: AntSelect,
+  setSelectRef?: (c: AntSelect) => void,
   filter?: string,
   forceUpdateStorageList(): void,
   reg: RegExp,
@@ -503,8 +503,22 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
     onDropdownVisibleChange(open)
   }
 
+  onFocus = () => {
+    if (!this.props.selectRef) return
+    const { readOnly, isMultiple } = this.props
+    const { rcSelect: { getInputDOMNode, getInputElement } } = this.props.selectRef as any
+    const input = getInputDOMNode() || getInputElement()
+    if (input) {
+      if (readOnly && isMultiple) {
+        const isReadOnly = input.getAttribute("readOnly")
+        if (!isReadOnly) input.setAttribute("readOnly", "readOnly")
+      }
+
+    }
+  }
+
   renderSelect = () => {
-    const { onSearch, onSelect, onChange, onopen } = this
+    const { onSearch, onSelect, onChange, onopen, onFocus } = this
     const { multiple, readOnly, renderList, loading, style, wrapperRef, addonAfter, setSelectRef, dropdownClassName, className, wrap, children, ...props } = this.props;
     if (readOnly) {
       props.open = false
@@ -516,6 +530,7 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
       <Select
         loading={loading}
         {...props}
+        onFocus={onFocus}
         ref={setSelectRef}
         className={classnames('gant-selector', className, !wrap && 'gant-selector-no-wrap')}
         onSearch={onSearch}
