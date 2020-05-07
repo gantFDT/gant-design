@@ -1,19 +1,9 @@
-import { GridReadyEvent, RowDataTransaction, GridApi } from 'ag-grid-community';
-import {
-  get,
-  isEmpty,
-  isEqual,
-  findIndex,
-  flatten,
-  isFunction,
-  isString,
-  reverse,
-  cloneDeep,
-} from 'lodash';
+import { RowDataTransaction, GridApi, RowNode } from 'ag-grid-community';
+import Schema, { Rules } from 'async-validator';
+import { get, isEmpty, findIndex, cloneDeep } from 'lodash';
 import { getModifyData, removeTagData, isEqualObj } from './utils';
-import { DataActions } from '../interface';
+import { DataActions, } from '../interface';
 import { bindAll, Debounce } from 'lodash-decorators';
-import {} from '../utils';
 interface OperationAction {
   type: DataActions;
   recordsIndex?: number[];
@@ -32,18 +22,18 @@ interface AgGridConfig {
   dataSource: any[];
 }
 
-function loadingDecorator(target, name, descriptor): any {
-  const fn = target[name];
-  target[name] = (...ags) => {
-    console.log(11);
-  };
-  return {
-    ...descriptor,
-    value: () => {
-      console.log('111');
-    },
-  };
-}
+// function loadingDecorator(target, name, descriptor): any {
+//   const fn = target[name];
+//   target[name] = (...ags) => {
+//     console.log(11);
+//   };
+//   return {
+//     ...descriptor,
+//     value: () => {
+//       console.log('111');
+//     },
+//   };
+// }
 @bindAll()
 export default class GridManage {
   public agGridApi: GridApi;
@@ -51,6 +41,7 @@ export default class GridManage {
   historyStack: OperationAction[] = [];
   private redoStack: OperationAction[] = [];
   private loading: boolean = false;
+  public validateFields: Rules;
   private getRowItemData = itemData => {
     const { getRowNodeId } = this.agGridConfig;
     const nodeId = typeof itemData === 'object' ? getRowNodeId(itemData) : itemData;
@@ -63,6 +54,59 @@ export default class GridManage {
   appendChild(keys, add) {
     this.batchUpdateGrid({ add });
   }
+  async validate(data) {
+    const { getRowNodeId } = this.agGridConfig;
+    // this.validateFields;
+    const { add, modify } = this.diff;
+    const source = isEmpty(data) ? [...add, ...modify] : data;
+    const fields: any = {};
+    const validateFields: Rules = cloneDeep(this.validateFields);
+    source.map((item, index) => {
+      fields[index] = {
+        type: 'object',
+        fields: validateFields,
+      };
+    });
+    let descriptor: Rules = {
+      source: {
+        type: "array",
+        fields
+      }
+      ,
+    };
+    let schema = new Schema(descriptor);
+    try {
+      await schema.validate({ source });
+      return null
+    } catch (err) {
+  
+      const { errors } = err
+      const validateErros: any = {};
+      errors.map(itemError => {
+        const [sourceName, index, field] = itemError.field.split('.');
+        const nodeId = getRowNodeId(get(source, `[${index}]`, {}));
+        const rowNode = this.agGridApi.getRowNode(nodeId);
+        const message = itemError.message;
+        if (rowNode) {
+          this.getNodeExtendsParent(rowNode);
+          const { rowIndex } = rowNode;
+          if (Reflect.has(validateErros, rowIndex)) {
+            validateErros[index].push({ field, message })
+          } else {
+            validateErros[index] = [{ field, message }]
+          }
+        }
+      })
+      if (isEmpty(validateErros)) return null;
+      return validateErros
+    }
+  }
+  private getNodeExtendsParent(rowNode: RowNode) {
+    if (rowNode.level !== 0 && !rowNode.parent.expanded) {
+      if (rowNode.parent.parent.level !== 0 && !rowNode.parent.parent.expanded) this.getNodeExtendsParent(rowNode.parent);
+      rowNode.parent.setExpanded(true);
+    }
+  }
   reset(agGridConfig) {
     this.agGridConfig = agGridConfig;
     this.historyStack = [];
@@ -72,7 +116,7 @@ export default class GridManage {
   getRowData() {
     var rowData = [];
     if (!this.agGridApi) return [];
-    this.agGridApi.forEachNode(function(node) {
+    this.agGridApi.forEachNode(function (node) {
       rowData.push(node.data);
     });
     return rowData;
@@ -179,7 +223,6 @@ export default class GridManage {
     const targetArray = Array.isArray(targetKeys) ? targetKeys : [targetKeys];
     if (targetArray.length <= 0) return;
     const removeRecords: any[] = [];
-    const removeTagRecords: any[] = [];
     targetArray.map(itemId => {
       const itemNode = this.agGridApi.getRowNode(itemId + '');
       const { allLeafChildren = [itemNode] } = itemNode;
@@ -360,13 +403,12 @@ export default class GridManage {
   getPureData() {
     const data: any[] = [];
     if (!this.agGridApi) return data;
-    this.agGridApi.forEachNode(function(node) {
+    this.agGridApi.forEachNode(function (node) {
       let cloneData = cloneDeep(get(node, 'data', {}));
-      if (!isEmpty(cloneData)){
+      if (!isEmpty(cloneData)) {
         const { _rowType, _rowData, ...itemData } = cloneData;
         if (_rowType !== DataActions.removeTag) data.push(itemData);
       }
-     
     });
     return data;
   }

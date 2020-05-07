@@ -8,7 +8,7 @@ import {
   ColumnApi as AgColumnApi,
 } from 'ag-grid-community';
 import { defaultProps, defaultRowSelection } from './index';
-
+import { Rules, RuleType, RuleItem } from 'async-validator'
 import { PaginationProps } from 'antd/lib/pagination';
 import GridManager from './gridManager';
 // 编辑框大小
@@ -84,9 +84,8 @@ export type EditConfig<T> = {
   onCellChange?: (value: any, record: T, records: T[]) => void;
   refName?: string;
   valuePropName?: string;
-  required?: boolean;
+  rules?: RuleItem | RuleItem[];
 };
-
 export type ColumnEdiatble<T> = boolean | ((record: T) => boolean);
 
 export type RowKey<T> = (data: T) => string;
@@ -125,7 +124,7 @@ export interface Columns<T extends {} = {}> extends ColDef {
   /** If true, group cannot be broken up by column moving, child columns will always appear side by side, however you can rearrange child columns within the group */
   marryChildren?: boolean;
   /** The custom header group component to be used for rendering the component header. If none specified the default ag-Grid is used**/
-  headerGroupComponent?:string
+  headerGroupComponent?: string;
   /** The custom header group component to be used for rendering the component header in the hosting framework (ie: React/Angular). If none specified the default ag-Grid is used**/
   headerGroupComponentFramework?: any;
   /** The custom header group component to be used for rendering the component header. If none specified the default ag-Grid is used**/

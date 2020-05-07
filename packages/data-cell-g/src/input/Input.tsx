@@ -33,7 +33,6 @@ class Input extends React.Component<GantInputProps> {
           ({ onEnter, onChange, wrapperRef: ref, ...childProps }) => {
             return <AntInput
               {...childProps}
-              autoFocus={true}
               ref={wrapperRef}
               onChange={(e: any) => this.onChange(e)}
               onPressEnter={onEnter}

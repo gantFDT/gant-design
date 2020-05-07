@@ -83,7 +83,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     // headerProps,
     // editActions,
     onReady,
-    columns: columnDefs,
+    columns,
     editable,
     rowSelection: rowSel,
     size,
@@ -185,7 +185,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   const { componentsMaps, frameworkComponentsMaps } = useMemo(() => {
     return getAllComponentsMaps();
   }, []);
-
   const onGridReady = useCallback(
     (params: GridReadyEvent) => {
       apiRef.current = params.api;
@@ -196,12 +195,11 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     },
     [onReady, dataSource],
   );
-  const onSelectionChanged = useCallback(
-    (event: SelectionChangedEvent) => {
-      const rows = event.api.getSelectedRows();
-      const keys = rows.map(item => getRowNodeId(item));
-      typeof onSelect === 'function' && onSelect(keys, rows);
-    },
+  const onSelectionChanged = useCallback((event: SelectionChangedEvent) => {
+    const rows = event.api.getSelectedRows();
+    const keys = rows.map(item => getRowNodeId(item));
+    typeof onSelect === 'function' && onSelect(keys, rows);
+  },
     [onSelect, getRowNodeId],
   );
   // 处理selection- 双向绑定selectKeys
@@ -224,21 +222,22 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   // 处理selection-end
   //columns
   const defaultSelection = !isEmpty(gantSelection) && showDefalutCheckbox;
-  const columns = useMemo<ColDef[] | ColGroupDef[]>(() => {
+  const { columnDefs, validateFields } = useMemo(() => {
     return mapColumns<T>(
-      columnDefs,
+      columns,
       getRowNodeId,
       defaultSelection,
       defaultSelectionCol,
       rowSelection,
       serialNumber,
     );
-  }, [columnDefs, getRowNodeId]);
-
+  }, [columns]);
+  useEffect(() => {
+    gridManager.validateFields = validateFields;
+  }, [validateFields]);
   //columns-end
   const editRowDataChanged = useCallback(
     (record: any, fieldName: string, newValue: any, oldValue: any) => {
-      console.log('editRowDataChanged');
       if (typeof onCellEditChange === 'function')
         return gridManager.modify(onCellEditChange(record, fieldName, newValue, oldValue));
       return gridManager.modify([record]);
@@ -247,7 +246,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   );
   const editingRowDataChange = useCallback(
     (record, fieldName, newValue, oldValue) => {
-      console.log('editingRowDataChange');
       if (typeof onCellEditingChange === 'function') {
         gridManager.modify(onCellEditingChange(record, fieldName, newValue, oldValue));
       }
@@ -288,7 +286,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     ...components,
                   }}
                   onSelectionChanged={onSelectionChanged}
-                  columnDefs={columns}
+                  columnDefs={columnDefs}
                   rowSelection={rowSelection}
                   getRowNodeId={getRowNodeId}
                   onGridReady={onGridReady}
