@@ -1,32 +1,25 @@
-// validate a field with multiple rules
-var Schema = require('async-validate'),
-  data = { bar: 'qux', foo: '111' },
-  descriptor = {
-    type: 'array',
-    fields: {
-      0: {
-        type: 'object',
-        fields: {
-          id: [
-            { type: 'string', required: true, max: 12 },
-            function exists(cb) {
-              // 	console.log(this)
-              //   if (!data[this.value]) {
-              //     this.raise(this.reason('missing-id'), 'id %s does not exist', this.value);
-              //   }
-              cb();
-            },
-          ],
-        },
-      },
-    },
-  },
-  source = [{ id: 'foo' }],
-  schema;
+import Schema, { Rules } from 'async-validator';
+var descriptor: any = {
+	roles: {
+		type: "array", required: true, len: 3,
+		fields: {
+			0: {
+				type: "object", fields: {
+					id: { required: true, len: 4 },
+					name: { required: true, len: 5 }
+				}
+			},
+		}
+	}
+}
+async function test() {
+	var schema = new Schema(descriptor)
+	try {
+		const res = await schema.validate({ roles: [{ id: "222", name: 'zzz' }] });
+	} catch (error) {
+		console.log(error)
+	}
 
-require('async-validate/plugin/all');
 
-schema = new Schema(descriptor);
-schema.validate(source, function(err, res) {
-  console.dir(res);
-});
+}
+test()

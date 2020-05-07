@@ -52,7 +52,6 @@ const ComputeGrid = () => {
             editConfig: {
                 component: Input,
                 editable: true,
-                type: "string",
                 rules: [
                     {
                         required: true,
@@ -62,7 +61,8 @@ const ComputeGrid = () => {
                         max: 2,
                         min: 1,
                         message: "产品类型编码范围2-10"
-                    }]
+                    },
+                ]
             },
             cellRenderer: "gantGroupCellRenderer",
         },
@@ -73,8 +73,6 @@ const ComputeGrid = () => {
             editConfig: {
                 component: Input,
                 editable: true,
-                required: true,
-                type: "string"
             }
         }
     ])

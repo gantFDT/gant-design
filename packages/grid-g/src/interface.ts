@@ -8,7 +8,7 @@ import {
   ColumnApi as AgColumnApi,
 } from 'ag-grid-community';
 import { defaultProps, defaultRowSelection } from './index';
-
+import { Rules, RuleType, RuleItem } from 'async-validator'
 import { PaginationProps } from 'antd/lib/pagination';
 import GridManager from './gridManager';
 // 编辑框大小
@@ -84,12 +84,7 @@ export type EditConfig<T> = {
   onCellChange?: (value: any, record: T, records: T[]) => void;
   refName?: string;
   valuePropName?: string;
-  required?: boolean;
-  rules?: ValidateRules[];
-  type?: ValidateTypes | ValidateTypes[];
-};
-export type ValidateRules = {
-  [index: number]: ValidateRule | Validateor;
+  rules?: RuleItem | RuleItem[];
 };
 export type ColumnEdiatble<T> = boolean | ((record: T) => boolean);
 
@@ -183,34 +178,3 @@ export type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>;
 export type GridProps<T> = ProtoExtends<AgGridReactProps, CustomProps<T>>;
 
 export type GridPropsPartial<T> = PartRequired<GridProps<T>, 'columns' | 'dataSource' | 'rowkey'>;
-
-type ValidateTypes =
-  | 'enum'
-  | 'array'
-  | 'string'
-  | 'object'
-  | 'boolean'
-  | 'date'
-  | 'number'
-  | 'float'
-  | 'integer'
-  | String
-  | Number
-  | Object;
-export interface ValidateRule {
-  message?: string;
-  type?: ValidateTypes | ValidateTypes[];
-  len?: number;
-  max?: number;
-  min?: number;
-  pattern?: RegExp;
-  required?: boolean;
-  whitespace?: boolean;
-  transform?: (value: any) => any;
-}
-export type Validateor = (
-  value,
-  data,
-  callBack: (message?: string) => void,
-  rules: ValidateRule[],
-) => void;

@@ -1,11 +1,13 @@
 import { useCallback, useMemo } from 'react';
 import classnames from 'classnames';
 import { ColGroupDef, ColDef, IsColumnFunc, IServerSideGetRowsParams } from 'ag-grid-community';
-import { get } from 'lodash';
+import { get, isEmpty } from 'lodash';
 import { isEqualObj } from './gridManager/utils';
 import { PaginationProps } from 'antd/lib/pagination';
-import { Size, DataActions, Pagination, ColumnEdiatble, Columns, ValidateRules } from './interface';
+import { Size, DataActions, Pagination, ColumnEdiatble, Columns } from './interface';
 import EditorCol from './GridEidtColumn';
+import { Rules, RuleItem } from 'async-validator';
+
 type Col = ColGroupDef | ColDef;
 
 function itemisgroup(item, children): item is ColGroupDef {
@@ -28,15 +30,11 @@ export const mapColumns = <T>(
   serialNumber,
 ): {
   columnDefs: Col[];
-  validateFields: {
-    [name: string]: ValidateRules;
-  };
+  validateFields: Rules;
 } => {
   // 移除所有已添加事件
   function getColumnDefs(columns: Columns<T>[]) {
-    let validateFields: {
-      [name: string]: ValidateRules;
-    } = {};
+    let validateFields: Rules = {};
     const columnDefs = columns.map(
       (
         {
@@ -85,18 +83,27 @@ export const mapColumns = <T>(
         if (!itemisgroup(colDef, children)) {
           // 当前列允许编辑
           if (ColEditable) {
-            const { props, changeFormatter, component, ...params } = editConfig;
-            let { required, rules = [], type } = params;
-            const fieldsRules = rules.map(item => {
-              const hasRequired = Reflect.has(item, 'required');
-              required = hasRequired ? Reflect.get(item, 'required') : required;
-              return { type, ...item };
-            });
-            validateFields[field] = required ? [{ required, type }, ...fieldsRules] : fieldsRules;
+            const { props, changeFormatter, component, rules, ...params } = editConfig;
+            let required = false
+            if (Array.isArray(rules)) {
+              const fieldsRules: RuleItem[] = rules.map(item => {
+                const hasRequired = Reflect.has(item, 'required');
+                required = hasRequired ? Reflect.get(item, 'required') : required;
+                return { ...item };
+              });
+              validateFields[field] = fieldsRules;
+            } else {
+              if (!isEmpty(rules)) {
+                validateFields[field] = { ...rules }
+                required = rules['required']
+              }
+            }
+
             colDef.cellEditorParams = {
               props,
               changeFormatter,
               rowkey: getRowNodeId,
+              required,
               ...params,
             };
             colDef.cellEditorFramework = EditorCol(component);

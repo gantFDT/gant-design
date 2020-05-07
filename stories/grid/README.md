@@ -79,7 +79,7 @@
 | required | 否 | booleann | - | 必填标识 |
 | refName | 否 | string | "warpperRef" | 设置 ref 字段 key 名 (Antd ref) |
 | valuePropName | 否 | string | "value" | 设置 value 字段 key 名 （Switch: checked） |
-
+| type | 否 | string | "value" | 设置 value 字段 key 名 （Switch: checked） |
 ### manager API
 
 **manager 对象用于提供对于编辑情况下的数据操作**

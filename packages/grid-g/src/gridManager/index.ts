@@ -1,11 +1,10 @@
 import { RowDataTransaction, GridApi, RowNode } from 'ag-grid-community';
-import Schema from 'async-validate';
+import Schema, { Rules } from 'async-validator';
 import { get, isEmpty, findIndex, cloneDeep } from 'lodash';
 import { getModifyData, removeTagData, isEqualObj } from './utils';
-import { DataActions, ValidateRules } from '../interface';
+import { DataActions, } from '../interface';
 import { bindAll, Debounce } from 'lodash-decorators';
-import 'async-validate/plugin/all';
-import './validate';
+import './validate'
 interface OperationAction {
   type: DataActions;
   recordsIndex?: number[];
@@ -43,9 +42,7 @@ export default class GridManage {
   historyStack: OperationAction[] = [];
   private redoStack: OperationAction[] = [];
   private loading: boolean = false;
-  public validateFields: {
-    [name: string]: ValidateRules;
-  };
+  public validateFields: Rules;
   private getRowItemData = itemData => {
     const { getRowNodeId } = this.agGridConfig;
     const nodeId = typeof itemData === 'object' ? getRowNodeId(itemData) : itemData;
@@ -58,65 +55,52 @@ export default class GridManage {
   appendChild(keys, add) {
     this.batchUpdateGrid({ add });
   }
-  validate(data) {
+  async validate(data) {
     const { getRowNodeId } = this.agGridConfig;
     // this.validateFields;
     const { add, modify } = this.diff;
     const source = isEmpty(data) ? [...add, ...modify] : data;
     const fields: any = {};
-    const validateFields = cloneDeep(this.validateFields);
-    Object.keys(validateFields).map(key => {
-      validateFields[key] = validateFields[key].map(itemValidate => {
-        if (typeof itemValidate == 'function')
-          return function exists(cb) {
-            itemValidate(
-              this.value,
-              source,
-              (mes?: string) => {
-                if (mes) return this.raise(mes);
-                cb();
-              },
-              validateFields[key],
-            );
-          };
-        return { ...itemValidate, type: itemValidate.type ? itemValidate.type : function () { } };
-      });
-    });
+    const validateFields: Rules = cloneDeep(this.validateFields);
     source.map((item, index) => {
       fields[index] = {
         type: 'object',
         fields: validateFields,
       };
     });
-    let descriptor = {
-      type: 'array',
-      fields,
+    let descriptor: Rules = {
+      source: {
+        type: "array",
+        fields
+      }
+      ,
     };
     let schema = new Schema(descriptor);
-    return new Promise((resolve, reject) => {
-      schema.validate(source, (err, res) => {
-        if (err) return reject(err);
-        if (!res) return resolve(null);
-        const { fields } = res;
-        const validateErros: any = {};
-        Object.keys(fields).map(itemKey => {
-          const [index, field] = itemKey.split('.');
-          const nodeId = getRowNodeId(get(source, `[${index}]`, {}));
-          const rowNode = this.agGridApi.getRowNode(nodeId);
-          if (rowNode) {
-            this.getNodeExtendsParent(rowNode);
-            const message = fields[itemKey][0].message;
-            const { rowIndex } = rowNode;
-            if (Reflect.has(validateErros, rowIndex)) {
-              validateErros[index].push({ field, message })
-            } else {
-              validateErros[index] = [{ field, message }]
-            }
+    try {
+      await schema.validate({ source });
+      return null
+    } catch (err) {
+  
+      const { errors } = err
+      const validateErros: any = {};
+      errors.map(itemError => {
+        const [sourceName, index, field] = itemError.field.split('.');
+        const nodeId = getRowNodeId(get(source, `[${index}]`, {}));
+        const rowNode = this.agGridApi.getRowNode(nodeId);
+        const message = itemError.message;
+        if (rowNode) {
+          this.getNodeExtendsParent(rowNode);
+          const { rowIndex } = rowNode;
+          if (Reflect.has(validateErros, rowIndex)) {
+            validateErros[index].push({ field, message })
+          } else {
+            validateErros[index] = [{ field, message }]
           }
-        });
-        resolve(validateErros);
-      });
-    });
+        }
+      })
+      if (isEmpty(validateErros)) return null;
+      return validateErros
+    }
   }
   private getNodeExtendsParent(rowNode: RowNode) {
     if (rowNode.level !== 0 && !rowNode.parent.expanded) {
@@ -240,7 +224,6 @@ export default class GridManage {
     const targetArray = Array.isArray(targetKeys) ? targetKeys : [targetKeys];
     if (targetArray.length <= 0) return;
     const removeRecords: any[] = [];
-    const removeTagRecords: any[] = [];
     targetArray.map(itemId => {
       const itemNode = this.agGridApi.getRowNode(itemId + '');
       const { allLeafChildren = [itemNode] } = itemNode;
