@@ -195,12 +195,11 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     },
     [onReady, dataSource],
   );
-  const onSelectionChanged = useCallback(
-    (event: SelectionChangedEvent) => {
-      const rows = event.api.getSelectedRows();
-      const keys = rows.map(item => getRowNodeId(item));
-      typeof onSelect === 'function' && onSelect(keys, rows);
-    },
+  const onSelectionChanged = useCallback((event: SelectionChangedEvent) => {
+    const rows = event.api.getSelectedRows();
+    const keys = rows.map(item => getRowNodeId(item));
+    typeof onSelect === 'function' && onSelect(keys, rows);
+  },
     [onSelect, getRowNodeId],
   );
   // 处理selection- 双向绑定selectKeys

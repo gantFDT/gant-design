@@ -4,7 +4,6 @@ import { get, isEmpty, findIndex, cloneDeep } from 'lodash';
 import { getModifyData, removeTagData, isEqualObj } from './utils';
 import { DataActions, } from '../interface';
 import { bindAll, Debounce } from 'lodash-decorators';
-import './validate'
 interface OperationAction {
   type: DataActions;
   recordsIndex?: number[];
@@ -23,18 +22,18 @@ interface AgGridConfig {
   dataSource: any[];
 }
 
-function loadingDecorator(target, name, descriptor): any {
-  const fn = target[name];
-  target[name] = (...ags) => {
-    console.log(11);
-  };
-  return {
-    ...descriptor,
-    value: () => {
-      console.log('111');
-    },
-  };
-}
+// function loadingDecorator(target, name, descriptor): any {
+//   const fn = target[name];
+//   target[name] = (...ags) => {
+//     console.log(11);
+//   };
+//   return {
+//     ...descriptor,
+//     value: () => {
+//       console.log('111');
+//     },
+//   };
+// }
 @bindAll()
 export default class GridManage {
   public agGridApi: GridApi;
