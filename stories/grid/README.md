@@ -76,10 +76,50 @@
 | editable | 是 | boolean 或(data)=>boolean | false | 单元格是否能编辑 |
 | props | 否 | any | - | 传递数据单元组件属性 |
 | changeFormatter | 否 | (val,recrod)=>val | - | 单元格 onChange 时调用 必须要返回一个数作为该单元的值 |
-| required | 否 | booleann | - | 必填标识 |
+| rules | 否 | Rules | - | 验证机制请参考   [https://ant.design/components/form-cn/#Rule](https://ant.design/components/form-cn/#Rule) |
 | refName | 否 | string | "warpperRef" | 设置 ref 字段 key 名 (Antd ref) |
 | valuePropName | 否 | string | "value" | 设置 value 字段 key 名 （Switch: checked） |
-| type | 否 | string | "value" | 设置 value 字段 key 名 （Switch: checked） |
+**rules 如何验证**
+
+```js
+// 用法一
+const columns=[{
+            fieldName: 'typeCode',
+            title: "产品类型编码",
+            width: 300,
+            editConfig: {
+                component: Input,
+                editable: true,
+                rules: {
+                  required:true,
+                  type:"string",
+                }
+            },
+        },]
+
+// 用法二
+  const columns=[{
+            fieldName: 'typeCode',
+            title: "产品类型编码",
+            width: 300,
+            editConfig: {
+                component: Input,
+                editable: true,
+                rules: [
+                    {
+                        required: true,
+                        message: "产品类型编码必填"
+                    },
+                    {
+                        max: 2,
+                        min: 1,
+                        message: "产品类型编码范围2-10"
+                    },
+                ]
+            },
+        },]
+```
+
 ### manager API
 
 **manager 对象用于提供对于编辑情况下的数据操作**
@@ -157,8 +197,17 @@ manager.save()
 manager.save(()=>true｜false)
 manager.save(async ()=>true｜false)
 ```
+6、验证
 
-6、其他 API
+验证可验证diff数据或自定定义数据； 返回一个promise 
+
+```js
+manager.validate()
+
+manager.validate(data)
+```
+
+7、其他 API
 
 |    属性     |   类型   |                        说明                        |
 | :---------: | :------: | :------------------------------------------------: |
