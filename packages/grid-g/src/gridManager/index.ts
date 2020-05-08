@@ -86,12 +86,13 @@ export default class GridManage {
         const rowNode = this.agGridApi.getRowNode(nodeId);
         const message = itemError.message;
         if (rowNode) {
+          console.log(rowNode);
           this.getNodeExtendsParent(rowNode);
           const { rowIndex } = rowNode;
           if (Reflect.has(validateErros, rowIndex)) {
-            validateErros[index].push({ field, message });
+            validateErros[rowIndex].push({ field, message });
           } else {
-            validateErros[index] = [{ field, message }];
+            validateErros[rowIndex] = [{ field, message }];
           }
         }
       });
@@ -99,11 +100,12 @@ export default class GridManage {
       return validateErros;
     }
   }
-  private getNodeExtendsParent(rowNode: RowNode) {
-    if (rowNode.level !== 0 && !rowNode.parent.expanded) {
-      if (rowNode.parent.parent.level !== 0 && !rowNode.parent.parent.expanded)
-        this.getNodeExtendsParent(rowNode.parent);
-      rowNode.parent.setExpanded(true);
+  private getNodeExtendsParent(rowNode: RowNode, first = true) {
+    if (rowNode.level > 0) {
+      this.getNodeExtendsParent(rowNode.parent, false);
+      if (!rowNode.parent.expanded) rowNode.parent.setExpanded(true);
+    } else if (rowNode.level == 0 && !first) {
+      if (!rowNode.expanded) rowNode.setExpanded(true);
     }
   }
   reset(agGridConfig) {
