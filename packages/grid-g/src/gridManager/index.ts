@@ -161,7 +161,7 @@ export default class GridManage {
     addRecords = addRecords;
     let hisRecords: any[] = [];
     targetArray.map((itemId, index) => {
-      let targetIndex = findIndex(rowData, data => getRowNodeId(data) === itemId);
+      let targetIndex = findIndex(rowData, data => getRowNodeId(data) == itemId);
       targetIndex = isSub ? targetIndex + 1 : targetIndex;
       let addTarget = get(addRecords, `[${index}]`, addRecords);
       addTarget = Array.isArray(addTarget) ? addTarget : addRecords;
