@@ -73,7 +73,7 @@ export const defaultRowSelection: RowSelection = {
   type: 'multiple',
   // checkboxIndex: 0,
   showDefalutCheckbox: true,
-  rowMultiSelectWithClick: true,
+  // rowMultiSelectWithClick: true,
   rowDeselection: true,
 };
 

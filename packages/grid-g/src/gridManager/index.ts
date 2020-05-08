@@ -2,7 +2,7 @@ import { RowDataTransaction, GridApi, RowNode } from 'ag-grid-community';
 import Schema, { Rules } from 'async-validator';
 import { get, isEmpty, findIndex, cloneDeep } from 'lodash';
 import { getModifyData, removeTagData, isEqualObj } from './utils';
-import { DataActions, } from '../interface';
+import { DataActions } from '../interface';
 import { bindAll, Debounce } from 'lodash-decorators';
 interface OperationAction {
   type: DataActions;
@@ -69,18 +69,16 @@ export default class GridManage {
     });
     let descriptor: Rules = {
       source: {
-        type: "array",
-        fields
-      }
-      ,
+        type: 'array',
+        fields,
+      },
     };
     let schema = new Schema(descriptor);
     try {
       await schema.validate({ source });
-      return null
+      return null;
     } catch (err) {
-  
-      const { errors } = err
+      const { errors } = err;
       const validateErros: any = {};
       errors.map(itemError => {
         const [sourceName, index, field] = itemError.field.split('.');
@@ -91,19 +89,20 @@ export default class GridManage {
           this.getNodeExtendsParent(rowNode);
           const { rowIndex } = rowNode;
           if (Reflect.has(validateErros, rowIndex)) {
-            validateErros[index].push({ field, message })
+            validateErros[index].push({ field, message });
           } else {
-            validateErros[index] = [{ field, message }]
+            validateErros[index] = [{ field, message }];
           }
         }
-      })
+      });
       if (isEmpty(validateErros)) return null;
-      return validateErros
+      return validateErros;
     }
   }
   private getNodeExtendsParent(rowNode: RowNode) {
     if (rowNode.level !== 0 && !rowNode.parent.expanded) {
-      if (rowNode.parent.parent.level !== 0 && !rowNode.parent.parent.expanded) this.getNodeExtendsParent(rowNode.parent);
+      if (rowNode.parent.parent.level !== 0 && !rowNode.parent.parent.expanded)
+        this.getNodeExtendsParent(rowNode.parent);
       rowNode.parent.setExpanded(true);
     }
   }
@@ -116,7 +115,7 @@ export default class GridManage {
   getRowData() {
     var rowData = [];
     if (!this.agGridApi) return [];
-    this.agGridApi.forEachNode(function (node) {
+    this.agGridApi.forEachNode(function(node) {
       rowData.push(node.data);
     });
     return rowData;
@@ -142,7 +141,7 @@ export default class GridManage {
 
   // 创建;
   //
-  public create(records: any, targetId?: string | string[], isSub?: boolean) {
+  public create(records: any, targetId?: string | string[], isSub: boolean = true) {
     const { getRowNodeId } = this.agGridConfig;
     let addRecords = Array.isArray(records) ? records : [records];
     if (addRecords.length <= 0) return;
@@ -403,7 +402,7 @@ export default class GridManage {
   getPureData() {
     const data: any[] = [];
     if (!this.agGridApi) return data;
-    this.agGridApi.forEachNode(function (node) {
+    this.agGridApi.forEachNode(function(node) {
       let cloneData = cloneDeep(get(node, 'data', {}));
       if (!isEmpty(cloneData)) {
         const { _rowType, _rowData, ...itemData } = cloneData;
