@@ -3,7 +3,7 @@ import { Form } from 'antd';
 import { EditStatus } from '@data-cell';
 import { compose, withHandlers, renameProp } from 'recompose';
 import _SchemaForm from './SchemaForm';
-import { isEmpty, isEqual } from 'lodash';
+import { isEmpty, isEqual, get } from 'lodash';
 import { Props, Context } from './interface';
 import classnames from 'classnames';
 import dependencies, { Inner, findDependencies, refHoc } from './compose';
@@ -23,6 +23,10 @@ class SchemaForm extends React.Component<Props> {
     uiSchema: {},
     backgroundColor: 'transparent',
   };
+
+  /**收集所有子级节点的初始数据 */
+  initialValueMap = new Map()
+
   componentDidUpdate(pervPops: Props) {
     const {
       data,
@@ -31,14 +35,32 @@ class SchemaForm extends React.Component<Props> {
     } = this.props;
     const vals = getFieldsValue();
     if (!isEqual(pervPops.data, data) && !isEqual(vals, getDateToForm(data, schema))) {
+      // schema更改或者data变化，清空map
+      this.initialValueMap.clear()
       const newVals: any = getNewValue(vals, data, schema);
       setFieldsValue(newVals);
     }
   }
+  /**names:["user.name", "user.addr.street"] */
   resetFields = (names?: string[]) => {
     const {
-      form: { resetFields },
+      form: { resetFields, getFieldsValue },
+      emitDependenciesChange
     } = this.props;
+    const { initialValueMap } = this
+    const currentValues = getFieldsValue()
+    /**initialValueMap中包含所有当前field的值 */
+    const keys = initialValueMap.keys()
+    for (const key of keys) {
+      if (!names || names.includes(key)) {
+        const initialValue = initialValueMap.get(key)
+        const currentValue = get(currentValues, key)
+        if (initialValue !== currentValue) {
+          emitDependenciesChange(key, initialValue)
+        }
+      }
+    }
+
     return resetFields(names);
   };
   validateForm = (names: string[]) => {
@@ -61,6 +83,9 @@ class SchemaForm extends React.Component<Props> {
     } = this.props;
     setFieldsValue(data);
   };
+  collectInitialValue = (name, initialValue) => {
+    this.initialValueMap.set(name, initialValue)
+  }
   render() {
     const {
       schema,
@@ -86,10 +111,10 @@ class SchemaForm extends React.Component<Props> {
     const defalutProps = size ? { ...getFieldProps(), size } : { ...getFieldProps() };
     return (
       <FormContext.Provider
-        value={{ form, edit, onSave, data, customFields, emitDependenciesChange, prefixCls, defalutProps }}
+        value={{ form, edit, onSave, data, customFields, emitDependenciesChange, prefixCls, defalutProps, collectInitialValue: this.collectInitialValue.bind(this) }}
       >
         <div className={classnames(className)} style={{ backgroundColor }}>
-          <_SchemaForm schema={schema} uiSchema={uiSchema} titleConfig={titleConfig} withoutAnimation={withoutAnimation}/>
+          <_SchemaForm schema={schema} uiSchema={uiSchema} titleConfig={titleConfig} withoutAnimation={withoutAnimation} />
         </div>
       </FormContext.Provider>
     );

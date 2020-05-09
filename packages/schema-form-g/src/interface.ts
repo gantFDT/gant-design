@@ -23,7 +23,8 @@ export interface Context {
 	edit?: EditStatus | EditObject,
 	emitDependenciesChange: (key: string, value: any) => void,
 	prefixCls?: string,
-	defalutProps?: any
+	defalutProps?: any,
+	collectInitialValue: (name: string, value: any) => void
 }
 export interface Schema {
 	name?: string,
@@ -73,8 +74,8 @@ export interface Props extends OptionalProps {
 	prefixCls?: string,
 	onSave: (id: any, value: any, cb: any) => any,
 	form: WrappedFormUtils,
-  emitDependenciesChange: (key: string, value: any) => void,
-  withoutAnimation?: boolean,
+	emitDependenciesChange: (key: string, value: any) => void,
+	withoutAnimation?: boolean,
 }
 export interface UISchema {
 	"ui:orders"?: string[],
