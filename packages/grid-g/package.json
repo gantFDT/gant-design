@@ -1,6 +1,6 @@
 {
   "name": "grid-g",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "description": "gantd table",
   "main": "lib/index.tsx",
   "types": "lib/index.d.ts",
@@ -21,10 +21,11 @@
   "author": "GantFDT",
   "license": "MIT",
   "dependencies": {
-    "ag-grid-community": "^23.0.2",
-    "ag-grid-enterprise": "^23.0.2",
-    "ag-grid-react": "^23.0.2",
+    "ag-grid-community": "23.0.2",
+    "ag-grid-enterprise": "23.0.2",
+    "ag-grid-react": "23.0.2",
     "antd": "^3.26.5",
+    "async-validate": "^1.0.1",
     "classnames": "^2.2.6",
     "data-cell-g": "^0.0.11",
     "lodash": "^4.17.11",
@@ -32,7 +33,6 @@
     "prop-types": "^15.6.0",
     "react": "^16.12.0",
     "recompose": "^0.30.0",
-    "util-g": "^0.1.2",
-    "async-validate": "^1.0.1"
+    "util-g": "^0.1.2"
   }
 }

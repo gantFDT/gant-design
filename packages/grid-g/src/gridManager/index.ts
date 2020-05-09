@@ -2,9 +2,8 @@ import { RowDataTransaction, GridApi, RowNode } from 'ag-grid-community';
 import Schema, { Rules } from 'async-validator';
 import { get, isEmpty, findIndex, cloneDeep } from 'lodash';
 import { getModifyData, removeTagData, isEqualObj } from './utils';
-import { DataActions, } from '../interface';
+import { DataActions } from '../interface';
 import { bindAll, Debounce } from 'lodash-decorators';
-import './validate'
 interface OperationAction {
   type: DataActions;
   recordsIndex?: number[];
@@ -23,18 +22,18 @@ interface AgGridConfig {
   dataSource: any[];
 }
 
-function loadingDecorator(target, name, descriptor): any {
-  const fn = target[name];
-  target[name] = (...ags) => {
-    console.log(11);
-  };
-  return {
-    ...descriptor,
-    value: () => {
-      console.log('111');
-    },
-  };
-}
+// function loadingDecorator(target, name, descriptor): any {
+//   const fn = target[name];
+//   target[name] = (...ags) => {
+//     console.log(11);
+//   };
+//   return {
+//     ...descriptor,
+//     value: () => {
+//       console.log('111');
+//     },
+//   };
+// }
 @bindAll()
 export default class GridManage {
   public agGridApi: GridApi;
@@ -70,18 +69,16 @@ export default class GridManage {
     });
     let descriptor: Rules = {
       source: {
-        type: "array",
-        fields
-      }
-      ,
+        type: 'array',
+        fields,
+      },
     };
     let schema = new Schema(descriptor);
     try {
       await schema.validate({ source });
-      return null
+      return null;
     } catch (err) {
-  
-      const { errors } = err
+      const { errors } = err;
       const validateErros: any = {};
       errors.map(itemError => {
         const [sourceName, index, field] = itemError.field.split('.');
@@ -89,23 +86,26 @@ export default class GridManage {
         const rowNode = this.agGridApi.getRowNode(nodeId);
         const message = itemError.message;
         if (rowNode) {
+          console.log(rowNode);
           this.getNodeExtendsParent(rowNode);
           const { rowIndex } = rowNode;
           if (Reflect.has(validateErros, rowIndex)) {
-            validateErros[index].push({ field, message })
+            validateErros[rowIndex].push({ field, message });
           } else {
-            validateErros[index] = [{ field, message }]
+            validateErros[rowIndex] = [{ field, message }];
           }
         }
-      })
+      });
       if (isEmpty(validateErros)) return null;
-      return validateErros
+      return validateErros;
     }
   }
-  private getNodeExtendsParent(rowNode: RowNode) {
-    if (rowNode.level !== 0 && !rowNode.parent.expanded) {
-      if (rowNode.parent.parent.level !== 0 && !rowNode.parent.parent.expanded) this.getNodeExtendsParent(rowNode.parent);
-      rowNode.parent.setExpanded(true);
+  private getNodeExtendsParent(rowNode: RowNode, first = true) {
+    if (rowNode.level > 0) {
+      this.getNodeExtendsParent(rowNode.parent, false);
+      if (!rowNode.parent.expanded) rowNode.parent.setExpanded(true);
+    } else if (rowNode.level == 0 && !first) {
+      if (!rowNode.expanded) rowNode.setExpanded(true);
     }
   }
   reset(agGridConfig) {
@@ -117,7 +117,7 @@ export default class GridManage {
   getRowData() {
     var rowData = [];
     if (!this.agGridApi) return [];
-    this.agGridApi.forEachNode(function (node) {
+    this.agGridApi.forEachNode(function(node) {
       rowData.push(node.data);
     });
     return rowData;
@@ -143,7 +143,7 @@ export default class GridManage {
 
   // 创建;
   //
-  public create(records: any, targetId?: string | string[], isSub?: boolean) {
+  public create(records: any, targetId?: string | string[], isSub: boolean = true) {
     const { getRowNodeId } = this.agGridConfig;
     let addRecords = Array.isArray(records) ? records : [records];
     if (addRecords.length <= 0) return;
@@ -162,7 +162,7 @@ export default class GridManage {
     addRecords = addRecords;
     let hisRecords: any[] = [];
     targetArray.map((itemId, index) => {
-      let targetIndex = findIndex(rowData, data => getRowNodeId(data) === itemId);
+      let targetIndex = findIndex(rowData, data => getRowNodeId(data) == itemId);
       targetIndex = isSub ? targetIndex + 1 : targetIndex;
       let addTarget = get(addRecords, `[${index}]`, addRecords);
       addTarget = Array.isArray(addTarget) ? addTarget : addRecords;
@@ -404,7 +404,7 @@ export default class GridManage {
   getPureData() {
     const data: any[] = [];
     if (!this.agGridApi) return data;
-    this.agGridApi.forEachNode(function (node) {
+    this.agGridApi.forEachNode(function(node) {
       let cloneData = cloneDeep(get(node, 'data', {}));
       if (!isEmpty(cloneData)) {
         const { _rowType, _rowData, ...itemData } = cloneData;

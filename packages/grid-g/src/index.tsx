@@ -73,7 +73,7 @@ export const defaultRowSelection: RowSelection = {
   type: 'multiple',
   // checkboxIndex: 0,
   showDefalutCheckbox: true,
-  rowMultiSelectWithClick: true,
+  // rowMultiSelectWithClick: true,
   rowDeselection: true,
 };
 
@@ -145,6 +145,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     }
     return rowkey(data);
   }, []);
+
   //
   const getDataPath = useCallback(
     data => {
@@ -201,7 +202,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       const keys = rows.map(item => getRowNodeId(item));
       typeof onSelect === 'function' && onSelect(keys, rows);
     },
-    [onSelect, getRowNodeId],
+    [onSelect],
   );
   // 处理selection- 双向绑定selectKeys
   useEffect(() => {
@@ -311,7 +312,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                   }}
                   suppressAnimationFrame
                   stopEditingWhenGridLosesFocus={false}
-                  // rowData={[]}
                   treeData={treeData}
                   getDataPath={getDataPath}
                   {...selection}
