@@ -346,5 +346,5 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
 };
 
 Grid.defaultProps = defaultProps;
-
+Grid.LicenseManager = LicenseManager
 export default Grid;
