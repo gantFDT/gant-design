@@ -238,6 +238,7 @@ function EditStatusUse() {
             uiSchema={uiSchema}
             onChange={onChange}
             titleConfig={titleConfig}
+            onSizeChange={(data)=>console.log("onSizeChange",data)}
         />
         <div style={{ float: 'right' }}>
             <Button size="small" type='primary' onClick={onSubmit}>提交</Button>

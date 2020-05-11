@@ -179,6 +179,7 @@ export default class GridManage {
   //移除;
   //
   remove(targetid) {
+    if (typeof targetid !== 'number' && isEmpty(targetid)) return;
     const { getRowNodeId } = this.agGridConfig;
     let targetArray = Array.isArray(targetid) ? targetid : [targetid];
     if (targetArray.length <= 0) return;
@@ -218,6 +219,7 @@ export default class GridManage {
   //移除标记;
   //
   tagRemove(targetKeys: string | number | string[] | number[]) {
+    if (typeof targetKeys !== 'number' && isEmpty(targetKeys)) return;
     const { getRowNodeId } = this.agGridConfig;
     let rowData = this.getRowData();
     if (!Array.isArray(targetKeys) && typeof targetKeys === 'object') return;

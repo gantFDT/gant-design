@@ -8,13 +8,15 @@ import { Props, Context } from './interface';
 import classnames from 'classnames';
 import dependencies, { Inner, findDependencies, refHoc } from './compose';
 import { getNewValue, getDateToForm } from './utils';
-import { getFieldProps } from './maps'
+import { getFieldProps } from './maps';
+import ReactResizeDetector from 'react-resize-detector';
+import { bind } from 'lodash-decorators';
 export const FormContext = React.createContext({} as Context);
 export * from './interface';
 export * from './maps';
 import * as maps from './maps';
 class SchemaForm extends React.Component<Props> {
-  static maps = maps
+  static maps = maps;
   static defaultProps = {
     edit: EditStatus.EDIT,
     onSave: () => true,
@@ -25,7 +27,7 @@ class SchemaForm extends React.Component<Props> {
   };
 
   /**收集所有子级节点的初始数据 */
-  initialValueMap = new Map()
+  initialValueMap = new Map();
 
   componentDidUpdate(pervPops: Props) {
     const {
@@ -36,7 +38,7 @@ class SchemaForm extends React.Component<Props> {
     const vals = getFieldsValue();
     if (!isEqual(pervPops.data, data) && !isEqual(vals, getDateToForm(data, schema))) {
       // schema更改或者data变化，清空map
-      this.initialValueMap.clear()
+      this.initialValueMap.clear();
       const newVals: any = getNewValue(vals, data, schema);
       setFieldsValue(newVals);
     }
@@ -45,22 +47,21 @@ class SchemaForm extends React.Component<Props> {
   resetFields = (names?: string[]) => {
     const {
       form: { resetFields, getFieldsValue },
-      emitDependenciesChange
+      emitDependenciesChange,
     } = this.props;
-    const { initialValueMap } = this
-    const currentValues = getFieldsValue()
+    const { initialValueMap } = this;
+    const currentValues = getFieldsValue();
     /**initialValueMap中包含所有当前field的值 */
-    const keys = initialValueMap.keys()
+    const keys = initialValueMap.keys();
     for (const key of keys) {
       if (!names || names.includes(key)) {
-        const initialValue = initialValueMap.get(key)
-        const currentValue = get(currentValues, key)
+        const initialValue = initialValueMap.get(key);
+        const currentValue = get(currentValues, key);
         if (initialValue !== currentValue) {
-          emitDependenciesChange(key, initialValue)
+          emitDependenciesChange(key, initialValue);
         }
       }
     }
-
     return resetFields(names);
   };
   validateForm = (names: string[]) => {
@@ -84,7 +85,12 @@ class SchemaForm extends React.Component<Props> {
     setFieldsValue(data);
   };
   collectInitialValue = (name, initialValue) => {
-    this.initialValueMap.set(name, initialValue)
+    this.initialValueMap.set(name, initialValue);
+  };
+  @bind()
+  onResize(width: number, height: number) {
+    const { onSizeChange } = this.props;
+    onSizeChange && onSizeChange({ width, height });
   }
   render() {
     const {
@@ -102,6 +108,7 @@ class SchemaForm extends React.Component<Props> {
       withoutAnimation = false,
       prefixCls: customizePrefixCls = 'gant',
       size,
+      onSizeChange,
     } = this.props;
 
     if (isEmpty(schema)) {
@@ -111,11 +118,28 @@ class SchemaForm extends React.Component<Props> {
     const defalutProps = size ? { ...getFieldProps(), size } : { ...getFieldProps() };
     return (
       <FormContext.Provider
-        value={{ form, edit, onSave, data, customFields, emitDependenciesChange, prefixCls, defalutProps, collectInitialValue: this.collectInitialValue.bind(this) }}
+        value={{
+          form,
+          edit,
+          onSave,
+          data,
+          customFields,
+          emitDependenciesChange,
+          prefixCls,
+          defalutProps,
+          collectInitialValue: this.collectInitialValue.bind(this),
+        }}
       >
-        <div className={classnames(className)} style={{ backgroundColor }}>
-          <_SchemaForm schema={schema} uiSchema={uiSchema} titleConfig={titleConfig} withoutAnimation={withoutAnimation} />
-        </div>
+        <ReactResizeDetector handleWidth handleHeight onResize={this.onResize}>
+          <div className={classnames(className)} style={{ backgroundColor }}>
+            <_SchemaForm
+              schema={schema}
+              uiSchema={uiSchema}
+              titleConfig={titleConfig}
+              withoutAnimation={withoutAnimation}
+            />
+          </div>
+        </ReactResizeDetector>
       </FormContext.Provider>
     );
   }
