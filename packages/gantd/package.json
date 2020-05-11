@@ -140,7 +140,7 @@
     "react-sortable-hoc": "^1.9.1",
     "recompose": "^0.30.0",
     "schema-form-g": "^0.1.23",
-    "smart-grid-g": "^0.1.27",
+    "smart-grid-g": "^0.1.27",  
     "smart-table-g": "^0.1.27",
     "submenu-g": "^0.1.12",
     "table-g": "^0.1.23",
