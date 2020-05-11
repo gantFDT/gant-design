@@ -171,7 +171,7 @@ export default class Submenu extends React.Component<any, Partial<SubmenuIF>> {
             <span>{item.title}</span>
             {item.count && (
               <span className={`${prefixCls}-item-count`}>
-                <Badge count={<>{item.count}</>} />
+                <Badge count={item.count} />
               </span>
             )}
           </Menu.Item>
