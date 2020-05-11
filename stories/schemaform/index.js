@@ -2,8 +2,8 @@ import '@packages/schema-form-g/src/style'
 import CodeDecorator from '../_util/CodeDecorator'
 import code from './code.js'
 /*! Start !*/
-import React, { useState, useMemo, useRef } from 'react'
-import { Button, Radio, Rate, Switch, Icon,Col,Row } from 'antd'
+import React, { useState, useMemo, useRef, useCallback } from 'react'
+import { Button, Radio, Rate, Switch, Icon, Col, Row } from 'antd'
 import { EditStatus, SchemaForm } from '@gantd'
 const initalUiSchema = {
     "form:gutter": 10,
@@ -13,130 +13,130 @@ const initalUiSchema = {
     "field:labelAlign": "left"
 }
 const schema = {
-  type: "object",
-  title: "普通表单",
-  required: ['key_1'],
-  propertyType: {
-      key_1: {
-          title: "普通输入框",
-          type: "string",
-          props:{
-              placeholder:"输入提示"
-          }
-      },
-      key_2: {
-          title: "数字输入框",
-          type: "number",
-          componentType: "InputNumber",
-          props:{
-            placeholder:"输入提示"
+    type: "object",
+    title: "普通表单",
+    required: ['key_1'],
+    propertyType: {
+        key_1: {
+            title: "普通输入框",
+            type: "string",
+            props: {
+                placeholder: "输入提示"
+            }
+        },
+        key_2: {
+            title: "数字输入框",
+            type: "number",
+            componentType: "InputNumber",
+            props: {
+                placeholder: "输入提示"
+            }
+        },
+        key_3: {
+            title: "金额",
+            type: "string",
+            componentType: "InputMoney",
+            props: {
+                placeholder: "输入提示"
+            }
+        },
+        key_4: {
+            title: "url地址",
+            type: "string",
+            componentType: "InputUrl",
+            props: {
+                placeholder: "输入提示"
+            }
+        },
+        key_5: {
+            title: "邮箱",
+            type: "string",
+            componentType: "InputEmail",
+            props: {
+                placeholder: "输入提示"
+            }
+        },
+        key_6: {
+            title: "语言",
+            type: "object",
+            componentType: "InputLanguage",
+            props: {
+                placeholder: "输入提示"
+            }
+        },
+        key_7: {
+            title: "手机号",
+            type: "string",
+            componentType: "InputCellPhone",
+            props: {
+                placeholder: "输入提示"
+            }
+        },
+        key_8: {
+            title: "搜索",
+            type: "string",
+            componentType: "Search",
+            props: {
+                placeholder: "输入提示"
+            }
+        },
+        key_9: {
+            title: "密码",
+            type: "string",
+            componentType: "Password",
+            props: {
+                placeholder: "输入提示"
+            }
+        },
+        key_11: {
+            title: "电话",
+            type: "string",
+            componentType: "InputTelePhone",
+            props: {
+                placeholder: "输入提示"
+            }
+        },
+        key_12: {
+            title: "日期",
+            type: "string",
+            componentType: "DatePicker",
+            props: {
+                placeholder: "输入提示"
+            }
+        },
+        key_13: {
+            title: "日期区间",
+            type: "string",
+            componentType: "RangePicker",
+            props: {
+                placeholder: "输入提示"
+            }
+        },
+        key_14: {
+            title: "枚举",
+            type: "string",
+            componentType: "Selector",
+            props: {
+                placeholder: "输入提示"
+            }
+        },
+        key_15: {
+            title: "地址",
+            type: "string",
+            componentType: "LocationSelector",
+            props: {
+                placeholder: "输入提示"
+            }
+        },
+        key_10: {
+            title: "多行文本",
+            type: "string",
+            componentType: "TextArea",
+            props: {
+                placeholder: "输入提示"
+            }
         }
-      },
-      key_3: {
-          title: "金额",
-          type: "string",
-          componentType: "InputMoney",
-          props:{
-            placeholder:"输入提示"
-        }
-      },
-      key_4: {
-          title: "url地址",
-          type: "string",
-          componentType: "InputUrl",
-          props:{
-            placeholder:"输入提示"
-        }
-      },
-      key_5: {
-          title: "邮箱",
-          type: "string",
-          componentType: "InputEmail",
-          props:{
-            placeholder:"输入提示"
-        }
-      },
-      key_6: {
-          title: "语言",
-          type: "object",
-          componentType: "InputLanguage",
-          props:{
-            placeholder:"输入提示"
-        }
-      },
-      key_7: {
-          title: "手机号",
-          type: "string",
-          componentType: "InputCellPhone",
-          props:{
-            placeholder:"输入提示"
-        }
-      },
-      key_8: {
-          title: "搜索",
-          type: "string",
-          componentType: "Search",
-          props:{
-            placeholder:"输入提示"
-        }
-      },
-      key_9: {
-          title: "密码",
-          type: "string",
-          componentType: "Password",
-          props:{
-            placeholder:"输入提示"
-        }
-      },
-      key_11: {
-        title: "电话",
-        type: "string",
-        componentType: "InputTelePhone",
-        props:{
-          placeholder:"输入提示"
-      }
-    },
-    key_12: {
-        title: "日期",
-        type: "string",
-        componentType: "DatePicker",
-        props:{
-          placeholder:"输入提示"
-      }
-    },
-    key_13: {
-        title: "日期区间",
-        type: "string",
-        componentType: "RangePicker",
-        props:{
-          placeholder:"输入提示"
-      }
-    },
-    key_14: {
-        title: "枚举",
-        type: "string",
-        componentType: "Selector",
-        props:{
-          placeholder:"输入提示"
-      }
-    },
-    key_15: {
-        title: "地址",
-        type: "string",
-        componentType: "LocationSelector",
-        props:{
-          placeholder:"输入提示"
-      }
-    },
-      key_10: {
-          title: "多行文本",
-          type: "string",
-          componentType: "TextArea",
-          props:{
-            placeholder:"输入提示"
-        }
-      }
-  }
+    }
 }
 /*! Split !*/
 function BasicUse() {
@@ -154,7 +154,7 @@ function BasicUse() {
             edit={edit}
             schema={schema}
             size="default"
-            uiSchema={{...initalUiSchema}}
+            uiSchema={{ ...initalUiSchema }}
             withoutAnimation
         />
         <div style={{ float: 'right' }}>
@@ -175,7 +175,7 @@ function EditStatusUse() {
         "field:labelCol": 24,
         "field:wrapperCol": 24,
         "field:labelAlign": "left",
-        
+
     }
 
     const schema = useMemo(() => {
@@ -297,63 +297,63 @@ function SearchUse() {
 }
 /*! Split !*/
 const configSchma = {
-  type: "object",
-  title: "配置普通表单",
-  propertyType: {
-      "field:col": {
-          title: "字段列比例 field:col",
-          type: "number",
-          componentType: "InputNumber",
-          props: {
-              min: 0
-          }
-      },
-      "field:labelCol": {
-          title: "字段描述列宽比例 field:labelCol",
-          type: "number",
-          componentType: "InputNumber",
-          props: {
-              max: 24,
-              min: 0
-          }
-      },
-      "field:wrapperCol": {
-          title: "字段内容列宽占比 field:wrapperCol",
-          type: "number",
-          componentType: "InputNumber",
-          props: {
-              max: 24,
-              min: 0
-          }
-      },
-      "field:labelAlign": {
-          title: "字段描述文字布局 field:labelAlign",
-          type: "string",
-          componentType: "Selector",
-          props: {
-              useStorage: false,
-              dataSource: [
-                  {
-                      label: "左",
-                      value: "left"
-                  },
-                  {
-                      label: "右",
-                      value: "right"
-                  }
-              ]
-          }
-      },
-      "form:gutter": {
-          title: "表单字段横向间隔 form:gutter ",
-          type: "number",
-          componentType: "InputNumber",
-          props: {
-              max: 24,
-              min: 0
-          }
-      },
-  }
+    type: "object",
+    title: "配置普通表单",
+    propertyType: {
+        "field:col": {
+            title: "字段列比例 field:col",
+            type: "number",
+            componentType: "InputNumber",
+            props: {
+                min: 0
+            }
+        },
+        "field:labelCol": {
+            title: "字段描述列宽比例 field:labelCol",
+            type: "number",
+            componentType: "InputNumber",
+            props: {
+                max: 24,
+                min: 0
+            }
+        },
+        "field:wrapperCol": {
+            title: "字段内容列宽占比 field:wrapperCol",
+            type: "number",
+            componentType: "InputNumber",
+            props: {
+                max: 24,
+                min: 0
+            }
+        },
+        "field:labelAlign": {
+            title: "字段描述文字布局 field:labelAlign",
+            type: "string",
+            componentType: "Selector",
+            props: {
+                useStorage: false,
+                dataSource: [
+                    {
+                        label: "左",
+                        value: "left"
+                    },
+                    {
+                        label: "右",
+                        value: "right"
+                    }
+                ]
+            }
+        },
+        "form:gutter": {
+            title: "表单字段横向间隔 form:gutter ",
+            type: "number",
+            componentType: "InputNumber",
+            props: {
+                max: 24,
+                min: 0
+            }
+        },
+    }
 }
 function CustomOptions() {
     const configUI = {
@@ -424,28 +424,28 @@ function GridLayout() {
             xs: 24
         },
         "field:labelAlign": "left",
-        "key_1":{
-            "field:extra":"tipss"
+        "key_1": {
+            "field:extra": "tipss"
         }
     }
     return <div style={{ margin: 10 }} >
-        <SchemaForm uiSchema={uiSchema} schema={schema}  />
+        <SchemaForm uiSchema={uiSchema} schema={schema} />
     </div>
 }
 /*! Split !*/
 const bindDataSchema = {
-  type: "object",
-  title: "支持双向绑定的表单",
-  propertyType: {
-      key_1: {
-          title: "普通输入框_1",
-          type: "string",
-      },
-      key_2: {
-          title: "普通输入框_2",
-          type: "string",
-      },
-  }
+    type: "object",
+    title: "支持双向绑定的表单",
+    propertyType: {
+        key_1: {
+            title: "普通输入框_1",
+            type: "string",
+        },
+        key_2: {
+            title: "普通输入框_2",
+            type: "string",
+        },
+    }
 }
 function BindData() {
     const [data, setData] = useState({ key_1: '1', key_2: '2' })
@@ -501,32 +501,41 @@ function DependenceData() {
                 title: "字数限制",
                 type: "number",
                 componentType: "InputNumber",
-
+                options: {
+                    initialValue: 2
+                }
             },
         }
     }
+    const ref = useRef()
+    const onReset = useCallback(() => {
+        ref.current.resetFields()
+    }, [])
+
     return <div style={{ margin: 10 }}>
+        <Button size="small" onClick={onReset} style={{ marginLeft: 5 }}>重置</Button>
         <SchemaForm
             uiSchema={initalUiSchema}
             schema={dependenceSchema}
+            ref={ref}
         />
     </div>
 }
 /*! Split !*/
 const customCmpSchema = {
-  type: "object",
-  title: "扩展自定义组件",
-  propertyType: {
-      key_1: {
-          title: "普通输入框_1",
-          type: "string",
-      },
-      key_2: {
-          title: "自定义组件",
-          type: "string",
-          componentType: 'CustomComponent'
-      },
-  }
+    type: "object",
+    title: "扩展自定义组件",
+    propertyType: {
+        key_1: {
+            title: "普通输入框_1",
+            type: "string",
+        },
+        key_2: {
+            title: "自定义组件",
+            type: "string",
+            componentType: 'CustomComponent'
+        },
+    }
 }
 function CustomCmp() {
     return <div style={{ margin: 10 }}>
@@ -542,52 +551,52 @@ function CustomCmp() {
 }
 /*! Split !*/
 const nestSchema = {
-  title: "嵌套表单—— parent",
-  type: "object",
-  propertyType: {
-      input: {
-          title: "input 组件",
-          type: "string"
-      },
-      inputNumber: {
-          title: "inputNumber 组件",
-          type: "number",
-          componentType: "InputNumber"
-      },
-      children: {
-          type: "object",
-          title: "嵌套表单—— children",
-          propertyType: {
-              inputMoney: {
-                  title: "InputMoney 组件",
-                  type: "string",
-                  componentType: "InputMoney"
-              },
-              url: {
-                  title: "Url 组件",
-                  type: "string",
-                  componentType: "Url"
-              },
-              grandson: {
-                  type: "object",
-                  title: "嵌套表单—— grandson",
-                  propertyType: {
-                      telePhone: {
-                          title: "TelePhone 组件",
-                          type: "string",
-                          componentType: "InputNumber"
-                      },
-                      datePicker: {
-                          title: "DatePicker 组件",
-                          type: "date",
-                          componentType: "DatePicker"
-                      }
-                  }
-              }
+    title: "嵌套表单—— parent",
+    type: "object",
+    propertyType: {
+        input: {
+            title: "input 组件",
+            type: "string"
+        },
+        inputNumber: {
+            title: "inputNumber 组件",
+            type: "number",
+            componentType: "InputNumber"
+        },
+        children: {
+            type: "object",
+            title: "嵌套表单—— children",
+            propertyType: {
+                inputMoney: {
+                    title: "InputMoney 组件",
+                    type: "string",
+                    componentType: "InputMoney"
+                },
+                url: {
+                    title: "Url 组件",
+                    type: "string",
+                    componentType: "Url"
+                },
+                grandson: {
+                    type: "object",
+                    title: "嵌套表单—— grandson",
+                    propertyType: {
+                        telePhone: {
+                            title: "TelePhone 组件",
+                            type: "string",
+                            componentType: "InputNumber"
+                        },
+                        datePicker: {
+                            title: "DatePicker 组件",
+                            type: "date",
+                            componentType: "DatePicker"
+                        }
+                    }
+                }
 
-          }
-      }
-  }
+            }
+        }
+    }
 }
 function NestUse() {
     const uiSchema = {

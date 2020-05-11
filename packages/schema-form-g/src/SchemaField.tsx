@@ -40,6 +40,7 @@ const SchemaField = (props: SchemaField) => {
     customFields,
     emitDependenciesChange,
     defalutProps,
+    collectInitialValue
   } = useContext(FormContext);
 
   const onCancel = useCallback(() => name && resetFields([name]), [componentType, name]);
@@ -65,7 +66,7 @@ const SchemaField = (props: SchemaField) => {
   const wrapperColayout = typeof wrapperCol === 'number' ? { span: wrapperCol } : wrapperCol;
   const renderFieldProps = useMemo(() => {
     return { ...defalutProps, ...FieldProps }
-  }, [defalutProps,FieldProps])
+  }, [defalutProps, FieldProps])
   const fieldComponent = useMemo(() => {
     let component = get(getFields(), `${componentType}`, null);
     if (component == null) {
@@ -83,6 +84,7 @@ const SchemaField = (props: SchemaField) => {
   }, [renderFieldProps, itemEdit, onCancel, onItemSave, componentType, customFields]);
 
   useEffect(() => {
+    collectInitialValue(name, initialValue)
     if (![null, undefined].includes(initialValue)) {
       emitDependenciesChange(name as string, initialValue);
     }
