@@ -161,9 +161,9 @@ export const mapColumns = <T>(
         context,
       } = parmas;
       const computedPagination = get(context, 'computedPagination', {});
-      const { pageSize = 0, beginIndex = 0 }: any = computedPagination;
+      const { defaultPageSize, pageSize = defaultPageSize, current = 1 }: any = computedPagination;
 
-      return parseInt(rowIndex + 1 + parseInt(pageSize * beginIndex + '')) + '';
+      return rowIndex + 1 + Math.floor(pageSize * (current - 1));
     },
   };
   let { columnDefs, validateFields } = getColumnDefs(columns);

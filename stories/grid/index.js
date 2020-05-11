@@ -102,7 +102,7 @@ const ComputeGrid = () => {
         setManager(manager)
     }, [])
 
-    const [beginIndex, setBeginIndex] = useState(0)
+    const [beginIndex, setBeginIndex] = useState(20)
 
     const [selectedKeys, setselectedKeys] = useState([]);
     const [selectedRows, setSelectedRows] = useState([])
@@ -231,6 +231,9 @@ const ComputeGrid = () => {
                 isServerSideGroup={(data) => data.children}
                 groupSuppressAutoColumn
                 getDataPath={getDataPath}
+                pagination={{
+                    beginIndex:beginIndex
+                }}
             />
         </>
     )

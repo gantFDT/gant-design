@@ -158,6 +158,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
 
   // 分页事件
   const computedPagination = usePagination(pagination);
+  console.log("computedPagination",computedPagination)
   // 判断数据分别处理 treeTable 和普通table
   const dataSource = useMemo(() => {
     if (treeData && isCompute)
