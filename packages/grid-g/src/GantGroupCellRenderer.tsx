@@ -9,7 +9,9 @@ import {
 } from 'ag-grid-community';
 import { BindAll } from 'lodash-decorators';
 import { isEqual } from 'lodash';
-interface GantGroupCellRendererProps extends ICellRendererParams {}
+interface GantGroupCellRendererProps extends ICellRendererParams {
+  render?: (showValue: any, data: any, rowIndex: number, params: ICellRendererParams) => any;
+}
 interface GantGroupCellRendererState {
   expanded: boolean;
   treeDataType: 'sync' | 'async' | 'none' | string;
@@ -125,11 +127,13 @@ export default class GantGroupCellRenderer extends Component<
     const {
       value,
       valueFormatted,
-      node: { level },
+      node: { level, data, rowIndex },
+      render,
     } = this.props;
     const { hasChildren, expanded } = this.state;
     const showValue =
       valueFormatted && valueFormatted !== '[object Object]' ? valueFormatted : value;
+
     return (
       <span
         className={classnames('ag-cell-wrapper', ' ag-row-group', ` ag-row-group-indent-${level}`)}
@@ -151,7 +155,7 @@ export default class GantGroupCellRenderer extends Component<
           <span className="ag-icon ag-icon-tree-closed" unselectable="on"></span>
         </span>
         <span className="ag-group-value" ref="eValue">
-          {showValue}
+          {render ? render(showValue, data, rowIndex, this.props) : showValue}
         </span>
       </span>
     );

@@ -65,6 +65,7 @@ const ComputeGrid = () => {
                 ]
             },
             cellRenderer: "gantGroupCellRenderer",
+            render:(value)=>value+"test-111"
         },
         {
             fieldName: 'typeName',
