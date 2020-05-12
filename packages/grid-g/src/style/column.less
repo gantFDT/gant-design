@@ -15,7 +15,15 @@
       }
     }
   }
-
+  .gant-grid-cell-serial-add {
+    &::before {
+      content: '+';
+      position: absolute;
+      left: 2px;
+      top: -1px;
+    }
+    color: #52c41a;
+  }
   .gant-grid-cell-editing {
     margin-top: -1px;
     > .gant-input-wrapper {

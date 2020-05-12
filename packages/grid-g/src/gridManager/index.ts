@@ -1,9 +1,10 @@
 import { RowDataTransaction, GridApi, RowNode } from 'ag-grid-community';
 import Schema, { Rules } from 'async-validator';
 import { get, isEmpty, findIndex, cloneDeep } from 'lodash';
-import { getModifyData, removeTagData, isEqualObj } from './utils';
-import { DataActions } from '../interface';
+import { getModifyData, removeTagData, isEqualObj, canQuickCreate } from './utils';
+import { DataActions, CreateConfig } from '../interface';
 import { bindAll, Debounce } from 'lodash-decorators';
+import { generateUuid } from '@util';
 interface OperationAction {
   type: DataActions;
   recordsIndex?: number[];
@@ -20,6 +21,9 @@ interface Diff {
 interface AgGridConfig {
   getRowNodeId: (data) => any;
   dataSource: any[];
+  treeData?: boolean;
+  getDataPath?: (data: any) => string[];
+  createConfig?: CreateConfig;
 }
 
 // function loadingDecorator(target, name, descriptor): any {
@@ -42,11 +46,12 @@ export default class GridManage {
   private redoStack: OperationAction[] = [];
   private loading: boolean = false;
   public validateFields: Rules;
-  private getRowItemData = itemData => {
+  private getRowItemData = (itemData: any, oldData?: any) => {
     const { getRowNodeId } = this.agGridConfig;
     const nodeId = typeof itemData === 'object' ? getRowNodeId(itemData) : itemData;
-    const rowNode = this.agGridApi.getRowNode(nodeId);
-    return rowNode;
+    let rowNode = this.agGridApi.getRowNode(nodeId);
+    rowNode = cloneDeep(rowNode);
+    return isEmpty(oldData) ? rowNode : { ...rowNode, data: { ...oldData } };
   };
   private batchUpdateGrid(transaction: RowDataTransaction) {
     this.agGridApi.batchUpdateRowData(transaction);
@@ -86,7 +91,6 @@ export default class GridManage {
         const rowNode = this.agGridApi.getRowNode(nodeId);
         const message = itemError.message;
         if (rowNode) {
-          console.log(rowNode);
           this.getNodeExtendsParent(rowNode);
           const { rowIndex } = rowNode;
           if (Reflect.has(validateErros, rowIndex)) {
@@ -129,10 +133,11 @@ export default class GridManage {
   }
   // 修改;
   // @loadingDecorator
-  public modify(records: any | any[]) {
+  public modify(records: any | any[], oldRecords?: any | any[]) {
+    if (isEmpty(records) && typeof records !== 'object') return;
     records = Array.isArray(records) ? records : [records];
     if (records.length <= 0) return;
-    const { hisRecords, newRecords } = getModifyData(records, this.getRowItemData);
+    const { hisRecords, newRecords } = getModifyData(records, this.getRowItemData, oldRecords);
     if (newRecords.length <= 0) return;
     this.batchUpdateGrid({ update: newRecords });
     this.historyStack.push({
@@ -143,7 +148,11 @@ export default class GridManage {
 
   // 创建;
   //
-  public create(records: any, targetId?: string | string[], isSub: boolean = true) {
+  public create(
+    records: any,
+    targetId?: string | string[] | number | number[],
+    isSub: boolean = true,
+  ) {
     const { getRowNodeId } = this.agGridConfig;
     let addRecords = Array.isArray(records) ? records : [records];
     if (addRecords.length <= 0) return;
@@ -175,6 +184,70 @@ export default class GridManage {
       type: DataActions.add,
       records: hisRecords,
     });
+  }
+  private quickCreateNode(
+    isChild: boolean = false,
+    targetId: string | number,
+    record: number | object | any[] = 1,
+  ) {
+    const { createConfig, treeData, getDataPath } = this.agGridConfig;
+    targetId = targetId + '';
+    const rowNode = this.agGridApi.getRowNode(targetId);
+    const { data: nodeData } = rowNode;
+    const nodePath = getDataPath(nodeData);
+    const parentPath = isChild ? [...nodePath] : [...nodePath.slice(0, nodePath.length - 1)];
+    if (typeof record == 'number') {
+      let len = record > 1 ? record : 1;
+      const records: any[] = [];
+      for (let index = 0; index < len; index++) {
+        let data: any = {};
+        const id = generateUuid() + '';
+        data[createConfig.id] = id;
+        if (getDataPath && treeData) {
+          data[createConfig.path] = createConfig.toPath([...parentPath, id]);
+        }
+        records.push(data);
+      }
+      return this.create(records, targetId);
+    }
+    if (typeof record === 'object' && !Array.isArray(record)) {
+      let data: any = { ...record };
+      const id = generateUuid() + '';
+      data[createConfig.id] = id;
+      if (getDataPath && treeData) {
+        data[createConfig.path] = createConfig.toPath([...parentPath, id]);
+      }
+      return this.create(data, targetId);
+    }
+    if (Array.isArray(record)) {
+      const records = record.map(item => {
+        const id = generateUuid() + '';
+        let data = { ...item, [createConfig.id]: id };
+        if (getDataPath && treeData) {
+          data[createConfig.path] = createConfig.toPath([...parentPath, id]);
+        }
+        return data;
+      });
+      return this.create(records, targetId);
+    }
+  }
+  // 创建平行节点
+  public createNode(targetId: string | number, record: number | object | any[] = 1) {
+    const { createConfig, getRowNodeId, treeData, getDataPath } = this.agGridConfig;
+    if (!canQuickCreate(createConfig)) return console.warn('createConfig is empty');
+    if (typeof targetId !== 'number' && !targetId) return console.warn('nodeId is null');
+    if (typeof targetId !== 'string' && typeof targetId !== 'number')
+      return console.warn('nodeId format error');
+
+    this.quickCreateNode(false, targetId, record);
+  }
+  public createChildNode(targetId: string | number, record: number | object | any[] = 1) {
+    const { createConfig, getRowNodeId, treeData, getDataPath } = this.agGridConfig;
+    if (!canQuickCreate(createConfig)) return console.warn('createConfig is empty');
+    if (typeof targetId !== 'number' && !targetId) return console.warn('parentNodeId is null');
+    if (typeof targetId !== 'string' && typeof targetId !== 'number')
+      return console.warn('parentNodeId format error');
+    this.quickCreateNode(true, targetId, record);
   }
   //移除;
   //
@@ -310,7 +383,6 @@ export default class GridManage {
     }
     return { type, records, recordsIndex };
   }
-
   //撤销；
   undo() {
     let hisStack = this.historyStack.pop();

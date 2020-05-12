@@ -8,7 +8,7 @@ import {
   ColumnApi as AgColumnApi,
 } from 'ag-grid-community';
 import { defaultProps, defaultRowSelection } from './index';
-import { Rules, RuleType, RuleItem } from 'async-validator'
+import { Rules, RuleType, RuleItem } from 'async-validator';
 import { PaginationProps } from 'antd/lib/pagination';
 import GridManager from './gridManager';
 // 编辑框大小
@@ -86,6 +86,11 @@ export type EditConfig<T> = {
   valuePropName?: string;
   rules?: RuleItem | RuleItem[];
 };
+export interface CreateConfig {
+  id: string; // id对应字段名称
+  path: string;
+  toPath: (path: string[]) => any;
+}
 export type ColumnEdiatble<T> = boolean | ((record: T) => boolean);
 
 export type RowKey<T> = (data: T) => string;
@@ -169,6 +174,7 @@ export interface Props<T extends any> {
   onCellEditChange: (record: any, fieldName: string, newValue: any, oldValue: any) => any;
   onCellEditingChange: (record: any, fieldName: string, newValue: any, oldValue: any) => any;
   openEditSign: boolean;
+  createConfig?: CreateConfig;
 }
 
 export type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>;

@@ -64,8 +64,7 @@ const ComputeGrid = () => {
                     },
                 ]
             },
-            cellRenderer: "gantGroupCellRenderer",
-            render:(value)=>value+"test-111"
+            cellRenderer: "gantGroupCellRenderer"
         },
         {
             fieldName: 'typeName',
@@ -82,11 +81,13 @@ const ComputeGrid = () => {
     const [dataSource, setdataSource] = useState(
         [
             {
-                "path": "313/", "expanded": true,
-                "leaf": false, "id": 313, "typeCode": "22", "typeName": "false",
+                "path": "313/",
+                "id": 313,
+                 "typeCode": "22", "typeName": "false",
                 "children": [{
-                    "parentId": 313, "path": "313/314/", "id": 314, "typeCode": "AAAA", "typeName": "false",
-                    children: [{ "parentId": 314, "path": "313/314/315/", "id": 315, "typeCode": "bbb", "typeName": "false", }]
+                    "path": "313/314/", "id": 314,
+                     "typeCode": "AAAA", "typeName": "false",
+                    children: [{  "path": "313/314/315/", "id": 315, "typeCode": "bbb", "typeName": "false", }]
                 }],
             }]
     )
@@ -212,7 +213,7 @@ const ComputeGrid = () => {
                 type="line"
             />
             <Grid
-                rowkey={(data) => data.id}
+                rowkey={(data) => data.id+""}
                 loading={loading}
                 columns={columns}
                 onCellEditingChange={(record) => [{ ...record, typeName: true }]}
@@ -226,13 +227,16 @@ const ComputeGrid = () => {
                     selectedKeys,
                     onSelect
                 }}
+                cellValueChanged={(data)=>console.log('cellValueChanged',data)}
                 openEditSign
                 removeShowLine={false}
                 isServerSideGroup={(data) => data.children}
                 groupSuppressAutoColumn
                 getDataPath={getDataPath}
-                pagination={{
-                    beginIndex:beginIndex
+                createConfig={{
+                    id:'id',
+                    path:"path",
+                    toPath:(path)=>path.join('/')+'/'
                 }}
             />
         </>
