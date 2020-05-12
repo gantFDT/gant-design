@@ -3,14 +3,16 @@ import { WrappedFormUtils } from 'antd/es/form/Form'
 import { get, isEqual, isPlainObject, intersection, set, cloneDeep } from 'lodash'
 import moment from 'moment'
 import { getKey } from './utils'
-import { compose, renameProp, withPropsOnChange, withStateHandlers } from 'recompose'
+import { compose, renameProp, withPropsOnChange, withStateHandlers, withState, withProps } from 'recompose'
 import { Props, Schema, Types } from './interface'
 
 
 export type Inner = Props & {
-    setSchema: (newSchema: Schema | ((s: Schema) => Schema)) => void,
-    mapSubSchema: (key: string, newSchema: Schema) => void,
-    schemaState: Schema
+    setSchema: (newSchema: Schema | ((s: Schema) => Schema), fn: any) => void,
+    mapSubSchema: (schema: Schema, key: string, newSchema: Schema) => void,
+    schemaState: Schema,
+    bakData: any,
+    setBakData: any,
 }
 
 const objectToPath = (obj: object): Array<string> => {
@@ -42,45 +44,49 @@ export const findDependencies = (
     changedValueObject: object,
     schemaKey: string,
     { ...schema }: Schema,
-    mapSubSchema: (key: string, newSchema: Schema) => void,
+    mapSubSchema: (schema: Schema, key: string, newSchema: Schema) => void,
     form: WrappedFormUtils
 ): void => {
-    // 改变的key
-    // object.product
-    const changeKeys = objectToPath(changedValueObject)
-    const { dependencies = [], onDependenciesChange, type, ...restSchema } = schema
-    if (type !== Types.object) {
-        if (get(dependencies, 'length') && get(intersection(dependencies, changeKeys), 'length') && onDependenciesChange) {
-            const dependenciesValues = dependencies.map(deKey => {
-                if (changeKeys.includes(deKey)) return get(changedValueObject, deKey)
-                return form.getFieldValue(deKey)
-            })
-            const mergeSchema = onDependenciesChange(dependenciesValues, cloneDeep(restSchema), form)
-            if (mergeSchema) {
-                // 异步走这里，需要通过mapSubSchema将subSchema更新到主schema
-                if (mergeSchema.then && typeof mergeSchema.then === 'function') {
-                    mergeSchema.then((mSchema: Schema) => { mapSubSchema(schemaKey, { ...schema, ...mSchema }) })
-                } else {
-                    // 同步走这里，直接改变schema，FormSchema更新的时候自动获取最新的schema
-                    // schema.props = { ...props, ...mergeProps }
-                    mapSubSchema(schemaKey, { ...schema, ...mergeSchema })
+    function inner(schemaKey, subSchema) {
+        // 改变的key
+        // object.product
+        const changeKeys = objectToPath(changedValueObject)
+        const { dependencies = [], onDependenciesChange, type, ...restSchema } = subSchema
+        if (type !== Types.object) {
+            if (get(dependencies, 'length') && get(intersection(dependencies, changeKeys), 'length') && onDependenciesChange) {
+                const dependenciesValues = dependencies.map(deKey => {
+                    if (changeKeys.includes(deKey)) return get(changedValueObject, deKey)
+                    return form.getFieldValue(deKey)
+                })
+                const mergeSchema = onDependenciesChange(dependenciesValues, cloneDeep(restSchema), form)
+                if (mergeSchema) {
+                    // 异步走这里，需要通过mapSubSchema将subSchema更新到主schema
+                    if (mergeSchema.then && typeof mergeSchema.then === 'function') {
+                        mergeSchema.then((mSchema: Schema) => { mapSubSchema(schema, schemaKey, { ...subSchema, ...mSchema }) })
+                    } else {
+                        // 同步走这里，直接改变schema，FormSchema更新的时候自动获取最新的schema
+                        // schema.props = { ...props, ...mergeProps }
+                        mapSubSchema(schema, schemaKey, { ...subSchema, ...mergeSchema })
+                    }
                 }
             }
-        }
-    } else if (schema.propertyType) {
-        schema.propertyType = { ...schema.propertyType }
-        for (const [subSchemaKey, schemaValue] of Object.entries(schema.propertyType)) {
-            const { dependencies = [], onDependenciesChange, type } = schemaValue
-            if (
-                // 找到了依赖项或者是object，进入递归
-                (get(dependencies, 'length') && get(intersection(dependencies, changeKeys), 'length') && onDependenciesChange) ||
-                type === Types.object
-            ) {
-                findDependencies(changedValueObject, `${schemaKey}.${subSchemaKey}`, schemaValue, mapSubSchema, form)
-            }
+        } else if (subSchema.propertyType) {
+            subSchema.propertyType = { ...subSchema.propertyType }
+            for (const [subSchemaKey, schemaValue] of Object.entries(subSchema.propertyType)) {
+                const { dependencies = [], onDependenciesChange, type } = schemaValue as any
+                if (
+                    // 找到了依赖项或者是object，进入递归
+                    (get(dependencies, 'length') && get(intersection(dependencies, changeKeys), 'length') && onDependenciesChange) ||
+                    type === Types.object
+                ) {
+                    inner(`${schemaKey}.${subSchemaKey}`, schemaValue)
+                }
 
+            }
         }
     }
+
+    inner(schemaKey, schema)
 }
 
 // 将subSchema更新到主schema，并返回
@@ -115,8 +121,9 @@ export default compose(
     withStateHandlers(
         ({ schema }: Props) => ({ schemaState: schema }),
         {
-            mapSubSchema: ({ schemaState }, { onSchemaChange }) => (key: string, subSchema: Schema) => {
-                const newSchema = deepMergeSchema(schemaState, key, subSchema)
+            mapSubSchema: ({ schemaState }, { onSchemaChange }) => (schema: Schema, key: string, subSchema: Schema) => {
+                if (!isEqual(schemaState, schema)) return /**说明此时schemaState已经更新，将阻断此次依赖更新schema的操作 */
+                const newSchema = deepMergeSchema(schema, key, subSchema)
                 if (!isEqual(schemaState, newSchema)) {
                     if (onSchemaChange) {
                         onSchemaChange(newSchema)
@@ -129,14 +136,36 @@ export default compose(
                     schemaState
                 }
             },
-            setSchema: () => schema => ({ schemaState: schema })
+            setSchema: () => (schema, fn) => {
+                fn()
+                return ({ schemaState: schema })
+            }
         }
     ),
+    withState("bakData", "setBakData", ({ data }: Inner) => data),
     withPropsOnChange((props: Inner, nextProps: Inner) => {
-        return !isEqual(props.schema, nextProps.schema);
-    }, ({ schema, setSchema }: Inner) => {
-        setSchema(schema);
-        return { key: getKey() }
-    }),
+        const isDataChange = !isEqual(props.data, nextProps.data)
+        const isSchemaChange = !isEqual(props.schema, nextProps.schema)
+        if (isSchemaChange) {
+            nextProps.setSchema(nextProps.schema, () => {
+                if (isDataChange) nextProps.setBakData(nextProps.data)
+            })
+        }
+        else if (isDataChange) {
+            // 再schema没有变化
+            nextProps.setBakData(nextProps.data)
+        }
+        return isSchemaChange
+    }, (props: Inner) => ({ key: getKey() })),
+    // withProps((props: Inner) => {
+    //     const isDataChange = !isEqual(props.data, props.bakData)
+    //     const schemaUpdated = isEqual(props.schemaState, props.schema)
+    //     if (isDataChange && schemaUpdated) {
+    //         // schema更新完毕、更新data
+    //         props.setBakData(props.data)
+    //     }
+    // }),
+
     renameProp('schemaState', 'schema'),
+    renameProp('bakData', 'data'),
 )
