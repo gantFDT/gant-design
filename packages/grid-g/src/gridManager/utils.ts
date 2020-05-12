@@ -1,10 +1,10 @@
 import { get, isEmpty, isEqual, findIndex } from 'lodash';
-import { DataActions } from '../interface';
-export function getModifyData(records, getRowItemData) {
+import { DataActions, CreateConfig } from '../interface';
+export function getModifyData(records, getRowItemData, oldRecords) {
   const hisRecords: any[] = [],
     newRecords: any[] = [];
-  records.map(item => {
-    const { data } = getRowItemData(item);
+  records.map((item, index) => {
+    const { data } = getRowItemData(item, get(oldRecords, `[${index}]`, undefined));
     if (isEqualObj(data, item)) return;
     let { _rowData, _rowType = null, ...oldData } = data;
     let { _rowData: nextRowData, _rowType: nextRowType, ...newData } = item;
@@ -80,3 +80,15 @@ export const isEqualObj = (obj, obj2) => {
   }
   return true;
 };
+export function canQuickCreate(config: CreateConfig) {
+  if (isEmpty(config)) return false;
+  const arr = ['id', 'path', 'toPath'];
+  try {
+    for (let index = 0; index < arr.length; index++) {
+      if (!Reflect.has(config, arr[index])) return false;
+    }
+  } catch (error) {
+    return false;
+  }
+  return true;
+}

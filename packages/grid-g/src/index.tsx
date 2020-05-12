@@ -11,7 +11,7 @@ import classnames from 'classnames';
 import { AgGridReact } from 'ag-grid-react';
 import {
   ColDef,
-  ColGroupDef,
+  GetContextMenuItems,
   GridApi,
   GridOptions,
   ColumnApi,
@@ -23,7 +23,7 @@ import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import { LicenseManager } from 'ag-grid-enterprise';
 import 'ag-grid-enterprise';
 import { Pagination, Spin } from 'antd';
-import { get, isEmpty, isEqual } from 'lodash';
+import { get, isEmpty, isEqual, cloneDeep, set } from 'lodash';
 import key from './license';
 import { mapColumns, flattenTreeData, usePagination, getSizeClassName } from './utils';
 import { Size, GridPropsPartial, RowSelection, DataActions } from './interface';
@@ -113,10 +113,15 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     onCellEditChange,
     onCellEditingChange,
     openEditSign,
+    onCellValueChanged,
+    getContextMenuItems,
+    createConfig,
     ...orignProps
   } = props;
   const apiRef = useRef<GridApi>();
   const columnsRef = useRef<ColumnApi>();
+  const [pasteContent, setPasetContent] = useState<any>({});
+  const [pasteLoading, setPasteLoading] = useState(false);
   const gridManager = useMemo(() => {
     return new GridManager();
   }, []);
@@ -158,7 +163,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
 
   // 分页事件
   const computedPagination = usePagination(pagination);
-  console.log("computedPagination",computedPagination)
   // 判断数据分别处理 treeTable 和普通table
   const dataSource = useMemo(() => {
     if (treeData && isCompute)
@@ -166,7 +170,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     return initDataSource;
   }, [initDataSource, treeData, treeDataChildrenName]);
   useEffect(() => {
-    gridManager.reset({ dataSource, getRowNodeId });
+    gridManager.reset({ dataSource, getRowNodeId, createConfig, treeData, getDataPath });
   }, [dataSource]);
   const serverDataCallback = useCallback((groupKeys, successCallback) => {
     return rows => {
@@ -255,11 +259,103 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     },
     [onCellEditingChange],
   );
+  const processCellForClipboard = useCallback(params => {
+    const {
+      column: { colId },
+    } = params;
+    if (colId === 'defalutSelection' || colId === 'g-index') return colId;
+    return params.value;
+  }, []);
+  const processDataFromClipboard = params => {
+    const data = params.data.map(rowData => {
+      return rowData.filter(item => item !== 'defalutSelection' && item !== 'g-index');
+    });
+    return data;
+  };
+  const onPasteStart = useCallback(params => {
+    setPasteLoading(true);
+  }, []);
+  const onPasteEnd = useCallback(
+    params => {
+      setPasteLoading(false);
+      const records: any[] = [],
+        oldRecords: any[] = [];
+      Object.keys(pasteContent).map(rowIndex => {
+        records.push(pasteContent[rowIndex].newData);
+        oldRecords.push(pasteContent[rowIndex].oldData);
+      });
+      if (!isEmpty(records)) gridManager.modify(records, oldRecords);
+    },
+    [pasteContent],
+  );
+  const cellValueChanged = useCallback(
+    params => {
+      const {
+        rowIndex,
+        data,
+        colDef: { field },
+        oldValue,
+      } = params;
+      pasteLoading &&
+        setPasetContent(content => {
+          let oldData = get(content, `${rowIndex}.oldData`, data);
+          oldData = cloneDeep(oldData);
+          oldData = set(oldData, field, oldValue);
+          return {
+            ...content,
+            [rowIndex]: {
+              newData: {
+                ...get(content, `[${rowIndex}].newData`, {}),
+                ...data,
+              },
+              oldData,
+            },
+          };
+        });
+      onCellValueChanged && onCellValueChanged(params);
+    },
+    [onCellValueChanged, pasteLoading],
+  );
+
   return (
     <LocaleReceiver>
       {(local, localeCode = 'zh-cn') => {
         let lang = langs[localeCode] || langs['zh-cn'];
         const locale = { ...lang, ...customLocale };
+        const contextMenuItems = function(params) {
+          const {
+            context: { golbalEditable },
+          } = params;
+          const rowNodes = apiRef.current.getSelectedNodes();
+          const hasCreateConfig = isEmpty(createConfig) || rowNodes.length !== 1;
+          const items = getContextMenuItems ? getContextMenuItems(params) : [];
+          const defultMenu = ['expandAll', 'contractAll', ...items, 'separator', 'export'];
+          if (!golbalEditable) return defultMenu;
+          return [
+            'copy',
+            'separator',
+            ...defultMenu,
+            'separator',
+            {
+              name: locale.createNode,
+              disabled: hasCreateConfig,
+              action: params => {
+                const [rowNode] = rowNodes;
+                const { id } = rowNode;
+                return gridManager.createNode(id);
+              },
+            },
+            {
+              name: locale.createChildNode,
+              disabled: hasCreateConfig,
+              action: params => {
+                const [rowNode] = rowNodes;
+                const { id } = rowNode;
+                return gridManager.createChildNode(id);
+              },
+            },
+          ];
+        };
         return (
           <Spin spinning={loading}>
             <div
@@ -315,6 +411,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                   stopEditingWhenGridLosesFocus={false}
                   treeData={treeData}
                   getDataPath={getDataPath}
+                  enableRangeSelection
                   {...selection}
                   {...orignProps}
                   defaultColDef={{
@@ -331,6 +428,12 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                       get(params, 'data._rowType') === DataActions.removeTag,
                     ...rowClassRules,
                   }}
+                  onCellValueChanged={cellValueChanged}
+                  processCellForClipboard={processCellForClipboard}
+                  processDataFromClipboard={processDataFromClipboard}
+                  onPasteStart={onPasteStart}
+                  onPasteEnd={onPasteEnd}
+                  getContextMenuItems={contextMenuItems as any}
                 />
               </div>
               {/* 分页高度为30 */}

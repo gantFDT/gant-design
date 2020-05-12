@@ -76,7 +76,6 @@ export default WrapperComponent =>
     );
     useEffect(() => {
       setTimeout(() => {
-        console.log('inputRef.current', inputRef.current);
         inputRef.current && inputRef.current.focus();
       }, 10);
     }, []);

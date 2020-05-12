@@ -144,6 +144,7 @@ export const mapColumns = <T>(
     },
     headerClass: 'gant-padding-h-3',
     ...defaultSelectionCol,
+    suppressPaste: true,
   };
   const serialNumberCol: ColDef = {
     width: 50,
@@ -155,16 +156,24 @@ export const mapColumns = <T>(
     lockPosition: true,
     lockVisible: true,
     field: 'g-index',
+    cellClassRules: {
+      'gant-grid-cell-serial-add': params => get(params, 'data._rowType') === DataActions.add,
+    },
     valueFormatter: (parmas: any) => {
       const {
-        node: { rowIndex },
+        node: { rowIndex, data },
         context,
       } = parmas;
       const computedPagination = get(context, 'computedPagination', {});
-      const { defaultPageSize, pageSize = defaultPageSize, current = 1 }: any = computedPagination;
-
-      return rowIndex + 1 + Math.floor(pageSize * (current - 1));
+      const {
+        defaultPageSize = 20,
+        pageSize = defaultPageSize,
+        current = 1,
+      }: any = computedPagination;
+      const serial = rowIndex + 1 + Math.floor(pageSize * (current - 1));
+      return serial;
     },
+    suppressPaste: true,
   };
   let { columnDefs, validateFields } = getColumnDefs(columns);
   columnDefs = serialNumber ? [serialNumberCol, ...columnDefs] : columnDefs;
