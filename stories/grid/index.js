@@ -65,7 +65,10 @@ const ComputeGrid = () => {
                     },
                 ]
             },
-            cellRenderer: "gantGroupCellRenderer"
+            cellRenderer: "gantGroupCellRenderer",
+            cellRendererParams:{
+                // showFolder:false
+            }
         },
         {
             fieldName: 'typeName',

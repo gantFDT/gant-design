@@ -12,6 +12,7 @@ import { isEqual } from 'lodash';
 import { Icon } from 'antd';
 interface GantGroupCellRendererProps extends ICellRendererParams {
   render?: (showValue: any, data: any, rowIndex: number, params: ICellRendererParams) => any;
+  showFolder?: boolean;
 }
 interface GantGroupCellRendererState {
   expanded: boolean;
@@ -97,21 +98,24 @@ export default class GantGroupCellRenderer extends Component<
   getLeveLine() {
     const {
       node: { level, data, rowIndex, lastChild },
+      showFolder = true,
     } = this.props;
     const { hasChildren } = this.state;
     const arr = new Array(level).fill(undefined);
+    if (!showFolder) return;
     return arr.map((item, index) => {
       const lastLine = index + 1 == arr.length;
       return lastLine ? (
         <span
+          key={index + 'folder-icon'}
           className={classnames('gant-level-line', {
-            ['gant-fold-line']: hasChildren,
+            ['gant-folder-line']: hasChildren,
             ['gant-file-line']: !hasChildren && !lastChild,
             ['gant-file-line-last']: !hasChildren && lastChild,
           })}
         ></span>
       ) : (
-        <span className={classnames('gant-level-line', 'gant-fold-line')}></span>
+        <span className={classnames('gant-level-line', 'gant-folder-line')}></span>
       );
     });
   }
@@ -151,6 +155,7 @@ export default class GantGroupCellRenderer extends Component<
       valueFormatted,
       node: { level, data, rowIndex },
       render,
+      showFolder = true,
     } = this.props;
     const { hasChildren, expanded } = this.state;
     const showValue =
@@ -162,7 +167,7 @@ export default class GantGroupCellRenderer extends Component<
           'ag-cell-wrapper',
           ' ag-row-group',
           ` ag-row-group-indent-${level}`,
-          `gant-row-group-indent-${level}`,
+          showFolder && `gant-row-group-indent-${level}`,
         )}
       >
         {this.getLeveLine()}
@@ -182,18 +187,19 @@ export default class GantGroupCellRenderer extends Component<
         >
           <span className="ag-icon ag-icon-tree-closed" unselectable="on"></span>
         </span>
-        {hasChildren ? (
-          <span className="gant-treedata-icon gant-treedata-folder">
-            <Icon type={expanded ? 'folder-open' : 'folder'} theme="filled" />
-          </span>
-        ) : (
-          level > 0 && (
-            <span className="gant-treedata-icon gant-treedata-file">
-              <Icon type="file" theme="filled" />
+        {showFolder ? (
+          hasChildren ? (
+            <span className="gant-treedata-icon gant-treedata-folder">
+              <Icon type={expanded ? 'folder-open' : 'folder'} theme="filled" />
             </span>
+          ) : (
+            level > 0 && (
+              <span className="gant-treedata-icon gant-treedata-file">
+                <Icon type="file" theme="filled" />
+              </span>
+            )
           )
-        )}
-
+        ) : null}
         <span className="ag-group-value" ref="eValue">
           {render ? render(showValue, data, rowIndex, this.props) : showValue}
         </span>
