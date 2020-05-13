@@ -9,6 +9,7 @@ import {
 } from 'ag-grid-community';
 import { BindAll } from 'lodash-decorators';
 import { isEqual } from 'lodash';
+import { Icon } from 'antd';
 interface GantGroupCellRendererProps extends ICellRendererParams {
   render?: (showValue: any, data: any, rowIndex: number, params: ICellRendererParams) => any;
 }
@@ -85,14 +86,36 @@ export default class GantGroupCellRenderer extends Component<
   }
   rowIndexChanged(params) {
     const node = params.node;
-    const { allLeafChildren = [node] } = node;
     node.gridApi.refreshCells({
       columns: ['g-index'],
+      rowNodes: [node],
       force: true,
     });
   }
   eContracted: any;
   eExpanded: any;
+  getLeveLine() {
+    const {
+      node: { level, data, rowIndex, lastChild },
+    } = this.props;
+    console.log(this.props.node);
+    const { hasChildren } = this.state;
+    const arr = new Array(level).fill(undefined);
+    return arr.map((item, index) => {
+      const lastLine = index + 1 == arr.length;
+      return lastLine ? (
+        <span
+          className={classnames('gant-level-line', {
+            ['gant-fold-line']: hasChildren,
+            ['gant-file-line']: !hasChildren && !lastChild,
+            ['gant-file-line-last']: !hasChildren && lastChild,
+          })}
+        ></span>
+      ) : (
+        <span className={classnames('gant-level-line', 'gant-fold-line')}></span>
+      );
+    });
+  }
   componentDidMount() {
     if (this.eContracted) {
       this.eContracted.addEventListener('click', this.onExpend);
@@ -136,8 +159,14 @@ export default class GantGroupCellRenderer extends Component<
 
     return (
       <span
-        className={classnames('ag-cell-wrapper', ' ag-row-group', ` ag-row-group-indent-${level}`)}
+        className={classnames(
+          'ag-cell-wrapper',
+          ' ag-row-group',
+          ` ag-row-group-indent-${level}`,
+          `gant-row-group-indent-${level}`,
+        )}
       >
+        {this.getLeveLine()}
         <span
           className={classnames('ag-group-expanded', {
             ['ag-hidden']: hasChildren ? !expanded : true,
@@ -154,6 +183,18 @@ export default class GantGroupCellRenderer extends Component<
         >
           <span className="ag-icon ag-icon-tree-closed" unselectable="on"></span>
         </span>
+        {hasChildren ? (
+          <span className="gant-treedata-icon gant-treedata-folder">
+            <Icon type={expanded ? 'folder-open' : 'folder'} theme="filled" />
+          </span>
+        ) : (
+          level > 0 && (
+            <span className="gant-treedata-icon gant-treedata-file">
+              <Icon type="file" theme="filled" />
+            </span>
+          )
+        )}
+
         <span className="ag-group-value" ref="eValue">
           {render ? render(showValue, data, rowIndex, this.props) : showValue}
         </span>

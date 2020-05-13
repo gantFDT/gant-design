@@ -38,6 +38,67 @@
     }
   }
   .gant-grid-cell {
+    &.ag-cell-range-handle {
+      background: bisque;
+      border: none !important;
+    }
+    .gant-level-line {
+      width: 16px;
+      margin-right: 2px;
+      position: relative;
+      &.gant-fold-line {
+        &::before {
+          position: absolute;
+          border-left: 1px dotted #a39f9f;
+          content: '';
+          height: 100%;
+          left: 8px;
+        }
+      }
+      &.gant-file-line-last {
+        &::before {
+          position: absolute;
+          border-left: 1px dotted #a39f9f;
+          content: '';
+          height: 50%;
+          left: 8px;
+          top: 0px;
+        }
+        &::after {
+          position: absolute;
+          border-top: 1px dotted #a39f9f;
+          content: '';
+          top: 50%;
+          width: 7px;
+          left: 8px;
+        }
+      }
+      &.gant-file-line {
+        &::before {
+          position: absolute;
+          border-left: 1px dotted #a39f9f;
+          content: '';
+          height: 100%;
+          left: 8px;
+        }
+        &::after {
+          position: absolute;
+          border-top: 1px dotted #a39f9f;
+          content: '';
+          top: 50%;
+          width: 7px;
+          left: 8px;
+        }
+      }
+    }
+
+    .gant-treedata-icon {
+      color: #a39f9f;
+      margin-right: 4px;
+      &.gant-treedata-file {
+        // margin-left: 18px;
+      }
+    }
     &::after {
       content: '';
       display: block;
