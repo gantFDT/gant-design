@@ -238,7 +238,7 @@ function EditStatusUse() {
             uiSchema={uiSchema}
             onChange={onChange}
             titleConfig={titleConfig}
-            onSizeChange={(data)=>console.log("onSizeChange",data)}
+            onSizeChange={(data) => console.log("onSizeChange", data)}
         />
         <div style={{ float: 'right' }}>
             <Button size="small" type='primary' onClick={onSubmit}>提交</Button>
@@ -504,6 +504,31 @@ function DependenceData() {
                 componentType: "InputNumber",
                 options: {
                     initialValue: 2
+                }
+            },
+            "key_3": {
+                title: "字数限制",
+                type: "number",
+                componentType: "Selector",
+                dependencies: ["key_2"],
+                onDependenciesChange([key_2], schema, form) {
+                    return Promise.resolve(key_2).then(data => {
+                        if (data) {
+                            let leveldataSource = []
+                            for (let i = 1; i <= data; i++) {
+                                leveldataSource.push({
+                                    value: i + '',
+                                    label: i + ''
+                                })
+                            }
+                            leveldataSource.push({ value: 99 + '', label: '全部' })
+                            schema.props = { dataSource: leveldataSource }
+                            console.log(leveldataSource)
+                            let showData = data > 3 ? 3 : data
+                            form.setFieldsValue({ levelNum: showData })
+                            return schema;
+                        }
+                    })
                 }
             },
         }
