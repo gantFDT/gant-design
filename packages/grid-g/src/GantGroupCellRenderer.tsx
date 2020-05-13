@@ -98,7 +98,6 @@ export default class GantGroupCellRenderer extends Component<
     const {
       node: { level, data, rowIndex, lastChild },
     } = this.props;
-    console.log(this.props.node);
     const { hasChildren } = this.state;
     const arr = new Array(level).fill(undefined);
     return arr.map((item, index) => {
