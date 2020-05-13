@@ -173,10 +173,20 @@ export const mapColumns = <T>(
       const serial = rowIndex + 1 + Math.floor(pageSize * (current - 1));
       return serial;
     },
-    suppressPaste: true,
   };
   let { columnDefs, validateFields } = getColumnDefs(columns);
-  columnDefs = serialNumber ? [serialNumberCol, ...columnDefs] : columnDefs;
+  columnDefs = serialNumber
+    ? typeof serialNumber === 'boolean'
+      ? [serialNumberCol, ...columnDefs]
+      : [
+          {
+            ...serialNumberCol,
+            ...serialNumber,
+            cellClassRules: { ...serialNumberCol.cellClassRules, ...serialNumber.cellClassRules },
+          },
+          ...columnDefs,
+        ]
+    : columnDefs;
   columnDefs = defaultSelection ? [defaultCheckboxColSelectionCol, ...columnDefs] : columnDefs;
   return { columnDefs, validateFields };
 };

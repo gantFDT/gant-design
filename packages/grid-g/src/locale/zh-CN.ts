@@ -224,4 +224,6 @@ export default {
   pivotChartRequiresPivotMode: 'laPivot Chart requires Pivot Mode enabled.',
   createChildNode: '创建子节点',
   createNode: '创建平行节点',
+  cutRows: '剪切选中行',
+  pasteRows: '粘贴到当前行',
 };
