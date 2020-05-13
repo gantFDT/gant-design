@@ -129,20 +129,22 @@ export default class GridManage {
         this.cutRows.map(rowNode => {
           const { allLeafChildren = [rowNode] } = rowNode;
           allLeafChildren.map(childNode => {
-            if (childNode.data) records.push({ ...childNode.data });
+            const id = generateUuid() + '';
+            const itemData = { ...childNode.data, [createConfig.id]: id };
+            const oldPath = getDataPath(itemData);
+            const parentPath = oldPath.slice(0, oldPath.length - 1);
+            itemData[createConfig.path] = createConfig.toPath(parentPath.concat([id]));
+            if (childNode.data) records.push(itemData);
           });
         });
         this.create(records);
-        this.cutRows = [];
         return;
       }
-
       if (!treeData) {
         const records = this.cutRows.map(itemNode => {
           return itemNode.data;
         });
         this.create(records, node.id);
-        this.cutRows = [];
         return;
       }
       if (!canQuickCreate(createConfig)) return console.warn('createConfig is error');
@@ -150,7 +152,6 @@ export default class GridManage {
       const parentPath = brotherPath.slice(0, brotherPath.length - 1);
       const newData = getRowsToUpdate(this.cutRows, parentPath, createConfig);
       this.create(newData, node.id);
-      this.cutRows = [];
     } catch (error) {
       console.error(error);
     }

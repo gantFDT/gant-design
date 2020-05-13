@@ -16,6 +16,7 @@ import {
   GridOptions,
   ColumnApi,
   GridReadyEvent,
+  RowNode,
   SelectionChangedEvent,
 } from 'ag-grid-community';
 import 'ag-grid-community/dist/styles/ag-grid.css';
