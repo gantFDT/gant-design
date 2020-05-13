@@ -1,6 +1,6 @@
 import React from 'react'
 import { WrappedFormUtils } from 'antd/es/form/Form'
-import { get, isEqual, isPlainObject, intersection, set, cloneDeep } from 'lodash'
+import { get, isEqual, isPlainObject, intersection, set, cloneDeep, isEmpty } from 'lodash'
 import moment from 'moment'
 import { getKey } from './utils'
 import { compose, renameProp, withPropsOnChange, withStateHandlers, withState, withProps } from 'recompose'
@@ -53,6 +53,7 @@ export const findDependencies = (
     // 改变的key
     // object.product
     const changeKeys = objectToPath(changedValueObject)
+    if (!changeKeys.length) return
     const dependenciesChangeValue = {}
     function setFieldsValue(data) {
         for (const key of Reflect.ownKeys(data)) {
@@ -80,7 +81,8 @@ export const findDependencies = (
             }
         } else if (subSchema.propertyType) {
             subSchema.propertyType = { ...subSchema.propertyType }
-            for (const [subSchemaKey, schemaValue] of Object.entries(subSchema.propertyType)) {
+            const entries = Object.entries(subSchema.propertyType)
+            for (const [subSchemaKey, schemaValue] of entries) {
                 const { dependencies = [], onDependenciesChange, type } = schemaValue as any
                 if (
                     // 找到了依赖项或者是object，进入递归
@@ -97,7 +99,11 @@ export const findDependencies = (
 
     const allChange = inner([], schema)
     Promise.all(allChange).then(changes => {
-        mapSubSchema(schema, changes, () => form.setFieldsValue(dependenciesChangeValue))
+        mapSubSchema(schema, changes, () => {
+            if (!isEmpty(dependenciesChangeValue)) {
+                form.setFieldsValue(dependenciesChangeValue)
+            }
+        })
     })
 }
 
@@ -106,7 +112,7 @@ const deepMergeSchema = (schemaState: Schema, changes: Change[]): Schema => {
     const schemaTree = cloneDeep(schemaState)
     changes.reduce((schema, change) => {
         const { key, schema: subSchema } = change
-        const keyPath = key.join('.').replace(/(\w+)/g, "propertyType.$1")
+        const keyPath = key.join('.').replace(/([^\.]+)/g, "propertyType.$1")
         set(schema, keyPath, subSchema)
         return schema
     }, schemaTree)
@@ -131,17 +137,21 @@ export default compose(
         ({ schema }: Props) => ({ schemaState: schema, nextTask: null }),
         {
             mapSubSchema: ({ schemaState }, { onSchemaChange }) => (schema: Schema, changes: Change[], nextTask: () => void) => {
-                if (!isEqual(schemaState, schema)) return /**说明此时schemaState已经更新，将阻断此次依赖更新schema的操作 */
-                const newSchema = deepMergeSchema(schema, changes)
-                if (!isEqual(schemaState, newSchema)) {
-                    if (onSchemaChange) {
-                        onSchemaChange(newSchema)
-                    }
-                    return {
-                        schemaState: newSchema,
-                        nextTask
+                /**schema发生变化，将阻断此次依赖更新schema的操作 */
+                if (!isEqual(schemaState, schema)) return { schemaState, nextTask: null }
+                if (changes.length) {
+                    const newSchema = deepMergeSchema(schema, changes)
+                    if (!isEqual(schemaState, newSchema)) {
+                        if (onSchemaChange) {
+                            onSchemaChange(newSchema)
+                        }
+                        return {
+                            schemaState: newSchema,
+                            nextTask
+                        }
                     }
                 }
+
                 return {
                     schemaState,
                     nextTask
@@ -156,9 +166,13 @@ export default compose(
     ),
     withPropsOnChange(["nextTask"], ({ resetNextTask, nextTask }: Inner) => {
         if (nextTask) {
-            nextTask()
-            resetNextTask()
+            // 降低nextTask执行的优先级，使Form先更新，得到新的schema
+            setTimeout(() => {
+                nextTask()
+                resetNextTask()
+            })
         }
+
     }),
 
     withState("bakData", "setBakData", ({ data }: Inner) => data),

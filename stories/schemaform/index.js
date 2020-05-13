@@ -476,7 +476,7 @@ function BindData() {
 }
 /*! Split !*/
 function DependenceData() {
-    const dependenceSchema = {
+    const dependenceSchema = useMemo(() => ({
         type: "object",
         title: "依赖关系",
         propertyType: {
@@ -485,6 +485,9 @@ function DependenceData() {
                 type: "string",
                 dependencies: ["key_2"],
                 onDependenciesChange: ([key_2], itemSchema, form) => {
+                    form.setFieldsValue({
+                        key_3: key_2 - 1
+                    })
                     return {
                         ...itemSchema,
                         options: {
@@ -523,16 +526,14 @@ function DependenceData() {
                             }
                             leveldataSource.push({ value: 99 + '', label: '全部' })
                             schema.props = { dataSource: leveldataSource }
-                            console.log(leveldataSource)
                             let showData = data > 3 ? 3 : data
-                            form.setFieldsValue({ levelNum: showData })
                             return schema;
                         }
                     })
                 }
             },
         }
-    }
+    }), [])
     const ref = useRef()
     const onReset = useCallback(() => {
         ref.current.resetFields()
