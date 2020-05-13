@@ -1,7 +1,7 @@
 import { RowDataTransaction, GridApi, RowNode } from 'ag-grid-community';
 import Schema, { Rules } from 'async-validator';
 import { get, isEmpty, findIndex, cloneDeep } from 'lodash';
-import { getModifyData, removeTagData, isEqualObj, canQuickCreate } from './utils';
+import { getModifyData, removeTagData, isEqualObj, canQuickCreate, getRowsToUpdate } from './utils';
 import { DataActions, CreateConfig } from '../interface';
 import { bindAll, Debounce } from 'lodash-decorators';
 import { generateUuid } from '@util';
@@ -44,6 +44,7 @@ export default class GridManage {
   public agGridConfig: AgGridConfig;
   historyStack: OperationAction[] = [];
   private redoStack: OperationAction[] = [];
+  public cutRows: any[];
   private loading: boolean = false;
   public validateFields: Rules;
   private getRowItemData = (itemData: any, oldData?: any) => {
@@ -112,12 +113,56 @@ export default class GridManage {
       if (!rowNode.expanded) rowNode.setExpanded(true);
     }
   }
+  cut(rowsNodes) {
+    const ids = rowsNodes.map(item => {
+      return item.id;
+    });
+    if (isEmpty(ids)) return;
+    this.cutRows = cloneDeep(rowsNodes);
+    this.remove(ids);
+  }
+  paste(node) {
+    try {
+      const { getDataPath, createConfig, treeData } = this.agGridConfig;
+      if (!node) {
+        const records = [];
+        this.cutRows.map(rowNode => {
+          const { allLeafChildren = [rowNode] } = rowNode;
+          allLeafChildren.map(childNode => {
+            if (childNode.data) records.push({ ...childNode.data });
+          });
+        });
+        this.create(records);
+        this.cutRows = [];
+        return;
+      }
+
+      if (!treeData) {
+        const records = this.cutRows.map(itemNode => {
+          return itemNode.data;
+        });
+        this.create(records, node.id);
+        this.cutRows = [];
+        return;
+      }
+      if (!canQuickCreate(createConfig)) return console.warn('createConfig is error');
+      const brotherPath = getDataPath(get(node, 'data', {}));
+      const parentPath = brotherPath.slice(0, brotherPath.length - 1);
+      const newData = getRowsToUpdate(this.cutRows, parentPath, createConfig);
+      this.create(newData, node.id);
+      this.cutRows = [];
+    } catch (error) {
+      console.error(error);
+    }
+  }
   reset(agGridConfig) {
     this.agGridConfig = agGridConfig;
     this.historyStack = [];
     this.redoStack = [];
+    this.cutRows = [];
     this.agGridApi && this.agGridApi.setRowData(agGridConfig.dataSource);
   }
+
   getRowData() {
     var rowData = [];
     if (!this.agGridApi) return [];
@@ -234,7 +279,7 @@ export default class GridManage {
   // 创建平行节点
   public createNode(targetId: string | number, record: number | object | any[] = 1) {
     const { createConfig, getRowNodeId, treeData, getDataPath } = this.agGridConfig;
-    if (!canQuickCreate(createConfig)) return console.warn('createConfig is empty');
+    if (!canQuickCreate(createConfig)) return console.warn('createConfig is error');
     if (typeof targetId !== 'number' && !targetId) return console.warn('nodeId is null');
     if (typeof targetId !== 'string' && typeof targetId !== 'number')
       return console.warn('nodeId format error');
@@ -243,7 +288,7 @@ export default class GridManage {
   }
   public createChildNode(targetId: string | number, record: number | object | any[] = 1) {
     const { createConfig, getRowNodeId, treeData, getDataPath } = this.agGridConfig;
-    if (!canQuickCreate(createConfig)) return console.warn('createConfig is empty');
+    if (!canQuickCreate(createConfig)) return console.warn('createConfig is error');
     if (typeof targetId !== 'number' && !targetId) return console.warn('parentNodeId is null');
     if (typeof targetId !== 'string' && typeof targetId !== 'number')
       return console.warn('parentNodeId format error');
@@ -267,7 +312,7 @@ export default class GridManage {
         const removeIndex = findIndex(removeRecords, data => {
           getRowNodeId(data) == getRowNodeId(childNode.data);
         });
-        if (removeIndex < 0) removeRecords.push(childNode.data);
+        if (removeIndex < 0 && childNode.data) removeRecords.push(childNode.data);
       });
     });
     removeRecords.map(itemRecord => {
@@ -288,6 +333,7 @@ export default class GridManage {
     this.batchUpdateGrid({
       remove: records,
     });
+    return records;
   }
   //移除标记;
   //

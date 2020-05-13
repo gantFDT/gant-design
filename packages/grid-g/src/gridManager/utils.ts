@@ -92,3 +92,27 @@ export function canQuickCreate(config: CreateConfig) {
   }
   return true;
 }
+export function isSelectionParentOfTarget(selectedNode, targetNode) {
+  let children = selectedNode.childrenAfterGroup;
+  for (let i = 0; i < children.length; i++) {
+    if (targetNode && children[i].key === targetNode.key) return true;
+    isSelectionParentOfTarget(children[i], targetNode);
+  }
+  return false;
+}
+export function getRowsToUpdate(nodes, parentPath, createConfig) {
+  let res = [];
+  const { path, toPath } = createConfig;
+  nodes.map(node => {
+    let newPath = parentPath.concat([node.key]);
+    if (node.data) {
+      node.data[path] = toPath(newPath);
+    }
+    if (node.childrenAfterGroup) {
+      let updatedChildRowData = getRowsToUpdate(node.childrenAfterGroup, newPath, createConfig);
+      res = res.concat(updatedChildRowData);
+    }
+    if (node.data) res = res.concat([node.data]);
+  });
+  return res;
+}

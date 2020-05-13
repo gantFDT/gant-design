@@ -328,6 +328,9 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
           } = params;
           const rowNodes = apiRef.current.getSelectedNodes();
           const hasCreateConfig = isEmpty(createConfig) || rowNodes.length !== 1;
+          const hasCut = rowNodes.length <= 0 || (treeData && isEmpty(createConfig));
+          const hasPaste =
+            rowNodes.length > 1 || isEmpty(createConfig) || isEmpty(gridManager.cutRows);
           const items = getContextMenuItems ? getContextMenuItems(params) : [];
           const defultMenu = ['expandAll', 'contractAll', ...items, 'separator', 'export'];
           if (!golbalEditable) return defultMenu;
@@ -352,6 +355,21 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                 const [rowNode] = rowNodes;
                 const { id } = rowNode;
                 return gridManager.createChildNode(id);
+              },
+            },
+            {
+              name: locale.cutRows,
+              disabled: hasCut,
+              action: params => {
+                return gridManager.cut(rowNodes);
+              },
+            },
+            {
+              name: locale.pasteRows,
+              disabled: hasPaste,
+              action: params => {
+                const [rowNode] = rowNodes;
+                return gridManager.paste(rowNode);
               },
             },
           ];
@@ -449,5 +467,5 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
 };
 
 Grid.defaultProps = defaultProps;
-Grid.LicenseManager = LicenseManager
+Grid.LicenseManager = LicenseManager;
 export default Grid;
