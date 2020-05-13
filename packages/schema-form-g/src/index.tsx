@@ -151,7 +151,7 @@ export default compose(
   Form.create<Inner>({
     onValuesChange: (props, changedValue, allValues) => {
       const { schema, form, mapSubSchema } = props;
-      findDependencies(changedValue, '', schema, mapSubSchema, form);
+      findDependencies(changedValue, schema, mapSubSchema, form);
       // props.onChange && props.onChange(changedValue, allValues)
       // 因为有findDependencies的存在, 导致了可能会存在allValues不准确的问题
       // 在这里，异步更新值的组件不会有问题，因为其他组件的值都已经更新
@@ -170,7 +170,7 @@ export default compose(
       value: any,
     ) => {
       const changedValue = [...key.split('.'), value].reverse().reduce((v, k) => ({ [k]: v }));
-      findDependencies(changedValue, '', schema, mapSubSchema, form);
+      findDependencies(changedValue, schema, mapSubSchema, form);
     },
   }),
   renameProp('onRef', 'ref'),
