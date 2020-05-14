@@ -43,9 +43,9 @@
       border: none !important;
     }
     .gant-level-line {
-      width: 16px;
-      margin-right: 2px;
+      width: 18px;
       position: relative;
+
       &.gant-folder-line {
         &::before {
           position: absolute;
@@ -53,6 +53,7 @@
           content: '';
           height: 100%;
           left: 8px;
+          display: block;
         }
       }
       &.gant-file-line-last {
@@ -69,7 +70,7 @@
           border-top: 1px dotted #a39f9f;
           content: '';
           top: 50%;
-          width: 7px;
+          width: 9px;
           left: 8px;
         }
       }
@@ -86,7 +87,7 @@
           border-top: 1px dotted #a39f9f;
           content: '';
           top: 50%;
-          width: 7px;
+          width: 9px;
           left: 8px;
         }
       }
@@ -96,7 +97,16 @@
       color: #a39f9f;
       margin-right: 4px;
       &.gant-treedata-file {
-        // margin-left: 18px;
+        padding-left: 18px;
+        position: relative;
+        &::before {
+          position: absolute;
+          border-top: 1px dotted #a39f9f;
+          content: '';
+          top: 50%;
+          width: 12px;
+          left: 0px;
+        }
       }
     }
     &::after {

@@ -1,22 +1,24 @@
 :global {
   .gant-grid {
-    .ag-row-group-indent-(@count) when (@count > 0) {
-      .ag-row-group-indent-((@count - 1));
-      .ag-row-group.ag-row-group-indent-@{count} {
-        padding-left: (18px * @count);
-        &.gant-row-group-indent-@{count} {
-          padding-left: (0px * @count);
-        }
-      }
-    }
-    .ag-row-group-indent-(20);
-
     .ag-ltr {
       .ag-selection-checkbox,
       .ag-group-expanded,
       .ag-group-contracted {
         margin-right: 4px;
       }
+      .ag-cell-wrapper.ag-row-group-leaf-indent {
+        margin-left: 20px;
+      }
+      .ag-row-group-indent-(@count) when (@count > 0) {
+        .ag-row-group-indent-((@count - 1));
+        .ag-cell-wrapper.ag-row-group-indent-@{count} {
+          padding-left: (18px * @count);
+          &.gant-row-group-indent-@{count} {
+            padding-left: (0px * @count);
+          }
+        }
+      }
+      .ag-row-group-indent-(20);
     }
 
     .ag-header-cell.gant-padding-h-3 {

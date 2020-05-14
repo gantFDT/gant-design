@@ -160,14 +160,14 @@ export default class GantGroupCellRenderer extends Component<
     const { hasChildren, expanded } = this.state;
     const showValue =
       valueFormatted && valueFormatted !== '[object Object]' ? valueFormatted : value;
-
     return (
       <span
         className={classnames(
           'ag-cell-wrapper',
-          ' ag-row-group',
-          ` ag-row-group-indent-${level}`,
+          `ag-row-group-indent-${level}`,
           showFolder && `gant-row-group-indent-${level}`,
+          ((!hasChildren && !showFolder) || (!hasChildren && level == 0)) &&
+            'ag-row-group-leaf-indent ',
         )}
       >
         {this.getLeveLine()}
