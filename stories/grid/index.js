@@ -65,7 +65,10 @@ const ComputeGrid = () => {
                     },
                 ]
             },
-            cellRenderer: "gantGroupCellRenderer"
+            cellRenderer: "gantGroupCellRenderer",
+            cellRendererParams:{
+                // showFolder:false
+            }
         },
         {
             fieldName: 'typeName',
@@ -240,7 +243,7 @@ const ComputeGrid = () => {
                 loading={loading}
                 columns={columns}
                 onCellEditingChange={(record) => [{ ...record, typeName: true }]}
-                // treeData
+                treeData
                 editable={editable}
                 dataSource={dataSource}
                 onReady={onReady}
