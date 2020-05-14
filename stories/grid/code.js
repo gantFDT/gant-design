@@ -239,7 +239,7 @@ const ComputeGrid = () => {
                 loading={loading}
                 columns={columns}
                 onCellEditingChange={(record) => [{ ...record, typeName: true }]}
-                treeData
+                // treeData
                 editable={editable}
                 dataSource={dataSource}
                 onReady={onReady}

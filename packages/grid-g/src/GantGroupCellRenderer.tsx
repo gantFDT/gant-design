@@ -155,8 +155,10 @@ export default class GantGroupCellRenderer extends Component<
       valueFormatted,
       node: { level, data, rowIndex },
       render,
+      context: { treeData },
       showFolder = true,
     } = this.props;
+    console.log(this.props);
     const { hasChildren, expanded } = this.state;
     const showValue =
       valueFormatted && valueFormatted !== '[object Object]' ? valueFormatted : value;
@@ -164,9 +166,10 @@ export default class GantGroupCellRenderer extends Component<
       <span
         className={classnames(
           'ag-cell-wrapper',
-          `ag-row-group-indent-${level}`,
-          showFolder && `gant-row-group-indent-${level}`,
+          treeData && `ag-row-group-indent-${level}`,
+          treeData && showFolder && `gant-row-group-indent-${level}`,
           ((!hasChildren && !showFolder) || (!hasChildren && level == 0)) &&
+            treeData &&
             'ag-row-group-leaf-indent ',
         )}
       >

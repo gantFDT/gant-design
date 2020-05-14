@@ -351,7 +351,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
             },
             {
               name: locale.createChildNode,
-              disabled: hasCreateConfig,
+              disabled: hasCreateConfig || !treeData,
               action: params => {
                 const [rowNode] = rowNodes;
                 const { id } = rowNode;
@@ -424,6 +424,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     editRowDataChanged,
                     editingRowDataChange,
                     computedPagination,
+                    treeData,
                     ...context,
                   }}
                   suppressAnimationFrame
