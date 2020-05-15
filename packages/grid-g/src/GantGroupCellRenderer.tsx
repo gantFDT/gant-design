@@ -158,10 +158,8 @@ export default class GantGroupCellRenderer extends Component<
       context: { treeData },
       showFolder = true,
     } = this.props;
-    console.log(this.props);
     const { hasChildren, expanded } = this.state;
-    const showValue =
-      valueFormatted && valueFormatted !== '[object Object]' ? valueFormatted : value;
+    const showValue = valueFormatted && !Array.isArray(value) ? valueFormatted : value;
     return (
       <span
         className={classnames(
