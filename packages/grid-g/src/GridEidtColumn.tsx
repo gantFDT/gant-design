@@ -56,9 +56,9 @@ export default WrapperComponent =>
     );
 
     const compoentProps = useMemo(() => {
-      if (typeof fieldProps === 'function') return fieldProps(data);
+      if (typeof fieldProps === 'function') return fieldProps(data, props);
       return fieldProps;
-    }, [fieldProps, data]);
+    }, [fieldProps, data, props]);
     useImperativeHandle(
       ref,
       () => {
