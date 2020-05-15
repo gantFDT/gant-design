@@ -427,7 +427,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     treeData,
                     ...context,
                   }}
-                  suppressAnimationFrame
                   stopEditingWhenGridLosesFocus={false}
                   treeData={treeData}
                   getDataPath={getDataPath}
