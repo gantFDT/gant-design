@@ -124,19 +124,9 @@ export default class GridManage {
   paste(node) {
     try {
       const { getDataPath, createConfig, treeData } = this.agGridConfig;
+      if (!canQuickCreate(createConfig)) return console.warn('createConfig is error');
       if (!node) {
-        const records = [];
-        this.cutRows.map(rowNode => {
-          const { allLeafChildren = [rowNode] } = rowNode;
-          allLeafChildren.map(childNode => {
-            const id = generateUuid() + '';
-            const itemData = { ...childNode.data, [createConfig.id]: id };
-            const oldPath = getDataPath(itemData);
-            const parentPath = oldPath.slice(0, oldPath.length - 1);
-            itemData[createConfig.path] = createConfig.toPath(parentPath.concat([id]));
-            if (childNode.data) records.push(itemData);
-          });
-        });
+        const records = getRowsToUpdate(this.cutRows, [], createConfig);
         this.create(records);
         return;
       }
@@ -147,7 +137,6 @@ export default class GridManage {
         this.create(records, node.id);
         return;
       }
-      if (!canQuickCreate(createConfig)) return console.warn('createConfig is error');
       const brotherPath = getDataPath(get(node, 'data', {}));
       const parentPath = brotherPath.slice(0, brotherPath.length - 1);
       const newData = getRowsToUpdate(this.cutRows, parentPath, createConfig);

@@ -238,7 +238,7 @@ const ComputeGrid = () => {
                 type="line"
             />
             <Grid
-                rowkey={(data) => data.id+""}
+                rowkey={(data) => data.id}
                 loading={loading}
                 columns={columns}
                 onCellEditingChange={(record) => [{ ...record, typeName: true }]}
