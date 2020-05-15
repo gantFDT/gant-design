@@ -9,12 +9,12 @@ import { get, findIndex } from 'lodash';
 import { getFields } from './maps';
 import en from './locale/en-US';
 import zh from './locale/zh-CN';
-import { getFieldItemSizeClass } from './utils'
+import { getFieldItemSizeClass } from './utils';
 
 const langs = {
-  'en': en,
-  'zh-cn': zh
-}
+  en: en,
+  'zh-cn': zh,
+};
 interface SchemaField extends Schema {
   isRequired?: boolean;
   edit: any;
@@ -40,7 +40,7 @@ const SchemaField = (props: SchemaField) => {
     customFields,
     emitDependenciesChange,
     defalutProps,
-    collectInitialValue
+    collectInitialValue,
   } = useContext(FormContext);
 
   const onCancel = useCallback(() => name && resetFields([name]), [componentType, name]);
@@ -65,14 +65,18 @@ const SchemaField = (props: SchemaField) => {
   const labelColLayout = typeof labelCol === 'number' ? { span: labelCol } : labelCol;
   const wrapperColayout = typeof wrapperCol === 'number' ? { span: wrapperCol } : wrapperCol;
   const renderFieldProps = useMemo(() => {
-    return { ...defalutProps, ...FieldProps }
-  }, [defalutProps, FieldProps])
+    return { ...defalutProps, ...FieldProps };
+  }, [defalutProps, FieldProps]);
   const fieldComponent = useMemo(() => {
     let component = get(getFields(), `${componentType}`, null);
-    if (component == null) {
-      const customIndex = findIndex(customFields, item => item.type === componentType);
-      component = get(customFields, `[${customIndex}].component`, Input);
+    let customIndex = -1;
+    if (component == null && componentType) {
+      customIndex = findIndex(
+        customFields,
+        item => item.type === componentType || item.name === componentType,
+      );
     }
+    component = component ? component : get(customFields, `[${customIndex}].component`, Input);
     const { initialValue, pattern, ...othterProps }: any = renderFieldProps || {};
 
     return React.createElement(component, {
@@ -84,7 +88,7 @@ const SchemaField = (props: SchemaField) => {
   }, [renderFieldProps, itemEdit, onCancel, onItemSave, componentType, customFields]);
 
   useEffect(() => {
-    collectInitialValue(name, initialValue)
+    collectInitialValue(name, initialValue);
     if (![null, undefined].includes(initialValue)) {
       emitDependenciesChange(name as string, initialValue);
     }
@@ -93,29 +97,31 @@ const SchemaField = (props: SchemaField) => {
     <Col {...colLayout}>
       <LocaleReceiver>
         {(local, localeCode = 'zh-cn') => {
-          let locale = langs[localeCode] || langs['zh-cn']
-          return <Form.Item
-            label={title}
-            className={classnames(className, getFieldItemSizeClass(renderFieldProps.size))}
-            style={style}
-            wrapperCol={wrapperColayout}
-            labelAlign={labelAlign}
-            labelCol={labelColLayout}
-            extra={extra}
-          >
-            {name &&
-              getFieldDecorator(name, {
-                ...options,
-                initialValue,
-                rules: [
-                  {
-                    required: typeof required === 'boolean' ? required : isRequired,
-                    message: `${title}${locale.required}`,
-                  },
-                  ...optionsRules,
-                ],
-              })(fieldComponent)}
-          </Form.Item>
+          let locale = langs[localeCode] || langs['zh-cn'];
+          return (
+            <Form.Item
+              label={title}
+              className={classnames(className, getFieldItemSizeClass(renderFieldProps.size))}
+              style={style}
+              wrapperCol={wrapperColayout}
+              labelAlign={labelAlign}
+              labelCol={labelColLayout}
+              extra={extra}
+            >
+              {name &&
+                getFieldDecorator(name, {
+                  ...options,
+                  initialValue,
+                  rules: [
+                    {
+                      required: typeof required === 'boolean' ? required : isRequired,
+                      message: `${title}${locale.required}`,
+                    },
+                    ...optionsRules,
+                  ],
+                })(fieldComponent)}
+            </Form.Item>
+          );
         }}
       </LocaleReceiver>
     </Col>

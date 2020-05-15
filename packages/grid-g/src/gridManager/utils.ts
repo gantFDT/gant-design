@@ -1,5 +1,6 @@
 import { get, isEmpty, isEqual, findIndex } from 'lodash';
 import { DataActions, CreateConfig } from '../interface';
+import { generateUuid } from '@util';
 export function getModifyData(records, getRowItemData, oldRecords) {
   const hisRecords: any[] = [],
     newRecords: any[] = [];
@@ -91,4 +92,30 @@ export function canQuickCreate(config: CreateConfig) {
     return false;
   }
   return true;
+}
+export function isSelectionParentOfTarget(selectedNode, targetNode) {
+  let children = selectedNode.childrenAfterGroup;
+  for (let i = 0; i < children.length; i++) {
+    if (targetNode && children[i].key === targetNode.key) return true;
+    isSelectionParentOfTarget(children[i], targetNode);
+  }
+  return false;
+}
+export function getRowsToUpdate(nodes, parentPath, createConfig) {
+  let res = [];
+  const { path, toPath, id } = createConfig;
+  nodes.map(node => {
+    const keyId = generateUuid() + '';
+    let newPath = parentPath.concat([keyId]);
+    if (node.data) {
+      node.data[path] = toPath(newPath);
+      node.data[id] = keyId;
+    }
+    if (node.childrenAfterGroup) {
+      let updatedChildRowData = getRowsToUpdate(node.childrenAfterGroup, newPath, createConfig);
+      res = res.concat(updatedChildRowData);
+    }
+    if (node.data) res = res.concat([node.data]);
+  });
+  return res;
 }

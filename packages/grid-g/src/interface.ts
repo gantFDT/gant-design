@@ -169,7 +169,7 @@ export interface Props<T extends any> {
   treeDataChildrenName: string;
   locale: object;
   serverGroupExpend: (param: IServerSideGetRowsParams, cd: (row: any[]) => void) => void;
-  serialNumber?: boolean;
+  serialNumber?: boolean | ColDef;
   isCompute?: boolean;
   onCellEditChange: (record: any, fieldName: string, newValue: any, oldValue: any) => any;
   onCellEditingChange: (record: any, fieldName: string, newValue: any, oldValue: any) => any;

@@ -224,4 +224,6 @@ export default {
   pivotChartRequiresPivotMode: 'laPivot Chart requires Pivot Mode enabled.',
   createChildNode: 'create child node',
   createNode: 'create node',
+  cutRows: 'cut selected rows',
+  pasteRows: 'paste to current Row',
 };

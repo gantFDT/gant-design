@@ -64,7 +64,10 @@ const ComputeGrid = () => {
                     },
                 ]
             },
-            cellRenderer: "gantGroupCellRenderer"
+            cellRenderer: "gantGroupCellRenderer",
+            cellRendererParams:{
+                // showFolder:false
+            }
         },
         {
             fieldName: 'typeName',
@@ -83,13 +86,35 @@ const ComputeGrid = () => {
             {
                 "path": "313/",
                 "id": 313,
-                 "typeCode": "22", "typeName": "false",
+                 "typeCode": "313", "typeName": "false",
                 "children": [{
                     "path": "313/314/", "id": 314,
-                     "typeCode": "AAAA", "typeName": "false",
+                     "typeCode": "314", "typeName": "false",
                     children: [{  "path": "313/314/315/", "id": 315, "typeCode": "bbb", "typeName": "false", }]
+                },{
+                    "path": "313/322/", "id": 322,
+                    "typeCode": "322", "typeName": "false", 
+                },
+                {
+                    "path": "313/323/", "id": 323,
+                    "typeCode": "323", "typeName": "false", 
+                }
+            ],
+            },
+            {
+                "path": "213/",
+                "id": 213,
+                 "typeCode": "213", "typeName": "false",
+                "children": [{
+                    "path": "213/214/", "id": 214,
+                     "typeCode": "214", "typeName": "false"
                 }],
-            }]
+            },{
+                "path": "113/",
+                "id": 113,
+                 "typeCode": "113", "typeName": "false",
+            }
+        ]
     )
 
     const apiRef = useRef()
@@ -230,7 +255,7 @@ const ComputeGrid = () => {
                 cellValueChanged={(data)=>console.log('cellValueChanged',data)}
                 openEditSign
                 removeShowLine={false}
-                isServerSideGroup={(data) => data.children}
+                // isServerSideGroup={(data) => data.children}
                 groupSuppressAutoColumn
                 getDataPath={getDataPath}
                 createConfig={{

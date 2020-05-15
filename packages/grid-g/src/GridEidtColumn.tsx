@@ -10,6 +10,7 @@ import React, {
 import classnames from 'classnames';
 import { EditStatus } from '@data-cell';
 import { set, cloneDeep, get } from 'lodash';
+import { isEqualObj } from './gridManager/utils';
 const defalutProps = {
   autoFocus: true,
   edit: EditStatus.EDIT,
@@ -56,9 +57,9 @@ export default WrapperComponent =>
     );
 
     const compoentProps = useMemo(() => {
-      if (typeof fieldProps === 'function') return fieldProps(data);
+      if (typeof fieldProps === 'function') return fieldProps(data, props);
       return fieldProps;
-    }, [fieldProps, data]);
+    }, [fieldProps, data, props]);
     useImperativeHandle(
       ref,
       () => {
@@ -66,7 +67,7 @@ export default WrapperComponent =>
           getValue: () => {
             let { data } = node;
             data = cloneDeep(data);
-            if (get(data, field) === newValue) return newValue;
+            if (isEqualObj(get(data, field), newValue)) return newValue;
             editRowDataChanged(set(data, field, newValue), field, newValue, value);
             return value;
           },
