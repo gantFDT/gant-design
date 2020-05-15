@@ -76,7 +76,7 @@ const SchemaField = (props: SchemaField) => {
         item => item.type === componentType || item.name === componentType,
       );
     }
-    component = get(customFields, `[${customIndex}].component`, Input);
+    component = component ? component : get(customFields, `[${customIndex}].component`, Input);
     const { initialValue, pattern, ...othterProps }: any = renderFieldProps || {};
 
     return React.createElement(component, {
