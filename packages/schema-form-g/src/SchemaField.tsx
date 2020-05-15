@@ -69,7 +69,7 @@ const SchemaField = (props: SchemaField) => {
   }, [defalutProps, FieldProps]);
   const fieldComponent = useMemo(() => {
     let component = get(getFields(), `${componentType}`, null);
-    if (component == null) {
+    if (component == null && componentType) {
       const customIndex = findIndex(
         customFields,
         item => item.type === componentType || item.name === componentType,
