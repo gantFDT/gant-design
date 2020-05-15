@@ -69,13 +69,14 @@ const SchemaField = (props: SchemaField) => {
   }, [defalutProps, FieldProps]);
   const fieldComponent = useMemo(() => {
     let component = get(getFields(), `${componentType}`, null);
+    let customIndex = -1;
     if (component == null && componentType) {
-      const customIndex = findIndex(
+      customIndex = findIndex(
         customFields,
         item => item.type === componentType || item.name === componentType,
       );
-      component = get(customFields, `[${customIndex}].component`, Input);
     }
+    component = get(customFields, `[${customIndex}].component`, Input);
     const { initialValue, pattern, ...othterProps }: any = renderFieldProps || {};
 
     return React.createElement(component, {
