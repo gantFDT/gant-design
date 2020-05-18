@@ -35,6 +35,9 @@
       .ag-cell-wrapper > *:not(.ag-cell-value):not(.ag-group-value) {
         height: 31px;
       }
+      perspective: 1000;
+      backface-visibility: hidden;
+      transform: translateZ(0);
     }
     &-sm {
       .ag-center-cols-container .ag-cell.ag-cell-inline-editing,

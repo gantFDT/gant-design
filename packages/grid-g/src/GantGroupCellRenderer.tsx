@@ -1,15 +1,11 @@
 import React, { Component } from 'react';
+import ReactDom from 'react-dom';
 import classnames from 'classnames';
-import {
-  ICellRendererParams,
-  IComponent,
-  RowNode,
-  GroupCellRenderer,
-  Utils,
-} from 'ag-grid-community';
+import { ICellRendererParams, IComponent, RowNode } from 'ag-grid-community';
 import { BindAll } from 'lodash-decorators';
 import { isEqual } from 'lodash';
 import { Icon } from 'antd';
+import { stopPropagationForAgGrid } from './utils';
 interface GantGroupCellRendererProps extends ICellRendererParams {
   render?: (showValue: any, data: any, rowIndex: number, params: ICellRendererParams) => any;
   showFolder?: boolean;
@@ -21,7 +17,7 @@ interface GantGroupCellRendererState {
 }
 
 @BindAll()
-export default class GantGroupCellRenderer extends Component<
+class GantGroupCellRendererCompoent extends Component<
   GantGroupCellRendererProps,
   GantGroupCellRendererState
 > {
@@ -30,7 +26,6 @@ export default class GantGroupCellRenderer extends Component<
     this.state = this.getTreeDataInfo(props.node);
     props.node.setExpanded(this.state.expanded);
   }
-
   getTreeDataInfo(node: RowNode) {
     const { expanded: nodeExpanded, childrenAfterFilter = [], data } = node;
     const {
@@ -59,7 +54,7 @@ export default class GantGroupCellRenderer extends Component<
       data,
       api,
     } = this.props;
-    Utils.stopPropagationForAgGrid(event);
+    stopPropagationForAgGrid(event);
     if (node.childrenAfterFilter && node.childrenAfterFilter.length > 0) {
       this.setState(state => ({ ...state, expanded: true }));
       return node.setExpanded(true);
@@ -72,7 +67,7 @@ export default class GantGroupCellRenderer extends Component<
   }
 
   onClose(event: MouseEvent) {
-    Utils.stopPropagationForAgGrid(event);
+    stopPropagationForAgGrid(event);
     const { node } = this.props;
     node.setExpanded(false);
   }
@@ -115,7 +110,10 @@ export default class GantGroupCellRenderer extends Component<
           })}
         ></span>
       ) : (
-        <span className={classnames('gant-level-line', 'gant-folder-line')}></span>
+        <span
+          key={index + 'folder-icon'}
+          className={classnames('gant-level-line', 'gant-folder-line')}
+        ></span>
       );
     });
   }
@@ -208,3 +206,14 @@ export default class GantGroupCellRenderer extends Component<
     );
   }
 }
+
+export default function GantGroupCellRenderer(): any {}
+
+// init method gets the details of the cell to be renderer
+GantGroupCellRenderer.prototype.init = function(params) {
+  this.eGui = document.createElement('div');
+  ReactDom.render(<GantGroupCellRendererCompoent {...params} />, this.eGui);
+};
+GantGroupCellRenderer.prototype.getGui = function() {
+  return this.eGui;
+};
