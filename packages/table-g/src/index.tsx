@@ -83,7 +83,7 @@ export type PartRequired<T, U extends keyof T> = Required<Pick<T, U>> & Partial<
 
 // 重写RowSelection类型
 export type RowSelection<T> = ProtoExtends<TableRowSelection<T>, {
-    selectedRowKeys?: string[],
+    selectedRowKeys: string[],
     onSelect?: (rows: any, selected: boolean) => void,
     preventDefault?: boolean,
     clickable?: boolean,
