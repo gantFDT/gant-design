@@ -55,7 +55,8 @@ export default class GridManage {
     return isEmpty(oldData) ? rowNode : { ...rowNode, data: { ...oldData } };
   };
   private batchUpdateGrid(transaction: RowDataTransaction) {
-    this.agGridApi.batchUpdateRowData(transaction);
+    const data = this.agGridApi.applyTransaction(transaction);
+    console.log('batchUpdateGrid', data);
   }
   appendChild(keys, add) {
     this.batchUpdateGrid({ add });
@@ -350,6 +351,7 @@ export default class GridManage {
       rowData,
       getRowNodeId,
     );
+    if (newRecords.length == 0 && remove.length == 0) return;
     this.batchUpdateGrid({ update: newRecords, remove });
     this.historyStack.push({
       type: DataActions.removeTag,

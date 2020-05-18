@@ -302,3 +302,8 @@ export function getSizeClassName(size: Size) {
       return '';
   }
 }
+export const  AG_GRID_STOP_PROPAGATION = '__ag_Grid_Stop_Propagation';
+export function stopPropagationForAgGrid(event) {
+  event[AG_GRID_STOP_PROPAGATION] = true;
+}
+

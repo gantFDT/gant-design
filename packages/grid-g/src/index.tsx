@@ -37,6 +37,7 @@ import { getAllComponentsMaps } from './maps';
 import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
 import en from './locale/en-US';
 import zh from './locale/zh-CN';
+export { default as GantGroupCellRenderer } from './GantGroupCellRenderer';
 export { setComponentsMaps, setFrameworkComponentsMaps } from './maps';
 LicenseManager.setLicenseKey(key);
 
@@ -394,12 +395,12 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
               >
                 <AgGridReact
                   frameworkComponents={{
-                    gantRenderCol: RenderCol,
-                    gantGroupCellRenderer: GantGroupCellRenderer,
                     ...frameworkComponentsMaps,
                     ...frameworkComponents,
                   }}
                   components={{
+                    gantGroupCellRenderer: GantGroupCellRenderer,
+                    gantRenderCol: RenderCol,
                     ...componentsMaps,
                     ...components,
                   }}
@@ -427,6 +428,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     treeData,
                     ...context,
                   }}
+                  // immutableData
                   stopEditingWhenGridLosesFocus={false}
                   treeData={treeData}
                   getDataPath={getDataPath}

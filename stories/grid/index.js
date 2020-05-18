@@ -3,7 +3,8 @@ import CodeDecorator from '../_util/CodeDecorator'
 import codes from './code';
 /*! Start !*/
 import React, { useMemo, useEffect, useCallback, useState, useRef } from 'react'
-import Grid, { Columns, Filter, OnReady, GridApi, Fixed, DataManage, RemoveCallBack } from '@grid';
+import ReactDom from 'react-dom'
+import Grid, { Columns, Filter, OnReady, GridApi, Fixed, DataManage, RemoveCallBack ,GantGroupCellRenderer} from '@grid';
 import { GridReadyEvent, ColDef } from 'ag-grid-community'
 import { Button, message, Dropdown, Menu, Switch, Checkbox } from "antd"
 import { Input, InputCellPhone, } from "@data-cell"
@@ -31,6 +32,19 @@ const sourceDataList = {
     updateDate: null,
     updatedBy: null,
     updatedByName: '',
+};
+
+function MedalCellRenderer() {
+}
+
+// init method gets the details of the cell to be renderer
+MedalCellRenderer.prototype.init = function(params) {
+    console.log("MedalCellRenderer.init",params)
+    this.eGui = document.createElement('span');
+    ReactDom.render(<GantGroupCellRenderer {...params} />,this.eGui);
+};
+MedalCellRenderer.prototype.getGui = function() {
+    return this.eGui;
 };
 const ComputeGrid = () => {
 
@@ -67,13 +81,16 @@ const ComputeGrid = () => {
             },
             cellRenderer: "gantGroupCellRenderer",
             cellRendererParams:{
-                // showFolder:false
+                innerRenderer:(params)=>{
+                    return params.value
+                }
             }
         },
         {
             fieldName: 'typeName',
             title: "产品类型名称",
             width: 300,
+            // cellRenderer:"medalCellRenderer",
             editConfig: {
                 component: Input,
                 editable: true,
@@ -242,7 +259,10 @@ const ComputeGrid = () => {
                 rowkey={(data) => data.id}
                 loading={loading}
                 columns={columns}
-                onCellEditingChange={(record) => [{ ...record, typeName: true }]}
+                components= {
+                    {'medalCellRenderer': MedalCellRenderer}
+                }
+                // onCellEditingChange={(record) => [{ ...record, typeName: true }]}
                 treeData
                 editable={editable}
                 dataSource={dataSource}
