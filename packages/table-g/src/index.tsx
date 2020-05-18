@@ -83,11 +83,11 @@ export type PartRequired<T, U extends keyof T> = Required<Pick<T, U>> & Partial<
 
 // 重写RowSelection类型
 export type RowSelection<T> = ProtoExtends<TableRowSelection<T>, {
-    selectedRowKeys: string[],
-    onSelect?: (rows: Array<T>, selected: boolean) => void,
+    selectedRowKeys?: string[],
+    onSelect?: (rows: any, selected: boolean) => void,
     preventDefault?: boolean,
     clickable?: boolean,
-    showFooterSelection?: boolean,
+    showFooterSelection?: boolean
 }>
 
 export type EditRender<T = any> = (value: string, record: T, rowIndex: number) => React.ReactElement
