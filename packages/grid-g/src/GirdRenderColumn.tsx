@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ReactDom from 'react-dom';
 class GirdRenderColumnComponent extends Component<any, any> {
   render() {
+
     const { value, rowIndex, render, data, valueFormatted, context } = this.props;
     const showValue = valueFormatted && !Array.isArray(value) ? valueFormatted : value;
     return (
@@ -19,4 +20,7 @@ GirdRenderColumn.prototype.init = function(params) {
 };
 GirdRenderColumn.prototype.getGui = function() {
   return this.eGui;
+};
+GirdRenderColumn.prototype.destroy = function() {
+  ReactDom.unmountComponentAtNode(this.eGui);
 };

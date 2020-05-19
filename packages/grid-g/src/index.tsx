@@ -428,7 +428,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     treeData,
                     ...context,
                   }}
-                  // immutableData
+                  immutableData
                   stopEditingWhenGridLosesFocus={false}
                   treeData={treeData}
                   getDataPath={getDataPath}

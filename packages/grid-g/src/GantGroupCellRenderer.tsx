@@ -217,3 +217,6 @@ GantGroupCellRenderer.prototype.init = function(params) {
 GantGroupCellRenderer.prototype.getGui = function() {
   return this.eGui;
 };
+GantGroupCellRenderer.prototype.destroy = function() {
+  ReactDom.unmountComponentAtNode(this.eGui);
+};
