@@ -168,13 +168,13 @@ export default class GridManage {
   }
   // 修改;
   // @loadingDecorator
-  public modify(records: any | any[], oldRecords?: any | any[]) {
+  public modify(records: any | any[], oldRecords?: any | any[], updateGrid?: boolean) {
     if (isEmpty(records) && typeof records !== 'object') return;
     records = Array.isArray(records) ? records : [records];
     if (records.length <= 0) return;
     const { hisRecords, newRecords } = getModifyData(records, this.getRowItemData, oldRecords);
     if (newRecords.length <= 0) return;
-    this.batchUpdateGrid({ update: newRecords });
+    !updateGrid && this.batchUpdateGrid({ update: newRecords });
     this.historyStack.push({
       type: DataActions.modify,
       records: hisRecords,
