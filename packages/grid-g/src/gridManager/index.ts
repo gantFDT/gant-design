@@ -55,8 +55,7 @@ export default class GridManage {
     return isEmpty(oldData) ? rowNode : { ...rowNode, data: { ...oldData } };
   };
   private batchUpdateGrid(transaction: RowDataTransaction) {
-    const data = this.agGridApi.applyTransaction(transaction);
-    console.log('batchUpdateGrid', data);
+    this.agGridApi.applyTransaction(transaction);
   }
   appendChild(keys, add) {
     this.batchUpdateGrid({ add });
