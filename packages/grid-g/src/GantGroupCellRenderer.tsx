@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import ReactDom from 'react-dom';
+import React, { useMemo, memo, useState, useCallback, useRef, useEffect, forwardRef } from 'react';
 import classnames from 'classnames';
 import { ICellRendererParams, IComponent, RowNode } from 'ag-grid-community';
 import { BindAll } from 'lodash-decorators';
@@ -16,165 +15,140 @@ interface GantGroupCellRendererState {
   hasChildren: boolean;
 }
 
-@BindAll()
-class GantGroupCellRendererCompoent extends Component<
-  GantGroupCellRendererProps,
-  GantGroupCellRendererState
-> {
-  constructor(props) {
-    super(props);
-    this.state = this.getTreeDataInfo(props.node);
-    props.node.setExpanded(this.state.expanded);
-  }
-  getTreeDataInfo(node: RowNode) {
-    const { expanded: nodeExpanded, childrenAfterFilter = [], data } = node;
-    const {
-      context: { isServerSideGroup },
-    } = this.props;
-    const hasChildren =
-      childrenAfterFilter.length > 0 || (isServerSideGroup && isServerSideGroup(data));
-    const treeDataType =
-      childrenAfterFilter.length > 0
-        ? 'sync'
-        : isServerSideGroup && isServerSideGroup(data)
-        ? 'async'
-        : 'none';
-    const expanded = nodeExpanded && treeDataType == 'sync';
-    return {
-      hasChildren,
-      treeDataType,
-      expanded,
-    };
-  }
-
-  onExpend(event: MouseEvent) {
+function rowIndexChanged(params) {
+  const node = params.node;
+  node.gridApi.refreshCells({
+    columns: ['g-index'],
+    rowNodes: [node],
+    force: true,
+  });
+}
+export default memo(
+  forwardRef(function GantGroupCellRendererCompoent(props: GantGroupCellRendererProps, ref: any) {
     const {
       node,
-      context: { serverDataRequest, getDataPath },
-      data,
       api,
-    } = this.props;
-    stopPropagationForAgGrid(event);
-    if (node.childrenAfterFilter && node.childrenAfterFilter.length > 0) {
-      this.setState(state => ({ ...state, expanded: true }));
-      return node.setExpanded(true);
-    }
-    api.showLoadingOverlay();
-    serverDataRequest(this.props, getDataPath(data), () => {
-      node.setExpanded(true);
-      api.hideOverlay();
-    });
-  }
-
-  onClose(event: MouseEvent) {
-    stopPropagationForAgGrid(event);
-    const { node } = this.props;
-    node.setExpanded(false);
-  }
-  selectionChangedCallback(params) {
-    const {
-      node: { expanded },
-    } = params;
-    this.setState({ expanded });
-  }
-  dataChangedCallback(params) {
-    this.setState({ ...this.getTreeDataInfo(params.node) });
-  }
-  rowIndexChanged(params) {
-    const node = params.node;
-    node.gridApi.refreshCells({
-      columns: ['g-index'],
-      rowNodes: [node],
-      force: true,
-    });
-  }
-  eContracted: any;
-  eExpanded: any;
-  getLeveLine() {
-    const {
-      node: { level, data, rowIndex, lastChild },
-      showFolder = true,
-    } = this.props;
-    const { hasChildren } = this.state;
-    const arr = new Array(level).fill(undefined);
-    if (!showFolder) return;
-    return arr.map((item, index) => {
-      const lastLine = index + 1 == arr.length;
-      return lastLine ? (
-        <span
-          key={index + 'folder-icon'}
-          className={classnames('gant-level-line', {
-            ['gant-folder-line']: hasChildren,
-            ['gant-file-line']: !hasChildren && !lastChild,
-            ['gant-file-line-last']: !hasChildren && lastChild,
-          })}
-        ></span>
-      ) : (
-        <span
-          key={index + 'folder-icon'}
-          className={classnames('gant-level-line', 'gant-folder-line')}
-        ></span>
-      );
-    });
-  }
-  componentDidMount() {
-    if (this.eContracted) {
-      this.eContracted.addEventListener('click', this.onExpend);
-    }
-    if (this.eExpanded) {
-      this.eExpanded.addEventListener('click', this.onClose);
-    }
-    this.props.node.addEventListener(RowNode.EVENT_EXPANDED_CHANGED, this.selectionChangedCallback);
-    this.props.node.addEventListener(
-      RowNode.EVENT_ALL_CHILDREN_COUNT_CHANGED,
-      this.dataChangedCallback,
-    );
-    this.props.node.addEventListener(RowNode.EVENT_ROW_INDEX_CHANGED, this.rowIndexChanged);
-  }
-
-  componentWillUnmount() {
-    this.props.node.removeEventListener(
-      RowNode.EVENT_EXPANDED_CHANGED,
-      this.selectionChangedCallback,
-    );
-    this.props.node.removeEventListener(RowNode.EVENT_DATA_CHANGED, this.dataChangedCallback);
-    this.props.node.addEventListener(RowNode.EVENT_ROW_INDEX_CHANGED, this.rowIndexChanged);
-    if (this.eContracted) {
-      this.eContracted.removeEventListener('click', this.onExpend);
-    }
-    if (this.eExpanded) {
-      this.eExpanded.removeEventListener('click', this.onClose);
-    }
-    this.props.node.removeEventListener(RowNode.EVENT_ROW_INDEX_CHANGED, this.rowIndexChanged);
-  }
-  render() {
-    const {
+      data,
+      context: { serverDataRequest, getDataPath, treeData, isServerSideGroup },
+      render,
       value,
       valueFormatted,
-      node: { level, data, rowIndex },
-      render,
-      context: { treeData },
-      showFolder = true,
-    } = this.props;
-    const { hasChildren, expanded } = this.state;
-    const showValue = valueFormatted && !Array.isArray(value) ? valueFormatted : value;
+      showFolder,
+      rowIndex,
+    } = props;
+    const getTreeDataInfo = useCallback((node: RowNode) => {
+      const { expanded: nodeExpanded, childrenAfterFilter = [], data } = node;
+      const hasChildren =
+        childrenAfterFilter.length > 0 || (isServerSideGroup && isServerSideGroup(data));
+      const treeDataType =
+        childrenAfterFilter.length > 0
+          ? 'sync'
+          : isServerSideGroup && isServerSideGroup(data)
+          ? 'async'
+          : 'none';
+      const expanded = nodeExpanded && treeDataType == 'sync';
+      return {
+        hasChildren,
+        treeDataType,
+        expanded,
+      };
+    }, []);
+    const [state, setState]: [GantGroupCellRendererState, any] = useState(getTreeDataInfo(node));
+    const { hasChildren, expanded, treeDataType } = state;
+    const eContracted = useRef<HTMLSpanElement>(null);
+    const eExpanded = useRef<HTMLSpanElement>(null);
+    const onExpend = useCallback((event: MouseEvent) => {
+      stopPropagationForAgGrid(event);
+      if (node.childrenAfterFilter && node.childrenAfterFilter.length > 0) {
+        // setState(state => ({ ...state, expanded: true }));
+        return node.setExpanded(true);
+      }
+      api.showLoadingOverlay();
+      serverDataRequest(props, getDataPath(data), () => {
+        node.setExpanded(true);
+        api.hideOverlay();
+      });
+    }, []);
+
+    const onClose = useCallback((event: MouseEvent) => {
+      stopPropagationForAgGrid(event);
+      const { node } = props;
+      node.setExpanded(false);
+    }, []);
+    function selectionChangedCallback(params) {
+      const {
+        node: { expanded },
+      } = params;
+      setState(state => ({ ...state, expanded }));
+    }
+    function dataChangedCallback(params) {
+      setState({ ...getTreeDataInfo(params.node) });
+    }
+    const getLeveLine = useCallback(() => {
+      const { level, lastChild } = node;
+      const arr = new Array(level).fill(undefined);
+      if (!showFolder) return;
+      return arr.map((item, index) => {
+        const lastLine = index + 1 == arr.length;
+        return lastLine ? (
+          <span
+            key={index + 'folder-icon'}
+            className={classnames('gant-level-line', {
+              ['gant-folder-line']: hasChildren,
+              ['gant-file-line']: !hasChildren && !lastChild,
+              ['gant-file-line-last']: !hasChildren && lastChild,
+            })}
+          ></span>
+        ) : (
+          <span
+            key={index + 'folder-icon'}
+            className={classnames('gant-level-line', 'gant-folder-line')}
+          ></span>
+        );
+      });
+    }, [node, hasChildren]);
+    useEffect(() => {
+      if (eContracted.current) {
+        eContracted.current.addEventListener('click', onExpend);
+      }
+      if (eExpanded.current) {
+        eExpanded.current.addEventListener('click', onClose);
+      }
+      node.addEventListener(RowNode.EVENT_EXPANDED_CHANGED, selectionChangedCallback);
+      node.addEventListener(RowNode.EVENT_ALL_CHILDREN_COUNT_CHANGED, dataChangedCallback);
+      node.addEventListener(RowNode.EVENT_ROW_INDEX_CHANGED, rowIndexChanged);
+      return () => {
+        if (eContracted.current) {
+          eContracted.current.removeEventListener('click', onExpend);
+        }
+        if (eExpanded.current) {
+          eExpanded.current.removeEventListener('click', onClose);
+        }
+        node.removeEventListener(RowNode.EVENT_EXPANDED_CHANGED, selectionChangedCallback);
+        node.removeEventListener(RowNode.EVENT_ALL_CHILDREN_COUNT_CHANGED, dataChangedCallback);
+        node.removeEventListener(RowNode.EVENT_ROW_INDEX_CHANGED, rowIndexChanged);
+      };
+    }, []);
+    const showValue = useMemo(() => {
+      return valueFormatted && !Array.isArray(value) ? valueFormatted : value;
+    }, [valueFormatted, value]);
     return (
       <span
         className={classnames(
           'ag-cell-wrapper',
-          treeData && `ag-row-group-indent-${level}`,
-          treeData && showFolder && `gant-row-group-indent-${level}`,
-          ((!hasChildren && !showFolder) || (!hasChildren && level == 0)) &&
+          treeData && `ag-row-group-indent-${node.level}`,
+          treeData && showFolder && `gant-row-group-indent-${node.level}`,
+          ((!hasChildren && !showFolder) || (!hasChildren && node.level == 0)) &&
             treeData &&
             'ag-row-group-leaf-indent ',
         )}
       >
-        {this.getLeveLine()}
+        {getLeveLine()}
         <span
           className={classnames('ag-group-expanded', {
             ['ag-hidden']: hasChildren ? !expanded : true,
           })}
-          ref={ref => (this.eExpanded = ref)}
+          ref={eExpanded}
         >
           <span className="ag-icon ag-icon-tree-open" unselectable="on"></span>
         </span>
@@ -182,7 +156,7 @@ class GantGroupCellRendererCompoent extends Component<
           className={classnames('ag-group-contracted', {
             ['ag-hidden']: hasChildren ? expanded : true,
           })}
-          ref={ref => (this.eContracted = ref)}
+          ref={eContracted}
         >
           <span className="ag-icon ag-icon-tree-closed" unselectable="on"></span>
         </span>
@@ -192,31 +166,17 @@ class GantGroupCellRendererCompoent extends Component<
               <Icon type={expanded ? 'folder-open' : 'folder'} theme="filled" />
             </span>
           ) : (
-            level > 0 && (
+            node.level > 0 && (
               <span className="gant-treedata-icon gant-treedata-file">
                 <Icon type="file" theme="filled" />
               </span>
             )
           )
         ) : null}
-        <span className="ag-group-value" ref="eValue">
-          {render ? render(showValue, data, rowIndex, this.props) : showValue}
+        <span className="ag-group-value">
+          {render ? render(showValue, data, rowIndex, props) : showValue}
         </span>
       </span>
     );
-  }
-}
-
-export default function GantGroupCellRenderer(): any {}
-
-// init method gets the details of the cell to be renderer
-GantGroupCellRenderer.prototype.init = function(params) {
-  this.eGui = document.createElement('div');
-  ReactDom.render(<GantGroupCellRendererCompoent {...params} />, this.eGui);
-};
-GantGroupCellRenderer.prototype.getGui = function() {
-  return this.eGui;
-};
-GantGroupCellRenderer.prototype.destroy = function() {
-  ReactDom.unmountComponentAtNode(this.eGui);
-};
+  }),
+);

@@ -395,12 +395,12 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
               >
                 <AgGridReact
                   frameworkComponents={{
+                    gantGroupCellRenderer: GantGroupCellRenderer,
+                    gantRenderCol: RenderCol,
                     ...frameworkComponentsMaps,
                     ...frameworkComponents,
                   }}
                   components={{
-                    gantGroupCellRenderer: GantGroupCellRenderer,
-                    gantRenderCol: RenderCol,
                     ...componentsMaps,
                     ...components,
                   }}

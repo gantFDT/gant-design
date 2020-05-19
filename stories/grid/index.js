@@ -90,7 +90,7 @@ const ComputeGrid = () => {
             fieldName: 'typeName',
             title: "产品类型名称",
             width: 300,
-            // cellRenderer:"medalCellRenderer",
+            render:val=>val,
             editConfig: {
                 component: Input,
                 editable: true,
