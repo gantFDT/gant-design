@@ -9,8 +9,9 @@ import React, {
 } from 'react';
 import classnames from 'classnames';
 import { EditStatus } from '@data-cell';
-import { set, cloneDeep, get } from 'lodash';
+import { set, cloneDeep, get, isEmpty } from 'lodash';
 import { isEqualObj } from './gridManager/utils';
+import { DataActions } from './interface';
 const defalutProps = {
   autoFocus: true,
   edit: EditStatus.EDIT,
@@ -68,8 +69,21 @@ export default WrapperComponent =>
             let { data } = node;
             data = cloneDeep(data);
             if (isEqualObj(get(data, field), newValue)) return newValue;
-            editRowDataChanged(set(data, field, newValue), field, newValue, value);
-            return value;
+            const rowNewData = set(cloneDeep(data), field, newValue);
+            let { _rowData, _rowType, ...oldData } = data;
+            let { _rowData: nextRowData, _rowType: nextRowType, ...newData } = rowNewData;
+            _rowData = isEmpty(_rowData) ? oldData : _rowData;
+            const hasChange = isEqualObj(newData, _rowData);
+            _rowType =
+              !_rowType || _rowType === DataActions.modify
+                ? !hasChange
+                  ? DataActions.modify
+                  : null
+                : _rowType;
+            let recordItem = { ...newData, _rowData, _rowType };
+            node.setData(recordItem);
+            editRowDataChanged(recordItem, field, newValue, value);
+            return newValue;
           },
         };
       },

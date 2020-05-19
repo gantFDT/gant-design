@@ -249,7 +249,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     (record: any, fieldName: string, newValue: any, oldValue: any) => {
       if (typeof onCellEditChange === 'function')
         return gridManager.modify(onCellEditChange(record, fieldName, newValue, oldValue));
-      return gridManager.modify([record]);
+      return gridManager.modify([record],undefined,true);
     },
     [onCellEditChange],
   );
@@ -395,12 +395,12 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
               >
                 <AgGridReact
                   frameworkComponents={{
+                    gantGroupCellRenderer: GantGroupCellRenderer,
+                    gantRenderCol: RenderCol,
                     ...frameworkComponentsMaps,
                     ...frameworkComponents,
                   }}
                   components={{
-                    gantGroupCellRenderer: GantGroupCellRenderer,
-                    gantRenderCol: RenderCol,
                     ...componentsMaps,
                     ...components,
                   }}
@@ -428,7 +428,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     treeData,
                     ...context,
                   }}
-                  // immutableData
+                  immutableData
                   stopEditingWhenGridLosesFocus={false}
                   treeData={treeData}
                   getDataPath={getDataPath}
