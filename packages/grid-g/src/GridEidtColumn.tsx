@@ -92,7 +92,6 @@ export default WrapperComponent =>
             return false;
           },
           getValue: () => {
-            debugger;
             const { data } = node;
             let { _rowData, _rowType, ...itemData } = cloneDeep(data);
             if (isEmpty(_rowData) || !_rowType) {
