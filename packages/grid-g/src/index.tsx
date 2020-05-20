@@ -249,7 +249,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     (record: any, fieldName: string, newValue: any, oldValue: any) => {
       if (typeof onCellEditChange === 'function')
         return gridManager.modify(onCellEditChange(record, fieldName, newValue, oldValue));
-      return gridManager.modify([record],undefined,true);
+      return gridManager.modify([record]);
     },
     [onCellEditChange],
   );
@@ -315,6 +315,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
           };
         });
       onCellValueChanged && onCellValueChanged(params);
+      console.log("onCellValueChanged",params)
     },
     [onCellValueChanged, pasteLoading],
   );

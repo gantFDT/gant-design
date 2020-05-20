@@ -12,6 +12,7 @@ import { EditStatus } from '@data-cell';
 import { set, cloneDeep, get, isEmpty } from 'lodash';
 import { isEqualObj } from './gridManager/utils';
 import { DataActions } from './interface';
+import { RowNode } from 'ag-grid-community';
 const defalutProps = {
   autoFocus: true,
   edit: EditStatus.EDIT,
@@ -56,6 +57,28 @@ export default WrapperComponent =>
       },
       [stopEditing],
     );
+    const cellChange = useCallback(
+      params => {
+        const {
+          newValue,
+          oldValue,
+          column: {
+            colDef: { field },
+          },
+          node,
+        } = params;
+        console.log('cellChange');
+        const data = cloneDeep(node.data);
+        editRowDataChanged(data, field, newValue, oldValue);
+      },
+      [editRowDataChanged],
+    );
+    useEffect(() => {
+      node.addEventListener(RowNode.EVENT_CELL_CHANGED, cellChange);
+      return () => {
+        node.removeEventListener(RowNode.EVENT_CELL_CHANGED, cellChange);
+      };
+    }, []);
 
     const compoentProps = useMemo(() => {
       if (typeof fieldProps === 'function') return fieldProps(data, props);
@@ -65,29 +88,23 @@ export default WrapperComponent =>
       ref,
       () => {
         return {
+          refresh() {
+            return false;
+          },
           getValue: () => {
-            let { data } = node;
-            data = cloneDeep(data);
-            if (isEqualObj(get(data, field), newValue)) return newValue;
-            const rowNewData = set(cloneDeep(data), field, newValue);
-            let { _rowData, _rowType, ...oldData } = data;
-            let { _rowData: nextRowData, _rowType: nextRowType, ...newData } = rowNewData;
-            _rowData = isEmpty(_rowData) ? oldData : _rowData;
-            const hasChange = isEqualObj(newData, _rowData);
-            _rowType =
-              !_rowType || _rowType === DataActions.modify
-                ? !hasChange
-                  ? DataActions.modify
-                  : null
-                : _rowType;
-            let recordItem = { ...newData, _rowData, _rowType };
-            node.setData(recordItem);
-            editRowDataChanged(recordItem, field, newValue, value);
+            debugger;
+            const { data } = node;
+            let { _rowData, _rowType, ...itemData } = cloneDeep(data);
+            if (isEmpty(_rowData) || !_rowType) {
+              _rowData = isEmpty(_rowData) ? itemData : _rowData;
+              _rowType = !_rowType ? DataActions.modify : _rowType;
+              node.setData({ ...itemData, _rowData, _rowType });
+            }
             return newValue;
           },
         };
       },
-      [value, field, newValue, node],
+      [newValue, value],
     );
     useEffect(() => {
       setTimeout(() => {

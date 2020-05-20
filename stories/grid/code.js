@@ -94,7 +94,7 @@ const ComputeGrid = () => {
             },
             render:val=>val,
             editConfig: {
-                component: Input,
+                component: InputCellPhone,
                 editable: true,
             }
         }
@@ -264,7 +264,7 @@ const ComputeGrid = () => {
                 components= {
                     {'medalCellRenderer': MedalCellRenderer}
                 }
-                // onCellEditingChange={(record) => [{ ...record, typeName: true }]}
+                onCellEditChange={(record) => [{ ...record, typeName: true }]}
                 treeData
                 editable={editable}
                 dataSource={dataSource}
