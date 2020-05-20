@@ -168,13 +168,21 @@ export default class GridManage {
   }
   // 修改;
   // @loadingDecorator
-  public modify(records: any | any[], oldRecords?: any | any[], updateGrid?: boolean) {
+  public modify(records: any | any[], oldRecords?: any | any[]) {
     if (isEmpty(records) && typeof records !== 'object') return;
     records = Array.isArray(records) ? records : [records];
     if (records.length <= 0) return;
     const { hisRecords, newRecords } = getModifyData(records, this.getRowItemData, oldRecords);
     if (newRecords.length <= 0) return;
-    !updateGrid && this.batchUpdateGrid({ update: newRecords });
+    const rowData = [];
+    this.agGridApi.forEachNode(node => {
+      const index = findIndex(newRecords, item => {
+        return this.agGridConfig.getRowNodeId(node.data) == this.agGridConfig.getRowNodeId(item);
+      });
+      if (index >= 0) return rowData.push(newRecords[index]);
+      rowData.push(node.data);
+    });
+    this.agGridApi.setRowData(rowData);
     this.historyStack.push({
       type: DataActions.modify,
       records: hisRecords,
