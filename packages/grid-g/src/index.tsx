@@ -247,14 +247,17 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   //columns-end
   const editRowDataChanged = useCallback(
     (record: any, fieldName: string, newValue: any, oldValue: any) => {
-      let oldData=cloneDeep(record);
-      set(oldData,fieldName,oldValue)
+      let oldData = cloneDeep(record);
+      set(oldData, fieldName, oldValue);
       if (typeof onCellEditChange === 'function')
         return gridManager.modify(onCellEditChange(record, fieldName, newValue, oldValue));
       return gridManager.modify([record]);
     },
     [onCellEditChange],
   );
+  const editingChange = useMemo(() => {
+    return typeof onCellEditingChange === 'function';
+  }, [onCellEditingChange]);
   const editingRowDataChange = useCallback(
     (record, fieldName, newValue, oldValue) => {
       if (typeof onCellEditingChange === 'function') {
@@ -426,6 +429,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     getDataPath: getDataPath,
                     editRowDataChanged,
                     editingRowDataChange,
+                    editingChange,
                     computedPagination,
                     treeData,
                     ...context,

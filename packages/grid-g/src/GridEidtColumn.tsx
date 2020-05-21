@@ -29,7 +29,7 @@ export default WrapperComponent =>
       changeFormatter,
       rowkey,
       rowIndex,
-      context: { size, editRowDataChanged, editingRowDataChange },
+      context: { size, editRowDataChanged, editingRowDataChange, editingChange },
       refName = 'wrapperRef',
       valuePropName = 'value',
       node,
@@ -69,6 +69,7 @@ export default WrapperComponent =>
             return false;
           },
           getValue: () => {
+            if (editingChange) return get(node, `data.${field}`, value);
             if (isEqualObj(get(node, `data.${field}`, value), newValue)) return value;
             setTimeout(() => {
               const data = cloneDeep(node.data);
