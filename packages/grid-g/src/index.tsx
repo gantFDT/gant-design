@@ -248,19 +248,24 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   }, [validateFields]);
   //columns-end
   const editRowDataChanged = useCallback(
-    (record: any, fieldName: string, newValue: any, oldValue: any) => {
-      let oldData = cloneDeep(record);
-      set(oldData, fieldName, oldValue);
-      if (typeof onCellEditChange === 'function')
-        return gridManager.modify(onCellEditChange(record, fieldName, newValue, oldValue));
+    async (record: any, fieldName: string, newValue: any, oldValue: any) => {
+      if (typeof onCellEditChange === 'function') {
+        let newRecords = await onCellEditChange(cloneDeep(record), fieldName, newValue, oldValue);
+        gridManager.modify(newRecords);
+      }
       return gridManager.modify([record]);
     },
     [onCellEditChange],
   );
   const editingRowDataChange = useCallback(
-    (record, fieldName, newValue, oldValue) => {
+    async (record, fieldName, newValue, oldValue) => {
       if (typeof onCellEditingChange === 'function') {
-        let newRecords = onCellEditingChange(cloneDeep(record), fieldName, newValue, oldValue);
+        let newRecords = await onCellEditingChange(
+          cloneDeep(record),
+          fieldName,
+          newValue,
+          oldValue,
+        );
         newRecords = Array.isArray(newRecords) ? newRecords : [newRecords];
         let oldRecord = cloneDeep(record);
         oldRecord = Array.isArray(oldRecord) ? oldRecord : [oldRecord];
