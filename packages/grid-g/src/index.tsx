@@ -247,6 +247,8 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   //columns-end
   const editRowDataChanged = useCallback(
     (record: any, fieldName: string, newValue: any, oldValue: any) => {
+      let oldData=cloneDeep(record);
+      set(oldData,fieldName,oldValue)
       if (typeof onCellEditChange === 'function')
         return gridManager.modify(onCellEditChange(record, fieldName, newValue, oldValue));
       return gridManager.modify([record]);
@@ -315,7 +317,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
           };
         });
       onCellValueChanged && onCellValueChanged(params);
-      console.log("onCellValueChanged",params)
     },
     [onCellValueChanged, pasteLoading],
   );

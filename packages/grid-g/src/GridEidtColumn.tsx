@@ -57,29 +57,6 @@ export default WrapperComponent =>
       },
       [stopEditing],
     );
-    const cellChange = useCallback(
-      params => {
-        const {
-          newValue,
-          oldValue,
-          column: {
-            colDef: { field },
-          },
-          node,
-        } = params;
-        console.log('cellChange');
-        const data = cloneDeep(node.data);
-        editRowDataChanged(data, field, newValue, oldValue);
-      },
-      [editRowDataChanged],
-    );
-    useEffect(() => {
-      node.addEventListener(RowNode.EVENT_CELL_CHANGED, cellChange);
-      return () => {
-        node.removeEventListener(RowNode.EVENT_CELL_CHANGED, cellChange);
-      };
-    }, []);
-
     const compoentProps = useMemo(() => {
       if (typeof fieldProps === 'function') return fieldProps(data, props);
       return fieldProps;
@@ -92,18 +69,17 @@ export default WrapperComponent =>
             return false;
           },
           getValue: () => {
-            const { data } = node;
-            let { _rowData, _rowType, ...itemData } = cloneDeep(data);
-            if (isEmpty(_rowData) || !_rowType) {
-              _rowData = isEmpty(_rowData) ? itemData : _rowData;
-              _rowType = !_rowType ? DataActions.modify : _rowType;
-              node.setData({ ...itemData, _rowData, _rowType });
-            }
-            return newValue;
+            if (isEqualObj(get(node, `data.${field}`, value), newValue)) return value;
+            setTimeout(() => {
+              const data = cloneDeep(node.data);
+              set(data, field, newValue);
+              editRowDataChanged(data, field, newValue, value);
+            }, 1);
+            return value;
           },
         };
       },
-      [newValue, value],
+      [value, newValue, field, editRowDataChanged],
     );
     useEffect(() => {
       setTimeout(() => {

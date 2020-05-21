@@ -90,6 +90,7 @@ export interface CreateConfig {
   id: string; // id对应字段名称
   path: string;
   toPath: (path: string[]) => any;
+  defaultParentPath?: string[] | number[];
 }
 export type ColumnEdiatble<T> = boolean | ((record: T) => boolean);
 

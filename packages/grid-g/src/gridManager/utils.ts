@@ -103,13 +103,13 @@ export function isSelectionParentOfTarget(selectedNode, targetNode) {
 }
 export function getRowsToUpdate(nodes, parentPath, createConfig) {
   let res = [];
-  const { path, toPath, id } = createConfig;
+  const { path, toPath, id  } = createConfig;
   nodes.map(node => {
     const keyId = generateUuid() + '';
     let newPath = parentPath.concat([keyId]);
     if (node.data) {
       node.data[path] = toPath(newPath);
-      node.data[id] = keyId;
+      node.data[id] = id === path ? node.data[path] : keyId;
     }
     if (node.childrenAfterGroup) {
       let updatedChildRowData = getRowsToUpdate(node.childrenAfterGroup, newPath, createConfig);

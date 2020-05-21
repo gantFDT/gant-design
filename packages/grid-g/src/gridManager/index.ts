@@ -73,7 +73,8 @@ export default class GridManage {
         fields: validateFields,
       };
     });
-    let descriptor: Rules = {
+    let descriptor:any = {
+      type: 'object',
       source: {
         type: 'array',
         fields,
@@ -126,7 +127,9 @@ export default class GridManage {
       const { getDataPath, createConfig, treeData } = this.agGridConfig;
       if (!canQuickCreate(createConfig)) return console.warn('createConfig is error');
       if (!node) {
-        const records = getRowsToUpdate(this.cutRows, [], createConfig);
+        let { defaultParentPath = [] } = createConfig;
+        defaultParentPath = Array.isArray(defaultParentPath) ? defaultParentPath : [];
+        const records = getRowsToUpdate(this.cutRows, defaultParentPath, createConfig);
         this.create(records);
         return;
       }
