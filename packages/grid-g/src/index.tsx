@@ -118,6 +118,8 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     onCellValueChanged,
     getContextMenuItems,
     createConfig,
+    onRowsPut,
+    onRowsPaste,
     ...orignProps
   } = props;
   const apiRef = useRef<GridApi>();
@@ -255,13 +257,15 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     },
     [onCellEditChange],
   );
-  const editingChange = useMemo(() => {
-    return typeof onCellEditingChange === 'function';
-  }, [onCellEditingChange]);
   const editingRowDataChange = useCallback(
     (record, fieldName, newValue, oldValue) => {
       if (typeof onCellEditingChange === 'function') {
-        gridManager.modify(onCellEditingChange(record, fieldName, newValue, oldValue));
+        let newRecords = onCellEditingChange(cloneDeep(record), fieldName, newValue, oldValue);
+        newRecords = Array.isArray(newRecords) ? newRecords : [newRecords];
+        let oldRecord = cloneDeep(record);
+        oldRecord = Array.isArray(oldRecord) ? oldRecord : [oldRecord];
+        if (isEqual(oldRecord, newRecords)) return;
+        gridManager.modify(newRecords);
       }
     },
     [onCellEditingChange],
@@ -368,7 +372,10 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
               name: locale.cutRows,
               disabled: hasCut,
               action: params => {
-                return gridManager.cut(rowNodes);
+                try {
+                  const canPut = onRowsPut ? onRowsPut(rowNodes) : true;
+                  return canPut && gridManager.cut(rowNodes);
+                } catch (error) {}
               },
             },
             {
@@ -376,7 +383,8 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
               disabled: hasPaste,
               action: params => {
                 const [rowNode] = rowNodes;
-                return gridManager.paste(rowNode);
+                const canPaste = onRowsPut ? onRowsPaste(rowNode) : true;
+                return canPaste && gridManager.paste(rowNode);
               },
             },
           ];
@@ -429,7 +437,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     getDataPath: getDataPath,
                     editRowDataChanged,
                     editingRowDataChange,
-                    editingChange,
                     computedPagination,
                     treeData,
                     ...context,

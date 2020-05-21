@@ -6,6 +6,7 @@ import {
   ColDef,
   IServerSideGetRowsParams,
   ColumnApi as AgColumnApi,
+  RowNode,
 } from 'ag-grid-community';
 import { defaultProps, defaultRowSelection } from './index';
 import { Rules, RuleType, RuleItem } from 'async-validator';
@@ -176,6 +177,8 @@ export interface Props<T extends any> {
   onCellEditingChange: (record: any, fieldName: string, newValue: any, oldValue: any) => any;
   openEditSign: boolean;
   createConfig?: CreateConfig;
+  onRowsPut?: (rows: RowNode[]) => boolean;
+  onRowsPaste?: (rows?: RowNode) => boolean;
 }
 
 export type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>;

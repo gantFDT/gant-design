@@ -29,7 +29,7 @@ export default WrapperComponent =>
       changeFormatter,
       rowkey,
       rowIndex,
-      context: { size, editRowDataChanged, editingRowDataChange, editingChange },
+      context: { size, editRowDataChanged, editingRowDataChange },
       refName = 'wrapperRef',
       valuePropName = 'value',
       node,
@@ -40,6 +40,9 @@ export default WrapperComponent =>
       if (!rowkey) return rowIndex;
       return rowkey(data);
     }, [rowIndex, rowkey, data]);
+    useEffect(() => {
+      setNewValue(get(node.data, field, value));
+    }, [node.data]);
     const onChange = useCallback(
       val => {
         let chageVal = val;
@@ -69,8 +72,7 @@ export default WrapperComponent =>
             return false;
           },
           getValue: () => {
-            if (editingChange) return get(node, `data.${field}`, value);
-            if (isEqualObj(get(node, `data.${field}`, value), newValue)) return value;
+            if (isEqualObj(get(node, `data.${field}`, value), newValue)) return get(node, `data.${field}`, value);
             setTimeout(() => {
               const data = cloneDeep(node.data);
               set(data, field, newValue);
