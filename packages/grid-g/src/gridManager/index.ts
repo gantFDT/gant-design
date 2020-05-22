@@ -24,6 +24,7 @@ interface AgGridConfig {
   treeData?: boolean;
   getDataPath?: (data: any) => string[];
   createConfig?: CreateConfig;
+  onRowsPasteEnd?: () => void;
 }
 @bindAll()
 export default class GridManage {
@@ -147,6 +148,7 @@ export default class GridManage {
           ...rowData.slice(rowIndex),
         ]);
         this.cutRows = [];
+        this.agGridConfig.onRowsPasteEnd && this.agGridConfig.onRowsPasteEnd();
       });
     } catch (error) {
       console.error(error);

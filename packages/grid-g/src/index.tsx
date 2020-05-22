@@ -264,6 +264,9 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     },
     [onCellEditChange],
   );
+  useEffect(() => {
+    gridManager.agGridConfig.onRowsPasteEnd = onRowsPasteEnd;
+  }, [onRowsPasteEnd]);
   const editingRowDataChange = useCallback(
     async (record, fieldName, newValue, oldValue) => {
       if (typeof onCellEditingChange === 'function') {
@@ -378,7 +381,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                 const [rowNode] = rowNodes;
                 const canPaste = onRowsPaste ? onRowsPaste(gridManager.cutRows, rowNode) : true;
                 canPaste && gridManager.paste(rowNode);
-                return onRowsPasteEnd && onRowsPasteEnd();
               },
             },
           ];
