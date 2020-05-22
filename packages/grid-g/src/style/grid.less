@@ -1,5 +1,20 @@
 :global {
   .gant-grid {
+    .gant-grid-row-cut {
+      background-color:transparent !important;
+      opacity: 0.6;
+      &::before {
+        content: '';
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        background-color: rgb(182, 182, 182) !important;
+        top: 0px;
+        left: 0px;
+        z-index: 1000;
+        opacity: 0.5;
+      }
+    }
     .ag-ltr {
       .ag-selection-checkbox,
       .ag-group-expanded,

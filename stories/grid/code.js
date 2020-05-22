@@ -286,10 +286,18 @@ const ComputeGrid = () => {
                 // isServerSideGroup={(data) => data.children}
                 groupSuppressAutoColumn
                 getDataPath={getDataPath}
+                onRow
                 createConfig={{
                     id: 'path',
                     path: "path",
-                    toPath: (path) => path.join('/') + '/',
+                    toPath: (path, data) => {
+                        if (data) {
+                            const arrPath = path
+                            arrPath.push(data.id)
+                            return arrPath.join('/') + '/'
+                        }
+                        return path.join('/') + "/"
+                    },
                     defaultParentPath: ["313"]
                 }}
             />

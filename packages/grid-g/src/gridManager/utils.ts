@@ -1,4 +1,4 @@
-import { get, isEmpty, isEqual, findIndex } from 'lodash';
+import { get, isEmpty, isEqual, findIndex, cloneDeep } from 'lodash';
 import { DataActions, CreateConfig } from '../interface';
 import { generateUuid } from '@util';
 export function getModifyData(records, getRowItemData, oldRecords) {
@@ -101,21 +101,32 @@ export function isSelectionParentOfTarget(selectedNode, targetNode) {
   }
   return false;
 }
-export function getRowsToUpdate(nodes, parentPath, createConfig) {
+export function getRowsToUpdate(nodes, parentPath, createConfig, agGridConfig) {
   let res = [];
-  const { path, toPath, id  } = createConfig;
+  let oldRowData = [];
+  const { path, toPath, id } = createConfig;
   nodes.map(node => {
-    const keyId = generateUuid() + '';
-    let newPath = parentPath.concat([keyId]);
+    let itemData = cloneDeep(node.data);
+    let newPath = [];
     if (node.data) {
-      node.data[path] = toPath(newPath);
-      node.data[id] = id === path ? node.data[path] : keyId;
+      node.data[path] = toPath(parentPath, node.data);
+      newPath = agGridConfig.getDataPath(node.data);
     }
     if (node.childrenAfterGroup) {
-      let updatedChildRowData = getRowsToUpdate(node.childrenAfterGroup, newPath, createConfig);
-      res = res.concat(updatedChildRowData);
+      let { newRowData: childrenNewRowData, oldRowData: childrenOldRowData } = getRowsToUpdate(
+        node.childrenAfterGroup,
+        newPath,
+        createConfig,
+        agGridConfig,
+      );
+      res = res.concat(childrenNewRowData);
+      oldRowData = oldRowData.concat(childrenOldRowData);
     }
-    if (node.data) res = res.concat([node.data]);
+    if (node.data) {
+      const { _rowCut, ...data } = node.data;
+      res = res.concat([data]);
+      oldRowData = oldRowData.concat([itemData]);
+    }
   });
-  return res;
+  return { newRowData: res, oldRowData };
 }

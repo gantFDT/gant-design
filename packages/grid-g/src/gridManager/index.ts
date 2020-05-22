@@ -25,19 +25,6 @@ interface AgGridConfig {
   getDataPath?: (data: any) => string[];
   createConfig?: CreateConfig;
 }
-
-// function loadingDecorator(target, name, descriptor): any {
-//   const fn = target[name];
-//   target[name] = (...ags) => {
-//     console.log(11);
-//   };
-//   return {
-//     ...descriptor,
-//     value: () => {
-//       console.log('111');
-//     },
-//   };
-// }
 @bindAll()
 export default class GridManage {
   public agGridApi: GridApi;
@@ -73,7 +60,7 @@ export default class GridManage {
         fields: validateFields,
       };
     });
-    let descriptor:any = {
+    let descriptor: any = {
       type: 'object',
       source: {
         type: 'array',
@@ -114,36 +101,53 @@ export default class GridManage {
       if (!rowNode.expanded) rowNode.setExpanded(true);
     }
   }
-  cut(rowsNodes) {
-    const ids = rowsNodes.map(item => {
-      return item.id;
-    });
-    if (isEmpty(ids)) return;
-    this.cutRows = cloneDeep(rowsNodes);
-    this.remove(ids);
+  cut(rowsNodes: RowNode[]) {
+    const update = [];
+    function onSetcutData(rowsNodes: RowNode[]) {
+      rowsNodes.map(item => {
+        const { childrenAfterGroup } = item;
+        const data = cloneDeep(item.data);
+        update.push({ ...data, _rowCut: true });
+        item.setSelected(false);
+        if (childrenAfterGroup) onSetcutData(childrenAfterGroup);
+      });
+      return update;
+    }
+    try {
+      const update = onSetcutData(rowsNodes);
+      this.agGridApi.batchUpdateRowData({ update });
+      this.cutRows = cloneDeep(rowsNodes);
+    } catch (error) {
+      console.log(error);
+    }
   }
   paste(node) {
     try {
       const { getDataPath, createConfig, treeData } = this.agGridConfig;
       if (!canQuickCreate(createConfig)) return console.warn('createConfig is error');
-      if (!node) {
-        let { defaultParentPath = [] } = createConfig;
-        defaultParentPath = Array.isArray(defaultParentPath) ? defaultParentPath : [];
-        const records = getRowsToUpdate(this.cutRows, defaultParentPath, createConfig);
-        this.create(records);
-        return;
+      let { defaultParentPath = [] } = createConfig;
+      defaultParentPath = Array.isArray(defaultParentPath) ? defaultParentPath : [];
+      let parentPath = !node ? defaultParentPath : [];
+      if (node) {
+        const brotherPath = getDataPath(get(node, 'data', []));
+        parentPath = brotherPath.slice(0, brotherPath.length - 1);
       }
-      if (!treeData) {
-        const records = this.cutRows.map(itemNode => {
-          return itemNode.data;
-        });
-        this.create(records, node.id);
-        return;
-      }
-      const brotherPath = getDataPath(get(node, 'data', {}));
-      const parentPath = brotherPath.slice(0, brotherPath.length - 1);
-      const newData = getRowsToUpdate(this.cutRows, parentPath, createConfig);
-      this.create(newData, node.id);
+      const { newRowData, oldRowData } = getRowsToUpdate(
+        this.cutRows,
+        parentPath,
+        createConfig,
+        this.agGridConfig,
+      );
+      const rowIndex = get(node, 'rowIndex', 0);
+      this.agGridApi.batchUpdateRowData({ remove: oldRowData }, () => {
+        const rowData = this.getRowData();
+        this.agGridApi.setRowData([
+          ...rowData.slice(0, rowIndex),
+          ...newRowData,
+          ...rowData.slice(rowIndex),
+        ]);
+        this.cutRows = [];
+      });
     } catch (error) {
       console.error(error);
     }

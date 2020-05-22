@@ -118,8 +118,9 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     onCellValueChanged,
     getContextMenuItems,
     createConfig,
-    onRowsPut,
+    onRowsCut,
     onRowsPaste,
+    onRowsPasteEnd,
     ...orignProps
   } = props;
   const apiRef = useRef<GridApi>();
@@ -174,7 +175,13 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     return initDataSource;
   }, [initDataSource, treeData, treeDataChildrenName]);
   useEffect(() => {
-    gridManager.reset({ dataSource, getRowNodeId, createConfig, treeData, getDataPath });
+    gridManager.reset({
+      dataSource,
+      getRowNodeId,
+      createConfig,
+      treeData,
+      getDataPath,
+    });
   }, [dataSource]);
   const serverDataCallback = useCallback((groupKeys, successCallback) => {
     return rows => {
@@ -378,7 +385,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
               disabled: hasCut,
               action: params => {
                 try {
-                  const canPut = onRowsPut ? onRowsPut(rowNodes) : true;
+                  const canPut = onRowsCut ? onRowsCut(rowNodes) : true;
                   return canPut && gridManager.cut(rowNodes);
                 } catch (error) {}
               },
@@ -388,8 +395,9 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
               disabled: hasPaste,
               action: params => {
                 const [rowNode] = rowNodes;
-                const canPaste = onRowsPut ? onRowsPaste(rowNode) : true;
-                return canPaste && gridManager.paste(rowNode);
+                const canPaste = onRowsPaste ? onRowsPaste(gridManager.cutRows, rowNode) : true;
+                canPaste && gridManager.paste(rowNode);
+                return onRowsPasteEnd && onRowsPasteEnd();
               },
             },
           ];
@@ -465,6 +473,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                   rowClassRules={{
                     'gant-grid-row-isdeleted': params =>
                       get(params, 'data._rowType') === DataActions.removeTag,
+                    'gant-grid-row-cut': params => get(params, 'data._rowCut'),
                     ...rowClassRules,
                   }}
                   onCellValueChanged={cellValueChanged}
