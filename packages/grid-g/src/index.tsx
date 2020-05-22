@@ -350,7 +350,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
             context: { golbalEditable },
           } = params;
           const rowNodes = apiRef.current.getSelectedNodes();
-          const hasCreateConfig = isEmpty(createConfig) || rowNodes.length !== 1;
           const hasCut = rowNodes.length <= 0 || (treeData && isEmpty(createConfig));
           const hasPaste =
             rowNodes.length > 1 || isEmpty(createConfig) || isEmpty(gridManager.cutRows);
@@ -362,24 +361,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
             'separator',
             ...defultMenu,
             'separator',
-            {
-              name: locale.createNode,
-              disabled: hasCreateConfig,
-              action: params => {
-                const [rowNode] = rowNodes;
-                const { id } = rowNode;
-                return gridManager.createNode(id);
-              },
-            },
-            {
-              name: locale.createChildNode,
-              disabled: hasCreateConfig || !treeData,
-              action: params => {
-                const [rowNode] = rowNodes;
-                const { id } = rowNode;
-                return gridManager.createChildNode(id);
-              },
-            },
             {
               name: locale.cutRows,
               disabled: hasCut,

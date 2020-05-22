@@ -261,11 +261,12 @@ export default class GridManage {
       return this.create(records, targetId);
     }
     if (typeof record === 'object' && !Array.isArray(record)) {
-      let data: any = { ...record };
+      let data: any = {};
       const id = generateUuid() + '';
       data[createConfig.id] = id;
       if (getDataPath && treeData) {
         data[createConfig.path] = createConfig.toPath([...parentPath, id]);
+        data = { ...data, ...record };
       }
       return this.create(data, targetId);
     }
