@@ -118,6 +118,9 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     onCellValueChanged,
     getContextMenuItems,
     createConfig,
+    onRowsCut,
+    onRowsPaste,
+    onRowsPasteEnd,
     ...orignProps
   } = props;
   const apiRef = useRef<GridApi>();
@@ -172,7 +175,13 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     return initDataSource;
   }, [initDataSource, treeData, treeDataChildrenName]);
   useEffect(() => {
-    gridManager.reset({ dataSource, getRowNodeId, createConfig, treeData, getDataPath });
+    gridManager.reset({
+      dataSource,
+      getRowNodeId,
+      createConfig,
+      treeData,
+      getDataPath,
+    });
   }, [dataSource]);
   const serverDataCallback = useCallback((groupKeys, successCallback) => {
     return rows => {
@@ -246,17 +255,32 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   }, [validateFields]);
   //columns-end
   const editRowDataChanged = useCallback(
-    (record: any, fieldName: string, newValue: any, oldValue: any) => {
-      if (typeof onCellEditChange === 'function')
-        return gridManager.modify(onCellEditChange(record, fieldName, newValue, oldValue));
+    async (record: any, fieldName: string, newValue: any, oldValue: any) => {
+      if (typeof onCellEditChange === 'function') {
+        let newRecords = await onCellEditChange(cloneDeep(record), fieldName, newValue, oldValue);
+        return gridManager.modify(newRecords);
+      }
       return gridManager.modify([record]);
     },
     [onCellEditChange],
   );
+  useEffect(() => {
+    gridManager.agGridConfig.onRowsPasteEnd = onRowsPasteEnd;
+  }, [onRowsPasteEnd]);
   const editingRowDataChange = useCallback(
-    (record, fieldName, newValue, oldValue) => {
+    async (record, fieldName, newValue, oldValue) => {
       if (typeof onCellEditingChange === 'function') {
-        gridManager.modify(onCellEditingChange(record, fieldName, newValue, oldValue));
+        let newRecords = await onCellEditingChange(
+          cloneDeep(record),
+          fieldName,
+          newValue,
+          oldValue,
+        );
+        newRecords = Array.isArray(newRecords) ? newRecords : [newRecords];
+        let oldRecord = cloneDeep(record);
+        oldRecord = Array.isArray(oldRecord) ? oldRecord : [oldRecord];
+        if (isEqual(oldRecord, newRecords)) return;
+        gridManager.modify(newRecords);
       }
     },
     [onCellEditingChange],
@@ -315,7 +339,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
           };
         });
       onCellValueChanged && onCellValueChanged(params);
-      console.log("onCellValueChanged",params)
     },
     [onCellValueChanged, pasteLoading],
   );
@@ -330,7 +353,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
             context: { golbalEditable },
           } = params;
           const rowNodes = apiRef.current.getSelectedNodes();
-          const hasCreateConfig = isEmpty(createConfig) || rowNodes.length !== 1;
           const hasCut = rowNodes.length <= 0 || (treeData && isEmpty(createConfig));
           const hasPaste =
             rowNodes.length > 1 || isEmpty(createConfig) || isEmpty(gridManager.cutRows);
@@ -343,28 +365,13 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
             ...defultMenu,
             'separator',
             {
-              name: locale.createNode,
-              disabled: hasCreateConfig,
-              action: params => {
-                const [rowNode] = rowNodes;
-                const { id } = rowNode;
-                return gridManager.createNode(id);
-              },
-            },
-            {
-              name: locale.createChildNode,
-              disabled: hasCreateConfig || !treeData,
-              action: params => {
-                const [rowNode] = rowNodes;
-                const { id } = rowNode;
-                return gridManager.createChildNode(id);
-              },
-            },
-            {
               name: locale.cutRows,
               disabled: hasCut,
               action: params => {
-                return gridManager.cut(rowNodes);
+                try {
+                  const canPut = onRowsCut ? onRowsCut(rowNodes) : true;
+                  return canPut && gridManager.cut(rowNodes);
+                } catch (error) {}
               },
             },
             {
@@ -372,7 +379,8 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
               disabled: hasPaste,
               action: params => {
                 const [rowNode] = rowNodes;
-                return gridManager.paste(rowNode);
+                const canPaste = onRowsPaste ? onRowsPaste(gridManager.cutRows, rowNode) : true;
+                canPaste && gridManager.paste(rowNode);
               },
             },
           ];
@@ -448,6 +456,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                   rowClassRules={{
                     'gant-grid-row-isdeleted': params =>
                       get(params, 'data._rowType') === DataActions.removeTag,
+                    'gant-grid-row-cut': params => get(params, 'data._rowCut'),
                     ...rowClassRules,
                   }}
                   onCellValueChanged={cellValueChanged}
