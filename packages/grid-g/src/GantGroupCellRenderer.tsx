@@ -33,7 +33,7 @@ export default memo(
       render,
       value,
       valueFormatted,
-      showFolder,
+      showFolder=true,
       rowIndex,
     } = props;
     const getTreeDataInfo = useCallback((node: RowNode) => {
@@ -106,7 +106,7 @@ export default memo(
           ></span>
         );
       });
-    }, [node, hasChildren]);
+    }, [node, hasChildren, showFolder]);
     useEffect(() => {
       if (eContracted.current) {
         eContracted.current.addEventListener('click', onExpend);
