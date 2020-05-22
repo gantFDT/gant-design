@@ -258,7 +258,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     async (record: any, fieldName: string, newValue: any, oldValue: any) => {
       if (typeof onCellEditChange === 'function') {
         let newRecords = await onCellEditChange(cloneDeep(record), fieldName, newValue, oldValue);
-        gridManager.modify(newRecords);
+        return gridManager.modify(newRecords);
       }
       return gridManager.modify([record]);
     },
