@@ -7,7 +7,7 @@ import { isEmpty, isEqual, get } from 'lodash';
 import { Props, Context } from './interface';
 import classnames from 'classnames';
 import dependencies, { Inner, findDependencies, refHoc } from './compose';
-import { getNewValue, getDateToForm } from './utils';
+import { getNewValue, getDateToForm, getSchemaRenderCount } from './utils';
 import { getFieldProps } from './maps';
 import ReactResizeDetector from 'react-resize-detector';
 import { bind } from 'lodash-decorators';
@@ -15,7 +15,7 @@ export const FormContext = React.createContext({} as Context);
 export * from './interface';
 export * from './maps';
 import * as maps from './maps';
-class SchemaForm extends React.Component<Props> {
+class SchemaForm extends React.Component<Props, { schemaCount: number }> {
   static maps = maps;
   static defaultProps = {
     edit: EditStatus.EDIT,
@@ -28,6 +28,14 @@ class SchemaForm extends React.Component<Props> {
 
   /**收集所有子级节点的初始数据 */
   initialValueMap = new Map();
+
+  constructor(props) {
+    super(props);
+    const { schema } = props
+    this.state = {
+      schemaCount: getSchemaRenderCount(schema)
+    }
+  }
 
   componentDidUpdate(pervPops: Props) {
     const {
@@ -43,25 +51,36 @@ class SchemaForm extends React.Component<Props> {
       setFieldsValue(newVals);
     }
   }
-  /**names:["user.name", "user.addr.street"] */
-  resetFields = (names?: string[]) => {
+
+  resetDependencies(cb: (a, b) => boolean, names?: string[], ) {
     const {
-      form: { resetFields, getFieldsValue },
-      emitDependenciesChange,
+      form: { getFieldsValue },
+      resetDependenciesChange,
     } = this.props;
     const { initialValueMap } = this;
     const currentValues = getFieldsValue();
     /**initialValueMap中包含所有当前field的值 */
-    const keys = initialValueMap.keys();
-    for (const key of keys) {
+    // 需要被重置的所有字段
+    const resetsValue = [...initialValueMap.entries()].filter(([key, initialValue]) => {
       if (!names || names.includes(key)) {
-        const initialValue = initialValueMap.get(key);
         const currentValue = get(currentValues, key);
-        if (initialValue !== currentValue) {
-          emitDependenciesChange(key, initialValue);
-        }
+        return cb(initialValue, currentValue)
       }
-    }
+      return false
+    }).reduce((result, [key, value]) => {
+      const changedValue = [...key.split('.'), value].reverse().reduce((v, k) => ({ [k]: v }));
+      return {
+        ...result,
+        ...changedValue
+      }
+    }, {})
+    resetDependenciesChange(resetsValue);
+  }
+
+  /**names:["user.name", "user.addr.street"] */
+  resetFields = (names?: string[]) => {
+    const { form: { resetFields, getFieldsValue }, } = this.props
+    this.resetDependencies((init, current) => init !== current, names)
     return resetFields(names);
   };
   validateForm = (names: string[]) => {
@@ -85,7 +104,11 @@ class SchemaForm extends React.Component<Props> {
     setFieldsValue(data);
   };
   collectInitialValue = (name, initialValue) => {
+    const { schemaCount } = this.state;
     this.initialValueMap.set(name, initialValue);
+    if (this.initialValueMap.size === schemaCount) {
+      this.resetDependencies(init => ![null, undefined].includes(init))
+    }
   };
   @bind()
   onResize(width: number, height: number) {
@@ -104,7 +127,7 @@ class SchemaForm extends React.Component<Props> {
       customFields,
       backgroundColor,
       className,
-      emitDependenciesChange,
+      // emitDependenciesChange,
       withoutAnimation = false,
       prefixCls: customizePrefixCls = 'gant',
       size,
@@ -124,7 +147,7 @@ class SchemaForm extends React.Component<Props> {
           onSave,
           data,
           customFields,
-          emitDependenciesChange,
+          // emitDependenciesChange,
           prefixCls,
           defalutProps,
           collectInitialValue: this.collectInitialValue.bind(this),
@@ -165,11 +188,14 @@ export default compose(
     },
   }),
   withHandlers({
-    emitDependenciesChange: ({ schema, form, mapSubSchema }: Inner) => (
-      key: string,
-      value: any,
-    ) => {
-      const changedValue = [...key.split('.'), value].reverse().reduce((v, k) => ({ [k]: v }));
+    // emitDependenciesChange: ({ schema, form, mapSubSchema }: Inner) => (
+    //   key: string,
+    //   value: any,
+    // ) => {
+    //   const changedValue = [...key.split('.'), value].reverse().reduce((v, k) => ({ [k]: v }));
+    //   findDependencies(changedValue, schema, mapSubSchema, form);
+    // },
+    resetDependenciesChange: ({ schema, form, mapSubSchema }: Inner) => (changedValue: Object) => {
       findDependencies(changedValue, schema, mapSubSchema, form);
     },
   }),

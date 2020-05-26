@@ -38,7 +38,7 @@ const SchemaField = (props: SchemaField) => {
     onSave,
     data,
     customFields,
-    emitDependenciesChange,
+    // emitDependenciesChange,
     defalutProps,
     collectInitialValue,
   } = useContext(FormContext);
@@ -89,9 +89,9 @@ const SchemaField = (props: SchemaField) => {
 
   useEffect(() => {
     collectInitialValue(name, initialValue);
-    if (![null, undefined].includes(initialValue)) {
-      emitDependenciesChange(name as string, initialValue);
-    }
+    // if (![null, undefined].includes(initialValue)) {
+    //   emitDependenciesChange(name as string, initialValue);
+    // }
   }, []);
   return (
     <Col {...colLayout}>
