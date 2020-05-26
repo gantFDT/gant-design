@@ -81,9 +81,7 @@ const ComputeGrid = () => {
             },
             cellRenderer: "gantGroupCellRenderer",
             cellRendererParams: {
-                innerRenderer: (params) => {
-                    return params.value
-                }
+                showFolder:false
             }
         },
         {
