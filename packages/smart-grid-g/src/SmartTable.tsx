@@ -222,7 +222,7 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
     [activeView, viewList, renameLoading, updateViewLoading, defaultView, titleRef, title],
   );
 
-  const HeaderRightElem: ReactNode = (
+  const HeaderRightElem: ReactNode = useMemo(()=>(
     <>
       {headerRight}
       {onReload && (
@@ -235,7 +235,7 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
         </Receiver>
       )}
     </>
-  );
+  ),[headerRight, onReload]);
 
   const gridHeight = useMemo(() => {
     if (hideHeader) { return height }
