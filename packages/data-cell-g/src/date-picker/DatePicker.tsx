@@ -28,7 +28,7 @@ const withDatePicker = compose(
 
 @compose(
   withDatePicker,
-  withEdit(getText)
+  withEdit(getText,'ant-calendar-picker-container')
 )
 class DatePicker extends React.Component<GantDatePickerProps>{
   static RangePicker: typeof RangePicker;

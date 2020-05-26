@@ -60,7 +60,7 @@ const withRangePicker = compose(
 
 @compose(
   withRangePicker,
-  withEdit(getValue)
+  withEdit(getValue,'ant-calendar-picker-container')
 )
 class RangePicker extends React.Component<GantRangePickerProps> {
 
