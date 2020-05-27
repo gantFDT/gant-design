@@ -561,7 +561,7 @@ const SelectorComponent = compose(
   toClass,
   withLocalStorage,
   withSelector,
-  withEdit<SelectorInnerProps<any, any>>(({ label }) => label,'gant-selector-dropdown'),
+  withEdit<SelectorInnerProps<any, any>>(({ label }) => label),
   withChange, // 单独将value的处理放到withEdit后面，
 )(BasicSelector)
 
