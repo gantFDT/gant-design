@@ -28,6 +28,7 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
     withoutAnimation = false,
     headerProps = {},
     onViewChange,
+    initView,
     prefixCls: customizePrefixCls,
     height,
     style,
@@ -99,6 +100,14 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
       });
     }
   }, [viewSchema]);
+  
+  useEffect(() => {
+    if (initView) {
+      setActiveView({
+        ...initView
+      });
+    }
+  }, [])
 
   const handlerSaveViews = useCallback(
     ({ views, hideModal, type }) => {
