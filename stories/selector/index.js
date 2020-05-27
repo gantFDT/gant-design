@@ -35,7 +35,10 @@ const Demo1 = () => {
   return (
     <>
       1、传递字符串数组作为选项列表<br />
-      <Selector dataSource={dataSource} style={{ margin: '5px 0' }} value={value} onChange={setValue} onSave={(id, value, cb) => cb()} />
+      <Selector
+        dataSource={dataSource}
+        onBlur={() => { console.log("onBlur") }}
+        style={{ margin: '5px 0' }} value={value} onChange={setValue} onSave={(id, value, cb) => cb()} />
       2、传递对象作为选项列表<br />
       <>
         <Button size="small" onClick={() => { setedit2(SwitchStatus) }}>编辑</Button>
