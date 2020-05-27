@@ -88,17 +88,14 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
     }
 
     setActiveView(usedView);
-    onViewChange && onViewChange(usedView.panelConfig);
+    onViewChange && onViewChange(usedView);
   }, []);
 
   useEffect(() => {
     if (viewSchema) {
       setActiveView({
         ...activeView,
-        panelConfig: {
-          ...activeView.panelConfig,
-          ...viewSchema,
-        },
+        ...viewSchema
       });
     }
   }, [viewSchema]);
