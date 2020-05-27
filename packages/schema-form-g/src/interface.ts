@@ -21,7 +21,7 @@ export interface Context {
   customFields?: CustomFields[];
   backgroundColor?: string;
   edit?: EditStatus | EditObject;
-  emitDependenciesChange: (key: string, value: any) => void;
+  // emitDependenciesChange: (key: string, value: any) => void;
   prefixCls?: string;
   defalutProps?: any;
   collectInitialValue: (name: string, value: any) => void;
@@ -75,7 +75,8 @@ export interface Props extends OptionalProps {
   prefixCls?: string;
   onSave: (id: any, value: any, cb: any) => any;
   form: WrappedFormUtils;
-  emitDependenciesChange: (key: string, value: any) => void;
+  // emitDependenciesChange: (key: string, value: any) => void;
+  resetDependenciesChange: (changedValue: Object) => void;
   withoutAnimation?: boolean;
 }
 export interface UISchema {
@@ -98,15 +99,15 @@ export interface UISchema {
   'field:wrapperCol'?: ColProps | number;
   'field:labelAlign'?: FormLabelAlign;
   [propName: string]:
-    | ColProps
-    | number
-    | string
-    | string[]
-    | Gutter
-    | [Gutter, Gutter]
-    | FormLabelAlign
-    | React.CSSProperties
-    | UISchema;
+  | ColProps
+  | number
+  | string
+  | string[]
+  | Gutter
+  | [Gutter, Gutter]
+  | FormLabelAlign
+  | React.CSSProperties
+  | UISchema;
 }
 export interface TitleSchema {
   'title:visible'?: boolean;

@@ -7,7 +7,7 @@ import ReactDom from 'react-dom'
 import Grid, { Columns, Filter, OnReady, GridApi, Fixed, DataManage, RemoveCallBack, GantGroupCellRenderer } from '@grid';
 import { GridReadyEvent, ColDef } from 'ag-grid-community'
 import { Button, message, Dropdown, Menu, Switch, Checkbox } from "antd"
-import { Input, InputCellPhone, } from "@data-cell"
+import { Input, InputCellPhone, DatePicker} from "@data-cell"
 import Header from '@header'
 /*! Split !*/
 const sourceDataList = {
@@ -81,9 +81,7 @@ const ComputeGrid = () => {
             },
             cellRenderer: "gantGroupCellRenderer",
             cellRendererParams: {
-                innerRenderer: (params) => {
-                    return params.value
-                }
+                showFolder:false
             }
         },
         {
@@ -96,6 +94,15 @@ const ComputeGrid = () => {
             render: val => val,
             editConfig: {
                 component: Input,
+                editable: true,
+            }
+        },
+        {
+            fieldName: 'create',
+            title: "创建时间",
+            width: 300,
+            editConfig: {
+                component: DatePicker,
                 editable: true,
             }
         }

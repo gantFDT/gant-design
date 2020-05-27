@@ -424,7 +424,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                   floatingFiltersHeight={20}
                   rowHeight={size == 'small' ? 24 : 32}
                   singleClickEdit
-                  deltaRowDataMode
                   context={{
                     golbalEditable: editable,
                     serverDataRequest,

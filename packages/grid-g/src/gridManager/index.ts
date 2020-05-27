@@ -155,7 +155,7 @@ export default class GridManage {
     }
   }
   reset(agGridConfig) {
-    this.agGridConfig = agGridConfig;
+    this.agGridConfig = { ...this.agGridConfig, ...agGridConfig };
     this.historyStack = [];
     this.redoStack = [];
     this.cutRows = [];
