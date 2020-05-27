@@ -67,7 +67,6 @@ export default (_popupClassName?: string) => WrapperedComponent =>
         },
         [onFocus, isFoucs],
       );
-      console.log("popupClassName",popupClassName)
       return (
         <div className={className} ref={divRef} onClick={handleFoucs} style={wrapperStyle}>
           <div className="gant-input" ref={ref}>
