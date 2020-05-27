@@ -76,7 +76,7 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
   useEffect(() => {
     let usedView;
 
-    usedView = [...systemViews, ...customViews].find((sV: ViewConfig) => {
+    usedView = initView || [...systemViews, ...customViews].find((sV: ViewConfig) => {
       return sV.viewId === defaultView.viewId;
     });
 
@@ -100,14 +100,6 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
       });
     }
   }, [viewSchema]);
-  
-  useEffect(() => {
-    if (initView) {
-      setActiveView({
-        ...initView
-      });
-    }
-  }, [])
 
   const handlerSaveViews = useCallback(
     ({ views, hideModal, type }) => {
