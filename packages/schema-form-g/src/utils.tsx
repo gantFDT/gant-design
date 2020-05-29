@@ -1,6 +1,6 @@
-import { UISchema, TitleSchema, Schema } from './interface'
+import { UISchema, TitleSchema, Schema, Types } from './interface'
 import { EditStatus } from '@data-cell'
-import { get } from 'lodash';
+import { get, isNil } from 'lodash';
 interface UIArrayItem {
 	alias: string,
 	belong: "field" | "form" | string[],
@@ -282,4 +282,15 @@ export function getFieldItemSizeClass(className: string) {
 		default:
 			return "gant-form-item"
 	}
+}
+
+export function getSchemaRenderCount(schema: Schema): number {
+	let index = 0
+	const { propertyType } = schema
+	const keys = Reflect.ownKeys(propertyType)
+	return keys.reduce<number>((count, key: string) => {
+		const subSchema = propertyType[key]
+		if (!isNil(subSchema.propertyType)) return count + getSchemaRenderCount(subSchema)
+		return count + (subSchema.hide ? 0 : 1)
+	}, index)
 }

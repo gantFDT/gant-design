@@ -3,6 +3,7 @@ export default [
 import React, { useState, useMemo, useRef, useCallback } from 'react'
 import { Button, Radio, Rate, Switch, Icon, Col, Row } from 'antd'
 import { EditStatus, SchemaForm } from 'gantd'
+import moment from "moment"
 const initalUiSchema = {
     "form:gutter": 10,
     "field:col": 24,
@@ -166,6 +167,7 @@ ReactDOM.render(<BasicUse />, mountNode)`,`
 import React, { useState, useMemo, useRef, useCallback } from 'react'
 import { Button, Radio, Rate, Switch, Icon, Col, Row } from 'antd'
 import { EditStatus, SchemaForm } from 'gantd'
+import moment from "moment"
 const initalUiSchema = {
     "form:gutter": 10,
     "field:col": 24,
@@ -388,6 +390,7 @@ ReactDOM.render(<EditStatusUse />, mountNode)`,`
 import React, { useState, useMemo, useRef, useCallback } from 'react'
 import { Button, Radio, Rate, Switch, Icon, Col, Row } from 'antd'
 import { EditStatus, SchemaForm } from 'gantd'
+import moment from "moment"
 const initalUiSchema = {
     "form:gutter": 10,
     "field:col": 24,
@@ -578,6 +581,7 @@ ReactDOM.render(<SearchUse />, mountNode)`,`
 import React, { useState, useMemo, useRef, useCallback } from 'react'
 import { Button, Radio, Rate, Switch, Icon, Col, Row } from 'antd'
 import { EditStatus, SchemaForm } from 'gantd'
+import moment from "moment"
 const initalUiSchema = {
     "form:gutter": 10,
     "field:col": 24,
@@ -823,6 +827,7 @@ ReactDOM.render(<configSchma />, mountNode)`,`
 import React, { useState, useMemo, useRef, useCallback } from 'react'
 import { Button, Radio, Rate, Switch, Icon, Col, Row } from 'antd'
 import { EditStatus, SchemaForm } from 'gantd'
+import moment from "moment"
 const initalUiSchema = {
     "form:gutter": 10,
     "field:col": 24,
@@ -993,6 +998,7 @@ ReactDOM.render(<GridLayout />, mountNode)`,`
 import React, { useState, useMemo, useRef, useCallback } from 'react'
 import { Button, Radio, Rate, Switch, Icon, Col, Row } from 'antd'
 import { EditStatus, SchemaForm } from 'gantd'
+import moment from "moment"
 const initalUiSchema = {
     "form:gutter": 10,
     "field:col": 24,
@@ -1173,6 +1179,7 @@ ReactDOM.render(<bindDataSchema />, mountNode)`,`
 import React, { useState, useMemo, useRef, useCallback } from 'react'
 import { Button, Radio, Rate, Switch, Icon, Col, Row } from 'antd'
 import { EditStatus, SchemaForm } from 'gantd'
+import moment from "moment"
 const initalUiSchema = {
     "form:gutter": 10,
     "field:col": 24,
@@ -1347,6 +1354,7 @@ function DependenceData() {
                 type: "number",
                 componentType: "Selector",
                 dependencies: ["key_2"],
+                hide: true,
                 onDependenciesChange([key_2], schema, form) {
                     return Promise.resolve(key_2).then(data => {
                         if (data) {
@@ -1365,6 +1373,48 @@ function DependenceData() {
                     })
                 }
             },
+            createDateFrom: {
+                title: '创建日期起',
+                componentType: 'DatePicker',
+                dependencies: ["createDateTo"],
+                onDependenciesChange: ([createDateTo], schema) => {
+                    return {
+                        ...schema,
+                        props: {
+                            ...schema.props,
+                            disabledDate: (current) => {
+                                if (!createDateTo) return
+                                // Can not select days before today and today
+                                return current && current > moment(createDateTo).endOf('day');
+                            }
+                        }
+                    }
+                },
+                props: {
+                    format: 'YYYY-MM-DD'
+                },
+            },
+            createDateTo: {
+                title: '创建日期止',
+                componentType: 'DatePicker',
+                dependencies: ["createDateFrom"],
+                onDependenciesChange: ([createDateFrom], schema) => {
+                    return {
+                        ...schema,
+                        props: {
+                            ...schema.props,
+                            disabledDate: (current) => {
+                                if (!createDateFrom) return
+                                // Can not select days before today and today
+                                return current && current < moment(createDateFrom).endOf('day');
+                            }
+                        }
+                    }
+                },
+                props: {
+                    format: 'YYYY-MM-DD'
+                },
+            },
         }
     }), [])
     const ref = useRef()
@@ -1377,6 +1427,10 @@ function DependenceData() {
         <SchemaForm
             uiSchema={initalUiSchema}
             schema={dependenceSchema}
+            data={{
+                createDateFrom: "2020-05-12",
+                createDateTo: "2020-05-29"
+            }}
             ref={ref}
         />
     </div>
@@ -1386,6 +1440,7 @@ ReactDOM.render(<DependenceData />, mountNode)`,`
 import React, { useState, useMemo, useRef, useCallback } from 'react'
 import { Button, Radio, Rate, Switch, Icon, Col, Row } from 'antd'
 import { EditStatus, SchemaForm } from 'gantd'
+import moment from "moment"
 const initalUiSchema = {
     "form:gutter": 10,
     "field:col": 24,
@@ -1553,6 +1608,7 @@ ReactDOM.render(<customCmpSchema />, mountNode)`,`
 import React, { useState, useMemo, useRef, useCallback } from 'react'
 import { Button, Radio, Rate, Switch, Icon, Col, Row } from 'antd'
 import { EditStatus, SchemaForm } from 'gantd'
+import moment from "moment"
 const initalUiSchema = {
     "form:gutter": 10,
     "field:col": 24,

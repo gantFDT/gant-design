@@ -28,6 +28,7 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
     withoutAnimation = false,
     headerProps = {},
     onViewChange,
+    initView,
     prefixCls: customizePrefixCls,
     height,
     style,
@@ -75,7 +76,7 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
   useEffect(() => {
     let usedView;
 
-    usedView = [...systemViews, ...customViews].find((sV: ViewConfig) => {
+    usedView = initView || [...systemViews, ...customViews].find((sV: ViewConfig) => {
       return sV.viewId === defaultView.viewId;
     });
 
@@ -88,17 +89,14 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
     }
 
     setActiveView(usedView);
-    onViewChange && onViewChange(usedView.panelConfig);
+    onViewChange && onViewChange(usedView);
   }, []);
 
   useEffect(() => {
     if (viewSchema) {
       setActiveView({
         ...activeView,
-        panelConfig: {
-          ...activeView.panelConfig,
-          ...viewSchema,
-        },
+        ...viewSchema
       });
     }
   }, [viewSchema]);
@@ -222,7 +220,7 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
     [activeView, viewList, renameLoading, updateViewLoading, defaultView, titleRef, title],
   );
 
-  const HeaderRightElem: ReactNode = (
+  const HeaderRightElem: ReactNode = useMemo(()=>(
     <>
       {headerRight}
       {onReload && (
@@ -235,7 +233,7 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
         </Receiver>
       )}
     </>
-  );
+  ),[headerRight, onReload]);
 
   const gridHeight = useMemo(() => {
     if (hideHeader) { return height }
