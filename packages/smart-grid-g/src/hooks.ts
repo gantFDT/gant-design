@@ -81,7 +81,9 @@ export const useTableConfig = (props: useTableConfigProps) => {
     columnFields = []
   } = tableConfig;
   // 列渲染
-  const fakeColumns = useMemo(() => columnFields
+  const fakeColumns = useMemo(() => {
+    if(columnFields.length !== columns.length) return [];
+    return columnFields
     .filter((item: any) => item.checked)
     .map((ck: any) => {
       let columnItem = columns.find((oc: any) => oc.fieldName === ck.fieldName);
@@ -92,7 +94,7 @@ export const useTableConfig = (props: useTableConfigProps) => {
         fixed: ck.fixed
       }
     })
-    , [columnFields, columns])
+  }, [columnFields, columns])
   return [
     fakeColumns
   ]
