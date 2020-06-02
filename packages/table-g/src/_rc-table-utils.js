@@ -56,4 +56,4 @@ const measureScrollbar = (_ref) => {
   return size;
 }
 
-export default { measureScrollbar }
+export default measureScrollbar 
