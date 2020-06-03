@@ -342,7 +342,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     },
     [onCellValueChanged, pasteLoading],
   );
-
   return (
     <LocaleReceiver>
       {(local, localeCode = 'zh-cn') => {
@@ -443,6 +442,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                   enableRangeSelection
                   {...selection}
                   {...orignProps}
+                  onCellClicked={handleCellClicked}
                   defaultColDef={{
                     resizable,
                     sortable,

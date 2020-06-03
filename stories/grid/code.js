@@ -78,7 +78,7 @@ const ComputeGrid = () => {
                     },
                 ]
             },
-            cellRenderer: "gantGroupCellRenderer",
+            // cellRenderer: "gantGroupCellRenderer",
             cellRendererParams: {
                 showFolder:false
             }
@@ -282,7 +282,14 @@ const ComputeGrid = () => {
                 editable={editable}
                 dataSource={dataSource}
                 onReady={onReady}
-                serialNumber
+                serialNumber={{
+                    cellRenderer:"gantGroupCellRenderer",
+                    cellRendererParams:{
+                        showFolder:false
+                    },
+                    
+                    
+                }}
                 rowSelection={{
                     type: 'multiple',
                     selectedKeys,
