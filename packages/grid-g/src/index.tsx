@@ -18,6 +18,7 @@ import {
   GridReadyEvent,
   RowNode,
   SelectionChangedEvent,
+  CellClickedEvent,
 } from 'ag-grid-community';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
@@ -121,6 +122,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     onRowsCut,
     onRowsPaste,
     onRowsPasteEnd,
+    onCellClicked,
     ...orignProps
   } = props;
   const apiRef = useRef<GridApi>();
@@ -147,7 +149,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     defaultSelectionCol,
     ...selection
   } = gantSelection;
-
+  const [innerSelectedKeys, setInnerSelectedKeys] = useState([]);
   // getRowNodeId;
   const getRowNodeId = useCallback(data => {
     if (typeof rowkey === 'string') {
@@ -216,9 +218,27 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     (event: SelectionChangedEvent) => {
       const rows = event.api.getSelectedRows();
       const keys = rows.map(item => getRowNodeId(item));
+      setInnerSelectedKeys(keys);
       typeof onSelect === 'function' && onSelect(keys, rows);
     },
     [onSelect],
+  );
+  const handleCellClicked = useCallback(
+    (event: CellClickedEvent) => {
+      console.log('handleCellClicked', event);
+      onCellClicked && onCellClicked(event);
+      const { node, api } = event;
+      const selectedRows = api.getSelectedNodes();
+      console.log("innerSelectedKeys",innerSelectedKeys,selectedRows)
+      if (innerSelectedKeys.length === 1 && selectedRows.length === 1) {
+        const [selectedKey] = innerSelectedKeys;
+        const [selectedNode] = selectedRows;
+        if (selectedKey === selectedNode.id) {
+          node.setSelected(false);
+        }
+      }
+    },
+    [onCellClicked, innerSelectedKeys],
   );
   // 处理selection- 双向绑定selectKeys
   useEffect(() => {
@@ -342,6 +362,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     },
     [onCellValueChanged, pasteLoading],
   );
+
   return (
     <LocaleReceiver>
       {(local, localeCode = 'zh-cn') => {
@@ -442,7 +463,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                   enableRangeSelection
                   {...selection}
                   {...orignProps}
-                  // onCellClicked={handleCellClicked}
+                  onCellClicked={handleCellClicked}
                   defaultColDef={{
                     resizable,
                     sortable,
