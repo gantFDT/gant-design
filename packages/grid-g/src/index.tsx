@@ -442,7 +442,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                   enableRangeSelection
                   {...selection}
                   {...orignProps}
-                  onCellClicked={handleCellClicked}
+                  // onCellClicked={handleCellClicked}
                   defaultColDef={{
                     resizable,
                     sortable,
