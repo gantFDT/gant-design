@@ -44,7 +44,7 @@ function ConfigModal(props: ConfigModalProps) {
   useEffect(() => {
     const view = deepCopy4JSON(dataSource);
     visible && setFakeView(view);
-    onViewChange && onViewChange(view.panelConfig);
+    onViewChange && onViewChange(view);
   }, [dataSource, visible]);
 
   const handlerClose = useCallback(() => {
@@ -62,7 +62,7 @@ function ConfigModal(props: ConfigModalProps) {
   const handlerChooseView = useCallback(view => {
     const _view = deepCopy4JSON(view);
     setFakeView(_view);
-    onViewChange && onViewChange(_view.panelConfig);
+    onViewChange && onViewChange(_view);
   }, []);
 
   const isSystem = useMemo(() => fakeView.viewId && fakeView.viewId.includes('sys'), [fakeView]);
@@ -88,11 +88,12 @@ function ConfigModal(props: ConfigModalProps) {
 
   const handlerChangeConfig = useCallback(
     config => {
-      setFakeView({
+      const _view = {
         ...fakeView,
         panelConfig: config,
-      });
-      onViewChange && onViewChange(config);
+      };
+      setFakeView(_view);
+      onViewChange && onViewChange(_view);
     },
     [fakeView],
   );

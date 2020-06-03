@@ -4,7 +4,7 @@ import CodeDecorator from '../_util/CodeDecorator'
 import code from './code.js'
 import Mock from 'mockjs'
 /*! Start !*/
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { Divider, Tag, Radio, Button, message, ConfigProvider, Rate } from 'antd'
 import { SmartGrid, EditStatus, SwitchStatus } from '@gantd'
 const { Random } = Mock
@@ -379,6 +379,130 @@ function MultiViewUse() {
   )
 }
 /*! Split !*/
+var dataSource = Array(10).fill().map((_, Idx) => ({
+  key: Idx,
+  name: Random.cname(),
+  age: Random.natural(20, 70),
+  address: Random.county(true),
+  tags: [[ '宅', '程序猿', '高富帅', '矮矬穷', '教师' ][Random.natural(0, 4)]]
+}))
+
+var tableColumns = [
+  {
+    title: '姓名',
+    fieldName: 'name',
+    render: text => <a>{text}</a>,
+  },
+  {
+    title: '年龄',
+    fieldName: 'age',
+  },
+  {
+    title: '住址',
+    fieldName: 'address',
+  },
+  {
+    title: '标签',
+    fieldName: 'tags',
+    render: tags => (
+      <span>
+        {tags.map(tag => {
+          let color = tag.length > 5 ? 'geekblue' : 'green';
+          if (tag === 'loser') {
+            color = 'volcano';
+          }
+          return (
+            <Tag color={color} key={tag}>
+              {tag.toUpperCase()}
+            </Tag>
+          );
+        })}
+      </span>
+    ),
+  },
+  {
+    title: '操作',
+    fieldName: 'action',
+    render: (text, record) => (
+      <span>
+        <a>邀请 {record.name}</a>
+        <Divider type="vertical" />
+        <a>删除</a>
+      </span>
+    ),
+  },
+]
+
+function InitViewUse() {
+  const tableSchema = useMemo(() => ({
+    supportColumnFields: tableColumns,
+    systemViews: [
+      {
+        viewId: 'systemView1',
+        name: "隐藏年龄",
+        version: '2020-02-10 09:45:37',
+        panelConfig: {
+          columnFields: [
+            {
+              fieldName: 'tags',
+              fixed: 'left',
+              width: 300
+            },
+            {
+              fieldName: 'name',
+            },
+            {
+              fieldName: 'address',
+            },
+            {
+              fieldName: 'action',
+            },
+          ]
+        }
+      },
+      {
+        viewId: 'systemView2',
+        name: "禁止操作",
+        version: '2020-02-10 09:45:37',
+        panelConfig: {
+          columnFields: [
+            {
+              fieldName: 'name',
+            },
+            {
+              fieldName: 'address',
+            },
+            {
+              fieldName: 'age',
+            },
+            {
+              fieldName: 'tags',
+              width: 300
+            },
+          ]
+        }
+      }
+    ]
+  }),[tableColumns])
+  const [lastView, setLastView] = useState(localStorage.getItem('MultiViewUse:view') ? JSON.parse(localStorage.getItem('MultiViewUse:view')) : null)
+  const handlerViewChange = useCallback((view) => {
+    setLastView(view)
+    localStorage.setItem('MultiViewUse:view', JSON.stringify(view));
+  },[])
+  
+  return (
+    <div style={{ margin: 10 }}>
+      <SmartGrid
+        tableKey="MultiViewUse"
+        schema={tableSchema}
+        onViewChange={handlerViewChange}
+        initView={lastView}
+        dataSource={dataSource}
+      />
+    </div>
+  )
+}
+/*! Split !*/
 // import zhCN from 'antd/es/locale/zh_CN' // 按模块导入
 // import enUS from 'antd/es/locale/en_US' // 按模块导入
 var zhCN = { locale: "zh-cn" };
@@ -686,6 +810,11 @@ const config = {
       title: '多视图动态切换用法',
       describe: '配置多个视图配置，可以快速动态切换。',
       cmp: MultiViewUse
+    },
+    {
+      title: '初始视图配置用法',
+      describe: '配置初始视图，可以记录上次视图的配置。',
+      cmp: InitViewUse
     },
     {
       title: '国际化用法',
