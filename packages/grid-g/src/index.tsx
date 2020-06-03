@@ -225,11 +225,9 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   );
   const handleCellClicked = useCallback(
     (event: CellClickedEvent) => {
-      console.log('handleCellClicked', event);
       onCellClicked && onCellClicked(event);
       const { node, api } = event;
       const selectedRows = api.getSelectedNodes();
-      console.log("innerSelectedKeys",innerSelectedKeys,selectedRows)
       if (innerSelectedKeys.length === 1 && selectedRows.length === 1) {
         const [selectedKey] = innerSelectedKeys;
         const [selectedNode] = selectedRows;
