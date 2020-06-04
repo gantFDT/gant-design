@@ -19,6 +19,7 @@ import {
   RowNode,
   SelectionChangedEvent,
   CellClickedEvent,
+  SuppressKeyboardEventParams,
 } from 'ag-grid-community';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
@@ -123,12 +124,15 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     onRowsPaste,
     onRowsPasteEnd,
     onCellClicked,
+    suppressKeyboardEvent,
     ...orignProps
   } = props;
   const apiRef = useRef<GridApi>();
   const columnsRef = useRef<ColumnApi>();
+  const divRef = useRef<HTMLDivElement>();
   const [pasteContent, setPasetContent] = useState<any>({});
   const [pasteLoading, setPasteLoading] = useState(false);
+  const [downShift, setDownShift] = useState(false);
   const gridManager = useMemo(() => {
     return new GridManager();
   }, []);
@@ -258,6 +262,20 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   // 处理selection-end
   //columns
   const defaultSelection = !isEmpty(gantSelection) && showDefalutCheckbox;
+  const gridKeydown = useCallback((event: KeyboardEvent) => {
+    if (event.key === 'Shift') setDownShift(true);
+  }, []);
+  const gridKeyup = useCallback((event: KeyboardEvent) => {
+    if (event.key === 'Shift') setDownShift(false);
+  }, []);
+  useEffect(() => {
+    divRef.current && divRef.current.addEventListener('keydown', gridKeydown);
+    divRef.current && divRef.current.addEventListener('keyup', gridKeyup);
+    return () => {
+      divRef.current && divRef.current.removeEventListener('keydown', gridKeydown);
+      divRef.current && divRef.current.removeEventListener('keyup', gridKeyup);
+    };
+  }, []);
   const { columnDefs, validateFields } = useMemo(() => {
     return mapColumns<T>(
       columns,
@@ -360,7 +378,36 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     },
     [onCellValueChanged, pasteLoading],
   );
-
+  const handlesuppressKeyboardEvent = useCallback(
+    (params: SuppressKeyboardEventParams) => {
+      if (suppressKeyboardEvent) return suppressKeyboardEvent(params);
+      console.log('params', params);
+      const {
+        context: { downShift },
+        api,
+        columnApi,
+        column,
+      } = params;
+      if (downShift) {
+        const columns = columnApi.getAllColumns();
+        const len = columns.length;
+        if (params.event.key === 'ArrowUp') {
+          const [fristColumn] = columns;
+          if (fristColumn.getColId() === column.getColId()) return true;
+          api.tabToPreviousCell();
+          return true;
+        }
+        if (params.event.key === 'ArrowDown') {
+          const lastColumn = columns[len - 1];
+          if (lastColumn.getColId() === column.getColId()) return true;
+          api.tabToNextCell();
+          return true;
+        }
+      }
+      return false;
+    },
+    [suppressKeyboardEvent],
+  );
   return (
     <LocaleReceiver>
       {(local, localeCode = 'zh-cn') => {
@@ -419,6 +466,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                   width: '100%',
                   height: computedPagination ? 'calc(100% - 30px)' : '100%',
                 }}
+                ref={divRef}
               >
                 <AgGridReact
                   frameworkComponents={{
@@ -452,6 +500,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     editingRowDataChange,
                     computedPagination,
                     treeData,
+                    downShift,
                     ...context,
                   }}
                   immutableData
@@ -483,6 +532,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                   onPasteStart={onPasteStart}
                   onPasteEnd={onPasteEnd}
                   getContextMenuItems={contextMenuItems as any}
+                  suppressKeyboardEvent={handlesuppressKeyboardEvent}
                 />
               </div>
               {/* 分页高度为30 */}
