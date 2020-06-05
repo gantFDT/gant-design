@@ -5,7 +5,7 @@ import ReactDom from 'react-dom'
 import Grid, { Columns, Filter, OnReady, GridApi, Fixed, DataManage, RemoveCallBack, GantGroupCellRenderer } from 'grid';
 import { GridReadyEvent, ColDef } from 'ag-grid-community'
 import { Button, message, Dropdown, Menu, Switch, Checkbox } from "antd"
-import { Input, InputCellPhone, DatePicker} from "data-cell"
+import { Input, InputCellPhone, DatePicker } from "data-cell"
 import Header from 'header'
 
 
@@ -78,9 +78,9 @@ const ComputeGrid = () => {
                     },
                 ]
             },
-            cellRenderer: "gantGroupCellRenderer",
+            // cellRenderer: "gantGroupCellRenderer",
             cellRendererParams: {
-                showFolder:false
+                showFolder: false
             }
         },
         {
@@ -111,14 +111,14 @@ const ComputeGrid = () => {
     const [dataSource, setdataSource] = useState(
         [
             {
+                "path": "3113/314/", "id": 314,
+                "typeCode": "314", "typeName": "false",
+            },
+            {
                 "path": "313/",
                 "id": 313,
                 "typeCode": "313", "typeName": "false",
                 "children": [{
-                    "path": "313/314/", "id": 314,
-                    "typeCode": "314", "typeName": "false",
-                    children: [{ "path": "313/314/315/", "id": 315, "typeCode": "bbb", "typeName": "false", }]
-                }, {
                     "path": "313/322/", "id": 322,
                     "typeCode": "322", "typeName": "false",
                 },
@@ -282,7 +282,14 @@ const ComputeGrid = () => {
                 editable={editable}
                 dataSource={dataSource}
                 onReady={onReady}
-                serialNumber
+                serialNumber={{
+                    cellRenderer: "gantGroupCellRenderer",
+                    cellRendererParams: {
+                        showFolder: false
+                    },
+
+
+                }}
                 rowSelection={{
                     type: 'multiple',
                     selectedKeys,
@@ -294,6 +301,7 @@ const ComputeGrid = () => {
                 groupSuppressAutoColumn
                 getDataPath={getDataPath}
                 onRow
+                isCompute={false}
                 createConfig={{
                     id: 'path',
                     path: "path",

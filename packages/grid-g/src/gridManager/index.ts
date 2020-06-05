@@ -189,7 +189,7 @@ export default class GridManage {
         return this.agGridConfig.getRowNodeId(node.data) == this.agGridConfig.getRowNodeId(item);
       });
       if (index >= 0) return rowData.push(newRecords[index]);
-      rowData.push(node.data);
+      node.data && rowData.push(node.data);
     });
     this.agGridApi.setRowData(rowData);
     this.historyStack.push({
