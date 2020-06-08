@@ -87,7 +87,7 @@ export type RowSelection<T> = ProtoExtends<TableRowSelection<T>, {
     onSelect?: (rows: any, selected: boolean) => void,
     preventDefault?: boolean,
     clickable?: boolean,
-    showFooterSelection?: boolean,
+    showFooterSelection?: boolean
 }>
 
 export type EditRender<T = any> = (value: string, record: T, rowIndex: number) => React.ReactElement
