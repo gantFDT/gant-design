@@ -89,6 +89,7 @@ const ComputeGrid = () => {
             title: "产品类型名称",
             width: 300,
             valueFormatter: (params) => {
+                console.log("valueFormatter", params)
                 return params.value
             },
             render: val => val,
@@ -101,6 +102,11 @@ const ComputeGrid = () => {
             fieldName: 'create',
             title: "创建时间",
             width: 300,
+
+            render: (...ags) => {
+                console.log("render", ags)
+                return '222'
+            },
             editConfig: {
                 component: DatePicker,
                 editable: true,
@@ -147,7 +153,9 @@ const ComputeGrid = () => {
 
     const apiRef = useRef()
 
-    const edit = useCallback((e) => { seteditable(true) }, [])
+    const edit = useCallback((e) => {
+        seteditable(true);
+    }, [])
 
     const [manager, setManager] = useState()
 

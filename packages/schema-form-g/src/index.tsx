@@ -131,7 +131,7 @@ class SchemaForm extends React.Component<Props, { schemaCount: number }> {
       withoutAnimation = false,
       prefixCls: customizePrefixCls = 'gant',
       size,
-      onSizeChange,
+      hideTitle
     } = this.props;
 
     if (isEmpty(schema)) {
@@ -151,6 +151,7 @@ class SchemaForm extends React.Component<Props, { schemaCount: number }> {
           prefixCls,
           defalutProps,
           collectInitialValue: this.collectInitialValue.bind(this),
+          hideTitle
         }}
       >
         <ReactResizeDetector handleWidth handleHeight onResize={this.onResize}>

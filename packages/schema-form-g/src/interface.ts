@@ -25,6 +25,7 @@ export interface Context {
   prefixCls?: string;
   defalutProps?: any;
   collectInitialValue: (name: string, value: any) => void;
+  hideTitle?: boolean;
 }
 export interface Schema {
   name?: string;
@@ -66,6 +67,7 @@ export interface OptionalProps {
   ref?: any | ReactElement | ReactHTML | HTMLDivElement;
   size?: 'small' | 'defalut' | 'large';
   onSizeChange?: (size: { height: number; width: number }) => void;
+  hideTitle?: boolean;
 }
 
 export interface LocaleProps {
@@ -99,15 +101,15 @@ export interface UISchema {
   'field:wrapperCol'?: ColProps | number;
   'field:labelAlign'?: FormLabelAlign;
   [propName: string]:
-  | ColProps
-  | number
-  | string
-  | string[]
-  | Gutter
-  | [Gutter, Gutter]
-  | FormLabelAlign
-  | React.CSSProperties
-  | UISchema;
+    | ColProps
+    | number
+    | string
+    | string[]
+    | Gutter
+    | [Gutter, Gutter]
+    | FormLabelAlign
+    | React.CSSProperties
+    | UISchema;
 }
 export interface TitleSchema {
   'title:visible'?: boolean;

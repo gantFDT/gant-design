@@ -41,6 +41,7 @@ const SchemaField = (props: SchemaField) => {
     // emitDependenciesChange,
     defalutProps,
     collectInitialValue,
+    hideTitle
   } = useContext(FormContext);
 
   const onCancel = useCallback(() => name && resetFields([name]), [componentType, name]);
@@ -100,7 +101,7 @@ const SchemaField = (props: SchemaField) => {
           let locale = langs[localeCode] || langs['zh-cn'];
           return (
             <Form.Item
-              label={title}
+              label={hideTitle ? <>{title}</> : title}
               className={classnames(className, getFieldItemSizeClass(renderFieldProps.size))}
               style={style}
               wrapperCol={wrapperColayout}

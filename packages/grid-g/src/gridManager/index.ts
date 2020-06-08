@@ -39,7 +39,6 @@ export default class GridManage {
     const { getRowNodeId } = this.agGridConfig;
     const nodeId = typeof itemData === 'object' ? getRowNodeId(itemData) : itemData;
     let rowNode = this.agGridApi.getRowNode(nodeId);
-    rowNode = cloneDeep(rowNode);
     return isEmpty(oldData) ? rowNode : { ...rowNode, data: { ...oldData } };
   };
   private batchUpdateGrid(transaction: RowDataTransaction) {
@@ -159,7 +158,6 @@ export default class GridManage {
     this.historyStack = [];
     this.redoStack = [];
     this.cutRows = [];
-    this.agGridApi && this.agGridApi.setRowData(agGridConfig.dataSource);
   }
 
   getRowData() {
@@ -188,10 +186,9 @@ export default class GridManage {
       const index = findIndex(newRecords, item => {
         return this.agGridConfig.getRowNodeId(node.data) == this.agGridConfig.getRowNodeId(item);
       });
-      if (index >= 0) return rowData.push(newRecords[index]);
-      node.data && rowData.push(node.data);
+      if (index >= 0 && node.data && newRecords[index]) return rowData.push(newRecords[index]);
     });
-    this.agGridApi.setRowData(rowData);
+    this.batchUpdateGrid({ update: rowData });
     this.historyStack.push({
       type: DataActions.modify,
       records: hisRecords,
