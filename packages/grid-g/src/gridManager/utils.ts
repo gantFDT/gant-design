@@ -5,7 +5,8 @@ export function getModifyData(records, getRowItemData, oldRecords) {
   const hisRecords: any[] = [],
     newRecords: any[] = [];
   records.map((item, index) => {
-    const { data } = getRowItemData(item, get(oldRecords, `[${index}]`, undefined));
+    var { data } = getRowItemData(item, get(oldRecords, `[${index}]`, undefined));
+    data = cloneDeep(data);
     if (isEqualObj(data, item)) return;
     let { _rowData, _rowType = null, ...oldData } = data;
     let { _rowData: nextRowData, _rowType: nextRowType, ...newData } = item;

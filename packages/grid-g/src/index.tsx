@@ -6,6 +6,7 @@ import React, {
   useEffect,
   Dispatch,
   SetStateAction,
+  createContext,
 } from 'react';
 import classnames from 'classnames';
 import { AgGridReact } from 'ag-grid-react';
@@ -44,7 +45,7 @@ export { setComponentsMaps, setFrameworkComponentsMaps } from './maps';
 LicenseManager.setLicenseKey(key);
 
 export { default as GantPromiseCellRender } from './GantPromiseCellRender';
-
+export const GridContext = createContext({} as any);
 const langs = {
   en: en,
   'zh-cn': zh,
@@ -213,10 +214,9 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       apiRef.current = params.api;
       columnsRef.current = params.columnApi;
       gridManager.agGridApi = params.api;
-      params.api.setRowData(dataSource);
       onReady && onReady(params, gridManager);
     },
-    [onReady, dataSource],
+    [onReady],
   );
   const onSelectionChanged = useCallback(
     (event: SelectionChangedEvent) => {
@@ -409,141 +409,158 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     [suppressKeyboardEvent],
   );
   return (
-    <LocaleReceiver>
-      {(local, localeCode = 'zh-cn') => {
-        let lang = langs[localeCode] || langs['zh-cn'];
-        const locale = { ...lang, ...customLocale };
-        const contextMenuItems = function(params) {
-          const {
-            context: { golbalEditable },
-          } = params;
-          const rowNodes = apiRef.current.getSelectedNodes();
-          const hasCut = rowNodes.length <= 0 || (treeData && isEmpty(createConfig));
-          const hasPaste =
-            rowNodes.length > 1 || isEmpty(createConfig) || isEmpty(gridManager.cutRows);
-          const items = getContextMenuItems ? getContextMenuItems(params) : [];
-          const defultMenu = ['expandAll', 'contractAll', ...items, 'separator', 'export'];
-          if (!golbalEditable) return defultMenu;
-          return [
-            'copy',
-            'separator',
-            ...defultMenu,
-            'separator',
-            {
-              name: locale.cutRows,
-              disabled: hasCut,
-              action: params => {
-                try {
-                  const canPut = onRowsCut ? onRowsCut(rowNodes) : true;
-                  return canPut && gridManager.cut(rowNodes);
-                } catch (error) {}
-              },
-            },
-            {
-              name: locale.pasteRows,
-              disabled: hasPaste,
-              action: params => {
-                const [rowNode] = rowNodes;
-                const canPaste = onRowsPaste ? onRowsPaste(gridManager.cutRows, rowNode) : true;
-                canPaste && gridManager.paste(rowNode);
-              },
-            },
-          ];
-        };
-        return (
-          <Spin spinning={loading}>
-            <div
-              style={{ width, height }}
-              className={classnames(
-                'gant-grid',
-                `gant-grid-${getSizeClassName(size)}`,
-                openEditSign && `gant-grid-edit`,
-              )}
-            >
-              <div
-                className="ag-theme-balham"
-                style={{
-                  width: '100%',
-                  height: computedPagination ? 'calc(100% - 30px)' : '100%',
-                }}
-                ref={divRef}
-              >
-                <AgGridReact
-                  frameworkComponents={{
-                    gantGroupCellRenderer: GantGroupCellRenderer,
-                    gantRenderCol: RenderCol,
-                    ...frameworkComponentsMaps,
-                    ...frameworkComponents,
-                  }}
-                  components={{
-                    ...componentsMaps,
-                    ...components,
-                  }}
-                  onSelectionChanged={onSelectionChanged}
-                  columnDefs={columnDefs}
-                  rowSelection={rowSelection}
-                  getRowNodeId={getRowNodeId}
-                  onGridReady={onGridReady}
-                  undoRedoCellEditing
-                  enableFillHandle
-                  headerHeight={24}
-                  floatingFiltersHeight={20}
-                  rowHeight={size == 'small' ? 24 : 32}
-                  singleClickEdit
-                  context={{
-                    golbalEditable: editable,
-                    serverDataRequest,
-                    isServerSideGroup,
-                    size,
-                    getDataPath: getDataPath,
-                    editRowDataChanged,
-                    editingRowDataChange,
-                    computedPagination,
-                    treeData,
-                    downShift,
-                    ...context,
-                  }}
-                  immutableData
-                  stopEditingWhenGridLosesFocus={false}
-                  treeData={treeData}
-                  getDataPath={getDataPath}
-                  enableRangeSelection
-                  {...selection}
-                  {...orignProps}
-                  onCellClicked={handleCellClicked}
-                  defaultColDef={{
-                    resizable,
-                    sortable,
-                    filter,
-                    minWidth: 30,
-                    ...defaultColDef,
-                  }}
-                  groupDefaultExpanded={groupDefaultExpanded}
-                  localeText={locale}
-                  rowClassRules={{
-                    'gant-grid-row-isdeleted': params =>
-                      get(params, 'data._rowType') === DataActions.removeTag,
-                    'gant-grid-row-cut': params => get(params, 'data._rowCut'),
-                    ...rowClassRules,
-                  }}
-                  onCellValueChanged={cellValueChanged}
-                  processCellForClipboard={processCellForClipboard}
-                  processDataFromClipboard={processDataFromClipboard}
-                  onPasteStart={onPasteStart}
-                  onPasteEnd={onPasteEnd}
-                  getContextMenuItems={contextMenuItems as any}
-                  suppressKeyboardEvent={handlesuppressKeyboardEvent}
-                />
-              </div>
-              {/* 分页高度为30 */}
-              {computedPagination && (
-                <Pagination className="gant-grid-pagination" {...computedPagination} />
-              )}
-            </div>
-          </Spin>
-        );
+    <GridContext.Provider
+      value={{
+        golbalEditable: editable,
+        serverDataRequest,
+        isServerSideGroup,
+        size,
+        getDataPath: getDataPath,
+        editRowDataChanged,
+        editingRowDataChange,
+        computedPagination,
+        treeData,
+        downShift,
+        ...context,
       }}
-    </LocaleReceiver>
+    >
+      <LocaleReceiver>
+        {(local, localeCode = 'zh-cn') => {
+          let lang = langs[localeCode] || langs['zh-cn'];
+          const locale = { ...lang, ...customLocale };
+          const contextMenuItems = function(params) {
+            const {
+              context: { golbalEditable },
+            } = params;
+            const rowNodes = apiRef.current.getSelectedNodes();
+            const hasCut = rowNodes.length <= 0 || (treeData && isEmpty(createConfig));
+            const hasPaste =
+              rowNodes.length > 1 || isEmpty(createConfig) || isEmpty(gridManager.cutRows);
+            const items = getContextMenuItems ? getContextMenuItems(params) : [];
+            const defultMenu = ['expandAll', 'contractAll', ...items, 'separator', 'export'];
+            if (!golbalEditable) return defultMenu;
+            return [
+              'copy',
+              'separator',
+              ...defultMenu,
+              'separator',
+              {
+                name: locale.cutRows,
+                disabled: hasCut,
+                action: params => {
+                  try {
+                    const canPut = onRowsCut ? onRowsCut(rowNodes) : true;
+                    return canPut && gridManager.cut(rowNodes);
+                  } catch (error) {}
+                },
+              },
+              {
+                name: locale.pasteRows,
+                disabled: hasPaste,
+                action: params => {
+                  const [rowNode] = rowNodes;
+                  const canPaste = onRowsPaste ? onRowsPaste(gridManager.cutRows, rowNode) : true;
+                  canPaste && gridManager.paste(rowNode);
+                },
+              },
+            ];
+          };
+          return (
+            <Spin spinning={loading}>
+              <div
+                style={{ width, height }}
+                className={classnames(
+                  'gant-grid',
+                  `gant-grid-${getSizeClassName(size)}`,
+                  openEditSign && `gant-grid-edit`,
+                )}
+              >
+                <div
+                  className="ag-theme-balham"
+                  style={{
+                    width: '100%',
+                    height: computedPagination ? 'calc(100% - 30px)' : '100%',
+                  }}
+                  ref={divRef}
+                >
+                  <AgGridReact
+                    frameworkComponents={{
+                      gantGroupCellRenderer: GantGroupCellRenderer,
+                      gantRenderCol: RenderCol,
+                      ...frameworkComponentsMaps,
+                      ...frameworkComponents,
+                    }}
+                    components={{
+                      ...componentsMaps,
+                      ...components,
+                    }}
+                    onSelectionChanged={onSelectionChanged}
+                    columnDefs={columnDefs}
+                    rowSelection={rowSelection}
+                    getRowNodeId={getRowNodeId}
+                    onGridReady={onGridReady}
+                    undoRedoCellEditing
+                    enableFillHandle
+                    headerHeight={24}
+                    floatingFiltersHeight={20}
+                    rowHeight={size == 'small' ? 24 : 32}
+                    singleClickEdit
+                    context={{
+                      golbalEditable: editable,
+                      serverDataRequest,
+                      isServerSideGroup,
+                      size,
+                      getDataPath: getDataPath,
+                      editRowDataChanged,
+                      editingRowDataChange,
+                      computedPagination,
+                      treeData,
+                      downShift,
+                      ...context,
+                    }}
+                    immutableData
+                    stopEditingWhenGridLosesFocus={false}
+                    treeData={treeData}
+                    getDataPath={getDataPath}
+                    enableRangeSelection
+                    rowData={dataSource}
+                    {...selection}
+                    {...orignProps}
+                    onCellClicked={handleCellClicked}
+                    defaultColDef={{
+                      resizable,
+                      sortable,
+                      filter,
+                      minWidth: 30,
+                      ...defaultColDef,
+                    }}
+                    groupDefaultExpanded={groupDefaultExpanded}
+                    localeText={locale}
+                    rowClassRules={{
+                      'gant-grid-row-isdeleted': params =>
+                        get(params, 'data._rowType') === DataActions.removeTag,
+                      'gant-grid-row-cut': params => get(params, 'data._rowCut'),
+                      ...rowClassRules,
+                    }}
+                    onCellValueChanged={cellValueChanged}
+                    processCellForClipboard={processCellForClipboard}
+                    processDataFromClipboard={processDataFromClipboard}
+                    onPasteStart={onPasteStart}
+                    onPasteEnd={onPasteEnd}
+                    getContextMenuItems={contextMenuItems as any}
+                    suppressKeyboardEvent={handlesuppressKeyboardEvent}
+                  />
+                </div>
+                {/* 分页高度为30 */}
+                {computedPagination && (
+                  <Pagination className="gant-grid-pagination" {...computedPagination} />
+                )}
+              </div>
+            </Spin>
+          );
+        }}
+      </LocaleReceiver>
+    </GridContext.Provider>
   );
 };
 
