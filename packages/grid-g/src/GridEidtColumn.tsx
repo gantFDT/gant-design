@@ -11,8 +11,7 @@ import classnames from 'classnames';
 import { EditStatus } from '@data-cell';
 import { set, cloneDeep, get, isEmpty } from 'lodash';
 import { isEqualObj } from './gridManager/utils';
-import { DataActions } from './interface';
-import { RowNode } from 'ag-grid-community';
+import { stopPropagationForAgGrid } from './utils';
 const defalutProps = {
   autoFocus: true,
   edit: EditStatus.EDIT,
@@ -27,19 +26,14 @@ export default WrapperComponent =>
       colDef: { field },
       props: fieldProps,
       changeFormatter,
-      rowkey,
-      rowIndex,
       context: { size, editRowDataChanged, editingRowDataChange },
       refName = 'wrapperRef',
       valuePropName = 'value',
       node,
     } = props;
     const [newValue, setNewValue] = useState(value);
+    const divRef = useRef<HTMLDivElement>(null);
     const inputRef: any = useRef();
-    const rowId = useMemo(() => {
-      if (!rowkey) return rowIndex;
-      return rowkey(data);
-    }, [rowIndex, rowkey, data]);
     useEffect(() => {
       setNewValue(get(node.data, field, value));
     }, [node.data]);
@@ -90,9 +84,14 @@ export default WrapperComponent =>
         inputRef.current && inputRef.current.focus();
       }, 10);
     }, []);
-    const wrapperClick = useCallback((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-      event.stopPropagation();
-      event.nativeEvent.stopImmediatePropagation();
+    const wrapperClick = useCallback((event: MouseEvent) => {
+      stopPropagationForAgGrid(event)
+    }, []);
+    useEffect(() => {
+      divRef.current?.addEventListener('click', wrapperClick);
+      return () => {
+        divRef.current?.removeEventListener('click', wrapperClick);
+      };
     }, []);
     const wrapperProps = useMemo(() => {
       return {
@@ -101,7 +100,7 @@ export default WrapperComponent =>
       };
     }, [valuePropName, refName, newValue]);
     return (
-      <div className={classnames('gant-grid-cell-editing')} onClick={wrapperClick}>
+      <div className={classnames('gant-grid-cell-editing')} ref={divRef}>
         <WrapperComponent
           wrapperRef={inputRef}
           {...compoentProps}

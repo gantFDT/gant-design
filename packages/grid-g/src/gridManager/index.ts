@@ -101,9 +101,28 @@ export default class GridManage {
       if (!rowNode.expanded) rowNode.setExpanded(true);
     }
   }
-  cut(rowsNodes: RowNode[]) {
-    const update = [];
+  cancelCut() {
     function onSetcutData(rowsNodes: RowNode[]) {
+      const update = [];
+      rowsNodes.map(item => {
+        const { childrenAfterGroup } = item;
+        const { _rowCut, ...data } = cloneDeep(item.data);
+        update.push({ ...data });
+        if (childrenAfterGroup) onSetcutData(childrenAfterGroup);
+      });
+      return update;
+    }
+    try {
+      const update = onSetcutData(this.cutRows);
+      this.agGridApi.batchUpdateRowData({ update });
+      this.cutRows = [];
+    } catch (error) {
+      console.log('cancelCut---->', error);
+    }
+  }
+  cut(rowsNodes: RowNode[]) {
+    function onSetcutData(rowsNodes: RowNode[]) {
+      const update = [];
       rowsNodes.map(item => {
         const { childrenAfterGroup } = item;
         const data = cloneDeep(item.data);
@@ -116,7 +135,7 @@ export default class GridManage {
     try {
       const update = onSetcutData(rowsNodes);
       this.agGridApi.batchUpdateRowData({ update });
-      this.cutRows = cloneDeep(rowsNodes);
+      this.cutRows = rowsNodes;
     } catch (error) {
       console.log(error);
     }
