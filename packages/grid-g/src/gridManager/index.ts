@@ -102,8 +102,8 @@ export default class GridManage {
     }
   }
   cancelCut() {
+    const update = [];
     function onSetcutData(rowsNodes: RowNode[]) {
-      const update = [];
       rowsNodes.map(item => {
         const { childrenAfterGroup } = item;
         const { _rowCut, ...data } = cloneDeep(item.data);
@@ -113,7 +113,7 @@ export default class GridManage {
       return update;
     }
     try {
-      const update = onSetcutData(this.cutRows);
+      onSetcutData(this.cutRows);
       this.agGridApi.batchUpdateRowData({ update });
       this.cutRows = [];
     } catch (error) {
@@ -121,19 +121,19 @@ export default class GridManage {
     }
   }
   cut(rowsNodes: RowNode[]) {
+    const update = [];
     function onSetcutData(rowsNodes: RowNode[]) {
-      const update = [];
       rowsNodes.map(item => {
         const { childrenAfterGroup } = item;
         const data = cloneDeep(item.data);
-        update.push({ ...data, _rowCut: true });
+        data && update.push({ ...data, _rowCut: true });
         item.setSelected(false);
         if (childrenAfterGroup) onSetcutData(childrenAfterGroup);
       });
       return update;
     }
     try {
-      const update = onSetcutData(rowsNodes);
+      onSetcutData(rowsNodes);
       this.agGridApi.batchUpdateRowData({ update });
       this.cutRows = rowsNodes;
     } catch (error) {
@@ -183,7 +183,7 @@ export default class GridManage {
     var rowData = [];
     if (!this.agGridApi) return [];
     this.agGridApi.forEachNode(function(node) {
-      node.data&&rowData.push(node.data);
+      node.data && rowData.push(node.data);
     });
     return rowData;
   }
