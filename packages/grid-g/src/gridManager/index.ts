@@ -183,7 +183,7 @@ export default class GridManage {
     var rowData = [];
     if (!this.agGridApi) return [];
     this.agGridApi.forEachNode(function(node) {
-      rowData.push(node.data);
+      node.data&&rowData.push(node.data);
     });
     return rowData;
   }
