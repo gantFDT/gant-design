@@ -24,7 +24,7 @@ interface AgGridConfig {
   treeData?: boolean;
   getDataPath?: (data: any) => string[];
   createConfig?: CreateConfig;
-  onRowsPasteEnd?: () => void;
+  onRowsPasteEnd?: (dataSource) => void;
 }
 @bindAll()
 export default class GridManage {
@@ -160,13 +160,14 @@ export default class GridManage {
       const rowIndex = get(node, 'rowIndex', 0);
       this.agGridApi.batchUpdateRowData({ remove: oldRowData }, () => {
         const rowData = this.getRowData();
-        this.agGridApi.setRowData([
+        const newDataSource = [
           ...rowData.slice(0, rowIndex),
           ...newRowData,
           ...rowData.slice(rowIndex),
-        ]);
+        ];
+        this.agGridApi.setRowData(newDataSource);
         this.cutRows = [];
-        this.agGridConfig.onRowsPasteEnd && this.agGridConfig.onRowsPasteEnd();
+        this.agGridConfig.onRowsPasteEnd && this.agGridConfig.onRowsPasteEnd(newDataSource);
       });
     } catch (error) {
       console.error(error);
