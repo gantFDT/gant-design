@@ -126,6 +126,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     onRowsPasteEnd,
     onCellClicked,
     suppressKeyboardEvent,
+    hideCut,
     ...orignProps
   } = props;
   const apiRef = useRef<GridApi>();
@@ -437,9 +438,15 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
             const hasPaste =
               rowNodes.length > 1 || isEmpty(createConfig) || isEmpty(gridManager.cutRows);
             const items = getContextMenuItems ? getContextMenuItems(params) : [];
-            const defultMenu = ['expandAll', 'contractAll', ...items, 'separator', 'export'];
+            const defultMenu = treeData
+              ? ['expandAll', 'contractAll', ...items, 'separator', 'export']
+              : [...items, 'separator', 'export'];
             if (!golbalEditable) return defultMenu;
-            return [
+            const editMenu=hideCut?[
+              'copy',
+              'separator',
+              ...defultMenu,
+            ]:[
               'copy',
               'separator',
               ...defultMenu,
@@ -463,7 +470,8 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                   canPaste && gridManager.paste(rowNode);
                 },
               },
-            ];
+            ]
+            return editMenu
           };
           return (
             <Spin spinning={loading}>
