@@ -177,6 +177,7 @@ export interface Props<T extends any> {
   onCellEditingChange: (record: any, fieldName: string, newValue: any, oldValue: any) => any;
   openEditSign: boolean;
   createConfig?: CreateConfig;
+  hideCut?: boolean;
   onRowsCut?: (rows: RowNode[]) => boolean;
   onRowsPaste?: (rows: RowNode[], targetRow?: RowNode) => boolean;
   onRowsPasteEnd?: () => void;

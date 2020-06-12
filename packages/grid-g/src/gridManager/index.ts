@@ -24,7 +24,7 @@ interface AgGridConfig {
   treeData?: boolean;
   getDataPath?: (data: any) => string[];
   createConfig?: CreateConfig;
-  onRowsPasteEnd?: () => void;
+  onRowsPasteEnd?: (dataSource) => void;
 }
 @bindAll()
 export default class GridManage {
@@ -101,22 +101,41 @@ export default class GridManage {
       if (!rowNode.expanded) rowNode.setExpanded(true);
     }
   }
+  cancelCut() {
+    const update = [];
+    function onSetcutData(rowsNodes: RowNode[]) {
+      rowsNodes.map(item => {
+        const { childrenAfterGroup } = item;
+        const { _rowCut, ...data } = cloneDeep(item.data);
+        update.push({ ...data });
+        if (childrenAfterGroup) onSetcutData(childrenAfterGroup);
+      });
+      return update;
+    }
+    try {
+      onSetcutData(this.cutRows);
+      this.agGridApi.batchUpdateRowData({ update });
+      this.cutRows = [];
+    } catch (error) {
+      console.log('cancelCut---->', error);
+    }
+  }
   cut(rowsNodes: RowNode[]) {
     const update = [];
     function onSetcutData(rowsNodes: RowNode[]) {
       rowsNodes.map(item => {
         const { childrenAfterGroup } = item;
         const data = cloneDeep(item.data);
-        update.push({ ...data, _rowCut: true });
+        data && update.push({ ...data, _rowCut: true });
         item.setSelected(false);
         if (childrenAfterGroup) onSetcutData(childrenAfterGroup);
       });
       return update;
     }
     try {
-      const update = onSetcutData(rowsNodes);
+      onSetcutData(rowsNodes);
       this.agGridApi.batchUpdateRowData({ update });
-      this.cutRows = cloneDeep(rowsNodes);
+      this.cutRows = rowsNodes;
     } catch (error) {
       console.log(error);
     }
@@ -141,13 +160,14 @@ export default class GridManage {
       const rowIndex = get(node, 'rowIndex', 0);
       this.agGridApi.batchUpdateRowData({ remove: oldRowData }, () => {
         const rowData = this.getRowData();
-        this.agGridApi.setRowData([
+        const newDataSource = [
           ...rowData.slice(0, rowIndex),
           ...newRowData,
           ...rowData.slice(rowIndex),
-        ]);
+        ];
+        this.agGridApi.setRowData(newDataSource);
         this.cutRows = [];
-        this.agGridConfig.onRowsPasteEnd && this.agGridConfig.onRowsPasteEnd();
+        this.agGridConfig.onRowsPasteEnd && this.agGridConfig.onRowsPasteEnd(newDataSource);
       });
     } catch (error) {
       console.error(error);
@@ -164,7 +184,7 @@ export default class GridManage {
     var rowData = [];
     if (!this.agGridApi) return [];
     this.agGridApi.forEachNode(function(node) {
-      rowData.push(node.data);
+      node.data && rowData.push(node.data);
     });
     return rowData;
   }

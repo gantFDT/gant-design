@@ -126,6 +126,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     onRowsPasteEnd,
     onCellClicked,
     suppressKeyboardEvent,
+    hideCut,
     ...orignProps
   } = props;
   const apiRef = useRef<GridApi>();
@@ -437,33 +438,49 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
             const hasPaste =
               rowNodes.length > 1 || isEmpty(createConfig) || isEmpty(gridManager.cutRows);
             const items = getContextMenuItems ? getContextMenuItems(params) : [];
-            const defultMenu = ['expandAll', 'contractAll', ...items, 'separator', 'export'];
+            const defultMenu = treeData
+              ? ['expandAll', 'contractAll', ...items, 'separator', 'export']
+              : [...items, 'separator', 'export'];
             if (!golbalEditable) return defultMenu;
-            return [
-              'copy',
-              'separator',
-              ...defultMenu,
-              'separator',
-              {
-                name: locale.cutRows,
-                disabled: hasCut,
-                action: params => {
-                  try {
-                    const canPut = onRowsCut ? onRowsCut(rowNodes) : true;
-                    return canPut && gridManager.cut(rowNodes);
-                  } catch (error) {}
-                },
-              },
-              {
-                name: locale.pasteRows,
-                disabled: hasPaste,
-                action: params => {
-                  const [rowNode] = rowNodes;
-                  const canPaste = onRowsPaste ? onRowsPaste(gridManager.cutRows, rowNode) : true;
-                  canPaste && gridManager.paste(rowNode);
-                },
-              },
-            ];
+            const editMenu = hideCut
+              ? ['copy', 'separator', ...defultMenu]
+              : [
+                  'copy',
+                  'separator',
+                  ...defultMenu,
+                  'separator',
+                  {
+                    name: locale.cutRows,
+                    disabled: hasCut,
+                    action: params => {
+                      try {
+                        const canPut = onRowsCut ? onRowsCut(rowNodes) : true;
+                        return canPut && gridManager.cut(rowNodes);
+                      } catch (error) {}
+                    },
+                  },
+                  {
+                    name: locale.cancelCut,
+                    disabled: isEmpty(gridManager.cutRows),
+                    action: params => {
+                      try {
+                        gridManager.cancelCut();
+                      } catch (error) {}
+                    },
+                  },
+                  {
+                    name: locale.pasteRows,
+                    disabled: hasPaste,
+                    action: params => {
+                      const [rowNode] = rowNodes;
+                      const canPaste = onRowsPaste
+                        ? onRowsPaste(gridManager.cutRows, rowNode)
+                        : true;
+                      canPaste && gridManager.paste(rowNode);
+                    },
+                  },
+                ];
+            return editMenu;
           };
           return (
             <Spin spinning={loading}>
