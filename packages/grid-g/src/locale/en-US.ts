@@ -226,4 +226,5 @@ export default {
   createNode: 'create node',
   cutRows: 'cut selected rows',
   pasteRows: 'paste to current Row',
+  cancelCut:"cancel cut"
 };

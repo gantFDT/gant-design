@@ -442,36 +442,45 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
               ? ['expandAll', 'contractAll', ...items, 'separator', 'export']
               : [...items, 'separator', 'export'];
             if (!golbalEditable) return defultMenu;
-            const editMenu=hideCut?[
-              'copy',
-              'separator',
-              ...defultMenu,
-            ]:[
-              'copy',
-              'separator',
-              ...defultMenu,
-              'separator',
-              {
-                name: locale.cutRows,
-                disabled: hasCut,
-                action: params => {
-                  try {
-                    const canPut = onRowsCut ? onRowsCut(rowNodes) : true;
-                    return canPut && gridManager.cut(rowNodes);
-                  } catch (error) {}
-                },
-              },
-              {
-                name: locale.pasteRows,
-                disabled: hasPaste,
-                action: params => {
-                  const [rowNode] = rowNodes;
-                  const canPaste = onRowsPaste ? onRowsPaste(gridManager.cutRows, rowNode) : true;
-                  canPaste && gridManager.paste(rowNode);
-                },
-              },
-            ]
-            return editMenu
+            const editMenu = hideCut
+              ? ['copy', 'separator', ...defultMenu]
+              : [
+                  'copy',
+                  'separator',
+                  ...defultMenu,
+                  'separator',
+                  {
+                    name: locale.cutRows,
+                    disabled: hasCut,
+                    action: params => {
+                      try {
+                        const canPut = onRowsCut ? onRowsCut(rowNodes) : true;
+                        return canPut && gridManager.cut(rowNodes);
+                      } catch (error) {}
+                    },
+                  },
+                  {
+                    name: locale.cancelCut,
+                    disabled: isEmpty(gridManager.cutRows),
+                    action: params => {
+                      try {
+                        gridManager.cancelCut();
+                      } catch (error) {}
+                    },
+                  },
+                  {
+                    name: locale.pasteRows,
+                    disabled: hasPaste,
+                    action: params => {
+                      const [rowNode] = rowNodes;
+                      const canPaste = onRowsPaste
+                        ? onRowsPaste(gridManager.cutRows, rowNode)
+                        : true;
+                      canPaste && gridManager.paste(rowNode);
+                    },
+                  },
+                ];
+            return editMenu;
           };
           return (
             <Spin spinning={loading}>

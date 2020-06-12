@@ -226,4 +226,5 @@ export default {
   createNode: '创建平行节点',
   cutRows: '剪切选中行',
   pasteRows: '粘贴剪切内容',
+  cancelCut:"取消剪切"
 };
