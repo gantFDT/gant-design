@@ -33,26 +33,30 @@ export default memo(
       render,
       value,
       valueFormatted,
-      showFolder=true,
+      showFolder = true,
       rowIndex,
     } = props;
-    const getTreeDataInfo = useCallback((node: RowNode) => {
-      const { expanded: nodeExpanded, childrenAfterFilter = [], data } = node;
-      const hasChildren =
-        childrenAfterFilter.length > 0 || (isServerSideGroup && isServerSideGroup(data));
-      const treeDataType =
-        childrenAfterFilter.length > 0
-          ? 'sync'
-          : isServerSideGroup && isServerSideGroup(data)
-          ? 'async'
-          : 'none';
-      const expanded = nodeExpanded && treeDataType == 'sync';
-      return {
-        hasChildren,
-        treeDataType,
-        expanded,
-      };
-    }, []);
+    const getTreeDataInfo = useCallback(
+      (node: RowNode) => {
+        const { expanded: nodeExpanded, childrenAfterFilter = [], data } = node;
+        const hasChildren =
+          (childrenAfterFilter.length > 0 || (isServerSideGroup && isServerSideGroup(data))) &&
+          treeData;
+        const treeDataType =
+          childrenAfterFilter.length > 0
+            ? 'sync'
+            : isServerSideGroup && isServerSideGroup(data)
+            ? 'async'
+            : 'none';
+        const expanded = nodeExpanded && treeDataType == 'sync';
+        return {
+          hasChildren,
+          treeDataType,
+          expanded,
+        };
+      },
+      [treeData],
+    );
     const [state, setState]: [GantGroupCellRendererState, any] = useState(getTreeDataInfo(node));
     const { hasChildren, expanded, treeDataType } = state;
     const eContracted = useRef<HTMLSpanElement>(null);

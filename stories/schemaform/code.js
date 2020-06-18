@@ -156,6 +156,7 @@ function BasicUse() {
             size="default"
             uiSchema={{ ...initalUiSchema }}
             withoutAnimation
+            hideTitle
         />
         <div style={{ float: 'right' }}>
             <Button size="small" type='primary' onClick={onSubmit}>提交</Button>
