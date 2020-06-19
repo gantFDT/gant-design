@@ -180,7 +180,7 @@ export interface Props<T extends any> {
   hideCut?: boolean;
   onRowsCut?: (rows: RowNode[]) => boolean;
   onRowsPaste?: (rows: RowNode[], targetRow?: RowNode) => boolean;
-  onRowsPasteEnd?: () => void;
+  onRowsPasteEnd?: (data: any) => void;
 }
 
 export type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>;

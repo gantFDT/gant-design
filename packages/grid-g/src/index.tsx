@@ -1,23 +1,10 @@
-import React, {
-  useState,
-  useCallback,
-  useRef,
-  useMemo,
-  useEffect,
-  Dispatch,
-  SetStateAction,
-  createContext,
-} from 'react';
+import React, { useState, useCallback, useRef, useMemo, useEffect, createContext } from 'react';
 import classnames from 'classnames';
 import { AgGridReact } from 'ag-grid-react';
 import {
-  ColDef,
-  GetContextMenuItems,
   GridApi,
-  GridOptions,
   ColumnApi,
   GridReadyEvent,
-  RowNode,
   SelectionChangedEvent,
   CellClickedEvent,
   SuppressKeyboardEventParams,
@@ -27,7 +14,7 @@ import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import { LicenseManager } from 'ag-grid-enterprise';
 import 'ag-grid-enterprise';
 import { Pagination, Spin } from 'antd';
-import { get, isEmpty, isEqual, cloneDeep, set } from 'lodash';
+import { get, isEmpty, isEqual, cloneDeep, set, max, min } from 'lodash';
 import key from './license';
 import { mapColumns, flattenTreeData, usePagination, getSizeClassName } from './utils';
 import { Size, GridPropsPartial, RowSelection, DataActions } from './interface';
@@ -127,6 +114,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     onCellClicked,
     suppressKeyboardEvent,
     hideCut,
+    onCellMouseDown,
     ...orignProps
   } = props;
   const apiRef = useRef<GridApi>();
@@ -231,15 +219,15 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   const handleCellClicked = useCallback(
     (event: CellClickedEvent) => {
       onCellClicked && onCellClicked(event);
-      const { node, api } = event;
-      const selectedRows = api.getSelectedNodes();
-      if (innerSelectedKeys.length === 1 && selectedRows.length === 1) {
-        const [selectedKey] = innerSelectedKeys;
-        const [selectedNode] = selectedRows;
-        if (selectedKey === selectedNode.id) {
-          node.setSelected(false);
-        }
-      }
+      // const { node, api } = event;
+      // const selectedRows = api.getSelectedNodes();
+      // if (innerSelectedKeys.length === 1 && selectedRows.length === 1) {
+      //   const [selectedKey] = innerSelectedKeys;
+      //   const [selectedNode] = selectedRows;
+      //   if (selectedKey === selectedNode.id) {
+      //     node.setSelected(false);
+      //   }
+      // }
     },
     [onCellClicked, innerSelectedKeys],
   );
@@ -382,7 +370,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   const handlesuppressKeyboardEvent = useCallback(
     (params: SuppressKeyboardEventParams) => {
       if (suppressKeyboardEvent) return suppressKeyboardEvent(params);
-      console.log('params', params);
       const {
         context: { downShift },
         api,
@@ -409,10 +396,35 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     },
     [suppressKeyboardEvent],
   );
+  const handleCellMouseDown = useCallback(
+    (cellEvent: CellClickedEvent) => {
+      const { node, event } = cellEvent;
+      const mouseEvent: any = event;
+      if (node.isSelected() || mouseEvent.buttons !== 2) return;
+      if (mouseEvent.shiftKey) {
+        const rowIndexs = [node.rowIndex];
+        const selectedNodes = apiRef.current?.getSelectedNodes();
+        selectedNodes.map(itemNode => rowIndexs.push(itemNode.rowIndex));
+        const maxIndex = max(rowIndexs);
+        const minIndex = min(rowIndexs);
+        for (let index = minIndex; index <= maxIndex; index++) {
+          const nowNode = apiRef.current?.getDisplayedRowAtIndex(index);
+          nowNode.setSelected(true);
+        }
+        const filterNodes = selectedNodes.filter(
+          node => node.rowIndex < minIndex || node.rowIndex > maxIndex,
+        );
+        filterNodes.map(filterNode => filterNode.setSelected(false));
+        return;
+      }
+      node.setSelected(true, true);
+    },
+    [onCellMouseDown],
+  );
   return (
     <GridContext.Provider
       value={{
-        golbalEditable: editable,
+        globalEditable: editable,
         serverDataRequest,
         isServerSideGroup,
         size,
@@ -431,7 +443,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
           const locale = { ...lang, ...customLocale };
           const contextMenuItems = function(params) {
             const {
-              context: { golbalEditable },
+              context: { globalEditable },
             } = params;
             const rowNodes = apiRef.current.getSelectedNodes();
             const hasCut = rowNodes.length <= 0 || (treeData && isEmpty(createConfig));
@@ -440,13 +452,11 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
             const items = getContextMenuItems ? getContextMenuItems(params) : [];
             const defultMenu = treeData
               ? ['expandAll', 'contractAll', ...items, 'separator', 'export']
-              : [...items, 'separator', 'export'];
-            if (!golbalEditable) return defultMenu;
+              : [...items, 'export'];
+            if (!globalEditable) return defultMenu;
             const editMenu = hideCut
-              ? ['copy', 'separator', ...defultMenu]
+              ? [...defultMenu]
               : [
-                  'copy',
-                  'separator',
                   ...defultMenu,
                   'separator',
                   {
@@ -523,7 +533,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     rowHeight={size == 'small' ? 24 : 32}
                     singleClickEdit
                     context={{
-                      golbalEditable: editable,
+                      globalEditable: editable,
                       serverDataRequest,
                       isServerSideGroup,
                       size,
@@ -566,6 +576,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     onPasteEnd={onPasteEnd}
                     getContextMenuItems={contextMenuItems as any}
                     suppressKeyboardEvent={handlesuppressKeyboardEvent}
+                    onCellMouseDown={handleCellMouseDown}
                   />
                 </div>
                 {/* 分页高度为30 */}

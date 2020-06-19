@@ -15,9 +15,9 @@ function itemisgroup(item, children): item is ColGroupDef {
 }
 
 function ColEditableFn(fn: ColumnEdiatble<any>): IsColumnFunc | boolean {
-  return ({ data, context: { golbalEditable } }) => {
-    if (typeof fn === 'function') return golbalEditable ? fn(data) : false;
-    return golbalEditable ? fn : false;
+  return ({ data, context: { globalEditable } }) => {
+    if (typeof fn === 'function') return globalEditable ? fn(data) : false;
+    return globalEditable ? fn : false;
   };
 }
 
@@ -157,13 +157,19 @@ export const mapColumns = <T>(
     lockVisible: true,
     field: 'g-index',
     cellClassRules: {
-      'gant-grid-cell-serial-add': params => get(params, 'data._rowType') === DataActions.add,
+      'gant-grid-cell-serial-add': params =>{
+        const {
+          node: { rowIndex, data },
+          context,
+        } = params;
+        return  get(params, 'data._rowType') === DataActions.add
+      },
     },
-    valueFormatter: (parmas: any) => {
+    valueFormatter: (params: any) => {
       const {
         node: { rowIndex, data },
         context,
-      } = parmas;
+      } = params;
       const computedPagination = get(context, 'computedPagination', {});
       const {
         defaultPageSize = 20,

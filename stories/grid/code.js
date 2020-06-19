@@ -78,20 +78,12 @@ const ComputeGrid = () => {
                     },
                 ]
             },
-            // cellRenderer: "gantGroupCellRenderer",
-            cellRendererParams: {
-                showFolder: false
-            }
+            cellRenderer: "gantGroupCellRenderer",
         },
         {
             fieldName: 'typeName',
             title: "产品类型名称",
             width: 300,
-            valueFormatter: (params) => {
-                console.log("valueFormatter", params)
-                return params.value
-            },
-            render: val => val,
             editConfig: {
                 component: Input,
                 editable: true,
@@ -101,11 +93,6 @@ const ComputeGrid = () => {
             fieldName: 'create',
             title: "创建时间",
             width: 300,
-
-            render: (...ags) => {
-                console.log("render", ags)
-                return '222'
-            },
             editConfig: {
                 component: DatePicker,
                 editable: true,
@@ -117,33 +104,29 @@ const ComputeGrid = () => {
     const [dataSource, setdataSource] = useState(
         [
             {
-                "path": "3113/314/", "id": 314,
-                "typeCode": "314", "typeName": "false",
-            },
-            {
-                "path": "313/",
+                "path": "313",
                 "id": 313,
                 "typeCode": "313", "typeName": "false",
                 "children": [{
-                    "path": "313/322/", "id": 322,
+                    "path": "313/322", "id": 322,
                     "typeCode": "322", "typeName": "false",
                 },
                 {
-                    "path": "313/323/", "id": 323,
+                    "path": "313/323", "id": 323,
                     "typeCode": "323", "typeName": "false",
                 }
                 ],
             },
             {
-                "path": "213/",
+                "path": "213",
                 "id": 213,
                 "typeCode": "213", "typeName": "false",
                 "children": [{
-                    "path": "213/214/", "id": 214,
+                    "path": "213/214", "id": 214,
                     "typeCode": "214", "typeName": "false"
                 }],
             }, {
-                "path": "113/",
+                "path": "113",
                 "id": 113,
                 "typeCode": "113", "typeName": "false",
             }
@@ -195,7 +178,6 @@ const ComputeGrid = () => {
     }
     const getDataPath = (data) => {
         const path = data.path.split('/');
-        path.pop()
         return [...path]
     }
     const createBrother = () => {
@@ -286,18 +268,11 @@ const ComputeGrid = () => {
                     { 'medalCellRenderer': MedalCellRenderer }
                 }
                 onCellEditingChange={(record) => [{ ...record, typeCode: record.typeCode + "test", typeName: "true" }]}
-                treeData
+                treeData={false}
                 editable={editable}
                 dataSource={dataSource}
                 onReady={onReady}
-                serialNumber={{
-                    cellRenderer: "gantGroupCellRenderer",
-                    cellRendererParams: {
-                        showFolder: false
-                    },
-
-
-                }}
+                serialNumber
                 rowSelection={{
                     type: 'multiple',
                     selectedKeys,
@@ -323,6 +298,7 @@ const ComputeGrid = () => {
                     },
                     defaultParentPath: ["313"]
                 }}
+                isServerSideGroup={(data) => data.children}
             />
         </>
     )
