@@ -34,15 +34,19 @@ export default WrapperComponent =>
     const [newValue, setNewValue] = useState(value);
     const divRef = useRef<HTMLDivElement>(null);
     const inputRef: any = useRef();
-    useEffect(() => {
-      setNewValue(get(node.data, field, value));
+    const nodeValue = useMemo(() => {
+      return get(node.data, field, value);
     }, [node.data]);
+    useEffect(() => {
+      setNewValue(nodeValue);
+    }, [nodeValue]);
     const onChange = useCallback(
       val => {
         let chageVal = val;
         let { data } = node;
         data = cloneDeep(data);
         if (typeof changeFormatter === 'function') chageVal = changeFormatter(val, data);
+        node.setDataValue(field, chageVal);
         setNewValue(chageVal);
         editingRowDataChange(set(data, field, chageVal), field, chageVal, value);
       },
@@ -85,7 +89,7 @@ export default WrapperComponent =>
       }, 10);
     }, []);
     const wrapperClick = useCallback((event: MouseEvent) => {
-      stopPropagationForAgGrid(event)
+      stopPropagationForAgGrid(event);
     }, []);
     useEffect(() => {
       divRef.current?.addEventListener('click', wrapperClick);

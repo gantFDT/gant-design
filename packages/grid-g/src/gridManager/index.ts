@@ -54,7 +54,6 @@ export default class GridManage {
   appendChild(keys, add) {
     this.batchUpdateGrid({ add });
   }
-  @Debounce(200)
   async validate(data) {
     const { getRowNodeId } = this.agGridConfig;
     // this.validateFields;
@@ -143,7 +142,7 @@ export default class GridManage {
       this.agGridApi.batchUpdateRowData({ update });
       this.cutRows = [];
     } catch (error) {
-      console.log('cancelCut---->', error);
+      console.error('cancelCut---->', error);
     }
   }
   cut(rowsNodes: RowNode[]) {
@@ -154,7 +153,7 @@ export default class GridManage {
       this.agGridApi.batchUpdateRowData({ update: [...oldUpdate, ...newUpdate] });
       this.cutRows = rowsNodes;
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
   paste(node) {
