@@ -117,6 +117,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     hideCut,
     onCellMouseDown,
     onContextChangeRender,
+    defaultExportParams,
     ...orignProps
   } = props;
   const initGrid = useState(true);
@@ -449,7 +450,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     };
   }, [propsContext, size, computedPagination, downShift, editable]);
   useEffect(() => {
-    const params = onContextChangeRender(context);
+    const params = onContextChangeRender && onContextChangeRender(context);
 
     if (!params) return;
     const { columns, nodeIds = [] } = params;
@@ -464,7 +465,16 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       force: true,
     });
   }, [context]);
-
+  const exportColumns = useMemo(() => {
+    const arr: string[] = [];
+    columnDefs.map((item: any) => {
+      if (item.field !== 'defalutSelection' && item.field !== 'g-index') {
+        arr.push(item.field);
+      }
+    });
+  
+    return arr;
+  }, [columnDefs]);
   return (
     <GridContext.Provider value={{}}>
       <LocaleReceiver>
@@ -522,6 +532,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                 ];
             return editMenu;
           };
+
           return (
             <Spin spinning={loading}>
               <div
@@ -562,6 +573,11 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     floatingFiltersHeight={20}
                     rowHeight={size == 'small' ? 24 : 32}
                     singleClickEdit
+                    defaultExportParams={{
+                      columnKeys: exportColumns,
+                      allColumns: false,
+                      ...defaultExportParams,
+                    }}
                     context={{
                       globalEditable: editable,
                       serverDataRequest,
