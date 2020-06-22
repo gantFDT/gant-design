@@ -70,8 +70,8 @@ export default WrapperComponent =>
             return false;
           },
           getValue: () => {
-            if (isEqualObj(get(node, `data.${field}`, value), newValue))
-              return get(node, `data.${field}`, value);
+            if (isEqualObj(value, newValue))
+              return newValue;
             setTimeout(() => {
               const data = cloneDeep(node.data);
               set(data, field, newValue);
