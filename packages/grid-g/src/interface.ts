@@ -86,6 +86,7 @@ export type EditConfig<T> = {
   refName?: string;
   valuePropName?: string;
   rules?: RuleItem | RuleItem[];
+  signable: ColumnEdiatble<T>;
 };
 export interface CreateConfig {
   id: string; // id对应字段名称

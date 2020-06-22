@@ -67,6 +67,7 @@ const ComputeGrid = () => {
             editConfig: {
                 component: Input,
                 editable: true,
+                signable: true,
                 rules: [
                     {
                         required: true,
@@ -268,7 +269,10 @@ const ComputeGrid = () => {
                 components={
                     { 'medalCellRenderer': MedalCellRenderer }
                 }
-                onCellEditingChange={(record) => [{ ...record, typeCode: record.typeCode + "test", typeName: "true" }]}
+                onCellEditingChange={(record, fieldName) => {
+                    if (fieldName === 'typeName') return record
+                    return [{ ...record, typeCode: record.typeCode, typeName: "true" }]
+                }}
                 treeData={false}
                 editable={editable}
                 dataSource={dataSource}
@@ -284,7 +288,6 @@ const ComputeGrid = () => {
                 // isServerSideGroup={(data) => data.children}
                 groupSuppressAutoColumn
                 getDataPath={getDataPath}
-                onRow
                 isCompute={false}
                 createConfig={{
                     id: 'path',

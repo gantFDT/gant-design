@@ -1,5 +1,18 @@
 :global {
   .gant-grid-edit {
+    .gant-cell-validate-sign {
+      ::after {
+        content: '';
+        width: 98%;
+        bottom: 0px;
+        border-bottom: 1px dotted #ff4d4f;
+        position: absolute;
+        left: 1%;
+      }
+    }
+    .ag-cell.gant-cell-validate-sign-2 {
+      border: 1px dotted #ff4d4f !important;
+    }
     .gant-header-cell-required {
       .ag-header-cell-text::before {
         content: '*';

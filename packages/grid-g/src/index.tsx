@@ -8,6 +8,7 @@ import {
   SelectionChangedEvent,
   CellClickedEvent,
   SuppressKeyboardEventParams,
+  RowDataUpdatedEvent,
 } from 'ag-grid-community';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
@@ -304,9 +305,11 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
         newRecords = Array.isArray(newRecords) ? newRecords : [newRecords];
         let oldRecord = cloneDeep(record);
         oldRecord = Array.isArray(oldRecord) ? oldRecord : [oldRecord];
-        if (isEqual(oldRecord, newRecords)) return;
+        if (isEqual(oldRecord, newRecords)) return gridManager.validate(newRecords);
         gridManager.modify(newRecords);
+        return;
       }
+      gridManager.validate([record]);
     },
     [onCellEditingChange],
   );
@@ -400,6 +403,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     (cellEvent: CellClickedEvent) => {
       const { node, event } = cellEvent;
       const mouseEvent: any = event;
+      onCellMouseDown && onCellMouseDown(cellEvent);
       if (node.isSelected() || mouseEvent.buttons !== 2) return;
       if (mouseEvent.shiftKey) {
         const rowIndexs = [node.rowIndex];
@@ -551,6 +555,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     getDataPath={getDataPath}
                     enableRangeSelection
                     rowData={dataSource}
+                    suppressColumnVirtualisation
                     {...selection}
                     {...orignProps}
                     onCellClicked={handleCellClicked}

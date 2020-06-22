@@ -83,7 +83,7 @@ export const mapColumns = <T>(
         if (!itemisgroup(colDef, children)) {
           // 当前列允许编辑
           if (ColEditable) {
-            const { props, changeFormatter, component, rules, ...params } = editConfig;
+            const { props, changeFormatter, component, rules, signable, ...params } = editConfig;
             let required = false;
             if (Array.isArray(rules)) {
               const fieldsRules: RuleItem[] = rules.map(item => {
@@ -112,6 +112,19 @@ export const mapColumns = <T>(
               headerClass,
               required ? 'gant-header-cell-required' : 'gant-header-cell-edit',
             );
+            if (typeof signable === 'boolean' || typeof signable === 'function')
+              colDef.cellClassRules = {
+                ...colDef.cellClassRules,
+                'gant-cell-validate-sign': params => {
+                  const show = typeof signable === 'boolean' ? signable : signable(params);
+                  if (!show) return false;
+                  const {
+                    data: { _rowError, ...itemData } = {} as any,
+                    colDef: { field },
+                  } = params;
+                  return get(_rowError, field, false);
+                },
+              };
           }
           if (fixed) colDef.pinned = fixed;
         } else if (itemisgroup(colDef, children)) {
@@ -157,12 +170,12 @@ export const mapColumns = <T>(
     lockVisible: true,
     field: 'g-index',
     cellClassRules: {
-      'gant-grid-cell-serial-add': params =>{
+      'gant-grid-cell-serial-add': params => {
         const {
           node: { rowIndex, data },
           context,
         } = params;
-        return  get(params, 'data._rowType') === DataActions.add
+        return get(params, 'data._rowType') === DataActions.add;
       },
     },
     valueFormatter: (params: any) => {
@@ -308,8 +321,7 @@ export function getSizeClassName(size: Size) {
       return '';
   }
 }
-export const  AG_GRID_STOP_PROPAGATION = '__ag_Grid_Stop_Propagation';
+export const AG_GRID_STOP_PROPAGATION = '__ag_Grid_Stop_Propagation';
 export function stopPropagationForAgGrid(event) {
   event[AG_GRID_STOP_PROPAGATION] = true;
 }
-
