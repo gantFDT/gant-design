@@ -624,7 +624,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     getContextMenuItems={contextMenuItems as any}
                     suppressKeyboardEvent={handlesuppressKeyboardEvent}
                     onCellMouseDown={handleCellMouseDown}
-                    
                   />
                 </div>
                 {/* 分页高度为30 */}
