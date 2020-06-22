@@ -90,6 +90,13 @@ const ComputeGrid = () => {
             editConfig: {
                 component: Input,
                 editable: true,
+                signable: true,
+                rules: [
+                    {
+                        required: true,
+                        message: "产品类型编码必填"
+                    }
+                ]
             }
         },
         {
