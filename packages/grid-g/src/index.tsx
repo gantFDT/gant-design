@@ -8,6 +8,7 @@ import {
   SelectionChangedEvent,
   CellClickedEvent,
   SuppressKeyboardEventParams,
+  RowDataUpdatedEvent,
 } from 'ag-grid-community';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
@@ -96,7 +97,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     serverGroupExpend,
     groupDefaultExpanded,
     defaultColDef,
-    context,
+    context: propsContext,
     components,
     serialNumber,
     rowClassRules,
@@ -115,8 +116,11 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     suppressKeyboardEvent,
     hideCut,
     onCellMouseDown,
+    onContextChangeRender,
+    defaultExportParams,
     ...orignProps
   } = props;
+  const initGrid = useState(true);
   const apiRef = useRef<GridApi>();
   const columnsRef = useRef<ColumnApi>();
   const divRef = useRef<HTMLDivElement>();
@@ -126,7 +130,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   const gridManager = useMemo(() => {
     return new GridManager();
   }, []);
-
   // 处理selection
   const gantSelection: RowSelection = useMemo(() => {
     if (rowSel === true) {
@@ -152,7 +155,12 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     return rowkey(data);
   }, []);
 
-  //
+  useEffect(() => {
+    if (!editable) {
+      apiRef.current?.stopEditing();
+    }
+  }, [editable]);
+
   const getDataPath = useCallback(
     data => {
       if (orignGetDataPath) return orignGetDataPath(data);
@@ -304,9 +312,11 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
         newRecords = Array.isArray(newRecords) ? newRecords : [newRecords];
         let oldRecord = cloneDeep(record);
         oldRecord = Array.isArray(oldRecord) ? oldRecord : [oldRecord];
-        if (isEqual(oldRecord, newRecords)) return;
+        if (isEqual(oldRecord, newRecords)) return gridManager.validate(newRecords);
         gridManager.modify(newRecords);
+        return;
       }
+      gridManager.validate([record]);
     },
     [onCellEditingChange],
   );
@@ -400,6 +410,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     (cellEvent: CellClickedEvent) => {
       const { node, event } = cellEvent;
       const mouseEvent: any = event;
+      onCellMouseDown && onCellMouseDown(cellEvent);
       if (node.isSelected() || mouseEvent.buttons !== 2) return;
       if (mouseEvent.shiftKey) {
         const rowIndexs = [node.rowIndex];
@@ -421,22 +432,51 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     },
     [onCellMouseDown],
   );
+
+  // context 变化
+  const context = useMemo(() => {
+    return {
+      globalEditable: editable,
+      serverDataRequest,
+      isServerSideGroup,
+      size,
+      getDataPath: getDataPath,
+      editRowDataChanged,
+      editingRowDataChange,
+      computedPagination,
+      treeData,
+      downShift,
+      ...propsContext,
+    };
+  }, [propsContext, size, computedPagination, downShift, editable]);
+  useEffect(() => {
+    const params = onContextChangeRender && onContextChangeRender(context);
+
+    if (!params) return;
+    const { columns, nodeIds = [] } = params;
+    let rowNodes = null;
+    if (nodeIds && nodeIds.length > 0)
+      rowNodes = nodeIds.map(id => {
+        return apiRef.current?.getRowNode(id);
+      });
+    apiRef.current?.refreshCells({
+      columns,
+      rowNodes,
+      force: true,
+    });
+  }, [context]);
+  const exportColumns = useMemo(() => {
+    const arr: string[] = [];
+    columnDefs.map((item: any) => {
+      if (item.field !== 'defalutSelection' && item.field !== 'g-index') {
+        arr.push(item.field);
+      }
+    });
+  
+    return arr;
+  }, [columnDefs]);
   return (
-    <GridContext.Provider
-      value={{
-        globalEditable: editable,
-        serverDataRequest,
-        isServerSideGroup,
-        size,
-        getDataPath: getDataPath,
-        editRowDataChanged,
-        editingRowDataChange,
-        computedPagination,
-        treeData,
-        downShift,
-        ...context,
-      }}
-    >
+    <GridContext.Provider value={{}}>
       <LocaleReceiver>
         {(local, localeCode = 'zh-cn') => {
           let lang = langs[localeCode] || langs['zh-cn'];
@@ -492,6 +532,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                 ];
             return editMenu;
           };
+
           return (
             <Spin spinning={loading}>
               <div
@@ -532,6 +573,11 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     floatingFiltersHeight={20}
                     rowHeight={size == 'small' ? 24 : 32}
                     singleClickEdit
+                    defaultExportParams={{
+                      columnKeys: exportColumns,
+                      allColumns: false,
+                      ...defaultExportParams,
+                    }}
                     context={{
                       globalEditable: editable,
                       serverDataRequest,
@@ -551,6 +597,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     getDataPath={getDataPath}
                     enableRangeSelection
                     rowData={dataSource}
+                    suppressColumnVirtualisation
                     {...selection}
                     {...orignProps}
                     onCellClicked={handleCellClicked}
@@ -577,6 +624,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     getContextMenuItems={contextMenuItems as any}
                     suppressKeyboardEvent={handlesuppressKeyboardEvent}
                     onCellMouseDown={handleCellMouseDown}
+                    
                   />
                 </div>
                 {/* 分页高度为30 */}

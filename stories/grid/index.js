@@ -64,9 +64,11 @@ const ComputeGrid = () => {
             fieldName: 'typeCode',
             title: "产品类型编码",
             width: 300,
+            forceRender: true,
             editConfig: {
                 component: Input,
                 editable: true,
+                signable: true,
                 rules: [
                     {
                         required: true,
@@ -88,6 +90,13 @@ const ComputeGrid = () => {
             editConfig: {
                 component: Input,
                 editable: true,
+                signable: true,
+                rules: [
+                    {
+                        required: true,
+                        message: "产品类型编码必填"
+                    }
+                ]
             }
         },
         {
@@ -97,7 +106,12 @@ const ComputeGrid = () => {
             editConfig: {
                 component: DatePicker,
                 editable: true,
+            },
+            render: (value) => {
+                console.log("create-render")
+                return value
             }
+
         }
     ])
 
@@ -268,7 +282,19 @@ const ComputeGrid = () => {
                 components={
                     { 'medalCellRenderer': MedalCellRenderer }
                 }
-                onCellEditingChange={(record) => [{ ...record, typeCode: record.typeCode + "test", typeName: "true" }]}
+                onContextChangeRender={
+                    (context) => {
+                        if (context.globalEditable) {
+                            return {
+                                columns: ['create']
+                            }
+                        }
+                    }
+                }
+                onCellEditingChange={(record, fieldName) => {
+                    if (fieldName === 'typeName') return record
+                    return [{ ...record, typeCode: record.typeCode, typeName: "true" }]
+                }}
                 treeData={false}
                 editable={editable}
                 dataSource={dataSource}
@@ -284,7 +310,6 @@ const ComputeGrid = () => {
                 // isServerSideGroup={(data) => data.children}
                 groupSuppressAutoColumn
                 getDataPath={getDataPath}
-                onRow
                 isCompute={false}
                 createConfig={{
                     id: 'path',
@@ -340,6 +365,7 @@ const AsyncTreeData = () => {
     {
         fieldName: 'employeeName',
         render: (val, record, index, params) => {
+            console.log("")
             const { context: { size } } = params;
             return <Input value={val} />
         }
@@ -397,6 +423,7 @@ const AsyncTreeData = () => {
                     onSelect(keys)
                 }
             }}
+
             size={size}
             onReady={onReady}
             editable={editable}

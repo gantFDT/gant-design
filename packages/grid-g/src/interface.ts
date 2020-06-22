@@ -86,6 +86,7 @@ export type EditConfig<T> = {
   refName?: string;
   valuePropName?: string;
   rules?: RuleItem | RuleItem[];
+  signable: ColumnEdiatble<T>;
 };
 export interface CreateConfig {
   id: string; // id对应字段名称
@@ -181,6 +182,15 @@ export interface Props<T extends any> {
   onRowsCut?: (rows: RowNode[]) => boolean;
   onRowsPaste?: (rows: RowNode[], targetRow?: RowNode) => boolean;
   onRowsPasteEnd?: (data: any) => void;
+  onContextChangeRender?: (
+    context: any,
+  ) =>
+    | {
+        columns?: string[];
+        nodeIds?: string[];
+      }
+    | null
+    | false;
 }
 
 export type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>;

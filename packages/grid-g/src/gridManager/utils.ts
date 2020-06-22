@@ -1,6 +1,7 @@
 import { get, isEmpty, isEqual, findIndex, cloneDeep } from 'lodash';
 import { DataActions, CreateConfig } from '../interface';
 import { generateUuid } from '@util';
+import { RowNode } from 'ag-grid-community';
 export function getModifyData(records, getRowItemData, oldRecords) {
   const hisRecords: any[] = [],
     newRecords: any[] = [];
@@ -130,4 +131,21 @@ export function getRowsToUpdate(nodes, parentPath, createConfig, agGridConfig) {
     }
   });
   return { newRowData: res, oldRowData };
+}
+
+// 标记剪切
+export function onSetcutData(rowsNodes: RowNode[], clear?: boolean) {
+  const update: any[] = [];
+  rowsNodes.map(item => {
+    const { childrenAfterGroup } = item;
+    let data: object = cloneDeep(item.data);
+    data = { ...data, _rowCut: !clear };
+    if (item.data) update.push(data);
+    item.setSelected(false);
+    if (childrenAfterGroup) {
+      const childrenData = onSetcutData(childrenAfterGroup);
+      update.push(...childrenData);
+    }
+  });
+  return update;
 }

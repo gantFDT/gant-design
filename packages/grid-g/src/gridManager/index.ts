@@ -1,7 +1,14 @@
 import { RowDataTransaction, GridApi, RowNode } from 'ag-grid-community';
 import Schema, { Rules } from 'async-validator';
-import { get, isEmpty, findIndex, cloneDeep } from 'lodash';
-import { getModifyData, removeTagData, isEqualObj, canQuickCreate, getRowsToUpdate } from './utils';
+import { get, isEmpty, findIndex, cloneDeep, merge } from 'lodash';
+import {
+  getModifyData,
+  removeTagData,
+  isEqualObj,
+  canQuickCreate,
+  getRowsToUpdate,
+  onSetcutData,
+} from './utils';
 import { DataActions, CreateConfig } from '../interface';
 import { bindAll, Debounce } from 'lodash-decorators';
 import { generateUuid } from '@util';
@@ -47,6 +54,7 @@ export default class GridManage {
   appendChild(keys, add) {
     this.batchUpdateGrid({ add });
   }
+  @Debounce(200)
   async validate(data) {
     const { getRowNodeId } = this.agGridConfig;
     // this.validateFields;
@@ -70,10 +78,13 @@ export default class GridManage {
     let schema = new Schema(descriptor);
     try {
       await schema.validate({ source });
+      this.errorSign({}, source);
       return null;
     } catch (err) {
       const { errors } = err;
       const validateErros: any = {};
+      let nodeIds: string[] = [];
+      let nodeFields: string[] = [];
       errors.map(itemError => {
         const [sourceName, index, field] = itemError.field.split('.');
         const nodeId = getRowNodeId(get(source, `[${index}]`, {}));
@@ -87,12 +98,37 @@ export default class GridManage {
           } else {
             validateErros[rowIndex] = [{ field, message }];
           }
+          nodeIds = [...nodeIds, nodeId];
+
+          nodeFields = [...nodeFields, field];
         }
       });
-      if (isEmpty(validateErros)) return null;
+      if (isEmpty(validateErros)) return;
+      this.errorSign(validateErros, source);
       return validateErros;
     }
   }
+  errorSign(validateErros: any, newData: any[]) {
+    let update: any[] = [];
+    const indexArr: number[] = [];
+    update = newData.map(itemData => {
+      const { _rowError: _row, ..._itemData } = itemData;
+      const nodeId = this.agGridConfig.getRowNodeId(itemData);
+      const rowNode = this.agGridApi.getRowNode(nodeId);
+      const rowIndex = get(rowNode, 'rowIndex', -1);
+      const errorsArr = validateErros[rowIndex];
+      if (errorsArr) {
+        const _rowError: any = {};
+        errorsArr.map(itemError => {
+          _rowError[itemError.field] = true;
+        });
+        rowNode.setData({ ..._itemData, _rowError });
+      } else {
+        if (_row) rowNode.setData(_itemData);
+      }
+    });
+  }
+
   private getNodeExtendsParent(rowNode: RowNode, first = true) {
     if (rowNode.level > 0) {
       this.getNodeExtendsParent(rowNode.parent, false);
@@ -102,18 +138,8 @@ export default class GridManage {
     }
   }
   cancelCut() {
-    const update = [];
-    function onSetcutData(rowsNodes: RowNode[]) {
-      rowsNodes.map(item => {
-        const { childrenAfterGroup } = item;
-        const { _rowCut, ...data } = cloneDeep(item.data);
-        update.push({ ...data });
-        if (childrenAfterGroup) onSetcutData(childrenAfterGroup);
-      });
-      return update;
-    }
     try {
-      onSetcutData(this.cutRows);
+      const update = onSetcutData(this.cutRows, true);
       this.agGridApi.batchUpdateRowData({ update });
       this.cutRows = [];
     } catch (error) {
@@ -121,20 +147,11 @@ export default class GridManage {
     }
   }
   cut(rowsNodes: RowNode[]) {
-    const update = [];
-    function onSetcutData(rowsNodes: RowNode[]) {
-      rowsNodes.map(item => {
-        const { childrenAfterGroup } = item;
-        const data = cloneDeep(item.data);
-        data && update.push({ ...data, _rowCut: true });
-        item.setSelected(false);
-        if (childrenAfterGroup) onSetcutData(childrenAfterGroup);
-      });
-      return update;
-    }
     try {
-      onSetcutData(rowsNodes);
-      this.agGridApi.batchUpdateRowData({ update });
+      const oldUpdate = onSetcutData(this.cutRows, true);
+      const newUpdate = onSetcutData(rowsNodes);
+      if (!isEmpty(this.cutRows)) onSetcutData(rowsNodes);
+      this.agGridApi.batchUpdateRowData({ update: [...oldUpdate, ...newUpdate] });
       this.cutRows = rowsNodes;
     } catch (error) {
       console.log(error);
@@ -202,13 +219,13 @@ export default class GridManage {
     const { hisRecords, newRecords } = getModifyData(records, this.getRowItemData, oldRecords);
     if (newRecords.length <= 0) return;
     const rowData = [];
-    this.agGridApi.forEachNode(node => {
-      const index = findIndex(newRecords, item => {
-        return this.agGridConfig.getRowNodeId(node.data) == this.agGridConfig.getRowNodeId(item);
-      });
-      if (index >= 0 && node.data && newRecords[index]) return rowData.push(newRecords[index]);
+    newRecords.map(data => {
+      const nodeId = this.agGridConfig.getRowNodeId(data);
+      const node = this.agGridApi.getRowNode(nodeId);
+      if (node && node.data && data) return rowData.push(data);
     });
     this.batchUpdateGrid({ update: rowData });
+    this.validate(rowData);
     this.historyStack.push({
       type: DataActions.modify,
       records: hisRecords,
@@ -229,6 +246,7 @@ export default class GridManage {
     this.agGridApi.setSortModel([]);
     if (typeof targetId !== 'number' && !targetId) {
       addRecords = addRecords.map(item => ({ ...item, _rowType: DataActions.add }));
+      this.validate(addRecords);
       this.agGridApi.setRowData([...addRecords, ...rowData]);
       this.historyStack.push({
         type: DataActions.add,
@@ -239,6 +257,7 @@ export default class GridManage {
     let targetArray = Array.isArray(targetId) ? targetId : [targetId];
     addRecords = addRecords;
     let hisRecords: any[] = [];
+    const newRecords: any[] = [];
     targetArray.map((itemId, index) => {
       let targetIndex = findIndex(rowData, data => getRowNodeId(data) == itemId);
       targetIndex = isSub ? targetIndex + 1 : targetIndex;
@@ -246,8 +265,10 @@ export default class GridManage {
       addTarget = Array.isArray(addTarget) ? addTarget : addRecords;
       addTarget = addTarget.map(item => ({ ...item, _rowType: DataActions.add }));
       rowData = [...rowData.slice(0, targetIndex), ...addTarget, ...rowData.slice(targetIndex)];
+      newRecords.push(...addTarget);
       hisRecords = [...hisRecords, ...addTarget];
     });
+    this.validate(newRecords);
     this.agGridApi.setRowData([...rowData]);
     this.historyStack.push({
       type: DataActions.add,
@@ -553,7 +574,7 @@ export default class GridManage {
     this.agGridApi.forEachNode(function(node) {
       let cloneData = cloneDeep(get(node, 'data', {}));
       if (!isEmpty(cloneData)) {
-        const { _rowType, _rowData, ...itemData } = cloneData;
+        const { _rowType, _rowData, _rowCut, _rowError, treeDataPath, ...itemData } = cloneData;
         if (_rowType !== DataActions.removeTag) data.push(itemData);
       }
     });
