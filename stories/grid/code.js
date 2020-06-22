@@ -63,6 +63,7 @@ const ComputeGrid = () => {
             fieldName: 'typeCode',
             title: "产品类型编码",
             width: 300,
+            forceRender: true,
             editConfig: {
                 component: Input,
                 editable: true,
@@ -97,7 +98,12 @@ const ComputeGrid = () => {
             editConfig: {
                 component: DatePicker,
                 editable: true,
+            },
+            render: (value) => {
+                console.log("create-render")
+                return value
             }
+
         }
     ])
 
@@ -267,6 +273,15 @@ const ComputeGrid = () => {
                 columns={columns}
                 components={
                     { 'medalCellRenderer': MedalCellRenderer }
+                }
+                onContextChangeRender={
+                    (context) => {
+                        if (context.globalEditable) {
+                            return {
+                                columns: ['create']
+                            }
+                        }
+                    }
                 }
                 onCellEditingChange={(record, fieldName) => {
                     if (fieldName === 'typeName') return record

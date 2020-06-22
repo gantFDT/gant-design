@@ -111,7 +111,6 @@ export default class GridManage {
   errorSign(validateErros: any, newData: any[]) {
     let update: any[] = [];
     const indexArr: number[] = [];
-    console.log('errorSign', newData);
     update = newData.map(itemData => {
       const { _rowError: _row, ..._itemData } = itemData;
       const nodeId = this.agGridConfig.getRowNodeId(itemData);

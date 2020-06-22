@@ -115,7 +115,7 @@ export const mapColumns = <T>(
             if (typeof signable === 'boolean' || typeof signable === 'function')
               colDef.cellClassRules = {
                 ...colDef.cellClassRules,
-                'gant-cell-validate-sign': params => {
+                'gant-cell-validate-sign-2': params => {
                   const show = typeof signable === 'boolean' ? signable : signable(params);
                   if (!show) return false;
                   const {

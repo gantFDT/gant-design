@@ -97,7 +97,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     serverGroupExpend,
     groupDefaultExpanded,
     defaultColDef,
-    context,
+    context: propsContext,
     components,
     serialNumber,
     rowClassRules,
@@ -116,8 +116,10 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     suppressKeyboardEvent,
     hideCut,
     onCellMouseDown,
+    onContextChangeRender,
     ...orignProps
   } = props;
+  const initGrid = useState(true);
   const apiRef = useRef<GridApi>();
   const columnsRef = useRef<ColumnApi>();
   const divRef = useRef<HTMLDivElement>();
@@ -127,7 +129,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   const gridManager = useMemo(() => {
     return new GridManager();
   }, []);
-
   // 处理selection
   const gantSelection: RowSelection = useMemo(() => {
     if (rowSel === true) {
@@ -153,7 +154,12 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     return rowkey(data);
   }, []);
 
-  //
+  useEffect(() => {
+    if (!editable) {
+      apiRef.current?.stopEditing();
+    }
+  }, [editable]);
+
   const getDataPath = useCallback(
     data => {
       if (orignGetDataPath) return orignGetDataPath(data);
@@ -425,22 +431,42 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     },
     [onCellMouseDown],
   );
+
+  // context 变化
+  const context = useMemo(() => {
+    return {
+      globalEditable: editable,
+      serverDataRequest,
+      isServerSideGroup,
+      size,
+      getDataPath: getDataPath,
+      editRowDataChanged,
+      editingRowDataChange,
+      computedPagination,
+      treeData,
+      downShift,
+      ...propsContext,
+    };
+  }, [propsContext, size, computedPagination, downShift, editable]);
+  useEffect(() => {
+    const params = onContextChangeRender(context);
+
+    if (!params) return;
+    const { columns, nodeIds = [] } = params;
+    let rowNodes = null;
+    if (nodeIds && nodeIds.length > 0)
+      rowNodes = nodeIds.map(id => {
+        return apiRef.current?.getRowNode(id);
+      });
+    apiRef.current?.refreshCells({
+      columns,
+      rowNodes,
+      force: true,
+    });
+  }, [context]);
+
   return (
-    <GridContext.Provider
-      value={{
-        globalEditable: editable,
-        serverDataRequest,
-        isServerSideGroup,
-        size,
-        getDataPath: getDataPath,
-        editRowDataChanged,
-        editingRowDataChange,
-        computedPagination,
-        treeData,
-        downShift,
-        ...context,
-      }}
-    >
+    <GridContext.Provider value={{}}>
       <LocaleReceiver>
         {(local, localeCode = 'zh-cn') => {
           let lang = langs[localeCode] || langs['zh-cn'];

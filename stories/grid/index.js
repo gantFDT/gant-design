@@ -64,6 +64,7 @@ const ComputeGrid = () => {
             fieldName: 'typeCode',
             title: "产品类型编码",
             width: 300,
+            forceRender: true,
             editConfig: {
                 component: Input,
                 editable: true,
@@ -98,7 +99,12 @@ const ComputeGrid = () => {
             editConfig: {
                 component: DatePicker,
                 editable: true,
+            },
+            render: (value) => {
+                console.log("create-render")
+                return value
             }
+
         }
     ])
 
@@ -269,6 +275,15 @@ const ComputeGrid = () => {
                 components={
                     { 'medalCellRenderer': MedalCellRenderer }
                 }
+                onContextChangeRender={
+                    (context) => {
+                        if (context.globalEditable) {
+                            return {
+                                columns: ['create']
+                            }
+                        }
+                    }
+                }
                 onCellEditingChange={(record, fieldName) => {
                     if (fieldName === 'typeName') return record
                     return [{ ...record, typeCode: record.typeCode, typeName: "true" }]
@@ -343,6 +358,7 @@ const AsyncTreeData = () => {
     {
         fieldName: 'employeeName',
         render: (val, record, index, params) => {
+            console.log("")
             const { context: { size } } = params;
             return <Input value={val} />
         }
@@ -400,6 +416,7 @@ const AsyncTreeData = () => {
                     onSelect(keys)
                 }
             }}
+
             size={size}
             onReady={onReady}
             editable={editable}
