@@ -44,9 +44,11 @@ export default WrapperComponent =>
       val => {
         let chageVal = val;
         let { data } = node;
+        let newData = cloneDeep(data);
         data = cloneDeep(data);
         if (typeof changeFormatter === 'function') chageVal = changeFormatter(val, data);
-        node.setDataValue(field, chageVal);
+        set(newData, `${field}`, chageVal);
+        node.setData(newData);
         setNewValue(chageVal);
         editingRowDataChange(set(data, field, chageVal), field, chageVal, value);
       },
@@ -70,8 +72,7 @@ export default WrapperComponent =>
             return false;
           },
           getValue: () => {
-            if (isEqualObj(value, newValue))
-              return newValue;
+            if (isEqualObj(value, newValue)) return newValue;
             setTimeout(() => {
               const data = cloneDeep(node.data);
               set(data, field, newValue);
