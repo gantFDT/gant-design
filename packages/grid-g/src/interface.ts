@@ -178,12 +178,13 @@ export interface Props<T extends any> {
   onCellEditingChange: (record: any, fieldName: string, newValue: any, oldValue: any) => any;
   openEditSign: boolean;
   createConfig?: CreateConfig;
-  hideCut?: boolean;
+  showCut?: boolean;
   onRowsCut?: (rows: RowNode[]) => boolean;
   onRowsPaste?: (rows: RowNode[], targetRow?: RowNode) => boolean;
   onRowsPasteEnd?: (data: any) => void;
   onContextChangeRender?: (
     context: any,
+    diffKeys: string[],
   ) =>
     | {
         columns?: string[];

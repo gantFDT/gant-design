@@ -15,7 +15,7 @@ import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import { LicenseManager } from 'ag-grid-enterprise';
 import 'ag-grid-enterprise';
 import { Pagination, Spin } from 'antd';
-import { get, isEmpty, isEqual, cloneDeep, set, max, min } from 'lodash';
+import { get, isEmpty, isEqual, cloneDeep, set, max, min, assign } from 'lodash';
 import key from './license';
 import { mapColumns, flattenTreeData, usePagination, getSizeClassName } from './utils';
 import { Size, GridPropsPartial, RowSelection, DataActions } from './interface';
@@ -114,13 +114,13 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     onRowsPasteEnd,
     onCellClicked,
     suppressKeyboardEvent,
-    hideCut,
+    showCut=false,
     onCellMouseDown,
     onContextChangeRender,
     defaultExportParams,
     ...orignProps
   } = props;
-  const initGrid = useState(true);
+
   const apiRef = useRef<GridApi>();
   const columnsRef = useRef<ColumnApi>();
   const divRef = useRef<HTMLDivElement>();
@@ -449,20 +449,29 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       ...propsContext,
     };
   }, [propsContext, size, computedPagination, downShift, editable]);
+  const [cancheContext, setCancheContext] = useState(context);
   useEffect(() => {
-    const params = onContextChangeRender && onContextChangeRender(context);
-
-    if (!params) return;
-    const { columns, nodeIds = [] } = params;
-    let rowNodes = null;
-    if (nodeIds && nodeIds.length > 0)
-      rowNodes = nodeIds.map(id => {
-        return apiRef.current?.getRowNode(id);
+    setCancheContext(cancheContext => {
+      const newContext = { ...cancheContext, ...context };
+      const diffKeys: string[] = [];
+      Object.keys(newContext).map(key => {
+        if (!isEqual(cancheContext[key], context[key])) diffKeys.push(key);
       });
-    apiRef.current?.refreshCells({
-      columns,
-      rowNodes,
-      force: true,
+      if (diffKeys.length === 0) return cancheContext;
+      const params = onContextChangeRender && onContextChangeRender(context, diffKeys);
+      if (!params) return context;
+      const { columns, nodeIds = [] } = params;
+      let rowNodes = null;
+      if (nodeIds && nodeIds.length > 0)
+        rowNodes = nodeIds.map(id => {
+          return apiRef.current?.getRowNode(id);
+        });
+      apiRef.current?.refreshCells({
+        columns,
+        rowNodes,
+        force: true,
+      });
+      return context;
     });
   }, [context]);
   const exportColumns = useMemo(() => {
@@ -472,7 +481,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
         arr.push(item.field);
       }
     });
-  
+
     return arr;
   }, [columnDefs]);
   return (
@@ -494,7 +503,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
               ? ['expandAll', 'contractAll', ...items, 'separator', 'export']
               : [...items, 'export'];
             if (!globalEditable) return defultMenu;
-            const editMenu = hideCut
+            const editMenu = !showCut
               ? [...defultMenu]
               : [
                   ...defultMenu,
@@ -591,7 +600,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                       downShift,
                       ...context,
                     }}
-                    immutableData
                     stopEditingWhenGridLosesFocus={false}
                     treeData={treeData}
                     getDataPath={getDataPath}

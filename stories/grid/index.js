@@ -283,7 +283,8 @@ const ComputeGrid = () => {
                     { 'medalCellRenderer': MedalCellRenderer }
                 }
                 onContextChangeRender={
-                    (context) => {
+                    (context,diffKeys) => {
+                        console.log("onContextChangeRender",context,diffKeys)
                         if (context.globalEditable) {
                             return {
                                 columns: ['create']
@@ -291,10 +292,10 @@ const ComputeGrid = () => {
                         }
                     }
                 }
-                onCellEditingChange={(record, fieldName) => {
-                    if (fieldName === 'typeName') return record
-                    return [{ ...record, typeCode: record.typeCode, typeName: "true" }]
-                }}
+                // onCellEditingChange={(record, fieldName) => {
+                //     if (fieldName === 'typeName') return record
+                //     return [{ ...record, typeCode: record.typeCode, typeName: "true" }]
+                // }}
                 treeData={false}
                 editable={editable}
                 dataSource={dataSource}
