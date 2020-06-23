@@ -114,7 +114,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     onRowsPasteEnd,
     onCellClicked,
     suppressKeyboardEvent,
-    hideCut,
+    showCut=false,
     onCellMouseDown,
     onContextChangeRender,
     defaultExportParams,
@@ -503,7 +503,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
               ? ['expandAll', 'contractAll', ...items, 'separator', 'export']
               : [...items, 'export'];
             if (!globalEditable) return defultMenu;
-            const editMenu = hideCut
+            const editMenu = !showCut
               ? [...defultMenu]
               : [
                   ...defultMenu,
