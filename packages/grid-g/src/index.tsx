@@ -606,6 +606,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     enableRangeSelection
                     rowData={dataSource}
                     suppressColumnVirtualisation
+                    immutableData
                     {...selection}
                     {...orignProps}
                     onCellClicked={handleCellClicked}

@@ -505,11 +505,12 @@ export default class GridManage {
     this.redoStack = [];
   }
   async save(cb?) {
+    let cansave = null;
     if (cb) {
-      const cansave = await cb();
+      cansave = await cb();
       if (!cansave) return;
     }
-    const data = this.getPureData();
+    const data = Array.isArray(cansave) ? cansave : this.getPureData();
     this.agGridConfig.dataSource = data;
     this.historyStack = [];
     this.redoStack = [];

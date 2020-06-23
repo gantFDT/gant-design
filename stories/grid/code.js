@@ -295,7 +295,7 @@ const ComputeGrid = () => {
                 //     if (fieldName === 'typeName') return record
                 //     return [{ ...record, typeCode: record.typeCode, typeName: "true" }]
                 // }}
-                treeData={false}
+                treeData
                 editable={editable}
                 dataSource={dataSource}
                 onReady={onReady}
