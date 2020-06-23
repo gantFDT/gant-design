@@ -184,6 +184,7 @@ export interface Props<T extends any> {
   onRowsPasteEnd?: (data: any) => void;
   onContextChangeRender?: (
     context: any,
+    diffKeys: string[],
   ) =>
     | {
         columns?: string[];
