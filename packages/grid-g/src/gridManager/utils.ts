@@ -143,7 +143,7 @@ export function onSetcutData(rowsNodes: RowNode[], clear?: boolean) {
     if (item.data) update.push(data);
     item.setSelected(false);
     if (childrenAfterGroup) {
-      const childrenData = onSetcutData(childrenAfterGroup);
+      const childrenData = onSetcutData(childrenAfterGroup, clear);
       update.push(...childrenData);
     }
   });
