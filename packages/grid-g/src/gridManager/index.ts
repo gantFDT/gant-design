@@ -121,9 +121,9 @@ export default class GridManage {
         errorsArr.map(itemError => {
           _rowError[itemError.field] = true;
         });
-        rowNode.setData({ ..._itemData, _rowError });
+        rowNode.setData({ ..._itemData, _rowError, ...rowNode.data });
       } else {
-        if (_row) rowNode.setData(_itemData);
+        if (_row) rowNode.setData({ _itemData, ...rowNode.data });
       }
     });
   }
@@ -173,9 +173,10 @@ export default class GridManage {
         createConfig,
         this.agGridConfig,
       );
-      const rowIndex = get(node, 'rowIndex', 0);
+
       this.agGridApi.batchUpdateRowData({ remove: oldRowData }, () => {
         const rowData = this.getRowData();
+        const rowIndex = get(node, 'rowIndex', 0);
         const newDataSource = [
           ...rowData.slice(0, rowIndex),
           ...newRowData,
@@ -352,13 +353,15 @@ export default class GridManage {
     const removeRecords: any[] = [];
     targetArray.map(itemId => {
       const itemNode = this.agGridApi.getRowNode(itemId);
-      const { allLeafChildren = [itemNode] } = itemNode;
-      allLeafChildren.map(childNode => {
-        const removeIndex = findIndex(removeRecords, data => {
-          getRowNodeId(data) == getRowNodeId(childNode.data);
+      if (itemNode) {
+        const { allLeafChildren = [itemNode] } = itemNode;
+        allLeafChildren.map(childNode => {
+          const removeIndex = findIndex(removeRecords, data => {
+            getRowNodeId(data) == getRowNodeId(childNode.data);
+          });
+          if (removeIndex < 0 && childNode.data) removeRecords.push(childNode.data);
         });
-        if (removeIndex < 0 && childNode.data) removeRecords.push(childNode.data);
-      });
+      }
     });
     removeRecords.map(itemRecord => {
       const removeIndex = findIndex(
@@ -392,13 +395,15 @@ export default class GridManage {
     const removeRecords: any[] = [];
     targetArray.map(itemId => {
       const itemNode = this.agGridApi.getRowNode(itemId + '');
-      const { allLeafChildren = [itemNode] } = itemNode;
-      allLeafChildren.map(childNode => {
-        const removeIndex = findIndex(removeRecords, data => {
-          getRowNodeId(data) == getRowNodeId(childNode.data);
+      if (itemNode) {
+        const { allLeafChildren = [itemNode] } = itemNode;
+        allLeafChildren.map(childNode => {
+          const removeIndex = findIndex(removeRecords, data => {
+            getRowNodeId(data) == getRowNodeId(childNode.data);
+          });
+          if (removeIndex < 0) removeRecords.push(childNode.data);
         });
-        if (removeIndex < 0) removeRecords.push(childNode.data);
-      });
+      }
     });
     const { hisRecords, newRecords, removeIndexs, removeRecords: remove } = removeTagData(
       removeRecords,
