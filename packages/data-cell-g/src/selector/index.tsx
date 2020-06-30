@@ -69,7 +69,7 @@ type DefaultProps<R> = ProtoExtends<typeof defaultprop, {
   multiple?: boolean,
   onSelect?: (k: string, item: R) => void,
   selectorId?: string,
-  onChange?: (key: SelectValue) => void,
+  onChange?: (key: SelectValue, items: R[]) => void,
   wrap?: boolean
 }>
 
@@ -432,35 +432,48 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
     onSearch(value)
   }, 300)
 
+
+  getItem = (realKey: string) => {
+    const { selectorId, dataList, storageList, getValue } = this.props
+    const isStorage = realKey.startsWith(selectorId)
+    let dataSource = isStorage ? storageList : dataList
+    return dataSource.find(item => getValue(item) === realKey)
+  }
+
   onChange = (...args) => {
     const [value] = args
     const { onChange, setCacheLabel, storageToReal, valuePropType } = this.props
     let keys: SelectValue = undefined
     let labels: NArray<string> = undefined
+    let items: R[] = []
     if (value) {
       if (Array.isArray(value)) {
         const keyMap = new Map()
+        const ItemMap = new Map()
         value.forEach(({ key, label }) => {
           const realKey = storageToReal(key)
           if (!keyMap.has(realKey)) {
             keyMap.set(realKey, label)
+            ItemMap.set(realKey, this.getItem(realKey))
           } else {
             // 如果已经有相同的key了，那么说明这是需要删除的项
             keyMap.delete(realKey)
+            ItemMap.delete(realKey)
           }
         })
         if (keyMap.size) {
           keys = [...keyMap.keys()].map(key => valueFormatter[valuePropType](key))
           labels = [...keyMap.values()]
+          items = [...ItemMap.values()]
         }
       } else {
         keys = valueFormatter[valuePropType](storageToReal(value.key))
         labels = value.label
+        items = [this.getItem(value.key)]
       }
     }
-
     setCacheLabel(labels)
-    onChange(keys)
+    onChange(keys, items)
     // 清除状态下重新搜索
     if (!value) {
       this.onSearch('')
