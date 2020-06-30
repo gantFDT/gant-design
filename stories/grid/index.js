@@ -39,7 +39,7 @@ function MedalCellRenderer() {
 
 // init method gets the details of the cell to be renderer
 MedalCellRenderer.prototype.init = function (params) {
-    console.log("MedalCellRenderer.init", params)
+   
     this.eGui = document.createElement('span');
     ReactDom.render(<GantGroupCellRenderer {...params} />, this.eGui);
 };
@@ -108,7 +108,6 @@ const ComputeGrid = () => {
                 editable: true,
             },
             render: (value) => {
-                console.log("create-render")
                 return value
             }
 
@@ -284,7 +283,6 @@ const ComputeGrid = () => {
                 }
                 onContextChangeRender={
                     (context,diffKeys) => {
-                        console.log("onContextChangeRender",context,diffKeys)
                         if (context.globalEditable) {
                             return {
                                 columns: ['create']
@@ -292,10 +290,10 @@ const ComputeGrid = () => {
                         }
                     }
                 }
-                // onCellEditingChange={(record, fieldName) => {
-                //     if (fieldName === 'typeName') return record
-                //     return [{ ...record, typeCode: record.typeCode, typeName: "true" }]
-                // }}
+                onCellEditChange={(record, fieldName) => {
+                    if (fieldName === 'typeName') return record
+                    return [{ ...record, typeCode: record.typeCode, typeName: "true" }]
+                }}
                 treeData
                 editable={editable}
                 dataSource={dataSource}
@@ -325,6 +323,8 @@ const ComputeGrid = () => {
                     },
                     defaultParentPath: ["313"]
                 }}
+                showCut
+                // editChangeCallback={(isChanged)=>console.log("isChanged",isChanged)}
                 isServerSideGroup={(data) => data.children}
             />
         </>

@@ -72,17 +72,17 @@ export default WrapperComponent =>
             return false;
           },
           getValue: () => {
-            if (isEqualObj(value, newValue)) return newValue;
+            if (isEqualObj(nodeValue, newValue)) return newValue;
             setTimeout(() => {
               const data = cloneDeep(node.data);
               set(data, field, newValue);
               editRowDataChanged(data, field, newValue, value);
             }, 1);
-            return value;
+            return nodeValue;
           },
         };
       },
-      [value, newValue, field, editRowDataChanged],
+      [nodeValue, newValue, field, editRowDataChanged],
     );
     useEffect(() => {
       setTimeout(() => {

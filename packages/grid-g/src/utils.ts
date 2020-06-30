@@ -66,8 +66,8 @@ export const mapColumns = <T>(
               const {
                 data: { _rowType, ...itemData } = {} as any,
                 colDef: { field },
-                value,
               } = params;
+              const value = get(itemData, field);
               const _rowData = get(itemData, `_rowData`, itemData);
               const originValue = get(_rowData, field);
               return _rowType === DataActions.modify && !isEqualObj(value, originValue);

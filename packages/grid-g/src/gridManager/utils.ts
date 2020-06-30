@@ -22,7 +22,7 @@ export function getModifyData(records, getRowItemData, oldRecords) {
           : null
         : _rowType;
     let recordItem = { ...newData, _rowData, _rowType };
-    let hisRecordItem = { ...data, _nextRowData: recordItem };
+    let hisRecordItem = data;
     newRecords.push(recordItem);
     hisRecords.push(hisRecordItem);
   });
@@ -39,7 +39,7 @@ export function removeTagData(records, rowData, getRowNodeId) {
     if (itemData._rowType === DataActions.removeTag || itemData._rowType === DataActions.remove)
       return console.warn('Deleted data cannot be deleted');
     const removeIndex = findIndex(rowData, data => getRowNodeId(data) === getRowNodeId(itemData));
-    let hisRecordItem = { ...itemData, _nextRowData: recordItem };
+    let hisRecordItem = { ...itemData };
     itemData._rowType !== DataActions.add
       ? newRecords.push(recordItem)
       : removeRecords.push(itemData);

@@ -12,6 +12,7 @@ import {
 import { DataActions, CreateConfig } from '../interface';
 import { bindAll, Debounce } from 'lodash-decorators';
 import { generateUuid } from '@util';
+import { flattenTreeData } from '../utils';
 interface OperationAction {
   type: DataActions;
   recordsIndex?: number[];
@@ -32,16 +33,37 @@ interface AgGridConfig {
   getDataPath?: (data: any) => string[];
   createConfig?: CreateConfig;
   onRowsPasteEnd?: (dataSource) => void;
+  isCompute?: boolean;
+  treeDataChildrenName?: string;
+  editChangeCallback?: (boolean) => void;
 }
+const initHistoryStack: OperationAction[] = [];
+const arrayMethods = Object.create(Array.prototype);
 @bindAll()
 export default class GridManage {
   public agGridApi: GridApi;
   public agGridConfig: AgGridConfig;
-  historyStack: OperationAction[] = [];
+  historyStack: any[] = [];
   private redoStack: OperationAction[] = [];
   public cutRows: any[];
   private loading: boolean = false;
   public validateFields: Rules;
+  private changeStatus: boolean = false;
+  get isChanged() {
+    const { remove, modify, add } = this.diff;
+    const all = [...remove, ...modify, ...add];
+    return all.length > 0;
+  }
+  get diff() {
+    const allDiff = this.changeDiff();
+    const { remove, modify, add, removeTag } = allDiff;
+    return { remove: [...remove, ...removeTag], modify, add };
+  }
+  private watchHistory() {
+    if (this.isChanged === this.changeStatus) return;
+    this.agGridConfig.editChangeCallback && this.agGridConfig.editChangeCallback(this.isChanged);
+    this.changeStatus = this.isChanged;
+  }
   private getRowItemData = (itemData: any, oldData?: any) => {
     const { getRowNodeId } = this.agGridConfig;
     const nodeId = typeof itemData === 'object' ? getRowNodeId(itemData) : itemData;
@@ -52,7 +74,9 @@ export default class GridManage {
     this.agGridApi.applyTransaction(transaction);
   }
   appendChild(keys, add) {
-    this.batchUpdateGrid({ add });
+    const { isCompute, treeDataChildrenName, getRowNodeId } = this.agGridConfig;
+    const addData = isCompute ? flattenTreeData(add, getRowNodeId, treeDataChildrenName) : add;
+    this.batchUpdateGrid({ add: addData });
   }
   async validate(data) {
     const { getRowNodeId } = this.agGridConfig;
@@ -116,14 +140,16 @@ export default class GridManage {
       const rowNode = this.agGridApi.getRowNode(nodeId);
       const rowIndex = get(rowNode, 'rowIndex', -1);
       const errorsArr = validateErros[rowIndex];
+      const mergeData = { ...itemData, ...rowNode.data };
+      const { _rowError: merge_row, ...newItemData } = mergeData;
       if (errorsArr) {
         const _rowError: any = {};
         errorsArr.map(itemError => {
           _rowError[itemError.field] = true;
         });
-        rowNode.setData({ ..._itemData, _rowError, ...rowNode.data });
+        rowNode.setData({ ...newItemData, _rowError });
       } else {
-        if (_row) rowNode.setData({ _itemData, ...rowNode.data });
+        if (_row) rowNode.setData({ ...newItemData });
       }
     });
   }
@@ -156,7 +182,7 @@ export default class GridManage {
       console.error(error);
     }
   }
-  paste(node) {
+  paste(node, up = true) {
     try {
       const { getDataPath, createConfig, treeData } = this.agGridConfig;
       if (!canQuickCreate(createConfig)) return console.warn('createConfig is error');
@@ -177,11 +203,9 @@ export default class GridManage {
       this.agGridApi.batchUpdateRowData({ remove: oldRowData }, () => {
         const rowData = this.getRowData();
         const rowIndex = get(node, 'rowIndex', 0);
-        const newDataSource = [
-          ...rowData.slice(0, rowIndex),
-          ...newRowData,
-          ...rowData.slice(rowIndex),
-        ];
+        const newDataSource = up
+          ? [...rowData.slice(0, rowIndex), ...newRowData, ...rowData.slice(rowIndex)]
+          : [...rowData.slice(0, rowIndex + 1), ...newRowData, ...rowData.slice(rowIndex + 1)];
         this.agGridApi.setRowData(newDataSource);
         this.cutRows = [];
         this.agGridConfig.onRowsPasteEnd && this.agGridConfig.onRowsPasteEnd(newDataSource);
@@ -193,10 +217,11 @@ export default class GridManage {
   reset(agGridConfig) {
     this.agGridConfig = { ...this.agGridConfig, ...agGridConfig };
     this.historyStack = [];
+    this.changeStatus = false;
     this.redoStack = [];
     this.cutRows = [];
+    this.agGridConfig.editChangeCallback && this.agGridConfig.editChangeCallback(false);
   }
-
   getRowData() {
     var rowData = [];
     if (!this.agGridApi) return [];
@@ -204,11 +229,6 @@ export default class GridManage {
       node.data && rowData.push(node.data);
     });
     return rowData;
-  }
-  private LoadingManager(name) {
-    if ((this.loading = true)) return;
-
-    this.loading = false;
   }
   // 修改;
   // @loadingDecorator
@@ -218,18 +238,19 @@ export default class GridManage {
     if (records.length <= 0) return;
     const { hisRecords, newRecords } = getModifyData(records, this.getRowItemData, oldRecords);
     if (newRecords.length <= 0) return;
-    const rowData = [];
+    const updateRowData = [];
     newRecords.map(data => {
       const nodeId = this.agGridConfig.getRowNodeId(data);
       const node = this.agGridApi.getRowNode(nodeId);
-      if (node && node.data && data) return rowData.push(data);
+      if (node && node.data && data) return updateRowData.push(data);
     });
-    this.batchUpdateGrid({ update: rowData });
-    this.validate(rowData);
+    this.batchUpdateGrid({ update: updateRowData });
+    this.validate(updateRowData);
     this.historyStack.push({
       type: DataActions.modify,
       records: hisRecords,
     });
+    this.watchHistory();
   }
 
   // 创建;
@@ -252,6 +273,7 @@ export default class GridManage {
         type: DataActions.add,
         records: addRecords,
       });
+      this.watchHistory();
       return;
     }
     let targetArray = Array.isArray(targetId) ? targetId : [targetId];
@@ -274,6 +296,7 @@ export default class GridManage {
       type: DataActions.add,
       records: hisRecords,
     });
+    this.watchHistory();
   }
   private quickCreateNode(
     isChild: boolean = false,
@@ -378,6 +401,7 @@ export default class GridManage {
       recordsIndex: recordsIndex,
       records: records,
     });
+    this.watchHistory();
     this.batchUpdateGrid({
       remove: records,
     });
@@ -417,6 +441,7 @@ export default class GridManage {
       records: hisRecords,
       recordsIndex: removeIndexs,
     });
+    this.watchHistory();
   }
 
   private toggleUndoRedo(hisStack: OperationAction, undo: boolean = true) {
@@ -448,34 +473,33 @@ export default class GridManage {
     } else if (type === DataActions.modify) {
       const hisRecords: any[] = [];
       const newRecords = records.map(item => {
+        const rowNode = this.agGridApi.getRowNode(getRowNodeId(item));
         const { _nextRowData, ...data } = item;
-        hisRecords.push({ ..._nextRowData, _nextRowData: data });
-        return data;
+        hisRecords.push({ ...get(rowNode, 'data') });
+        return item;
       });
       records = hisRecords;
       this.batchUpdateGrid({ update: newRecords });
+      this.validate(newRecords);
     } else {
       const hisRecords: any[] = [];
       recordsIndex.map((removeIndex, index) => {
         const item = records[index];
-        const { _nextRowData, ...data } = item;
-        if (data._rowType === DataActions.add) {
+        if (item._rowType === DataActions.add) {
           if (undo) {
             rowData = [...rowData.slice(0, removeIndex), item, ...rowData.slice(removeIndex)];
           } else {
             rowData = [...rowData.slice(0, removeIndex), ...rowData.slice(removeIndex + 1)];
           }
-
           hisRecords.push(item);
         } else {
-          rowData = [...rowData.slice(0, removeIndex), data, ...rowData.slice(removeIndex + 1)];
-          hisRecords.push({ ..._nextRowData, _nextRowData: data });
+          rowData = [...rowData.slice(0, removeIndex), item, ...rowData.slice(removeIndex + 1)];
+          const rowNode = this.agGridApi.getRowNode(getRowNodeId(item));
+          hisRecords.push({ ...get(rowNode, 'data') });
         }
       });
-
       records = hisRecords.reverse();
       recordsIndex = recordsIndex.reverse();
-
       this.agGridApi.setRowData(rowData);
     }
     return { type, records, recordsIndex };
@@ -486,6 +510,7 @@ export default class GridManage {
     if (isEmpty(hisStack)) return;
     const newhisStack = this.toggleUndoRedo(hisStack, true);
     this.redoStack.push(newhisStack);
+    this.watchHistory();
   }
 
   redo() {
@@ -493,21 +518,12 @@ export default class GridManage {
     if (isEmpty(hisStack)) return;
     const newhisStack = this.toggleUndoRedo(hisStack, false);
     this.historyStack.push(newhisStack);
+    this.watchHistory();
   }
-  get isChanged() {
-    const { remove, modify, add } = this.diff;
-    const all = [...remove, ...modify, ...add];
-    return all.length > 0;
-  }
-  get diff() {
-    const allDiff = this.changeDiff();
-    const { remove, modify, add, removeTag } = allDiff;
-    return { remove: [...remove, ...removeTag], modify, add };
-  }
+
   cancel() {
     this.agGridApi.setRowData(this.agGridConfig.dataSource);
-    this.historyStack = [];
-    this.redoStack = [];
+    this.reset(this.agGridConfig);
   }
   async save(cb?) {
     let cansave = null;
@@ -516,11 +532,10 @@ export default class GridManage {
       if (!cansave) return;
     }
     const data = Array.isArray(cansave) ? cansave : this.getPureData();
-    this.agGridConfig.dataSource = data;
-    this.historyStack = [];
-    this.redoStack = [];
     this.agGridApi.setRowData(data);
+    this.reset({ dataSource: data });
   }
+  //
   private changeDiff() {
     const { getRowNodeId } = this.agGridConfig;
     const diffRecords: any = [];
@@ -537,21 +552,20 @@ export default class GridManage {
       const { type, recordsIndex, records } = hisItem;
       records.map((recordItem, recordItemIndex) => {
         const isRecorded = diffRecords.indexOf(getRowNodeId(recordItem)) >= 0;
-        let { _rowData, _rowType, _nextRowData = {}, ...data } = recordItem;
         if (isRecorded) return;
+        const rowNode = this.agGridApi.getRowNode(getRowNodeId(recordItem));
+        const _nextRowData = get(rowNode, 'data');
+        let { _rowData, _rowType, _rowError, ...data } = _nextRowData;
         _rowData = isEmpty(_rowData) ? data : _rowData;
-        _nextRowData = isEmpty(_nextRowData) ? data : _nextRowData;
-
         diffRecords.push(getRowNodeId(_nextRowData));
         if (type === DataActions.add) {
-          diff.add.push(_nextRowData);
+          diff.add.push(data);
           return;
         }
         if (type === DataActions.modify) {
           const { _rowType: next_rowType, _rowData: next_rowData, ...newData } = _nextRowData;
-          if (!isEqualObj(_rowData, newData) && _rowType !== DataActions.add) {
-            diff.modify.push(newData);
-            diff.origin.push(_rowData);
+          if (!isEqualObj(_rowData, data) && _rowType !== DataActions.add) {
+            diff.modify.push(data);
           } else if (_rowType === DataActions.add) {
             diff.add.push(newData);
           }
