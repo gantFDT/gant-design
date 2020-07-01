@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef, useMemo, useEffect, createContext } from 'react';
+import React, { useState, useCallback, useRef, useMemo, useEffect, useContext } from 'react';
 import classnames from 'classnames';
 import { AgGridReact } from 'ag-grid-react';
 import {
@@ -31,9 +31,7 @@ import zh from './locale/zh-CN';
 export { default as GantGroupCellRenderer } from './GantGroupCellRenderer';
 export { setComponentsMaps, setFrameworkComponentsMaps } from './maps';
 LicenseManager.setLicenseKey(key);
-
 export { default as GantPromiseCellRender } from './GantPromiseCellRender';
-export const GridContext = createContext({} as any);
 const langs = {
   en: en,
   'zh-cn': zh,
@@ -113,23 +111,45 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     onRowsPaste,
     onRowsPasteEnd,
     onCellClicked,
-    suppressKeyboardEvent,
-    showCut=false,
+    showCut = false,
     onCellMouseDown,
     onContextChangeRender,
     defaultExportParams,
+    editChangeCallback,
     ...orignProps
   } = props;
 
   const apiRef = useRef<GridApi>();
   const columnsRef = useRef<ColumnApi>();
-  const divRef = useRef<HTMLDivElement>();
   const [pasteContent, setPasetContent] = useState<any>({});
   const [pasteLoading, setPasteLoading] = useState(false);
-  const [downShift, setDownShift] = useState(false);
   const gridManager = useMemo(() => {
     return new GridManager();
   }, []);
+  /**默认基本方法 */
+  const getRowNodeId = useCallback(data => {
+    if (typeof rowkey === 'string') {
+      return get(data, rowkey);
+    }
+    return rowkey(data);
+  }, []);
+  const getDataPath = useCallback(
+    data => {
+      if (orignGetDataPath) return orignGetDataPath(data);
+      return data.treeDataPath;
+    },
+    [orignGetDataPath],
+  );
+  const onGridReady = useCallback(
+    (params: GridReadyEvent) => {
+      apiRef.current = params.api;
+      columnsRef.current = params.columnApi;
+      gridManager.agGridApi = params.api;
+      onReady && onReady(params, gridManager);
+    },
+    [onReady],
+  );
+
   // 处理selection
   const gantSelection: RowSelection = useMemo(() => {
     if (rowSel === true) {
@@ -147,27 +167,14 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     ...selection
   } = gantSelection;
   const [innerSelectedKeys, setInnerSelectedKeys] = useState([]);
-  // getRowNodeId;
-  const getRowNodeId = useCallback(data => {
-    if (typeof rowkey === 'string') {
-      return get(data, rowkey);
-    }
-    return rowkey(data);
-  }, []);
 
   useEffect(() => {
     if (!editable) {
       apiRef.current?.stopEditing();
+      gridManager.reset({});
     }
   }, [editable]);
 
-  const getDataPath = useCallback(
-    data => {
-      if (orignGetDataPath) return orignGetDataPath(data);
-      return data.treeDataPath;
-    },
-    [orignGetDataPath],
-  );
   /**fix: 解决保存时候标记状态无法清楚的问题 */
 
   // 分页事件
@@ -185,6 +192,10 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       createConfig,
       treeData,
       getDataPath,
+      isCompute,
+      treeDataChildrenName,
+      editChangeCallback,
+      onRowsPasteEnd,
     });
   }, [dataSource]);
   const serverDataCallback = useCallback((groupKeys, successCallback) => {
@@ -206,15 +217,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   const { componentsMaps, frameworkComponentsMaps } = useMemo(() => {
     return getAllComponentsMaps();
   }, []);
-  const onGridReady = useCallback(
-    (params: GridReadyEvent) => {
-      apiRef.current = params.api;
-      columnsRef.current = params.columnApi;
-      gridManager.agGridApi = params.api;
-      onReady && onReady(params, gridManager);
-    },
-    [onReady],
-  );
+
   const onSelectionChanged = useCallback(
     (event: SelectionChangedEvent) => {
       const rows = event.api.getSelectedRows();
@@ -227,15 +230,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   const handleCellClicked = useCallback(
     (event: CellClickedEvent) => {
       onCellClicked && onCellClicked(event);
-      // const { node, api } = event;
-      // const selectedRows = api.getSelectedNodes();
-      // if (innerSelectedKeys.length === 1 && selectedRows.length === 1) {
-      //   const [selectedKey] = innerSelectedKeys;
-      //   const [selectedNode] = selectedRows;
-      //   if (selectedKey === selectedNode.id) {
-      //     node.setSelected(false);
-      //   }
-      // }
     },
     [onCellClicked, innerSelectedKeys],
   );
@@ -259,20 +253,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   // 处理selection-end
   //columns
   const defaultSelection = !isEmpty(gantSelection) && showDefalutCheckbox;
-  const gridKeydown = useCallback((event: KeyboardEvent) => {
-    if (event.key === 'Shift') setDownShift(true);
-  }, []);
-  const gridKeyup = useCallback((event: KeyboardEvent) => {
-    if (event.key === 'Shift') setDownShift(false);
-  }, []);
-  useEffect(() => {
-    divRef.current && divRef.current.addEventListener('keydown', gridKeydown);
-    divRef.current && divRef.current.addEventListener('keyup', gridKeyup);
-    return () => {
-      divRef.current && divRef.current.removeEventListener('keydown', gridKeydown);
-      divRef.current && divRef.current.removeEventListener('keyup', gridKeyup);
-    };
-  }, []);
+
   const { columnDefs, validateFields } = useMemo(() => {
     return mapColumns<T>(
       columns,
@@ -297,9 +278,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     },
     [onCellEditChange],
   );
-  useEffect(() => {
-    gridManager.agGridConfig.onRowsPasteEnd = onRowsPasteEnd;
-  }, [onRowsPasteEnd]);
   const editingRowDataChange = useCallback(
     async (record, fieldName, newValue, oldValue) => {
       if (typeof onCellEditingChange === 'function') {
@@ -377,35 +355,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     },
     [onCellValueChanged, pasteLoading],
   );
-  const handlesuppressKeyboardEvent = useCallback(
-    (params: SuppressKeyboardEventParams) => {
-      if (suppressKeyboardEvent) return suppressKeyboardEvent(params);
-      const {
-        context: { downShift },
-        api,
-        columnApi,
-        column,
-      } = params;
-      if (downShift) {
-        const columns = columnApi.getAllColumns();
-        const len = columns.length;
-        if (params.event.key === 'ArrowUp') {
-          const [fristColumn] = columns;
-          if (fristColumn.getColId() === column.getColId()) return true;
-          api.tabToPreviousCell();
-          return true;
-        }
-        if (params.event.key === 'ArrowDown') {
-          const lastColumn = columns[len - 1];
-          if (lastColumn.getColId() === column.getColId()) return true;
-          api.tabToNextCell();
-          return true;
-        }
-      }
-      return false;
-    },
-    [suppressKeyboardEvent],
-  );
   const handleCellMouseDown = useCallback(
     (cellEvent: CellClickedEvent) => {
       const { node, event } = cellEvent;
@@ -445,10 +394,11 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       editingRowDataChange,
       computedPagination,
       treeData,
-      downShift,
+      gridManager,
+      showCut,
       ...propsContext,
     };
-  }, [propsContext, size, computedPagination, downShift, editable]);
+  }, [propsContext, size, computedPagination, editable, showCut]);
   const [cancheContext, setCancheContext] = useState(context);
   useEffect(() => {
     setCancheContext(cancheContext => {
@@ -481,169 +431,174 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
         arr.push(item.field);
       }
     });
-
     return arr;
   }, [columnDefs]);
   return (
-    <GridContext.Provider value={{}}>
-      <LocaleReceiver>
-        {(local, localeCode = 'zh-cn') => {
-          let lang = langs[localeCode] || langs['zh-cn'];
-          const locale = { ...lang, ...customLocale };
-          const contextMenuItems = function(params) {
-            const {
-              context: { globalEditable },
-            } = params;
-            const rowNodes = apiRef.current.getSelectedNodes();
-            const hasCut = rowNodes.length <= 0 || (treeData && isEmpty(createConfig));
-            const hasPaste =
-              rowNodes.length > 1 || isEmpty(createConfig) || isEmpty(gridManager.cutRows);
-            const items = getContextMenuItems ? getContextMenuItems(params) : [];
-            const defultMenu = treeData
-              ? ['expandAll', 'contractAll', ...items, 'separator', 'export']
-              : [...items, 'export'];
-            if (!globalEditable) return defultMenu;
-            const editMenu = !showCut
-              ? [...defultMenu]
-              : [
-                  ...defultMenu,
-                  'separator',
-                  {
-                    name: locale.cutRows,
-                    disabled: hasCut,
-                    action: params => {
-                      try {
-                        const canPut = onRowsCut ? onRowsCut(rowNodes) : true;
-                        return canPut && gridManager.cut(rowNodes);
-                      } catch (error) {}
-                    },
+    <LocaleReceiver>
+      {(local, localeCode = 'zh-cn') => {
+        let lang = langs[localeCode] || langs['zh-cn'];
+        const locale = { ...lang, ...customLocale };
+        const contextMenuItems = function(params) {
+          const {
+            context: { globalEditable },
+          } = params;
+          const rowNodes = apiRef.current.getSelectedNodes();
+          const selectedRows = rowNodes.map(item => {
+            return item.data;
+          }, []);
+          const hasCut = rowNodes.length <= 0 || (treeData && isEmpty(createConfig));
+          const hasPaste =
+            rowNodes.length > 1 || isEmpty(createConfig) || isEmpty(gridManager.cutRows);
+          const items = getContextMenuItems ? getContextMenuItems({ selectedRows, ...params }) : [];
+          const defultMenu = treeData
+            ? ['expandAll', 'contractAll', ...items, 'separator', 'export']
+            : [...items, 'export'];
+          if (!globalEditable) return defultMenu;
+          const editMenu = !showCut
+            ? [...defultMenu]
+            : [
+                ...defultMenu,
+                'separator',
+                {
+                  name: locale.cutRows,
+                  disabled: hasCut,
+                  action: params => {
+                    try {
+                      const canPut = onRowsCut ? onRowsCut(rowNodes) : true;
+                      return canPut && gridManager.cut(rowNodes);
+                    } catch (error) {}
                   },
-                  {
-                    name: locale.cancelCut,
-                    disabled: isEmpty(gridManager.cutRows),
-                    action: params => {
-                      try {
-                        gridManager.cancelCut();
-                      } catch (error) {}
-                    },
+                },
+                {
+                  name: locale.cancelCut,
+                  disabled: isEmpty(gridManager.cutRows),
+                  action: params => {
+                    try {
+                      gridManager.cancelCut();
+                    } catch (error) {}
                   },
-                  {
-                    name: locale.pasteRows,
-                    disabled: hasPaste,
-                    action: params => {
-                      const [rowNode] = rowNodes;
-                      const canPaste = onRowsPaste
-                        ? onRowsPaste(gridManager.cutRows, rowNode)
-                        : true;
-                      canPaste && gridManager.paste(rowNode);
-                    },
+                },
+                {
+                  name: locale.pasteTop,
+                  disabled: hasPaste,
+                  action: params => {
+                    const [rowNode] = rowNodes;
+                    const canPaste = onRowsPaste ? onRowsPaste(gridManager.cutRows, rowNode) : true;
+                    canPaste && gridManager.paste(rowNode);
                   },
-                ];
-            return editMenu;
-          };
+                },
+                {
+                  name: locale.pasteBottom,
+                  disabled: hasPaste,
+                  action: params => {
+                    const [rowNode] = rowNodes;
+                    const canPaste = onRowsPaste ? onRowsPaste(gridManager.cutRows, rowNode) : true;
+                    canPaste && gridManager.paste(rowNode, false);
+                  },
+                },
+              ];
+          return editMenu;
+        };
 
-          return (
-            <Spin spinning={loading}>
+        return (
+          <Spin spinning={loading}>
+            <div
+              style={{ width, height }}
+              className={classnames(
+                'gant-grid',
+                `gant-grid-${getSizeClassName(size)}`,
+                openEditSign && `gant-grid-edit`,
+              )}
+            >
               <div
-                style={{ width, height }}
-                className={classnames(
-                  'gant-grid',
-                  `gant-grid-${getSizeClassName(size)}`,
-                  openEditSign && `gant-grid-edit`,
-                )}
+                className="ag-theme-balham"
+                style={{
+                  width: '100%',
+                  height: computedPagination ? 'calc(100% - 30px)' : '100%',
+                }}
               >
-                <div
-                  className="ag-theme-balham"
-                  style={{
-                    width: '100%',
-                    height: computedPagination ? 'calc(100% - 30px)' : '100%',
+                <AgGridReact
+                  frameworkComponents={{
+                    gantGroupCellRenderer: GantGroupCellRenderer,
+                    gantRenderCol: RenderCol,
+                    ...frameworkComponentsMaps,
+                    ...frameworkComponents,
                   }}
-                  ref={divRef}
-                >
-                  <AgGridReact
-                    frameworkComponents={{
-                      gantGroupCellRenderer: GantGroupCellRenderer,
-                      gantRenderCol: RenderCol,
-                      ...frameworkComponentsMaps,
-                      ...frameworkComponents,
-                    }}
-                    components={{
-                      ...componentsMaps,
-                      ...components,
-                    }}
-                    onSelectionChanged={onSelectionChanged}
-                    columnDefs={columnDefs}
-                    rowSelection={rowSelection}
-                    getRowNodeId={getRowNodeId}
-                    onGridReady={onGridReady}
-                    undoRedoCellEditing
-                    enableFillHandle
-                    headerHeight={24}
-                    floatingFiltersHeight={20}
-                    rowHeight={size == 'small' ? 24 : 32}
-                    singleClickEdit
-                    defaultExportParams={{
-                      columnKeys: exportColumns,
-                      allColumns: false,
-                      ...defaultExportParams,
-                    }}
-                    context={{
-                      globalEditable: editable,
-                      serverDataRequest,
-                      isServerSideGroup,
-                      size,
-                      getDataPath: getDataPath,
-                      editRowDataChanged,
-                      editingRowDataChange,
-                      computedPagination,
-                      treeData,
-                      downShift,
-                      ...context,
-                    }}
-                    stopEditingWhenGridLosesFocus={false}
-                    treeData={treeData}
-                    getDataPath={getDataPath}
-                    enableRangeSelection
-                    rowData={dataSource}
-                    suppressColumnVirtualisation
-                    {...selection}
-                    {...orignProps}
-                    onCellClicked={handleCellClicked}
-                    defaultColDef={{
-                      resizable,
-                      sortable,
-                      filter,
-                      minWidth: 30,
-                      ...defaultColDef,
-                    }}
-                    groupDefaultExpanded={groupDefaultExpanded}
-                    localeText={locale}
-                    rowClassRules={{
-                      'gant-grid-row-isdeleted': params =>
-                        get(params, 'data._rowType') === DataActions.removeTag,
-                      'gant-grid-row-cut': params => get(params, 'data._rowCut'),
-                      ...rowClassRules,
-                    }}
-                    onCellValueChanged={cellValueChanged}
-                    processCellForClipboard={processCellForClipboard}
-                    processDataFromClipboard={processDataFromClipboard}
-                    onPasteStart={onPasteStart}
-                    onPasteEnd={onPasteEnd}
-                    getContextMenuItems={contextMenuItems as any}
-                    suppressKeyboardEvent={handlesuppressKeyboardEvent}
-                    onCellMouseDown={handleCellMouseDown}
-                  />
-                </div>
-                {/* 分页高度为30 */}
-                {computedPagination && (
-                  <Pagination className="gant-grid-pagination" {...computedPagination} />
-                )}
+                  components={{
+                    ...componentsMaps,
+                    ...components,
+                  }}
+                  onSelectionChanged={onSelectionChanged}
+                  columnDefs={columnDefs}
+                  rowSelection={rowSelection}
+                  getRowNodeId={getRowNodeId}
+                  onGridReady={onGridReady}
+                  undoRedoCellEditing
+                  enableFillHandle
+                  headerHeight={24}
+                  floatingFiltersHeight={20}
+                  rowHeight={size == 'small' ? 24 : 32}
+                  singleClickEdit
+                  defaultExportParams={{
+                    columnKeys: exportColumns,
+                    allColumns: false,
+                    ...defaultExportParams,
+                  }}
+                  context={{
+                    globalEditable: editable,
+                    serverDataRequest,
+                    isServerSideGroup,
+                    size,
+                    getDataPath: getDataPath,
+                    editRowDataChanged,
+                    editingRowDataChange,
+                    computedPagination,
+                    treeData,
+                    ...context,
+                  }}
+                  stopEditingWhenGridLosesFocus={false}
+                  treeData={treeData}
+                  getDataPath={getDataPath}
+                  enableRangeSelection
+                  rowData={dataSource}
+                  suppressColumnVirtualisation
+                  immutableData
+                  {...selection}
+                  {...orignProps}
+                  onCellClicked={handleCellClicked}
+                  defaultColDef={{
+                    resizable,
+                    sortable,
+                    filter,
+                    minWidth: 30,
+                    ...defaultColDef,
+                  }}
+                  groupDefaultExpanded={groupDefaultExpanded}
+                  localeText={locale}
+                  rowClassRules={{
+                    'gant-grid-row-isdeleted': params =>
+                      get(params, 'data._rowType') === DataActions.removeTag,
+                    'gant-grid-row-cut': params => get(params, 'data._rowCut'),
+                    ...rowClassRules,
+                  }}
+                  onCellValueChanged={cellValueChanged}
+                  processCellForClipboard={processCellForClipboard}
+                  processDataFromClipboard={processDataFromClipboard}
+                  onPasteStart={onPasteStart}
+                  onPasteEnd={onPasteEnd}
+                  getContextMenuItems={contextMenuItems as any}
+                  onCellMouseDown={handleCellMouseDown}
+                />
               </div>
-            </Spin>
-          );
-        }}
-      </LocaleReceiver>
-    </GridContext.Provider>
+              {/* 分页高度为30 */}
+              {computedPagination && (
+                <Pagination className="gant-grid-pagination" {...computedPagination} />
+              )}
+            </div>
+          </Spin>
+        );
+      }}
+    </LocaleReceiver>
   );
 };
 

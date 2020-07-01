@@ -225,6 +225,7 @@ export default {
   createChildNode: 'create child node',
   createNode: 'create node',
   cutRows: 'cut selected rows',
-  pasteRows: 'paste to current Row',
+  pasteTop: 'paste on top',
+  pasteBottom: 'paste on bottom',
   cancelCut:"cancel cut"
 };

@@ -225,6 +225,7 @@ export default {
   createChildNode: '创建子节点',
   createNode: '创建平行节点',
   cutRows: '剪切选中行',
-  pasteRows: '粘贴剪切内容',
-  cancelCut:"取消剪切"
+  pasteTop: '粘贴至上面',
+  pasteBottom: '粘贴至下面',
+  cancelCut: '取消剪切',
 };
