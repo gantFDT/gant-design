@@ -275,6 +275,7 @@ const withSelector = compose(
 
       if (!useCache) {
         // 不使用选择器缓存，由业务自己决定缓存
+        setLoading(true)
         task = query(filter)
       } else {
         task = selectorCache.get(taskId);
