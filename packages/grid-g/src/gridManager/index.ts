@@ -236,7 +236,12 @@ export default class GridManage {
     if (isEmpty(records) && typeof records !== 'object') return;
     records = Array.isArray(records) ? records : [records];
     if (records.length <= 0) return;
-    const { hisRecords, newRecords } = getModifyData(records, this.getRowItemData, oldRecords);
+    const { hisRecords, newRecords } = getModifyData(
+      records,
+      this.getRowItemData,
+      oldRecords,
+      this.agGridConfig.getRowNodeId,
+    );
     if (newRecords.length <= 0) return;
     const updateRowData = [];
     newRecords.map(data => {
@@ -244,8 +249,9 @@ export default class GridManage {
       const node = this.agGridApi.getRowNode(nodeId);
       if (node && node.data && data) return updateRowData.push(data);
     });
-    this.batchUpdateGrid({ update: updateRowData });
-    this.validate(updateRowData);
+    this.agGridApi.applyTransactionAsync({ update: updateRowData }, () => {
+      this.validate(updateRowData);
+    });
     this.historyStack.push({
       type: DataActions.modify,
       records: hisRecords,

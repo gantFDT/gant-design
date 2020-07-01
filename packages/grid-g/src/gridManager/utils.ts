@@ -2,12 +2,12 @@ import { get, isEmpty, isEqual, findIndex, cloneDeep } from 'lodash';
 import { DataActions, CreateConfig } from '../interface';
 import { generateUuid } from '@util';
 import { RowNode } from 'ag-grid-community';
-export function getModifyData(records, getRowItemData, oldRecords) {
+export function getModifyData(records, getRowItemData, oldRecords, getRowNodeId) {
   const hisRecords: any[] = [],
     newRecords: any[] = [];
   records.map((item, index) => {
-    var { data } = getRowItemData(item, get(oldRecords, `[${index}]`, undefined));
-    data = cloneDeep(data);
+    const oldIndex = findIndex(oldRecords, oldItem => getRowNodeId(oldItem) === getRowNodeId(item));
+    var { data } = getRowItemData(item, get(oldRecords, `[${oldIndex}]`, undefined));
     if (isEqualObj(data, item)) return;
     let { _rowData, _rowType = null, ...oldData } = data;
     let { _rowData: nextRowData, _rowType: nextRowType, ...newData } = item;
