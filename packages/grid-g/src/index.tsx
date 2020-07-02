@@ -269,12 +269,12 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   }, [validateFields]);
   //columns-end
   const editRowDataChanged = useCallback(
-    async (record: any, fieldName: string, newValue: any, oldValue: any) => {
+    async (record: any, fieldName: string, newValue: any, oldValue: any, data) => {
       if (typeof onCellEditChange === 'function') {
         let newRecords = await onCellEditChange(cloneDeep(record), fieldName, newValue, oldValue);
-        return gridManager.modify(newRecords);
+        return gridManager.modify(newRecords, [data]);
       }
-      return gridManager.modify([record]);
+      return gridManager.modify([record], [data]);
     },
     [onCellEditChange],
   );
