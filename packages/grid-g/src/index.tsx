@@ -274,27 +274,17 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
         let newRecords = await onCellEditChange(cloneDeep(record), fieldName, newValue, oldValue);
         return gridManager.modify(newRecords, [data]);
       }
-      return gridManager.modify([record], [data]);
+      return gridManager.modify([record]);
     },
     [onCellEditChange],
   );
   const editingRowDataChange = useCallback(
-    async (record, fieldName, newValue, oldValue) => {
+    async (record, fieldName, newValue, oldValue, oldRecord) => {
+      let modifyRecord = record;
       if (typeof onCellEditingChange === 'function') {
-        let newRecords = await onCellEditingChange(
-          cloneDeep(record),
-          fieldName,
-          newValue,
-          oldValue,
-        );
-        newRecords = Array.isArray(newRecords) ? newRecords : [newRecords];
-        let oldRecord = cloneDeep(record);
-        oldRecord = Array.isArray(oldRecord) ? oldRecord : [oldRecord];
-        if (isEqual(oldRecord, newRecords)) return gridManager.validate(newRecords);
-        gridManager.modify(newRecords);
-        return;
+        modifyRecord = await onCellEditingChange(cloneDeep(record), fieldName, newValue, oldValue);
       }
-      gridManager.validate([record]);
+      gridManager.modify(modifyRecord, [oldRecord]);
     },
     [onCellEditingChange],
   );
@@ -396,6 +386,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       treeData,
       gridManager,
       showCut,
+      watchEditingChange: typeof onCellEditingChange === 'function',
       ...propsContext,
     };
   }, [propsContext, size, computedPagination, editable, showCut]);

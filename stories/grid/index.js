@@ -39,7 +39,7 @@ function MedalCellRenderer() {
 
 // init method gets the details of the cell to be renderer
 MedalCellRenderer.prototype.init = function (params) {
-   
+
     this.eGui = document.createElement('span');
     ReactDom.render(<GantGroupCellRenderer {...params} />, this.eGui);
 };
@@ -96,7 +96,11 @@ const ComputeGrid = () => {
                         required: true,
                         message: "产品类型编码必填"
                     }
-                ]
+                ],
+                props:(...ags)=>{
+                    console.log(ags)
+                    return {}
+                }
             }
         },
         {
@@ -282,7 +286,7 @@ const ComputeGrid = () => {
                     { 'medalCellRenderer': MedalCellRenderer }
                 }
                 onContextChangeRender={
-                    (context,diffKeys) => {
+                    (context, diffKeys) => {
                         if (context.globalEditable) {
                             return {
                                 columns: ['create']
@@ -290,10 +294,10 @@ const ComputeGrid = () => {
                         }
                     }
                 }
-                onCellEditChange={(record, fieldName) => {
-                    if (fieldName === 'typeName') return record
-                    return [{ ...record, typeCode: record.typeCode, typeName: "true" }]
-                }}
+                // onCellEditingChange={(record, fieldName) => {
+                //     if (fieldName === 'typeName') return record
+                //     return [{ ...record, typeCode: record.typeCode, typeName: record.typeName + 1 }]
+                // }}
                 // treeData
                 editable={editable}
                 dataSource={dataSource}

@@ -140,7 +140,7 @@ export default class GridManage {
       const rowNode = this.agGridApi.getRowNode(nodeId);
       const rowIndex = get(rowNode, 'rowIndex', -1);
       const errorsArr = validateErros[rowIndex];
-      const mergeData = { ...itemData, ...rowNode.data };
+      const mergeData = { ...rowNode.data };
       const { _rowError: merge_row, ...newItemData } = mergeData;
       if (errorsArr) {
         const _rowError: any = {};
@@ -486,7 +486,7 @@ export default class GridManage {
       });
       records = hisRecords;
       this.batchUpdateGrid({ update: newRecords });
-      this.validate(newRecords);
+      // this.validate(newRecords);
     } else {
       const hisRecords: any[] = [];
       recordsIndex.map((removeIndex, index) => {
@@ -554,13 +554,14 @@ export default class GridManage {
       removeTag: [],
     };
     const nowHistoryStack = cloneDeep(this.historyStack);
+    console.log(nowHistoryStack);
     nowHistoryStack.reverse().map(hisItem => {
       const { type, recordsIndex, records } = hisItem;
       records.map((recordItem, recordItemIndex) => {
         const isRecorded = diffRecords.indexOf(getRowNodeId(recordItem)) >= 0;
         if (isRecorded) return;
         const rowNode = this.agGridApi.getRowNode(getRowNodeId(recordItem));
-        const _nextRowData = get(rowNode, 'data');
+        const _nextRowData = get(rowNode, 'data', recordItem);
         let { _rowData, _rowType, _rowError, ...data } = _nextRowData;
         _rowData = isEmpty(_rowData) ? data : _rowData;
         diffRecords.push(getRowNodeId(_nextRowData));

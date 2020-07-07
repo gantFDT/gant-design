@@ -7,9 +7,10 @@ import React, {
   useMemo,
   useEffect,
 } from 'react';
+import { RowNode } from 'ag-grid-community';
 import classnames from 'classnames';
 import { EditStatus } from '@data-cell';
-import { set, cloneDeep, get, isEmpty } from 'lodash';
+import { set, cloneDeep, get, isEmpty, debounce } from 'lodash';
 import { isEqualObj } from './gridManager/utils';
 import { stopPropagationForAgGrid } from './utils';
 const defalutProps = {
@@ -26,7 +27,7 @@ export default WrapperComponent =>
       colDef: { field },
       props: fieldProps,
       changeFormatter,
-      context: { size, editRowDataChanged, editingRowDataChange },
+      context: { size, editRowDataChanged, editingRowDataChange, watchEditingChange },
       refName = 'wrapperRef',
       valuePropName = 'value',
       node,
@@ -34,33 +35,62 @@ export default WrapperComponent =>
     const [newValue, setNewValue] = useState(value);
     const divRef = useRef<HTMLDivElement>(null);
     const inputRef: any = useRef();
-    const nodeValue = useMemo(() => {
-      return get(node.data, field, value);
-    }, [node.data]);
+    const eventDataChange = useCallback(
+      (event: any) => {
+        const editingCells = api.getEditingCells();
+        editingCells.map((item: any) => {
+          if (item.rowIndex === node.rowIndex) {
+            const rowNode = api.getDisplayedRowAtIndex(item.rowIndex);
+            if (
+              get(rowNode, 'data') &&
+              !isEqualObj(get(rowNode, `data.${field}`), value) &&
+              !isEqualObj(get(rowNode, `data.${field}`), newValue)
+            ) {
+              console.log('eventDataChange--->', get(rowNode, `data.${field}`));
+              setNewValue(get(rowNode, `data.${field}`));
+            }
+          }
+        });
+      },
+      [value, newValue],
+    );
+    const compoentProps = useMemo(() => {
+      if (typeof fieldProps === 'function') return fieldProps(node.data, props);
+      return fieldProps;
+    }, [fieldProps, node.data, props]);
     useEffect(() => {
-      setNewValue(nodeValue);
-    }, [nodeValue]);
+      node.addEventListener(RowNode.EVENT_DATA_CHANGED, eventDataChange);
+      return () => {
+        node.removeEventListener(RowNode.EVENT_DATA_CHANGED, eventDataChange);
+      };
+    }, []);
     const onChange = useCallback(
       val => {
         let chageVal = val;
         let { data } = node;
+        const oldData = cloneDeep(data);
         data = cloneDeep(data);
         if (typeof changeFormatter === 'function') chageVal = changeFormatter(val, data);
-        setNewValue(chageVal);
-        editingRowDataChange(set(data, field, chageVal), field, chageVal, value);
+        if (!watchEditingChange) setNewValue(chageVal);
+        else
+          editingRowDataChange(
+            set(data, field, chageVal),
+            field,
+            chageVal,
+            value,
+            cloneDeep(oldData),
+          );
       },
       [changeFormatter, editingRowDataChange, field, node],
     );
+
     const onBlur = useCallback(
       (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         stopEditing();
       },
       [stopEditing],
     );
-    const compoentProps = useMemo(() => {
-      if (typeof fieldProps === 'function') return fieldProps(data, props);
-      return fieldProps;
-    }, [fieldProps, data, props]);
+
     useImperativeHandle(
       ref,
       () => {
@@ -69,15 +99,15 @@ export default WrapperComponent =>
             return false;
           },
           getValue: () => {
-            if (isEqualObj(nodeValue, newValue)) return newValue;
+            if (isEqualObj(value, newValue) || watchEditingChange) return newValue;
             const newData = cloneDeep(node.data);
             set(newData, field, newValue);
             editRowDataChanged(newData, field, newValue, value, cloneDeep(data));
-            return newValue;
+            return value;
           },
         };
       },
-      [nodeValue, newValue, field, data, editRowDataChanged],
+      [value, newValue, field, data, editRowDataChanged],
     );
     useEffect(() => {
       setTimeout(() => {
