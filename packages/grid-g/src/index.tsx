@@ -62,7 +62,7 @@ export const defaultProps = {
   /**是否执行treeDataPath计算 */
   isCompute: true,
   //默认开启编辑校验
-  openEditSign:true
+  openEditSign: true
 };
 export const defaultRowSelection: RowSelection = {
   type: 'multiple',
@@ -433,7 +433,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       {(local, localeCode = 'zh-cn') => {
         let lang = langs[localeCode] || langs['zh-cn'];
         const locale = { ...lang, ...customLocale };
-        const contextMenuItems = function(params) {
+        const contextMenuItems = function (params) {
           const {
             context: { globalEditable },
           } = params;
@@ -441,10 +441,13 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
           const selectedRows = rowNodes.map(item => {
             return item.data;
           }, []);
+          const selectedRowKeys = rowNodes.map(item => {
+            return getRowNodeId(item.data)
+          }, []);
           const hasCut = rowNodes.length <= 0 || (treeData && isEmpty(createConfig));
           const hasPaste =
             rowNodes.length > 1 || isEmpty(createConfig) || isEmpty(gridManager.cutRows);
-          const items = getContextMenuItems ? getContextMenuItems({ selectedRows, ...params }) : [];
+          const items = getContextMenuItems ? getContextMenuItems({ selectedRows, selectedRowKeys, ...params }) : [];
           const defultMenu = treeData
             ? ['expandAll', 'contractAll', ...items, 'separator', 'export']
             : [...items, 'export'];
@@ -452,46 +455,46 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
           const editMenu = !showCut
             ? [...defultMenu]
             : [
-                ...defultMenu,
-                'separator',
-                {
-                  name: locale.cutRows,
-                  disabled: hasCut,
-                  action: params => {
-                    try {
-                      const canPut = onRowsCut ? onRowsCut(rowNodes) : true;
-                      return canPut && gridManager.cut(rowNodes);
-                    } catch (error) {}
-                  },
+              ...defultMenu,
+              'separator',
+              {
+                name: locale.cutRows,
+                disabled: hasCut,
+                action: params => {
+                  try {
+                    const canPut = onRowsCut ? onRowsCut(rowNodes) : true;
+                    return canPut && gridManager.cut(rowNodes);
+                  } catch (error) { }
                 },
-                {
-                  name: locale.cancelCut,
-                  disabled: isEmpty(gridManager.cutRows),
-                  action: params => {
-                    try {
-                      gridManager.cancelCut();
-                    } catch (error) {}
-                  },
+              },
+              {
+                name: locale.cancelCut,
+                disabled: isEmpty(gridManager.cutRows),
+                action: params => {
+                  try {
+                    gridManager.cancelCut();
+                  } catch (error) { }
                 },
-                {
-                  name: locale.pasteTop,
-                  disabled: hasPaste,
-                  action: params => {
-                    const [rowNode] = rowNodes;
-                    const canPaste = onRowsPaste ? onRowsPaste(gridManager.cutRows, rowNode) : true;
-                    canPaste && gridManager.paste(rowNode);
-                  },
+              },
+              {
+                name: locale.pasteTop,
+                disabled: hasPaste,
+                action: params => {
+                  const [rowNode] = rowNodes;
+                  const canPaste = onRowsPaste ? onRowsPaste(gridManager.cutRows, rowNode) : true;
+                  canPaste && gridManager.paste(rowNode);
                 },
-                {
-                  name: locale.pasteBottom,
-                  disabled: hasPaste,
-                  action: params => {
-                    const [rowNode] = rowNodes;
-                    const canPaste = onRowsPaste ? onRowsPaste(gridManager.cutRows, rowNode) : true;
-                    canPaste && gridManager.paste(rowNode, false);
-                  },
+              },
+              {
+                name: locale.pasteBottom,
+                disabled: hasPaste,
+                action: params => {
+                  const [rowNode] = rowNodes;
+                  const canPaste = onRowsPaste ? onRowsPaste(gridManager.cutRows, rowNode) : true;
+                  canPaste && gridManager.paste(rowNode, false);
                 },
-              ];
+              },
+            ];
           return editMenu;
         };
 
