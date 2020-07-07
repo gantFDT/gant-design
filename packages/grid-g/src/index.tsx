@@ -32,10 +32,12 @@ export { default as GantGroupCellRenderer } from './GantGroupCellRenderer';
 export { setComponentsMaps, setFrameworkComponentsMaps } from './maps';
 LicenseManager.setLicenseKey(key);
 export { default as GantPromiseCellRender } from './GantPromiseCellRender';
+
 const langs = {
   en: en,
   'zh-cn': zh,
 };
+
 export const defaultProps = {
   /**加载状态 */
   loading: false,
