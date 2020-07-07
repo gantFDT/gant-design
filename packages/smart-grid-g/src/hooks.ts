@@ -35,6 +35,7 @@ interface usePaginationProps {
   totalCount?: number;
   pageSizeOptions?: string[];
 }
+
 export const usePagination = (props: usePaginationProps): PaginationConfig | undefined | boolean => {
   const {
     pagination,
