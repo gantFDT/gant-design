@@ -149,7 +149,7 @@ const withSelector = compose(
     },
     getValue: ({ valueProp }) => data => String(valueProp && isPlainObject(data) ? data[valueProp] : data), // 获取选项的value
     getLabel: ({ labelProp }) => data => labelProp && isPlainObject(data) ? data[labelProp] : data, // 获取选项的label
-    setLabel: ({ setLabel: originSetLabel }) => labels => originSetLabel(Array.isArray(labels) ? labels.filter(Boolean).join('、') : labels), // 重置setlabel方法,增加格式化的功能
+    setLabel: ({ setLabel: originSetLabel }) => labels => originSetLabel(Array.isArray(labels) ? labels.filter(Boolean).join(',') : labels), // 重置setlabel方法,增加格式化的功能
   }),
   withHandlers({
     // 从dataList或者storageList中找到数据
