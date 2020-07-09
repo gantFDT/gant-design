@@ -29,11 +29,13 @@
   }
 
   .@{profilecard-prefix-cls} {
+    box-sizing: border-box;
     height: @standard;
     background: #fff;
     border-bottom: 1px solid rgba(126, 126, 126, 0.3);
     width: 100%;
     font-size: 12px;
+    z-index: 1;
 
     &-silderCss {
       width: calc(100% - 160px);
@@ -52,6 +54,7 @@
       display: inline-block;
       vertical-align: top;
       height: auto;
+      height: 100%;
     }
 
     &-aCss {
@@ -80,6 +83,7 @@
     &-activeCss {
       color: @theme;
       border-bottom: 3px solid @theme;
+      height: @standard - 1;
     }
 
     &-aCss:last-child {
@@ -104,7 +108,11 @@
 
     &-horAnchorOut {
       width: 100%;
-      height: @standard - 1;
+      height: @standard;
+
+      &__hidden {
+        display: none;
+      }
     }
 
     &-verticallayout {
@@ -112,10 +120,17 @@
     }
 
     &-content>div {
-      width: 100%!important;
+      width: 100% !important;
     }
 
+    &-wrapper {
+      display: flex;
+    }
 
-
+    &-verticalbox {
+      &__hidden {
+        display: none;
+      }
+    }
   }
 }
