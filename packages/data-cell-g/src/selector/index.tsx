@@ -1,5 +1,5 @@
 import React, { PureComponent, Component } from 'react'
-import { Select } from 'antd'
+import { Select, Icon } from 'antd'
 import AntSelect, { SelectProps, SelectValue as AntSelectValue } from 'antd/lib/select'
 import { debounce, isPlainObject, isNil, cloneDeep, isEqual, zipWith, groupBy, pick } from 'lodash'
 import { compose, defaultProps, withProps, withPropsOnChange, withState, mapProps, withHandlers, lifecycle, toClass, setDisplayName } from 'recompose'
@@ -113,7 +113,11 @@ const withLocalStorage = compose(
       selectorStorageId: `selector:${selectorId}`, // 存储在storage的key
     }
   }),
-  withState('storageList', 'setStorageList', ({ selectorStorageId }) => JSON.parse(localStorage.getItem(selectorStorageId) || '[]')),
+  withState(
+    'storageList',
+    'setStorageList',
+    ({ selectorStorageId }) => JSON.parse(localStorage.getItem(selectorStorageId) || '[]')
+  ),
   withHandlers({
     forceUpdateStorageList: ({ setStorageList, storageList, selectorStorageId }) => () => {
       const list = JSON.parse(localStorage.getItem(selectorStorageId) || '[]')
@@ -216,9 +220,13 @@ const withSelector = compose(
         }
 
         if (!show) style = { display: 'none' }
-        return <Option key={key} value={value} disabled={disabled} title={title} style={style} className={className}>{label}</Option>
+        return <Option key={key} value={value} disabled={disabled} title={title} style={style} className={className}>
+          {label}
+        </Option>
       }
-      return <Option key={item} value={item}>{item}</Option>
+      return <Option key={item} value={item}>
+        {item}
+      </Option>
     }),
     setLabelWithValue: ({ value, setLabel, setCacheLabel, getItemLabel }) => () => {
       if (isNil(value)) {
@@ -270,6 +278,10 @@ const withSelector = compose(
       setStorageList(copyList) // 更新list
       localStorage.setItem(selectorStorageId, JSON.stringify(copyList)) // 更新缓存
     },
+    cleanStorage:({ selectorId, selectorStorageId, storageList, getValue, valueProp, setStorageList, useStorage }) => (data, update) => {
+      setStorageList([]) // 更新list
+      localStorage.setItem(selectorStorageId, JSON.stringify([])) // 更新缓存
+    },
     getData: ({ taskId, useCache, loading, setLoading, query, filter, setDataList }) => () => {
       if (!query) return
       let task = null
@@ -304,7 +316,8 @@ const withSelector = compose(
   //#region
   withPropsOnChange(
     ['dataList', 'filter', 'storageList', 'loading'],
-    ({ dataList, filter, storageList, transformDataToList, loading, useStorage, query, labelProp, getLabel, isFilter }) => {
+    ({ dataList, filter, storageList,selectorStorageId, cleanStorage,transformDataToList, setStorageList, updateStorage, forceUpdateStorageList, loading, useStorage, query, labelProp, getLabel, isFilter }) => {
+
       let result = dataList
       if (!query && filter && isFilter) {
         /**
@@ -365,17 +378,34 @@ const withSelector = compose(
         )
 
         const selectedItems = (
-          <Select.OptGroup key='recent' label='最近选择'>
+          <Select.OptGroup key='recent' label={
+            <div style={{ width: '100%', display: 'flex' }}>
+              <span style={{ flex: 1 }}>最近选择</span>
+              <Icon
+                type="delete"
+                style={{
+                  fontSize: '12px',
+                  lineHeight: '32px'
+                }}
+                onClick={() => {
+                  cleanStorage()
+                }}
+              />
+            </div>
+          }>
             {
-              storageList.length ? transformDataToList(storageList) : <Select.Option key='empty' disabled>没有最近选择</Select.Option>
+              storageList.length
+                ?
+                transformDataToList(storageList)
+                :
+                <Select.Option key='empty' disabled>没有最近选择</Select.Option>
             }
           </Select.OptGroup>
         )
         return {
           renderList: [selectedItems].concat(newItems)
         }
-      }
-      else {
+      }else {
         return {
           renderList: list
         }
