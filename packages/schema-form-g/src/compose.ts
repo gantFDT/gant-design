@@ -10,6 +10,7 @@ interface Change {
     key: string[],
     schema: Schema
 }
+
 type mapSubSchema = (schema: Schema, changes: Change[], nextTask: () => void) => void
 
 export type Inner = Props & {

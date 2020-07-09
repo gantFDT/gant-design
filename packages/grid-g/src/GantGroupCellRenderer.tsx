@@ -9,6 +9,7 @@ interface GantGroupCellRendererProps extends ICellRendererParams {
   render?: (showValue: any, data: any, rowIndex: number, params: ICellRendererParams) => any;
   showFolder?: boolean;
 }
+
 interface GantGroupCellRendererState {
   expanded: boolean;
   treeDataType: 'sync' | 'async' | 'none' | string;

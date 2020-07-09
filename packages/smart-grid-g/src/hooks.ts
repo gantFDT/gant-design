@@ -72,6 +72,7 @@ interface useTableConfigProps extends usePaginationProps {
   columns: any[],
   tableKey?: string,
 }
+
 export const useTableConfig = (props: useTableConfigProps) => {
   const {
     tableConfig,
