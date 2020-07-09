@@ -41,12 +41,12 @@ let ComponentsMap = {
 function formatColumn<R>(schema: CustomColumnProps<R>) {
   let fakeColumn = { ...schema };
   if (!schema.render) {
-    if(schema.componentType){
-      if(getType(schema.componentType) !== 'String'){
+    if (schema.componentType) {
+      if (getType(schema.componentType) !== 'String') {
         fakeColumn.render = () => schema.componentType as React.ReactElement;
-      }else{
+      } else {
         const Cmp = ComponentsMap[schema.componentType as Fields];
-        if(Cmp){
+        if (Cmp) {
           fakeColumn.render = value => React.createElement(Cmp, {
             ...schema.props,
             value,
@@ -58,10 +58,10 @@ function formatColumn<R>(schema: CustomColumnProps<R>) {
             editable: true,
             ...fakeColumn.editConfig
           }
-        }else{
+        } else {
           try {
             fakeColumn.render = value => React.createElement('span', {}, JSON.stringify(value))
-          }catch{
+          } catch{
             throw `字段（${schema.fieldName}）的值解析出错。`
           }
         }
@@ -78,7 +78,7 @@ function formatColumn<R>(schema: CustomColumnProps<R>) {
 }
 
 export const setFields = (cmpMap) => {
-  ComponentsMap = {...ComponentsMap, ...cmpMap }
+  ComponentsMap = { ...ComponentsMap, ...cmpMap }
 }
 
 export default function formatSchema<R>(schema: SchemaProp<R> | CustomColumnProps<R>[]) {
@@ -103,6 +103,7 @@ export default function formatSchema<R>(schema: SchemaProp<R> | CustomColumnProp
     };
   }
 
+  
   const { supportColumnFields: columnFields, systemViews } = schema;
 
   // 转换组件类型后的列数据

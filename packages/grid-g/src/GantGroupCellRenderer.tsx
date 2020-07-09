@@ -22,7 +22,8 @@ function rowIndexChanged(params) {
     rowNodes: [node],
     force: true,
   });
-}
+} 
+
 export default memo(
   forwardRef(function GantGroupCellRendererCompoent(props: GantGroupCellRendererProps, ref: any) {
     const {
