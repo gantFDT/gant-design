@@ -101,6 +101,7 @@ const GantAnchor = (props: GantAnchorProps) => {
     [stateMode, setId, isClickScroll, list],
   )
 
+  
   //   //点击左右箭头
   const handleMobileTabs = useCallback(
     e => {

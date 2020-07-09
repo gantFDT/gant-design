@@ -18,6 +18,7 @@ function CustomExpandIcon(props: ExpandIconProps<object>, isTree?: boolean) {
     type = 'folder';
     prefix = 'collapsed';
   }
+  
   return (
     <span onClick={(e: any) => props.onExpand(props.record, e)} style={{ paddingLeft: prefix ? 0 : 17 }}>
       {
