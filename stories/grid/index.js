@@ -53,7 +53,8 @@ const RandomCreate = () => ({
     name: Random.name(),
     age: Random.natural(10, 50),
     county: Random.county(true),
-    leaf: [true, false][Random.natural(0, 1)]
+    leaf: [true, false][Random.natural(0, 1)],
+    path: [Random.ip()]
 })
 const mockData = Array(100).fill().map((_, Idx) => RandomCreate())
 const BaiscGrid = () => {
@@ -151,16 +152,18 @@ const BaiscGrid = () => {
                 dataSource={dataSource}
                 serialNumber
                 treeData
-                isServerSideGroup={(data) => data.leaf}
+                // isServerSideGroup={(data) => data.leaf}
                 rowSelection={{
                     type: 'multiple',
                     selectedKeys,
                     selectedRows,
                     onSelect
                 }}
+                groupSuppressAutoColumn
                 editChangeCallback={onEditChangeCallback}
                 onReady={onReady}
                 openEditSign
+                getDataPath={(data) => data.path}
                 createConfig={{
                     id: 'path',
                     path: "path",
@@ -182,6 +185,7 @@ const BaiscGrid = () => {
                         onChange: onPageChange
                     }
                 }
+
             />
         </Fragment>
     )

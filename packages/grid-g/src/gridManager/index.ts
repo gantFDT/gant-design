@@ -274,8 +274,10 @@ export default class GridManage {
     this.agGridApi.setSortModel([]);
     if (typeof targetId !== 'number' && !targetId) {
       addRecords = addRecords.map(item => ({ ...item, _rowType: DataActions.add }));
-      this.validate(addRecords);
+
       this.agGridApi.setRowData([...addRecords, ...rowData]);
+      return
+      this.validate(addRecords);
       this.historyStack.push({
         type: DataActions.add,
         records: addRecords,
@@ -297,8 +299,8 @@ export default class GridManage {
       newRecords.push(...addTarget);
       hisRecords = [...hisRecords, ...addTarget];
     });
-    this.validate(newRecords);
     this.agGridApi.setRowData([...rowData]);
+    this.validate(newRecords);
     this.historyStack.push({
       type: DataActions.add,
       records: hisRecords,

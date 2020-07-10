@@ -176,9 +176,11 @@ export default memo(
               <Icon type="file" theme="filled" />
             </span>
           ) : (
-            <span className="gant-treedata-icon gant-treedata-first-file">
-              <Icon type="file" theme="filled" />
-            </span>
+            treeData && (
+              <span className="gant-treedata-icon gant-treedata-first-file">
+                <Icon type="file" theme="filled" />
+              </span>
+            )
           )
         ) : null}
         <span className="ag-group-value">
