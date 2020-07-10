@@ -1,5 +1,5 @@
 import React, { PureComponent, Component } from 'react'
-import { Select } from 'antd'
+import { Select, Icon } from 'antd'
 import AntSelect, { SelectProps, SelectValue as AntSelectValue } from 'antd/lib/select'
 import { debounce, isPlainObject, isNil, cloneDeep, isEqual, zipWith, groupBy, pick } from 'lodash'
 import { compose, defaultProps, withProps, withPropsOnChange, withState, mapProps, withHandlers, lifecycle, toClass, setDisplayName } from 'recompose'
@@ -89,6 +89,7 @@ type SelectorInnerProps<T, R> = ProtoExtends<BasicSelectorProps<T, R>, {
   updateStorage?: (d: R, u: boolean) => void,
   selectRef?: AntSelect,
   setSelectRef?: (c: AntSelect) => void,
+  splitStr?: string,
   filter?: string,
   forceUpdateStorageList(): void,
   reg: RegExp,
@@ -112,7 +113,11 @@ const withLocalStorage = compose(
       selectorStorageId: `selector:${selectorId}`, // 存储在storage的key
     }
   }),
-  withState('storageList', 'setStorageList', ({ selectorStorageId }) => JSON.parse(localStorage.getItem(selectorStorageId) || '[]')),
+  withState(
+    'storageList',
+    'setStorageList',
+    ({ selectorStorageId }) => JSON.parse(localStorage.getItem(selectorStorageId) || '[]')
+  ),
   withHandlers({
     forceUpdateStorageList: ({ setStorageList, storageList, selectorStorageId }) => () => {
       const list = JSON.parse(localStorage.getItem(selectorStorageId) || '[]')
@@ -149,7 +154,7 @@ const withSelector = compose(
     },
     getValue: ({ valueProp }) => data => String(valueProp && isPlainObject(data) ? data[valueProp] : data), // 获取选项的value
     getLabel: ({ labelProp }) => data => labelProp && isPlainObject(data) ? data[labelProp] : data, // 获取选项的label
-    setLabel: ({ setLabel: originSetLabel }) => labels => originSetLabel(Array.isArray(labels) ? labels.filter(Boolean).join('、') : labels), // 重置setlabel方法,增加格式化的功能
+    setLabel: ({ setLabel: originSetLabel, splitStr = '、' }) => labels => originSetLabel(Array.isArray(labels) ? labels.filter(Boolean).join(splitStr) : labels), // 重置setlabel方法,增加格式化的功能
   }),
   withHandlers({
     // 从dataList或者storageList中找到数据
@@ -215,9 +220,13 @@ const withSelector = compose(
         }
 
         if (!show) style = { display: 'none' }
-        return <Option key={key} value={value} disabled={disabled} title={title} style={style} className={className}>{label}</Option>
+        return <Option key={key} value={value} disabled={disabled} title={title} style={style} className={className}>
+          {label}
+        </Option>
       }
-      return <Option key={item} value={item}>{item}</Option>
+      return <Option key={item} value={item}>
+        {item}
+      </Option>
     }),
     setLabelWithValue: ({ value, setLabel, setCacheLabel, getItemLabel }) => () => {
       if (isNil(value)) {
@@ -269,6 +278,10 @@ const withSelector = compose(
       setStorageList(copyList) // 更新list
       localStorage.setItem(selectorStorageId, JSON.stringify(copyList)) // 更新缓存
     },
+    cleanStorage:({ selectorId, selectorStorageId, storageList, getValue, valueProp, setStorageList, useStorage }) => (data, update) => {
+      setStorageList([]) // 更新list
+      localStorage.setItem(selectorStorageId, JSON.stringify([])) // 更新缓存
+    },
     getData: ({ taskId, useCache, loading, setLoading, query, filter, setDataList }) => () => {
       if (!query) return
       let task = null
@@ -303,7 +316,8 @@ const withSelector = compose(
   //#region
   withPropsOnChange(
     ['dataList', 'filter', 'storageList', 'loading'],
-    ({ dataList, filter, storageList, transformDataToList, loading, useStorage, query, labelProp, getLabel, isFilter }) => {
+    ({ dataList, filter, storageList,selectorStorageId, cleanStorage,transformDataToList, setStorageList, updateStorage, forceUpdateStorageList, loading, useStorage, query, labelProp, getLabel, isFilter }) => {
+
       let result = dataList
       if (!query && filter && isFilter) {
         /**
@@ -364,17 +378,34 @@ const withSelector = compose(
         )
 
         const selectedItems = (
-          <Select.OptGroup key='recent' label='最近选择'>
+          <Select.OptGroup key='recent' label={
+            <div style={{ width: '100%', display: 'flex' }}>
+              <span style={{ flex: 1 }}>最近选择</span>
+              <Icon
+                type="delete"
+                style={{
+                  fontSize: '12px',
+                  lineHeight: '32px'
+                }}
+                onClick={() => {
+                  cleanStorage()
+                }}
+              />
+            </div>
+          }>
             {
-              storageList.length ? transformDataToList(storageList) : <Select.Option key='empty' disabled>没有最近选择</Select.Option>
+              storageList.length
+                ?
+                transformDataToList(storageList)
+                :
+                <Select.Option key='empty' disabled>没有最近选择</Select.Option>
             }
           </Select.OptGroup>
         )
         return {
           renderList: [selectedItems].concat(newItems)
         }
-      }
-      else {
+      }else {
         return {
           renderList: list
         }

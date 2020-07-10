@@ -9,6 +9,7 @@ interface GantGroupCellRendererProps extends ICellRendererParams {
   render?: (showValue: any, data: any, rowIndex: number, params: ICellRendererParams) => any;
   showFolder?: boolean;
 }
+
 interface GantGroupCellRendererState {
   expanded: boolean;
   treeDataType: 'sync' | 'async' | 'none' | string;
@@ -22,7 +23,8 @@ function rowIndexChanged(params) {
     rowNodes: [node],
     force: true,
   });
-}
+} 
+
 export default memo(
   forwardRef(function GantGroupCellRendererCompoent(props: GantGroupCellRendererProps, ref: any) {
     const {

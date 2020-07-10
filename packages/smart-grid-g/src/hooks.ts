@@ -35,6 +35,7 @@ interface usePaginationProps {
   totalCount?: number;
   pageSizeOptions?: string[];
 }
+
 export const usePagination = (props: usePaginationProps): PaginationConfig | undefined | boolean => {
   const {
     pagination,
@@ -71,6 +72,7 @@ interface useTableConfigProps extends usePaginationProps {
   columns: any[],
   tableKey?: string,
 }
+
 export const useTableConfig = (props: useTableConfigProps) => {
   const {
     tableConfig,
