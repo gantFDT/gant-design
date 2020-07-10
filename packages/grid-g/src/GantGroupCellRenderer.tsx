@@ -23,7 +23,7 @@ function rowIndexChanged(params) {
     rowNodes: [node],
     force: true,
   });
-} 
+}
 
 export default memo(
   forwardRef(function GantGroupCellRendererCompoent(props: GantGroupCellRendererProps, ref: any) {
@@ -171,12 +171,14 @@ export default memo(
             <span className="gant-treedata-icon gant-treedata-folder">
               <Icon type={expanded ? 'folder-open' : 'folder'} theme="filled" />
             </span>
+          ) : node.level > 0 ? (
+            <span className="gant-treedata-icon gant-treedata-file">
+              <Icon type="file" theme="filled" />
+            </span>
           ) : (
-            node.level > 0 && (
-              <span className="gant-treedata-icon gant-treedata-file">
-                <Icon type="file" theme="filled" />
-              </span>
-            )
+            <span className="gant-treedata-icon gant-treedata-first-file">
+              <Icon type="file" theme="filled" />
+            </span>
           )
         ) : null}
         <span className="ag-group-value">
