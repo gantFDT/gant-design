@@ -184,6 +184,7 @@ export interface Props<T extends any> {
   onRowsCut?: (rows: RowNode[]) => boolean;
   onRowsPaste?: (rows: RowNode[], targetRow?: RowNode) => boolean;
   onRowsPasteEnd?: (data: any) => void;
+  hideSelcetedBox?: boolean;
   editChangeCallback?: (isChanged: boolean) => void;
   onContextChangeRender?: (
     context: any,

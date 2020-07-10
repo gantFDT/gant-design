@@ -125,6 +125,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     editChangeCallback,
     isRowSelectable,
     boxColumnIndex,
+    hideSelcetedBox,
     onSelectionChanged: propsOnSelectionChanged,
     ...orignProps
   } = props;
@@ -452,6 +453,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       treeData,
       gridManager,
       showCut,
+
       watchEditingChange: typeof onCellEditingChange === 'function',
       ...propsContext,
     };
@@ -599,12 +601,15 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                   height: computedPagination ? 'calc(100% - 30px)' : '100%',
                 }}
               >
-                <SelectedGrid
-                  onChange={onBoxSelectionChanged}
-                  getRowNodeId={getRowNodeId}
-                  columnDefs={selectedColumns as any}
-                  rowData={boxSelectedRows}
-                />
+                {!hideSelcetedBox && (
+                  <SelectedGrid
+                    onChange={onBoxSelectionChanged}
+                    getRowNodeId={getRowNodeId}
+                    columnDefs={selectedColumns as any}
+                    rowData={boxSelectedRows}
+                  />
+                )}
+
                 <AgGridReact
                   frameworkComponents={{
                     gantGroupCellRenderer: GantGroupCellRenderer,
