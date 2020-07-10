@@ -527,11 +527,16 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
           const gridSelectedRows = selectedRowNodes.map(item => {
             return item.data;
           }, []);
+          const gridSelectedKeys = gridSelectedRows.map(item => getRowNodeId(item), []);
           const hasCut = selectedRowNodes.length <= 0 || (treeData && isEmpty(createConfig));
           const hasPaste =
             selectedRowNodes.length > 1 || isEmpty(createConfig) || isEmpty(gridManager.cutRows);
           const items = getContextMenuItems
-            ? getContextMenuItems({ selectedRows: gridSelectedRows, ...params } as any)
+            ? getContextMenuItems({
+                selectedRows: gridSelectedRows,
+                selectedKeys: gridSelectedKeys,
+                ...params,
+              } as any)
             : [];
           const defultMenu = treeData
             ? ['expandAll', 'contractAll', ...items, 'separator', 'export']
