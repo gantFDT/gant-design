@@ -37,20 +37,20 @@ export default WrapperComponent =>
     const inputRef: any = useRef();
     const eventDataChange = useCallback(
       (event: any) => {
-        const editingCells = api.getEditingCells();
-        editingCells.map((item: any) => {
-          if (item.rowIndex === node.rowIndex) {
-            const rowNode = api.getDisplayedRowAtIndex(item.rowIndex);
-            if (
-              get(rowNode, 'data') &&
-              !isEqualObj(get(rowNode, `data.${field}`), value) &&
-              !isEqualObj(get(rowNode, `data.${field}`), newValue)
-            ) {
-              console.log('eventDataChange--->', get(rowNode, `data.${field}`));
-              setNewValue(get(rowNode, `data.${field}`));
-            }
-          }
-        });
+        return;
+        // const editingCells = api.getEditingCells();
+        // editingCells.map((item: any) => {
+        //   if (item.rowIndex === node.rowIndex) {
+        //     const rowNode = api.getDisplayedRowAtIndex(item.rowIndex);
+        //     if (
+        //       get(rowNode, 'data') &&
+        //       !isEqualObj(get(rowNode, `data.${field}`), value) &&
+        //       !isEqualObj(get(rowNode, `data.${field}`), newValue)
+        //     ) {
+        //       setNewValue(get(rowNode, `data.${field}`));
+        //     }
+        //   }
+        // });
       },
       [value, newValue],
     );
@@ -99,11 +99,11 @@ export default WrapperComponent =>
             return false;
           },
           getValue: () => {
-            if (isEqualObj(value, newValue) || watchEditingChange) return newValue;
-            const newData = cloneDeep(node.data);
+            if (isEqualObj(value, newValue) || watchEditingChange) return value;
+            const newData = cloneDeep(data);
             set(newData, field, newValue);
             editRowDataChanged(newData, field, newValue, value, cloneDeep(data));
-            return value;
+            return newValue;
           },
         };
       },

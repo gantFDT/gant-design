@@ -66,6 +66,7 @@ export type RowSelection = {
   checkboxIndex?: number;
   onSelect?: (keys: string[], rows: any[]) => void;
   selectedKeys?: string[];
+  selectedRows?: string[];
   showDefalutCheckbox?: boolean;
   defaultSelectionCol?: ColDef;
   rowMultiSelectWithClick?: boolean;
@@ -153,6 +154,7 @@ export type Pagination = Omit<
 // Grid Api
 export interface Props<T extends any> {
   columns: Columns<T>[];
+  boxColumnIndex?: number;
   dataSource: T[];
   removeShowLine: boolean;
   filter?: boolean;

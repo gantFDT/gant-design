@@ -1,5 +1,41 @@
 :global {
+  .gant-selected-agrid-title {
+    line-height: 24px;
+    font-size: 12px;
+    > p {
+      float: left;
+    }
+    > div {
+      float: right;
+    }
+    button {
+      font-size: 12px;
+    }
+    height: 32px;
+    line-height: 32px;
+    overflow: hidden;
+  }
   .gant-grid {
+    .gant-ag-wrapper {
+      position: relative;
+    }
+
+    .gant-grid-selected-wrapper {
+      position: absolute;
+      bottom: 18px;
+      right: 18px;
+      z-index: 1000;
+    }
+    .gant-grid-selected-box {
+      width: 32px;
+      height: 32px;
+      line-height: 32px;
+      background: #eee;
+      cursor: pointer;
+      font-size: 18px;
+      text-align: center;
+      border-radius: 3px;
+    }
     .gant-grid-row-cut {
       background-color: transparent !important;
       opacity: 0.6;

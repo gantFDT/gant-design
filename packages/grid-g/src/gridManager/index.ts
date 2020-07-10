@@ -70,8 +70,11 @@ export default class GridManage {
     let rowNode = this.agGridApi.getRowNode(nodeId);
     return isEmpty(oldData) ? rowNode : { ...rowNode, data: { ...oldData } };
   };
-  private batchUpdateGrid(transaction: RowDataTransaction) {
-    this.agGridApi.applyTransaction(transaction);
+  private batchUpdateGrid(
+    transaction: RowDataTransaction,
+    callback?: (transaction: RowDataTransaction) => void,
+  ) {
+    this.agGridApi.applyTransactionAsync(transaction, callback);
   }
   appendChild(keys, add) {
     const { isCompute, treeDataChildrenName, getRowNodeId } = this.agGridConfig;
@@ -80,7 +83,6 @@ export default class GridManage {
   }
   async validate(data) {
     const { getRowNodeId } = this.agGridConfig;
-    // this.validateFields;
     const { add, modify } = this.diff;
     const source = isEmpty(data) ? [...add, ...modify] : data;
     const fields: any = {};
@@ -135,13 +137,12 @@ export default class GridManage {
     let update: any[] = [];
     const indexArr: number[] = [];
     update = newData.map(itemData => {
-      const { _rowError: _row, ..._itemData } = itemData;
       const nodeId = this.agGridConfig.getRowNodeId(itemData);
       const rowNode = this.agGridApi.getRowNode(nodeId);
       const rowIndex = get(rowNode, 'rowIndex', -1);
       const errorsArr = validateErros[rowIndex];
-      const mergeData = { ...rowNode.data };
-      const { _rowError: merge_row, ...newItemData } = mergeData;
+      const mergeData = { ...rowNode.data, ...itemData };
+      const { _rowError: merge_rowError, ...newItemData } = mergeData;
       if (errorsArr) {
         const _rowError: any = {};
         errorsArr.map(itemError => {
@@ -149,7 +150,7 @@ export default class GridManage {
         });
         rowNode.setData({ ...newItemData, _rowError });
       } else {
-        if (_row) rowNode.setData({ ...newItemData });
+        if (merge_rowError) rowNode.setData({ ...newItemData });
       }
     });
   }
@@ -249,14 +250,14 @@ export default class GridManage {
       const node = this.agGridApi.getRowNode(nodeId);
       if (node && node.data && data) return updateRowData.push(data);
     });
-    this.agGridApi.applyTransactionAsync({ update: updateRowData }, () => {
+    this.batchUpdateGrid({ update: updateRowData }, () => {
       this.validate(updateRowData);
+      this.historyStack.push({
+        type: DataActions.modify,
+        records: hisRecords,
+      });
+      this.watchHistory();
     });
-    this.historyStack.push({
-      type: DataActions.modify,
-      records: hisRecords,
-    });
-    this.watchHistory();
   }
 
   // 创建;
@@ -554,7 +555,6 @@ export default class GridManage {
       removeTag: [],
     };
     const nowHistoryStack = cloneDeep(this.historyStack);
-    console.log(nowHistoryStack);
     nowHistoryStack.reverse().map(hisItem => {
       const { type, recordsIndex, records } = hisItem;
       records.map((recordItem, recordItemIndex) => {

@@ -20,7 +20,63 @@ function ColEditableFn(fn: ColumnEdiatble<any>): IsColumnFunc | boolean {
     return globalEditable ? fn : false;
   };
 }
-
+const defaultCheckboxColSelectionCol: ColDef = {
+  width: 24,
+  checkboxSelection: true,
+  resizable: false,
+  sortable: false,
+  pinned: true,
+  field: 'defalutSelection',
+  minWidth: 24,
+  headerName: '',
+  suppressMenu: true,
+  lockPosition: true,
+  lockVisible: true,
+  cellStyle: {
+    padding: '0px 3px',
+  },
+  headerClass: 'gant-padding-h-3',
+  suppressPaste: true,
+};
+const serialNumberCol: ColDef = {
+  width: 50,
+  sortable: false,
+  pinned: true,
+  minWidth: 50,
+  headerName: '序号',
+  suppressMenu: true,
+  lockPosition: true,
+  lockVisible: true,
+  field: 'g-index',
+  cellClassRules: {
+    'gant-grid-cell-serial-add': params => {
+      const {
+        node: { rowIndex, data },
+        context,
+      } = params;
+      return get(params, 'data._rowType') === DataActions.add;
+    },
+  },
+  valueFormatter: (params: any) => {
+    const {
+      node: { rowIndex, data },
+      context,
+    } = params;
+    const computedPagination = get(context, 'computedPagination', {});
+    const {
+      defaultPageSize = 20,
+      pageSize = defaultPageSize,
+      current = 1,
+    }: any = computedPagination;
+    const serial = rowIndex + 1 + Math.floor(pageSize * (current - 1));
+    return serial;
+  },
+};
+export const selectedMapColumns = <T>(columns: Columns<T>[], index: number = 0) => {
+  const columnItem = columns[0];
+  const { title: headerName, fieldName: field } = columnItem;
+  return [{...defaultCheckboxColSelectionCol,headerCheckboxSelection:'multiple'}, { headerName, field, flex: true }];
+};
 export const mapColumns = <T>(
   columns: Columns<T>[],
   getRowNodeId: any,
@@ -139,60 +195,7 @@ export const mapColumns = <T>(
     );
     return { columnDefs, validateFields };
   }
-  const defaultCheckboxColSelectionCol: ColDef = {
-    width: 24,
-    checkboxSelection: true,
-    resizable: false,
-    sortable: false,
-    pinned: true,
-    field: 'defalutSelection',
-    headerCheckboxSelection: rowSelection === 'multiple',
-    minWidth: 24,
-    headerName: '',
-    suppressMenu: true,
-    lockPosition: true,
-    lockVisible: true,
-    cellStyle: {
-      padding: '0px 3px',
-    },
-    headerClass: 'gant-padding-h-3',
-    ...defaultSelectionCol,
-    suppressPaste: true,
-  };
-  const serialNumberCol: ColDef = {
-    width: 50,
-    sortable: false,
-    pinned: true,
-    minWidth: 50,
-    headerName: '序号',
-    suppressMenu: true,
-    lockPosition: true,
-    lockVisible: true,
-    field: 'g-index',
-    cellClassRules: {
-      'gant-grid-cell-serial-add': params => {
-        const {
-          node: { rowIndex, data },
-          context,
-        } = params;
-        return get(params, 'data._rowType') === DataActions.add;
-      },
-    },
-    valueFormatter: (params: any) => {
-      const {
-        node: { rowIndex, data },
-        context,
-      } = params;
-      const computedPagination = get(context, 'computedPagination', {});
-      const {
-        defaultPageSize = 20,
-        pageSize = defaultPageSize,
-        current = 1,
-      }: any = computedPagination;
-      const serial = rowIndex + 1 + Math.floor(pageSize * (current - 1));
-      return serial;
-    },
-  };
+
   let { columnDefs, validateFields } = getColumnDefs(columns);
   columnDefs = serialNumber
     ? typeof serialNumber === 'boolean'
@@ -206,7 +209,16 @@ export const mapColumns = <T>(
           ...columnDefs,
         ]
     : columnDefs;
-  columnDefs = defaultSelection ? [defaultCheckboxColSelectionCol, ...columnDefs] : columnDefs;
+  columnDefs = defaultSelection
+    ? [
+        {
+          ...defaultCheckboxColSelectionCol,
+          headerCheckboxSelection: rowSelection === 'multiple',
+          ...defaultSelectionCol,
+        },
+        ...columnDefs,
+      ]
+    : columnDefs;
   return { columnDefs, validateFields };
 };
 
