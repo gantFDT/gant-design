@@ -1,5 +1,5 @@
 import React, { PureComponent, Component } from 'react'
-import { Select, Icon } from 'antd'
+import { Select, Icon, Tooltip } from 'antd'
 import AntSelect, { SelectProps, SelectValue as AntSelectValue } from 'antd/lib/select'
 import { debounce, isPlainObject, isNil, cloneDeep, isEqual, zipWith, groupBy, pick } from 'lodash'
 import { compose, defaultProps, withProps, withPropsOnChange, withState, mapProps, withHandlers, lifecycle, toClass, setDisplayName } from 'recompose'
@@ -278,7 +278,7 @@ const withSelector = compose(
       setStorageList(copyList) // 更新list
       localStorage.setItem(selectorStorageId, JSON.stringify(copyList)) // 更新缓存
     },
-    cleanStorage:({ selectorId, selectorStorageId, storageList, getValue, valueProp, setStorageList, useStorage }) => (data, update) => {
+    cleanStorage: ({ selectorId, selectorStorageId, storageList, getValue, valueProp, setStorageList, useStorage }) => (data, update) => {
       setStorageList([]) // 更新list
       localStorage.setItem(selectorStorageId, JSON.stringify([])) // 更新缓存
     },
@@ -316,7 +316,7 @@ const withSelector = compose(
   //#region
   withPropsOnChange(
     ['dataList', 'filter', 'storageList', 'loading'],
-    ({ dataList, filter, storageList,selectorStorageId, cleanStorage,transformDataToList, setStorageList, updateStorage, forceUpdateStorageList, loading, useStorage, query, labelProp, getLabel, isFilter }) => {
+    ({ dataList, filter, storageList, selectorStorageId, cleanStorage, transformDataToList, setStorageList, updateStorage, forceUpdateStorageList, loading, useStorage, query, labelProp, getLabel, isFilter }) => {
 
       let result = dataList
       if (!query && filter && isFilter) {
@@ -381,16 +381,18 @@ const withSelector = compose(
           <Select.OptGroup key='recent' label={
             <div style={{ width: '100%', display: 'flex' }}>
               <span style={{ flex: 1 }}>最近选择</span>
-              <Icon
-                type="delete"
-                style={{
-                  fontSize: '12px',
-                  lineHeight: '32px'
-                }}
-                onClick={() => {
-                  cleanStorage()
-                }}
-              />
+              <Tooltip title="清空最近选择">
+                <Icon
+                  type="delete"
+                  style={{
+                    fontSize: '12px',
+                    lineHeight: '32px'
+                  }}
+                  onClick={() => {
+                    cleanStorage()
+                  }}
+                />
+              </Tooltip>
             </div>
           }>
             {
@@ -405,7 +407,7 @@ const withSelector = compose(
         return {
           renderList: [selectedItems].concat(newItems)
         }
-      }else {
+      } else {
         return {
           renderList: list
         }
