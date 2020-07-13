@@ -356,6 +356,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   //columns-end
   const editRowDataChanged = useCallback(
     async (record: any, fieldName: string, newValue: any, oldValue: any, oldRecord) => {
+      gridManager.loading = true;
       if (typeof onCellEditChange === 'function') {
         let newRecords = await onCellEditChange(cloneDeep(record), fieldName, newValue, oldValue);
         return gridManager.modify(newRecords, [oldRecord]);
@@ -366,11 +367,12 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   );
   const editingRowDataChange = useCallback(
     async (record, fieldName, newValue, oldValue, oldRecord) => {
+      gridManager.loading = true;
       let modifyRecord = record;
       if (typeof onCellEditingChange === 'function') {
         modifyRecord = await onCellEditingChange(cloneDeep(record), fieldName, newValue, oldValue);
       }
-      gridManager.modify(modifyRecord, [oldRecord]);
+      gridManager.modify(modifyRecord);
     },
     [onCellEditingChange],
   );

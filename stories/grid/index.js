@@ -33,6 +33,7 @@ const columns = [{
 {
     fieldName: "age",
     title: "年龄",
+    render: (value) => value,
     editConfig: {
         component: InputNumber,
         signable: true,
@@ -137,7 +138,7 @@ const BaiscGrid = () => {
                     <Button size="small" icon='delete' onClick={onRemove} />
                     <Button size="small" icon='undo' onClick={() => gridManagerRef.current.undo()} />
                     <Button size="small" icon='redo' onClick={() => gridManagerRef.current.redo()} />
-                    <Button size="small" icon='save' disabled={!gridChange} onClick={onSave} />
+                    <Button size="small" icon='save' onClick={onSave} />
                 </Fragment>}
             </Fragment>
             }
@@ -159,11 +160,16 @@ const BaiscGrid = () => {
                     selectedRows,
                     onSelect
                 }}
+                rowBuffer={1}
                 groupSuppressAutoColumn
                 editChangeCallback={onEditChangeCallback}
                 onReady={onReady}
                 openEditSign
                 getDataPath={(data) => data.path}
+                onCellEditingChange={(record) => {
+                    console.log('record', record)
+                    return record
+                }}
                 createConfig={{
                     id: 'path',
                     path: "path",
