@@ -1,6 +1,6 @@
 import { RowDataTransaction, GridApi, RowNode } from 'ag-grid-community';
 import Schema, { Rules } from 'async-validator';
-import { get, isEmpty, findIndex, cloneDeep, delay } from 'lodash';
+import { get, isEmpty, findIndex, cloneDeep } from 'lodash';
 import {
   getModifyData,
   removeTagData,
@@ -37,29 +37,13 @@ interface AgGridConfig {
   treeDataChildrenName?: string;
   editChangeCallback?: (boolean) => void;
 }
-async function test() {
-  const data = await delay(
-    name => {
-      console.log(name);
-    },
-    1000,
-    'tesxt',
-  );
-  console.log('---->', delay);
+function delay(time) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve();
+    }, time);
+  });
 }
-test()
-function loadingDecorator(target, name, descriptor) {
-  return {
-    ...descriptor,
-    value: async (...ags) => {
-      target.loading = true;
-      const res = await descriptor.value(...ags);
-      target.loading = false;
-      return res;
-    },
-  };
-}
-
 @bindAll()
 export default class GridManage {
   public agGridApi: GridApi;
@@ -73,6 +57,7 @@ export default class GridManage {
   get isChanged() {
     const { remove, modify, add } = this.diff;
     const all = [...remove, ...modify, ...add];
+    if (this.loading) return true;
     return all.length > 0;
   }
   get diff() {
@@ -252,8 +237,7 @@ export default class GridManage {
     });
     return rowData;
   }
-  @loadingDecorator
-  public modify(records: any | any[], oldRecords?: any | any[]) {
+  public async modify(records: any | any[], oldRecords?: any | any[]) {
     if (isEmpty(records) && typeof records !== 'object') return;
     records = Array.isArray(records) ? records : [records];
     if (records.length <= 0) return;
@@ -277,6 +261,7 @@ export default class GridManage {
         records: hisRecords,
       });
       this.watchHistory();
+      this.loading = false;
     });
   }
 

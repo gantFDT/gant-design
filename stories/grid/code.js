@@ -116,6 +116,7 @@ const BaiscGrid = () => {
         gridManagerRef.current.remove(selectedKeys);
     }, [selectedKeys])
     const onSave = useCallback(async () => {
+        console.log('---->', gridManagerRef.current.loading)
         const errors = await gridManagerRef.current.validate();
         console.log("validate----->", errors);
         if (errors) return

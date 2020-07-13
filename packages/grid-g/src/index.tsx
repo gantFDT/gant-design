@@ -456,7 +456,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       gridManager,
       showCut,
 
-      watchEditingChange: typeof onCellEditingChange === 'function',
+      watchEditChange: typeof onCellEditChange === 'function',
       ...propsContext,
     };
   }, [propsContext, size, computedPagination, editable, showCut]);
