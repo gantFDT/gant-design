@@ -73,9 +73,13 @@ const serialNumberCol: ColDef = {
   },
 };
 export const selectedMapColumns = <T>(columns: Columns<T>[], index: number = 0) => {
-  const columnItem = columns[0];
+  if (columns.length <= 0) return [];
+  const columnItem = get(columns, `[0]`, {});
   const { title: headerName, fieldName: field } = columnItem;
-  return [{...defaultCheckboxColSelectionCol,headerCheckboxSelection:'multiple'}, { headerName, field, flex: true }];
+  return [
+    { ...defaultCheckboxColSelectionCol, headerCheckboxSelection: 'multiple' },
+    { headerName, field, flex: true },
+  ];
 };
 export const mapColumns = <T>(
   columns: Columns<T>[],

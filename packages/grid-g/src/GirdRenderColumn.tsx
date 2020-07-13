@@ -6,7 +6,7 @@ export default memo(function GirdRenderColumnComponent(props: any) {
   useEffect(() => {
     timerRef.current = setTimeout(() => {
       setCanRender(true);
-    }, 10);
+    }, 50);
     return () => {
       clearTimeout(timerRef.current);
       timerRef.current = null;
