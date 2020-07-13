@@ -27,7 +27,7 @@ export default WrapperComponent =>
       colDef: { field },
       props: fieldProps,
       changeFormatter,
-      context: { size, editRowDataChanged, editingRowDataChange, watchEditingChange },
+      context: { size, editRowDataChanged, editingRowDataChange, watchEditChange },
       refName = 'wrapperRef',
       valuePropName = 'value',
       node,
@@ -46,10 +46,10 @@ export default WrapperComponent =>
         data = cloneDeep(data);
         if (typeof changeFormatter === 'function') chageVal = changeFormatter(val, data);
         setNewValue(chageVal);
-        if (watchEditingChange)
+        if (!watchEditChange)
           editingRowDataChange(set(data, field, chageVal), field, chageVal, value);
       },
-      [changeFormatter, editingRowDataChange, field, node],
+      [changeFormatter, editingRowDataChange, field, node, watchEditChange],
     );
 
     const onBlur = useCallback(
@@ -67,7 +67,7 @@ export default WrapperComponent =>
             return false;
           },
           getValue: () => {
-            if (watchEditingChange) return get(node, `data.${field}`);
+            if (!watchEditChange) return get(node, `data.${field}`);
             if (isEqualObj(value, newValue)) return newValue;
             const newData = cloneDeep(data);
             set(newData, field, newValue);

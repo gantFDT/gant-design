@@ -457,7 +457,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       gridManager,
       showCut,
 
-      watchEditingChange: typeof onCellEditingChange === 'function',
+      watchEditChange: typeof onCellEditChange === 'function',
       ...propsContext,
     };
   }, [propsContext, size, computedPagination, editable, showCut]);
@@ -498,33 +498,35 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
             node,
             api,
           } = params;
-          const { rowIndex } = node;
+          const rowIndex = get(node, 'rowIndex', 0);
           let selectedRowNodes: RowNode[] = [];
-          if (!shiftRef.current) {
-            node.setSelected(true, true);
-            selectedRowNodes = [node];
-          } else {
+          if (node) {
             const rowNodes = apiRef.current.getSelectedNodes();
-            const rowNodeIndexs = rowNodes.map(rowNode => rowNode.rowIndex);
-            const maxIndex = max(rowNodeIndexs);
-            const minIndex = min(rowNodeIndexs);
-            if (rowIndex >= minIndex && rowIndex <= maxIndex) {
+            if (!shiftRef.current || rowNodes.length == 0) {
               node.setSelected(true, true);
               selectedRowNodes = [node];
             } else {
-              const isMin = rowIndex < minIndex;
-              const nodesCount = isMin ? minIndex - rowIndex : rowIndex - maxIndex;
-              const startIndex = isMin ? rowIndex : maxIndex + 1;
-              const extraNodes = Array(nodesCount)
-                .fill('')
-                .map((item, index) => {
-                  const startNode = api.getDisplayedRowAtIndex(index + startIndex);
-                  startNode.setSelected(true);
-                  return startNode;
-                });
-              selectedRowNodes = isMin
-                ? [...extraNodes, ...rowNodes]
-                : [...rowNodes, ...extraNodes];
+              const rowNodeIndexs = rowNodes.map(rowNode => rowNode.rowIndex);
+              const maxIndex = max(rowNodeIndexs);
+              const minIndex = min(rowNodeIndexs);
+              if (rowIndex >= minIndex && rowIndex <= maxIndex) {
+                node.setSelected(true, true);
+                selectedRowNodes = [node];
+              } else {
+                const isMin = rowIndex < minIndex;
+                const nodesCount = isMin ? minIndex - rowIndex : rowIndex - maxIndex;
+                const startIndex = isMin ? rowIndex : maxIndex + 1;
+                const extraNodes = Array(nodesCount)
+                  .fill('')
+                  .map((item, index) => {
+                    const startNode = api.getDisplayedRowAtIndex(index + startIndex);
+                    startNode.setSelected(true);
+                    return startNode;
+                  });
+                selectedRowNodes = isMin
+                  ? [...extraNodes, ...rowNodes]
+                  : [...rowNodes, ...extraNodes];
+              }
             }
           }
           const gridSelectedRows = selectedRowNodes.map(item => {
