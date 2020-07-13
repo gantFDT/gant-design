@@ -35,51 +35,19 @@ export default WrapperComponent =>
     const [newValue, setNewValue] = useState(value);
     const divRef = useRef<HTMLDivElement>(null);
     const inputRef: any = useRef();
-    const eventDataChange = useCallback(
-      (event: any) => {
-        return;
-        // const editingCells = api.getEditingCells();
-        // editingCells.map((item: any) => {
-        //   if (item.rowIndex === node.rowIndex) {
-        //     const rowNode = api.getDisplayedRowAtIndex(item.rowIndex);
-        //     if (
-        //       get(rowNode, 'data') &&
-        //       !isEqualObj(get(rowNode, `data.${field}`), value) &&
-        //       !isEqualObj(get(rowNode, `data.${field}`), newValue)
-        //     ) {
-        //       setNewValue(get(rowNode, `data.${field}`));
-        //     }
-        //   }
-        // });
-      },
-      [value, newValue],
-    );
     const compoentProps = useMemo(() => {
       if (typeof fieldProps === 'function') return fieldProps(node.data, props);
       return fieldProps;
     }, [fieldProps, node.data, props]);
-    useEffect(() => {
-      node.addEventListener(RowNode.EVENT_DATA_CHANGED, eventDataChange);
-      return () => {
-        node.removeEventListener(RowNode.EVENT_DATA_CHANGED, eventDataChange);
-      };
-    }, []);
     const onChange = useCallback(
       val => {
         let chageVal = val;
         let { data } = node;
-        const oldData = cloneDeep(data);
         data = cloneDeep(data);
         if (typeof changeFormatter === 'function') chageVal = changeFormatter(val, data);
-        if (!watchEditingChange) setNewValue(chageVal);
-        else
-          editingRowDataChange(
-            set(data, field, chageVal),
-            field,
-            chageVal,
-            value,
-            cloneDeep(oldData),
-          );
+        setNewValue(chageVal);
+        if (watchEditingChange)
+          editingRowDataChange(set(data, field, chageVal), field, chageVal, value);
       },
       [changeFormatter, editingRowDataChange, field, node],
     );
@@ -99,7 +67,8 @@ export default WrapperComponent =>
             return false;
           },
           getValue: () => {
-            if (isEqualObj(value, newValue) || watchEditingChange) return value;
+            if (watchEditingChange) return get(node, `data.${field}`);
+            if (isEqualObj(value, newValue)) return newValue;
             const newData = cloneDeep(data);
             set(newData, field, newValue);
             editRowDataChanged(newData, field, newValue, value, cloneDeep(data));

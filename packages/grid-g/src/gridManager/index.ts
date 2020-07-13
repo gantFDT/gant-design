@@ -1,6 +1,6 @@
 import { RowDataTransaction, GridApi, RowNode } from 'ag-grid-community';
 import Schema, { Rules } from 'async-validator';
-import { get, isEmpty, findIndex, cloneDeep, merge } from 'lodash';
+import { get, isEmpty, findIndex, cloneDeep, delay } from 'lodash';
 import {
   getModifyData,
   removeTagData,
@@ -37,8 +37,29 @@ interface AgGridConfig {
   treeDataChildrenName?: string;
   editChangeCallback?: (boolean) => void;
 }
-const initHistoryStack: OperationAction[] = [];
-const arrayMethods = Object.create(Array.prototype);
+async function test() {
+  const data = await delay(
+    name => {
+      console.log(name);
+    },
+    1000,
+    'tesxt',
+  );
+  console.log('---->', delay);
+}
+test()
+function loadingDecorator(target, name, descriptor) {
+  return {
+    ...descriptor,
+    value: async (...ags) => {
+      target.loading = true;
+      const res = await descriptor.value(...ags);
+      target.loading = false;
+      return res;
+    },
+  };
+}
+
 @bindAll()
 export default class GridManage {
   public agGridApi: GridApi;
@@ -46,7 +67,7 @@ export default class GridManage {
   historyStack: any[] = [];
   private redoStack: OperationAction[] = [];
   public cutRows: any[];
-  private loading: boolean = false;
+  public loading: boolean = false;
   public validateFields: Rules;
   private changeStatus: boolean = false;
   get isChanged() {
@@ -141,7 +162,7 @@ export default class GridManage {
       const rowNode = this.agGridApi.getRowNode(nodeId);
       const rowIndex = get(rowNode, 'rowIndex', -1);
       const errorsArr = validateErros[rowIndex];
-      const mergeData = { ...rowNode.data, ...itemData };
+      const mergeData = { ...get(rowNode, 'data', {}), ...itemData };
       const { _rowError: merge_rowError, ...newItemData } = mergeData;
       if (errorsArr) {
         const _rowError: any = {};
@@ -231,8 +252,7 @@ export default class GridManage {
     });
     return rowData;
   }
-  // 修改;
-  // @loadingDecorator
+  @loadingDecorator
   public modify(records: any | any[], oldRecords?: any | any[]) {
     if (isEmpty(records) && typeof records !== 'object') return;
     records = Array.isArray(records) ? records : [records];
@@ -261,7 +281,6 @@ export default class GridManage {
   }
 
   // 创建;
-  //
   public create(
     records: any,
     targetId?: string | string[] | number | number[],
@@ -274,9 +293,7 @@ export default class GridManage {
     this.agGridApi.setSortModel([]);
     if (typeof targetId !== 'number' && !targetId) {
       addRecords = addRecords.map(item => ({ ...item, _rowType: DataActions.add }));
-
       this.agGridApi.setRowData([...addRecords, ...rowData]);
-      return
       this.validate(addRecords);
       this.historyStack.push({
         type: DataActions.add,
@@ -373,7 +390,6 @@ export default class GridManage {
     this.quickCreateNode(true, targetId, record);
   }
   //移除;
-  //
   remove(targetid) {
     if (typeof targetid !== 'number' && isEmpty(targetid)) return;
     const { getRowNodeId } = this.agGridConfig;
