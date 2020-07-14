@@ -1,16 +1,18 @@
-import React, { useCallback } from 'react';
-import { Modal, Form, Input } from 'antd';
-import _ from 'lodash';
-import Receiver from '../locale/Receiver';
+import React, { useCallback, useMemo } from 'react'
+import { Modal, Form, Input } from 'antd'
+import _ from 'lodash'
+import Receiver from '../locale/Receiver'
 
 interface EditModalProps {
-  loading: boolean;
-  showModal: boolean;
-  setShowModal: Function;
-  initValue: string;
-  form: any;
-  onSubmit: (name: string) => void;
-  withoutAnimation?: boolean;
+  loading: boolean
+  showModal: boolean
+  setShowModal: Function
+  initValue: string
+  form: any
+  onSubmit: (name: string) => void
+  withoutAnimation?: boolean
+  systemViews: any[]
+  customViews: any[]
 }
 
 const EditModal = (props: EditModalProps) => {
@@ -22,26 +24,29 @@ const EditModal = (props: EditModalProps) => {
     initValue = '',
     form: { getFieldDecorator, validateFieldsAndScroll },
     onSubmit,
-  } = props;
+    systemViews,
+    customViews
+  } = props
 
+  const allNames = useMemo(() => { return [...systemViews, ...customViews].map(item => (item.name)) }, [systemViews, customViews])
 
   const onOk = useCallback(
     (e: any) => {
-      e.stopPropagation();
+      e.stopPropagation()
       validateFieldsAndScroll((errors: any, values: any) => {
-        if (errors) return;
-        onSubmit && onSubmit(values.name);
-      });
+        if (errors) return
+        onSubmit && onSubmit(values.name)
+      })
     },
     [onSubmit],
-  );
+  )
 
   const stoppropagation = useCallback(e => {
     if (e) {
-      e.stopPropagation();
-      e.nativeEvent.stopImmediatePropagation();
+      e.stopPropagation()
+      e.nativeEvent.stopImmediatePropagation()
     }
-  }, []);
+  }, [])
 
   return (
     <Receiver>
@@ -69,14 +74,28 @@ const EditModal = (props: EditModalProps) => {
             <Form.Item>
               {getFieldDecorator('name', {
                 initialValue: initValue,
-                rules: [{ required: true, message: locale.viewNameRequired }],
+                rules: [
+                  {
+                    message: locale.viewNameRepeat,
+                    validator: function (rule: any, value: string = '', callback: Function) {
+                      let res = value.trim()
+                      if (!res) {
+                        rule.message = locale.viewNameRequired
+                        callback(true)
+                      } else if (allNames.includes(res)) {
+                        callback(true)
+                      }
+                      callback(undefined)
+                    }
+                  }
+                ],
               })(<Input placeholder={locale.viewNamePlaceholder} maxLength={500} />)}
             </Form.Item>
           </Form>
         </Modal>
       </div>}
     </Receiver>
-  );
-};
+  )
+}
 
-export default Form.create<any>()(EditModal);
+export default Form.create<any>()(EditModal)

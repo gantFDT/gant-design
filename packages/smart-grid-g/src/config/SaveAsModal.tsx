@@ -1,13 +1,15 @@
-import React, { useState, useCallback, memo } from 'react';
-import { Modal, Form, Input, Checkbox, Button } from 'antd';
-import Receiver from '../locale/Receiver';
+import React, { useState, useCallback, memo, useMemo } from 'react'
+import { Modal, Form, Input, Checkbox, Button } from 'antd'
+import Receiver from '../locale/Receiver'
 
 export interface SaveAsModalProps {
-  form: any;
-  visible?: boolean;
-  loading?: boolean;
-  onCancel?: () => void;
-  onSubmit?: (values: object) => void;
+  form: any
+  visible?: boolean
+  loading?: boolean
+  onCancel?: () => void
+  onSubmit?: (values: object) => void
+  systemViews: any[]
+  customViews: any[]
 }
 
 function SaveAsModal(props: SaveAsModalProps) {
@@ -17,16 +19,19 @@ function SaveAsModal(props: SaveAsModalProps) {
     loading,
     onCancel,
     onSubmit,
+    systemViews,
+    customViews,
     ...nextProps
-  } = props;
+  } = props
 
+  const allNames = useMemo(() => { return [...systemViews, ...customViews].map(item => (item.name)) }, [systemViews, customViews])
 
   const onOk = useCallback(() => {
     validateFieldsAndScroll((errors: any, values: object) => {
-      if (errors) return;
-      onSubmit && onSubmit(values);
-    });
-  }, [onSubmit]);
+      if (errors) return
+      onSubmit && onSubmit(values)
+    })
+  }, [onSubmit])
 
   return (
     <Receiver>
@@ -51,7 +56,21 @@ function SaveAsModal(props: SaveAsModalProps) {
         <Form>
           <Form.Item label={locale.viewName}>
             {getFieldDecorator('name', {
-              rules: [{ required: true, message: locale.viewNameRequired }],
+              rules: [
+                {
+                  message: locale.viewNameRepeat,
+                  validator: function (rule: any, value: string = '', callback: Function) {
+                    let res = value.trim()
+                    if (!res) {
+                      rule.message = locale.viewNameRequired
+                      callback(true)
+                    } else if (allNames.includes(res)) {
+                      callback(true)
+                    }
+                    callback(undefined)
+                  }
+                }
+              ],
             })(<Input placeholder={locale.viewNamePlaceholder} maxLength={500} />)}
           </Form.Item>
           <Form.Item>
@@ -63,6 +82,6 @@ function SaveAsModal(props: SaveAsModalProps) {
         </Form>
       </Modal>}
     </Receiver>
-  );
+  )
 }
-export default memo(Form.create<any>()(SaveAsModal));
+export default memo(Form.create<any>()(SaveAsModal))
