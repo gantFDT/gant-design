@@ -10,6 +10,7 @@ interface UIContentProps {
   viewConfig: any;
   schema?: any;
   uiFields?: string[];
+  showDisplayConfig?: boolean;
   onChange(viewConfig: any): void;
 }
 
@@ -17,6 +18,7 @@ function UIContent(props: UIContentProps) {
   const {
     viewConfig = {},
     schema,
+    showDisplayConfig,
     uiFields = ['clickable', 'footerDirection'],
     onChange,
   } = props;
@@ -81,20 +83,22 @@ function UIContent(props: UIContentProps) {
     <Receiver>
       {(locale) => {
         return <>
-          <Radio.Group
-            value={tabKey}
-            onChange={handlerChangeTabKey}
-            style={{ marginBottom: 10, width: '100%', display: 'flex' }}
-            buttonStyle="solid"
-            size="small"
-          >
-            <Radio.Button style={{ flex: 1, textAlign: 'center' }} value="field">
-              {locale.fieldConfig}
-            </Radio.Button>
-            <Radio.Button style={{ flex: 1, textAlign: 'center' }} value="ui">
-              {locale.displayConfig}
-            </Radio.Button>
-          </Radio.Group>
+          {
+            showDisplayConfig && <Radio.Group
+              value={tabKey}
+              onChange={handlerChangeTabKey}
+              style={{ marginBottom: 10, width: '100%', display: 'flex' }}
+              buttonStyle="solid"
+              size="small"
+            >
+              <Radio.Button style={{ flex: 1, textAlign: 'center' }} value="field">
+                {locale.fieldConfig}
+              </Radio.Button>
+              <Radio.Button style={{ flex: 1, textAlign: 'center' }} value="ui">
+                {locale.displayConfig}
+              </Radio.Button>
+            </Radio.Group>
+          }
           {tabKey === 'field' ? (
             <Sortable dataSource={columnFields} onChange={handlerChangeColumnKeys} />
           ) : (

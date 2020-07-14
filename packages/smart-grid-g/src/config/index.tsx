@@ -13,6 +13,7 @@ interface ConfigModalProps extends ModalProps {
   views: any;
   onSaveViews: (vals: any) => void;
   withoutAnimation?: boolean,
+  showDisplayConfig?: boolean,
   onSaveAs: (vals: any, cb: () => void) => void;
   tableKey?: string;
   onOk?: (config: any) => void;
@@ -33,6 +34,7 @@ function ConfigModal(props: ConfigModalProps) {
     onCancel,
     onViewChange,
     withoutAnimation,
+    showDisplayConfig,
     ...restProps
   } = props;
 
@@ -153,7 +155,7 @@ function ConfigModal(props: ConfigModalProps) {
         }
         {...restProps}
       >
-        <UIContent viewConfig={fakeView.panelConfig} onChange={handlerChangeConfig} />
+        <UIContent viewConfig={fakeView.panelConfig} showDisplayConfig={showDisplayConfig} onChange={handlerChangeConfig} />
       </Modal>
       <SaveAsModal
         visible={titleModalVisible}

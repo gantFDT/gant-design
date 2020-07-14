@@ -71,6 +71,7 @@ export interface SmartTableProps<T> extends GantTableProps<T> {
   onReload?: () => void,
 
   withoutAnimation?: boolean,
+  showDisplayConfig?: boolean,
   hideHeader?: boolean,
   height?: number | string,
   style?: object

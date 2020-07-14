@@ -29,6 +29,7 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
     headerProps = {},
     onViewChange,
     initView,
+    showDisplayConfig = false,
     prefixCls: customizePrefixCls,
     height,
     style,
@@ -278,6 +279,7 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
         visible={configModalVisible}
         originColumns={columns}
         withoutAnimation={withoutAnimation}
+        showDisplayConfig={showDisplayConfig}
         dataSource={activeView}
         tableKey={tableKey}
         views={viewList}
