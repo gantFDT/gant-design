@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import classnames from 'classnames';
-import { ColGroupDef, ColDef, IsColumnFunc, IServerSideGetRowsParams } from 'ag-grid-community';
+import { ColGroupDef, ColDef, IsColumnFunc, IServerSideGetRowsParams } from '@ag-grid-community/core';
 import { get, isEmpty } from 'lodash';
 import { isEqualObj } from './gridManager/utils';
 import { PaginationProps } from 'antd/lib/pagination';

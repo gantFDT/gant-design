@@ -8,7 +8,7 @@ import { Input, InputCellPhone, DatePicker, InputNumber } from "data-cell"
 import Header from 'header'
 
 
-const columns = [{
+const basicColumns = [{
     fieldName: "name",
     title: "姓名",
     cellRenderer: 'gantGroupCellRenderer',
@@ -148,7 +148,7 @@ const BaiscGrid = () => {
             <Grid
                 rowkey='ip'
                 loading={loading}
-                columns={columns}
+                columns={basicColumns}
                 editable={editable}
                 dataSource={dataSource}
                 serialNumber
@@ -198,4 +198,4 @@ const BaiscGrid = () => {
     )
 }
 
-ReactDOM.render(<columns />, mountNode)`,]
+ReactDOM.render(<basicColumns />, mountNode)`,]

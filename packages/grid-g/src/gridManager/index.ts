@@ -1,4 +1,4 @@
-import { RowDataTransaction, GridApi, RowNode } from 'ag-grid-community';
+import { RowDataTransaction, GridApi, RowNode } from '@ag-grid-community/core';
 import Schema, { Rules } from 'async-validator';
 import { get, isEmpty, findIndex, cloneDeep } from 'lodash';
 import {

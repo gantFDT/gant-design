@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useRef, useMemo, useEffect, useContext } from 'react';
 import classnames from 'classnames';
-import { AgGridReact } from 'ag-grid-react';
+import { AgGridReact } from '@ag-grid-community/react';
 import {
   GridApi,
   ColumnApi,
@@ -9,11 +9,11 @@ import {
   CellClickedEvent,
   RowNode,
   GetContextMenuItemsParams,
-} from 'ag-grid-community';
-import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-balham.css';
-import { LicenseManager } from 'ag-grid-enterprise';
-import 'ag-grid-enterprise';
+} from '@ag-grid-community/core';
+import '@ag-grid-community/core/dist/styles/ag-grid.css';
+import '@ag-grid-community/core/dist/styles/ag-theme-balham.css';
+import { LicenseManager, AllModules } from '@ag-grid-enterprise/all-modules';
+import { AllCommunityModules } from '@ag-grid-community/all-modules';
 import { Pagination, Spin, Icon, Badge } from 'antd';
 import { get, isEmpty, isEqual, cloneDeep, set, max, min, findIndex, uniq } from 'lodash';
 import key from './license';
@@ -688,6 +688,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                   onPasteStart={onPasteStart}
                   onPasteEnd={onPasteEnd}
                   getContextMenuItems={contextMenuItems as any}
+                  modules={[...AllModules, ...AllCommunityModules]}
                 />
               </div>
               {/* 分页高度为30 */}

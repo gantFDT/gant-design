@@ -1,7 +1,7 @@
 import { get, isEmpty, isEqual, findIndex, cloneDeep } from 'lodash';
 import { DataActions, CreateConfig } from '../interface';
 import { generateUuid } from '@util';
-import { RowNode } from 'ag-grid-community';
+import { RowNode } from '@ag-grid-community/core';
 export function getModifyData(records, getRowItemData, oldRecords, getRowNodeId) {
   const hisRecords: any[] = [],
     newRecords: any[] = [];
