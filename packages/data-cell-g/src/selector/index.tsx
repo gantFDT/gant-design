@@ -580,6 +580,7 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
 
     const select = (
       <Select
+        showArrow
         loading={loading}
         {...props}
         onFocus={onFocus}

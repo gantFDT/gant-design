@@ -13,6 +13,7 @@ export default {
     viewName: '视图名称',
     viewNameRequired: '视图名称必填',
     viewNamePlaceholder: '视图名称必填',
+    viewNameRepeat: '视图名称重复',
     setDefault: '设为默认',
     fieldConfig: '字段配置',
     displayConfig: '显示配置',

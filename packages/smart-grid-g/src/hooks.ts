@@ -88,7 +88,7 @@ export const useTableConfig = (props: useTableConfigProps) => {
     return columnFields
     .filter((item: any) => item.checked)
     .map((ck: any) => {
-      let columnItem = columns.find((oc: any) => oc.fieldName === ck.fieldName);
+      let columnItem = columns.find((oc: any) => oc.fieldName === ck.fieldName) || {};
       let finalWidth = columnItem.width || ck.width;
       return {
         ...columnItem,
