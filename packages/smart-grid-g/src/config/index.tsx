@@ -1,17 +1,17 @@
-import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import { notification, Icon, Button } from 'antd';
-import Modal from '@modal';
-import { ModalProps } from 'antd/lib/modal';
-import { deepCopy4JSON } from '@util';
-import ViewPicker from '../viewpicker';
-import SaveAsModal from './SaveAsModal';
-import UIContent from './UIContent';
-import Receiver from '../locale/Receiver';
+import React, { useState, useCallback, useEffect, useMemo } from 'react'
+import { notification, Icon, Button } from 'antd'
+import Modal from '@modal'
+import { ModalProps } from 'antd/lib/modal'
+import { deepCopy4JSON } from '@util'
+import ViewPicker from '../viewpicker'
+import SaveAsModal from './SaveAsModal'
+import UIContent from './UIContent'
+import Receiver from '../locale/Receiver'
 interface ConfigModalProps extends ModalProps {
-  dataSource: any;
-  originColumns: any;
-  views: any;
-  onSaveViews: (vals: any) => void;
+  dataSource: any
+  originColumns: any
+  views: any
+  onSaveViews: (vals: any) => void
   withoutAnimation?: boolean,
   showDisplayConfig?: boolean,
   onSaveAs: (vals: any, cb: () => void) => void;
@@ -36,44 +36,44 @@ function ConfigModal(props: ConfigModalProps) {
     withoutAnimation,
     showDisplayConfig,
     ...restProps
-  } = props;
+  } = props
 
-  const [titleModalVisible, setTitleModalVisible] = useState(false);
+  const [titleModalVisible, setTitleModalVisible] = useState(false)
 
-  const [fakeView, setFakeView] = useState(deepCopy4JSON(dataSource));
-  const { panelConfig } = fakeView;
+  const [fakeView, setFakeView] = useState(deepCopy4JSON(dataSource))
+  const { panelConfig } = fakeView
 
   useEffect(() => {
-    const view = deepCopy4JSON(dataSource);
-    visible && setFakeView(view);
-    onViewChange && onViewChange(view);
-  }, [dataSource, visible]);
+    const view = deepCopy4JSON(dataSource)
+    visible && setFakeView(view)
+    onViewChange && onViewChange(view)
+  }, [dataSource, visible])
 
   const handlerClose = useCallback(() => {
-    onCancel && onCancel();
-  }, []);
+    onCancel && onCancel()
+  }, [])
 
   const handlerSave = useCallback(() => {
     if (!panelConfig.columnFields.filter((record: any) => record.checked).length)
       return notification.info({
         message: <Receiver>{(locale) => <>{locale.saveMessage}</>}</Receiver>,
-      });
-    onOk && onOk(fakeView);
-  }, [fakeView]);
+      })
+    onOk && onOk(fakeView)
+  }, [fakeView])
 
   const handlerChooseView = useCallback(view => {
-    const _view = deepCopy4JSON(view);
-    setFakeView(_view);
-    onViewChange && onViewChange(_view);
-  }, []);
+    const _view = deepCopy4JSON(view)
+    setFakeView(_view)
+    onViewChange && onViewChange(_view)
+  }, [])
 
-  const isSystem = useMemo(() => fakeView.viewId && fakeView.viewId.includes('sys'), [fakeView]);
+  const isSystem = useMemo(() => fakeView.viewId && fakeView.viewId.includes('sys'), [fakeView])
 
   const handleSaveAs = useCallback(
     values => {
       let cb = () => {
-        setTitleModalVisible(false);
-      };
+        setTitleModalVisible(false)
+      }
       onSaveAs &&
         onSaveAs(
           {
@@ -83,22 +83,22 @@ function ConfigModal(props: ConfigModalProps) {
             ...values,
           },
           cb,
-        );
+        )
     },
     [fakeView, onSaveAs],
-  );
+  )
 
   const handlerChangeConfig = useCallback(
     config => {
       const _view = {
         ...fakeView,
         panelConfig: config,
-      };
-      setFakeView(_view);
-      onViewChange && onViewChange(_view);
+      }
+      setFakeView(_view)
+      onViewChange && onViewChange(_view)
     },
     [fakeView],
-  );
+  )
 
   return (
     <>
@@ -135,7 +135,7 @@ function ConfigModal(props: ConfigModalProps) {
                   size="small"
                   icon="diff"
                   onClick={() => {
-                    setTitleModalVisible(true);
+                    setTitleModalVisible(true)
                   }}
                 >
                   {locale.saveAs}
@@ -161,11 +161,13 @@ function ConfigModal(props: ConfigModalProps) {
         visible={titleModalVisible}
         onSubmit={handleSaveAs}
         onCancel={() => {
-          setTitleModalVisible(false);
+          setTitleModalVisible(false)
         }}
+        systemViews={views.systemViews}
+        customViews={views.customViews}
       />
     </>
-  );
+  )
 }
 
-export default ConfigModal;
+export default ConfigModal

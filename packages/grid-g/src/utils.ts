@@ -74,7 +74,8 @@ const serialNumberCol: ColDef = {
 };
 export const selectedMapColumns = <T>(columns: Columns<T>[], index: number = 0) => {
   if (columns.length <= 0) return [];
-  const columnItem = get(columns, `[0]`, {});
+  const columnItem = get(columns, `[${index}]`, undefined);
+  if (!columnItem) return [];
   const { title: headerName, fieldName: field } = columnItem;
   return [
     { ...defaultCheckboxColSelectionCol, headerCheckboxSelection: 'multiple' },
