@@ -43,6 +43,7 @@ const langs = {
   en: en,
   'zh-cn': zh,
 };
+
 export const defaultProps = {
   /**加载状态 */
   loading: false,

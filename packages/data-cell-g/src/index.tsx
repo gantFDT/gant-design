@@ -15,7 +15,6 @@ export { default as InputEmail } from './input-email'
 export { default as InputLanguage } from './input-language';
 export { default as InputMoney } from './input-money';
 export { default as InputNumber } from './input-number';
-
 //picker
 export { default as DatePicker } from './date-picker'
 export { default as ColorPicker } from './color-picker';
