@@ -13,6 +13,7 @@ export default {
     viewName: 'ViewName',
     viewNameRequired: 'ViewName Required',
     viewNamePlaceholder: 'ViewName Required',
+    viewNameRepeat: 'ViewName Repeated',
     setDefault: 'Set default',
     fieldConfig: 'Field config',
     displayConfig: 'Display config',

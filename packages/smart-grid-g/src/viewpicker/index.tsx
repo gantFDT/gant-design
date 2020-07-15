@@ -1,42 +1,42 @@
-import React, { useMemo, useCallback, useState, ReactNode, CSSProperties } from 'react';
-import { Icon, Popover, Spin, Empty } from 'antd';
-import classnames from 'classnames';
-import _ from 'lodash';
-import Panel from './Panel';
-import EditModal from './EditModal';
-import { getActiveDefaultView } from './utils';
-import Receiver from '../locale/Receiver';
+import React, { useMemo, useCallback, useState, ReactNode, CSSProperties } from 'react'
+import { Icon, Popover, Spin, Empty } from 'antd'
+import classnames from 'classnames'
+import _ from 'lodash'
+import Panel from './Panel'
+import EditModal from './EditModal'
+import { getActiveDefaultView } from './utils'
+import Receiver from '../locale/Receiver'
 
-export type ViewType = 'company' | 'system' | 'custom';
+export type ViewType = 'company' | 'system' | 'custom'
 
 export interface UpdateViewProps {
-  type: 'delete' | 'rename'; // 操作类型
-  views: any[]; // 修改后的视图列表
-  operateView: any; // 当前修改的视图（修改后）
-  hideModal?: Function; // 关闭modal的回调
+  type: 'delete' | 'rename' // 操作类型
+  views: any[] // 修改后的视图列表
+  operateView: any // 当前修改的视图（修改后）
+  hideModal?: Function // 关闭modal的回调
 }
 
 export interface DefaultView {
-  type: ViewType; // 视图类型
-  viewId: string; // 视图id
+  type: ViewType // 视图类型
+  viewId: string // 视图id
 }
 
 export interface ViewProps {
-  splitLine?: boolean; // 分割线
-  viewId: string; // 当前视图id
-  viewName: string; // 视图名称
-  defaultView?: DefaultView; // 默认视图
-  systemViews: any[]; // 系统视图
-  customViews: any[]; // 用户视图
-  companyViews?: any[]; // 企业视图
-  switchActiveView: (view: any) => void; // 切换视图的回调
-  updateView: (params: UpdateViewProps) => void; // 更新视图的回调
-  onDefaultViewChange?: (params: DefaultView) => void; // 设置默认视图的回调
-  renameLoading?: boolean; // 重命名loading
-  loading?: boolean; // 其他更新loading，例如删除
-  config?: ReactNode; // 配置按钮
-  getPopupContainer?: () => HTMLElement;
-  withoutAnimation?: boolean;
+  splitLine?: boolean // 分割线
+  viewId: string // 当前视图id
+  viewName: string // 视图名称
+  defaultView?: DefaultView // 默认视图
+  systemViews: any[] // 系统视图
+  customViews: any[] // 用户视图
+  companyViews?: any[] // 企业视图
+  switchActiveView: (view: any) => void // 切换视图的回调
+  updateView: (params: UpdateViewProps) => void // 更新视图的回调
+  onDefaultViewChange?: (params: DefaultView) => void // 设置默认视图的回调
+  renameLoading?: boolean // 重命名loading
+  loading?: boolean // 其他更新loading，例如删除
+  config?: ReactNode // 配置按钮
+  getPopupContainer?: () => HTMLElement
+  withoutAnimation?: boolean
 }
 
 /**
@@ -60,47 +60,47 @@ export default function View(props: ViewProps) {
     config,
     getPopupContainer,
     withoutAnimation,
-  } = props;
+  } = props
 
-  const [showModal, setShowModal] = useState(false);
-  const [editViewName, setEditViewName] = useState('');
-  const [editView, setEditView] = useState({ name: '' });
-  const currentLoading = loading || renameLoading ? true : false;
-  const [showPop, setShowPop] = useState(false);
+  const [showModal, setShowModal] = useState(false)
+  const [editViewName, setEditViewName] = useState('')
+  const [editView, setEditView] = useState({ name: '' })
+  const currentLoading = loading || renameLoading ? true : false
+  const [showPop, setShowPop] = useState(false)
 
   const switchActiveViewImpl = useCallback(
     (viewType: ViewType, view: any) => {
-      view.isSystem = viewType !== 'custom';
-      switchActiveView && switchActiveView(view);
+      view.isSystem = viewType !== 'custom'
+      switchActiveView && switchActiveView(view)
     },
     [switchActiveView],
-  );
+  )
 
   const updateEditView = (name: string) => {
     if (editView.name === name) {
-      setShowModal(false);
-      return;
+      setShowModal(false)
+      return
     }
-    let newViews: any[] = [];
+    let newViews: any[] = []
     newViews = customViews.map(item => {
       return {
         ...item,
         name: _.isEqual(item, editView) ? name : item.name,
-      };
-    });
-    editView.name = name;
+      }
+    })
+    editView.name = name
     updateView &&
       updateView({
         views: newViews,
         type: 'rename',
         operateView: editView,
         hideModal: () => setShowModal(false),
-      });
-  };
+      })
+  }
 
   const views = useMemo(() => {
     if (systemViews.length === 0 && customViews.length === 0) {
-      return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={<Receiver>{(locale) => <>{locale.noView}</>}</Receiver>}></Empty >;
+      return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={<Receiver>{(locale) => <>{locale.noView}</>}</Receiver>}></Empty >
     }
 
     const activeDefaultView = getActiveDefaultView({
@@ -108,7 +108,7 @@ export default function View(props: ViewProps) {
       companyViews,
       customViews,
       defaultView,
-    });
+    })
 
     return (
       <div style={{ margin: '-10px' }}>
@@ -117,7 +117,7 @@ export default function View(props: ViewProps) {
             {(locale) => {
               return <>
                 <Panel
-                  title={<><Icon type="hdd" className="gant-margin-h-5"/>{locale.sysView}</>}
+                  title={<><Icon type="hdd" className="gant-margin-h-5" />{locale.sysView}</>}
                   views={systemViews}
                   viewType="system"
                   switchActiveView={switchActiveViewImpl.bind(null, 'system')}
@@ -127,7 +127,7 @@ export default function View(props: ViewProps) {
                 />
                 {companyViews.length > 0 && (
                   <Panel
-                    title={<><Icon type="user" className="gant-margin-h-5"/>{locale.companyView}</>}
+                    title={<><Icon type="user" className="gant-margin-h-5" />{locale.companyView}</>}
                     views={companyViews}
                     viewType="company"
                     switchActiveView={switchActiveViewImpl.bind(null, 'company')}
@@ -138,7 +138,7 @@ export default function View(props: ViewProps) {
                 )}
                 <Panel
                   viewId={viewId}
-                  title={<><Icon type="user" className="gant-margin-h-5"/>{locale.customView}</>}
+                  title={<><Icon type="user" className="gant-margin-h-5" />{locale.customView}</>}
                   views={customViews}
                   viewType="custom"
                   switchActiveView={switchActiveViewImpl.bind(null, 'custom')}
@@ -155,7 +155,7 @@ export default function View(props: ViewProps) {
           </Receiver>
         </Spin>
       </div>
-    );
+    )
   }, [
     customViews,
     companyViews,
@@ -167,7 +167,7 @@ export default function View(props: ViewProps) {
     updateView,
     switchActiveViewImpl,
     config,
-  ]);
+  ])
 
   return (
     <>
@@ -201,7 +201,9 @@ export default function View(props: ViewProps) {
         showModal={showModal}
         setShowModal={setShowModal}
         onSubmit={updateEditView}
+        systemViews={systemViews}
+        customViews={customViews}
       />
     </>
-  );
+  )
 }
