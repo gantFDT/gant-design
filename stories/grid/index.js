@@ -154,6 +154,7 @@ const BaiscGrid = () => {
                 dataSource={dataSource}
                 serialNumber
                 treeData
+                boxColumnIndex={2}
                 // isServerSideGroup={(data) => data.leaf}
                 rowSelection={{
                     type: 'multiple',
