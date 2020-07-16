@@ -1,6 +1,6 @@
 import React, { useMemo, memo, useState, useCallback, useRef, useEffect, forwardRef } from 'react';
 import classnames from 'classnames';
-import { ICellRendererParams, IComponent, RowNode } from 'ag-grid-community';
+import { ICellRendererParams, IComponent, RowNode } from '@ag-grid-community/core';
 import { BindAll } from 'lodash-decorators';
 import { isEqual } from 'lodash';
 import { Icon } from 'antd';

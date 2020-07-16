@@ -9,7 +9,7 @@ import { Button, message, Dropdown, Menu, Switch, Checkbox, Modal } from "antd"
 import { Input, InputCellPhone, DatePicker, InputNumber } from "@data-cell"
 import Header from '@header'
 /*! Split !*/
-const columns = [{
+const basicColumns = [{
     fieldName: "name",
     title: "姓名",
     cellRenderer: 'gantGroupCellRenderer',
@@ -149,7 +149,7 @@ const BaiscGrid = () => {
             <Grid
                 rowkey='ip'
                 loading={loading}
-                columns={columns}
+                columns={basicColumns}
                 editable={editable}
                 dataSource={dataSource}
                 serialNumber
@@ -200,6 +200,131 @@ const BaiscGrid = () => {
 }
 /*! End !*/
 
+/*! Split !*/
+const treeDataSource = [{
+    id: 1,
+    filePath: ['Documents'],
+    dateModified: 'Aug 12 2016 10:50:00 PM',
+},
+{
+    id: 2,
+    filePath: ['Documents', 'txt'],
+    dateModified: 'Aug 12 2016 10:50:00 PM',
+},
+{
+    id: 3,
+    filePath: ['Documents', 'txt', 'notes.txt'],
+    dateModified: 'May 21 2017 01:50:00 PM',
+    size: 14.7,
+},
+{
+    id: 4,
+    filePath: ['Documents', 'pdf'],
+    dateModified: 'Aug 12 2016 10:50:00 PM',
+},
+{
+    id: 5,
+    filePath: ['Documents', 'pdf', 'book.pdf'],
+    dateModified: 'May 20 2017 01:50:00 PM',
+    size: 2.1,
+},
+{
+    id: 6,
+    filePath: ['Documents', 'pdf', 'cv.pdf'],
+    dateModified: 'May 20 2016 11:50:00 PM',
+    size: 2.4,
+},
+{
+    id: 7,
+    filePath: ['Documents', 'xls'],
+    dateModified: 'Aug 12 2016 10:50:00 PM',
+},
+{
+    id: 8,
+    filePath: ['Documents', 'xls', 'accounts.xls'],
+    dateModified: 'Aug 12 2016 10:50:00 AM',
+    size: 4.3,
+},
+{
+    id: 9,
+    filePath: ['Documents', 'stuff'],
+    dateModified: 'Aug 12 2016 10:50:00 PM',
+},
+{
+    id: 10,
+    filePath: ['Documents', 'stuff', 'xyz.txt'],
+    dateModified: 'Jan 17 2016 08:03:00 PM',
+    size: 1.1,
+},
+{
+    id: 11,
+    filePath: ['Music', 'mp3', 'pop'],
+    dateModified: 'Sep 11 2016 08:03:00 PM',
+    size: 14.3,
+},
+{
+    id: 12,
+    filePath: ['temp.txt'],
+    dateModified: 'Aug 12 2016 10:50:00 PM',
+    size: 101,
+},
+{
+    id: 13,
+    filePath: ['Music', 'mp3', 'pop', 'theme.mp3'],
+    dateModified: 'Aug 12 2016 10:50:00 PM',
+    size: 101,
+},
+{
+    id: 14,
+    filePath: ['Music', 'mp3', 'jazz'],
+    dateModified: 'Aug 12 2016 10:50:00 PM',
+    size: 101,
+},
+]
+const treeColumns = [{
+    title:'dateModified',
+    fieldName: 'dateModified',
+    minWidth: 250,
+    cellRenderer: 'gantGroupCellRenderer',
+    comparator: function (d1, d2) {
+        return new Date(d1).getTime() < new Date(d2).getTime() ? -1 : 1;
+    },
+},
+{
+    title:'size',
+    fieldName: 'size',
+    aggFunc: 'sum',
+    valueFormatter: function (params) {
+        return params.value
+            ? Math.round(params.value * 10) / 10 + ' MB'
+            : '0 MB';
+    },
+}]
+const TreeGrid = () => {
+    return <Grid
+        rowkey='id'
+        columns={treeColumns}
+        dataSource={treeDataSource}
+        serialNumber
+        treeData
+        boxColumnIndex={0}
+        rowSelection
+        // rowSelection={{
+        //     type: 'multiple',
+        //     selectedKeys,
+        //     selectedRows,
+        //     onSelect
+        // }}
+        rowBuffer={1}
+        groupSuppressAutoColumn
+        // editChangeCallback={onEditChangeCallback}
+        // onReady={onReady}
+        openEditSign
+        getDataPath={(data) => data.filePath}
+
+    />
+}
+/*! End !*/
 const config = {
     codes,
     useage: <div>

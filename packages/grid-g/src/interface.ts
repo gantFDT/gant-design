@@ -1,4 +1,4 @@
-import { AgGridReactProps } from 'ag-grid-react';
+import { AgGridReactProps } from '@ag-grid-community/react';
 import {
   GridApi as AgGridApi,
   GridReadyEvent,
@@ -7,7 +7,7 @@ import {
   IServerSideGetRowsParams,
   ColumnApi as AgColumnApi,
   RowNode,
-} from 'ag-grid-community';
+} from '@ag-grid-community/core';
 import { defaultProps, defaultRowSelection } from './index';
 import { Rules, RuleType, RuleItem } from 'async-validator';
 import { PaginationProps } from 'antd/lib/pagination';
