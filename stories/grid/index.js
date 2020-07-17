@@ -64,7 +64,7 @@ const basicColumns = [{
             {
                 min: 6,
                 type: 'string',
-                message: "地址不能小于6个字符串"
+                message: "地址不能小于个字符串"
             }
         ]
     }
@@ -153,7 +153,6 @@ const BaiscGrid = () => {
             return dataSource
         })
     }, [])
-    return <div>111</div>
     return (
         <Fragment>
             <Header extra={<Fragment>
