@@ -48,14 +48,39 @@ const basicColumns = [{
 {
     fieldName: "county",
     title: "国家"
-}]
+},
+{
+    fieldName: "recored.address",
+    title: "地址",
+    editConfig: {
+        component: Input,
+        editable: true,
+        signable: true,
+        rules: [
+            {
+                required: true,
+                message: "地址不能为空"
+            },
+            {
+                min: 6,
+                type: 'string',
+                message: "地址不能小于6个字符串"
+            }
+        ]
+    }
+    
+},
+]
 const RandomCreate = () => ({
     ip: Random.ip(),
     name: Random.name(),
     age: Random.natural(10, 50),
     county: Random.county(true),
     leaf: [true, false][Random.natural(0, 1)],
-    path: [Random.ip()]
+    path: [Random.ip()],
+    recored: {
+        address: Random.address()
+    }
 })
 const mockData = Array(100).fill().map((_, Idx) => RandomCreate())
 const BaiscGrid = () => {
@@ -128,6 +153,7 @@ const BaiscGrid = () => {
             return dataSource
         })
     }, [])
+    return <div>111</div>
     return (
         <Fragment>
             <Header extra={<Fragment>
@@ -162,6 +188,7 @@ const BaiscGrid = () => {
                     selectedRows,
                     onSelect
                 }}
+                hideSelectedBox
                 rowBuffer={1}
                 groupSuppressAutoColumn
                 editChangeCallback={onEditChangeCallback}
@@ -282,7 +309,7 @@ const treeDataSource = [{
 },
 ]
 const treeColumns = [{
-    title:'dateModified',
+    title: 'dateModified',
     fieldName: 'dateModified',
     minWidth: 250,
     cellRenderer: 'gantGroupCellRenderer',
@@ -291,7 +318,7 @@ const treeColumns = [{
     },
 },
 {
-    title:'size',
+    title: 'size',
     fieldName: 'size',
     aggFunc: 'sum',
     valueFormatter: function (params) {

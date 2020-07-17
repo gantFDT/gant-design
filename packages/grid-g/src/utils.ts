@@ -1,6 +1,11 @@
 import { useCallback, useMemo } from 'react';
 import classnames from 'classnames';
-import { ColGroupDef, ColDef, IsColumnFunc, IServerSideGetRowsParams } from '@ag-grid-community/core';
+import {
+  ColGroupDef,
+  ColDef,
+  IsColumnFunc,
+  IServerSideGetRowsParams,
+} from '@ag-grid-community/core';
 import { get, isEmpty } from 'lodash';
 import { isEqualObj } from './gridManager/utils';
 import { PaginationProps } from 'antd/lib/pagination';
@@ -39,10 +44,10 @@ const defaultCheckboxColSelectionCol: ColDef = {
   suppressPaste: true,
 };
 const serialNumberCol: ColDef = {
-  width: 50,
+  width: 55,
   sortable: false,
   pinned: true,
-  minWidth: 50,
+  minWidth: 55,
   headerName: '序号',
   suppressMenu: true,
   lockPosition: true,
@@ -146,16 +151,17 @@ export const mapColumns = <T>(
           if (ColEditable) {
             const { props, changeFormatter, component, rules, signable, ...params } = editConfig;
             let required = false;
+            const validateField = field.replace(/\./g, '-');
             if (Array.isArray(rules)) {
               const fieldsRules: RuleItem[] = rules.map(item => {
                 const hasRequired = Reflect.has(item, 'required');
                 required = hasRequired ? Reflect.get(item, 'required') : required;
                 return { ...item };
               });
-              validateFields[field] = fieldsRules;
+              validateFields[validateField] = fieldsRules;
             } else {
               if (!isEmpty(rules)) {
-                validateFields[field] = { ...rules };
+                validateFields[validateField] = { ...rules };
                 required = rules['required'];
               }
             }
