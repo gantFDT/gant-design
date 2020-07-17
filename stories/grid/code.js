@@ -78,7 +78,7 @@ const RandomCreate = () => ({
     leaf: [true, false][Random.natural(0, 1)],
     path: [Random.ip()],
     recored: {
-        address: Random.address()
+        address: Random.county(true)
     }
 })
 const mockData = Array(100).fill().map((_, Idx) => RandomCreate())
@@ -143,7 +143,6 @@ const BaiscGrid = () => {
     const onSave = useCallback(async () => {
         console.log('---->', gridManagerRef.current.loading)
         const errors = await gridManagerRef.current.validate();
-        console.log("validate----->", errors);
         if (errors) return
         gridManagerRef.current.save(() => {
             const dataSource = gridManagerRef.current.getPureData();
@@ -193,10 +192,10 @@ const BaiscGrid = () => {
                 onReady={onReady}
                 openEditSign
                 getDataPath={(data) => data.path}
-                onCellEditingChange={(record) => {
-                    console.log('record', record)
-                    return record
-                }}
+                // onCellEditingChange={(record) => {
+                //     console.log('record', record)
+                //     return record
+                // }}
                 createConfig={{
                     id: 'path',
                     path: "path",

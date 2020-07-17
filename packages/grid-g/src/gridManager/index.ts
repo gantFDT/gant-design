@@ -94,14 +94,14 @@ export default class GridManage {
     const fields: any = {};
     const validateFields: Rules = cloneDeep(this.validateFields);
     source = source.map((item, index) => {
-      const newItem = cloneDeep(item);
+      let newItem = cloneDeep(item);
       fields[index] = {
         type: 'object',
         fields: validateFields,
       };
       Object.keys(validateFields).map(validateField => {
         const field = validateField.replace(/-/g, '.');
-        set(newItem, validateField, get(validateField, field));
+        newItem = set(newItem, validateField, get(newItem, field));
       });
       return newItem;
     });
@@ -124,7 +124,7 @@ export default class GridManage {
       let nodeFields: string[] = [];
       errors.map(itemError => {
         let [sourceName, index, field] = itemError.field.split('.');
-        field = field.replace(/-/g, '.');
+        field = field.replace(/\-/g, '.');
         const nodeId = getRowNodeId(get(source, `[${index}]`, {}));
         const rowNode = this.agGridApi.getRowNode(nodeId);
         const message = itemError.message;
