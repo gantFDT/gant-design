@@ -66,7 +66,7 @@ export type RowSelection = {
   checkboxIndex?: number;
   onSelect?: (keys: string[], rows: any[]) => void;
   selectedKeys?: string[];
-  selectedRows?: string[];
+  selectedRows?: any[];
   showDefalutCheckbox?: boolean;
   defaultSelectionCol?: ColDef;
   rowMultiSelectWithClick?: boolean;

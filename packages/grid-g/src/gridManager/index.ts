@@ -1,6 +1,6 @@
 import { RowDataTransaction, GridApi, RowNode } from '@ag-grid-community/core';
 import Schema, { Rules } from 'async-validator';
-import { get, isEmpty, findIndex, cloneDeep } from 'lodash';
+import { get, isEmpty, findIndex, cloneDeep, set } from 'lodash';
 import {
   getModifyData,
   removeTagData,
@@ -90,14 +90,20 @@ export default class GridManage {
   async validate(data) {
     const { getRowNodeId } = this.agGridConfig;
     const { add, modify } = this.diff;
-    const source = isEmpty(data) ? [...add, ...modify] : data;
+    let source = isEmpty(data) ? [...add, ...modify] : data;
     const fields: any = {};
     const validateFields: Rules = cloneDeep(this.validateFields);
-    source.map((item, index) => {
+    source = source.map((item, index) => {
+      let newItem = cloneDeep(item);
       fields[index] = {
         type: 'object',
         fields: validateFields,
       };
+      Object.keys(validateFields).map(validateField => {
+        const field = validateField.replace(/-/g, '.');
+        newItem = set(newItem, validateField, get(newItem, field));
+      });
+      return newItem;
     });
     let descriptor: any = {
       type: 'object',
@@ -117,7 +123,8 @@ export default class GridManage {
       let nodeIds: string[] = [];
       let nodeFields: string[] = [];
       errors.map(itemError => {
-        const [sourceName, index, field] = itemError.field.split('.');
+        let [sourceName, index, field] = itemError.field.split('.');
+        field = field.replace(/\-/g, '.');
         const nodeId = getRowNodeId(get(source, `[${index}]`, {}));
         const rowNode = this.agGridApi.getRowNode(nodeId);
         const message = itemError.message;
@@ -130,7 +137,6 @@ export default class GridManage {
             validateErros[rowIndex] = [{ field, message }];
           }
           nodeIds = [...nodeIds, nodeId];
-
           nodeFields = [...nodeFields, field];
         }
       });
@@ -375,7 +381,7 @@ export default class GridManage {
     this.quickCreateNode(true, targetId, record);
   }
   //移除;
-  remove(targetid) {
+  remove(targetid, deleteChildren = false) {
     if (typeof targetid !== 'number' && isEmpty(targetid)) return;
     const { getRowNodeId } = this.agGridConfig;
     let targetArray = Array.isArray(targetid) ? targetid : [targetid];
@@ -388,6 +394,9 @@ export default class GridManage {
       const itemNode = this.agGridApi.getRowNode(itemId);
       if (itemNode) {
         const { allLeafChildren = [itemNode] } = itemNode;
+        if (deleteChildren) {
+          return itemNode.data && removeRecords.push(itemNode.data);
+        }
         allLeafChildren.map(childNode => {
           const removeIndex = findIndex(removeRecords, data => {
             getRowNodeId(data) == getRowNodeId(childNode.data);
@@ -419,7 +428,7 @@ export default class GridManage {
   }
   //移除标记;
   //
-  tagRemove(targetKeys: string | number | string[] | number[]) {
+  tagRemove(targetKeys: string | number | string[] | number[], deleteChildren = false) {
     if (typeof targetKeys !== 'number' && isEmpty(targetKeys)) return;
     const { getRowNodeId } = this.agGridConfig;
     let rowData = this.getRowData();
@@ -431,6 +440,9 @@ export default class GridManage {
       const itemNode = this.agGridApi.getRowNode(itemId + '');
       if (itemNode) {
         const { allLeafChildren = [itemNode] } = itemNode;
+        if (deleteChildren) {
+          return itemNode.data && removeRecords.push(itemNode.data);
+        }
         allLeafChildren.map(childNode => {
           const removeIndex = findIndex(removeRecords, data => {
             getRowNodeId(data) == getRowNodeId(childNode.data);

@@ -4,7 +4,8 @@ import code from './code.js'
 /*! Start !*/
 import React, { useState, useMemo, useRef, useCallback } from 'react'
 import { Button, Radio, Rate, Switch, Icon, Col, Row } from 'antd'
-import { EditStatus, SchemaForm } from '@gantd'
+import { SchemaForm } from '@gantd'
+import { EditStatus } from '@data-cell'
 import moment from "moment"
 const initalUiSchema = {
     "form:gutter": 10,

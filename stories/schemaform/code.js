@@ -2,7 +2,8 @@ export default [
 `
 import React, { useState, useMemo, useRef, useCallback } from 'react'
 import { Button, Radio, Rate, Switch, Icon, Col, Row } from 'antd'
-import { EditStatus, SchemaForm } from 'gantd'
+import { SchemaForm } from 'gantd'
+import { EditStatus } from 'data-cell'
 import moment from "moment"
 const initalUiSchema = {
     "form:gutter": 10,
@@ -167,7 +168,8 @@ function BasicUse() {
 ReactDOM.render(<BasicUse />, mountNode)`,`
 import React, { useState, useMemo, useRef, useCallback } from 'react'
 import { Button, Radio, Rate, Switch, Icon, Col, Row } from 'antd'
-import { EditStatus, SchemaForm } from 'gantd'
+import { SchemaForm } from 'gantd'
+import { EditStatus } from 'data-cell'
 import moment from "moment"
 const initalUiSchema = {
     "form:gutter": 10,
@@ -390,7 +392,8 @@ function EditStatusUse() {
 ReactDOM.render(<EditStatusUse />, mountNode)`,`
 import React, { useState, useMemo, useRef, useCallback } from 'react'
 import { Button, Radio, Rate, Switch, Icon, Col, Row } from 'antd'
-import { EditStatus, SchemaForm } from 'gantd'
+import { SchemaForm } from 'gantd'
+import { EditStatus } from 'data-cell'
 import moment from "moment"
 const initalUiSchema = {
     "form:gutter": 10,
@@ -581,7 +584,8 @@ function SearchUse() {
 ReactDOM.render(<SearchUse />, mountNode)`,`
 import React, { useState, useMemo, useRef, useCallback } from 'react'
 import { Button, Radio, Rate, Switch, Icon, Col, Row } from 'antd'
-import { EditStatus, SchemaForm } from 'gantd'
+import { SchemaForm } from 'gantd'
+import { EditStatus } from 'data-cell'
 import moment from "moment"
 const initalUiSchema = {
     "form:gutter": 10,
@@ -827,7 +831,8 @@ function CustomOptions() {
 ReactDOM.render(<configSchma />, mountNode)`,`
 import React, { useState, useMemo, useRef, useCallback } from 'react'
 import { Button, Radio, Rate, Switch, Icon, Col, Row } from 'antd'
-import { EditStatus, SchemaForm } from 'gantd'
+import { SchemaForm } from 'gantd'
+import { EditStatus } from 'data-cell'
 import moment from "moment"
 const initalUiSchema = {
     "form:gutter": 10,
@@ -998,7 +1003,8 @@ function GridLayout() {
 ReactDOM.render(<GridLayout />, mountNode)`,`
 import React, { useState, useMemo, useRef, useCallback } from 'react'
 import { Button, Radio, Rate, Switch, Icon, Col, Row } from 'antd'
-import { EditStatus, SchemaForm } from 'gantd'
+import { SchemaForm } from 'gantd'
+import { EditStatus } from 'data-cell'
 import moment from "moment"
 const initalUiSchema = {
     "form:gutter": 10,
@@ -1179,7 +1185,8 @@ function BindData() {
 ReactDOM.render(<bindDataSchema />, mountNode)`,`
 import React, { useState, useMemo, useRef, useCallback } from 'react'
 import { Button, Radio, Rate, Switch, Icon, Col, Row } from 'antd'
-import { EditStatus, SchemaForm } from 'gantd'
+import { SchemaForm } from 'gantd'
+import { EditStatus } from 'data-cell'
 import moment from "moment"
 const initalUiSchema = {
     "form:gutter": 10,
@@ -1440,7 +1447,8 @@ function DependenceData() {
 ReactDOM.render(<DependenceData />, mountNode)`,`
 import React, { useState, useMemo, useRef, useCallback } from 'react'
 import { Button, Radio, Rate, Switch, Icon, Col, Row } from 'antd'
-import { EditStatus, SchemaForm } from 'gantd'
+import { SchemaForm } from 'gantd'
+import { EditStatus } from 'data-cell'
 import moment from "moment"
 const initalUiSchema = {
     "form:gutter": 10,
@@ -1608,7 +1616,8 @@ function CustomCmp() {
 ReactDOM.render(<customCmpSchema />, mountNode)`,`
 import React, { useState, useMemo, useRef, useCallback } from 'react'
 import { Button, Radio, Rate, Switch, Icon, Col, Row } from 'antd'
-import { EditStatus, SchemaForm } from 'gantd'
+import { SchemaForm } from 'gantd'
+import { EditStatus } from 'data-cell'
 import moment from "moment"
 const initalUiSchema = {
     "form:gutter": 10,

@@ -48,14 +48,39 @@ const basicColumns = [{
 {
     fieldName: "county",
     title: "国家"
-}]
+},
+{
+    fieldName: "recored.address",
+    title: "地址",
+    editConfig: {
+        component: Input,
+        editable: true,
+        signable: true,
+        rules: [
+            {
+                required: true,
+                message: "地址不能为空"
+            },
+            {
+                min: 6,
+                type: 'string',
+                message: "地址不能小于个字符串"
+            }
+        ]
+    }
+    
+},
+]
 const RandomCreate = () => ({
     ip: Random.ip(),
     name: Random.name(),
     age: Random.natural(10, 50),
     county: Random.county(true),
     leaf: [true, false][Random.natural(0, 1)],
-    path: [Random.ip()]
+    path: [Random.ip()],
+    recored: {
+        address: Random.county(true)
+    }
 })
 const mockData = Array(100).fill().map((_, Idx) => RandomCreate())
 const BaiscGrid = () => {
@@ -119,7 +144,6 @@ const BaiscGrid = () => {
     const onSave = useCallback(async () => {
         console.log('---->', gridManagerRef.current.loading)
         const errors = await gridManagerRef.current.validate();
-        console.log("validate----->", errors);
         if (errors) return
         gridManagerRef.current.save(() => {
             const dataSource = gridManagerRef.current.getPureData();
@@ -162,16 +186,17 @@ const BaiscGrid = () => {
                     selectedRows,
                     onSelect
                 }}
+                hideSelectedBox
                 rowBuffer={1}
                 groupSuppressAutoColumn
                 editChangeCallback={onEditChangeCallback}
                 onReady={onReady}
                 openEditSign
                 getDataPath={(data) => data.path}
-                onCellEditingChange={(record) => {
-                    console.log('record', record)
-                    return record
-                }}
+                // onCellEditingChange={(record) => {
+                //     console.log('record', record)
+                //     return record
+                // }}
                 createConfig={{
                     id: 'path',
                     path: "path",
@@ -282,7 +307,7 @@ const treeDataSource = [{
 },
 ]
 const treeColumns = [{
-    title:'dateModified',
+    title: 'dateModified',
     fieldName: 'dateModified',
     minWidth: 250,
     cellRenderer: 'gantGroupCellRenderer',
@@ -291,7 +316,7 @@ const treeColumns = [{
     },
 },
 {
-    title:'size',
+    title: 'size',
     fieldName: 'size',
     aggFunc: 'sum',
     valueFormatter: function (params) {

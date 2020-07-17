@@ -116,9 +116,10 @@
   "dependencies": {
     "@ant-design/colors": "^3.1.0",
     "@ant-design/icons": "2.1.1",
-    "ag-grid-community": "23.2.1",
-    "ag-grid-enterprise": "23.2.1",
-    "ag-grid-react": "23.2.1",
+    "@ag-grid-community/all-modules": "23.2.1",
+    "@ag-grid-community/core": "23.2.1",
+    "@ag-grid-community/react": "23.2.1",
+    "@ag-grid-enterprise/all-modules": "23.2.1",
     "anchor-g": "^0.1.9",
     "antd": "3.26.5",
     "auto-reload-g": "^0.1.10",
