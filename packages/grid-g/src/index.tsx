@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useRef, useMemo, useEffect, useContext } from 'react';
 import classnames from 'classnames';
 import { AgGridReact } from '@ag-grid-community/react';
-import { GridApi, ColumnApi, GridReadyEvent, SelectionChangedEvent, CellClickedEvent, RowNode, GetContextMenuItemsParams } from '@ag-grid-community/core';
+import { GridApi, ColumnApi, GridReadyEvent, SelectionChangedEvent, SuppressKeyboardEventParams, RowNode, GetContextMenuItemsParams } from '@ag-grid-community/core';
 import '@ag-grid-community/core/dist/styles/ag-grid.css';
 import '@ag-grid-community/core/dist/styles/ag-theme-balham.css';
 import { LicenseManager, AllModules } from '@ag-grid-enterprise/all-modules';
@@ -112,10 +112,10 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     isRowSelectable,
     boxColumnIndex,
     hideSelcetedBox,
+    suppressKeyboardEvent,
     onSelectionChanged: propsOnSelectionChanged,
     ...orignProps
   } = props;
-  const divRef = useRef<HTMLDivElement>(null);
   const apiRef = useRef<GridApi>();
   const shiftRef = useRef<boolean>(false);
   const columnsRef = useRef<ColumnApi>();
@@ -124,20 +124,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   const [pasteLoading, setPasteLoading] = useState(false);
   const [innerSelectedRows, setInnerSelectedRows] = useState([]);
   const [errors, setErrors] = useState(null);
-  const gridKeydownFunc = useCallback((event: KeyboardEvent) => {
-    if (event.key === 'Shift') shiftRef.current = true;
-  }, []);
-  const gridKeyUpFunc = useCallback((event: KeyboardEvent) => {
-    if (event.key === 'Shift') shiftRef.current = false;
-  }, []);
-  useEffect(() => {
-    divRef.current?.addEventListener('keydown', gridKeydownFunc);
-    divRef.current?.addEventListener('keyup', gridKeyUpFunc);
-    return () => {
-      divRef.current?.removeEventListener('keydown', gridKeydownFunc);
-      divRef.current?.removeEventListener('keyup', gridKeyUpFunc);
-    };
-  }, []);
+  const [clipboardData, setClipboardData] = useState('');
   const gridManager = useMemo(() => {
     return new GridManager();
   }, []);
@@ -349,11 +336,23 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     },
     [onCellEditingChange],
   );
+  const onSuppressKeyboardEvent = useCallback((params: SuppressKeyboardEventParams) => {
+    const { event, colDef, data ,api} = params;
+    if (event.key === 'Shift') {
+      shiftRef.current = true;
+      return false;
+    }
+    if (event.keyCode == 67 && (event.ctrlKey || event.composed)) {
+      api.copySelectedRangeToClipboard(false);
+      return true
+    }
+    return false;
+  }, []);
   const processCellForClipboard = useCallback(params => {
     const {
       column: { colId },
     } = params;
-    if (colId === 'defalutSelection' || colId === 'g-index') return colId;
+    if (colId === 'defalutSelection' || colId === 'g-index') return null;
     return params.value;
   }, []);
   const processDataFromClipboard = params => {
@@ -406,7 +405,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     },
     [onCellValueChanged, pasteLoading],
   );
-
   const onRowSelectable = useCallback((rowNode: RowNode) => {
     const notRemove = get(rowNode, 'data._rowType') !== DataActions.removeTag;
     if (isRowSelectable) {
@@ -463,6 +461,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   const hideBox = useMemo(() => {
     return hideSelcetedBox || rowSelection == 'single';
   }, [hideSelcetedBox, rowSelection]);
+
   return (
     <LocaleReceiver>
       {(local, localeCode = 'zh-cn') => {
@@ -479,7 +478,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
         };
         return (
           <Spin spinning={loading}>
-            <div style={{ width, height }} className={classnames('gant-grid', `gant-grid-${getSizeClassName(size)}`, openEditSign && `gant-grid-edit`, editable && 'gant-grid-editable')} ref={divRef}>
+            <div style={{ width, height }} className={classnames('gant-grid', `gant-grid-${getSizeClassName(size)}`, openEditSign && `gant-grid-edit`, editable && 'gant-grid-editable')}>
               <div
                 className="ag-theme-balham gant-ag-wrapper"
                 style={{
@@ -529,7 +528,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                   stopEditingWhenGridLosesFocus={false}
                   treeData={treeData}
                   getDataPath={getDataPath}
-                  enableRangeSelection
                   rowData={dataSource}
                   immutableData
                   tooltipShowDelay={10}
@@ -552,6 +550,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     'gant-grid-row-cut': params => get(params, 'data._rowCut'),
                     ...rowClassRules,
                   }}
+                  enableRangeSelection={true}
                   onCellValueChanged={cellValueChanged}
                   processCellForClipboard={processCellForClipboard}
                   processDataFromClipboard={processDataFromClipboard}
@@ -559,6 +558,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                   onPasteEnd={onPasteEnd}
                   getContextMenuItems={contextMenuItems as any}
                   modules={[...AllModules, ...AllCommunityModules]}
+                  suppressKeyboardEvent={onSuppressKeyboardEvent}
                 />
               </div>
               <GantPagination pagination={computedPagination} />

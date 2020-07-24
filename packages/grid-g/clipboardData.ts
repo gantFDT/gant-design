@@ -1,0 +1,1 @@
+// const clipboardEvent = new ClipboardEvent();

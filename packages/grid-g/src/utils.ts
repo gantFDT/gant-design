@@ -20,7 +20,6 @@ function ColEditableFn(fn: ColumnEdiatble<any>): IsColumnFunc | boolean {
       data,
       context: { globalEditable },
     } = params;
-    console.log('====>', typeof fn === 'function' ? fn(params) : fn);
     if (typeof fn === 'function') return globalEditable ? fn(params) : false;
     return globalEditable ? fn : false;
   };
