@@ -95,7 +95,7 @@ export interface CreateConfig {
   toPath: (parentPath: string[], data?: any) => any;
   defaultParentPath?: string[] | number[];
 }
-export type ColumnEdiatble<T> = boolean | ((record: T) => boolean);
+export type ColumnEdiatble<T> = boolean | ((record: T,params:any) => boolean);
 
 export type RowKey<T> = (data: T) => string;
 

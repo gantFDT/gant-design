@@ -20,7 +20,7 @@ function ColEditableFn(fn: ColumnEdiatble<any>): IsColumnFunc | boolean {
       data,
       context: { globalEditable },
     } = params;
-    if (typeof fn === 'function') return globalEditable ? fn(params) : false;
+    if (typeof fn === 'function') return globalEditable ? fn(data,params) : false;
     return globalEditable ? fn : false;
   };
 }
@@ -122,11 +122,12 @@ export const mapColumns = <T>(
           'gant-cell-disable-sign': (params: any) => {
             const {
               context: { globalEditable },
+              data
             } = params;
             const editable = get(editConfig, 'editable');
             if (!editable) return false;
             if (typeof editable == 'boolean') return false;
-            return !editable(params);
+            return !editable(data,params);
           },
           ...cellClassRules,
         },

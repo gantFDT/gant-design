@@ -543,6 +543,8 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     tooltipComponent: 'gantValidateTooltip',
                     ...defaultColDef,
                   }}
+                  enableCellTextSelection
+                  ensureDomOrder
                   groupDefaultExpanded={groupDefaultExpanded}
                   localeText={locale}
                   rowClassRules={{
@@ -550,7 +552,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     'gant-grid-row-cut': params => get(params, 'data._rowCut'),
                     ...rowClassRules,
                   }}
-                  enableRangeSelection={true}
+                  // enableRangeSelection={true}
                   onCellValueChanged={cellValueChanged}
                   processCellForClipboard={processCellForClipboard}
                   processDataFromClipboard={processDataFromClipboard}

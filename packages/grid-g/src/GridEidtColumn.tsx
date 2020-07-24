@@ -72,7 +72,7 @@ export default WrapperComponent =>
             const newData = cloneDeep(get(node, `data`));
             set(newData, field, newValue);
             editRowDataChanged(newData, field, newValue, value, cloneDeep(data));
-            return newValue;
+            return value;
           },
         };
       },

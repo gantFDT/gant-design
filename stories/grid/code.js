@@ -48,7 +48,8 @@ const basicColumns = [{
 },
 {
     fieldName: "county",
-    title: "国家"
+    title: "国家",
+    render: (value) => value + 222
 },
 {
     fieldName: "recored.address",
@@ -144,6 +145,16 @@ const BaiscGrid = () => {
     }, [selectedKeys])
     const onSave = useCallback(async () => {
         const errors = await gridManagerRef.current.validate();
+        if (gridManagerRef.current.loading) {
+            gridManagerRef.current.loadingCallback(() => {
+                gridManagerRef.current.save(() => {
+                    const dataSource = gridManagerRef.current.getPureData();
+                    setDataSource(dataSource);
+                    setEditable(false);
+                    return dataSource
+                })
+            })
+        }
         if (errors) return
         gridManagerRef.current.save(() => {
             const dataSource = gridManagerRef.current.getPureData();
