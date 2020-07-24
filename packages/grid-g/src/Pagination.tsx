@@ -7,9 +7,9 @@ export default memo(function GantPagination(props: any) {
   /* 分页高度为30 */
   return (
     <div className="gantd-grid-footer">
-      {addonAfter && <div>{addonAfter}</div>}
-      <Pagination className="gant-grid-pagination" {...resetProps} />
       {addonBefore && <div>{addonBefore}</div>}
+      <Pagination className="gant-grid-pagination" {...resetProps} />
+      {addonAfter && <div>{addonAfter}</div>}
     </div>
   );
 });
