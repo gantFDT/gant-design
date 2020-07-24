@@ -1,15 +1,10 @@
 import { useCallback, useMemo } from 'react';
 import classnames from 'classnames';
-import {
-  ColGroupDef,
-  ColDef,
-  IsColumnFunc,
-  IServerSideGetRowsParams,
-} from '@ag-grid-community/core';
+import { ColGroupDef, ColDef, IsColumnFunc, IServerSideGetRowsParams } from '@ag-grid-community/core';
 import { get, isEmpty } from 'lodash';
 import { isEqualObj } from './gridManager/utils';
 import { PaginationProps } from 'antd/lib/pagination';
-import { Size, DataActions, Pagination, ColumnEdiatble, Columns } from './interface';
+import { Size, DataActions, GantPaginationProps, ColumnEdiatble, Columns } from './interface';
 import EditorCol from './GridEidtColumn';
 import { Rules, RuleItem } from 'async-validator';
 
@@ -20,8 +15,13 @@ function itemisgroup(item, children): item is ColGroupDef {
 }
 
 function ColEditableFn(fn: ColumnEdiatble<any>): IsColumnFunc | boolean {
-  return ({ data, context: { globalEditable } }) => {
-    if (typeof fn === 'function') return globalEditable ? fn(data) : false;
+  return (params: any) => {
+    const {
+      data,
+      context: { globalEditable },
+    } = params;
+    console.log('====>', typeof fn === 'function' ? fn(params) : fn);
+    if (typeof fn === 'function') return globalEditable ? fn(params) : false;
     return globalEditable ? fn : false;
   };
 }
@@ -68,11 +68,8 @@ const serialNumberCol: ColDef = {
       context,
     } = params;
     const computedPagination = get(context, 'computedPagination', {});
-    const {
-      defaultPageSize = 20,
-      pageSize = defaultPageSize,
-      current = 1,
-    }: any = computedPagination;
+
+    const { defaultPageSize = 20, pageSize = defaultPageSize, current = 1 }: any = computedPagination;
     const serial = rowIndex + 1 + Math.floor(pageSize * (current - 1));
     return serial;
   },
@@ -101,109 +98,100 @@ export const mapColumns = <T>(
   // 移除所有已添加事件
   function getColumnDefs(columns: Columns<T>[]) {
     let validateFields: Rules = {};
-    const columnDefs = columns.map(
-      (
-        {
-          title: headerName,
-          fieldName: field,
-          children,
+    const columnDefs = columns.map(({ title: headerName, fieldName: field, children, render, editConfig, fixed, headerClass, cellClassRules, cellClass, cellRendererParams, ...item }, index) => {
+      const ColEditable = typeof editConfig !== 'undefined';
+      const colDef = {
+        headerName,
+        field,
+        cellRendererParams: {
           render,
-          editConfig,
-          fixed,
-          headerClass,
-          cellClassRules,
-          cellClass,
-          cellRendererParams,
-          ...item
+          ...cellRendererParams,
         },
-        index,
-      ) => {
-        const ColEditable = typeof editConfig !== 'undefined';
-        const colDef = {
-          headerName,
-          field,
-          cellRendererParams: {
-            render,
-            ...cellRendererParams,
+        cellClass: classnames('gant-grid-cell', cellClass),
+        cellClassRules: {
+          'gant-grid-cell-modify': params => {
+            const {
+              data: { _rowType, ...itemData } = {} as any,
+              colDef: { field },
+            } = params;
+            const value = get(itemData, field);
+            const _rowData = get(itemData, `_rowData`, itemData);
+            const originValue = get(_rowData, field);
+            return _rowType === DataActions.modify && !isEqualObj(value, originValue);
           },
-          cellClass: classnames('gant-grid-cell', cellClass),
-          cellClassRules: {
-            'gant-grid-cell-modify': params => {
-              const {
-                data: { _rowType, ...itemData } = {} as any,
-                colDef: { field },
-              } = params;
-              const value = get(itemData, field);
-              const _rowData = get(itemData, `_rowData`, itemData);
-              const originValue = get(_rowData, field);
-              return _rowType === DataActions.modify && !isEqualObj(value, originValue);
-            },
-            'gant-grid-cell-add': params => get(params, 'data._rowType') === DataActions.add,
-            ...cellClassRules,
+          'gant-grid-cell-add': params => get(params, 'data._rowType') === DataActions.add,
+          'gant-cell-disable-sign': (params: any) => {
+            const {
+              context: { globalEditable },
+            } = params;
+            const editable = get(editConfig, 'editable');
+            if (!editable) return false;
+            if (typeof editable == 'boolean') return false;
+            return !editable(params);
           },
-          cellRenderer: render ? 'gantRenderCol' : undefined,
-          headerClass,
-          ...item,
-        } as Col;
+          ...cellClassRules,
+        },
+        cellRenderer: render ? 'gantRenderCol' : undefined,
+        headerClass,
+        ...item,
+      } as Col;
 
-        if (!itemisgroup(colDef, children)) {
-          // 当前列允许编辑
-          if (ColEditable) {
-            const { props, changeFormatter, component, rules, signable, ...params } = editConfig;
-            let required = false;
-            const validateField = field.replace(/\./g, '-');
-            if (Array.isArray(rules)) {
-              const fieldsRules: RuleItem[] = rules.map(item => {
-                const hasRequired = Reflect.has(item, 'required');
-                required = hasRequired ? Reflect.get(item, 'required') : required;
-                return { ...item };
-              });
-              validateFields[validateField] = fieldsRules;
-            } else {
-              if (!isEmpty(rules)) {
-                validateFields[validateField] = { ...rules };
-                required = rules['required'];
-              }
+      if (!itemisgroup(colDef, children)) {
+        // 当前列允许编辑
+        if (ColEditable) {
+          const { props, changeFormatter, component, rules, signable, ...params } = editConfig;
+          let required = false;
+          const validateField = field.replace(/\./g, '-');
+          if (Array.isArray(rules)) {
+            const fieldsRules: RuleItem[] = rules.map(item => {
+              const hasRequired = Reflect.has(item, 'required');
+              required = hasRequired ? Reflect.get(item, 'required') : required;
+              return { ...item };
+            });
+            validateFields[validateField] = fieldsRules;
+          } else {
+            if (!isEmpty(rules)) {
+              validateFields[validateField] = { ...rules };
+              required = rules['required'];
             }
-
-            colDef.cellEditorParams = {
-              props,
-              changeFormatter,
-              rowkey: getRowNodeId,
-              required,
-              ...params,
+          }
+          if (!isEmpty(rules)) {
+            colDef.tooltipComponent = 'gantValidateTooltip';
+          }
+          colDef.cellEditorParams = {
+            props,
+            changeFormatter,
+            rowkey: getRowNodeId,
+            required,
+            ...params,
+          };
+          colDef.cellEditorFramework = EditorCol(component);
+          colDef.editable = ColEditableFn(editConfig.editable);
+          colDef.headerClass = classnames(headerClass, required ? 'gant-header-cell-required' : 'gant-header-cell-edit');
+          if (typeof signable === 'boolean' || typeof signable === 'function')
+            colDef.cellClassRules = {
+              ...colDef.cellClassRules,
+              'gant-cell-validate-sign': params => {
+                const show = typeof signable === 'boolean' ? signable : signable(params);
+                if (!show) return false;
+                const {
+                  data: { _rowError, ...itemData } = {} as any,
+                  colDef: { field },
+                } = params;
+                return get(_rowError, field, false);
+              },
             };
-            colDef.cellEditorFramework = EditorCol(component);
-            colDef.editable = ColEditableFn(editConfig.editable);
-            colDef.headerClass = classnames(
-              headerClass,
-              required ? 'gant-header-cell-required' : 'gant-header-cell-edit',
-            );
-            if (typeof signable === 'boolean' || typeof signable === 'function')
-              colDef.cellClassRules = {
-                ...colDef.cellClassRules,
-                'gant-cell-validate-sign': params => {
-                  const show = typeof signable === 'boolean' ? signable : signable(params);
-                  if (!show) return false;
-                  const {
-                    data: { _rowError, ...itemData } = {} as any,
-                    colDef: { field },
-                  } = params;
-                  return get(_rowError, field, false);
-                },
-              };
-          }
-          if (fixed) colDef.pinned = fixed;
-        } else if (itemisgroup(colDef, children)) {
-          if (children && children.length) {
-            const groupChildren = getColumnDefs(children);
-            colDef.children = groupChildren.columnDefs;
-            validateFields = { ...validateFields, ...groupChildren.validateFields };
-          }
         }
-        return colDef;
-      },
-    );
+        if (fixed) colDef.pinned = fixed;
+      } else if (itemisgroup(colDef, children)) {
+        if (children && children.length) {
+          const groupChildren = getColumnDefs(children);
+          colDef.children = groupChildren.columnDefs;
+          validateFields = { ...validateFields, ...groupChildren.validateFields };
+        }
+      }
+      return colDef;
+    });
     return { columnDefs, validateFields };
   }
 
@@ -260,24 +248,14 @@ export function isfunc(t: any): t is Function {
 export function ispromise(t: any): t is Promise<any> {
   return t && isfunc(t.then);
 }
-export function flattenTreeData(
-  dataSoruce: any[],
-  getRowNodeId,
-  treeDataChildrenName = 'children',
-  pathArray: string[] = [],
-): any[] {
+export function flattenTreeData(dataSoruce: any[], getRowNodeId, treeDataChildrenName = 'children', pathArray: string[] = []): any[] {
   let treeData: any[] = [];
   dataSoruce.map((item: any) => {
     const { [treeDataChildrenName]: children, ...itemData } = item;
     const treeDataPath = [...pathArray, getRowNodeId(itemData)];
     if (children && children.length) {
       treeData.push({ ...item, treeDataPath, parent: true });
-      const childrenTreeData = flattenTreeData(
-        children,
-        getRowNodeId,
-        treeDataChildrenName,
-        treeDataPath,
-      );
+      const childrenTreeData = flattenTreeData(children, getRowNodeId, treeDataChildrenName, treeDataPath);
       Array.prototype.push.apply(treeData, childrenTreeData);
     } else {
       treeData.push({ ...item, treeDataPath });
@@ -286,35 +264,29 @@ export function flattenTreeData(
   return treeData;
 }
 
-export function isPagitation(p: Pagination): p is Pagination {
+export function isPagitation(p: GantPaginationProps): p is GantPaginationProps {
   return typeof p === 'object';
 }
 
-export function usePagination(pagitation: Pagination): PaginationProps {
+export function usePagination(pagitation: GantPaginationProps): any {
   if (isPagitation(pagitation)) {
-    const { onChange, pageSize: size } = pagitation;
-    const showTotal = useCallback(
-      (total, range) => (total > 0 ? `第${range[0]} - ${range[1]}条，共${total}条` : ''),
-      [],
-    );
-
-    const defaultPagetation: Pagination = {
+    const { onChange, pageSize: size, countLimit, total, current = 1 } = pagitation;
+    const limit = countLimit >= total && countLimit;
+    const defaultPagetation: GantPaginationProps = {
       size: 'small',
       defaultPageSize: 20,
       defaultCurrent: 1,
       pageSizeOptions: ['20', '50', '100', '150', '200', '500'],
       showSizeChanger: true,
       showQuickJumper: true,
-      showTotal,
+      current,
     };
-
     const pageSize = useMemo(() => {
       if (isnumber(size)) {
         return size;
       }
       return defaultPagetation.defaultPageSize;
     }, [size]);
-
     const onPageChange = useCallback(
       (page, pageSize) => {
         const beginIndex = (page - 1) * pageSize;
@@ -328,13 +300,18 @@ export function usePagination(pagitation: Pagination): PaginationProps {
     if (isnumber(pagitation.beginIndex)) {
       pagitation.current = pagitation.beginIndex / pageSize + 1;
     }
+    const showTotal = useCallback((total, range) => (total > 0 ? `第${range[0]} - ${range[1]}条，共${limit ? countLimit + current * pageSize + ' +' : total}条` : ''), [current, pageSize]);
     return {
       ...defaultPagetation,
       ...pagitation,
       onChange: onPageChange,
       onShowSizeChange: onPageChange,
+      total: limit ? countLimit + current * pageSize : total,
+      showTotal,
+      pageSize,
     };
   }
+  return false;
 }
 export function getSizeClassName(size: Size) {
   switch (size) {

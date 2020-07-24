@@ -1,5 +1,10 @@
 :global {
   .gant-grid-edit {
+    &.gant-grid-editable {
+      .gant-cell-disable-sign {
+        background-color: rgba(128, 128, 128, 0.1)
+      }
+    }
     .gant-cell-validate-sign {
       &::before {
         content: '';
@@ -106,7 +111,7 @@
     .gant-treedata-icon {
       color: #a39f9f;
       margin-right: 4px;
-      &.gant-treedata-first-file{
+      &.gant-treedata-first-file {
         padding-left: 0px;
       }
       &.gant-treedata-file {

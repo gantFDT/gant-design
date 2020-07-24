@@ -1,14 +1,7 @@
 import { RowDataTransaction, GridApi, RowNode } from '@ag-grid-community/core';
 import Schema, { Rules } from 'async-validator';
 import { get, isEmpty, findIndex, cloneDeep, set } from 'lodash';
-import {
-  getModifyData,
-  removeTagData,
-  isEqualObj,
-  canQuickCreate,
-  getRowsToUpdate,
-  onSetcutData,
-} from './utils';
+import { getModifyData, removeTagData, isEqualObj, canQuickCreate, getRowsToUpdate, onSetcutData, getAllChildrenNode } from './utils';
 import { DataActions, CreateConfig } from '../interface';
 import { bindAll, Debounce } from 'lodash-decorators';
 import { generateUuid } from '@util';
@@ -36,13 +29,7 @@ interface AgGridConfig {
   isCompute?: boolean;
   treeDataChildrenName?: string;
   editChangeCallback?: (boolean) => void;
-}
-function delay(time) {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve();
-    }, time);
-  });
+  setErrors: any;
 }
 @bindAll()
 export default class GridManage {
@@ -76,10 +63,7 @@ export default class GridManage {
     let rowNode = this.agGridApi.getRowNode(nodeId);
     return isEmpty(oldData) ? rowNode : { ...rowNode, data: { ...oldData } };
   };
-  private batchUpdateGrid(
-    transaction: RowDataTransaction,
-    callback?: (transaction: RowDataTransaction) => void,
-  ) {
+  private batchUpdateGrid(transaction: RowDataTransaction, callback?: (transaction: RowDataTransaction) => void) {
     this.agGridApi.applyTransactionAsync(transaction, callback);
   }
   appendChild(keys, add) {
@@ -116,6 +100,7 @@ export default class GridManage {
     try {
       await schema.validate({ source });
       this.errorSign({}, source);
+      this.agGridConfig.setErrors(null);
       return null;
     } catch (err) {
       const { errors } = err;
@@ -142,6 +127,7 @@ export default class GridManage {
       });
       if (isEmpty(validateErros)) return;
       this.errorSign(validateErros, source);
+      this.agGridConfig.setErrors(validateErros);
       return validateErros;
     }
   }
@@ -206,19 +192,12 @@ export default class GridManage {
         const brotherPath = getDataPath(get(node, 'data', []));
         parentPath = brotherPath.slice(0, brotherPath.length - 1);
       }
-      const { newRowData, oldRowData } = getRowsToUpdate(
-        this.cutRows,
-        parentPath,
-        createConfig,
-        this.agGridConfig,
-      );
+      const { newRowData, oldRowData } = getRowsToUpdate(this.cutRows, parentPath, createConfig, this.agGridConfig);
 
       this.agGridApi.batchUpdateRowData({ remove: oldRowData }, () => {
         const rowData = this.getRowData();
         const rowIndex = get(node, 'rowIndex', 0);
-        const newDataSource = up
-          ? [...rowData.slice(0, rowIndex), ...newRowData, ...rowData.slice(rowIndex)]
-          : [...rowData.slice(0, rowIndex + 1), ...newRowData, ...rowData.slice(rowIndex + 1)];
+        const newDataSource = up ? [...rowData.slice(0, rowIndex), ...newRowData, ...rowData.slice(rowIndex)] : [...rowData.slice(0, rowIndex + 1), ...newRowData, ...rowData.slice(rowIndex + 1)];
         this.agGridApi.setRowData(newDataSource);
         this.cutRows = [];
         this.agGridConfig.onRowsPasteEnd && this.agGridConfig.onRowsPasteEnd(newDataSource);
@@ -247,12 +226,7 @@ export default class GridManage {
     if (isEmpty(records) && typeof records !== 'object') return;
     records = Array.isArray(records) ? records : [records];
     if (records.length <= 0) return;
-    const { hisRecords, newRecords } = getModifyData(
-      records,
-      this.getRowItemData,
-      oldRecords,
-      this.agGridConfig.getRowNodeId,
-    );
+    const { hisRecords, newRecords } = getModifyData(records, this.getRowItemData, oldRecords, this.agGridConfig.getRowNodeId);
     if (newRecords.length <= 0) return;
     const updateRowData = [];
     newRecords.map(data => {
@@ -272,11 +246,7 @@ export default class GridManage {
   }
 
   // 创建;
-  public create(
-    records: any,
-    targetId?: string | string[] | number | number[],
-    isSub: boolean = true,
-  ) {
+  public create(records: any, targetId?: string | string[] | number | number[], isSub: boolean = true) {
     const { getRowNodeId } = this.agGridConfig;
     let addRecords = Array.isArray(records) ? records : [records];
     if (addRecords.length <= 0) return;
@@ -315,11 +285,7 @@ export default class GridManage {
     });
     this.watchHistory();
   }
-  private quickCreateNode(
-    isChild: boolean = false,
-    targetId: string | number,
-    record: number | object | any[] = 1,
-  ) {
+  private quickCreateNode(isChild: boolean = false, targetId: string | number, record: number | object | any[] = 1) {
     const { createConfig, treeData, getDataPath } = this.agGridConfig;
     targetId = targetId + '';
     const rowNode = this.agGridApi.getRowNode(targetId);
@@ -367,8 +333,7 @@ export default class GridManage {
     const { createConfig, getRowNodeId, treeData, getDataPath } = this.agGridConfig;
     if (!canQuickCreate(createConfig)) return console.warn('createConfig is error');
     if (typeof targetId !== 'number' && !targetId) return console.warn('nodeId is null');
-    if (typeof targetId !== 'string' && typeof targetId !== 'number')
-      return console.warn('nodeId format error');
+    if (typeof targetId !== 'string' && typeof targetId !== 'number') return console.warn('nodeId format error');
 
     this.quickCreateNode(false, targetId, record);
   }
@@ -376,8 +341,7 @@ export default class GridManage {
     const { createConfig, getRowNodeId, treeData, getDataPath } = this.agGridConfig;
     if (!canQuickCreate(createConfig)) return console.warn('createConfig is error');
     if (typeof targetId !== 'number' && !targetId) return console.warn('parentNodeId is null');
-    if (typeof targetId !== 'string' && typeof targetId !== 'number')
-      return console.warn('parentNodeId format error');
+    if (typeof targetId !== 'string' && typeof targetId !== 'number') return console.warn('parentNodeId format error');
     this.quickCreateNode(true, targetId, record);
   }
   //移除;
@@ -386,35 +350,16 @@ export default class GridManage {
     const { getRowNodeId } = this.agGridConfig;
     let targetArray = Array.isArray(targetid) ? targetid : [targetid];
     if (targetArray.length <= 0) return;
-    let rowData = this.getRowData();
     const recordsIndex: number[] = [];
     const records: any[] = [];
-    const removeRecords: any[] = [];
-    targetArray.map(itemId => {
-      const itemNode = this.agGridApi.getRowNode(itemId);
-      if (itemNode) {
-        const { allLeafChildren = [itemNode] } = itemNode;
-        if (deleteChildren) {
-          return itemNode.data && removeRecords.push(itemNode.data);
-        }
-        allLeafChildren.map(childNode => {
-          const removeIndex = findIndex(removeRecords, data => {
-            getRowNodeId(data) == getRowNodeId(childNode.data);
-          });
-          if (removeIndex < 0 && childNode.data) removeRecords.push(childNode.data);
-        });
+    const removeNodes = getAllChildrenNode(targetArray, this.agGridApi, deleteChildren);
+    removeNodes.map(itemNode => {
+      const { data, childIndex } = itemNode;
+      if (data) {
+        recordsIndex.unshift(childIndex);
+        records.unshift(data);
       }
     });
-    removeRecords.map(itemRecord => {
-      const removeIndex = findIndex(
-        rowData,
-        data => getRowNodeId(data) === getRowNodeId(itemRecord),
-      );
-      rowData = [...rowData.slice(0, removeIndex), ...rowData.slice(removeIndex + 1)];
-      recordsIndex.unshift(removeIndex);
-      records.unshift(itemRecord);
-    });
-
     this.historyStack.push({
       type: DataActions.remove,
       recordsIndex: recordsIndex,
@@ -435,27 +380,8 @@ export default class GridManage {
     if (!Array.isArray(targetKeys) && typeof targetKeys === 'object') return;
     const targetArray = Array.isArray(targetKeys) ? targetKeys : [targetKeys];
     if (targetArray.length <= 0) return;
-    const removeRecords: any[] = [];
-    targetArray.map(itemId => {
-      const itemNode = this.agGridApi.getRowNode(itemId + '');
-      if (itemNode) {
-        const { allLeafChildren = [itemNode] } = itemNode;
-        if (deleteChildren) {
-          return itemNode.data && removeRecords.push(itemNode.data);
-        }
-        allLeafChildren.map(childNode => {
-          const removeIndex = findIndex(removeRecords, data => {
-            getRowNodeId(data) == getRowNodeId(childNode.data);
-          });
-          if (removeIndex < 0) removeRecords.push(childNode.data);
-        });
-      }
-    });
-    const { hisRecords, newRecords, removeIndexs, removeRecords: remove } = removeTagData(
-      removeRecords,
-      rowData,
-      getRowNodeId,
-    );
+    const removeNodes = getAllChildrenNode(targetArray, this.agGridApi, deleteChildren);
+    const { hisRecords, newRecords, removeIndexs, removeRecords: remove } = removeTagData(removeNodes);
     if (newRecords.length == 0 && remove.length == 0) return;
     this.batchUpdateGrid({ update: newRecords, remove });
     this.historyStack.push({
@@ -468,22 +394,22 @@ export default class GridManage {
 
   private toggleUndoRedo(hisStack: OperationAction, undo: boolean = true) {
     const { getRowNodeId } = this.agGridConfig;
+    debugger
     let rowData = this.getRowData();
+    if (rowData.length == 0) this.agGridApi.setRowData([]);
     let { records, recordsIndex, type } = hisStack;
     if (type === DataActions.remove) {
       recordsIndex.map((removeIndex, index) => {
         rowData = [...rowData.slice(0, removeIndex), records[index], ...rowData.slice(removeIndex)];
       });
+      console.log('----->', rowData);
       this.agGridApi.setRowData(rowData);
       recordsIndex = [];
       type = DataActions.add;
     } else if (type === DataActions.add) {
       recordsIndex = [];
       records.map(itemRecord => {
-        const removeIndex = findIndex(
-          rowData,
-          data => getRowNodeId(data) === getRowNodeId(itemRecord),
-        );
+        const removeIndex = findIndex(rowData, data => getRowNodeId(data) === getRowNodeId(itemRecord));
         rowData = [...rowData.slice(0, removeIndex), ...rowData.slice(removeIndex + 1)];
         recordsIndex.unshift(removeIndex);
       });

@@ -69,7 +69,7 @@ export default WrapperComponent =>
           getValue: () => {
             if (!watchEditChange) return get(node, `data.${field}`);
             if (isEqualObj(value, newValue)) return newValue;
-            const newData = cloneDeep(data);
+            const newData = cloneDeep(get(node, `data`));
             set(newData, field, newValue);
             editRowDataChanged(newData, field, newValue, value, cloneDeep(data));
             return newValue;

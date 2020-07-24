@@ -5,7 +5,7 @@ import { BindAll } from 'lodash-decorators';
 import { isEqual } from 'lodash';
 import { Icon } from 'antd';
 import { stopPropagationForAgGrid } from './utils';
-interface GantGroupCellRendererProps extends ICellRendererParams {
+export interface GantGroupCellRendererProps extends ICellRendererParams {
   render?: (showValue: any, data: any, rowIndex: number, params: ICellRendererParams) => any;
   showFolder?: boolean;
 }
