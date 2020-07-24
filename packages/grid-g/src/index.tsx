@@ -460,6 +460,9 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       return context;
     });
   }, [context]);
+  const hideBox = useMemo(() => {
+    return hideSelcetedBox || rowSelection == 'single';
+  }, [hideSelcetedBox, rowSelection]);
   return (
     <LocaleReceiver>
       {(local, localeCode = 'zh-cn') => {
@@ -484,7 +487,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                   height: computedPagination ? 'calc(100% - 30px)' : '100%',
                 }}
               >
-                {!hideSelcetedBox && <SelectedGrid onChange={onBoxSelectionChanged} getRowNodeId={getRowNodeId} columnDefs={selectedColumns as any} rowData={boxSelectedRows} />}
+                {!hideBox && <SelectedGrid onChange={onBoxSelectionChanged} getRowNodeId={getRowNodeId} columnDefs={selectedColumns as any} rowData={boxSelectedRows} />}
 
                 <AgGridReact
                   frameworkComponents={{

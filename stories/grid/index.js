@@ -400,7 +400,7 @@ const config = {
         {
             title: '基础Grid',
             describe: "基础Grid",
-            cmp: TreeGrid
+            cmp: BaiscGrid
         }
     ]
 }
