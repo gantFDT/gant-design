@@ -1,34 +1,20 @@
 import React, { useState, useCallback, useRef, useMemo, useEffect, useContext } from 'react';
 import classnames from 'classnames';
 import { AgGridReact } from '@ag-grid-community/react';
-import {
-  GridApi,
-  ColumnApi,
-  GridReadyEvent,
-  SelectionChangedEvent,
-  CellClickedEvent,
-  RowNode,
-  GetContextMenuItemsParams,
-} from '@ag-grid-community/core';
+import { GridApi, ColumnApi, GridReadyEvent, SelectionChangedEvent, SuppressKeyboardEventParams, RowNode, GetContextMenuItemsParams } from '@ag-grid-community/core';
 import '@ag-grid-community/core/dist/styles/ag-grid.css';
 import '@ag-grid-community/core/dist/styles/ag-theme-balham.css';
 import { LicenseManager, AllModules } from '@ag-grid-enterprise/all-modules';
 import { AllCommunityModules } from '@ag-grid-community/all-modules';
-import { Pagination, Spin, Icon, Badge } from 'antd';
+import { Spin } from 'antd';
 import { get, isEmpty, isEqual, cloneDeep, set, max, min, findIndex, uniq } from 'lodash';
 import key from './license';
-import {
-  mapColumns,
-  flattenTreeData,
-  usePagination,
-  getSizeClassName,
-  selectedMapColumns,
-} from './utils';
+import { mapColumns, flattenTreeData, usePagination, getSizeClassName, selectedMapColumns } from './utils';
 import { Size, GridPropsPartial, RowSelection, DataActions } from './interface';
-import RenderCol from './GirdRenderColumn';
-import GantGroupCellRenderer from './GantGroupCellRenderer';
 import SelectedGrid from './SelectedGrid';
+import GantPagination from './Pagination';
 import GridManager from './gridManager';
+import { gantGetcontextMenuItems } from './contextMenuItems';
 import { getAllComponentsMaps } from './maps';
 import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
 import en from './locale/en-US';
@@ -127,10 +113,10 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     isRowSelectable,
     boxColumnIndex,
     hideSelcetedBox,
+    suppressKeyboardEvent,
     onSelectionChanged: propsOnSelectionChanged,
     ...orignProps
   } = props;
-  const divRef = useRef<HTMLDivElement>(null);
   const apiRef = useRef<GridApi>();
   const shiftRef = useRef<boolean>(false);
   const columnsRef = useRef<ColumnApi>();
@@ -138,20 +124,8 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   const [pasteContent, setPasetContent] = useState<any>({});
   const [pasteLoading, setPasteLoading] = useState(false);
   const [innerSelectedRows, setInnerSelectedRows] = useState([]);
-  const gridKeydownFunc = useCallback((event: KeyboardEvent) => {
-    if (event.key === 'Shift') shiftRef.current = true;
-  }, []);
-  const gridKeyUpFunc = useCallback((event: KeyboardEvent) => {
-    if (event.key === 'Shift') shiftRef.current = false;
-  }, []);
-  useEffect(() => {
-    divRef.current?.addEventListener('keydown', gridKeydownFunc);
-    divRef.current?.addEventListener('keyup', gridKeyUpFunc);
-    return () => {
-      divRef.current?.removeEventListener('keydown', gridKeydownFunc);
-      divRef.current?.removeEventListener('keyup', gridKeyUpFunc);
-    };
-  }, []);
+  const [errors, setErrors] = useState(null);
+  const [clipboardData, setClipboardData] = useState('');
   const gridManager = useMemo(() => {
     return new GridManager();
   }, []);
@@ -187,15 +161,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     if (rowSel) return { ...defaultRowSelection, ...rowSel };
     return {};
   }, [rowSel]);
-  const {
-    onSelect,
-    selectedKeys,
-    selectedRows,
-    showDefalutCheckbox,
-    type: rowSelection,
-    defaultSelectionCol,
-    ...selection
-  } = gantSelection;
+  const { onSelect, selectedKeys, selectedRows, showDefalutCheckbox, type: rowSelection, defaultSelectionCol, ...selection } = gantSelection;
 
   useEffect(() => {
     if (!editable) {
@@ -206,14 +172,14 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
 
   /**fix: 解决保存时候标记状态无法清楚的问题 */
 
-  // 分页事件
-  const computedPagination = usePagination(pagination);
   // 判断数据分别处理 treeTable 和普通table
   const dataSource = useMemo(() => {
-    if (treeData && isCompute)
-      return flattenTreeData(initDataSource, getRowNodeId, treeDataChildrenName);
+    if (treeData && isCompute) return flattenTreeData(initDataSource, getRowNodeId, treeDataChildrenName);
     return initDataSource;
   }, [initDataSource, treeData, treeDataChildrenName]);
+
+  // 分页事件
+  const computedPagination: any = usePagination(pagination);
   useEffect(() => {
     gridManager.reset({
       dataSource,
@@ -225,6 +191,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       treeDataChildrenName,
       editChangeCallback,
       onRowsPasteEnd,
+      setErrors,
     });
   }, [dataSource]);
   const serverDataCallback = useCallback((groupKeys, successCallback) => {
@@ -327,14 +294,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   //columns
   const defaultSelection = !isEmpty(gantSelection) && showDefalutCheckbox;
   const { columnDefs, validateFields } = useMemo(() => {
-    return mapColumns<T>(
-      columns,
-      getRowNodeId,
-      defaultSelection,
-      defaultSelectionCol,
-      rowSelection,
-      serialNumber,
-    );
+    return mapColumns<T>(columns, getRowNodeId, defaultSelection, defaultSelectionCol, rowSelection, serialNumber);
   }, [columns]);
   // 选中栏grid  columns;
   const selectedColumns = useMemo(() => {
@@ -377,11 +337,23 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     },
     [onCellEditingChange],
   );
+  const onSuppressKeyboardEvent = useCallback((params: SuppressKeyboardEventParams) => {
+    const { event, colDef, data ,api} = params;
+    if (event.key === 'Shift') {
+      shiftRef.current = true;
+      return false;
+    }
+    if (event.keyCode == 67 && (event.ctrlKey || event.composed)) {
+      api.copySelectedRangeToClipboard(false);
+      return true
+    }
+    return false;
+  }, []);
   const processCellForClipboard = useCallback(params => {
     const {
       column: { colId },
     } = params;
-    if (colId === 'defalutSelection' || colId === 'g-index') return colId;
+    if (colId === 'defalutSelection' || colId === 'g-index') return null;
     return params.value;
   }, []);
   const processDataFromClipboard = params => {
@@ -434,13 +406,12 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     },
     [onCellValueChanged, pasteLoading],
   );
-
   const onRowSelectable = useCallback((rowNode: RowNode) => {
-    const disabled =
-      get(rowNode, 'data._rowType') !== DataActions.removeTag ||
-      (isRowSelectable && isRowSelectable(rowNode));
-    if (!disabled && rowNode.isSelected()) rowNode.setSelected(false);
-    return disabled;
+    const notRemove = get(rowNode, 'data._rowType') !== DataActions.removeTag;
+    if (isRowSelectable) {
+      return isRowSelectable(rowNode) && notRemove;
+    }
+    return notRemove;
   }, []);
   
   // context 变化
@@ -457,11 +428,13 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       treeData,
       gridManager,
       showCut,
-
+      errors,
+      createConfig,
+      getRowNodeId,
       watchEditChange: typeof onCellEditChange === 'function',
       ...propsContext,
     };
-  }, [propsContext, size, computedPagination, editable, showCut]);
+  }, [propsContext, size, computedPagination, editable, showCut, errors]);
   const [cancheContext, setCancheContext] = useState(context);
   useEffect(() => {
     setCancheContext(cancheContext => {
@@ -487,6 +460,9 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       return context;
     });
   }, [context]);
+  const hideBox = useMemo(() => {
+    return hideSelcetedBox || rowSelection == 'single';
+  }, [hideSelcetedBox, rowSelection]);
 
   return (
     <LocaleReceiver>
@@ -494,117 +470,17 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
         let lang = langs[localeCode] || langs['zh-cn'];
         const locale = { ...lang, ...customLocale };
         const contextMenuItems = function(params: GetContextMenuItemsParams) {
-          const {
-            context: { globalEditable },
-            node,
-            api,
-          } = params;
-          const rowIndex = get(node, 'rowIndex', 0);
-          let selectedRowNodes: RowNode[] = [];
-          if (node) {
-            const rowNodes = apiRef.current.getSelectedNodes();
-            if (!shiftRef.current || rowNodes.length == 0) {
-              node.setSelected(true, true);
-              selectedRowNodes = [node];
-            } else {
-              const rowNodeIndexs = rowNodes.map(rowNode => rowNode.rowIndex);
-              const maxIndex = max(rowNodeIndexs);
-              const minIndex = min(rowNodeIndexs);
-              if (rowIndex >= minIndex && rowIndex <= maxIndex) {
-                node.setSelected(true, true);
-                selectedRowNodes = [node];
-              } else {
-                const isMin = rowIndex < minIndex;
-                const nodesCount = isMin ? minIndex - rowIndex : rowIndex - maxIndex;
-                const startIndex = isMin ? rowIndex : maxIndex + 1;
-                const extraNodes = Array(nodesCount)
-                  .fill('')
-                  .map((item, index) => {
-                    const startNode = api.getDisplayedRowAtIndex(index + startIndex);
-                    startNode.setSelected(true);
-                    return startNode;
-                  });
-                selectedRowNodes = isMin
-                  ? [...extraNodes, ...rowNodes]
-                  : [...rowNodes, ...extraNodes];
-              }
-            }
-          }
-          const gridSelectedRows = selectedRowNodes.map(item => {
-            return item.data;
-          }, []);
-          const gridSelectedKeys = gridSelectedRows.map(item => getRowNodeId(item), []);
-          const hasCut = selectedRowNodes.length <= 0 || (treeData && isEmpty(createConfig));
-          const hasPaste =
-            selectedRowNodes.length > 1 || isEmpty(createConfig) || isEmpty(gridManager.cutRows);
-          const items = getContextMenuItems
-            ? getContextMenuItems({
-                selectedRows: gridSelectedRows,
-                selectedKeys: gridSelectedKeys,
-                ...params,
-              } as any)
-            : [];
-          const defultMenu = treeData
-            ? ['expandAll', 'contractAll', ...items, 'separator', 'export']
-            : [...items, 'export'];
-          if (!globalEditable) return defultMenu;
-          const editMenu = !showCut
-            ? [...defultMenu]
-            : [
-                ...defultMenu,
-                'separator',
-                {
-                  name: locale.cutRows,
-                  disabled: hasCut,
-                  action: params => {
-                    try {
-                      const canPut = onRowsCut ? onRowsCut(selectedRowNodes) : true;
-                      return canPut && gridManager.cut(selectedRowNodes);
-                    } catch (error) {}
-                  },
-                },
-                {
-                  name: locale.cancelCut,
-                  disabled: isEmpty(gridManager.cutRows),
-                  action: params => {
-                    try {
-                      gridManager.cancelCut();
-                    } catch (error) {}
-                  },
-                },
-                {
-                  name: locale.pasteTop,
-                  disabled: hasPaste,
-                  action: params => {
-                    const [rowNode] = selectedRowNodes;
-                    const canPaste = onRowsPaste ? onRowsPaste(gridManager.cutRows, rowNode) : true;
-                    canPaste && gridManager.paste(rowNode);
-                  },
-                },
-                {
-                  name: locale.pasteBottom,
-                  disabled: hasPaste,
-                  action: params => {
-                    const [rowNode] = selectedRowNodes;
-                    const canPaste = onRowsPaste ? onRowsPaste(gridManager.cutRows, rowNode) : true;
-                    canPaste && gridManager.paste(rowNode, false);
-                  },
-                },
-              ];
-          return editMenu;
+          return gantGetcontextMenuItems(params, {
+            downShift: shiftRef.current,
+            onRowsCut,
+            onRowsPaste,
+            locale,
+            getContextMenuItems,
+          });
         };
-
         return (
           <Spin spinning={loading}>
-            <div
-              style={{ width, height }}
-              className={classnames(
-                'gant-grid',
-                `gant-grid-${getSizeClassName(size)}`,
-                openEditSign && `gant-grid-edit`,
-              )}
-              ref={divRef}
-            >
+            <div style={{ width, height }} className={classnames('gant-grid', `gant-grid-${getSizeClassName(size)}`, openEditSign && `gant-grid-edit`, editable && 'gant-grid-editable')}>
               <div
                 className="ag-theme-balham gant-ag-wrapper"
                 style={{
@@ -612,19 +488,10 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                   height: computedPagination ? 'calc(100% - 30px)' : '100%',
                 }}
               >
-                {!hideSelcetedBox && (
-                  <SelectedGrid
-                    onChange={onBoxSelectionChanged}
-                    getRowNodeId={getRowNodeId}
-                    columnDefs={selectedColumns as any}
-                    rowData={boxSelectedRows}
-                  />
-                )}
+                {!hideBox && <SelectedGrid onChange={onBoxSelectionChanged} getRowNodeId={getRowNodeId} columnDefs={selectedColumns as any} rowData={boxSelectedRows} />}
 
                 <AgGridReact
                   frameworkComponents={{
-                    gantGroupCellRenderer: GantGroupCellRenderer,
-                    gantRenderCol: RenderCol,
                     ...frameworkComponentsMaps,
                     ...frameworkComponents,
                   }}
@@ -663,9 +530,9 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                   stopEditingWhenGridLosesFocus={false}
                   treeData={treeData}
                   getDataPath={getDataPath}
-                  enableRangeSelection
                   rowData={dataSource}
                   immutableData
+                  tooltipShowDelay={10}
                   {...selection}
                   {...orignProps}
                   isRowSelectable={onRowSelectable}
@@ -674,16 +541,20 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     sortable,
                     filter,
                     minWidth: 30,
+                    tooltip: (params: any) => 'tooltip',
+                    tooltipComponent: 'gantValidateTooltip',
                     ...defaultColDef,
                   }}
+                  enableCellTextSelection
+                  ensureDomOrder
                   groupDefaultExpanded={groupDefaultExpanded}
                   localeText={locale}
                   rowClassRules={{
-                    'gant-grid-row-isdeleted': params =>
-                      get(params, 'data._rowType') === DataActions.removeTag,
+                    'gant-grid-row-isdeleted': params => get(params, 'data._rowType') === DataActions.removeTag,
                     'gant-grid-row-cut': params => get(params, 'data._rowCut'),
                     ...rowClassRules,
                   }}
+                  // enableRangeSelection={true}
                   onCellValueChanged={cellValueChanged}
                   processCellForClipboard={processCellForClipboard}
                   processDataFromClipboard={processDataFromClipboard}
@@ -691,12 +562,10 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                   onPasteEnd={onPasteEnd}
                   getContextMenuItems={contextMenuItems as any}
                   modules={[...AllModules, ...AllCommunityModules]}
+                  suppressKeyboardEvent={onSuppressKeyboardEvent}
                 />
               </div>
-              {/* 分页高度为30 */}
-              {computedPagination && (
-                <Pagination className="gant-grid-pagination" {...computedPagination} />
-              )}
+              <GantPagination pagination={computedPagination} />
             </div>
           </Spin>
         );

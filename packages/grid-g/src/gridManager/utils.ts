@@ -1,7 +1,7 @@
-import { get, isEmpty, isEqual, findIndex, cloneDeep } from 'lodash';
+import { get, isEmpty, isEqual, findIndex, cloneDeep, groupBy, uniqBy, min } from 'lodash';
 import { DataActions, CreateConfig } from '../interface';
 import { generateUuid } from '@util';
-import { RowNode } from '@ag-grid-community/core';
+import { RowNode, GridApi } from '@ag-grid-community/core';
 export function getModifyData(records, getRowItemData, oldRecords, getRowNodeId) {
   const hisRecords: any[] = [],
     newRecords: any[] = [];
@@ -11,16 +11,10 @@ export function getModifyData(records, getRowItemData, oldRecords, getRowNodeId)
     if (isEqualObj(data, item)) return;
     let { _rowData, _rowType = null, ...oldData } = data;
     let { _rowData: nextRowData, _rowType: nextRowType, ...newData } = item;
-    if (nextRowType === DataActions.remove || nextRowType === DataActions.removeTag)
-      return console.warn('Cannot modify deleted data');
+    if (nextRowType === DataActions.remove || nextRowType === DataActions.removeTag) return console.warn('Cannot modify deleted data');
     _rowData = isEmpty(_rowData) ? oldData : _rowData;
     const hasChange = !isEqualObj(_rowData, newData);
-    _rowType =
-      !_rowType || _rowType === DataActions.modify
-        ? hasChange
-          ? DataActions.modify
-          : null
-        : _rowType;
+    _rowType = !_rowType || _rowType === DataActions.modify ? (hasChange ? DataActions.modify : null) : _rowType;
     let recordItem = { ...newData, _rowData, _rowType };
     let hisRecordItem = data;
     newRecords.push(recordItem);
@@ -29,22 +23,19 @@ export function getModifyData(records, getRowItemData, oldRecords, getRowNodeId)
   return { newRecords, hisRecords };
 }
 
-export function removeTagData(records, rowData, getRowNodeId) {
+export function removeTagData(removeNodes: RowNode[]) {
   const hisRecords: any[] = [],
     newRecords: any[] = [],
     removeRecords: any[] = [],
     removeIndexs: any[] = [];
-  records.map(itemData => {
+  removeNodes.map(itemNode => {
+    const itemData = get(itemNode, 'data', {});
     let recordItem = { ...itemData, _rowType: DataActions.removeTag };
-    if (itemData._rowType === DataActions.removeTag || itemData._rowType === DataActions.remove)
-      return console.warn('Deleted data cannot be deleted');
-    const removeIndex = findIndex(rowData, data => getRowNodeId(data) === getRowNodeId(itemData));
+    if (itemData._rowType === DataActions.removeTag || itemData._rowType === DataActions.remove) return console.warn('Deleted data cannot be deleted');
+    const { childIndex } = itemNode;
     let hisRecordItem = { ...itemData };
-    itemData._rowType !== DataActions.add
-      ? newRecords.push(recordItem)
-      : removeRecords.push(itemData);
-
-    removeIndexs.unshift(removeIndex);
+    itemData._rowType !== DataActions.add ? newRecords.push(recordItem) : removeRecords.push(itemData);
+    removeIndexs.unshift(childIndex);
     hisRecords.unshift(hisRecordItem);
   });
   return { newRecords, hisRecords, removeIndexs, removeRecords };
@@ -65,12 +56,7 @@ export const isEqualObj = (obj, obj2) => {
   for (let i in newObj) {
     let value1 = get(obj, i),
       value2 = get(obj2, i);
-    if (
-      typeof value1 === 'object' &&
-      typeof value2 === 'object' &&
-      !Array.isArray(value1) &&
-      !Array.isArray(value2)
-    ) {
+    if (typeof value1 === 'object' && typeof value2 === 'object' && !Array.isArray(value1) && !Array.isArray(value2)) {
       _EqualObj = isEqualObj(value1, value2);
     } else {
       if (!(isEmptyObj(value1) && isEmptyObj(value2))) {
@@ -115,12 +101,7 @@ export function getRowsToUpdate(nodes, parentPath, createConfig, agGridConfig) {
       newPath = agGridConfig.getDataPath(node.data);
     }
     if (node.childrenAfterGroup) {
-      let { newRowData: childrenNewRowData, oldRowData: childrenOldRowData } = getRowsToUpdate(
-        node.childrenAfterGroup,
-        newPath,
-        createConfig,
-        agGridConfig,
-      );
+      let { newRowData: childrenNewRowData, oldRowData: childrenOldRowData } = getRowsToUpdate(node.childrenAfterGroup, newPath, createConfig, agGridConfig);
       res = res.concat(childrenNewRowData);
       oldRowData = oldRowData.concat(childrenOldRowData);
     }
@@ -148,4 +129,33 @@ export function onSetcutData(rowsNodes: RowNode[], clear?: boolean) {
     }
   });
   return update;
+}
+
+export function getAllChildrenNode(targetKeys: any[], api: GridApi, deleteChildren = false): RowNode[] {
+  const targetNodes: RowNode[] = [];
+  targetKeys.map(key => {
+    const itemNode = api.getRowNode(key);
+    itemNode && targetNodes.push(itemNode);
+  });
+
+  if (deleteChildren) return targetNodes;
+  const allNodes: RowNode[] = [];
+  const groupNodes = groupBy(targetNodes, 'level');
+  let level = min(Object.keys(groupNodes).map(level => level));
+  console.log(level, groupNodes[level]);
+  while (!isEmpty(groupNodes[level])) {
+    const list = groupNodes[level];
+    let nextLevel: any = parseInt(level) + 1;
+    nextLevel = nextLevel.toString();
+    groupNodes[nextLevel] = groupNodes[nextLevel] ? groupNodes[nextLevel] : [];
+    list.map(itemNode => {
+      const { childrenAfterFilter = [] } = itemNode;
+      groupNodes[nextLevel].push(...childrenAfterFilter);
+      return itemNode.data;
+    });
+    groupNodes[nextLevel] = uniqBy(groupNodes[nextLevel], 'id');
+    allNodes.push(...list);
+    level = nextLevel;
+  }
+  return allNodes;
 }

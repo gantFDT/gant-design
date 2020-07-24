@@ -12,7 +12,7 @@ import Header from '@header'
 const basicColumns = [{
     fieldName: "name",
     title: "姓名",
-    cellRenderer: 'gantGroupCellRenderer',
+    cellRenderer: 'agGroupCellRenderer',
     editConfig: {
         component: Input,
         editable: true,
@@ -37,7 +37,9 @@ const basicColumns = [{
     editConfig: {
         component: InputNumber,
         signable: true,
-        editable: true,
+        editable: (params) => {
+            return params.data.age > 30
+        },
         rules: {
             type: "number",
             min: 10,
@@ -47,7 +49,8 @@ const basicColumns = [{
 },
 {
     fieldName: "county",
-    title: "国家"
+    title: "国家",
+    render: (value) => value + 222
 },
 {
     fieldName: "recored.address",
@@ -68,7 +71,7 @@ const basicColumns = [{
             }
         ]
     }
-    
+
 },
 ]
 const RandomCreate = () => ({
@@ -142,8 +145,17 @@ const BaiscGrid = () => {
         gridManagerRef.current.remove(selectedKeys);
     }, [selectedKeys])
     const onSave = useCallback(async () => {
-        console.log('---->', gridManagerRef.current.loading)
         const errors = await gridManagerRef.current.validate();
+        if (gridManagerRef.current.loading) {
+            gridManagerRef.current.loadingCallback(() => {
+                gridManagerRef.current.save(() => {
+                    const dataSource = gridManagerRef.current.getPureData();
+                    setDataSource(dataSource);
+                    setEditable(false);
+                    return dataSource
+                })
+            })
+        }
         if (errors) return
         gridManagerRef.current.save(() => {
             const dataSource = gridManagerRef.current.getPureData();
@@ -171,6 +183,7 @@ const BaiscGrid = () => {
                 type="line"
             />
             <Grid
+                tooltipShowDelay={10}
                 rowkey='ip'
                 loading={loading}
                 columns={basicColumns}
@@ -215,7 +228,7 @@ const BaiscGrid = () => {
                         pageSize: 20,
                         current: current,
                         total: 100,
-                        onChange: onPageChange
+                        onChange: onPageChange,
                     }
                 }
 
@@ -281,12 +294,7 @@ const treeDataSource = [{
     dateModified: 'Jan 17 2016 08:03:00 PM',
     size: 1.1,
 },
-{
-    id: 11,
-    filePath: ['Music', 'mp3', 'pop'],
-    dateModified: 'Sep 11 2016 08:03:00 PM',
-    size: 14.3,
-},
+
 {
     id: 12,
     filePath: ['temp.txt'],
@@ -294,8 +302,14 @@ const treeDataSource = [{
     size: 101,
 },
 {
+    id: 11,
+    filePath: ['Music'],
+    dateModified: 'Sep 11 2016 08:03:00 PM',
+    size: 14.3,
+},
+{
     id: 13,
-    filePath: ['Music', 'mp3', 'pop', 'theme.mp3'],
+    filePath: ['Music', 'mp3',],
     dateModified: 'Aug 12 2016 10:50:00 PM',
     size: 101,
 },
@@ -326,28 +340,63 @@ const treeColumns = [{
     },
 }]
 const TreeGrid = () => {
-    return <Grid
-        rowkey='id'
-        columns={treeColumns}
-        dataSource={treeDataSource}
-        serialNumber
-        treeData
-        boxColumnIndex={0}
-        rowSelection
-        // rowSelection={{
-        //     type: 'multiple',
-        //     selectedKeys,
-        //     selectedRows,
-        //     onSelect
-        // }}
-        rowBuffer={1}
-        groupSuppressAutoColumn
-        // editChangeCallback={onEditChangeCallback}
-        // onReady={onReady}
-        openEditSign
-        getDataPath={(data) => data.filePath}
+    const [selectedKeys, setSelectedKeys] = useState([]);
+    const [selectedRows, setSelectedRows] = useState([]);
+    const [editable, setEditable] = useState(false)
+    const apiRef = useRef(null)
+    const gridManagerRef = useRef(null)
+    const onReady = useCallback((params, manager) => {
+        apiRef.current = params.api;
+        gridManagerRef.current = manager;
+    })
+    const onSelect = useCallback((keys, rows) => {
+        setSelectedKeys(keys);
+        setSelectedRows(rows)
+    }, [])
+    const onTagRemove = useCallback(() => {
+        gridManagerRef.current.tagRemove(selectedKeys);
+    }, [selectedKeys])
+    const onCancelEdit = useCallback(() => {
+        setEditable(false);
+        gridManagerRef.current.cancel()
+    }, [])
+    return <Fragment>
+        <Header extra={<Fragment>
+            {!editable ? <Button size="small" icon='edit' onClick={() => setEditable(true)} /> : <Fragment>
+                <Button size="small" icon='poweroff' onClick={onCancelEdit} />
+                <Button size="small" icon='minus' onClick={onTagRemove} />
+                <Button size="small" icon='undo' onClick={() => gridManagerRef.current.undo()} />
+                <Button size="small" icon='redo' onClick={() => gridManagerRef.current.redo()} />
+            </Fragment>}
+        </Fragment>
+        }
+            title="基本Grid"
+            type="line"
+        />
+        <Grid
+            rowkey='id'
+            columns={treeColumns}
+            dataSource={treeDataSource}
+            serialNumber
+            treeData
+            boxColumnIndex={0}
+            rowSelection
+            rowSelection={{
+                type: 'multiple',
+                selectedKeys,
+                selectedRows,
+                onSelect
+            }}
+            rowBuffer={1}
+            groupSuppressAutoColumn
+            // editChangeCallback={onEditChangeCallback}
+            onReady={onReady}
+            openEditSign
+            getDataPath={(data) => data.filePath}
 
-    />
+        />
+    </Fragment>
+
 }
 /*! End !*/
 const config = {
@@ -362,7 +411,7 @@ const config = {
         {
             title: '基础Grid',
             describe: "基础Grid",
-            cmp: BaiscGrid
+            cmp: TreeGrid
         }
     ]
 }

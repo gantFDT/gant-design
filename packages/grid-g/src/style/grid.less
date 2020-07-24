@@ -1,4 +1,31 @@
 :global {
+  .gant-cell-tooltip {
+    position: absolute;
+    pointer-events: none;
+    transition: opacity 1s;
+    min-width: 80px;
+    
+  }
+
+  .gant-cell-tooltip.ag-tooltip-hiding {
+    opacity: 0;
+  }
+  .gant-cell-tooltip-content {
+    font-size: 12px;
+    padding: 0px 5px;
+    line-height: 24px;
+    color: #f5222d;
+    // background-color: rgba(175,175, 175, 0.65);
+    background-color: #fff;
+    // border-radius: 3px;
+    white-space: nowrap;
+    border: 1px red solid;
+  }
+  .gantd-grid-footer {
+    height: 30px;
+    overflow: hidden;
+    display: flex;
+  }
   .gant-selected-agrid-title {
     line-height: 24px;
     font-size: 12px;
@@ -30,16 +57,16 @@
       width: 24px;
       height: 24px;
       line-height: 24px;
-      background: rgba(128,128,128,0.1);
+      background: rgba(128, 128, 128, 0.1);
       cursor: pointer;
       font-size: 16px;
       text-align: center;
       border-radius: 3px;
       transition: all 0.3s;
-      &:hover{
+      &:hover {
         background: var(--component-background);
         transition: all 0.3s;
-        box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
       }
     }
     .gant-grid-row-cut {

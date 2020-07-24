@@ -11,7 +11,7 @@ import Header from 'header'
 const basicColumns = [{
     fieldName: "name",
     title: "姓名",
-    cellRenderer: 'gantGroupCellRenderer',
+    cellRenderer: 'agGroupCellRenderer',
     editConfig: {
         component: Input,
         editable: true,
@@ -36,7 +36,9 @@ const basicColumns = [{
     editConfig: {
         component: InputNumber,
         signable: true,
-        editable: true,
+        editable: (params) => {
+            return params.data.age > 30
+        },
         rules: {
             type: "number",
             min: 10,
@@ -46,7 +48,8 @@ const basicColumns = [{
 },
 {
     fieldName: "county",
-    title: "国家"
+    title: "国家",
+    render: (value) => value + 222
 },
 {
     fieldName: "recored.address",
@@ -67,7 +70,7 @@ const basicColumns = [{
             }
         ]
     }
-    
+
 },
 ]
 const RandomCreate = () => ({
@@ -141,8 +144,17 @@ const BaiscGrid = () => {
         gridManagerRef.current.remove(selectedKeys);
     }, [selectedKeys])
     const onSave = useCallback(async () => {
-        console.log('---->', gridManagerRef.current.loading)
         const errors = await gridManagerRef.current.validate();
+        if (gridManagerRef.current.loading) {
+            gridManagerRef.current.loadingCallback(() => {
+                gridManagerRef.current.save(() => {
+                    const dataSource = gridManagerRef.current.getPureData();
+                    setDataSource(dataSource);
+                    setEditable(false);
+                    return dataSource
+                })
+            })
+        }
         if (errors) return
         gridManagerRef.current.save(() => {
             const dataSource = gridManagerRef.current.getPureData();
@@ -170,6 +182,7 @@ const BaiscGrid = () => {
                 type="line"
             />
             <Grid
+                tooltipShowDelay={10}
                 rowkey='ip'
                 loading={loading}
                 columns={basicColumns}
@@ -214,7 +227,7 @@ const BaiscGrid = () => {
                         pageSize: 20,
                         current: current,
                         total: 100,
-                        onChange: onPageChange
+                        onChange: onPageChange,
                     }
                 }
 

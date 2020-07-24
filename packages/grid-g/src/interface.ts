@@ -87,7 +87,7 @@ export type EditConfig<T> = {
   refName?: string;
   valuePropName?: string;
   rules?: RuleItem | RuleItem[];
-  signable: ColumnEdiatble<T>;
+  signable: ColumnSignable;
 };
 export interface CreateConfig {
   id: string; // id对应字段名称
@@ -95,8 +95,8 @@ export interface CreateConfig {
   toPath: (parentPath: string[], data?: any) => any;
   defaultParentPath?: string[] | number[];
 }
-export type ColumnEdiatble<T> = boolean | ((record: T) => boolean);
-
+export type ColumnEdiatble<T> = boolean | ((record: T,params:any) => boolean);
+export type ColumnSignable= boolean | ((params:any) => boolean);
 export type RowKey<T> = (data: T) => string;
 
 // Column Api
@@ -140,12 +140,15 @@ export interface Columns<T extends {} = {}> extends ColDef {
   headerGroupComponentParams?: any;
 }
 
-export type Pagination = Omit<
+export type GantPaginationProps = Omit<
   ProtoExtends<
     PaginationProps,
     {
       beginIndex?: number;
       onChange?: (beginIndex: number, pageSize?: number, current?: number) => void;
+      addonAfter?: string | React.ReactNode;
+      addonBefore?: string | React.ReactNode;
+      countLimit?: number;
     }
   >,
   'onShowSizeChange'
@@ -167,7 +170,7 @@ export interface Props<T extends any> {
   width?: string | number;
   height?: string | number;
   treeData?: boolean;
-  pagination: Pagination;
+  pagination: GantPaginationProps;
   loading: boolean;
   className: string;
   isServerSideGroup: (data: any) => boolean;
