@@ -381,6 +381,7 @@ export default class GridManage {
     const targetArray = Array.isArray(targetKeys) ? targetKeys : [targetKeys];
     if (targetArray.length <= 0) return;
     const removeNodes = getAllChildrenNode(targetArray, this.agGridApi, deleteChildren);
+    console.log("--->",removeNodes)
     const { hisRecords, newRecords, removeIndexs, removeRecords: remove } = removeTagData(removeNodes);
     if (newRecords.length == 0 && remove.length == 0) return;
     this.batchUpdateGrid({ update: newRecords, remove });

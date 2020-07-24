@@ -87,7 +87,7 @@ export type EditConfig<T> = {
   refName?: string;
   valuePropName?: string;
   rules?: RuleItem | RuleItem[];
-  signable: ColumnEdiatble<T>;
+  signable: ColumnSignable;
 };
 export interface CreateConfig {
   id: string; // id对应字段名称
@@ -96,7 +96,7 @@ export interface CreateConfig {
   defaultParentPath?: string[] | number[];
 }
 export type ColumnEdiatble<T> = boolean | ((record: T,params:any) => boolean);
-
+export type ColumnSignable= boolean | ((params:any) => boolean);
 export type RowKey<T> = (data: T) => string;
 
 // Column Api

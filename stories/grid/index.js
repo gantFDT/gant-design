@@ -354,7 +354,7 @@ const TreeGrid = () => {
         setSelectedRows(rows)
     }, [])
     const onTagRemove = useCallback(() => {
-        gridManagerRef.current.remove(selectedKeys);
+        gridManagerRef.current.tagRemove(selectedKeys);
     }, [selectedKeys])
     const onCancelEdit = useCallback(() => {
         setEditable(false);
@@ -411,7 +411,7 @@ const config = {
         {
             title: '基础Grid',
             describe: "基础Grid",
-            cmp: BaiscGrid
+            cmp: TreeGrid
         }
     ]
 }
