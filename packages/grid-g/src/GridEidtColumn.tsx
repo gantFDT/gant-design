@@ -1,16 +1,8 @@
-import React, {
-  forwardRef,
-  useImperativeHandle,
-  useState,
-  useRef,
-  useCallback,
-  useMemo,
-  useEffect,
-} from 'react';
+import React, { forwardRef, useImperativeHandle, useState, useRef, useCallback, useMemo, useEffect } from 'react';
 import { RowNode } from '@ag-grid-community/core';
 import classnames from 'classnames';
 import { EditStatus } from '@data-cell';
-import { set, cloneDeep, get, isEmpty, debounce } from 'lodash';
+import { set, cloneDeep, get, isEmpty, debounce, findIndex } from 'lodash';
 import { isEqualObj } from './gridManager/utils';
 import { stopPropagationForAgGrid } from './utils';
 const defalutProps = {
@@ -27,7 +19,7 @@ export default WrapperComponent =>
       colDef: { field },
       props: fieldProps,
       changeFormatter,
-      context: { size, editRowDataChanged, editingRowDataChange, watchEditChange },
+      context: { size, editRowDataChanged, gridManager, editingRowDataChange, watchEditChange, onCellEditChange, onCellEditingChange, getRowNodeId },
       refName = 'wrapperRef',
       valuePropName = 'value',
       node,
@@ -40,18 +32,39 @@ export default WrapperComponent =>
       return fieldProps;
     }, [fieldProps, node.data, props]);
     const onChange = useCallback(
-      val => {
+      async (val: any) => {
         let chageVal = val;
         let { data } = node;
         data = cloneDeep(data);
         if (typeof changeFormatter === 'function') chageVal = changeFormatter(val, data);
+        const editData = set(data, field, chageVal);
+        let res = editData;
+        if (onCellEditingChange) {
+          res = await onCellEditingChange(editData, field, chageVal, value);
+          res = Array.isArray(res) ? res : [res];
+          const resIndex = findIndex(res, function(item) {
+            return getRowNodeId(item) === getRowNodeId(data);
+          });
+          chageVal = get(res, `[${resIndex}].${field}`);
+        }
+        console.log('---->', res, chageVal);
+        if (isEmpty(res)) return console.warn('celleditingChange must be callbak result');
         setNewValue(chageVal);
-        if (!watchEditChange)
-          editingRowDataChange(set(data, field, chageVal), field, chageVal, value);
+        gridManager.modify(res);
       },
       [changeFormatter, editingRowDataChange, field, node, watchEditChange],
     );
-
+    const onCellChanged = useCallback(
+      async newValue => {
+        const editData = cloneDeep(get(node, `data`));
+        set(editData, `${field}`, newValue);
+        if (onCellEditChange) {
+          const res = await onCellEditChange(editData, field, newValue, value);
+          gridManager.modify(res, [data]);
+        }
+      },
+      [node, field, data, onCellEditChange],
+    );
     const onBlur = useCallback(
       (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         stopEditing();
@@ -67,16 +80,12 @@ export default WrapperComponent =>
             return false;
           },
           getValue: () => {
-            if (!watchEditChange) return get(node, `data.${field}`);
-            if (isEqualObj(value, newValue)) return newValue;
-            const newData = cloneDeep(get(node, `data`));
-            set(newData, field, newValue);
-            editRowDataChanged(newData, field, newValue, value, cloneDeep(data));
-            return value;
+            onCellChanged(newValue);
+            return newValue;
           },
         };
       },
-      [value, newValue, field, data, editRowDataChanged],
+      [value, newValue, field, node, onCellChanged],
     );
     useEffect(() => {
       setTimeout(() => {
@@ -100,15 +109,7 @@ export default WrapperComponent =>
     }, [valuePropName, refName, newValue]);
     return (
       <div className={classnames('gant-grid-cell-editing')} ref={divRef}>
-        <WrapperComponent
-          wrapperRef={inputRef}
-          {...compoentProps}
-          {...defalutProps}
-          {...wrapperProps}
-          onChange={onChange}
-          size={size}
-          onBlur={onBlur}
-        />
+        <WrapperComponent wrapperRef={inputRef} {...compoentProps} {...defalutProps} {...wrapperProps} onChange={onChange} size={size} onBlur={onBlur} />
       </div>
     );
   });
