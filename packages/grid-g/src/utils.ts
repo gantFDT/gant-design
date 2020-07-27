@@ -60,6 +60,7 @@ const serialNumberCol: ColDef = {
       } = params;
       return get(params, 'data._rowType') === DataActions.add;
     },
+    'gant-cell-disable-sign': params => true,
   },
   valueFormatter: (params: any) => {
     const {
