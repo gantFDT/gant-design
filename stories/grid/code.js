@@ -36,8 +36,8 @@ const basicColumns = [{
     editConfig: {
         component: InputNumber,
         signable: true,
-        editable: (params) => {
-            return params.data.age > 30
+        editable: (data) => {
+            return data.age > 30
         },
         rules: {
             type: "number",
@@ -168,6 +168,9 @@ const BaiscGrid = () => {
             <Header extra={<Fragment>
                 <Button size="small" onClick={() => setLoading(loading => !loading)} > toggle loading </Button>
                 {!editable ? <Button size="small" icon='edit' onClick={() => setEditable(true)} /> : <Fragment>
+                    <Button size="small" icon='poweroff' onClick={() => console.log(dataSource)} >
+                        打印data
+                    </Button>
                     <Button size="small" icon='poweroff' onClick={onCancelEdit} />
                     <Button size="small" icon='plus' onClick={onCreate} />
                     <Button size="small" icon='minus' onClick={onTagRemove} />
@@ -205,10 +208,10 @@ const BaiscGrid = () => {
                 onReady={onReady}
                 openEditSign
                 getDataPath={(data) => data.path}
-                // onCellEditingChange={(record) => {
-                //     console.log('record', record)
-                //     return record
-                // }}
+                onCellEditChange={(record) => {
+                    console.log({ ...record, name: record.name + "1" })
+                    return { ...record, name: record.name + "1" }
+                }}
                 createConfig={{
                     id: 'path',
                     path: "path",

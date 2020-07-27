@@ -314,37 +314,15 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     gridManager.validateFields = validateFields;
   }, [validateFields]);
   //columns-end
-  const editRowDataChanged = useCallback(
-    async (record: any, fieldName: string, newValue: any, oldValue: any, oldRecord) => {
-      gridManager.loading = true;
-      if (typeof onCellEditChange === 'function') {
-        let newRecords = await onCellEditChange(cloneDeep(record), fieldName, newValue, oldValue);
-        return gridManager.modify(newRecords, [oldRecord]);
-      }
-      return gridManager.modify([record], [oldRecord]);
-    },
-    [onCellEditChange],
-  );
-  const editingRowDataChange = useCallback(
-    async (record, fieldName, newValue, oldValue, oldRecord) => {
-      gridManager.loading = true;
-      let modifyRecord = record;
-      if (typeof onCellEditingChange === 'function') {
-        modifyRecord = await onCellEditingChange(cloneDeep(record), fieldName, newValue, oldValue);
-      }
-      gridManager.modify(modifyRecord);
-    },
-    [onCellEditingChange],
-  );
   const onSuppressKeyboardEvent = useCallback((params: SuppressKeyboardEventParams) => {
-    const { event, colDef, data ,api} = params;
+    const { event, colDef, data, api } = params;
     if (event.key === 'Shift') {
       shiftRef.current = true;
       return false;
     }
     if (event.keyCode == 67 && (event.ctrlKey || event.composed)) {
       api.copySelectedRangeToClipboard(false);
-      return true
+      return true;
     }
     return false;
   }, []);
@@ -420,8 +398,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       isServerSideGroup,
       size,
       getDataPath: getDataPath,
-      editRowDataChanged,
-      editingRowDataChange,
       computedPagination,
       treeData,
       gridManager,
@@ -430,9 +406,11 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       createConfig,
       getRowNodeId,
       watchEditChange: typeof onCellEditChange === 'function',
+      onCellEditChange,
+      onCellEditingChange,
       ...propsContext,
     };
-  }, [propsContext, size, computedPagination, editable, showCut, errors]);
+  }, [propsContext, size, computedPagination, editable, showCut, errors, onCellEditChange, onCellEditingChange]);
   const [cancheContext, setCancheContext] = useState(context);
   useEffect(() => {
     setCancheContext(cancheContext => {
@@ -519,8 +497,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     isServerSideGroup,
                     size,
                     getDataPath: getDataPath,
-                    editRowDataChanged,
-                    editingRowDataChange,
                     computedPagination,
                     treeData,
                     ...context,
@@ -552,7 +528,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     'gant-grid-row-cut': params => get(params, 'data._rowCut'),
                     ...rowClassRules,
                   }}
-                  // enableRangeSelection={true}
                   onCellValueChanged={cellValueChanged}
                   processCellForClipboard={processCellForClipboard}
                   processDataFromClipboard={processDataFromClipboard}
