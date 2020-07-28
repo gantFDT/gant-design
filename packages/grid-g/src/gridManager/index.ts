@@ -31,6 +31,21 @@ interface AgGridConfig {
   editChangeCallback?: (boolean) => void;
   setErrors: any;
 }
+function decorator() {
+  return function(target, name, desc) {
+    return {
+      ...desc,
+      value: function(...ags) {
+        console.log('....', target, this);
+        desc.value.apply(this, ags);
+      },
+      // get: (...ags) => {
+      //   console.log(...ags);
+      //   return () => {};
+      // },
+    };
+  };
+}
 @bindAll()
 export default class GridManage {
   public agGridApi: GridApi;
@@ -41,6 +56,10 @@ export default class GridManage {
   public loading: boolean = false;
   public validateFields: Rules;
   private changeStatus: boolean = false;
+  @decorator()
+  testFn() {
+    console.log(this.agGridConfig);
+  }
   get isChanged() {
     const { remove, modify, add } = this.diff;
     const all = [...remove, ...modify, ...add];
@@ -222,6 +241,10 @@ export default class GridManage {
     });
     return rowData;
   }
+  async processData(callback: any, ags) {
+    const res = await callback.apply(callback, ags);
+    this.modify(res);
+  }
   public async modify(records: any | any[], oldRecords?: any | any[]) {
     if (isEmpty(records) && typeof records !== 'object') return;
     records = Array.isArray(records) ? records : [records];
@@ -381,7 +404,7 @@ export default class GridManage {
     const targetArray = Array.isArray(targetKeys) ? targetKeys : [targetKeys];
     if (targetArray.length <= 0) return;
     const removeNodes = getAllChildrenNode(targetArray, this.agGridApi, deleteChildren);
-    console.log("--->",removeNodes)
+    console.log('--->', removeNodes);
     const { hisRecords, newRecords, removeIndexs, removeRecords: remove } = removeTagData(removeNodes);
     if (newRecords.length == 0 && remove.length == 0) return;
     this.batchUpdateGrid({ update: newRecords, remove });
@@ -395,7 +418,7 @@ export default class GridManage {
 
   private toggleUndoRedo(hisStack: OperationAction, undo: boolean = true) {
     const { getRowNodeId } = this.agGridConfig;
-    debugger
+    debugger;
     let rowData = this.getRowData();
     if (rowData.length == 0) this.agGridApi.setRowData([]);
     let { records, recordsIndex, type } = hisStack;

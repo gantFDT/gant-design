@@ -339,22 +339,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     });
     return data;
   };
-  const onPasteStart = useCallback(params => {
-    setPasteLoading(true);
-  }, []);
-  const onPasteEnd = useCallback(
-    params => {
-      setPasteLoading(false);
-      const records: any[] = [],
-        oldRecords: any[] = [];
-      Object.keys(pasteContent).map(rowIndex => {
-        records.push(pasteContent[rowIndex].newData);
-        oldRecords.push(pasteContent[rowIndex].oldData);
-      });
-      if (!isEmpty(records)) gridManager.modify(records, oldRecords);
-    },
-    [pasteContent],
-  );
   const cellValueChanged = useCallback(
     params => {
       const {
@@ -531,8 +515,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                   onCellValueChanged={cellValueChanged}
                   processCellForClipboard={processCellForClipboard}
                   processDataFromClipboard={processDataFromClipboard}
-                  onPasteStart={onPasteStart}
-                  onPasteEnd={onPasteEnd}
                   getContextMenuItems={contextMenuItems as any}
                   modules={[...AllModules, ...AllCommunityModules]}
                   suppressKeyboardEvent={onSuppressKeyboardEvent}

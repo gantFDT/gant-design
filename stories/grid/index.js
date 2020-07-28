@@ -167,11 +167,12 @@ const BaiscGrid = () => {
     return (
         <Fragment>
             <Header extra={<Fragment>
+                <Button size="small" onClick={() => gridManagerRef.current.testFn()} >
+                    测试
+            </Button>
                 <Button size="small" onClick={() => setLoading(loading => !loading)} > toggle loading </Button>
                 {!editable ? <Button size="small" icon='edit' onClick={() => setEditable(true)} /> : <Fragment>
-                    <Button size="small" icon='poweroff' onClick={() => console.log(dataSource)} >
-                        打印data
-                    </Button>
+
                     <Button size="small" icon='poweroff' onClick={onCancelEdit} />
                     <Button size="small" icon='plus' onClick={onCreate} />
                     <Button size="small" icon='minus' onClick={onTagRemove} />

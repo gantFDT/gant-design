@@ -47,7 +47,6 @@ export default WrapperComponent =>
           });
           chageVal = get(res, `[${resIndex}].${field}`);
         }
-        console.log('---->', res, chageVal);
         if (isEmpty(res)) return console.warn('celleditingChange must be callbak result');
         setNewValue(chageVal);
         gridManager.modify(res);
