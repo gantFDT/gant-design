@@ -4,12 +4,13 @@
     pointer-events: none;
     transition: opacity 1s;
     min-width: 80px;
-    
+
   }
 
   .gant-cell-tooltip.ag-tooltip-hiding {
     opacity: 0;
   }
+
   .gant-cell-tooltip-content {
     font-size: 12px;
     padding: 0px 5px;
@@ -21,27 +22,34 @@
     white-space: nowrap;
     border: 1px red solid;
   }
+
   .gantd-grid-footer {
     height: 30px;
     overflow: hidden;
     display: flex;
   }
+
   .gant-selected-agrid-title {
     line-height: 24px;
     font-size: 12px;
-    > p {
+
+    >p {
       float: left;
     }
-    > div {
+
+    >div {
       float: right;
     }
+
     button {
       font-size: 12px;
     }
+
     height: 32px;
     line-height: 32px;
     overflow: hidden;
   }
+
   .gant-grid {
     .gant-ag-wrapper {
       position: relative;
@@ -53,6 +61,7 @@
       right: 18px;
       z-index: 1000;
     }
+
     .gant-grid-selected-box {
       width: 24px;
       height: 24px;
@@ -63,15 +72,18 @@
       text-align: center;
       border-radius: 3px;
       transition: all 0.3s;
+
       &:hover {
         background: var(--component-background);
         transition: all 0.3s;
         box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
       }
     }
+
     .gant-grid-row-cut {
       background-color: transparent !important;
       opacity: 0.6;
+
       &::before {
         content: '';
         position: absolute;
@@ -84,57 +96,73 @@
         opacity: 0.5;
       }
     }
+
     .ag-ltr {
+
       .ag-selection-checkbox,
       .ag-group-expanded,
       .ag-group-contracted {
         margin-right: 4px !important;
       }
+
       .ag-cell-wrapper.ag-row-group-leaf-indent {
         margin-left: 20px;
       }
+
       .ag-row-group-indent-(@count) when (@count > 0) {
         .ag-row-group-indent-((@count - 1));
+
         .ag-cell-wrapper.ag-row-group-indent-@{count} {
           padding-left: (18px * @count);
+
           &.gant-row-group-indent-@{count} {
             padding-left: (0px * @count);
           }
         }
       }
+
       .ag-row-group-indent-(20);
     }
 
     .ag-header-cell.gant-padding-h-3 {
       padding: 0px 3px;
     }
+
     .ag-selection-checkbox {
       z-index: 2;
     }
+
     .ag-cell.ag-cell-inline-editing,
     .ag-cell {
       height: 31px;
       border: none !important;
       line-height: 32px;
-      .ag-cell-wrapper > *:not(.ag-cell-value):not(.ag-group-value) {
+
+      .ag-cell-wrapper>*:not(.ag-cell-value):not(.ag-group-value) {
         height: 31px;
       }
+
       perspective: 1000;
       backface-visibility: hidden;
       transform: translateZ(0);
     }
+
     &-sm {
+
       .ag-cell.ag-cell-inline-editing,
       .ag-cell {
         height: 23px !important;
         line-height: 24px !important;
-        .ag-cell-wrapper > *:not(.ag-cell-value):not(.ag-group-value) {
+
+        .ag-cell-wrapper>*:not(.ag-cell-value):not(.ag-group-value) {
           height: 24px !important;
         }
       }
     }
+
     .gant-grid-pagination.mini {
       padding: 3px 5px;
+
       .ant-pagination-options {
         line-height: 24px;
       }
@@ -156,4 +184,17 @@
       }
     }
   }
+}
+
+//不显示斑马线
+.no-zebra div .ag-row-odd {
+  background-color: var(--component-background);
+}
+
+.ag-theme-balham .ag-row-hover {
+  background-color: var(--ag-row-hover-color, #ecf0f1) !important;
+}
+
+.ag-theme-balham .ag-row-selected {
+  background-color: var(--ag-selected-row-background-color, #b7e4ff)!important;
 }
