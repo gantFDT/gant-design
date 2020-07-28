@@ -29,6 +29,7 @@ const langs = {
   en: en,
   'zh-cn': zh,
 };
+
 export const defaultProps = {
   /**加载状态 */
   loading: false,
@@ -235,7 +236,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       const extraKeys: string[] = [];
       const extraRows: any[] = [];
       innerSelectedRows.map(itemRow => {
-        const index = findIndex(dataSource, function(itemData) {
+        const index = findIndex(dataSource, function (itemData) {
           return getRowNodeId(itemData) === getRowNodeId(itemRow);
         });
         if (index < 0 && itemRow._rowType !== DataActions.add) {
@@ -374,6 +375,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     }
     return notRemove;
   }, []);
+
   // context 变化
   const context = useMemo(() => {
     return {
@@ -429,7 +431,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       {(local, localeCode = 'zh-cn') => {
         let lang = langs[localeCode] || langs['zh-cn'];
         const locale = { ...lang, ...customLocale };
-        const contextMenuItems = function(params: GetContextMenuItemsParams) {
+        const contextMenuItems = function (params: GetContextMenuItemsParams) {
           return gantGetcontextMenuItems(params, {
             downShift: shiftRef.current,
             onRowsCut,
@@ -442,7 +444,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
           <Spin spinning={loading}>
             <div style={{ width, height }} className={classnames('gant-grid', `gant-grid-${getSizeClassName(size)}`, openEditSign && `gant-grid-edit`, editable && 'gant-grid-editable')}>
               <div
-                className="ag-theme-balham gant-ag-wrapper"
+                className={classnames("ag-theme-balham", "gant-ag-wrapper", editable && 'no-zebra')}
                 style={{
                   width: '100%',
                   height: computedPagination ? 'calc(100% - 30px)' : '100%',
