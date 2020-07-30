@@ -137,12 +137,10 @@ export function getAllChildrenNode(targetKeys: any[], api: GridApi, deleteChildr
     const itemNode = api.getRowNode(key);
     itemNode && targetNodes.push(itemNode);
   });
-
   if (deleteChildren) return targetNodes;
   const allNodes: RowNode[] = [];
   const groupNodes = groupBy(targetNodes, 'level');
   let level = min(Object.keys(groupNodes).map(level => level));
-  console.log(level, groupNodes[level]);
   while (!isEmpty(groupNodes[level])) {
     const list = groupNodes[level];
     let nextLevel: any = parseInt(level) + 1;

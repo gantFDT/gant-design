@@ -1,13 +1,5 @@
 import { AgGridReactProps } from '@ag-grid-community/react';
-import {
-  GridApi as AgGridApi,
-  GridReadyEvent,
-  ValueFormatterParams,
-  ColDef,
-  IServerSideGetRowsParams,
-  ColumnApi as AgColumnApi,
-  RowNode,
-} from '@ag-grid-community/core';
+import { GridApi as AgGridApi, GridReadyEvent, ValueFormatterParams, ColDef, IServerSideGetRowsParams, ColumnApi as AgColumnApi, RowNode } from '@ag-grid-community/core';
 import { defaultProps, defaultRowSelection } from './index';
 import { Rules, RuleType, RuleItem } from 'async-validator';
 import { PaginationProps } from 'antd/lib/pagination';
@@ -95,8 +87,8 @@ export interface CreateConfig {
   toPath: (parentPath: string[], data?: any) => any;
   defaultParentPath?: string[] | number[];
 }
-export type ColumnEdiatble<T> = boolean | ((record: T,params:any) => boolean);
-export type ColumnSignable= boolean | ((params:any) => boolean);
+export type ColumnEdiatble<T> = boolean | ((record: T, params: any) => boolean);
+export type ColumnSignable = boolean | ((params: any) => boolean);
 export type RowKey<T> = (data: T) => string;
 
 // Column Api
@@ -157,7 +149,7 @@ export type GantPaginationProps = Omit<
 // Grid Api
 export interface Props<T extends any> {
   columns: Columns<T>[];
-  boxColumnIndex?: number;
+  boxColumnIndex?: number | string[] | string;
   dataSource: T[];
   removeShowLine: boolean;
   filter?: boolean;

@@ -39,6 +39,7 @@ export default WrapperComponent =>
         if (typeof changeFormatter === 'function') chageVal = changeFormatter(val, data);
         const editData = set(data, field, chageVal);
         let res = editData;
+        gridManager.loading = true;
         if (onCellEditingChange) {
           res = await onCellEditingChange(editData, field, chageVal, value);
           res = Array.isArray(res) ? res : [res];
@@ -58,6 +59,7 @@ export default WrapperComponent =>
         const editData = cloneDeep(get(node, `data`));
         set(editData, `${field}`, newValue);
         if (onCellEditChange) {
+          gridManager.loading = true;
           const res = await onCellEditChange(editData, field, newValue, value);
           gridManager.modify(res, [data]);
         }

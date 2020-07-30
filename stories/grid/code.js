@@ -135,8 +135,8 @@ const BaiscGrid = () => {
     }, [gridChange])
     const onCreate = useCallback(() => {
         const createData = RandomCreate();
-        gridManagerRef.current.create(createData);
-    }, []);
+        gridManagerRef.current.create(createData, selectedKeys);
+    }, [selectedKeys]);
     const onTagRemove = useCallback(() => {
         gridManagerRef.current.tagRemove(selectedKeys);
     }, [selectedKeys]);
@@ -144,35 +144,36 @@ const BaiscGrid = () => {
         gridManagerRef.current.remove(selectedKeys);
     }, [selectedKeys])
     const onSave = useCallback(async () => {
-        const errors = await gridManagerRef.current.validate();
-        if (gridManagerRef.current.loading) {
-            gridManagerRef.current.loadingCallback(() => {
-                gridManagerRef.current.save(() => {
-                    const dataSource = gridManagerRef.current.getPureData();
-                    setDataSource(dataSource);
-                    setEditable(false);
-                    return dataSource
-                })
+        const { onDataAsyncEnd, validate, getPureData, diff } = gridManagerRef.current
+        onDataAsyncEnd(async () => {
+            console.log('----->', diff)
+            const errors = await validate();
+            if (errors) return
+            gridManagerRef.current.save(() => {
+                const dataSource = getPureData();
+                setDataSource(dataSource);
+                setEditable(false);
+                return dataSource
             })
-        }
-        if (errors) return
-        gridManagerRef.current.save(() => {
-            const dataSource = gridManagerRef.current.getPureData();
-            setDataSource(dataSource);
-            setEditable(false);
-            return dataSource
         })
     }, [])
     return (
         <Fragment>
             <Header extra={<Fragment>
-                <Button size="small" onClick={() => gridManagerRef.current.testFn()} >
+                <Button size="small" onClick={() => {
+                    console.log(gridManagerRef.current.diff)
+                }} >
                     测试
             </Button>
                 <Button size="small" onClick={() => setLoading(loading => !loading)} > toggle loading </Button>
                 {!editable ? <Button size="small" icon='edit' onClick={() => setEditable(true)} /> : <Fragment>
-
                     <Button size="small" icon='poweroff' onClick={onCancelEdit} />
+                    <Button size="small" onClick={() => {
+                        const [key] = selectedKeys;
+                        console.log(apiRef.current.getRowNode(key))
+                    }} >
+
+                    </Button>
                     <Button size="small" icon='plus' onClick={onCreate} />
                     <Button size="small" icon='minus' onClick={onTagRemove} />
                     <Button size="small" icon='delete' onClick={onRemove} />
@@ -194,7 +195,7 @@ const BaiscGrid = () => {
                 dataSource={dataSource}
                 serialNumber
                 treeData
-                boxColumnIndex={2}
+                boxColumnIndex={['name', 'county', 'age']}
                 // isServerSideGroup={(data) => data.leaf}
                 rowSelection={{
                     type: 'multiple',
@@ -209,8 +210,10 @@ const BaiscGrid = () => {
                 onReady={onReady}
                 openEditSign
                 getDataPath={(data) => data.path}
-                onCellEditChange={(record) => {
-                    console.log({ ...record, name: record.name + "1" })
+                onCellEditChange={async (record) => {
+                    await new Promise(resolve => {
+                        setTimeout(() => resolve(111), 3000)
+                    })
                     return { ...record, name: record.name + "1" }
                 }}
                 createConfig={{

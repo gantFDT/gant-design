@@ -161,7 +161,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     if (rowSel) return { ...defaultRowSelection, ...rowSel };
     return {};
   }, [rowSel]);
-  const { onSelect, selectedKeys, selectedRows, showDefalutCheckbox, type: rowSelection, defaultSelectionCol, ...selection } = gantSelection;
+  const { onSelect, selectedRows, showDefalutCheckbox, type: rowSelection, defaultSelectionCol, ...selection } = gantSelection;
 
   useEffect(() => {
     if (!editable) {
@@ -236,34 +236,34 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       const extraKeys: string[] = [];
       const extraRows: any[] = [];
       innerSelectedRows.map(itemRow => {
-        const index = findIndex(dataSource, function (itemData) {
+        const index = findIndex(dataSource, function(itemData) {
           return getRowNodeId(itemData) === getRowNodeId(itemRow);
         });
-        if (index < 0 && itemRow._rowType !== DataActions.add) {
+        if (index < 0 && !apiRef.current.getRowNode(getRowNodeId(itemRow))) {
           extraKeys.push(getRowNodeId(itemRow));
           extraRows.push(itemRow);
         }
       });
       const newSelectedKeys = [...extraKeys, ...keys];
       const newSelectedRows = [...extraRows, ...rows];
-      if (selectedKeys === undefined) {
+      if (selectedRows === undefined) {
         setInnerSelectedRows(newSelectedRows);
         selectedRowsRef.current = newSelectedKeys;
       }
       onSelect && onSelect(newSelectedKeys, newSelectedRows);
     },
-    [onSelect, dataSource, innerSelectedRows, selectedKeys],
+    [onSelect, dataSource, innerSelectedRows, selectedRows],
   );
   const onBoxSelectionChanged = useCallback(
     (keys, rows) => {
       garidShowSelectedRows(rows);
-      if (selectedKeys === undefined) {
+      if (selectedRows === undefined) {
         setInnerSelectedRows(rows);
         selectedRowsRef.current = rows;
       }
       onSelect && onSelect(keys, rows);
     },
-    [selectedKeys, garidShowSelectedRows],
+    [selectedRows, garidShowSelectedRows],
   );
   const onSelectionChanged = useCallback(
     (event: SelectionChangedEvent) => {
@@ -423,7 +423,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     });
   }, [context]);
   const hideBox = useMemo(() => {
-    return hideSelcetedBox || rowSelection == 'single';
+    return hideSelcetedBox || rowSelection !== 'multiple';
   }, [hideSelcetedBox, rowSelection]);
 
   return (
@@ -431,7 +431,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       {(local, localeCode = 'zh-cn') => {
         let lang = langs[localeCode] || langs['zh-cn'];
         const locale = { ...lang, ...customLocale };
-        const contextMenuItems = function (params: GetContextMenuItemsParams) {
+        const contextMenuItems = function(params: GetContextMenuItemsParams) {
           return gantGetcontextMenuItems(params, {
             downShift: shiftRef.current,
             onRowsCut,
@@ -444,7 +444,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
           <Spin spinning={loading}>
             <div style={{ width, height }} className={classnames('gant-grid', `gant-grid-${getSizeClassName(size)}`, openEditSign && `gant-grid-edit`, editable && 'gant-grid-editable')}>
               <div
-                className={classnames("ag-theme-balham", "gant-ag-wrapper", editable && 'no-zebra')}
+                className={classnames('ag-theme-balham', 'gant-ag-wrapper', editable && 'no-zebra')}
                 style={{
                   width: '100%',
                   height: computedPagination ? 'calc(100% - 30px)' : '100%',

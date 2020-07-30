@@ -74,15 +74,22 @@ const serialNumberCol: ColDef = {
     return serial;
   },
 };
-export const selectedMapColumns = <T>(columns: Columns<T>[], index: number = 0) => {
+export const selectedMapColumns = <T>(columns: Columns<T>[], index: number | string | string[] = 0) => {
   if (columns.length <= 0) return [];
-  const columnItem = get(columns, `[${index}]`, undefined);
-  if (!columnItem) return [];
-  const { title: headerName, fieldName: field } = columnItem;
-  return [
-    { ...defaultCheckboxColSelectionCol, headerCheckboxSelection: 'multiple' },
-    { headerName, field, flex: true },
-  ];
+  let colArray = [];
+  if (typeof index !== 'number') {
+    colArray = typeof index === 'string' ? [index] : index;
+  } else {
+    const columnItem = get(columns, `[${index}]`, columns[0]);
+    const { fieldName: field } = columnItem;
+    colArray = [field];
+  }
+  const selectedCol: any = [];
+  columns.map(colItem => {
+    const { fieldName: field, title: headerName } = colItem;
+    if (colArray.indexOf(field) >= 0) selectedCol.push({ field, headerName, flex: true });
+  });
+  return [{ ...defaultCheckboxColSelectionCol, headerCheckboxSelection: 'multiple' }, ...selectedCol];
 };
 export const mapColumns = <T>(
   columns: Columns<T>[],
@@ -170,7 +177,6 @@ export const mapColumns = <T>(
           colDef.headerClass = classnames(headerClass, required ? 'gant-header-cell-required' : 'gant-header-cell-edit');
           if (typeof signable === 'boolean' || typeof signable === 'function')
             colDef.cellClassRules = {
-              ...colDef.cellClassRules,
               'gant-cell-validate-sign': params => {
                 const show = typeof signable === 'boolean' ? signable : signable(params);
                 if (!show) return false;
@@ -180,6 +186,7 @@ export const mapColumns = <T>(
                 } = params;
                 return get(_rowError, field, false);
               },
+              ...colDef.cellClassRules,
             };
         }
         if (fixed) colDef.pinned = fixed;
