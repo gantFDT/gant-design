@@ -15,6 +15,7 @@ export default class GridManage {
   public historyStack: any[] = [];
   private redoStack: OperationAction[] = [];
   private dataAsyncFun: any = null;
+  private dataAsyncStack: any[] = [];
   public cutRows: any[];
   setingLoading: boolean = false;
   get loading() {
@@ -22,9 +23,8 @@ export default class GridManage {
   }
   set loading(value) {
     this.setingLoading = value;
-    if (value === false && this.dataAsyncFun) {
-      this.dataAsyncFun();
-      this.dataAsyncFun = null;
+    if (value === false && this.dataAsyncStack.length > 0) {
+      this.outAsyncFunStack();
     }
   }
   public validateFields: Rules;
@@ -39,10 +39,16 @@ export default class GridManage {
     const { remove, modify, add } = allDiff;
     return { remove: [...remove], modify, add };
   }
+  private async outAsyncFunStack() {
+    if (this.loading || this.dataAsyncStack.length <= 0) return;
+    const asyncFun = this.dataAsyncStack.shift();
+    await asyncFun();
+    if (this.dataAsyncStack.length > 0) this.outAsyncFunStack();
+  }
   public async onDataAsyncEnd(func) {
     if (typeof func !== 'function') return;
     if (this.loading === false) return func();
-    this.dataAsyncFun = func;
+    this.dataAsyncStack.push(func);
     return null;
   }
   private watchHistory() {

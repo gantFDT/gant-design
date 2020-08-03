@@ -239,7 +239,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
         const index = findIndex(dataSource, function(itemData) {
           return getRowNodeId(itemData) === getRowNodeId(itemRow);
         });
-        if (index < 0 && !apiRef.current.getRowNode(getRowNodeId(itemRow))) {
+        if (index < 0 && !apiRef.current.getRowNode(getRowNodeId(itemRow)) && get(itemRow, '_rowType') !== DataActions.add) {
           extraKeys.push(getRowNodeId(itemRow));
           extraRows.push(itemRow);
         }

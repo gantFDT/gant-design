@@ -146,7 +146,6 @@ const BaiscGrid = () => {
     const onSave = useCallback(async () => {
         const { onDataAsyncEnd, validate, getPureData, diff } = gridManagerRef.current
         onDataAsyncEnd(async () => {
-            console.log('----->', diff)
             const errors = await validate();
             if (errors) return
             gridManagerRef.current.save(() => {
@@ -212,7 +211,7 @@ const BaiscGrid = () => {
                 getDataPath={(data) => data.path}
                 onCellEditChange={async (record) => {
                     await new Promise(resolve => {
-                        setTimeout(() => resolve(111), 3000)
+                        setTimeout(() => resolve(111), 1000)
                     })
                     return { ...record, name: record.name + "1" }
                 }}

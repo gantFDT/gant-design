@@ -56,6 +56,7 @@ export default WrapperComponent =>
     );
     const onCellChanged = useCallback(
       async newValue => {
+        if (isEqualObj(value, newValue)) return;
         const editData = cloneDeep(get(node, `data`));
         set(editData, `${field}`, newValue);
         if (onCellEditChange) {
