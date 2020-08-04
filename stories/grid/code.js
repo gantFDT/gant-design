@@ -4,7 +4,7 @@ import React, { useMemo, useEffect, useCallback, useState, useRef, Fragment } fr
 import { mock, Random } from 'mockjs'
 import Grid from 'grid';
 import { Button, message, Dropdown, Menu, Switch, Checkbox, Modal } from "antd"
-import { Input, InputCellPhone, DatePicker, InputNumber } from "data-cell"
+import { Input, InputCellPhone, DatePicker, InputNumber ,EditStatus} from "data-cell"
 import Header from 'header'
 
 
@@ -146,7 +146,6 @@ const BaiscGrid = () => {
     const onSave = useCallback(async () => {
         const { onDataAsyncEnd, validate, getPureData, diff } = gridManagerRef.current
         onDataAsyncEnd(async () => {
-            console.log('----->', diff)
             const errors = await validate();
             if (errors) return
             gridManagerRef.current.save(() => {
@@ -159,6 +158,7 @@ const BaiscGrid = () => {
     }, [])
     return (
         <Fragment>
+            <Input  edit='EDIT' />
             <Header extra={<Fragment>
                 <Button size="small" onClick={() => {
                     console.log(gridManagerRef.current.diff)
@@ -194,7 +194,7 @@ const BaiscGrid = () => {
                 editable={editable}
                 dataSource={dataSource}
                 serialNumber
-                treeData
+                // treeData
                 boxColumnIndex={['name', 'county', 'age']}
                 // isServerSideGroup={(data) => data.leaf}
                 rowSelection={{
@@ -209,26 +209,27 @@ const BaiscGrid = () => {
                 editChangeCallback={onEditChangeCallback}
                 onReady={onReady}
                 openEditSign
+                showCut
                 getDataPath={(data) => data.path}
                 onCellEditChange={async (record) => {
-                    await new Promise(resolve => {
-                        setTimeout(() => resolve(111), 3000)
-                    })
-                    return { ...record, name: record.name + "1" }
+                    await new Promise(resolve => setTimeout(() => {
+                        resolve(10)
+                    }, 2000))
+                    return { ...record, age: record.age + 1 }
                 }}
-                createConfig={{
-                    id: 'path',
-                    path: "path",
-                    toPath: (path, data) => {
-                        if (data) {
-                            const arrPath = path
-                            arrPath.push(data.id)
-                            return arrPath.join('/') + '/'
-                        }
-                        return path.join('/') + "/"
-                    },
-                    defaultParentPath: ["313"]
-                }}
+                // createConfig={{
+                //     id: 'path',
+                //     path: "path",
+                //     toPath: (path, data) => {
+                //         if (data) {
+                //             const arrPath = path
+                //             arrPath.push(data.id)
+                //             return arrPath.join('/') + '/'
+                //         }
+                //         return path.join('/') + "/"
+                //     },
+                //     defaultParentPath: ["313"]
+                // }}
                 pagination={
                     {
                         pageSize: 20,
