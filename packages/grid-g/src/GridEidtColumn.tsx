@@ -19,7 +19,7 @@ export default WrapperComponent =>
       colDef: { field },
       props: fieldProps,
       changeFormatter,
-      context: { size, editRowDataChanged, gridManager, editingRowDataChange, watchEditChange, onCellEditChange, onCellEditingChange, getRowNodeId },
+      context: { size, gridManager, onCellEditChange, onCellEditingChange, getRowNodeId },
       refName = 'wrapperRef',
       valuePropName = 'value',
       node,
@@ -31,6 +31,23 @@ export default WrapperComponent =>
       if (typeof fieldProps === 'function') return fieldProps(node.data, props);
       return fieldProps;
     }, [fieldProps, node.data, props]);
+    const handleCellEditingChange = useCallback(
+      async (chageVal, editData) => {
+        let res = editData;
+        if (onCellEditingChange) {
+          res = await onCellEditingChange(editData, field, chageVal, value);
+          res = Array.isArray(res) ? res : [res];
+          const resIndex = findIndex(res, function(item) {
+            return getRowNodeId(item) === getRowNodeId(data);
+          });
+          const chageVal2 = get(res, `[${resIndex}].${field}`);
+          if (!isEqualObj(chageVal2, chageVal)) setNewValue(chageVal2);
+        }
+        if (isEmpty(res)) return console.warn('celleditingChange must be callbak result');
+        gridManager.modify(res);
+      },
+      [onCellEditingChange],
+    );
     const onChange = useCallback(
       async (val: any) => {
         let chageVal = val;
@@ -38,21 +55,12 @@ export default WrapperComponent =>
         data = cloneDeep(data);
         if (typeof changeFormatter === 'function') chageVal = changeFormatter(val, data);
         const editData = set(data, field, chageVal);
-        let res = editData;
+
         gridManager.loading = true;
-        if (onCellEditingChange) {
-          res = await onCellEditingChange(editData, field, chageVal, value);
-          res = Array.isArray(res) ? res : [res];
-          const resIndex = findIndex(res, function(item) {
-            return getRowNodeId(item) === getRowNodeId(data);
-          });
-          chageVal = get(res, `[${resIndex}].${field}`);
-        }
-        if (isEmpty(res)) return console.warn('celleditingChange must be callbak result');
         setNewValue(chageVal);
-        gridManager.modify(res);
+        handleCellEditingChange(chageVal, editData);
       },
-      [changeFormatter, editingRowDataChange, field, node, watchEditChange],
+      [changeFormatter, field, node, handleCellEditingChange],
     );
     const onCellChanged = useCallback(
       async newValue => {
@@ -62,6 +70,7 @@ export default WrapperComponent =>
         if (onCellEditChange) {
           gridManager.loading = true;
           const res = await onCellEditChange(editData, field, newValue, value);
+          node.setData(res);
           gridManager.modify(res, [data]);
         }
       },

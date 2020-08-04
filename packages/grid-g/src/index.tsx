@@ -461,6 +461,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     ...componentsMaps,
                     ...components,
                   }}
+                  // onCel
                   onSelectionChanged={onSelectionChanged}
                   columnDefs={columnDefs}
                   rowSelection={rowSelection}

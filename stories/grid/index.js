@@ -211,10 +211,10 @@ const BaiscGrid = () => {
                 openEditSign
                 getDataPath={(data) => data.path}
                 onCellEditChange={async (record) => {
-                    await new Promise(resolve => {
-                        setTimeout(() => resolve(111), 1000)
-                    })
-                    return { ...record, name: record.name + "1" }
+                     await new Promise(resolve=>setTimeout(()=>{
+                        resolve(10)
+                     },2000))
+                    return { ...record, age: record.age + 1 }
                 }}
                 createConfig={{
                     id: 'path',
