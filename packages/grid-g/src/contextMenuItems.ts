@@ -48,7 +48,7 @@ export const gantGetcontextMenuItems = function(params: GetContextMenuItemsParam
   }, []);
   const gridSelectedKeys = gridSelectedRows.map(item => getRowNodeId(item), []);
   const hasCut = selectedRowNodes.length <= 0 || (treeData && isEmpty(createConfig));
-  const hasPaste = selectedRowNodes.length > 1 || isEmpty(createConfig) || isEmpty(gridManager.cutRows);
+  const hasPaste = selectedRowNodes.length > 1 || (treeData && isEmpty(createConfig)) || isEmpty(gridManager.cutRows);
   const items = getContextMenuItems
     ? getContextMenuItems({
         selectedRows: gridSelectedRows,

@@ -193,7 +193,7 @@ const BaiscGrid = () => {
                 editable={editable}
                 dataSource={dataSource}
                 serialNumber
-                treeData
+                // treeData
                 boxColumnIndex={['name', 'county', 'age']}
                 // isServerSideGroup={(data) => data.leaf}
                 rowSelection={{
@@ -208,6 +208,7 @@ const BaiscGrid = () => {
                 editChangeCallback={onEditChangeCallback}
                 onReady={onReady}
                 openEditSign
+                showCut
                 getDataPath={(data) => data.path}
                 onCellEditChange={async (record) => {
                      await new Promise(resolve=>setTimeout(()=>{
@@ -215,19 +216,19 @@ const BaiscGrid = () => {
                      },2000))
                     return { ...record, age: record.age + 1 }
                 }}
-                createConfig={{
-                    id: 'path',
-                    path: "path",
-                    toPath: (path, data) => {
-                        if (data) {
-                            const arrPath = path
-                            arrPath.push(data.id)
-                            return arrPath.join('/') + '/'
-                        }
-                        return path.join('/') + "/"
-                    },
-                    defaultParentPath: ["313"]
-                }}
+                // createConfig={{
+                //     id: 'path',
+                //     path: "path",
+                //     toPath: (path, data) => {
+                //         if (data) {
+                //             const arrPath = path
+                //             arrPath.push(data.id)
+                //             return arrPath.join('/') + '/'
+                //         }
+                //         return path.join('/') + "/"
+                //     },
+                //     defaultParentPath: ["313"]
+                // }}
                 pagination={
                     {
                         pageSize: 20,
