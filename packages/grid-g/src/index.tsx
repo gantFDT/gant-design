@@ -119,6 +119,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   } = props;
   const apiRef = useRef<GridApi>();
   const shiftRef = useRef<boolean>(false);
+  const selectedChanged = useRef<boolean>(false);
   const columnsRef = useRef<ColumnApi>();
   const selectedRowsRef = useRef<string[]>([]);
   const [pasteContent, setPasetContent] = useState<any>({});
@@ -217,15 +218,22 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   // 根据数据显示选中行；
   const garidShowSelectedRows = useCallback(
     selectedRows => {
+      const timer = new Date().getTime();
       const gridSelectedRows = apiRef.current.getSelectedRows();
       const gridSelcetedKeys = gridSelectedRows.map((item = {}) => getRowNodeId(item));
-      const selectedKeys = selectedRows.map((item = {}) => getRowNodeId(item));
-      if (isEqual(selectedKeys, gridSelcetedKeys)) return;
+      const selectedKeys: string[] = selectedRows.map((item = {}) => getRowNodeId(item));
+      if (selectedKeys.length === 0) apiRef.current.deselectAll();
       const allKeys = uniq([...gridSelcetedKeys, ...selectedKeys]);
+      if (rowSelection === 'single') {
+        const [key] = selectedKeys;
+        const singleNode = apiRef.current.getRowNode(key);
+        singleNode && singleNode.setSelected(true, true);
+        return;
+      }
       allKeys.map(id => {
         const nodeItem = apiRef.current.getRowNode(id);
         if (!nodeItem) return;
-        if (selectedKeys.indexOf(id) >= 0) nodeItem.setSelected(true, rowSelection === 'single');
+        if (selectedKeys.indexOf(id) >= 0) nodeItem.setSelected(true);
         else nodeItem.setSelected(false);
       });
     },
@@ -267,7 +275,9 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   );
   const onSelectionChanged = useCallback(
     (event: SelectionChangedEvent) => {
+      if (selectedChanged.current) return;
       const rows = event.api.getSelectedRows();
+      if (isEqual(rows, selectedRowsRef.current)) return;
       const keys = rows.map(item => getRowNodeId(item));
       onSelectionChange(keys, rows);
       propsOnSelectionChanged && propsOnSelectionChanged(event);
@@ -276,14 +286,17 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   );
   useEffect(() => {
     if (!apiRef.current) return;
+    selectedChanged.current = true;
     if (selectedRows) {
       garidShowSelectedRows(selectedRows);
-      if (isEqual(selectedRows, selectedRowsRef.current)) return;
-      setInnerSelectedRows(selectedRows);
-      selectedRowsRef.current = selectedRows;
+      if (!isEqual(selectedRows, selectedRowsRef.current)) {
+        setInnerSelectedRows(selectedRows);
+        selectedRowsRef.current = selectedRows;
+      }
     } else {
       garidShowSelectedRows(selectedRowsRef.current);
     }
+    selectedChanged.current = false;
   }, [selectedRows, dataSource, garidShowSelectedRows]);
   const boxSelectedRows = useMemo(() => {
     if (selectedRows) return selectedRows;
