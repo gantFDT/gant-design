@@ -4,7 +4,7 @@ import React, { useMemo, useEffect, useCallback, useState, useRef, Fragment } fr
 import { mock, Random } from 'mockjs'
 import Grid from 'grid';
 import { Button, message, Dropdown, Menu, Switch, Checkbox, Modal } from "antd"
-import { Input, InputCellPhone, DatePicker, InputNumber } from "data-cell"
+import { Input, InputCellPhone, DatePicker, InputNumber ,EditStatus} from "data-cell"
 import Header from 'header'
 
 
@@ -158,6 +158,7 @@ const BaiscGrid = () => {
     }, [])
     return (
         <Fragment>
+            <Input  edit='EDIT' />
             <Header extra={<Fragment>
                 <Button size="small" onClick={() => {
                     console.log(gridManagerRef.current.diff)
@@ -211,9 +212,9 @@ const BaiscGrid = () => {
                 showCut
                 getDataPath={(data) => data.path}
                 onCellEditChange={async (record) => {
-                     await new Promise(resolve=>setTimeout(()=>{
+                    await new Promise(resolve => setTimeout(() => {
                         resolve(10)
-                     },2000))
+                    }, 2000))
                     return { ...record, age: record.age + 1 }
                 }}
                 // createConfig={{

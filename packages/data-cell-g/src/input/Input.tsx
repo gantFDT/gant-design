@@ -24,7 +24,7 @@ class Input extends React.Component<GantInputProps> {
     onChange && onChange(value)
   }
   render() {
-    const { strict, wrapperRef, ...props } = this.props;
+    const { strict, wrapperRef,...props } = this.props;
     // console.log("props input ", props)
 
     return (
