@@ -515,7 +515,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     sortable,
                     filter,
                     minWidth: 30,
-                    tooltip: (params: any) => 'tooltip',
+                    tooltip: (params: any) => params,
                     tooltipComponent: 'gantValidateTooltip',
                     ...defaultColDef,
                   }}
