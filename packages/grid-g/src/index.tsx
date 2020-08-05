@@ -125,7 +125,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   const [pasteContent, setPasetContent] = useState<any>({});
   const [pasteLoading, setPasteLoading] = useState(false);
   const [innerSelectedRows, setInnerSelectedRows] = useState([]);
-  const [errors, setErrors] = useState(null);
   const [clipboardData, setClipboardData] = useState('');
   const gridManager = useMemo(() => {
     return new GridManager();
@@ -192,7 +191,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       treeDataChildrenName,
       editChangeCallback,
       onRowsPasteEnd,
-      setErrors,
     });
   }, [dataSource]);
   const serverDataCallback = useCallback((groupKeys, successCallback) => {
@@ -401,7 +399,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       treeData,
       gridManager,
       showCut,
-      errors,
       createConfig,
       getRowNodeId,
       watchEditChange: typeof onCellEditChange === 'function',
@@ -409,7 +406,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       onCellEditingChange,
       ...propsContext,
     };
-  }, [propsContext, size, computedPagination, editable, showCut, errors, onCellEditChange, onCellEditingChange]);
+  }, [propsContext, size, computedPagination, editable, showCut, onCellEditChange, onCellEditingChange]);
   const [cancheContext, setCancheContext] = useState(context);
   useEffect(() => {
     setCancheContext(cancheContext => {
@@ -460,7 +457,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                 className={classnames('ag-theme-balham', 'gant-ag-wrapper', editable && 'no-zebra')}
                 style={{
                   width: '100%',
-                  height: computedPagination ? 'calc(100% - 30px)' : '100%',
+                  height:computedPagination ? 'calc(100% - 30px)' : '100%',
                 }}
               >
                 {!hideBox && <SelectedGrid onChange={onBoxSelectionChanged} getRowNodeId={getRowNodeId} columnDefs={selectedColumns as any} rowData={boxSelectedRows} />}
@@ -515,7 +512,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     sortable,
                     filter,
                     minWidth: 30,
-                    tooltip: (params: any) => 'tooltip',
+                    tooltip: (params: any) => params,
                     tooltipComponent: 'gantValidateTooltip',
                     ...defaultColDef,
                   }}
@@ -534,6 +531,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                   getContextMenuItems={contextMenuItems as any}
                   modules={[...AllModules, ...AllCommunityModules]}
                   suppressKeyboardEvent={onSuppressKeyboardEvent}
+                  tooltipMouseTrack
                 />
               </div>
               <GantPagination pagination={computedPagination} />

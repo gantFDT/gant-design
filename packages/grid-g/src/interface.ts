@@ -1,5 +1,5 @@
 import { AgGridReactProps } from '@ag-grid-community/react';
-import { GridApi as AgGridApi, GridReadyEvent, ValueFormatterParams, ColDef, IServerSideGetRowsParams, ColumnApi as AgColumnApi, RowNode } from '@ag-grid-community/core';
+import { GridApi as AgGridApi, ITooltipParams, GridReadyEvent, ValueFormatterParams, ColDef, IServerSideGetRowsParams, ColumnApi as AgColumnApi, RowNode } from '@ag-grid-community/core';
 import { defaultProps, defaultRowSelection } from './index';
 import { Rules, RuleType, RuleItem } from 'async-validator';
 import { PaginationProps } from 'antd/lib/pagination';
@@ -130,6 +130,7 @@ export interface Columns<T extends {} = {}> extends ColDef {
   headerGroupComponentFramework?: any;
   /** The custom header group component to be used for rendering the component header. If none specified the default ag-Grid is used**/
   headerGroupComponentParams?: any;
+  toolTipRender?: (params: ITooltipParams) => string | React.ReactNode;
 }
 
 export type GantPaginationProps = Omit<
@@ -137,7 +138,7 @@ export type GantPaginationProps = Omit<
     PaginationProps,
     {
       beginIndex?: number;
-      onChange?: (beginIndex: number, pageSize?: number, current?: number) => void;
+      onChange?: (beginIndex: number, pageSize?: number, current?: number, countLimit?: number) => void;
       addonAfter?: string | React.ReactNode;
       addonBefore?: string | React.ReactNode;
       countLimit?: number;

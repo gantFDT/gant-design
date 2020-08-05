@@ -7,6 +7,7 @@ import { PaginationProps } from 'antd/lib/pagination';
 import { Size, DataActions, GantPaginationProps, ColumnEdiatble, Columns } from './interface';
 import EditorCol from './GridEidtColumn';
 import { Rules, RuleItem } from 'async-validator';
+import { paginationShowTotal } from './Pagination';
 
 type Col = ColGroupDef | ColDef;
 
@@ -162,9 +163,6 @@ export const mapColumns = <T>(
               required = rules['required'];
             }
           }
-          if (!isEmpty(rules)) {
-            colDef.tooltipComponent = 'gantValidateTooltip';
-          }
           colDef.cellEditorParams = {
             props,
             changeFormatter,
@@ -184,7 +182,7 @@ export const mapColumns = <T>(
                   data: { _rowError, ...itemData } = {} as any,
                   colDef: { field },
                 } = params;
-                return get(_rowError, field, false);
+                return typeof get(_rowError, field, null) === 'string';
               },
               ...colDef.cellClassRules,
             };
@@ -278,7 +276,7 @@ export function isPagitation(p: GantPaginationProps): p is GantPaginationProps {
 export function usePagination(pagitation: GantPaginationProps): any {
   if (isPagitation(pagitation)) {
     const { onChange, pageSize: size, countLimit, total, current = 1 } = pagitation;
-    const limit = countLimit >= total && countLimit;
+    const limit = countLimit >= total && countLimit != 0;
     const defaultPagetation: GantPaginationProps = {
       size: 'small',
       defaultPageSize: 20,
@@ -298,24 +296,27 @@ export function usePagination(pagitation: GantPaginationProps): any {
       (page, pageSize) => {
         const beginIndex = (page - 1) * pageSize;
         if (onChange) {
-          onChange(beginIndex, pageSize, page);
+          limit ? onChange(beginIndex, pageSize, page, countLimit) : onChange(beginIndex, pageSize, page);
         }
       },
-      [onChange],
+      [onChange, limit, countLimit],
     );
 
     if (isnumber(pagitation.beginIndex)) {
       pagitation.current = pagitation.beginIndex / pageSize + 1;
     }
-    const showTotal = useCallback((total, range) => (total > 0 ? `第${range[0]} - ${range[1]}条，共${limit ? countLimit + current * pageSize + ' +' : total}条` : ''), [current, pageSize]);
-    return {
+    const pageInfo = {
       ...defaultPagetation,
       ...pagitation,
       onChange: onPageChange,
       onShowSizeChange: onPageChange,
-      total: limit ? countLimit + current * pageSize : total,
-      showTotal,
+      total: limit ? countLimit : total,
       pageSize,
+    };
+    const showTotal = useCallback((total, range) => paginationShowTotal(total, range, limit, { pageSize: pageInfo.pageSize, beginIndex: pageInfo.beginIndex, current: pageInfo.current, onChange: onPageChange }), [limit, onPageChange, pageInfo.pageSize, pageInfo.beginIndex, pageInfo.current]);
+    return {
+      ...pageInfo,
+      showTotal,
     };
   }
   return false;
