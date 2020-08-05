@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { Pagination } from 'antd';
+import { Pagination, Button } from 'antd';
 export default memo(function GantPagination(props: any) {
   const { pagination } = props;
   if (!pagination) return null;
@@ -13,3 +13,14 @@ export default memo(function GantPagination(props: any) {
     </div>
   );
 });
+
+export const paginationShowTotal = (total, range, limit, pagination) => {
+  if (total <= 0) return '';
+  if (limit)
+    return (
+      <>
+        {`第${range[0]} - ${range[1]}条，${total} `} <a onClick={() => pagination.onChange(pagination.beginIndex, pagination.pageSize, pagination.current)}>more +</a>
+      </>
+    );
+  return `第${range[0]} - ${range[1]}条，共${total}条`;
+};

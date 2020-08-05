@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import classnames from 'classnames';
 import { get, findIndex } from 'lodash';
 export default class GantValidateTooltip extends Component<any> {
   getReactContainerClasses() {
@@ -8,18 +9,21 @@ export default class GantValidateTooltip extends Component<any> {
     const {
       context,
       rowIndex,
-      colDef: { field },
+      colDef: { tooltip, toolTipRender, field },
     } = this.props;
     const { errors } = context;
     const rowErrors = get(errors, `${rowIndex}`, []);
     const errorIndex = findIndex(rowErrors, function(item) {
       return item.field == field;
     });
-    if (errorIndex < 0) return null;
-    const errorMsg = get(rowErrors, `${errorIndex}.message`);
+    if (!toolTipRender && errorIndex < 0) return null;
+    const errorMsg = get(rowErrors, `${errorIndex}.message`, '');
     return (
       <div className="gant-cell-tooltip">
-        <div className="gant-cell-tooltip-content">{errorMsg}</div>
+        <div className={classnames('gant-cell-tooltip-content', errorMsg && 'gant-cell-tooltip-error')}>
+          <div>{toolTipRender(this.props)}</div>
+          {errorMsg && <div className='gant-cell-tooltip-errorMsg' >{errorMsg}</div>}
+        </div>
       </div>
     );
   }

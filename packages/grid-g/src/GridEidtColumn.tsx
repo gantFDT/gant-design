@@ -91,12 +91,13 @@ export default WrapperComponent =>
             return false;
           },
           getValue: () => {
+            if (!onCellEditChange) return newValue;
             onCellChanged(newValue);
-            return newValue;
+            return value;
           },
         };
       },
-      [value, newValue, field, node, onCellChanged],
+      [value, newValue, field, node, onCellChanged, onCellEditChange],
     );
     useEffect(() => {
       setTimeout(() => {
