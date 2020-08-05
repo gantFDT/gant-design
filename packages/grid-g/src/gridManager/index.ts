@@ -226,6 +226,7 @@ export default class GridManage {
     this.historyStack = [];
     this.redoStack = [];
     this.cutRows = [];
+    this.agGridConfig.setErrors(null)
   }
   getRowData() {
     var rowData = [];

@@ -12,10 +12,10 @@ const basicColumns = [{
     fieldName: "name",
     title: "姓名",
     cellRenderer: 'agGroupCellRenderer',
-    toolTipRender: (params) => {
-        const { data } = params;
-        return data.age > 30 ? data.name : null
-    },
+    // toolTipRender: (params) => {
+    //     const { data } = params;
+    //     return data.age > 30 ? data.name : null
+    // },
     editConfig: {
         component: Input,
         editable: true,
@@ -215,12 +215,12 @@ const BaiscGrid = () => {
                 openEditSign
                 showCut
                 getDataPath={(data) => data.path}
-                onCellEditingChange={async (record) => {
-                    await new Promise(resolve => setTimeout(() => {
-                        resolve(10)
-                    }, 2000))
-                    return { ...record, age: record.age + 1 }
-                }}
+                // onCellEditingChange={async (record) => {
+                //     await new Promise(resolve => setTimeout(() => {
+                //         resolve(10)
+                //     }, 2000))
+                //     return { ...record, age: record.age + 1 }
+                // }}
                 // createConfig={{
                 //     id: 'path',
                 //     path: "path",
