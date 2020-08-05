@@ -70,7 +70,6 @@ export default WrapperComponent =>
         if (onCellEditChange) {
           gridManager.loading = true;
           const res = await onCellEditChange(editData, field, newValue, value);
-          node.setData(res);
           gridManager.modify(res, [data]);
         }
       },
@@ -78,7 +77,7 @@ export default WrapperComponent =>
     );
     const onBlur = useCallback(
       (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-        api.stopEditing(true);
+        api.stopEditing();
       },
       [stopEditing],
     );
