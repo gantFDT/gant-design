@@ -457,7 +457,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                 className={classnames('ag-theme-balham', 'gant-ag-wrapper', editable && 'no-zebra')}
                 style={{
                   width: '100%',
-                  height:400,
+                  height: computedPagination ? 'calc(100% - 30px)' : '100%',
                 }}
               >
                 {!hideBox && <SelectedGrid onChange={onBoxSelectionChanged} getRowNodeId={getRowNodeId} columnDefs={selectedColumns as any} rowData={boxSelectedRows} />}
