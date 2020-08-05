@@ -12,10 +12,10 @@ const basicColumns = [{
     fieldName: "name",
     title: "姓名",
     cellRenderer: 'agGroupCellRenderer',
-    // toolTipRender: (params) => {
-    //     const { data } = params;
-    //     return data.age > 30 ? data.name : null
-    // },
+    toolTipRender: (params) => {
+        const { data } = params;
+        return data.age > 30 ? data.name : null
+    },
     editConfig: {
         component: Input,
         editable: true,
