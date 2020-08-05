@@ -182,7 +182,7 @@ export const mapColumns = <T>(
                   data: { _rowError, ...itemData } = {} as any,
                   colDef: { field },
                 } = params;
-                return get(_rowError, field, false);
+                return typeof get(_rowError, field, null) === 'string';
               },
               ...colDef.cellClassRules,
             };

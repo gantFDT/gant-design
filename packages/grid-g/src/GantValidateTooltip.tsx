@@ -10,16 +10,12 @@ export default class GantValidateTooltip extends Component<any> {
       context,
       rowIndex,
       colDef: { tooltip, toolTipRender, field },
-      value
+      value: params,
     } = this.props;
-    const { errors } = context;
-    const rowErrors = get(errors, `${rowIndex}`, []);
-    const errorIndex = findIndex(rowErrors, function(item) {
-      return item.field == field;
-    });
-    const ToolTipRender = toolTipRender ? toolTipRender(value) : null;
-    if (!ToolTipRender && errorIndex < 0) return null;
-    const errorMsg = get(rowErrors, `${errorIndex}.message`, '');
+    const { data } = params;
+    const errorMsg = get(data, `_rowError.${field}`, null);
+    const ToolTipRender = toolTipRender ? toolTipRender(params) : null;
+    if (!ToolTipRender && !errorMsg) return null;
     return (
       <div className="gant-cell-tooltip">
         <div className={classnames('gant-cell-tooltip-content', errorMsg && 'gant-cell-tooltip-error')}>

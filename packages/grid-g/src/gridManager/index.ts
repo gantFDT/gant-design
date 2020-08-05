@@ -99,7 +99,6 @@ export default class GridManage {
     try {
       await schema.validate({ source });
       this.errorSign({}, source);
-      this.agGridConfig.setErrors(null);
       return null;
     } catch (err) {
       const { errors } = err;
@@ -126,7 +125,6 @@ export default class GridManage {
       });
       if (isEmpty(validateErros)) return;
       this.errorSign(validateErros, source);
-      this.agGridConfig.setErrors(validateErros);
       return validateErros;
     }
   }
@@ -143,7 +141,7 @@ export default class GridManage {
       if (errorsArr) {
         const _rowError: any = {};
         errorsArr.map(itemError => {
-          _rowError[itemError.field] = true;
+          _rowError[itemError.field] = itemError.message;
         });
         rowNode.setData({ ...newItemData, _rowError });
       } else {
@@ -226,7 +224,6 @@ export default class GridManage {
     this.historyStack = [];
     this.redoStack = [];
     this.cutRows = [];
-    this.agGridConfig.setErrors(null)
   }
   getRowData() {
     var rowData = [];
