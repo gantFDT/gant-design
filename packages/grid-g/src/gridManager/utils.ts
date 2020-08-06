@@ -23,7 +23,7 @@ export function getModifyData(records, getRowItemData, oldRecords, getRowNodeId)
   return { newRecords, hisRecords };
 }
 
-export function removeTagData(removeNodes: RowNode[]) {
+export function removeTagData(removeNodes: RowNode[], rowData: any[], getRowNodeId: any) {
   const hisRecords: any[] = [],
     newRecords: any[] = [],
     removeRecords: any[] = [],
@@ -32,10 +32,10 @@ export function removeTagData(removeNodes: RowNode[]) {
     const itemData = get(itemNode, 'data', {});
     let recordItem = { ...itemData, _rowType: DataActions.removeTag };
     if (itemData._rowType === DataActions.removeTag || itemData._rowType === DataActions.remove) return console.warn('Deleted data cannot be deleted');
-    const { childIndex } = itemNode;
     let hisRecordItem = { ...itemData };
     itemData._rowType !== DataActions.add ? newRecords.push(recordItem) : removeRecords.push(itemData);
-    removeIndexs.unshift(childIndex);
+    const rowIndex = findIndex(rowData, rowItemData => getRowNodeId(rowItemData) === getRowNodeId(itemData));
+    removeIndexs.unshift(rowIndex);
     hisRecords.unshift(hisRecordItem);
   });
   return { newRecords, hisRecords, removeIndexs, removeRecords };
