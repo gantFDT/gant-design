@@ -366,11 +366,13 @@ export default class GridManage {
     if (targetArray.length <= 0) return;
     const recordsIndex: number[] = [];
     const records: any[] = [];
+    const rowData = this.getRowData();
     const removeNodes = getAllChildrenNode(targetArray, this.agGridApi, deleteChildren);
     removeNodes.map(itemNode => {
       const { data, childIndex } = itemNode;
       if (data) {
-        recordsIndex.unshift(childIndex);
+        const rowIndex = findIndex(rowData, itemData => getRowNodeId(itemData) === getRowNodeId(data));
+        recordsIndex.unshift(rowIndex);
         records.unshift(data);
       }
     });
@@ -394,7 +396,7 @@ export default class GridManage {
     const targetArray = Array.isArray(targetKeys) ? targetKeys : [targetKeys];
     if (targetArray.length <= 0) return;
     const removeNodes = getAllChildrenNode(targetArray, this.agGridApi, deleteChildren);
-    const { hisRecords, newRecords, removeIndexs, removeRecords: remove } = removeTagData(removeNodes);
+    const { hisRecords, newRecords, removeIndexs, removeRecords: remove } = removeTagData(removeNodes,rowData,getRowNodeId);
     if (newRecords.length == 0 && remove.length == 0) return;
     this.batchUpdateGrid({ update: newRecords, remove });
     this.historyStack.push({
