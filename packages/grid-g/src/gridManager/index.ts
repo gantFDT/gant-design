@@ -188,7 +188,7 @@ export default class GridManage {
         });
         this.agGridApi.batchUpdateRowData({ remove: oldData }, () => {
           const rowData = this.getRowData();
-          const rowIndex = get(node, 'rowIndex', 0);
+          const rowIndex = findIndex(rowData, itemData => getRowNodeId(get(node, 'data', {})) === getRowNodeId(itemData));
           const newDataSource = up ? [...rowData.slice(0, rowIndex), ...oldData, ...rowData.slice(rowIndex)] : [...rowData.slice(0, rowIndex), rowData[rowIndex], ...oldData, ...rowData.slice(rowIndex + 1)];
           this.agGridApi.setRowData(newDataSource);
           this.cutRows = [];
