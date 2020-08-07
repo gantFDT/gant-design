@@ -19,7 +19,7 @@ export const paginationShowTotal = (total, range, limit, pagination) => {
   if (limit)
     return (
       <>
-        {`第${range[0]} - ${range[1]}条，${total} `} <a onClick={() => pagination.onChange(pagination.beginIndex, pagination.pageSize, pagination.current)}>more +</a>
+        {`第${range[0]} - ${range[1]}条，${total} `} <a onClick={() => pagination.onChange(pagination.current, pagination.pageSize, pagination.current)}>more +</a>
       </>
     );
   return `第${range[0]} - ${range[1]}条，共${total}条`;
