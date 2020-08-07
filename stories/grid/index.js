@@ -9,74 +9,78 @@ import { Button, message, Dropdown, Menu, Switch, Checkbox, Modal } from "antd"
 import { Input, InputCellPhone, DatePicker, InputNumber, EditStatus } from "@data-cell"
 import Header from '@header'
 /*! Split !*/
-const basicColumns = [{
-    fieldName: "name",
-    title: "姓名",
-    cellRenderer: 'agGroupCellRenderer',
-    toolTipRender: (params) => {
-        const { data } = params;
-        return data.age > 30 ? data.name : null
-    },
-    editConfig: {
-        component: Input,
-        editable: true,
-        signable: true,
-        rules: [
-            {
-                required: true,
-                message: "姓名不能为空"
+const basicColumns = [
+    {
+        title: 'Athlete Fields',
+        children: [{
+            fieldName: "name",
+            title: "姓名",
+            cellRenderer: 'agGroupCellRenderer',
+            toolTipRender: (params) => {
+                const { data } = params;
+                return data.age > 30 ? data.name : null
             },
-            {
-                min: 4,
-                type: 'string',
-                message: "姓名不能小于四个字符串"
+            editConfig: {
+                component: Input,
+                editable: true,
+                signable: true,
+                rules: [
+                    {
+                        required: true,
+                        message: "姓名不能为空"
+                    },
+                    {
+                        min: 4,
+                        type: 'string',
+                        message: "姓名不能小于四个字符串"
+                    }
+                ]
             }
-        ]
-    }
-},
-{
-    fieldName: "age",
-    title: "年龄",
-    render: (value) => value,
-    editConfig: {
-        component: InputNumber,
-        signable: true,
-        editable: (data) => {
-            return data.age > 30
         },
-        rules: {
-            type: "number",
-            min: 10,
-            message: "年龄不能小于10岁"
-        }
-    }
-},
-{
-    fieldName: "county",
-    title: "国家",
-    render: (value) => value + 222
-},
-{
-    fieldName: "recored.address",
-    title: "地址",
-    editConfig: {
-        component: Input,
-        editable: true,
-        signable: true,
-        rules: [
-            {
-                required: true,
-                message: "地址不能为空"
-            },
-            {
-                min: 6,
-                type: 'string',
-                message: "地址不能小于个字符串"
+        {
+            fieldName: "age",
+            title: "年龄",
+            render: (value) => value,
+            editConfig: {
+                component: InputNumber,
+                signable: true,
+                editable: (data) => {
+                    return data.age > 30
+                },
+                rules: {
+                    type: "number",
+                    min: 10,
+                    message: "年龄不能小于10岁"
+                }
             }
-        ]
-    }
+        },]
+    },
+    {
+        fieldName: "county",
+        title: "国家",
+        render: (value) => value + 222
+    },
+    {
+        fieldName: "recored.address",
+        title: "地址",
+        editConfig: {
+            component: Input,
+            editable: true,
+            signable: true,
+            rules: [
+                {
+                    required: true,
+                    message: "地址不能为空"
+                },
+                {
+                    min: 6,
+                    type: 'string',
+                    message: "地址不能小于个字符串"
+                }
+            ]
+        }
 
-},
+    },
 ]
 const RandomCreate = () => ({
     ip: Random.ip(),
@@ -424,7 +428,7 @@ const config = {
         {
             title: '基础Grid',
             describe: "基础Grid",
-            cmp: TreeGrid
+            cmp: BaiscGrid
         }
     ]
 }

@@ -312,14 +312,22 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     return selectedMapColumns(columns, boxColumnIndex);
   }, [columns, boxColumnIndex]);
   /// 导出 columns
-  const exportColumns = useMemo(() => {
+  const getExportColmns = useCallback(columns => {
     const arr: string[] = [];
-    columnDefs.map((item: any) => {
+    console.log(columns);
+    columns.map((item: any) => {
       if (item.field !== 'defalutSelection' && item.field !== 'g-index') {
-        arr.push(item.field);
+        item.field && arr.push(item.field);
+        if (Array.isArray(item.children)) {
+          const childrenArray = getExportColmns(item.children);
+          arr.push(...childrenArray);
+        }
       }
     });
     return arr;
+  }, []);
+  const exportColumns = useMemo(() => {
+    return getExportColmns(columnDefs);
   }, [columnDefs]);
   // 配置验证规则
   useEffect(() => {
@@ -457,7 +465,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                 className={classnames('ag-theme-balham', 'gant-ag-wrapper', editable && 'no-zebra')}
                 style={{
                   width: '100%',
-                  height:computedPagination ? 'calc(100% - 30px)' : '100%',
+                  height: computedPagination ? 'calc(100% - 30px)' : '100%',
                 }}
               >
                 {!hideBox && <SelectedGrid onChange={onBoxSelectionChanged} getRowNodeId={getRowNodeId} columnDefs={selectedColumns as any} rowData={boxSelectedRows} />}
@@ -486,6 +494,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                   defaultExportParams={{
                     columnKeys: exportColumns,
                     allColumns: false,
+                    columnGroups: true,
                     ...defaultExportParams,
                   }}
                   context={{

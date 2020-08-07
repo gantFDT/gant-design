@@ -180,8 +180,7 @@ export default class GridManage {
   }
   paste(node, up = true) {
     try {
-      const { getDataPath, createConfig, treeData } = this.agGridConfig;
-      console.log('===>', treeData);
+      const { getDataPath, createConfig, treeData, getRowNodeId } = this.agGridConfig;
       if (!treeData) {
         const oldData = this.cutRows.map(itemNode => {
           const { _rowCut, ...data } = get(itemNode, 'data', {});
@@ -189,7 +188,7 @@ export default class GridManage {
         });
         this.agGridApi.batchUpdateRowData({ remove: oldData }, () => {
           const rowData = this.getRowData();
-          const rowIndex = get(node, 'rowIndex', 0);
+          const rowIndex = findIndex(rowData, itemData => getRowNodeId(get(node, 'data', {})) === getRowNodeId(itemData));
           const newDataSource = up ? [...rowData.slice(0, rowIndex), ...oldData, ...rowData.slice(rowIndex)] : [...rowData.slice(0, rowIndex), rowData[rowIndex], ...oldData, ...rowData.slice(rowIndex + 1)];
           this.agGridApi.setRowData(newDataSource);
           this.cutRows = [];
@@ -208,7 +207,7 @@ export default class GridManage {
       const { newRowData, oldRowData } = getRowsToUpdate(this.cutRows, parentPath, createConfig, this.agGridConfig);
       this.agGridApi.batchUpdateRowData({ remove: oldRowData }, () => {
         const rowData = this.getRowData();
-        const rowIndex = get(node, 'rowIndex', 0);
+        const rowIndex = findIndex(rowData, itemData => getRowNodeId(get(node, 'data', {})) === getRowNodeId(itemData));
         const newDataSource = up ? [...rowData.slice(0, rowIndex), ...newRowData, ...rowData.slice(rowIndex)] : [...rowData.slice(0, rowIndex), rowData[rowIndex], ...newRowData, ...rowData.slice(rowIndex + 1)];
         this.agGridApi.setRowData(newDataSource);
         this.cutRows = [];
@@ -396,7 +395,7 @@ export default class GridManage {
     const targetArray = Array.isArray(targetKeys) ? targetKeys : [targetKeys];
     if (targetArray.length <= 0) return;
     const removeNodes = getAllChildrenNode(targetArray, this.agGridApi, deleteChildren);
-    const { hisRecords, newRecords, removeIndexs, removeRecords: remove } = removeTagData(removeNodes,rowData,getRowNodeId);
+    const { hisRecords, newRecords, removeIndexs, removeRecords: remove } = removeTagData(removeNodes, rowData, getRowNodeId);
     if (newRecords.length == 0 && remove.length == 0) return;
     this.batchUpdateGrid({ update: newRecords, remove });
     this.historyStack.push({
