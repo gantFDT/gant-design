@@ -2,18 +2,19 @@
 
 SchemaForm
 
-| 属性           | 说明                                                | 类型                | 默认值          |
-| -------------- | --------------------------------------------------- | ------------------- | --------------- |
-| schema         | 表单结构匹配单，必填                                | Schema              | {}              |
-| uiSchema       | 带有继承性，可直接赋予父级，也可指定单独filed或form | UiSchema            | {}              |
-| titleConfig    | 带有继承性，可直接赋予父级，也可指定单独filed或form | TitleConfig         | {}              |
-| className      | 添加class名称                                       | string              |                 |
-| data           | 按照schema结构赋值                                  | object              | {}              |
-| edit           | 带有继承性，可直接赋予父级，也可指定单独filed或form | EditStatus          | EditStatus.EDIT |
-| customFields   | 自定义组件                                          | array               | []              |
-| onChange       | form值改变是调用                                    | (values)=>void      | ()=>{}          |
-| onSave         | 在EditStatus.CANCEL状态下编辑单个field触发          | (id,value,cb)=>void | ()=>{}          |
-| onSchemaChange | 当依赖项改变，更新schema时的回调                    | (schema)=>void      | ()=>{}          |
+| 属性           | 说明                                                | 类型                      | 默认值          |
+| -------------- | --------------------------------------------------- | ------------------------- | --------------- |
+| schema         | 表单结构匹配单，必填                                | Schema                    | {}              |
+| uiSchema       | 带有继承性，可直接赋予父级，也可指定单独filed或form | UiSchema                  | {}              |
+| titleConfig    | 带有继承性，可直接赋予父级，也可指定单独filed或form | TitleConfig               | {}              |
+| className      | 添加class名称                                       | string                    |                 |
+| size           | 风格、紧凑性                                        | string['default'/'small'] | 'small'         |
+| data           | 按照schema结构赋值                                  | object                    | {}              |
+| edit           | 带有继承性，可直接赋予父级，也可指定单独filed或form | EditStatus                | EditStatus.EDIT |
+| customFields   | 自定义组件                                          | array                     | []              |
+| onChange       | form值改变是调用                                    | (values)=>void            | ()=>{}          |
+| onSave         | 在EditStatus.CANCEL状态下编辑单个field触发          | (id,value,cb)=>void       | ()=>{}          |
+| onSchemaChange | 当依赖项改变，更新schema时的回调                    | (schema)=>void            | ()=>{}          |
 
 Schema
 
@@ -33,18 +34,18 @@ Schema
 
 UiSchema
 
-| 属性               | 说明                                      | 类型           | 默认值 |
-| ------------------ | ----------------------------------------- | -------------- | ------ |
-| form:orders        | 字段排序，仅对form结构生效                | string[]         | []     |
-| form:gutter        | Form中filed之间的间隙                     | RowProps       | 10     |
-| form:style         | Form style样式                            | CSS            | {padding:0}     |
-| form:className     | Form className                            | string         | ''     |
-| field:col          | form中field布局方式                       | ColProps       | 24     |
-| field:labelCol     | field中Label布局方式                      | ColProps       | 24     |
-| field:wrapperCol   | field中Component布局方式                  | ColProps       | 24     |
-| field:labelAlign   | label对齐方式                             | 'left'/'right' | 'left' |
-| field:style        | field style样式                            | CSS            |      |
-| field:className    | field className                            | string         | '     |
+| 属性             | 说明                       | 类型           | 默认值      |
+| ---------------- | -------------------------- | -------------- | ----------- |
+| form:orders      | 字段排序，仅对form结构生效 | string[]       | []          |
+| form:gutter      | Form中filed之间的间隙      | RowProps       | 10          |
+| form:style       | Form style样式             | CSS            | {padding:0} |
+| form:className   | Form className             | string         | ''          |
+| field:col        | form中field布局方式        | ColProps       | 24          |
+| field:labelCol   | field中Label布局方式       | ColProps       | 24          |
+| field:wrapperCol | field中Component布局方式   | ColProps       | 24          |
+| field:labelAlign | label对齐方式              | 'left'/'right' | 'left'      |
+| field:style      | field style样式            | CSS            |             |
+| field:className  | field className            | string         | '           |
 
 
 TitleConfig  
@@ -53,19 +54,19 @@ TitleConfig
 
 ComponentType
 
-| 属性        | 说明         | 属性             | 说明           |
-| ----------- | ------------ | ---------------- | -------------- |
-| Input       | 普通输入框   | ColorPicker      | 颜色选择器     |
-| Password    | 密码输入框   | Selector         | 普通选择器     |
-| InputNumber | 数字输入框   | IconSelector     | 图标选择器     |
-| InputMoney  | 金额输入框   | LocationSelector | 地址选择器     |
-| InputUrl         | 链接输入框   | Switch           | 开关           |
-| InputEmail       | 邮箱输入框   | Checkbox         | 勾选框         |
-| InputLanguage    | 多语言输入框 | CheckboxGroup    | 勾选框组       |
-| InputCellPhone   | 手机号输入框 | Radio            | 单选           |
-| InputTelePhone   | 电话输入框   | RadioGroup       | 单选组         |
-| TextArea    | 多行输入框   | AutoComplete     | 自动完成       |
-| DatePicker  | 日期选择器   | RangePicker      | 日期区间选择器 |
+| 属性           | 说明         | 属性             | 说明           |
+| -------------- | ------------ | ---------------- | -------------- |
+| Input          | 普通输入框   | ColorPicker      | 颜色选择器     |
+| Password       | 密码输入框   | Selector         | 普通选择器     |
+| InputNumber    | 数字输入框   | IconSelector     | 图标选择器     |
+| InputMoney     | 金额输入框   | LocationSelector | 地址选择器     |
+| InputUrl       | 链接输入框   | Switch           | 开关           |
+| InputEmail     | 邮箱输入框   | Checkbox         | 勾选框         |
+| InputLanguage  | 多语言输入框 | CheckboxGroup    | 勾选框组       |
+| InputCellPhone | 手机号输入框 | Radio            | 单选           |
+| InputTelePhone | 电话输入框   | RadioGroup       | 单选组         |
+| TextArea       | 多行输入框   | AutoComplete     | 自动完成       |
+| DatePicker     | 日期选择器   | RangePicker      | 日期区间选择器 |
  
 ## 注意
 
