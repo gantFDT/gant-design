@@ -302,7 +302,12 @@ export function usePagination(pagitation: GantPaginationProps): any {
       },
       [onChange, limit, countLimit],
     );
-
+    const onMorePageChange = useCallback((page, pageSize) => {
+      const beginIndex = (page - 1) * pageSize;
+      if (onChange) {
+        onChange(beginIndex, pageSize, page);
+      }
+    }, []);
     if (isnumber(pagitation.beginIndex)) {
       pagitation.current = pagitation.beginIndex / pageSize + 1;
     }
@@ -314,7 +319,7 @@ export function usePagination(pagitation: GantPaginationProps): any {
       total: limit ? countLimit : total,
       pageSize,
     };
-    const showTotal = useCallback((total, range) => paginationShowTotal(total, range, limit, { pageSize: pageInfo.pageSize, beginIndex: pageInfo.beginIndex, current: pageInfo.current, onChange: onPageChange }), [limit, onPageChange, pageInfo.pageSize, pageInfo.beginIndex, pageInfo.current]);
+    const showTotal = useCallback((total, range) => paginationShowTotal(total, range, limit, { pageSize: pageInfo.pageSize, beginIndex: pageInfo.beginIndex, current: pageInfo.current, onChange: onMorePageChange }), [limit, onPageChange, pageInfo.pageSize, pageInfo.beginIndex, pageInfo.current]);
     return {
       ...pageInfo,
       showTotal,
