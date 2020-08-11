@@ -160,17 +160,15 @@ const withSelector = compose(
   }),
   withHandlers({
     // 从dataList或者storageList中找到数据
-    getItemLabel: ({ dataList, storageList, selectorId, getValue, getLabel, optionLabel, useStorage }) => (value, index = 0) => {
+    getItemLabel: ({ dataList, storageList, selectorId, getValue, storageToReal, getLabel, optionLabel, useStorage }) => (value, index = 0) => {
       let list = concat(dataList, storageList)
       // 启用缓存的情况下执行判断
       // fix: 解决当storageId恰好是value的前缀的情况
       if (useStorage && value.startsWith(selectorId)) {
         list = storageList
       }
-      const valueItem = list.find(item => getValue(item) === value)
-      if (valueItem) {
-        return getLabel(valueItem)
-      }
+      const valueItem = list.find(item => storageToReal(getValue(item)) === value)
+      if (valueItem) return getLabel(valueItem)
       const optionLabelArray = Array.isArray(optionLabel) ? optionLabel : [optionLabel]
       return optionLabelArray[index]
     }
