@@ -70,7 +70,8 @@ type DefaultProps<R> = ProtoExtends<typeof defaultprop, {
   onSelect?: (k: string, item: R) => void,
   selectorId?: string,
   onChange?: (key: SelectValue, items: R[]) => void,
-  wrap?: boolean
+  wrap?: boolean,
+  onApiRef?: (api: any) => void
 }>
 
 type BasicSelectorProps<T, R> = ProtoExtends<SelectProps<T>, DefaultProps<R>>
@@ -87,6 +88,7 @@ type SelectorInnerProps<T, R> = ProtoExtends<BasicSelectorProps<T, R>, {
   storageList?: R[],
   getValue?: (v: R) => string,
   updateStorage?: (d: R, u: boolean) => void,
+  cleanStorage?: () => void,
   selectRef?: AntSelect,
   setSelectRef?: (c: AntSelect) => void,
   splitStr?: string,
@@ -457,6 +459,11 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
 
     this.onSelect = this.onSelect.bind(this)
     this.onSearch = this.onSearch.bind(this)
+  }
+
+  componentDidMount() {
+    const { onApiRef, updateStorage, cleanStorage, forceUpdateStorageList } = this.props
+    onApiRef && onApiRef({ updateStorage, cleanStorage, forceUpdateStorageList })
   }
 
   onSearch = debounce((value) => {
