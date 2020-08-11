@@ -1,7 +1,7 @@
 import React, { PureComponent, Component } from 'react'
 import { Select, Icon, Tooltip } from 'antd'
 import AntSelect, { SelectProps, SelectValue as AntSelectValue } from 'antd/lib/select'
-import { debounce, isPlainObject, isNil, cloneDeep, isEqual, zipWith, groupBy, pick } from 'lodash'
+import { debounce, isPlainObject, isNil, cloneDeep, isEqual, zipWith, groupBy, pick, concat } from 'lodash'
 import { compose, defaultProps, withProps, withPropsOnChange, withState, mapProps, withHandlers, lifecycle, toClass, setDisplayName } from 'recompose'
 import warning from '@util/warning'
 import classnames from 'classnames'
@@ -161,7 +161,7 @@ const withSelector = compose(
   withHandlers({
     // 从dataList或者storageList中找到数据
     getItemLabel: ({ dataList, storageList, selectorId, getValue, getLabel, optionLabel, useStorage }) => (value, index = 0) => {
-      let list = dataList
+      let list = concat(dataList, storageList)
       // 启用缓存的情况下执行判断
       // fix: 解决当storageId恰好是value的前缀的情况
       if (useStorage && value.startsWith(selectorId)) {
