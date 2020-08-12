@@ -87,7 +87,7 @@ type SelectorInnerProps<T, R> = ProtoExtends<BasicSelectorProps<T, R>, {
   dataList?: R[],
   storageList?: R[],
   getValue?: (v: R) => string,
-  updateStorage?: (d: R, u: boolean) => void,
+  updateStorage?: (d: R[], u: boolean) => void,
   cleanStorage?: () => void,
   selectRef?: AntSelect,
   setSelectRef?: (c: AntSelect) => void,
@@ -250,31 +250,31 @@ const withSelector = compose(
   withHandlers({
     updateStorage: ({ selectorId, selectorStorageId, storageList, getValue, valueProp, setStorageList, useStorage }) => (data, update) => {
       if (!useStorage) return; // 不启用缓存
-
-      const id = `${selectorId}-${getValue(data)}`
-      let isUpdate = update // 为true表示从最近选择的项里面选择,只更新
-      if (!isUpdate) { // 
-        const existed = storageList.some(pItem => getValue(pItem) === id)
-        isUpdate = existed // 如果最近选择种已存在,将直接更新数据
-        if (!existed) { // 新增最近被选择的数据
-          if (valueProp && isPlainObject(data)) {
-            storageList.push({ ...data, [valueProp]: id })
-          } else {
-            storageList.push(id)
-          }
-          storageList.slice(-5) // 保留最近5条       
-        }
-      }
-
-      if (isUpdate) {
-        storageList.map(item => {
-          if (getValue(item) === id) { // 找到被选择的那一条，更新数据
-            return valueProp && isPlainObject(data) ? { ...data, [valueProp]: id } : id
-          }
-          return item
-        })
-      }
       const copyList = cloneDeep(storageList)
+      data.map((item) => {
+        const id = `${selectorId}-${getValue(item)}`
+        let isUpdate = update // 为true表示从最近选择的项里面选择,只更新
+        if (!isUpdate) { // 
+          const existed = copyList.some(pItem => getValue(pItem) === id)
+          isUpdate = existed // 如果最近选择种已存在,将直接更新数据
+          if (!existed) { // 新增最近被选择的数据
+            if (valueProp && isPlainObject(item)) {
+              copyList.push({ ...item, [valueProp]: id })
+            } else {
+              copyList.push(id)
+            }
+            copyList.slice(-5) // 保留最近5条       
+          }
+        }
+        if (isUpdate) {
+          copyList.map(item => {
+            if (getValue(item) === id) { // 找到被选择的那一条，更新数据
+              return valueProp && isPlainObject(item) ? { ...item, [valueProp]: id } : id
+            }
+            return item
+          })
+        }
+      })
       setStorageList(copyList) // 更新list
       localStorage.setItem(selectorStorageId, JSON.stringify(copyList)) // 更新缓存
     },
@@ -316,7 +316,7 @@ const withSelector = compose(
   //#region
   withPropsOnChange(
     ['dataList', 'filter', 'storageList', 'loading'],
-    ({ dataList, filter, storageList, selectorStorageId, cleanStorage, transformDataToList, setStorageList, updateStorage, forceUpdateStorageList, loading, useStorage, query, labelProp, getLabel, isFilter }) => {
+    ({ dataList, filter, storageList, cleanStorage, transformDataToList, loading, useStorage, query, labelProp, getLabel, isFilter }) => {
 
       let result = dataList
       if (!query && filter && isFilter) {
@@ -417,13 +417,13 @@ const withSelector = compose(
   //#endregion
   withPropsOnChange(['query'], ({ getData }) => getData()),
   // 下列属性变化的时候重新根据value值设置label
-  withPropsOnChange(['value', 'optionLabel', 'dataList'], ({ setLabelWithValue }) => setLabelWithValue()),
+  withPropsOnChange(['value', 'optionLabel', 'dataList', 'storageList'], ({ setLabelWithValue }) => setLabelWithValue()),
   // 监听label
-  withPropsOnChange(['optionLabel'], ({ optionLabel }) => {
-    return {
-      cacheLabel: optionLabel
-    }
-  }),
+  // withPropsOnChange(['optionLabel'], ({ optionLabel }) => {
+  //   return {
+  //     cacheLabel: optionLabel
+  //   }
+  // }),
   // 去支持只传递dataSource，并且希望更新dataSource的情况
   withPropsOnChange(['dataSource'], ({ dataSource, setDataList }) => setDataList(dataSource)),
   mapProps(({ dataSource, transformDataToList, ...props }) => props)
@@ -431,21 +431,22 @@ const withSelector = compose(
 
 const withChange = withPropsOnChange( // 外部value到内部value对象形式的转换
   ['value', 'cacheLabel'],
-  ({ value, cacheLabel, isMultiple }) => { // 这里的value是外部传进来的value,约定是一个基础类型的值
+  ({ value, label, cacheLabel, isMultiple }) => { // 这里的value是外部传进来的value,约定是一个基础类型的值
     if (isNil(value)) return { value: undefined }
+    let showLabel = label || cacheLabel
     if (isMultiple) {
       let sValue = undefined
-      if (Array.isArray(cacheLabel)) {
-        sValue = zipWith(value, cacheLabel, (key, label) => ({ key, label }))
+      if (Array.isArray(showLabel)) {
+        sValue = zipWith(value, showLabel, (key, label) => ({ key, label }))
       } else {
-        sValue = value.map(key => ({ key, label: cacheLabel }))
+        sValue = value.map(key => ({ key, label: showLabel }))
       }
       return {
         value: sValue.slice(0, value.length)
       }
     }
     return {
-      value: { key: value, label: cacheLabel }
+      value: { key: value, label: showLabel }
     }
   }
 )
@@ -529,7 +530,7 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
     let isStorage = select.key.startsWith(selectorId)
     if (!isStorage || originItem) { // 从搜索出来的数据中选择.或者在最近选择中选择了有搜索出来的数据
       onSelect(key, originItem)
-      updateStorage(originItem, isStorage) // isStorage为true,表示当前只是更新操作.加快updateStorage的速度
+      updateStorage([originItem], isStorage) // isStorage为true,表示当前只是更新操作.加快updateStorage的速度
     } else {
       const item = storageList.find(item => getValue(item) === select.key)
       onSelect(key, item)
