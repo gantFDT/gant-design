@@ -431,9 +431,9 @@ const withSelector = compose(
 
 const withChange = withPropsOnChange( // 外部value到内部value对象形式的转换
   ['value', 'cacheLabel'],
-  ({ value, label, cacheLabel, isMultiple }) => { // 这里的value是外部传进来的value,约定是一个基础类型的值
+  ({ value, optionLabel, cacheLabel, isMultiple }) => { // 这里的value是外部传进来的value,约定是一个基础类型的值
     if (isNil(value)) return { value: undefined }
-    let showLabel = label || cacheLabel
+    let showLabel = cacheLabel || optionLabel
     if (isMultiple) {
       let sValue = undefined
       if (Array.isArray(showLabel)) {
