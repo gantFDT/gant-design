@@ -1,7 +1,7 @@
 import React, { PureComponent, Component } from 'react';
 import { Select, Icon, Tooltip } from 'antd';
 import AntSelect, { SelectProps, SelectValue as AntSelectValue } from 'antd/lib/select';
-import { debounce, isPlainObject, isNil, cloneDeep, isEqual, zipWith, groupBy, pick } from 'lodash';
+import { debounce, isPlainObject, isNil, cloneDeep, isEqual, zipWith, groupBy, pick ,concat} from 'lodash';
 import { compose, defaultProps, withProps, withPropsOnChange, withState, mapProps, withHandlers, lifecycle, toClass, setDisplayName } from 'recompose';
 import warning from '@util/warning';
 import classnames from 'classnames';
