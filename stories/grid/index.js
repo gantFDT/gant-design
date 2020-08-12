@@ -6,7 +6,7 @@ import React, { useMemo, useEffect, useCallback, useState, useRef, Fragment } fr
 import { mock, Random } from 'mockjs'
 import Grid from '@grid';
 import { Button, message, Dropdown, Menu, Switch, Checkbox, Modal } from "antd"
-import { Input, InputCellPhone, DatePicker, InputNumber, EditStatus } from "@data-cell"
+import { Input, InputCellPhone, DatePicker, InputNumber, EditStatus, Selector } from "@data-cell"
 import Header from '@header'
 /*! Split !*/
 const basicColumns = [
@@ -18,7 +18,7 @@ const basicColumns = [
             cellRenderer: 'agGroupCellRenderer',
             toolTipRender: (params) => {
                 const { data } = params;
-                return data.age > 30 ? data.name : null
+                return data.age > 30 ? <div>{data.name}</div> : null
             },
             editConfig: {
                 component: Input,
@@ -167,7 +167,7 @@ const BaiscGrid = () => {
     }, [])
     return (
         <Fragment>
-            <Input edit='EDIT' />
+            <Selector edit='EDIT' autoFocus />
             <Header extra={<Fragment>
                 <Button size="small" onClick={() => {
                     console.log(gridManagerRef.current.diff)

@@ -250,7 +250,7 @@ const withSelector = compose(
   withHandlers({
     updateStorage: ({ selectorId, selectorStorageId, storageList, getValue, valueProp, setStorageList, useStorage }) => (data, update) => {
       if (!useStorage) return; // 不启用缓存
-      const copyList = cloneDeep(storageList)
+      let copyList = cloneDeep(storageList)
       data.map((item) => {
         const id = `${selectorId}-${getValue(item)}`
         let isUpdate = update // 为true表示从最近选择的项里面选择,只更新
@@ -615,7 +615,7 @@ const SelectorComponent = compose(
   toClass,
   withLocalStorage,
   withSelector,
-  withEdit<SelectorInnerProps<any, any>>(({ label }) => label),
+  withEdit<SelectorInnerProps<any, any>>(({ label }) => label, 'gant-selector-dropdown'),
   withChange, // 单独将value的处理放到withEdit后面，
 )(BasicSelector)
 

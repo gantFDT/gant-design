@@ -19,12 +19,13 @@ export default WrapperComponent =>
       colDef: { field },
       props: fieldProps,
       changeFormatter,
+      initValueFormatter,
       context: { size, gridManager, onCellEditChange, onCellEditingChange, getRowNodeId },
       refName = 'wrapperRef',
       valuePropName = 'value',
       node,
     } = props;
-    const [newValue, setNewValue] = useState(value);
+    const [newValue, setNewValue] = useState(initValueFormatter ? initValueFormatter(props) : value);
     const divRef = useRef<HTMLDivElement>(null);
     const inputRef: any = useRef();
     const compoentProps = useMemo(() => {
@@ -120,7 +121,7 @@ export default WrapperComponent =>
     }, [valuePropName, refName, newValue]);
     return (
       <div className={classnames('gant-grid-cell-editing')} ref={divRef}>
-        <WrapperComponent wrapperRef={inputRef} {...compoentProps} {...defalutProps} {...wrapperProps} onChange={onChange} size={size} onBlur={onBlur} />
+        <WrapperComponent autoFocus={true} wrapperRef={inputRef} {...compoentProps} {...defalutProps} {...wrapperProps} onChange={onChange} size={size} onBlur={onBlur} />
       </div>
     );
   });
