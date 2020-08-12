@@ -43,6 +43,7 @@ const defaultCheckboxColSelectionCol: ColDef = {
   headerClass: 'gant-padding-h-3',
   suppressPaste: true,
 };
+
 const serialNumberCol: ColDef = {
   width: 55,
   sortable: false,

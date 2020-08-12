@@ -60,50 +60,47 @@ export type Query<T> = (f: string) => Promise<T[]>;
 type Label = NArray<string>;
 
 // 重写defaultProps中部分数据的类型
-type DefaultProps<R> = ProtoExtends<
-  typeof defaultprop,
-  {
-    query?: Query<R>;
-    dataSource?: R[];
-    style?: React.CSSProperties;
-    optionLabel?: Label;
-    multiple?: boolean;
-    onSelect?: (k: string, item: R) => void;
-    selectorId?: string;
-    onChange?: (key: SelectValue, items: R[]) => void;
-    wrap?: boolean;
-  }
->;
+type DefaultProps<R> = ProtoExtends<typeof defaultprop, {
+  query?: Query<R>,
+  dataSource?: R[],
+  style?: React.CSSProperties,
+  optionLabel?: Label,
+  multiple?: boolean,
+  onSelect?: (k: string, item: R) => void,
+  selectorId?: string,
+  onChange?: (key: SelectValue, items: R[]) => void,
+  wrap?: boolean,
+  onApiRef?: (api: any) => void
+}>
 
-type BasicSelectorProps<T, R> = ProtoExtends<SelectProps<T>, DefaultProps<R>>;
+type BasicSelectorProps<T, R> = ProtoExtends<SelectProps<T>, DefaultProps<R>>
 
-export type SelectorProps<T, R> = ProtoExtends<WithBasicProps, BasicSelectorProps<T, R>>;
+export type SelectorProps<T, R> = ProtoExtends<WithBasicProps, BasicSelectorProps<T, R>>
 
-type SelectorInnerProps<T, R> = ProtoExtends<
-  BasicSelectorProps<T, R>,
-  {
-    setFilter?: (v: string) => void;
-    getData(): void;
-    label?: Label;
-    setLabel?: (l: Label) => void;
-    setCacheLabel?: (lable: Label) => Label;
-    dataList?: R[];
-    storageList?: R[];
-    getValue?: (v: R) => string;
-    updateStorage?: (d: R, u: boolean) => void;
-    selectRef?: AntSelect;
-    setSelectRef?: (c: AntSelect) => void;
-    splitStr?: string;
-    filter?: string;
-    forceUpdateStorageList(): void;
-    reg: RegExp;
-    addonAfter: React.ReactElement;
-    renderList: React.ReactElement[];
-    storageToReal: <T>(v: T) => T;
-    isMultiple: boolean;
-    wrapperRef?: any;
-  }
->;
+type SelectorInnerProps<T, R> = ProtoExtends<BasicSelectorProps<T, R>, {
+  setFilter?: (v: string) => void,
+  getData(): void,
+  label?: Label,
+  setLabel?: (l: Label) => void,
+  setCacheLabel?: (lable: Label) => Label,
+  dataList?: R[],
+  storageList?: R[],
+  getValue?: (v: R) => string,
+  updateStorage?: (d: R, u: boolean) => void,
+  cleanStorage?: () => void,
+  selectRef?: AntSelect,
+  setSelectRef?: (c: AntSelect) => void,
+  splitStr?: string,
+  filter?: string,
+  forceUpdateStorageList(): void,
+  reg: RegExp,
+  addonAfter: React.ReactElement,
+  renderList: React.ReactElement[],
+  storageToReal: <T>(v: T) => T,
+  isMultiple: boolean,
+  wrapperRef?: any
+}>
+
 
 const withLocalStorage = compose(
   defaultProps({
@@ -156,20 +153,18 @@ const withSelector = compose(
   }),
   withHandlers({
     // 从dataList或者storageList中找到数据
-    getItemLabel: ({ dataList, storageList, selectorId, getValue, getLabel, optionLabel, useStorage }) => (value, index = 0) => {
-      let list = dataList;
+    getItemLabel: ({ dataList, storageList, selectorId, getValue, storageToReal, getLabel, optionLabel, useStorage }) => (value, index = 0) => {
+      let list = concat(dataList, storageList)
       // 启用缓存的情况下执行判断
       // fix: 解决当storageId恰好是value的前缀的情况
       if (useStorage && value.startsWith(selectorId)) {
         list = storageList;
       }
-      const valueItem = list.find(item => getValue(item) === value);
-      if (valueItem) {
-        return getLabel(valueItem);
-      }
-      const optionLabelArray = Array.isArray(optionLabel) ? optionLabel : [optionLabel];
-      return optionLabelArray[index];
-    },
+      const valueItem = list.find(item => storageToReal(getValue(item)) === value)
+      if (valueItem) return getLabel(valueItem)
+      const optionLabelArray = Array.isArray(optionLabel) ? optionLabel : [optionLabel]
+      return optionLabelArray[index]
+    }
   }),
   withPropsOnChange(['multiple', 'mode'], ({ multiple, mode }) => ({ isMultiple: multiple || mode === 'multiple' || mode === 'tags' })),
   withPropsOnChange(['value'], ({ dataList, storageList, value, getValue, selectorId, isMultiple }) => {
@@ -466,12 +461,18 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
     this.onSearch = this.onSearch.bind(this);
   }
 
-  onSearch = debounce(value => {
-    const { onSearch, setFilter, getData } = this.props;
-    setFilter(value);
-    getData();
-    onSearch(value);
-  }, 300);
+  componentDidMount() {
+    const { onApiRef, updateStorage, cleanStorage, forceUpdateStorageList } = this.props
+    onApiRef && onApiRef({ updateStorage, cleanStorage, forceUpdateStorageList })
+  }
+
+  onSearch = debounce((value) => {
+    const { onSearch, setFilter, getData } = this.props
+    setFilter(value)
+    getData()
+    onSearch(value)
+  }, 300)
+
 
   getItem = (realKey: string) => {
     const { selectorId, dataList, storageList, getValue } = this.props;
