@@ -80,6 +80,7 @@ export type EditConfig<T> = {
   valuePropName?: string;
   rules?: RuleItem | RuleItem[];
   signable: ColumnSignable;
+  initValueFormatter?: (params: any) => any;
 };
 export interface CreateConfig {
   id: string; // id对应字段名称
@@ -130,7 +131,7 @@ export interface Columns<T extends {} = {}> extends ColDef {
   headerGroupComponentFramework?: any;
   /** The custom header group component to be used for rendering the component header. If none specified the default ag-Grid is used**/
   headerGroupComponentParams?: any;
-  toolTipRender?: (params: ITooltipParams) => string | React.ReactNode;
+  tooltipRender?: (params: ITooltipParams) => string | React.ReactNode;
 }
 
 export type GantPaginationProps = Omit<
