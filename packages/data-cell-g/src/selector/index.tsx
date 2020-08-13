@@ -1,7 +1,7 @@
 import React, { PureComponent, Component } from 'react'
 import { Select, Icon, Tooltip } from 'antd'
 import AntSelect, { SelectProps, SelectValue as AntSelectValue } from 'antd/lib/select'
-import { debounce, isPlainObject, isNil, cloneDeep, isEqual, zipWith, groupBy, pick } from 'lodash'
+import { debounce, isPlainObject, isNil, cloneDeep, isEqual, zipWith, groupBy, pick, concat } from 'lodash'
 import { compose, defaultProps, withProps, withPropsOnChange, withState, mapProps, withHandlers, lifecycle, toClass, setDisplayName } from 'recompose'
 import warning from '@util/warning'
 import classnames from 'classnames'
@@ -70,7 +70,8 @@ type DefaultProps<R> = ProtoExtends<typeof defaultprop, {
   onSelect?: (k: string, item: R) => void,
   selectorId?: string,
   onChange?: (key: SelectValue, items: R[]) => void,
-  wrap?: boolean
+  wrap?: boolean,
+  onApiRef?: (api: any) => void
 }>
 
 type BasicSelectorProps<T, R> = ProtoExtends<SelectProps<T>, DefaultProps<R>>
@@ -86,7 +87,8 @@ type SelectorInnerProps<T, R> = ProtoExtends<BasicSelectorProps<T, R>, {
   dataList?: R[],
   storageList?: R[],
   getValue?: (v: R) => string,
-  updateStorage?: (d: R, u: boolean) => void,
+  updateStorage?: (d: R[], u: boolean) => void,
+  cleanStorage?: () => void,
   selectRef?: AntSelect,
   setSelectRef?: (c: AntSelect) => void,
   splitStr?: string,
@@ -158,17 +160,15 @@ const withSelector = compose(
   }),
   withHandlers({
     // 从dataList或者storageList中找到数据
-    getItemLabel: ({ dataList, storageList, selectorId, getValue, getLabel, optionLabel, useStorage }) => (value, index = 0) => {
-      let list = dataList
+    getItemLabel: ({ dataList, storageList, selectorId, getValue, storageToReal, getLabel, optionLabel, useStorage }) => (value, index = 0) => {
+      let list = concat(dataList, storageList)
       // 启用缓存的情况下执行判断
       // fix: 解决当storageId恰好是value的前缀的情况
       if (useStorage && value.startsWith(selectorId)) {
         list = storageList
       }
-      const valueItem = list.find(item => getValue(item) === value)
-      if (valueItem) {
-        return getLabel(valueItem)
-      }
+      const valueItem = list.find(item => storageToReal(getValue(item)) === value)
+      if (valueItem) return getLabel(valueItem)
       const optionLabelArray = Array.isArray(optionLabel) ? optionLabel : [optionLabel]
       return optionLabelArray[index]
     }
@@ -201,7 +201,7 @@ const withSelector = compose(
   ),
   withHandlers({
     // 依赖转化后的value
-    transformDataToList: ({ getLabel, getValue, renderItem, hideSelected, isMultiple, value: comValue }) => list => list.map(item => {
+    transformDataToList: ({ getLabel, getValue, renderItem, optionLabelProp, hideSelected, isMultiple, value: comValue }) => list => list.map(item => {
       if (renderItem) {
         return renderItem(item, Option)
       }
@@ -218,9 +218,10 @@ const withSelector = compose(
             show = comValue !== value
           }
         }
-
         if (!show) style = { display: 'none' }
-        return <Option key={key} value={value} disabled={disabled} title={title} style={style} className={className}>
+        //支持 antd提供的回填到选择框的 Option 的属性值参数功能
+        const optionLabelPropObj = optionLabelProp && item[optionLabelProp] ? { [optionLabelProp]: item[optionLabelProp] } : {}
+        return <Option key={key} value={value} disabled={disabled} title={title} style={style} className={className} {...optionLabelPropObj}>
           {label}
         </Option>
       }
@@ -250,31 +251,31 @@ const withSelector = compose(
   withHandlers({
     updateStorage: ({ selectorId, selectorStorageId, storageList, getValue, valueProp, setStorageList, useStorage }) => (data, update) => {
       if (!useStorage) return; // 不启用缓存
-
-      const id = `${selectorId}-${getValue(data)}`
-      let isUpdate = update // 为true表示从最近选择的项里面选择,只更新
-      if (!isUpdate) { // 
-        const existed = storageList.some(pItem => getValue(pItem) === id)
-        isUpdate = existed // 如果最近选择种已存在,将直接更新数据
-        if (!existed) { // 新增最近被选择的数据
-          if (valueProp && isPlainObject(data)) {
-            storageList.push({ ...data, [valueProp]: id })
-          } else {
-            storageList.push(id)
+      let copyList = cloneDeep(storageList)
+      data.map((item) => {
+        const id = `${selectorId}-${getValue(item)}`
+        let isUpdate = update // 为true表示从最近选择的项里面选择,只更新
+        if (!isUpdate) { // 
+          const existed = copyList.some(pItem => getValue(pItem) === id)
+          isUpdate = existed // 如果最近选择种已存在,将直接更新数据
+          if (!existed) { // 新增最近被选择的数据
+            if (valueProp && isPlainObject(item)) {
+              copyList.push({ ...item, [valueProp]: id })
+            } else {
+              copyList.push(id)
+            }
+            copyList.slice(-5) // 保留最近5条       
           }
-          storageList.slice(-5) // 保留最近5条       
         }
-      }
-
-      if (isUpdate) {
-        storageList.map(item => {
-          if (getValue(item) === id) { // 找到被选择的那一条，更新数据
-            return valueProp && isPlainObject(data) ? { ...data, [valueProp]: id } : id
-          }
-          return item
-        })
-      }
-      const copyList = cloneDeep(storageList)
+        if (isUpdate) {
+          copyList.map(item => {
+            if (getValue(item) === id) { // 找到被选择的那一条，更新数据
+              return valueProp && isPlainObject(item) ? { ...item, [valueProp]: id } : id
+            }
+            return item
+          })
+        }
+      })
       setStorageList(copyList) // 更新list
       localStorage.setItem(selectorStorageId, JSON.stringify(copyList)) // 更新缓存
     },
@@ -316,7 +317,7 @@ const withSelector = compose(
   //#region
   withPropsOnChange(
     ['dataList', 'filter', 'storageList', 'loading'],
-    ({ dataList, filter, storageList, selectorStorageId, cleanStorage, transformDataToList, setStorageList, updateStorage, forceUpdateStorageList, loading, useStorage, query, labelProp, getLabel, isFilter }) => {
+    ({ dataList, filter, storageList, cleanStorage, transformDataToList, loading, useStorage, query, labelProp, getLabel, isFilter }) => {
 
       let result = dataList
       if (!query && filter && isFilter) {
@@ -419,11 +420,11 @@ const withSelector = compose(
   // 下列属性变化的时候重新根据value值设置label
   withPropsOnChange(['value', 'optionLabel', 'dataList'], ({ setLabelWithValue }) => setLabelWithValue()),
   // 监听label
-  withPropsOnChange(['optionLabel'], ({ optionLabel }) => {
-    return {
-      cacheLabel: optionLabel
-    }
-  }),
+  // withPropsOnChange(['optionLabel'], ({ optionLabel }) => {
+  //   return {
+  //     cacheLabel: optionLabel
+  //   }
+  // }),
   // 去支持只传递dataSource，并且希望更新dataSource的情况
   withPropsOnChange(['dataSource'], ({ dataSource, setDataList }) => setDataList(dataSource)),
   mapProps(({ dataSource, transformDataToList, ...props }) => props)
@@ -431,21 +432,22 @@ const withSelector = compose(
 
 const withChange = withPropsOnChange( // 外部value到内部value对象形式的转换
   ['value', 'cacheLabel'],
-  ({ value, cacheLabel, isMultiple }) => { // 这里的value是外部传进来的value,约定是一个基础类型的值
+  ({ value, optionLabel, cacheLabel, isMultiple }) => { // 这里的value是外部传进来的value,约定是一个基础类型的值
     if (isNil(value)) return { value: undefined }
+    let showLabel = cacheLabel || optionLabel
     if (isMultiple) {
       let sValue = undefined
-      if (Array.isArray(cacheLabel)) {
-        sValue = zipWith(value, cacheLabel, (key, label) => ({ key, label }))
+      if (Array.isArray(showLabel)) {
+        sValue = zipWith(value, showLabel, (key, label) => ({ key, label }))
       } else {
-        sValue = value.map(key => ({ key, label: cacheLabel }))
+        sValue = value.map(key => ({ key, label: showLabel }))
       }
       return {
         value: sValue.slice(0, value.length)
       }
     }
     return {
-      value: { key: value, label: cacheLabel }
+      value: { key: value, label: showLabel }
     }
   }
 )
@@ -457,6 +459,11 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
 
     this.onSelect = this.onSelect.bind(this)
     this.onSearch = this.onSearch.bind(this)
+  }
+
+  componentDidMount() {
+    const { onApiRef, updateStorage, cleanStorage, forceUpdateStorageList } = this.props
+    onApiRef && onApiRef({ updateStorage, cleanStorage, forceUpdateStorageList })
   }
 
   onSearch = debounce((value) => {
@@ -524,7 +531,7 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
     let isStorage = select.key.startsWith(selectorId)
     if (!isStorage || originItem) { // 从搜索出来的数据中选择.或者在最近选择中选择了有搜索出来的数据
       onSelect(key, originItem)
-      updateStorage(originItem, isStorage) // isStorage为true,表示当前只是更新操作.加快updateStorage的速度
+      updateStorage([originItem], isStorage) // isStorage为true,表示当前只是更新操作.加快updateStorage的速度
     } else {
       const item = storageList.find(item => getValue(item) === select.key)
       onSelect(key, item)
@@ -609,7 +616,7 @@ const SelectorComponent = compose(
   toClass,
   withLocalStorage,
   withSelector,
-  withEdit<SelectorInnerProps<any, any>>(({ label }) => label),
+  withEdit<SelectorInnerProps<any, any>>(({ label }) => label, 'gant-selector-dropdown'),
   withChange, // 单独将value的处理放到withEdit后面，
 )(BasicSelector)
 

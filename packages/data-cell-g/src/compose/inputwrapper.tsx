@@ -58,7 +58,7 @@ export default (_popupClassName?: string) => WrapperedComponent =>
       useEffect(() => {
         popupClassName && window.addEventListener('mousedown', handleClick);
         return () => popupClassName && window.removeEventListener('mousedown', handleClick);
-      }, [handleClick]);
+      }, [handleClick,popupClassName]);
       const handleFoucs = useCallback(
         (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
           if (isFoucs) return;

@@ -314,7 +314,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   /// 导出 columns
   const getExportColmns = useCallback(columns => {
     const arr: string[] = [];
-    console.log(columns);
     columns.map((item: any) => {
       if (item.field !== 'defalutSelection' && item.field !== 'g-index') {
         item.field && arr.push(item.field);
