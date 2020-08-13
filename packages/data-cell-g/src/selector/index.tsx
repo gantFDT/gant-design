@@ -201,7 +201,7 @@ const withSelector = compose(
   ),
   withHandlers({
     // 依赖转化后的value
-    transformDataToList: ({ getLabel, getValue, renderItem, hideSelected, isMultiple, value: comValue }) => list => list.map(item => {
+    transformDataToList: ({ getLabel, getValue, renderItem, optionLabelProp, hideSelected, isMultiple, value: comValue }) => list => list.map(item => {
       if (renderItem) {
         return renderItem(item, Option)
       }
@@ -218,9 +218,10 @@ const withSelector = compose(
             show = comValue !== value
           }
         }
-
         if (!show) style = { display: 'none' }
-        return <Option key={key} value={value} disabled={disabled} title={title} style={style} className={className}>
+        //支持 antd提供的回填到选择框的 Option 的属性值参数功能
+        const optionLabelPropObj = optionLabelProp ? { [optionLabelProp]: item[optionLabelProp] } : {}
+        return <Option key={key} value={value} disabled={disabled} title={title} style={style} className={className} {...optionLabelPropObj}>
           {label}
         </Option>
       }
@@ -417,7 +418,7 @@ const withSelector = compose(
   //#endregion
   withPropsOnChange(['query'], ({ getData }) => getData()),
   // 下列属性变化的时候重新根据value值设置label
-  withPropsOnChange(['value', 'optionLabel', 'dataList', 'storageList'], ({ setLabelWithValue }) => setLabelWithValue()),
+  withPropsOnChange(['value', 'optionLabel', 'dataList'], ({ setLabelWithValue }) => setLabelWithValue()),
   // 监听label
   // withPropsOnChange(['optionLabel'], ({ optionLabel }) => {
   //   return {
