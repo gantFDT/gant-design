@@ -220,7 +220,7 @@ const withSelector = compose(
         }
         if (!show) style = { display: 'none' }
         //支持 antd提供的回填到选择框的 Option 的属性值参数功能
-        const optionLabelPropObj = optionLabelProp ? { [optionLabelProp]: item[optionLabelProp] } : {}
+        const optionLabelPropObj = optionLabelProp && item[optionLabelProp] ? { [optionLabelProp]: item[optionLabelProp] } : {}
         return <Option key={key} value={value} disabled={disabled} title={title} style={style} className={className} {...optionLabelPropObj}>
           {label}
         </Option>
