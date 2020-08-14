@@ -332,7 +332,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   useEffect(() => {
     gridManager.validateFields = validateFields;
   }, [validateFields]);
-  //columns-end
+  // columns-end
   const onSuppressKeyboardEvent = useCallback((params: SuppressKeyboardEventParams) => {
     const { event, colDef, data, api } = params;
     if (event.key === 'Shift') {
