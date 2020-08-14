@@ -21,7 +21,7 @@ export function useLocalStorage<T>(storageKey: string, initValue: T): [T, (param
   return [localData, setLocalStorage]
 }
 
-// 分页相关
+//  分页相关
 const getPageFromIndex = (pageIndex: number, pageSize: number): number => {
   if (!pageIndex) return 1;
   return (pageIndex / pageSize) + 1;
