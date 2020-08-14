@@ -184,7 +184,7 @@ export default compose(
       props.onChange &&
         props.onChange(changedValue, {
           ...form.getFieldsValue(), // 保证其他组件的值已经更新
-          ...changedValue, // 保证当前改变值的组件值更新
+          ...changedValue,  // 保证当前改变值的组件值更新
         });
     },
   }),
