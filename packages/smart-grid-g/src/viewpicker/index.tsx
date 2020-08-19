@@ -72,6 +72,7 @@ export default function View(props: ViewProps) {
     (viewType: ViewType, view: any) => {
       view.isSystem = viewType !== 'custom'
       switchActiveView && switchActiveView(view)
+      setShowPop(false)
     },
     [switchActiveView],
   )
@@ -172,6 +173,7 @@ export default function View(props: ViewProps) {
   return (
     <>
       <Popover
+        visible={showPop}
         content={views}
         placement="bottomLeft"
         trigger="click"
