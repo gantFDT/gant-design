@@ -24,6 +24,7 @@ export default (_popupClassName?: string) => WrapperedComponent =>
       const [isFoucs, setFoucs] = useState(props.autoFocus);
       useEffect(() => {
         setFoucs(props.autoFocus);
+        if (props.autoFocus) onFocus && onFocus();
       }, [props.autoFocus]);
       const className = classnames(
         'gant-input-wrapper',
@@ -58,7 +59,7 @@ export default (_popupClassName?: string) => WrapperedComponent =>
       useEffect(() => {
         popupClassName && window.addEventListener('mousedown', handleClick);
         return () => popupClassName && window.removeEventListener('mousedown', handleClick);
-      }, [handleClick,popupClassName]);
+      }, [handleClick, popupClassName]);
       const handleFoucs = useCallback(
         (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
           if (isFoucs) return;
