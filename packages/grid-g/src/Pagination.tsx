@@ -9,7 +9,17 @@ export default memo(function GantPagination(props: any) {
     <div className="gantd-grid-footer">
       {addonBefore && <div>{addonBefore}</div>}
       <Pagination className="gant-grid-pagination" {...resetProps} />
-      {!hideRefreshBtn && <Button icon="reload" size="small" onClick={onRefresh} style={{ fontSize: 12 }} />}
+      {!hideRefreshBtn && (
+        <Button
+          icon="reload"
+          size="small"
+          onClick={() => {
+            if (onRefresh) return onRefresh();
+            console.warn('Function refresh is null');
+          }}
+          style={{ fontSize: 12 }}
+        />
+      )}
       {addonAfter && <div>{addonAfter}</div>}
     </div>
   );
