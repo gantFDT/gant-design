@@ -434,7 +434,7 @@ export default class GridManage {
       const newRecords = records.map(item => {
         const rowNode = this.agGridApi.getRowNode(getRowNodeId(item));
         const { _nextRowData, ...data } = item;
-        hisRecords.push({ ...get(rowNode, 'data') });
+        hisRecords.push({ ...get(rowNode, 'data', {}) });
         return item;
       });
       records = hisRecords;
@@ -453,7 +453,7 @@ export default class GridManage {
         } else {
           rowData = [...rowData.slice(0, removeIndex), item, ...rowData.slice(removeIndex + 1)];
           const rowNode = this.agGridApi.getRowNode(getRowNodeId(item));
-          hisRecords.push({ ...get(rowNode, 'data') });
+          hisRecords.push({ ...get(rowNode, 'data', {}) });
         }
       });
       records = hisRecords.reverse();
@@ -533,9 +533,9 @@ export default class GridManage {
       });
     });
 
-    this.agGridApi.forEachLeafNode(function(node, index) {
+    this.agGridApi.forEachNode(function(node, index) {
       const diffIndex = findIndex(diffArray, item => {
-        return getRowNodeId(item) === getRowNodeId(node.data);
+        return getRowNodeId(item) === getRowNodeId(get(node, 'data', {}));
       });
       if (diffIndex >= 0) {
         diffArray[diffIndex] = { ...diffArray[diffIndex], dataNumber: index };
@@ -547,7 +547,7 @@ export default class GridManage {
   getPureData() {
     const data: any[] = [];
     if (!this.agGridApi) return data;
-    this.agGridApi.forEachLeafNode(function(node, index) {
+    this.agGridApi.forEachNode(function(node, index) {
       let cloneData = cloneDeep(get(node, 'data', {}));
       if (!isEmpty(cloneData)) {
         const { _rowType, _rowData, _rowCut, _rowError, treeDataPath, ...itemData } = cloneData;
@@ -560,12 +560,12 @@ export default class GridManage {
     const dataSource: any = [];
     const { add, modify, remove } = params;
     const update = uniqBy([...add, ...modify], 'dataNumber');
-    this.agGridApi.forEachLeafNode(function(node, index) {
+    this.agGridApi.forEachNode(function(node, index) {
       const removeIndex = findIndex(remove, item => item.dataNumber === index);
       if (removeIndex >= 0) return;
       const updateIndex = findIndex(update, item => item.dataNumber === index);
       if (updateIndex >= 0) return dataSource.push(update[updateIndex]);
-      const { _rowType, _rowData, _rowCut, _rowError, treeDataPath, ...data } = node.data;
+      const { _rowType, _rowData, _rowCut, _rowError, treeDataPath, ...data } = get(node, 'data', {});
       dataSource.push(data);
     } as any);
     return dataSource;
