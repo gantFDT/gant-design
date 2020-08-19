@@ -143,6 +143,8 @@ export type GantPaginationProps = Omit<
       addonAfter?: string | React.ReactNode;
       addonBefore?: string | React.ReactNode;
       countLimit?: number;
+      hideRefreshBtn?:boolean;
+      onRefresh?:()=>void
     }
   >,
   'onShowSizeChange'

@@ -245,6 +245,7 @@ const BaiscGrid = () => {
                         current: current,
                         total: 100,
                         onChange: onPageChange,
+                        onRefresh:()=>{console.log('-->onRefresh')}
                     }
                 }
 

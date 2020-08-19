@@ -216,7 +216,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   // 根据数据显示选中行；
   const garidShowSelectedRows = useCallback(
     selectedRows => {
-      const timer = new Date().getTime();
       const gridSelectedRows = apiRef.current.getSelectedRows();
       const gridSelcetedKeys = gridSelectedRows.map((item = {}) => getRowNodeId(item));
       const selectedKeys: string[] = selectedRows.map((item = {}) => getRowNodeId(item));
@@ -241,7 +240,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     (keys: string[], rows: any[]) => {
       const extraKeys: string[] = [];
       const extraRows: any[] = [];
-      innerSelectedRows.map(itemRow => {
+      selectedRowsRef.current.map(itemRow => {
         const index = findIndex(dataSource, function(itemData) {
           return getRowNodeId(itemData) === getRowNodeId(itemRow);
         });
@@ -252,13 +251,13 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       });
       const newSelectedKeys = [...extraKeys, ...keys];
       const newSelectedRows = [...extraRows, ...rows];
+      selectedRowsRef.current = newSelectedRows;
       if (selectedRows === undefined) {
         setInnerSelectedRows(newSelectedRows);
-        selectedRowsRef.current = newSelectedKeys;
       }
       onSelect && onSelect(newSelectedKeys, newSelectedRows);
     },
-    [onSelect, dataSource, innerSelectedRows, selectedRows],
+    [onSelect, dataSource, selectedRows],
   );
   const onBoxSelectionChanged = useCallback(
     (keys, rows) => {
@@ -285,14 +284,11 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   useEffect(() => {
     if (!apiRef.current) return;
     selectedChanged.current = true;
-    if (selectedRows) {
+    if (selectedRows && dataSource.length > 0) {
       garidShowSelectedRows(selectedRows);
       if (!isEqual(selectedRows, selectedRowsRef.current)) {
-        setInnerSelectedRows(selectedRows);
         selectedRowsRef.current = selectedRows;
       }
-    } else {
-      garidShowSelectedRows(selectedRowsRef.current);
     }
     selectedChanged.current = false;
   }, [selectedRows, dataSource, garidShowSelectedRows]);
