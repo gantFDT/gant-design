@@ -1,4 +1,4 @@
-import { get, isEmpty, isEqual, findIndex, cloneDeep, groupBy, uniqBy, min } from 'lodash';
+import { get, isEmpty, isEqual, findIndex, cloneDeep, groupBy, uniqBy, min, isPlainObject } from 'lodash';
 import { DataActions, CreateConfig } from '../interface';
 import { generateUuid } from '@util';
 import { RowNode, GridApi } from '@ag-grid-community/core';
@@ -48,11 +48,11 @@ const isEmptyObj = value => {
 };
 export const isEqualObj = (obj, obj2) => {
   let _EqualObj = true;
-  const newObj = { ...obj, ...obj2 };
-  if (Array.isArray(obj) || typeof obj !== 'object') {
+  if (!isPlainObject(obj) || !isPlainObject(obj2)) {
     if (isEmptyObj(obj) && isEmptyObj(obj2)) return true;
     return isEqual(obj, obj2);
   }
+  const newObj = { ...obj, ...obj2 };
   for (let i in newObj) {
     let value1 = get(obj, i),
       value2 = get(obj2, i);

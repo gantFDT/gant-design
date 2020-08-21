@@ -70,7 +70,7 @@ export default class GridManage {
     const addData = isCompute ? flattenTreeData(add, getRowNodeId, treeDataChildrenName) : add;
     this.batchUpdateGrid({ add: addData });
   }
-  async validate(data) {
+  async validate(data?: any[]) {
     const { getRowNodeId } = this.agGridConfig;
     const { add, modify } = this.diff;
     let source = isEmpty(data) ? [...add, ...modify] : data;
@@ -83,7 +83,7 @@ export default class GridManage {
         fields: validateFields,
       };
       Object.keys(validateFields).map(validateField => {
-        const field = validateField.replace(/-/g, '.');
+        const field = validateField.replace(/\-/g, '.');
         newItem = set(newItem, validateField, get(newItem, field));
       });
       return newItem;
