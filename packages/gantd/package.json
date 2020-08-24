@@ -1,6 +1,6 @@
 {
   "name": "gantd",
-  "version": "1.1.73",
+  "version": "1.1.78",
   "description": "GantD base on antD",
   "author": "Gant FDT",
   "license": "MIT",
@@ -125,8 +125,8 @@
     "auto-reload-g": "^0.1.11",
     "classnames": "^2.2.6",
     "create-react-context": "^0.2.3",
-    "data-cell-g": "^0.1.33",
-    "grid-g": "^0.0.59",
+    "data-cell-g": "^0.1.37",
+    "grid-g": "^0.0.65",
     "header-g": "^0.1.17",
     "lodash": "^4.17.11",
     "modal-g": "^0.1.14",
@@ -140,9 +140,9 @@
     "react-dom": "^16.8.6",
     "react-sortable-hoc": "^1.9.1",
     "recompose": "^0.30.0",
-    "schema-form-g": "^0.1.36",
-    "smart-grid-g": "^0.1.65",
-    "smart-table-g": "^0.1.40",
+    "schema-form-g": "^0.1.39",
+    "smart-grid-g": "^0.1.70",
+    "smart-table-g": "^0.1.43",
     "submenu-g": "^0.1.14",
     "table-g": "^0.1.27",
     "util-g": "^0.1.2"
@@ -154,6 +154,5 @@
     "ie >= 9",
     "iOS >= 8",
     "Android >= 4"
-  ],
-  "gitHead": "51919092898c02c86cf7ed262993496e8d5b3652"
+  ]
 }
