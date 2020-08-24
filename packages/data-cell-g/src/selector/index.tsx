@@ -146,14 +146,15 @@ const withSelector = compose(
       taskId: `${selectorId}:${escape(filter).replace(/\%u/g, '')}`
     })
   ),
-  withHandlers({
+   withHandlers({
     //将最近选择的项的key转化为真实的key
     storageToReal: ({ selectorId, reg }) => (value) => {
-      if (value.startsWith(selectorId)) { // 最近选择
-        return value.replace(reg, '$1')
-      }
+       // 最近选择
+      if (value.startsWith(selectorId)) return value.replace(reg, '$1')
       return value
-    },
+    }
+  }),
+  withHandlers({
     getValue: ({ valueProp }) => data => String(valueProp && isPlainObject(data) ? data[valueProp] : data), // 获取选项的value
     getLabel: ({ storageToReal, valueProp, labelProp }) => data => {
       if (labelProp && isPlainObject(data)) return valueProp == labelProp ? storageToReal(data[labelProp]) : data[labelProp]
