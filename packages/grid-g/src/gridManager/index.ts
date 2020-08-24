@@ -48,7 +48,7 @@ export default class GridManage {
   public async onDataAsyncEnd(func) {
     if (typeof func !== 'function') return;
     if (this.loading === false) return func();
-    this.dataAsyncStack.push(func);
+    this.dataAsyncStack.unshift(func);
     return null;
   }
   private watchHistory() {
@@ -251,7 +251,7 @@ export default class GridManage {
         resolve(params);
       });
     });
-    this.validate(updateRowData);
+   await this.validate(updateRowData);
     this.historyStack.push({
       type: DataActions.modify,
       records: hisRecords,

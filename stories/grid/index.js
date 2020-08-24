@@ -220,32 +220,14 @@ const BaiscGrid = () => {
                 openEditSign
                 showCut
                 getDataPath={(data) => data.path}
-                // onCellEditingChange={async (record) => {
-                //     await new Promise(resolve => setTimeout(() => {
-                //         resolve(10)
-                //     }, 2000))
-                //     return { ...record, age: record.age + 1 }
-                // }}
-                // createConfig={{
-                //     id: 'path',
-                //     path: "path",
-                //     toPath: (path, data) => {
-                //         if (data) {
-                //             const arrPath = path
-                //             arrPath.push(data.id)
-                //             return arrPath.join('/') + '/'
-                //         }
-                //         return path.join('/') + "/"
-                //     },
-                //     defaultParentPath: ["313"]
-                // }}
+                onCellChanged={(...ags) => console.log(ags)}
                 pagination={
                     {
                         pageSize: 20,
                         current: current,
                         total: 100,
                         onChange: onPageChange,
-                        onRefresh:()=>{console.log('-->onRefresh')}
+                        onRefresh: () => { console.log('-->onRefresh') }
                     }
                 }
 

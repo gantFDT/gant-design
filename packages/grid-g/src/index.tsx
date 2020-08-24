@@ -99,8 +99,8 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     getDataPath: orignGetDataPath,
     onCellEditChange,
     onCellEditingChange,
+    onCellChanged,
     openEditSign = true,
-    onCellValueChanged,
     getContextMenuItems,
     createConfig,
     onRowsCut,
@@ -123,9 +123,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   const columnsRef = useRef<ColumnApi>();
   const selectedRowsRef = useRef<string[]>([]);
   const [pasteContent, setPasetContent] = useState<any>({});
-  const [pasteLoading, setPasteLoading] = useState(false);
   const [innerSelectedRows, setInnerSelectedRows] = useState([]);
-  const [clipboardData, setClipboardData] = useState('');
   const gridManager = useMemo(() => {
     return new GridManager();
   }, []);
@@ -341,47 +339,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     }
     return false;
   }, []);
-  const processCellForClipboard = useCallback(params => {
-    const {
-      column: { colId },
-    } = params;
-    if (colId === 'defalutSelection' || colId === 'g-index') return null;
-    return params.value;
-  }, []);
-  const processDataFromClipboard = params => {
-    const data = params.data.map(rowData => {
-      return rowData.filter(item => item !== 'defalutSelection' && item !== 'g-index');
-    });
-    return data;
-  };
-  const cellValueChanged = useCallback(
-    params => {
-      const {
-        rowIndex,
-        data,
-        colDef: { field },
-        oldValue,
-      } = params;
-      pasteLoading &&
-        setPasetContent(content => {
-          let oldData = get(content, `${rowIndex}.oldData`, data);
-          oldData = cloneDeep(oldData);
-          oldData = set(oldData, field, oldValue);
-          return {
-            ...content,
-            [rowIndex]: {
-              newData: {
-                ...get(content, `[${rowIndex}].newData`, {}),
-                ...data,
-              },
-              oldData,
-            },
-          };
-        });
-      onCellValueChanged && onCellValueChanged(params);
-    },
-    [onCellValueChanged, pasteLoading],
-  );
   const onRowSelectable = useCallback((rowNode: RowNode) => {
     const notRemove = get(rowNode, 'data._rowType') !== DataActions.removeTag;
     if (isRowSelectable) {
@@ -407,9 +364,10 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       watchEditChange: typeof onCellEditChange === 'function',
       onCellEditChange,
       onCellEditingChange,
+      onCellChanged,
       ...propsContext,
     };
-  }, [propsContext, size, computedPagination, editable, showCut, onCellEditChange, onCellEditingChange]);
+  }, [propsContext, size, computedPagination, editable, showCut, onCellEditChange, onCellEditingChange, onCellChanged]);
   const [cancheContext, setCancheContext] = useState(context);
   useEffect(() => {
     setCancheContext(cancheContext => {
@@ -529,9 +487,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     'gant-grid-row-cut': params => get(params, 'data._rowCut'),
                     ...rowClassRules,
                   }}
-                  onCellValueChanged={cellValueChanged}
-                  processCellForClipboard={processCellForClipboard}
-                  processDataFromClipboard={processDataFromClipboard}
                   getContextMenuItems={contextMenuItems as any}
                   modules={[...AllModules, ...AllCommunityModules]}
                   suppressKeyboardEvent={onSuppressKeyboardEvent}

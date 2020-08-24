@@ -143,7 +143,7 @@ export type GantPaginationProps = Omit<
       addonAfter?: string | React.ReactNode;
       addonBefore?: string | React.ReactNode;
       countLimit?: number;
-      onRefresh?:()=>void
+      onRefresh?: () => void;
     }
   >,
   'onShowSizeChange'
@@ -176,6 +176,7 @@ export interface Props<T extends any> {
   isCompute?: boolean;
   onCellEditChange: (record: any, fieldName: string, newValue: any, oldValue: any) => any;
   onCellEditingChange: (record: any, fieldName: string, newValue: any, oldValue: any) => any;
+  onCellChanged: (record: any, fieldName: string, newValue: any, oldValue: any) => void;
   openEditSign: boolean;
   createConfig?: CreateConfig;
   showCut?: boolean;

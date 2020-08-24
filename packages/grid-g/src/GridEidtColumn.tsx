@@ -20,7 +20,7 @@ export default WrapperComponent =>
       props: fieldProps,
       changeFormatter,
       initValueFormatter,
-      context: { size, gridManager, onCellEditChange, onCellEditingChange, getRowNodeId },
+      context: { size, gridManager, onCellEditChange, onCellEditingChange, getRowNodeId, onCellChanged },
       refName = 'wrapperRef',
       valuePropName = 'value',
       node,
@@ -45,9 +45,10 @@ export default WrapperComponent =>
           if (!isEqualObj(chageVal2, chageVal)) setNewValue(chageVal2);
         }
         if (isEmpty(res)) return console.warn('celleditingChange must be callbak result');
-        gridManager.modify(res);
+        await gridManager.modify(res);
+        onCellChanged(editData, field, chageVal, value);
       },
-      [onCellEditingChange],
+      [onCellEditingChange, onCellChanged],
     );
     const onChange = useCallback(
       async (val: any) => {
@@ -56,14 +57,13 @@ export default WrapperComponent =>
         data = cloneDeep(data);
         if (typeof changeFormatter === 'function') chageVal = changeFormatter(val, data);
         const editData = set(data, field, chageVal);
-
         gridManager.loading = true;
         setNewValue(chageVal);
         handleCellEditingChange(chageVal, editData);
       },
       [changeFormatter, field, node, handleCellEditingChange],
     );
-    const onCellChanged = useCallback(
+    const handleCellEditChange = useCallback(
       async newValue => {
         if (isEqualObj(value, newValue)) return;
         const editData = cloneDeep(get(node, `data`));
@@ -71,7 +71,8 @@ export default WrapperComponent =>
         if (onCellEditChange) {
           gridManager.loading = true;
           const res = await onCellEditChange(editData, field, newValue, value);
-          gridManager.modify(res, [data]);
+          await gridManager.modify(res, [data]);
+          onCellChanged(editData, field, newValue, value);
         }
       },
       [node, field, data, onCellEditChange],
@@ -92,12 +93,12 @@ export default WrapperComponent =>
           },
           getValue: () => {
             if (!onCellEditChange) return newValue;
-            onCellChanged(newValue);
+            handleCellEditChange(newValue);
             return value;
           },
         };
       },
-      [value, newValue, field, node, onCellChanged, onCellEditChange],
+      [value, newValue, field, node, handleCellEditChange, onCellEditChange],
     );
     useEffect(() => {
       setTimeout(() => {
