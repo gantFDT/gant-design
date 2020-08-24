@@ -46,7 +46,7 @@ export default WrapperComponent =>
         }
         if (isEmpty(res)) return console.warn('celleditingChange must be callbak result');
         await gridManager.modify(res);
-        onCellChanged(editData, field, chageVal, value);
+        typeof onCellChanged == 'function' && onCellChanged(editData, field, chageVal, value);
       },
       [onCellEditingChange, onCellChanged],
     );
@@ -72,7 +72,7 @@ export default WrapperComponent =>
           gridManager.loading = true;
           const res = await onCellEditChange(editData, field, newValue, value);
           await gridManager.modify(res, [data]);
-          onCellChanged(editData, field, newValue, value);
+          typeof onCellChanged == 'function' && onCellChanged(editData, field, newValue, value);
         }
       },
       [node, field, data, onCellEditChange],
