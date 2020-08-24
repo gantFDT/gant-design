@@ -155,7 +155,10 @@ const withSelector = compose(
       return value
     },
     getValue: ({ valueProp }) => data => String(valueProp && isPlainObject(data) ? data[valueProp] : data), // 获取选项的value
-    getLabel: ({ labelProp }) => data => labelProp && isPlainObject(data) ? data[labelProp] : data, // 获取选项的label
+    getLabel: ({ valueProps, labelProp }) => data => {
+      if (labelProp && isPlainObject(data)) return valueProps == labelProps ? storageToReal(data[labelProp]) : data[labelProp]
+      return data
+    }, // 获取选项的label
     setLabel: ({ setLabel: originSetLabel, splitStr = '、' }) => labels => originSetLabel(Array.isArray(labels) ? labels.filter(Boolean).join(splitStr) : labels), // 重置setlabel方法,增加格式化的功能
   }),
   withHandlers({
