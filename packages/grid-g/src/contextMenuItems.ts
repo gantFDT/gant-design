@@ -60,7 +60,7 @@ export const gantGetcontextMenuItems = function(params: GetContextMenuItemsParam
   const defultMenu = treeData ? ['expandAll', 'contractAll', ...items, 'separator', 'export'] : [...items, 'export'];
   if (!globalEditable) return defultMenu;
   const showCutBtns = typeof showCut === 'function' ? showCut(params) : showCut;
-  const editMenu = showCutBtns!
+  const editMenu = !showCutBtns
     ? [...defultMenu]
     : [
         ...defultMenu,
