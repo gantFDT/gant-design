@@ -1,5 +1,5 @@
 import { AgGridReactProps } from '@ag-grid-community/react';
-import { GridApi as AgGridApi, ITooltipParams, GridReadyEvent, ValueFormatterParams, ColDef, IServerSideGetRowsParams, ColumnApi as AgColumnApi, RowNode } from '@ag-grid-community/core';
+import { GridApi as AgGridApi, ITooltipParams, GridReadyEvent, ValueFormatterParams, ColDef, IServerSideGetRowsParams, GetContextMenuItemsParams, ColumnApi as AgColumnApi, RowNode } from '@ag-grid-community/core';
 import { defaultProps, defaultRowSelection } from './index';
 import { Rules, RuleType, RuleItem } from 'async-validator';
 import { PaginationProps } from 'antd/lib/pagination';
@@ -179,7 +179,7 @@ export interface Props<T extends any> {
   onCellChanged: (record: any, fieldName: string, newValue: any, oldValue: any) => void;
   openEditSign: boolean;
   createConfig?: CreateConfig;
-  showCut?: boolean;
+  showCut?: (params: GetContextMenuItemsParams) => boolean | boolean;
   onRowsCut?: (rows: RowNode[]) => boolean;
   onRowsPaste?: (rows: RowNode[], targetRow?: RowNode) => boolean;
   onRowsPasteEnd?: (data: any) => void;
