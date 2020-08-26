@@ -6,6 +6,7 @@ interface ContextMenuItemsConfig {
   onRowsCut?: any;
   onRowsPaste?: any;
   getContextMenuItems?: any;
+  getDefalutContextMenuItems?: () => any[];
 }
 export const gantGetcontextMenuItems = function(params: GetContextMenuItemsParams, config: ContextMenuItemsConfig) {
   const { downShift, locale, onRowsCut, onRowsPaste, getContextMenuItems } = config;
@@ -58,7 +59,8 @@ export const gantGetcontextMenuItems = function(params: GetContextMenuItemsParam
     : [];
   const defultMenu = treeData ? ['expandAll', 'contractAll', ...items, 'separator', 'export'] : [...items, 'export'];
   if (!globalEditable) return defultMenu;
-  const editMenu = !showCut
+  const showCutBtns = typeof showCut === 'function' ? showCut(params) : showCut;
+  const editMenu = !showCutBtns
     ? [...defultMenu]
     : [
         ...defultMenu,
