@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef, useMemo, useEffect, useContext } from 'react';
+import React, { useState, useCallback, useRef, useMemo, useEffect, createContext } from 'react';
 import classnames from 'classnames';
 import { AgGridReact } from '@ag-grid-community/react';
 import { GridApi, ColumnApi, GridReadyEvent, SelectionChangedEvent, SuppressKeyboardEventParams, RowNode, GetContextMenuItemsParams } from '@ag-grid-community/core';
@@ -29,7 +29,7 @@ const langs = {
   en: en,
   'zh-cn': zh,
 };
-
+export const GridContext = createContext<any>({});
 export const defaultProps = {
   /**加载状态 */
   loading: false,
@@ -160,14 +160,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     return {};
   }, [rowSel]);
   const { onSelect, selectedRows, showDefalutCheckbox, type: rowSelection, defaultSelectionCol, ...selection } = gantSelection;
-
-  useEffect(() => {
-    if (!editable) {
-      apiRef.current?.stopEditing();
-      gridManager.reset({});
-    }
-  }, [editable]);
-
   /**fix: 解决保存时候标记状态无法清楚的问题 */
 
   // 判断数据分别处理 treeTable 和普通table
@@ -178,9 +170,9 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
 
   // 分页事件
   const computedPagination: any = usePagination(pagination);
+  // 初始注册配置信息；
   useEffect(() => {
     gridManager.reset({
-      dataSource,
       getRowNodeId,
       createConfig,
       treeData,
@@ -190,6 +182,9 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       editChangeCallback,
       onRowsPasteEnd,
     });
+  }, []);
+  useEffect(() => {
+    gridManager.dataSourceChanged(dataSource);
   }, [dataSource]);
   const serverDataCallback = useCallback((groupKeys, successCallback) => {
     return rows => {
@@ -294,7 +289,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     if (selectedRows) return selectedRows;
     return innerSelectedRows;
   }, [selectedRows, innerSelectedRows]);
-  // 监听 dataSource
   // 处理selection-end
   //columns
   const defaultSelection = !isEmpty(gantSelection) && showDefalutCheckbox;
@@ -413,88 +407,103 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
         };
         return (
           <Spin spinning={loading}>
-            <div style={{ width, height }} className={classnames('gant-grid', `gant-grid-${getSizeClassName(size)}`, openEditSign && `gant-grid-edit`, editable && 'gant-grid-editable')}>
-              <div
-                className={classnames('ag-theme-balham', 'gant-ag-wrapper', editable && 'no-zebra')}
-                style={{
-                  width: '100%',
-                  height: computedPagination ? 'calc(100% - 30px)' : '100%',
-                }}
-              >
-                {!hideBox && <SelectedGrid onChange={onBoxSelectionChanged} getRowNodeId={getRowNodeId} columnDefs={selectedColumns as any} rowData={boxSelectedRows} />}
+            <GridContext.Provider
+              value={{
+                globalEditable: editable,
+                serverDataRequest,
+                isServerSideGroup,
+                size,
+                getDataPath: getDataPath,
+                computedPagination,
+                treeData,
+                ...context,
+              }}
+            >
+              <div style={{ width, height }} className={classnames('gant-grid', `gant-grid-${getSizeClassName(size)}`, openEditSign && `gant-grid-edit`, editable && 'gant-grid-editable')}>
+                <div
+                  className={classnames('ag-theme-balham', 'gant-ag-wrapper', editable && 'no-zebra')}
+                  style={{
+                    width: '100%',
+                    height: computedPagination ? 'calc(100% - 30px)' : '100%',
+                  }}
+                >
+                  {!hideBox && <SelectedGrid onChange={onBoxSelectionChanged} getRowNodeId={getRowNodeId} columnDefs={selectedColumns as any} rowData={boxSelectedRows} />}
 
-                <AgGridReact
-                  frameworkComponents={{
-                    ...frameworkComponentsMaps,
-                    ...frameworkComponents,
-                  }}
-                  components={{
-                    ...componentsMaps,
-                    ...components,
-                  }}
-                  // onCel
-                  onSelectionChanged={onSelectionChanged}
-                  columnDefs={columnDefs}
-                  rowSelection={rowSelection}
-                  getRowNodeId={getRowNodeId}
-                  onGridReady={onGridReady}
-                  undoRedoCellEditing
-                  enableFillHandle
-                  headerHeight={24}
-                  floatingFiltersHeight={20}
-                  rowHeight={size == 'small' ? 24 : 32}
-                  singleClickEdit
-                  defaultExportParams={{
-                    columnKeys: exportColumns,
-                    allColumns: false,
-                    columnGroups: true,
-                    ...defaultExportParams,
-                  }}
-                  context={{
-                    globalEditable: editable,
-                    serverDataRequest,
-                    isServerSideGroup,
-                    size,
-                    getDataPath: getDataPath,
-                    computedPagination,
-                    treeData,
-                    ...context,
-                  }}
-                  stopEditingWhenGridLosesFocus={false}
-                  treeData={treeData}
-                  getDataPath={getDataPath}
-                  rowData={dataSource}
-                  immutableData
-                  tooltipShowDelay={10}
-                  {...selection}
-                  {...orignProps}
-                  isRowSelectable={onRowSelectable}
-                  defaultColDef={{
-                    resizable,
-                    sortable,
-                    filter,
-                    minWidth: 30,
-                    tooltip: (params: any) => params,
-                    tooltipComponent: 'gantValidateTooltip',
-                    ...defaultColDef,
-                  }}
-                  enableCellTextSelection
-                  ensureDomOrder
-                  groupDefaultExpanded={groupDefaultExpanded}
-                  localeText={locale}
-                  rowClassRules={{
-                    'gant-grid-row-isdeleted': params => get(params, 'data._rowType') === DataActions.removeTag,
-                    'gant-grid-row-cut': params => get(params, 'data._rowCut'),
-                    ...rowClassRules,
-                  }}
-                  getContextMenuItems={contextMenuItems as any}
-                  modules={[...AllModules, ...AllCommunityModules]}
-                  suppressKeyboardEvent={onSuppressKeyboardEvent}
-                  tooltipMouseTrack
-                />
+                  <AgGridReact
+                    frameworkComponents={{
+                      ...frameworkComponentsMaps,
+                      ...frameworkComponents,
+                    }}
+                    components={{
+                      ...componentsMaps,
+                      ...components,
+                    }}
+                    // onCel
+                    onSelectionChanged={onSelectionChanged}
+                    columnDefs={columnDefs}
+                    rowSelection={rowSelection}
+                    getRowNodeId={getRowNodeId}
+                    onGridReady={onGridReady}
+                    undoRedoCellEditing
+                    enableFillHandle
+                    headerHeight={24}
+                    floatingFiltersHeight={20}
+                    rowHeight={size == 'small' ? 24 : 32}
+                    singleClickEdit
+                    defaultExportParams={{
+                      columnKeys: exportColumns,
+                      allColumns: false,
+                      columnGroups: true,
+                      ...defaultExportParams,
+                    }}
+                    context={{
+                      globalEditable: editable,
+                      serverDataRequest,
+                      isServerSideGroup,
+                      size,
+                      getDataPath: getDataPath,
+                      computedPagination,
+                      treeData,
+                      ...context,
+                    }}
+                    stopEditingWhenGridLosesFocus={false}
+                    treeData={treeData}
+                    getDataPath={getDataPath}
+                    gridOptions={{
+                      rowData: dataSource,
+                    }}
+                    immutableData
+                    tooltipShowDelay={10}
+                    {...selection}
+                    {...orignProps}
+                    isRowSelectable={onRowSelectable}
+                    defaultColDef={{
+                      resizable,
+                      sortable,
+                      filter,
+                      minWidth: 30,
+                      tooltip: (params: any) => params,
+                      tooltipComponent: 'gantValidateTooltip',
+                      ...defaultColDef,
+                    }}
+                    enableCellTextSelection
+                    ensureDomOrder
+                    groupDefaultExpanded={groupDefaultExpanded}
+                    localeText={locale}
+                    rowClassRules={{
+                      'gant-grid-row-isdeleted': params => get(params, 'data._rowType') === DataActions.removeTag,
+                      'gant-grid-row-cut': params => get(params, 'data._rowCut'),
+                      ...rowClassRules,
+                    }}
+                    getContextMenuItems={contextMenuItems as any}
+                    modules={[...AllModules, ...AllCommunityModules]}
+                    suppressKeyboardEvent={onSuppressKeyboardEvent}
+                    tooltipMouseTrack
+                  />
+                </div>
+                <GantPagination pagination={computedPagination} />
               </div>
-              <GantPagination pagination={computedPagination} />
-            </div>
+            </GridContext.Provider>
           </Spin>
         );
       }}
