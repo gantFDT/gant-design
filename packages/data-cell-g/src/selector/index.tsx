@@ -499,7 +499,7 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
           const realKey = storageToReal(key)
           if (!keyMap.has(realKey)) {
             keyMap.set(realKey, label)
-            ItemMap.set(realKey, this.getItem(realKey))
+            ItemMap.set(realKey, this.getItem(key))
           } else {
             // 如果已经有相同的key了，那么说明这是需要删除的项
             keyMap.delete(realKey)
