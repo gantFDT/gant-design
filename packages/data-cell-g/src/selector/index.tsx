@@ -146,10 +146,10 @@ const withSelector = compose(
       taskId: `${selectorId}:${escape(filter).replace(/\%u/g, '')}`
     })
   ),
-   withHandlers({
+  withHandlers({
     //将最近选择的项的key转化为真实的key
     storageToReal: ({ selectorId, reg }) => (value) => {
-       // 最近选择
+      // 最近选择
       if (value.startsWith(selectorId)) return value.replace(reg, '$1')
       return value
     }
@@ -206,14 +206,20 @@ const withSelector = compose(
   withHandlers({
     // 依赖转化后的value
     transformDataToList: ({ getLabel, getValue, renderItem, optionLabelProp, hideSelected, isMultiple, value: comValue }) => list => list.map(item => {
-      if (renderItem) {
-        return renderItem(item, Option)
-      }
-      if (isPlainObject(item)) {
-        const { disabled, title, className } = item
+      const transformItemInfo = (item) => {
         const value = getValue(item);
         const key = value || item.key;
-        const label = getLabel(item)
+        const label = getLabel(item);
+        return { value, key, label }
+      }
+
+      if (renderItem) {
+        return renderItem(isPlainObject(item) ? { ...item, ...transformItemInfo(item) } : item, Option)
+      }
+
+      if (isPlainObject(item)) {
+        const { disabled, title, className } = item
+        const { value, key, label } = transformItemInfo(item)
         let show = true, style
         if (hideSelected) {
           if (isMultiple) {
@@ -403,7 +409,7 @@ const withSelector = compose(
             {
               storageList.length
                 ?
-                transformDataToList(storageList)
+                transformDataToList(storageList, true)
                 :
                 <Select.Option key='empty' disabled>没有最近选择</Select.Option>
             }
