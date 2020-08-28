@@ -20,7 +20,13 @@ const basicColumns = [
                 return data.age > 30 ? <div>{data.name}</div> : null
             },
             editConfig: {
-                component: Input,
+                component:(props)=>{
+                    console.log('component',props)
+                    return <Input  {...props} />
+                },
+                props:(record)=>{
+                    return {record}
+                },
                 editable: true,
                 signable: true,
                 rules: [
@@ -169,7 +175,7 @@ const BaiscGrid = () => {
             <Selector edit='EDIT' autoFocus />
             <Header extra={<Fragment>
                 <Button size="small" onClick={() => {
-                    console.log(gridManagerRef.current.diff)
+                    console.log(apiRef.current.getEditingCells())
                 }} >
                     测试
             </Button>
