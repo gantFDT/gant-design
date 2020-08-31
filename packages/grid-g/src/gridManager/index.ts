@@ -1,6 +1,6 @@
 import { RowDataTransaction, GridApi, RowNode } from '@ag-grid-community/core';
 import Schema, { Rules } from 'async-validator';
-import { get, isEmpty, findIndex, cloneDeep, set, uniqBy, groupBy, difference } from 'lodash';
+import { get, isEmpty, findIndex, cloneDeep, set, uniqBy, groupBy, difference, isEqual } from 'lodash';
 import { getModifyData, removeTagData, isEqualObj, canQuickCreate, getRowsToUpdate, onSetcutData, getAllChildrenNode } from './utils';
 import { bindAll } from 'lodash-decorators';
 import { generateUuid } from '@util';
@@ -229,7 +229,7 @@ export default class GridManage {
     if (!this.agGridApi) return;
     this.reset({ dataSource });
     const rowsData = this.getRowData();
-    if (difference(dataSource, rowsData).length && difference(rowsData, dataSource).length) return;
+    if (isEqual(dataSource, rowsData)) return;
     if (dataSource.length == 0 || rowsData.length === 0) return this.agGridApi.setRowData(dataSource);
     this.agGridApi.setRowData([]);
     this.agGridApi.setRowData(dataSource);
