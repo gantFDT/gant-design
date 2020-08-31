@@ -226,8 +226,8 @@ export default class GridManage {
     this.cutRows = [];
   }
   dataSourceChanged(dataSource: any[]) {
-    if (!this.agGridApi) return;
     this.reset({ dataSource });
+    if (!this.agGridApi) return;
     const rowsData = this.getRowData();
     if (isEqual(dataSource, rowsData) && dataSource.length) return;
     if (dataSource.length === 0 || rowsData.length === 0) return this.agGridApi.setRowData(dataSource);
