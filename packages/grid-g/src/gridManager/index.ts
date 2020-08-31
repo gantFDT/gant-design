@@ -229,8 +229,8 @@ export default class GridManage {
     if (!this.agGridApi) return;
     this.reset({ dataSource });
     const rowsData = this.getRowData();
-    if (isEqual(dataSource, rowsData)) return;
-    if (dataSource.length == 0 || rowsData.length === 0) return this.agGridApi.setRowData(dataSource);
+    if (isEqual(dataSource, rowsData) && dataSource.length) return;
+    if (dataSource.length === 0 || rowsData.length === 0) return this.agGridApi.setRowData(dataSource);
     this.agGridApi.setRowData([]);
     this.agGridApi.setRowData(dataSource);
   }

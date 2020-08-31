@@ -141,14 +141,20 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     },
     [orignGetDataPath],
   );
+  // 判断数据分别处理 treeTable 和普通table
+  const dataSource = useMemo(() => {
+    if (treeData && isCompute) return flattenTreeData(initDataSource, getRowNodeId, treeDataChildrenName);
+    return initDataSource;
+  }, [initDataSource, treeData, treeDataChildrenName]);
   const onGridReady = useCallback(
     (params: GridReadyEvent) => {
       apiRef.current = params.api;
       columnsRef.current = params.columnApi;
       gridManager.agGridApi = params.api;
       onReady && onReady(params, gridManager);
+      params.api.setRowData(dataSource);
     },
-    [onReady],
+    [onReady, dataSource],
   );
 
   // 处理selection
@@ -161,12 +167,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   }, [rowSel]);
   const { onSelect, selectedRows, showDefalutCheckbox, type: rowSelection, defaultSelectionCol, ...selection } = gantSelection;
   /**fix: 解决保存时候标记状态无法清楚的问题 */
-
-  // 判断数据分别处理 treeTable 和普通table
-  const dataSource = useMemo(() => {
-    if (treeData && isCompute) return flattenTreeData(initDataSource, getRowNodeId, treeDataChildrenName);
-    return initDataSource;
-  }, [initDataSource, treeData, treeDataChildrenName]);
 
   // 分页事件
   const computedPagination: any = usePagination(pagination);
@@ -469,9 +469,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     stopEditingWhenGridLosesFocus={false}
                     treeData={treeData}
                     getDataPath={getDataPath}
-                    gridOptions={{
-                      rowData: dataSource,
-                    }}
                     immutableData
                     tooltipShowDelay={10}
                     {...selection}
