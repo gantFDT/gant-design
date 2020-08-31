@@ -229,7 +229,7 @@ export default class GridManage {
     if (!this.agGridApi) return;
     this.reset({ dataSource });
     const rowsData = this.getRowData();
-    if (difference(dataSource, rowsData).length == 0 && difference(rowsData, dataSource).length) return;
+    if (difference(dataSource, rowsData).length && difference(rowsData, dataSource).length) return;
     if (dataSource.length == 0 || rowsData.length === 0) return this.agGridApi.setRowData(dataSource);
     this.agGridApi.setRowData([]);
     this.agGridApi.setRowData(dataSource);
