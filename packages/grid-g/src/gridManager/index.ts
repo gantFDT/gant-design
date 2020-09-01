@@ -41,9 +41,9 @@ export default class GridManage {
   }
   private async outAsyncFunStack() {
     if (this.loading || this.dataAsyncStack.length <= 0) return;
-    while (!this.loading || this.dataAsyncStack.length > 0) {
+    while (!this.loading && this.dataAsyncStack.length > 0) {
       const asyncFun = this.dataAsyncStack.shift();
-      await asyncFun();
+      if (typeof asyncFun === 'function') await asyncFun();
     }
   }
   public async onDataAsyncEnd(func) {
