@@ -225,7 +225,10 @@ const BaiscGrid = () => {
                 openEditSign
                 showCut
                 getDataPath={(data) => data.path}
-                onCellChanged={(...ags) => console.log(ags)}
+                onCellEditChange={(record,fieldName) =>{
+                    if(fieldName==='name') return  ( {...record,age:0})
+                    return record
+                }}
                 pagination={
                     {
                         pageSize: 20,
