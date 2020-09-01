@@ -124,7 +124,15 @@
     }
 
     &-wrapper {
-      display: flex;
+      // display: flex;
+      &:after {
+        content: '';
+        width: 100%;
+        display: block;
+        height: 0px;
+        clear: both;
+        visibility: hidden;
+      }
     }
 
     &-verticalbox {
