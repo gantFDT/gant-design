@@ -101,7 +101,7 @@ const GantAnchor = (props: GantAnchorProps) => {
     [stateMode, setId, isClickScroll, list],
   )
 
-  
+
   //   //点击左右箭头
   const handleMobileTabs = useCallback(
     e => {
@@ -220,7 +220,7 @@ const GantAnchor = (props: GantAnchorProps) => {
 
   return (
     <div className={classnames(className, `${prefixCls}-wrapper`)} style={{ ...style }}>
-      <div style={{ flex: 1 }}>
+      <div style={{ width: stateMode === 'horizontal' ? '100%' : 'calc(100% - 150px)', float: 'left' }}>
         <div className={classnames(`${prefixCls}-horAnchorOut`, { [`${prefixCls}-horAnchorOut__hidden`]: stateMode === 'vertical' })} >
           <div className={`gant-anchor`} id="anchorBoxId">
             <Icon
@@ -285,8 +285,18 @@ const GantAnchor = (props: GantAnchorProps) => {
         </div>
       </div>
       <div
-        className={classnames(`${prefixCls}-verticalbox`, { [`${prefixCls}-verticalbox__hidden`]: stateMode === 'horizontal' })}
-        style={{ width: 150, paddingLeft: '10px', paddingTop: '10px' }}
+        className={
+          classnames(
+            `${prefixCls}-verticalbox`,
+            {
+              [`${prefixCls}-verticalbox__hidden`]: stateMode === 'horizontal',
+            }
+          )
+        }
+        style={{
+          width: 150, paddingLeft: '10px', paddingTop: '10px',
+          float: stateMode === 'horizontal' ? 'none' : 'left',
+        }}
       >
         <Anchor
           offsetTop={fixedTop}
