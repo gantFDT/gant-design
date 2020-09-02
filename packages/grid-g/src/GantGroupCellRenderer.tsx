@@ -1,8 +1,6 @@
 import React, { useMemo, memo, useState, useCallback, useRef, useEffect, forwardRef } from 'react';
 import classnames from 'classnames';
-import { ICellRendererParams, IComponent, RowNode } from '@ag-grid-community/core';
-import { BindAll } from 'lodash-decorators';
-import { isEqual } from 'lodash';
+import { ICellRendererParams, RowNode } from '@ag-grid-community/core';
 import { Icon } from 'antd';
 import { stopPropagationForAgGrid } from './utils';
 export interface GantGroupCellRendererProps extends ICellRendererParams {

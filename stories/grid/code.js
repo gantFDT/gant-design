@@ -9,12 +9,10 @@ import Header from 'header'
 
 
 const basicColumns = [
-    {
-        title: 'Athlete Fields',
-        children: [{
+  {
             fieldName: "name",
             title: "姓名",
-            cellRenderer: 'agGroupCellRenderer',
+            cellRenderer: 'gantGroupCellRenderer',
             toolTipRender: (params) => {
                 const { data } = params;
                 return data.age > 30 ? <div>{data.name}</div> : null
@@ -58,8 +56,7 @@ const basicColumns = [
                     message: "年龄不能小于10岁"
                 }
             }
-        },]
-    },
+        },
     {
         fieldName: "county",
         title: "国家",
@@ -107,6 +104,7 @@ const BaiscGrid = () => {
     const [gridChange, setGridChange] = useState(false);
     const [selectedKeys, setselectedKeys] = useState([]);
     const [selectedRows, setSelectedRows] = useState([]);
+    const [columns,setColumns]=useState(basicColumns)
     const apiRef = useRef();
     const gridManagerRef = useRef();
     const onReady = useCallback((params, manager) => {
@@ -175,9 +173,13 @@ const BaiscGrid = () => {
             <Selector edit='EDIT' autoFocus />
             <Header extra={<Fragment>
                 <Button size="small" onClick={() => {
-                    console.log(apiRef.current.getEditingCells())
+                   
+                    setColumns(cols=>{
+                         const addIndex=cols.length-basicColumns.length+1;
+                         return [...cols,{fieldName:\`test\${addIndex}\`,title:\`动态列\${addIndex}\`,}]
+                    })
                 }} >
-                    测试
+                    添加列
             </Button>
                 <Button size="small" onClick={() => setLoading(loading => !loading)} > toggle loading </Button>
                 {!editable ? <Button size="small" icon='edit' onClick={() => setEditable(true)} /> : <Fragment>
@@ -204,7 +206,7 @@ const BaiscGrid = () => {
                 tooltipShowDelay={10}
                 rowkey='ip'
                 loading={loading}
-                columns={basicColumns}
+                columns={columns}
                 editable={editable}
                 dataSource={dataSource}
                 serialNumber

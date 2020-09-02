@@ -52,7 +52,7 @@ export const defaultProps = {
   treeDataChildrenName: 'children',
   /** 默认的删除行为 */
   /**是否执行treeDataPath计算 */
-  isCompute: true,
+  isCompute: false,
   //默认开启编辑校验
   openEditSign: true,
 };
@@ -65,58 +65,7 @@ export const defaultRowSelection: RowSelection = {
 };
 
 const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
-  const {
-    dataSource: initDataSource,
-    // headerProps,
-    // editActions,
-    onReady,
-    columns,
-    editable,
-    rowSelection: rowSel,
-    size,
-    rowkey,
-    resizable,
-    filter,
-    sortable,
-    width,
-    height,
-    treeData,
-    pagination,
-    loading,
-    isServerSideGroup,
-    getServerSideGroupKey,
-    frameworkComponents,
-    treeDataChildrenName,
-    locale: customLocale,
-    serverGroupExpend,
-    groupDefaultExpanded,
-    defaultColDef,
-    context: propsContext,
-    components,
-    serialNumber,
-    rowClassRules,
-    isCompute,
-    getDataPath: orignGetDataPath,
-    onCellEditChange,
-    onCellEditingChange,
-    onCellChanged,
-    openEditSign = true,
-    getContextMenuItems,
-    createConfig,
-    onRowsCut,
-    onRowsPaste,
-    onRowsPasteEnd,
-    showCut = false,
-    onContextChangeRender,
-    defaultExportParams,
-    editChangeCallback,
-    isRowSelectable,
-    boxColumnIndex,
-    hideSelcetedBox,
-    suppressKeyboardEvent,
-    onSelectionChanged: propsOnSelectionChanged,
-    ...orignProps
-  } = props;
+  const { dataSource: initDataSource, onReady, columns, editable, rowSelection: rowSel, size, rowkey, resizable, filter, sortable, width, height, treeData, pagination, loading, isServerSideGroup, getServerSideGroupKey, frameworkComponents, treeDataChildrenName, locale: customLocale, serverGroupExpend, groupDefaultExpanded, defaultColDef, context: propsContext, components, serialNumber, rowClassRules, isCompute, getDataPath: orignGetDataPath, onCellEditChange, onCellEditingChange, onCellChanged, openEditSign = true, getContextMenuItems, createConfig, onRowsCut, onRowsPaste, onRowsPasteEnd, showCut = false, onContextChangeRender, defaultExportParams, editChangeCallback, isRowSelectable, boxColumnIndex, hideSelcetedBox, suppressKeyboardEvent, onSelectionChanged: propsOnSelectionChanged, ...orignProps } = props;
   const apiRef = useRef<GridApi>();
   const shiftRef = useRef<boolean>(false);
   const selectedChanged = useRef<boolean>(false);
@@ -146,16 +95,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     if (treeData && isCompute) return flattenTreeData(initDataSource, getRowNodeId, treeDataChildrenName);
     return initDataSource;
   }, [initDataSource, treeData, treeDataChildrenName]);
-  const onGridReady = useCallback(
-    (params: GridReadyEvent) => {
-      apiRef.current = params.api;
-      columnsRef.current = params.columnApi;
-      gridManager.agGridApi = params.api;
-      onReady && onReady(params, gridManager);
-      params.api.setRowData(dataSource);
-    },
-    [onReady, dataSource],
-  );
 
   // 处理selection
   const gantSelection: RowSelection = useMemo(() => {
@@ -320,7 +259,22 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   useEffect(() => {
     gridManager.validateFields = validateFields;
   }, [validateFields]);
+  //设置动态列
+  useEffect(() => {
+    apiRef.current?.setColumnDefs(columnDefs);
+  }, [columnDefs]);
   // columns-end
+  const onGridReady = useCallback(
+    (params: GridReadyEvent) => {
+      apiRef.current = params.api;
+      columnsRef.current = params.columnApi;
+      gridManager.agGridApi = params.api;
+      onReady && onReady(params, gridManager);
+      params.api.setRowData(dataSource);
+      params.api.setColumnDefs(columnDefs);
+    },
+    [onReady, dataSource, columnDefs],
+  );
   const onSuppressKeyboardEvent = useCallback((params: SuppressKeyboardEventParams) => {
     const { event, colDef, data, api } = params;
     if (event.key === 'Shift') {
@@ -438,9 +392,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                       ...componentsMaps,
                       ...components,
                     }}
-                    // onCel
                     onSelectionChanged={onSelectionChanged}
-                    columnDefs={columnDefs}
                     rowSelection={rowSelection}
                     getRowNodeId={getRowNodeId}
                     onGridReady={onGridReady}
@@ -473,6 +425,10 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     tooltipShowDelay={10}
                     {...selection}
                     {...orignProps}
+                    gridOptions={{
+                      ...orignProps.gridOptions,
+                      columnDefs
+                    }}
                     isRowSelectable={onRowSelectable}
                     defaultColDef={{
                       resizable,
