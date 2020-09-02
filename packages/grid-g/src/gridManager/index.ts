@@ -569,7 +569,7 @@ export default class GridManage {
   batchUpdateDataSource(params: BatchUpdateDataSourceParams) {
     const dataSource: any = [];
     const { add, modify, remove } = params;
-    const update = uniqBy([...add, ...modify], 'dataNumber');
+    const update = uniqBy([...modify, ...add], 'dataNumber');
     this.agGridApi.forEachNode(function(node, index) {
       const removeIndex = findIndex(remove, item => item.dataNumber === index);
       if (removeIndex >= 0) return;
