@@ -260,9 +260,9 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     gridManager.validateFields = validateFields;
   }, [validateFields]);
   //设置动态列
-  useEffect(() => {
-    apiRef.current?.setColumnDefs(columnDefs);
-  }, [columnDefs]);
+  // useEffect(() => {
+  //   apiRef.current?.setColumnDefs(columnDefs);
+  // }, [columnDefs]);
   // columns-end
   const onGridReady = useCallback(
     (params: GridReadyEvent) => {
@@ -271,7 +271,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       gridManager.agGridApi = params.api;
       onReady && onReady(params, gridManager);
       params.api.setRowData(dataSource);
-      params.api.setColumnDefs(columnDefs);
+      // params.api.setColumnDefs(columnDefs);
     },
     [onReady, dataSource, columnDefs],
   );
@@ -422,12 +422,13 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     treeData={treeData}
                     getDataPath={getDataPath}
                     immutableData
+                    columnDefs={columnDefs}
+                    immutableColumns
                     tooltipShowDelay={10}
                     {...selection}
                     {...orignProps}
                     gridOptions={{
                       ...orignProps.gridOptions,
-                      columnDefs
                     }}
                     isRowSelectable={onRowSelectable}
                     defaultColDef={{
