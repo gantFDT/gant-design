@@ -90,9 +90,7 @@ const GantAnchor = (props: GantAnchorProps) => {
               const id = document.getElementById(item.id)
               let common = fixedTop + extraheight + FIXED_HEIGHT
               let { top, height } = id.getBoundingClientRect()
-              if (
-                top <= common && top >= (common - height)
-              ) {
+              if ( top <= common && top >= (common - height) ) {
                 //这里的44是水平锚点条高度
                 setId(item.id)
               }
@@ -311,6 +309,9 @@ const GantAnchor = (props: GantAnchorProps) => {
           onClick={e => {
             e.preventDefault()
           }}
+          onChange={e=>{
+              console.log('Anchor:OnChange', e);
+          }}
           {...nextProps}
         >
           <Icon
@@ -330,6 +331,7 @@ const GantAnchor = (props: GantAnchorProps) => {
               key={item.key || item.title}
               href={`#${item.id || item.title}`}
               title={
+                // let nowCss = item.id == currentId ? 'activeCss' : ''
                 <>
                   <Tooltip title={item.title} placement="left">
                     {item.title}
