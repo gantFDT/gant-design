@@ -16,6 +16,11 @@ function BasicUse() {
       title: '高级信息',
     },
     {
+      id: 'horbasic4',
+      title: 'bba',
+      isInvalid:true
+    },
+    {
       id: 'horbasic3',
       title: '额外信息',
       complete: false
