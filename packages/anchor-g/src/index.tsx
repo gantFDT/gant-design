@@ -86,14 +86,16 @@ const GantAnchor = (props: GantAnchorProps) => {
         if (!isClickScroll) {
           //水平方向锚点跟随页面滚动高亮
           list.map(item => {
-            const id = document.getElementById(item.id)
-            let common = fixedTop + extraheight + FIXED_HEIGHT
-            let { top, height } = id.getBoundingClientRect()
-            if (
-              top <= common && top >= (common - height)
-            ) {
-              //这里的44是水平锚点条高度
-              setId(item.id)
+            if(!item.isInvalid){
+              const id = document.getElementById(item.id)
+              let common = fixedTop + extraheight + FIXED_HEIGHT
+              let { top, height } = id.getBoundingClientRect()
+              if (
+                top <= common && top >= (common - height)
+              ) {
+                //这里的44是水平锚点条高度
+                setId(item.id)
+              }
             }
           })
         }
@@ -235,7 +237,7 @@ const GantAnchor = (props: GantAnchorProps) => {
                 {list.map(item => {
                   let nowCss = item.id == currentId ? 'activeCss' : ''
                   if (item.isInvalid) {
-                    return <div className={`${prefixCls}-aCss`} style={{ opacity: 0.6, cursor: 'not-allowed' }}>
+                    return <div className={`${prefixCls}-isInvalid`}>
                       {item.title}
                     </div>
                   }
@@ -318,7 +320,7 @@ const GantAnchor = (props: GantAnchorProps) => {
           />
           {list.map(item => {
             if (item.isInvalid) {
-              return <div className='ant-anchor-link' style={{ opacity: 0.6, cursor: 'not-allowed' }}>
+              return <div className='ant-anchor-link' style={{ opacity: 0.6, cursor: 'not-allowed'}}>
                 <Tooltip title={item.title} placement="left">
                   {item.title}
                 </Tooltip>
