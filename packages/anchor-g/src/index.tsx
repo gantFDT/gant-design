@@ -319,32 +319,29 @@ const GantAnchor = (props: GantAnchorProps) => {
             style={{ width: '100%', paddingRight: '10px', textAlign: 'right' }}
           />
           {list.map(item => {
-            const invalidCss = {
-              opacity: 0.6,
-              cursor: 'not-allowed',
-              pointerEvents: 'none'
-            }
             const nullCss = {}
-            return <div style={item.isInvalid ? invalidCss : nullCss}>
-              <Anchor.Link
-                key={item.key || item.title}
-                href={`#${item.id || item.title}`}
-                title={
-                  <>
-                    <Tooltip title={item.title} placement="left">
-                      {item.title}
-                    </Tooltip>
-                    {item.complete ? (
-                      <Icon
-                        type="check-circle"
-                        theme="twoTone"
-                        twoToneColor="#52c41a"
-                        style={{ paddingLeft: '5px' }}
-                      />
-                    ) : null}
-                  </>
-                }
-              />
+            return <div style={item.isInvalid ? { opacity: 0.5, cursor: 'not-allowed' } : nullCss}>
+              <div style={item.isInvalid ? { pointerEvents: 'none' } : nullCss}>
+                <Anchor.Link
+                  key={item.key || item.title}
+                  href={`#${item.id || item.title}`}
+                  title={
+                    <>
+                      <Tooltip title={item.title} placement="left">
+                        {item.title}
+                      </Tooltip>
+                      {item.complete ? (
+                        <Icon
+                          type="check-circle"
+                          theme="twoTone"
+                          twoToneColor="#52c41a"
+                          style={{ paddingLeft: '5px' }}
+                        />
+                      ) : null}
+                    </>
+                  }
+                />
+              </div>
             </div>
           })}
         </Anchor>
