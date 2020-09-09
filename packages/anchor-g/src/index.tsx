@@ -11,7 +11,8 @@ interface ListItem {
   key: string,
   id: string,
   title: string,
-  complete?: boolean
+  complete?: boolean,
+  isInvalid?: boolean, //是否无效（显示menu但不可点击），默认有效
 }
 export interface GantAnchorProps extends AnchorProps {
   minHeight?: number | string,
@@ -85,14 +86,14 @@ const GantAnchor = (props: GantAnchorProps) => {
         if (!isClickScroll) {
           //水平方向锚点跟随页面滚动高亮
           list.map(item => {
-            const id = document.getElementById(item.id)
-            let common = fixedTop + extraheight + FIXED_HEIGHT
-            let { top, height } = id.getBoundingClientRect()
-            if (
-              top <= common && top >= (common - height)
-            ) {
-              //这里的44是水平锚点条高度
-              setId(item.id)
+            if(!item.isInvalid){
+              const id = document.getElementById(item.id)
+              let common = fixedTop + extraheight + FIXED_HEIGHT
+              let { top, height } = id.getBoundingClientRect()
+              if ( top <= common && top >= (common - height) ) {
+                //这里的44是水平锚点条高度
+                setId(item.id)
+              }
             }
           })
         }
@@ -197,7 +198,7 @@ const GantAnchor = (props: GantAnchorProps) => {
       <Menu selectedKeys={[currentId]}>
         {list.map(item => {
           return (
-            <Menu.Item key={item.id} onClick={() => scrollToAnchor(item.id)}>
+            <Menu.Item key={item.id} onClick={() => scrollToAnchor(item.id)} disabled={item.isInvalid ? true : false}>
               {item.title}
             </Menu.Item>
           )
@@ -233,6 +234,11 @@ const GantAnchor = (props: GantAnchorProps) => {
               <div className={`${prefixCls}-contentCss`} id="contentId">
                 {list.map(item => {
                   let nowCss = item.id == currentId ? 'activeCss' : ''
+                  if (item.isInvalid) {
+                    return <div className={`${prefixCls}-isInvalid`}>
+                      {item.title}
+                    </div>
+                  }
                   return (
                     <a
                       className={`${prefixCls}-aCss`}
@@ -303,6 +309,9 @@ const GantAnchor = (props: GantAnchorProps) => {
           onClick={e => {
             e.preventDefault()
           }}
+          onChange={e=>{
+              console.log('Anchor:OnChange', e);
+          }}
           {...nextProps}
         >
           <Icon
@@ -310,11 +319,19 @@ const GantAnchor = (props: GantAnchorProps) => {
             onClick={onSwitchClick}
             style={{ width: '100%', paddingRight: '10px', textAlign: 'right' }}
           />
-          {list.map(item => (
-            <Anchor.Link
+          {list.map(item => {
+            if (item.isInvalid) {
+              return <div className='ant-anchor-link' style={{ opacity: 0.6, cursor: 'not-allowed'}}>
+                <Tooltip title={item.title} placement="left">
+                  {item.title}
+                </Tooltip>
+              </div>
+            }
+            return <Anchor.Link
               key={item.key || item.title}
               href={`#${item.id || item.title}`}
               title={
+                // let nowCss = item.id == currentId ? 'activeCss' : ''
                 <>
                   <Tooltip title={item.title} placement="left">
                     {item.title}
@@ -330,7 +347,7 @@ const GantAnchor = (props: GantAnchorProps) => {
                 </>
               }
             />
-          ))}
+          })}
         </Anchor>
       </div>
     </div>

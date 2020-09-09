@@ -22,3 +22,4 @@
 | title    | 文字内容                                      | string/ReactNode |        |
 | id       | 与模块对应ID                                  | string           |        |
 | complete | 对应模块内容是否填写完整,对应显示一个对勾符号 | boolean          |        |
+| isInvalid | 是否无效，若无效则禁止点击跳转                 | boolean   | false   |
