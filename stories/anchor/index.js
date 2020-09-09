@@ -17,8 +17,8 @@ function BasicUse() {
       title: '高级信息',
     },
     {
-      id: 'horbasic4',
-      title: 'bba',
+      id: 'bbq',
+      title: '无效menu',
       isInvalid:true
     },
     {
