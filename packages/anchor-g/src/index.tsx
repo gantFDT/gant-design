@@ -86,13 +86,15 @@ const GantAnchor = (props: GantAnchorProps) => {
         if (!isClickScroll) {
           //水平方向锚点跟随页面滚动高亮
           list.map(item => {
-            if(!item.isInvalid){
+            if (!item.isInvalid) {
               const id = document.getElementById(item.id)
               let common = fixedTop + extraheight + FIXED_HEIGHT
-              let { top, height } = id.getBoundingClientRect()
-              if ( top <= common && top >= (common - height) ) {
-                //这里的44是水平锚点条高度
-                setId(item.id)
+              if (id && id.getBoundingClientRect()) {
+                let { top, height } = id.getBoundingClientRect()
+                if (top <= common && top >= (common - height)) {
+                  //这里的44是水平锚点条高度
+                  setId(item.id)
+                }
               }
             }
           })
@@ -309,9 +311,6 @@ const GantAnchor = (props: GantAnchorProps) => {
           onClick={e => {
             e.preventDefault()
           }}
-          onChange={e=>{
-              console.log('Anchor:OnChange', e);
-          }}
           {...nextProps}
         >
           <Icon
@@ -320,33 +319,33 @@ const GantAnchor = (props: GantAnchorProps) => {
             style={{ width: '100%', paddingRight: '10px', textAlign: 'right' }}
           />
           {list.map(item => {
-            if (item.isInvalid) {
-              return <div className='ant-anchor-link' style={{ opacity: 0.6, cursor: 'not-allowed'}}>
-                <Tooltip title={item.title} placement="left">
-                  {item.title}
-                </Tooltip>
-              </div>
+            const invalidCss = {
+              opacity: 0.6,
+              cursor: 'not-allowed',
+              pointerEvents: 'none'
             }
-            return <Anchor.Link
-              key={item.key || item.title}
-              href={`#${item.id || item.title}`}
-              title={
-                // let nowCss = item.id == currentId ? 'activeCss' : ''
-                <>
-                  <Tooltip title={item.title} placement="left">
-                    {item.title}
-                  </Tooltip>
-                  {item.complete ? (
-                    <Icon
-                      type="check-circle"
-                      theme="twoTone"
-                      twoToneColor="#52c41a"
-                      style={{ paddingLeft: '5px' }}
-                    />
-                  ) : null}
-                </>
-              }
-            />
+            const nullCss = {}
+            return <div style={item.isInvalid ? invalidCss : nullCss}>
+              <Anchor.Link
+                key={item.key || item.title}
+                href={`#${item.id || item.title}`}
+                title={
+                  <>
+                    <Tooltip title={item.title} placement="left">
+                      {item.title}
+                    </Tooltip>
+                    {item.complete ? (
+                      <Icon
+                        type="check-circle"
+                        theme="twoTone"
+                        twoToneColor="#52c41a"
+                        style={{ paddingLeft: '5px' }}
+                      />
+                    ) : null}
+                  </>
+                }
+              />
+            </div>
           })}
         </Anchor>
       </div>
