@@ -1,7 +1,6 @@
 import RenderCol from './GirdRenderColumn';
 import GantGroupCellRenderer, { GantGroupCellRendererProps } from './GantGroupCellRenderer';
 import GantValidateTooltip from './GantValidateTooltip';
-
 let componentsMaps = {};
 let frameworkComponentsMaps = {
   gantGroupCellRenderer: GantGroupCellRenderer,

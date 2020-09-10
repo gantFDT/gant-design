@@ -3,7 +3,6 @@ import classnames from 'classnames';
 import { ColGroupDef, ColDef, IsColumnFunc, IServerSideGetRowsParams } from '@ag-grid-community/core';
 import { get, isEmpty } from 'lodash';
 import { isEqualObj } from './gridManager/utils';
-import { PaginationProps } from 'antd/lib/pagination';
 import { Size, DataActions, GantPaginationProps, ColumnEdiatble, Columns } from './interface';
 import EditorCol from './GridEidtColumn';
 import { Rules, RuleItem } from 'async-validator';
@@ -128,16 +127,25 @@ export const mapColumns = <T>(
             const originValue = get(_rowData, field);
             return _rowType === DataActions.modify && !isEqualObj(value, originValue);
           },
-          'gant-grid-cell-add': params => get(params, 'data._rowType') === DataActions.add,
-          'gant-cell-disable-sign': (params: any) => {
+          // 'gant-grid-cell-add': params => get(params, 'data._rowType') === DataActions.add,
+          'gant-grid-cell-edit': (params: any) => {
             const {
               context: { globalEditable },
               data,
             } = params;
             const editable = get(editConfig, 'editable', false);
-            if (typeof editable == 'boolean') return !editable;
-            return !editable(data, params);
+            if (typeof editable == 'boolean') return editable;
+            return editable(data, params);
           },
+          // 'gant-cell-disable-sign': (params: any) => {
+          //   const {
+          //     context: { globalEditable },
+          //     data,
+          //   } = params;
+          //   const editable = get(editConfig, 'editable', false);
+          //   if (typeof editable == 'boolean') return !editable;
+          //   return !editable(data, params);
+          // },
           ...cellClassRules,
         },
         cellRenderer: render ? 'gantRenderCol' : undefined,
@@ -276,8 +284,6 @@ export function isPagitation(p: GantPaginationProps): p is GantPaginationProps {
 
 export function usePagination(pagitation: GantPaginationProps): any {
   if (isPagitation(pagitation)) {
-    const { onChange, pageSize: size, countLimit, total, current = 1 } = pagitation;
-    const limit = countLimit === total && countLimit != 0;
     const defaultPagetation: GantPaginationProps = {
       size: 'small',
       defaultPageSize: 20,
@@ -285,47 +291,11 @@ export function usePagination(pagitation: GantPaginationProps): any {
       pageSizeOptions: ['20', '50', '100', '150', '200', '500'],
       showSizeChanger: true,
       showQuickJumper: true,
-      current,
+      countLimit: 50000,
     };
-    const pageSize = useMemo(() => {
-      if (isnumber(size)) {
-        return size;
-      }
-      return defaultPagetation.defaultPageSize;
-    }, [size]);
-    const onPageChange = useCallback(
-      (page, pageSize) => {
-        const beginIndex = (page - 1) * pageSize;
-        if (onChange) {
-          limit ? onChange(beginIndex, pageSize, page, countLimit) : onChange(beginIndex, pageSize, page);
-        }
-      },
-      [onChange, limit, countLimit],
-    );
-    const onMorePageChange = useCallback(
-      (page, pageSize) => {
-        const beginIndex = (page - 1) * pageSize;
-        if (onChange) {
-          onChange(beginIndex, pageSize, page);
-        }
-      },
-      [onChange],
-    );
-    if (isnumber(pagitation.beginIndex)) {
-      pagitation.current = pagitation.beginIndex / pageSize + 1;
-    }
-    const pageInfo = {
+    return {
       ...defaultPagetation,
       ...pagitation,
-      onChange: onPageChange,
-      onShowSizeChange: onPageChange,
-      total: limit ? countLimit : total,
-      pageSize,
-    };
-    const showTotal = useCallback((total, range) => paginationShowTotal(total, range, limit, { pageSize: pageInfo.pageSize, beginIndex: pageInfo.beginIndex, current: pageInfo.current, onChange: onMorePageChange }), [limit, onMorePageChange, pageInfo.pageSize, pageInfo.beginIndex, pageInfo.current]);
-    return {
-      ...pageInfo,
-      showTotal,
     };
   }
   return false;
