@@ -1,24 +1,35 @@
 @gant-prefix: gant;
 @component: ~'@{gant-prefix}-schemaform';
+
+:root {
+    --font-size-base: 12px;
+}
+
 :global {
     .@{component} {
         &-schemaCard {
             clear: both;
         }
+
         &-schemaForm {
+
             .ant-input-group.gant-input-group,
             .ant-input-group-wrapper {
                 top: 0px !important;
                 vertical-align: top;
             }
+
             .ant-input-group {
+
                 .ant-select,
                 .ant-cascader-picker {
                     width: 100%;
                 }
             }
+
             .ant-form-item {
                 margin-bottom: 4px;
+
                 .ant-form-item-label {
                     color: rgba(125, 125, 125, 0.65);
                     height: 32px;
@@ -28,14 +39,18 @@
                     white-space: nowrap;
                     padding: 0 0 0px;
                 }
+
                 .ant-form-item-control-wrapper {
                     color: var(--text-color);
+
                     .ant-form-item-control {
                         margin-bottom: 4px;
                         line-height: 32px;
+
                         .ant-form-extra {
                             padding-top: 4px;
                         }
+
                         .ant-form-explain {
                             position: absolute;
                             font-size: 14px;
@@ -53,64 +68,78 @@
                     }
                 }
             }
+
             .@{gant-prefix} {
                 &-form-item-sm {
-                    font-size: 12px;
+                    font-size: var(--font-size-base);
+
                     .ant-select-sm {
-                        font-size: 12px;
+                        font-size: var(--font-size-base);
+
                         .ant-select-selection__placeholder {
                             line-height: 24px;
                         }
                     }
+
                     .ant-form-item-control-wrapper {
                         .ant-form-item-control {
                             margin-top: -1px;
                             line-height: 24px;
+
                             .ant-form-explain {
-                                font-size: 12px;
+                                font-size: var(--font-size-base);
                                 line-height: 24px;
                             }
+
                             .ant-form-extra {
                                 min-height: 18px;
                                 padding-top: 2px;
-                                font-size: 12px;
+                                font-size: var(--font-size-base);
                             }
                         }
                     }
+
                     .ant-form-item-label {
-                        font-size: 12px;
+                        font-size: var(--font-size-base);
                         line-height: 24px;
                         height: 24px;
                     }
+
                     label {
-                        font-size: 12px;
+                        font-size: var(--font-size-base);
                     }
                 }
             }
+
             .ant-form-item-label label::after,
             .ant-col-24.ant-form-item-label label::after,
             .ant-col-xl-24.ant-form-item-label label::after {
                 display: inline;
             }
+
             .ant-input {
                 padding: 4px 7px !important
             }
+
             .@{component}-showRequiredMark {
                 .ant-form-item-required::before {
                     display: inline;
                 }
             }
         }
+
         &-right {
             .ant-form-item-label {
                 text-align: right;
             }
         }
+
         &-left {
             .ant-form-item-label {
                 text-align: left;
             }
         }
+
         &-schemaTable {
             padding: 5px;
         }

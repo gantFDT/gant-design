@@ -11,7 +11,8 @@ interface ListItem {
   key: string,
   id: string,
   title: string,
-  complete?: boolean
+  complete?: boolean,
+  isInvalid?: boolean, //是否无效（显示menu但不可点击），默认有效
 }
 export interface GantAnchorProps extends AnchorProps {
   minHeight?: number | string,
@@ -85,14 +86,16 @@ const GantAnchor = (props: GantAnchorProps) => {
         if (!isClickScroll) {
           //水平方向锚点跟随页面滚动高亮
           list.map(item => {
-            const id = document.getElementById(item.id)
-            let common = fixedTop + extraheight + FIXED_HEIGHT
-            let { top, height } = id.getBoundingClientRect()
-            if (
-              top <= common && top >= (common - height)
-            ) {
-              //这里的44是水平锚点条高度
-              setId(item.id)
+            if (!item.isInvalid) {
+              const id = document.getElementById(item.id)
+              let common = fixedTop + extraheight + FIXED_HEIGHT
+              if (id && id.getBoundingClientRect()) {
+                let { top, height } = id.getBoundingClientRect()
+                if (top <= common && top >= (common - height)) {
+                  //这里的44是水平锚点条高度
+                  setId(item.id)
+                }
+              }
             }
           })
         }
@@ -197,7 +200,7 @@ const GantAnchor = (props: GantAnchorProps) => {
       <Menu selectedKeys={[currentId]}>
         {list.map(item => {
           return (
-            <Menu.Item key={item.id} onClick={() => scrollToAnchor(item.id)}>
+            <Menu.Item key={item.id} onClick={() => scrollToAnchor(item.id)} disabled={item.isInvalid ? true : false}>
               {item.title}
             </Menu.Item>
           )
@@ -233,6 +236,11 @@ const GantAnchor = (props: GantAnchorProps) => {
               <div className={`${prefixCls}-contentCss`} id="contentId">
                 {list.map(item => {
                   let nowCss = item.id == currentId ? 'activeCss' : ''
+                  if (item.isInvalid) {
+                    return <div className={`${prefixCls}-isInvalid`}>
+                      {item.title}
+                    </div>
+                  }
                   return (
                     <a
                       className={`${prefixCls}-aCss`}
@@ -310,27 +318,32 @@ const GantAnchor = (props: GantAnchorProps) => {
             onClick={onSwitchClick}
             style={{ width: '100%', paddingRight: '10px', textAlign: 'right' }}
           />
-          {list.map(item => (
-            <Anchor.Link
-              key={item.key || item.title}
-              href={`#${item.id || item.title}`}
-              title={
-                <>
-                  <Tooltip title={item.title} placement="left">
-                    {item.title}
-                  </Tooltip>
-                  {item.complete ? (
-                    <Icon
-                      type="check-circle"
-                      theme="twoTone"
-                      twoToneColor="#52c41a"
-                      style={{ paddingLeft: '5px' }}
-                    />
-                  ) : null}
-                </>
-              }
-            />
-          ))}
+          {list.map(item => {
+            const nullCss = {}
+            return <div style={item.isInvalid ? { opacity: 0.5, cursor: 'not-allowed' } : nullCss}>
+              <div style={item.isInvalid ? { pointerEvents: 'none' } : nullCss}>
+                <Anchor.Link
+                  key={item.key || item.title}
+                  href={`#${item.id || item.title}`}
+                  title={
+                    <>
+                      <Tooltip title={item.title} placement="left">
+                        {item.title}
+                      </Tooltip>
+                      {item.complete ? (
+                        <Icon
+                          type="check-circle"
+                          theme="twoTone"
+                          twoToneColor="#52c41a"
+                          style={{ paddingLeft: '5px' }}
+                        />
+                      ) : null}
+                    </>
+                  }
+                />
+              </div>
+            </div>
+          })}
         </Anchor>
       </div>
     </div>

@@ -17,6 +17,11 @@ function BasicUse() {
       title: '高级信息',
     },
     {
+      id: 'bbq',
+      title: '无效menu',
+      isInvalid:true
+    },
+    {
       id: 'horbasic3',
       title: '额外信息',
       complete: false
