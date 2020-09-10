@@ -391,7 +391,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                 ...context,
               }}
             >
-              <div style={{ width, height }} className={classnames('gant-grid', `gant-grid-${getSizeClassName(size)}`, openEditSign && `gant-grid-edit-sign`, editable && 'gant-grid-edit')}>
+              <div style={{ width, height }} className={classnames('gant-grid', `gant-grid-${getSizeClassName(size)}`, openEditSign && `gant-grid-edit`, editable && 'gant-grid-editable')}>
                 <div
                   className={classnames('ag-theme-balham', 'gant-ag-wrapper', editable && 'no-zebra')}
                   style={{
