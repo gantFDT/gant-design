@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useRef, useMemo, useEffect, createContext } from 'react';
 import classnames from 'classnames';
 import { AgGridReact } from '@ag-grid-community/react';
-import { GridApi, ColumnApi, GridReadyEvent, SelectionChangedEvent, SuppressKeyboardEventParams, RowNode, GetContextMenuItemsParams } from '@ag-grid-community/core';
+import { GridApi, ColumnApi, GridReadyEvent, SelectionChangedEvent, SuppressKeyboardEventParams, CellEditingStoppedEvent, RowNode, GetContextMenuItemsParams } from '@ag-grid-community/core';
 import '@ag-grid-community/core/dist/styles/ag-grid.css';
 import '@ag-grid-community/core/dist/styles/ag-theme-balham.css';
 import { LicenseManager, AllModules } from '@ag-grid-enterprise/all-modules';
@@ -71,7 +71,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   const selectedChanged = useRef<boolean>(false);
   const columnsRef = useRef<ColumnApi>();
   const selectedRowsRef = useRef<string[]>([]);
-  const [pasteContent, setPasetContent] = useState<any>({});
+  const [gridKey, setGridKey] = useState<number>(-1);
   const [innerSelectedRows, setInnerSelectedRows] = useState([]);
   const gridManager = useMemo(() => {
     return new GridManager();
@@ -108,7 +108,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   /**fix: 解决保存时候标记状态无法清楚的问题 */
 
   // 分页事件
-  const computedPagination: any = usePagination(pagination);
+  const computedPagination: any = useMemo(() => usePagination(pagination), [pagination]);
   // 初始注册配置信息；
   useEffect(() => {
     gridManager.reset({
@@ -260,9 +260,9 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     gridManager.validateFields = validateFields;
   }, [validateFields]);
   //设置动态列
-  // useEffect(() => {
-  //   apiRef.current?.setColumnDefs(columnDefs);
-  // }, [columnDefs]);
+  useEffect(() => {
+    setGridKey(key => key + 1);
+  }, [columnDefs]);
   // columns-end
   const onGridReady = useCallback(
     (params: GridReadyEvent) => {
@@ -271,9 +271,9 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       gridManager.agGridApi = params.api;
       onReady && onReady(params, gridManager);
       params.api.setRowData(dataSource);
-      // params.api.setColumnDefs(columnDefs);
+      params.api.showLoadingOverlay;
     },
-    [onReady, dataSource, columnDefs],
+    [onReady, dataSource],
   );
   const onSuppressKeyboardEvent = useCallback((params: SuppressKeyboardEventParams) => {
     const { event, colDef, data, api } = params;
@@ -341,10 +341,28 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       return context;
     });
   }, [context]);
+  const exportParams = useMemo(() => {
+    return {
+      columnKeys: exportColumns,
+      allColumns: false,
+      columnGroups: true,
+      ...defaultExportParams,
+    };
+  }, [defaultExportParams, exportColumns]);
   const hideBox = useMemo(() => {
     return hideSelcetedBox || rowSelection !== 'multiple';
   }, [hideSelcetedBox, rowSelection]);
-
+  const gridProps = useMemo(() => {
+    if (gridKey) return { key: gridKey };
+    return {};
+  }, [gridKey]);
+  //编辑结束
+  const onCellEditingStopped = useCallback((params: CellEditingStoppedEvent) => {
+    const tipDoms = document.querySelectorAll('.gant-cell-tooltip.ag-tooltip-custom');
+    tipDoms.forEach(itemDom => {
+      itemDom.remove();
+    });
+  }, []);
   return (
     <LocaleReceiver>
       {(local, localeCode = 'zh-cn') => {
@@ -373,7 +391,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                 ...context,
               }}
             >
-              <div style={{ width, height }} className={classnames('gant-grid', `gant-grid-${getSizeClassName(size)}`, openEditSign && `gant-grid-edit`, editable && 'gant-grid-editable')}>
+              <div style={{ width, height }} className={classnames('gant-grid', `gant-grid-${getSizeClassName(size)}`, openEditSign && `gant-grid-edit-sign`, editable && 'gant-grid-edit')}>
                 <div
                   className={classnames('ag-theme-balham', 'gant-ag-wrapper', editable && 'no-zebra')}
                   style={{
@@ -382,8 +400,8 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                   }}
                 >
                   {!hideBox && <SelectedGrid onChange={onBoxSelectionChanged} getRowNodeId={getRowNodeId} columnDefs={selectedColumns as any} rowData={boxSelectedRows} />}
-
                   <AgGridReact
+                    {...gridProps}
                     frameworkComponents={{
                       ...frameworkComponentsMaps,
                       ...frameworkComponents,
@@ -402,12 +420,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     floatingFiltersHeight={20}
                     rowHeight={size == 'small' ? 24 : 32}
                     singleClickEdit
-                    defaultExportParams={{
-                      columnKeys: exportColumns,
-                      allColumns: false,
-                      columnGroups: true,
-                      ...defaultExportParams,
-                    }}
+                    defaultExportParams={exportParams}
                     context={{
                       globalEditable: editable,
                       serverDataRequest,
@@ -452,10 +465,10 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     getContextMenuItems={contextMenuItems as any}
                     modules={[...AllModules, ...AllCommunityModules]}
                     suppressKeyboardEvent={onSuppressKeyboardEvent}
-                    tooltipMouseTrack
+                    onCellEditingStopped={onCellEditingStopped}
                   />
                 </div>
-                <GantPagination pagination={computedPagination} />
+                {computedPagination && <GantPagination {...computedPagination} />}
               </div>
             </GridContext.Provider>
           </Spin>

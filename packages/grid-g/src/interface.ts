@@ -144,6 +144,8 @@ export type GantPaginationProps = Omit<
       addonBefore?: string | React.ReactNode;
       countLimit?: number;
       onRefresh?: () => void;
+      mode?: 'default' | 'limit';
+      tooltipTotal?: () => number | number;
     }
   >,
   'onShowSizeChange'

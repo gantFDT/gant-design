@@ -41,7 +41,7 @@ export function removeTagData(removeNodes: RowNode[], rowData: any[], getRowNode
   return { newRecords, hisRecords, removeIndexs, removeRecords };
 }
 
-const isEmptyObj = value => {
+export const isEmptyObj = value => {
   if (typeof value === 'number') return false;
   if (typeof value === 'object') return isEmpty(value);
   return !value;

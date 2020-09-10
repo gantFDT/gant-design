@@ -83,6 +83,14 @@ const basicColumns = [
         }
 
     },
+    {
+        fieldName: "time",
+        title: "时间",
+    },
+    {
+        fieldName: "time2",
+        title: "时间2",
+    },
 ]
 const RandomCreate = () => ({
     ip: Random.ip(),
@@ -122,9 +130,10 @@ const BaiscGrid = () => {
         queryData();
     }, [])
     const onPageChange = useCallback(
-        (beginIndex, pageSize, cur) => {
-            if (cur === current) return;
-            setCurrent(cur)
+        (beginIndex, pageSize, page,countLimit) => {
+            console.log('--->',beginIndex, pageSize,page,countLimit)
+            if (page === current) return;
+            setCurrent(page)
             queryData(beginIndex);
         },
         [current],
@@ -173,7 +182,6 @@ const BaiscGrid = () => {
             <Selector edit='EDIT' autoFocus />
             <Header extra={<Fragment>
                 <Button size="small" onClick={() => {
-                   
                     setColumns(cols=>{
                          const addIndex=cols.length-basicColumns.length+1;
                          return [...cols,{fieldName:\`test\${addIndex}\`,title:\`动态列\${addIndex}\`,}]
@@ -210,9 +218,7 @@ const BaiscGrid = () => {
                 editable={editable}
                 dataSource={dataSource}
                 serialNumber
-                // treeData
                 boxColumnIndex={['name', 'county', 'age']}
-                // isServerSideGroup={(data) => data.leaf}
                 rowSelection={{
                     type: 'multiple',
                     selectedKeys,
@@ -227,19 +233,7 @@ const BaiscGrid = () => {
                 openEditSign
                 showCut
                 getDataPath={(data) => data.path}
-                onCellEditChange={(record,fieldName) =>{
-                    if(fieldName==='name') return  ( {...record,age:0})
-                    return record
-                }}
-                pagination={
-                    {
-                        pageSize: 20,
-                        current: current,
-                        total: 100,
-                        onChange: onPageChange,
-                        onRefresh: () => { console.log('-->onRefresh') }
-                    }
-                }
+                // pagination
 
             />
         </Fragment>
