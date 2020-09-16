@@ -579,7 +579,6 @@ export default class GridManage {
       if (removeIndex >= 0) return;
       const updateIndex = findIndex(update, item => item.dataNumber === index);
       const { _rowType, _rowData, _rowCut, _rowError, treeDataPath, ...data } = get(node, 'data', {});
-
       if (updateIndex >= 0) return dataSource.push({ ...update[updateIndex] });
       dataSource.push(data);
     } as any);
