@@ -190,7 +190,9 @@ export default class GridManage {
         this.agGridApi.batchUpdateRowData({ remove: oldData }, () => {
           const rowData = this.getRowData();
           const rowIndex = findIndex(rowData, itemData => getRowNodeId(get(node, 'data', {})) === getRowNodeId(itemData));
-          const newDataSource = up ? [...rowData.slice(0, rowIndex), ...oldData, ...rowData.slice(rowIndex)] : [...rowData.slice(0, rowIndex), rowData[rowIndex], ...oldData, ...rowData.slice(rowIndex + 1)];
+          const newDataSource = up
+            ? [...rowData.slice(0, rowIndex), ...oldData, ...rowData.slice(rowIndex)]
+            : [...rowData.slice(0, rowIndex), rowData[rowIndex], ...oldData, ...rowData.slice(rowIndex + 1)];
           this.agGridApi.setRowData(newDataSource);
           this.cutRows = [];
           this.agGridConfig.onRowsPasteEnd && this.agGridConfig.onRowsPasteEnd(newDataSource);
@@ -209,7 +211,9 @@ export default class GridManage {
       this.agGridApi.batchUpdateRowData({ remove: oldRowData }, () => {
         const rowData = this.getRowData();
         const rowIndex = findIndex(rowData, itemData => getRowNodeId(get(node, 'data', {})) === getRowNodeId(itemData));
-        const newDataSource = up ? [...rowData.slice(0, rowIndex), ...newRowData, ...rowData.slice(rowIndex)] : [...rowData.slice(0, rowIndex), rowData[rowIndex], ...newRowData, ...rowData.slice(rowIndex + 1)];
+        const newDataSource = up
+          ? [...rowData.slice(0, rowIndex), ...newRowData, ...rowData.slice(rowIndex)]
+          : [...rowData.slice(0, rowIndex), rowData[rowIndex], ...newRowData, ...rowData.slice(rowIndex + 1)];
         this.agGridApi.setRowData(newDataSource);
         this.cutRows = [];
         this.agGridConfig.onRowsPasteEnd && this.agGridConfig.onRowsPasteEnd(newDataSource);
@@ -575,7 +579,8 @@ export default class GridManage {
       if (removeIndex >= 0) return;
       const updateIndex = findIndex(update, item => item.dataNumber === index);
       const { _rowType, _rowData, _rowCut, _rowError, treeDataPath, ...data } = get(node, 'data', {});
-      if (updateIndex >= 0) return dataSource.push({ ...data, ...update[updateIndex] });
+
+      if (updateIndex >= 0) return dataSource.push({ ...update[updateIndex] });
       dataSource.push(data);
     } as any);
     return dataSource;
