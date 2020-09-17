@@ -1,7 +1,17 @@
 import React, { useState, useCallback, useRef, useMemo, useEffect, createContext } from 'react';
 import classnames from 'classnames';
 import { AgGridReact } from '@ag-grid-community/react';
-import { GridApi, ColumnApi, GridReadyEvent, SelectionChangedEvent, SuppressKeyboardEventParams, CellEditingStoppedEvent, RowNode, GetContextMenuItemsParams } from '@ag-grid-community/core';
+import {
+  GridApi,
+  ColumnApi,
+  GridReadyEvent,
+  RowDataUpdatedEvent,
+  SelectionChangedEvent,
+  SuppressKeyboardEventParams,
+  CellEditingStoppedEvent,
+  RowNode,
+  GetContextMenuItemsParams,
+} from '@ag-grid-community/core';
 import '@ag-grid-community/core/dist/styles/ag-grid.css';
 import '@ag-grid-community/core/dist/styles/ag-theme-balham.css';
 import { LicenseManager, AllModules } from '@ag-grid-enterprise/all-modules';
@@ -65,7 +75,57 @@ export const defaultRowSelection: RowSelection = {
 };
 
 const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
-  const { dataSource: initDataSource, onReady, columns, editable, rowSelection: rowSel, size, rowkey, resizable, filter, sortable, width, height, treeData, pagination, loading, isServerSideGroup, getServerSideGroupKey, frameworkComponents, treeDataChildrenName, locale: customLocale, serverGroupExpend, groupDefaultExpanded, defaultColDef, context: propsContext, components, serialNumber, rowClassRules, isCompute, getDataPath: orignGetDataPath, onCellEditChange, onCellEditingChange, onCellChanged, openEditSign = true, getContextMenuItems, createConfig, onRowsCut, onRowsPaste, onRowsPasteEnd, showCut = false, onContextChangeRender, defaultExportParams, editChangeCallback, isRowSelectable, boxColumnIndex, hideSelcetedBox, suppressKeyboardEvent, onSelectionChanged: propsOnSelectionChanged, ...orignProps } = props;
+  const {
+    dataSource: initDataSource,
+    onReady,
+    columns,
+    editable,
+    rowSelection: rowSel,
+    size,
+    rowkey,
+    resizable,
+    filter,
+    sortable,
+    width,
+    height,
+    treeData,
+    pagination,
+    loading,
+    isServerSideGroup,
+    getServerSideGroupKey,
+    frameworkComponents,
+    treeDataChildrenName,
+    locale: customLocale,
+    serverGroupExpend,
+    groupDefaultExpanded,
+    defaultColDef,
+    context: propsContext,
+    components,
+    serialNumber,
+    rowClassRules,
+    isCompute,
+    getDataPath: orignGetDataPath,
+    onCellEditChange,
+    onCellEditingChange,
+    onCellChanged,
+    openEditSign = true,
+    getContextMenuItems,
+    createConfig,
+    onRowsCut,
+    onRowsPaste,
+    onRowsPasteEnd,
+    showCut = false,
+    onContextChangeRender,
+    defaultExportParams,
+    editChangeCallback,
+    isRowSelectable,
+    boxColumnIndex,
+    hideSelcetedBox,
+    suppressKeyboardEvent,
+    onSelectionChanged: propsOnSelectionChanged,
+    onRowDataUpdated: propOnRowDataUpdated,
+    ...orignProps
+  } = props;
   const apiRef = useRef<GridApi>();
   const shiftRef = useRef<boolean>(false);
   const selectedChanged = useRef<boolean>(false);
@@ -104,7 +164,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     if (rowSel) return { ...defaultRowSelection, ...rowSel };
     return {};
   }, [rowSel]);
-  const { onSelect, selectedRows, showDefalutCheckbox, type: rowSelection, defaultSelectionCol, ...selection } = gantSelection;
+  const { onSelect, selectedRows, showDefalutCheckbox, type: rowSelection, onSelectedChanged, defaultSelectionCol, ...selection } = gantSelection;
   /**fix: 解决保存时候标记状态无法清楚的问题 */
 
   // 分页事件
@@ -363,6 +423,32 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       itemDom.remove();
     });
   }, []);
+  // 监听数据变化
+  const onRowDataUpdated = useCallback(
+    (event: RowDataUpdatedEvent) => {
+      const { api } = event;
+      propOnRowDataUpdated && propOnRowDataUpdated(event);
+      if (isEmpty(selectedRows) || typeof onSelectedChanged !== 'function') return;
+      const gridSelectedRows = api.getSelectedRows();
+      let changed = false;
+      const newSelectedRows = selectedRows.map(item => {
+        const gridIndex = findIndex(gridSelectedRows, gridItem => getRowNodeId(gridItem) === getRowNodeId(item));
+        if (gridIndex >= 0) {
+          const newSelectedItem = gridSelectedRows[gridIndex];
+          const diff = !isEqual(newSelectedItem, item);
+          changed = diff ? diff : changed;
+          return diff ? newSelectedItem : item;
+        }
+        return item;
+      });
+      if (changed)
+        onSelectedChanged(
+          newSelectedRows.map(item => getRowNodeId(item)),
+          newSelectedRows,
+        );
+    },
+    [selectedRows, onSelectedChanged],
+  );
   return (
     <LocaleReceiver>
       {(local, localeCode = 'zh-cn') => {
@@ -399,7 +485,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     height: computedPagination ? 'calc(100% - 30px)' : '100%',
                   }}
                 >
-                  {!hideBox && <SelectedGrid   apiRef={apiRef} onChange={onBoxSelectionChanged} getRowNodeId={getRowNodeId} columnDefs={selectedColumns as any} rowData={boxSelectedRows} />}
+                  {!hideBox && <SelectedGrid apiRef={apiRef} onChange={onBoxSelectionChanged} getRowNodeId={getRowNodeId} columnDefs={selectedColumns as any} rowData={boxSelectedRows} />}
                   <AgGridReact
                     {...gridProps}
                     frameworkComponents={{
@@ -466,6 +552,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     modules={[...AllModules, ...AllCommunityModules]}
                     suppressKeyboardEvent={onSuppressKeyboardEvent}
                     onCellEditingStopped={onCellEditingStopped}
+                    onRowDataUpdated={onRowDataUpdated}
                   />
                 </div>
                 {computedPagination && <GantPagination {...computedPagination} />}

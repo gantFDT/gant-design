@@ -224,7 +224,10 @@ const BaiscGrid = () => {
                     type: 'multiple',
                     selectedKeys,
                     selectedRows,
-                    onSelect
+                    onSelect,
+                    onSelectedChanged:(keys,rows)=>{
+                        console.log('----->onSelectedChanged',keys,rows)
+                    }
                 }}
                 hideSelectedBox
                 rowBuffer={1}
