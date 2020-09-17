@@ -233,7 +233,11 @@ const BaiscGrid = () => {
                 openEditSign
                 showCut
                 getDataPath={(data) => data.path}
-                // pagination
+                pagination={{
+                    total:400,
+                    onChange:onPageChange,
+                    current
+                }}
 
             />
         </Fragment>

@@ -79,7 +79,12 @@ export default memo(function GantPagination(props: GantPaginationProps) {
         )}
         {addonAfter && <div>{addonAfter}</div>}
       </div>
-      {mode === 'limit' && <Switch onChange={onSwitchChange} className="grid-pagination-mode-switch" checkedChildren="模糊查询" unCheckedChildren="精确查询" defaultChecked />}
+      {mode === 'limit' && (
+        <>
+          <label style={{ marginLeft: 4 }}>精确查询：</label>
+          <Switch onChange={onSwitchChange} className="grid-pagination-mode-switch" />
+        </>
+      )}
     </div>
   );
 });
@@ -109,7 +114,7 @@ function PaginationTotal(props: any) {
             visible && onHover();
           }}
         >
-          <Button size="small" style={{ fontSize: 12 }} type="link" icon="pie-chart"></Button>
+          <Button size="small" className="gantd-pagination-total-btn" type="link" icon="exclamation-circle"></Button>
         </Tooltip>
       </>
     );
