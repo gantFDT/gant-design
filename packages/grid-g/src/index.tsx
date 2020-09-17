@@ -123,6 +123,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     hideSelcetedBox,
     suppressKeyboardEvent,
     onSelectionChanged: propsOnSelectionChanged,
+    onRowDataUpdated: propOnRowDataUpdated,
     ...orignProps
   } = props;
   const apiRef = useRef<GridApi>();
@@ -163,7 +164,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     if (rowSel) return { ...defaultRowSelection, ...rowSel };
     return {};
   }, [rowSel]);
-  const { onSelect, selectedRows, showDefalutCheckbox, type: rowSelection, defaultSelectionCol, ...selection } = gantSelection;
+  const { onSelect, selectedRows, showDefalutCheckbox, type: rowSelection, onSelectedChanged, defaultSelectionCol, ...selection } = gantSelection;
   /**fix: 解决保存时候标记状态无法清楚的问题 */
 
   // 分页事件
@@ -423,9 +424,31 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     });
   }, []);
   // 监听数据变化
-  const onRowDataUpdated = useCallback((event: RowDataUpdatedEvent) => {
-    console.log('--->onRowDataUpdated', event);
-  }, []);
+  const onRowDataUpdated = useCallback(
+    (event: RowDataUpdatedEvent) => {
+      const { api } = event;
+      propOnRowDataUpdated && propOnRowDataUpdated(event);
+      if (isEmpty(selectedRows) || typeof onSelectedChanged !== 'function') return;
+      const gridSelectedRows = api.getSelectedRows();
+      let changed = false;
+      const newSelectedRows = selectedRows.map(item => {
+        const gridIndex = findIndex(gridSelectedRows, gridItem => getRowNodeId(gridItem) === getRowNodeId(item));
+        if (gridIndex >= 0) {
+          const newSelectedItem = gridSelectedRows[gridIndex];
+          const diff = !isEqual(newSelectedItem, item);
+          changed = diff ? diff : changed;
+          return diff ? newSelectedItem : item;
+        }
+        return item;
+      });
+      if (changed)
+        onSelectedChanged(
+          newSelectedRows.map(item => getRowNodeId(item)),
+          newSelectedRows,
+        );
+    },
+    [selectedRows, onSelectedChanged],
+  );
   return (
     <LocaleReceiver>
       {(local, localeCode = 'zh-cn') => {

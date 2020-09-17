@@ -1,5 +1,15 @@
 import { AgGridReactProps } from '@ag-grid-community/react';
-import { GridApi as AgGridApi, ITooltipParams, GridReadyEvent, ValueFormatterParams, ColDef, IServerSideGetRowsParams, GetContextMenuItemsParams, ColumnApi as AgColumnApi, RowNode } from '@ag-grid-community/core';
+import {
+  GridApi as AgGridApi,
+  ITooltipParams,
+  GridReadyEvent,
+  ValueFormatterParams,
+  ColDef,
+  IServerSideGetRowsParams,
+  GetContextMenuItemsParams,
+  ColumnApi as AgColumnApi,
+  RowNode,
+} from '@ag-grid-community/core';
 import { defaultProps, defaultRowSelection } from './index';
 import { Rules, RuleType, RuleItem } from 'async-validator';
 import { PaginationProps } from 'antd/lib/pagination';
@@ -63,6 +73,7 @@ export type RowSelection = {
   defaultSelectionCol?: ColDef;
   rowMultiSelectWithClick?: boolean;
   rowDeselection?: boolean;
+  onSelectedChanged?: (keys: string[], rows: any[]) => void;
 };
 
 type EditComponentProps = {
