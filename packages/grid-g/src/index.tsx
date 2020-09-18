@@ -183,6 +183,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     });
   }, []);
   useEffect(() => {
+   
     gridManager.dataSourceChanged(dataSource);
   }, [dataSource]);
   const serverDataCallback = useCallback((groupKeys, successCallback) => {

@@ -1,6 +1,6 @@
 import { RowDataTransaction, GridApi, RowNode } from '@ag-grid-community/core';
 import Schema, { Rules } from 'async-validator';
-import { get, isEmpty, findIndex, cloneDeep, set, uniqBy, groupBy, difference, isEqual } from 'lodash';
+import { get, isEmpty, findIndex, cloneDeep, set, uniqBy, groupBy, assignInWith, isEqual } from 'lodash';
 import { getModifyData, removeTagData, isEqualObj, canQuickCreate, getRowsToUpdate, onSetcutData, getAllChildrenNode } from './utils';
 import { bindAll } from 'lodash-decorators';
 import { generateUuid } from '@util';
@@ -570,16 +570,23 @@ export default class GridManage {
     } as any);
     return data;
   }
-  batchUpdateDataSource(params: BatchUpdateDataSourceParams) {
+  batchUpdateDataSource(params: BatchUpdateDataSourceParams, keys: string | string[] = []) {
     const dataSource: any = [];
     const { add, modify, remove } = params;
     const update = uniqBy([...add, ...modify], 'dataNumber');
+    const assignKeys = typeof keys === 'string' ? [keys] : keys;
     this.agGridApi.forEachNode(function(node, index) {
       const removeIndex = findIndex(remove, item => item.dataNumber === index);
       if (removeIndex >= 0) return;
       const updateIndex = findIndex(update, item => item.dataNumber === index);
       const { _rowType, _rowData, _rowCut, _rowError, treeDataPath, ...data } = get(node, 'data', {});
-      if (updateIndex >= 0) return dataSource.push({ ...update[updateIndex] });
+      if (updateIndex >= 0) {
+        const updateItem = assignInWith({ ...update[updateIndex] }, data, (objValue, srcValue, key) => {
+          if(assignKeys.indexOf(key)>=0) return srcValue;
+          return objValue;
+        });
+        return dataSource.push(updateItem);
+      }
       dataSource.push(data);
     } as any);
     return dataSource;
