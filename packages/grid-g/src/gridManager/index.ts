@@ -581,10 +581,11 @@ export default class GridManage {
       const updateIndex = findIndex(update, item => item.dataNumber === index);
       const { _rowType, _rowData, _rowCut, _rowError, treeDataPath, ...data } = get(node, 'data', {});
       if (updateIndex >= 0) {
-        const updateItem = assignInWith({ ...update[updateIndex] }, data, (objValue, srcValue, key) => {
-          if(assignKeys.indexOf(key)>=0) return srcValue;
-          return objValue;
+        const mergeData = {};
+        assignKeys.map(item => {
+          mergeData[item] = data[item];
         });
+        const updateItem = { ...update[index], ...mergeData };
         return dataSource.push(updateItem);
       }
       dataSource.push(data);
