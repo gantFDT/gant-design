@@ -8,7 +8,22 @@ interface Page {
   beginIndex: number;
 }
 export default memo(function GantPagination(props: GantPaginationProps) {
-  const { addonAfter, addonBefore, onRefresh, countLimit, mode = 'default', tooltipTotal, total, onChange, current: propCurrent, pageSize: PropPageSize, beginIndex, defaultPageSize, defaultCurrent, ...resetProps } = props;
+  const {
+    addonAfter,
+    addonBefore,
+    onRefresh,
+    countLimit,
+    mode = 'default',
+    tooltipTotal,
+    total,
+    onChange,
+    current: propCurrent,
+    pageSize: PropPageSize,
+    beginIndex,
+    defaultPageSize,
+    defaultCurrent,
+    ...resetProps
+  } = props;
   const [innerMode, setInnerMode] = useState<'limit' | 'default'>('limit');
   const [pageInfo, setPageInfo] = useState<Page>({ current: defaultCurrent, pageSize: defaultPageSize, beginIndex: 0 });
   useEffect(() => {
@@ -54,8 +69,8 @@ export default memo(function GantPagination(props: GantPaginationProps) {
   const onSwitchChange = useCallback(
     value => {
       const { current, pageSize, beginIndex } = pageInfo;
-      value ? onChange(beginIndex, pageSize, current, countLimit) : onChange(beginIndex, pageSize, current);
-      const _mode = value ? 'limit' : 'default';
+      !value ? onChange(beginIndex, pageSize, current, countLimit) : onChange(beginIndex, pageSize, current);
+      const _mode = value ? 'default' : 'limit';
       setInnerMode(_mode);
     },
     [pageInfo, onChange, countLimit],
@@ -82,7 +97,7 @@ export default memo(function GantPagination(props: GantPaginationProps) {
       {mode === 'limit' && (
         <>
           <label style={{ marginLeft: 4 }}>精确查询：</label>
-          <Switch onChange={onSwitchChange} className="grid-pagination-mode-switch" />
+          <Switch onChange={onSwitchChange} size="small" className="grid-pagination-mode-switch" />
         </>
       )}
     </div>
