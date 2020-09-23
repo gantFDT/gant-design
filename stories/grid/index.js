@@ -339,6 +339,7 @@ const treeColumns = [{
     comparator: function (d1, d2) {
         return new Date(d1).getTime() < new Date(d2).getTime() ? -1 : 1;
     },
+
 },
 {
     title: 'size',
@@ -373,7 +374,7 @@ const TreeGrid = () => {
     }, [])
     return <Fragment>
         <Header extra={<Fragment>
-            <Button size="small" icon='poweroff' onClick={() => console.log(gridManagerRef.current.getPureData())} />
+            <Button size="small" icon='poweroff' onClick={() => console.log(apiRef.current.getBestCostNodeSelection())} />
             {!editable ? <Button size="small" icon='edit' onClick={() => setEditable(true)} /> : <Fragment>
                 <Button size="small" icon='poweroff' onClick={onCancelEdit} />
                 <Button size="small" icon='minus' onClick={onTagRemove} />
@@ -405,7 +406,8 @@ const TreeGrid = () => {
             onReady={onReady}
             openEditSign
             getDataPath={(data) => data.filePath}
-
+            groupSelectsChildren
+            suppressAggFuncInHeader
         />
     </Fragment>
 
@@ -423,7 +425,7 @@ const config = {
         {
             title: '基础Grid',
             describe: "基础Grid",
-            cmp: BaiscGrid
+            cmp: TreeGrid
         }
     ]
 }

@@ -11,6 +11,7 @@ import {
   CellEditingStoppedEvent,
   RowNode,
   GetContextMenuItemsParams,
+  RowSelectedEvent,
 } from '@ag-grid-community/core';
 import '@ag-grid-community/core/dist/styles/ag-grid.css';
 import '@ag-grid-community/core/dist/styles/ag-theme-balham.css';
@@ -19,7 +20,7 @@ import { AllCommunityModules } from '@ag-grid-community/all-modules';
 import { Spin } from 'antd';
 import { get, isEmpty, isEqual, cloneDeep, set, max, min, findIndex, uniq } from 'lodash';
 import key from './license';
-import { mapColumns, flattenTreeData, usePagination, getSizeClassName, selectedMapColumns } from './utils';
+import { mapColumns, flattenTreeData, usePagination, getSizeClassName, selectedMapColumns, groupNodeSelectedToggle, checkParentGroupSelectedStatus } from './utils';
 import { Size, GridPropsPartial, RowSelection, DataActions } from './interface';
 import SelectedGrid from './SelectedGrid';
 import GantPagination from './Pagination';
@@ -123,7 +124,9 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     hideSelcetedBox,
     suppressKeyboardEvent,
     onSelectionChanged: propsOnSelectionChanged,
+    onRowSelected: propsOnRowSelected,
     onRowDataUpdated: propOnRowDataUpdated,
+    groupSelectsChildren,
     ...orignProps
   } = props;
   const apiRef = useRef<GridApi>();
@@ -131,6 +134,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   const selectedChanged = useRef<boolean>(false);
   const columnsRef = useRef<ColumnApi>();
   const selectedRowsRef = useRef<string[]>([]);
+  const selectedLoadingRef = useRef<boolean>(false);
   const [gridKey, setGridKey] = useState<number>(-1);
   const [innerSelectedRows, setInnerSelectedRows] = useState([]);
   const gridManager = useMemo(() => {
@@ -183,7 +187,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     });
   }, []);
   useEffect(() => {
-   
     gridManager.dataSourceChanged(dataSource);
   }, [dataSource]);
   const serverDataCallback = useCallback((groupKeys, successCallback) => {
@@ -261,7 +264,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       }
       onSelect && onSelect(keys, rows);
     },
-    [selectedRows, garidShowSelectedRows],
+    [selectedRows, garidShowSelectedRows, groupSelectsChildren],
   );
   const onSelectionChanged = useCallback(
     (event: SelectionChangedEvent) => {
@@ -273,6 +276,29 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       propsOnSelectionChanged && propsOnSelectionChanged(event);
     },
     [onSelectionChange, propsOnSelectionChanged],
+  );
+  const onRowSelected = useCallback(
+    (event: RowSelectedEvent) => {
+      propsOnRowSelected && propsOnRowSelected(event);
+      if (!groupSelectsChildren) return;
+      const gridSelectedRows = event.api.getSelectedRows();
+      if (gridSelectedRows.length === 0 || gridManager.getRowData().length === gridSelectedRows.length) return;
+      if(selectedLoadingRef.current) return
+      selectedLoadingRef.current = true;
+      const { node } = event;
+      const nodeSelected = node.isSelected();
+      groupNodeSelectedToggle(node, nodeSelected);
+      checkParentGroupSelectedStatus(node, nodeSelected,event.api);
+      setTimeout(()=>{
+        selectedLoadingRef.current=false
+        event.api.refreshCells({
+          columns:['defalutSelection'],
+          rowNodes:[node],
+          force:true
+        })
+      },300)
+    },
+    [propsOnRowSelected],
   );
   useEffect(() => {
     if (!apiRef.current) return;
@@ -293,7 +319,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   //columns
   const defaultSelection = !isEmpty(gantSelection) && showDefalutCheckbox;
   const { columnDefs, validateFields } = useMemo(() => {
-    return mapColumns<T>(columns, getRowNodeId, defaultSelection, defaultSelectionCol, rowSelection, serialNumber);
+    return mapColumns<T>(columns, getRowNodeId, defaultSelection, defaultSelectionCol, rowSelection, serialNumber,groupSelectsChildren);
   }, [columns]);
   // 选中栏grid  columns;
   const selectedColumns = useMemo(() => {
@@ -498,6 +524,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                       ...components,
                     }}
                     onSelectionChanged={onSelectionChanged}
+                    onRowSelected={onRowSelected}
                     rowSelection={rowSelection}
                     getRowNodeId={getRowNodeId}
                     onGridReady={onGridReady}
@@ -536,10 +563,11 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                       sortable,
                       filter,
                       minWidth: 30,
-                      tooltip: (params: any) => params,
+                      tooltipValueGetter: (params: any) => params,
                       tooltipComponent: 'gantValidateTooltip',
                       ...defaultColDef,
                     }}
+                    groupSelectsChildren={treeData ? false : groupSelectsChildren}
                     enableCellTextSelection
                     ensureDomOrder
                     groupDefaultExpanded={groupDefaultExpanded}
