@@ -14,6 +14,7 @@ import { defaultProps, defaultRowSelection } from './index';
 import { Rules, RuleType, RuleItem } from 'async-validator';
 import { PaginationProps } from 'antd/lib/pagination';
 import GridManager from './gridManager';
+export * from '@ag-grid-community/core'
 // 编辑框大小
 export enum Size {
   small = 'small',

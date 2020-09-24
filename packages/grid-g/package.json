@@ -21,7 +21,6 @@
   "author": "GantFDT",
   "license": "MIT",
   "dependencies": {
-    "@ag-grid-community/all-modules": "23.2.1",
     "@ag-grid-community/core": "23.2.1",
     "@ag-grid-community/react": "23.2.1",
     "@ag-grid-enterprise/all-modules": "23.2.1",

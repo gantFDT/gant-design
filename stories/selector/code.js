@@ -2,7 +2,7 @@ export default [
 `
 import React, { useState, useMemo, useCallback } from 'react'
 import { Button } from 'antd'
-import { Selector, EditStatus, SwitchStatus } from 'gantd'
+import { Selector, EditStatus, SwitchStatus } from 'data-cell'
 
 
 const Demo1 = () => {
@@ -33,19 +33,25 @@ const Demo1 = () => {
 
   return (
     <>
-      1、传递字符串数组作为选项列表<br />
+      {/* 1、传递字符串数组作为选项列表<br />
       <Selector
+        defaultValue={'sss'}
         dataSource={dataSource}
         onBlur={() => { console.log("onBlur") }}
         style={{ margin: '5px 0' }} value={value} onChange={setValue} onSave={(id, value, cb) => cb()} />
-      2、传递对象作为选项列表<br />
+      2、传递对象作为选项列表<br /> */}
       <>
         <Button size="small" onClick={() => { setedit2(SwitchStatus) }}>编辑</Button>
         <Button size="small" onClick={() => { setedit2(SwitchStatus) }}>取消</Button>
         <Button size="small" onClick={() => { setedit2(EditStatus.SAVE) }}>保存</Button>
       </>
 
-      <Selector dataSource={dataSource2} selectorId='language' edit={edit2} style={{ margin: '5px 0' }} value={value2} onChange={setValue2} onSave={(id, value, cb) => cb()} />
+      <Selector dataSource={dataSource2} 
+      selectorId='language' 
+      edit={EditStatus.EDIT} style={{ margin: '5px 0' }} 
+      // value={value2} 
+      defaultValue={'ssss'}
+      onChange={setValue2} onSave={(id, value, cb) => cb()} />
     </>
   )
 }
@@ -53,7 +59,7 @@ const Demo1 = () => {
 ReactDOM.render(<Demo1 />, mountNode)`,`
 import React, { useState, useMemo, useCallback } from 'react'
 import { Button } from 'antd'
-import { Selector, EditStatus, SwitchStatus } from 'gantd'
+import { Selector, EditStatus, SwitchStatus } from 'data-cell'
 
 
 const Demo2 = () => {
@@ -87,7 +93,7 @@ const Demo2 = () => {
 ReactDOM.render(<Demo2 />, mountNode)`,`
 import React, { useState, useMemo, useCallback } from 'react'
 import { Button } from 'antd'
-import { Selector, EditStatus, SwitchStatus } from 'gantd'
+import { Selector, EditStatus, SwitchStatus } from 'data-cell'
 
 
 const Demo3 = () => {
@@ -117,7 +123,7 @@ const Demo3 = () => {
 ReactDOM.render(<Demo3 />, mountNode)`,`
 import React, { useState, useMemo, useCallback } from 'react'
 import { Button } from 'antd'
-import { Selector, EditStatus, SwitchStatus } from 'gantd'
+import { Selector, EditStatus, SwitchStatus } from 'data-cell'
 
 
 const Demo4 = () => {
@@ -151,7 +157,7 @@ const Demo4 = () => {
 ReactDOM.render(<Demo4 />, mountNode)`,`
 import React, { useState, useMemo, useCallback } from 'react'
 import { Button } from 'antd'
-import { Selector, EditStatus, SwitchStatus } from 'gantd'
+import { Selector, EditStatus, SwitchStatus } from 'data-cell'
 
 
 const Demo5 = () => {
@@ -164,7 +170,7 @@ const Demo5 = () => {
 ReactDOM.render(<Demo5 />, mountNode)`,`
 import React, { useState, useMemo, useCallback } from 'react'
 import { Button } from 'antd'
-import { Selector, EditStatus, SwitchStatus } from 'gantd'
+import { Selector, EditStatus, SwitchStatus } from 'data-cell'
 
 
 const Demo6 = () => {
@@ -226,7 +232,7 @@ const Demo6 = () => {
 ReactDOM.render(<Demo6 />, mountNode)`,`
 import React, { useState, useMemo, useCallback } from 'react'
 import { Button } from 'antd'
-import { Selector, EditStatus, SwitchStatus } from 'gantd'
+import { Selector, EditStatus, SwitchStatus } from 'data-cell'
 
 
 const Demo7 = () => {
@@ -262,7 +268,7 @@ const Demo7 = () => {
 ReactDOM.render(<Demo7 />, mountNode)`,`
 import React, { useState, useMemo, useCallback } from 'react'
 import { Button } from 'antd'
-import { Selector, EditStatus, SwitchStatus } from 'gantd'
+import { Selector, EditStatus, SwitchStatus } from 'data-cell'
 
 
 const Demo8 = () => {

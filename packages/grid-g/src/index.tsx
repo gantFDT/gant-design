@@ -15,8 +15,10 @@ import {
 } from '@ag-grid-community/core';
 import '@ag-grid-community/core/dist/styles/ag-grid.css';
 import '@ag-grid-community/core/dist/styles/ag-theme-balham.css';
-import { LicenseManager, AllModules } from '@ag-grid-enterprise/all-modules';
-import { AllCommunityModules } from '@ag-grid-community/all-modules';
+import {
+  LicenseManager,
+  AllModules,
+} from '@ag-grid-enterprise/all-modules';
 import { Spin } from 'antd';
 import { get, isEmpty, isEqual, cloneDeep, set, max, min, findIndex, uniq } from 'lodash';
 import key from './license';
@@ -280,23 +282,23 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   const onRowSelected = useCallback(
     (event: RowSelectedEvent) => {
       propsOnRowSelected && propsOnRowSelected(event);
-      if (!groupSelectsChildren) return;
+      if (!groupSelectsChildren || !treeData) return;
       const gridSelectedRows = event.api.getSelectedRows();
       if (gridSelectedRows.length === 0 || gridManager.getRowData().length === gridSelectedRows.length) return;
-      if(selectedLoadingRef.current) return
+      if (selectedLoadingRef.current) return;
       selectedLoadingRef.current = true;
       const { node } = event;
       const nodeSelected = node.isSelected();
       groupNodeSelectedToggle(node, nodeSelected);
-      checkParentGroupSelectedStatus(node, nodeSelected,event.api);
-      setTimeout(()=>{
-        selectedLoadingRef.current=false
+      checkParentGroupSelectedStatus(node, nodeSelected, event.api);
+      setTimeout(() => {
+        selectedLoadingRef.current = false;
         event.api.refreshCells({
-          columns:['defalutSelection'],
-          rowNodes:[node],
-          force:true
-        })
-      },300)
+          columns: ['defalutSelection'],
+          rowNodes: [node],
+          force: true,
+        });
+      }, 300);
     },
     [propsOnRowSelected],
   );
@@ -319,7 +321,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   //columns
   const defaultSelection = !isEmpty(gantSelection) && showDefalutCheckbox;
   const { columnDefs, validateFields } = useMemo(() => {
-    return mapColumns<T>(columns, getRowNodeId, defaultSelection, defaultSelectionCol, rowSelection, serialNumber,groupSelectsChildren);
+    return mapColumns<T>(columns, getRowNodeId, defaultSelection, defaultSelectionCol, rowSelection, serialNumber, groupSelectsChildren);
   }, [columns]);
   // 选中栏grid  columns;
   const selectedColumns = useMemo(() => {
@@ -578,7 +580,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                       ...rowClassRules,
                     }}
                     getContextMenuItems={contextMenuItems as any}
-                    modules={[...AllModules, ...AllCommunityModules]}
+                    modules={[...AllModules]}
                     suppressKeyboardEvent={onSuppressKeyboardEvent}
                     onCellEditingStopped={onCellEditingStopped}
                     onRowDataUpdated={onRowDataUpdated}
