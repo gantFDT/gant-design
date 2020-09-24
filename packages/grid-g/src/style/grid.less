@@ -42,7 +42,7 @@
     :global {
       .ant-pagination-total-text {
         vertical-align: top;
-        line-height: 24px!important;
+        line-height: 24px !important;
       }
     }
   }
@@ -165,13 +165,15 @@
     }
 
     &-sm {
-      .ag-cell.ag-cell-inline-editing,
-      .ag-cell {
-        height: 23px !important;
-        line-height: 24px !important;
+      .ag-theme-balham {
+        .ag-cell.ag-cell-inline-editing,
+        .ag-cell {
+          height: 23px;
+          line-height: 24px;
 
-        .ag-cell-wrapper > *:not(.ag-cell-value):not(.ag-group-value) {
-          height: 24px !important;
+          .ag-cell-wrapper > *:not(.ag-cell-value):not(.ag-group-value) {
+            height: 24px;
+          }
         }
       }
     }
@@ -213,4 +215,25 @@
 
 .ag-theme-balham .ag-row-selected {
   background-color: var(--ag-selected-row-background-color, #b7e4ff) !important;
+}
+
+// treeData groupSelectsChildren 模式
+:global {
+  .gant-grid {
+    .ag-theme-balham {
+      .gant-grid-cell-checkbox-indeterminate {
+        .ag-checked {
+          &::after {
+            content: '\f107';
+            color: #7f8c8d;
+            color: var(--ag-checkbox-indeterminate-color, var(--ag-checkbox-unchecked-color, #7f8c8d));
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+          }
+        }
+      }
+    }
+  }
 }

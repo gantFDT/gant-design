@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import classnames from 'classnames';
-import { ColGroupDef, ColDef, IsColumnFunc, IServerSideGetRowsParams } from '@ag-grid-community/core';
+import { ColGroupDef, ColDef, IsColumnFunc, IServerSideGetRowsParams, RowNode, GridApi } from '@ag-grid-community/core';
 import { get, isEmpty } from 'lodash';
 import { isEqualObj } from './gridManager/utils';
 import { Size, DataActions, GantPaginationProps, ColumnEdiatble, Columns } from './interface';
@@ -40,7 +40,6 @@ const defaultCheckboxColSelectionCol: ColDef = {
     padding: '0px 3px',
   },
   headerClass: 'gant-padding-h-3',
-  suppressPaste: true,
 };
 
 const serialNumberCol: ColDef = {
@@ -99,6 +98,7 @@ export const mapColumns = <T>(
   defaultSelectionCol: ColDef,
   rowSelection,
   serialNumber,
+  groupSelectsChildren: boolean,
 ): {
   columnDefs: Col[];
   validateFields: Rules;
@@ -228,6 +228,18 @@ export const mapColumns = <T>(
           ...defaultCheckboxColSelectionCol,
           headerCheckboxSelection: rowSelection === 'multiple',
           ...defaultSelectionCol,
+          cellClassRules: {
+            'gant-grid-cell-checkbox-indeterminate': params => {
+              const { node } = params;
+              if (!node.isSelected()) return false;
+              const { allLeafChildren = [] } = node;
+              for (let itemNode of allLeafChildren) {
+                if (!itemNode.isSelected()) return true;
+              }
+              return false;
+            },
+            ...get(defaultSelectionCol, 'cellClassRules', {}),
+          },
         },
         ...columnDefs,
       ]
@@ -311,4 +323,41 @@ export function getSizeClassName(size: Size) {
 export const AG_GRID_STOP_PROPAGATION = '__ag_Grid_Stop_Propagation';
 export function stopPropagationForAgGrid(event) {
   event[AG_GRID_STOP_PROPAGATION] = true;
+}
+
+export function groupNodeSelectedToggle(node: RowNode, selected: boolean) {
+  const { childrenAfterFilter = [] } = node;
+  childrenAfterFilter.map(itemNode => {
+    itemNode.setSelected(selected);
+    groupNodeSelectedToggle(itemNode, selected);
+  });
+}
+
+export function checkParentGroupSelectedStatus(node: RowNode, selected: boolean, api: GridApi) {
+  const { parent } = node;
+  if (parent.level < 0) return;
+  if (selected) {
+    parent.setSelected(selected);
+    checkParentGroupSelectedStatus(parent, selected, api);
+    api.refreshCells({
+      columns: ['defalutSelection'],
+      rowNodes: [parent],
+      force: true,
+    });
+    return;
+  }
+  const { childrenAfterFilter = [] } = parent;
+  for (let itemNode of childrenAfterFilter) {
+    if (itemNode.isSelected()){
+      parent.setSelected(true);
+      api.refreshCells({
+        columns: ['defalutSelection'],
+        rowNodes: [parent],
+        force: true,
+      });
+      return 
+    };
+  }
+  parent.setSelected(false);
+  checkParentGroupSelectedStatus(parent, selected, api);
 }

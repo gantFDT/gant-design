@@ -4,7 +4,7 @@ import codeList from './code'
 /*! Start !*/
 import React, { useState, useMemo, useCallback } from 'react'
 import { Button } from 'antd'
-import { Selector, EditStatus, SwitchStatus } from '@gantd'
+import { Selector, EditStatus, SwitchStatus } from '@data-cell'
 /*! Split !*/
 const Demo1 = () => {
   const dataSource = useMemo(() => ['Jhon', 'Dan', 'Tom'], []);
@@ -34,19 +34,25 @@ const Demo1 = () => {
 
   return (
     <>
-      1、传递字符串数组作为选项列表<br />
+      {/* 1、传递字符串数组作为选项列表<br />
       <Selector
+        defaultValue={'sss'}
         dataSource={dataSource}
         onBlur={() => { console.log("onBlur") }}
         style={{ margin: '5px 0' }} value={value} onChange={setValue} onSave={(id, value, cb) => cb()} />
-      2、传递对象作为选项列表<br />
+      2、传递对象作为选项列表<br /> */}
       <>
         <Button size="small" onClick={() => { setedit2(SwitchStatus) }}>编辑</Button>
         <Button size="small" onClick={() => { setedit2(SwitchStatus) }}>取消</Button>
         <Button size="small" onClick={() => { setedit2(EditStatus.SAVE) }}>保存</Button>
       </>
 
-      <Selector dataSource={dataSource2} selectorId='language' edit={edit2} style={{ margin: '5px 0' }} value={value2} onChange={setValue2} onSave={(id, value, cb) => cb()} />
+      <Selector dataSource={dataSource2} 
+      selectorId='language' 
+      edit={EditStatus.EDIT} style={{ margin: '5px 0' }} 
+      // value={value2} 
+      defaultValue={'ssss'}
+      onChange={setValue2} onSave={(id, value, cb) => cb()} />
     </>
   )
 }
@@ -264,41 +270,41 @@ const config = {
       describe: '通过dataSource传递选项数组',
       cmp: Demo1,
     },
-    {
-      title: '数据分组',
-      describe: '在dataSource中设置group实现数据分组',
-      cmp: Demo2
-    },
-    {
-      title: '自定义value、label',
-      describe: 'valueProp、labelProp可以修改datasource中作为value、label的字段。往往在获取远程数据的时候需要调整',
-      cmp: Demo3
-    },
-    {
-      title: '远程数据源',
-      describe: '使用query方法查询数据',
-      cmp: Demo4
-    },
-    {
-      title: '不显示最近选择',
-      describe: "设置useStorage为false之后，将不会展示最近选择选项，也不会记录到storage里面",
-      cmp: Demo5
-    },
-    {
-      title: '多选',
-      describe: "设置multiple属性、或者mode=multiple",
-      cmp: Demo6
-    },
-    {
-      title: '通过外部指定选项的lable显示',
-      describe: "设置optionLabel",
-      cmp: Demo7
-    },
-    {
-      title: '过滤选中项',
-      describe: "设置hideSelected为true",
-      cmp: Demo8
-    },
+    // {
+    //   title: '数据分组',
+    //   describe: '在dataSource中设置group实现数据分组',
+    //   cmp: Demo2
+    // },
+    // {
+    //   title: '自定义value、label',
+    //   describe: 'valueProp、labelProp可以修改datasource中作为value、label的字段。往往在获取远程数据的时候需要调整',
+    //   cmp: Demo3
+    // },
+    // {
+    //   title: '远程数据源',
+    //   describe: '使用query方法查询数据',
+    //   cmp: Demo4
+    // },
+    // {
+    //   title: '不显示最近选择',
+    //   describe: "设置useStorage为false之后，将不会展示最近选择选项，也不会记录到storage里面",
+    //   cmp: Demo5
+    // },
+    // {
+    //   title: '多选',
+    //   describe: "设置multiple属性、或者mode=multiple",
+    //   cmp: Demo6
+    // },
+    // {
+    //   title: '通过外部指定选项的lable显示',
+    //   describe: "设置optionLabel",
+    //   cmp: Demo7
+    // },
+    // {
+    //   title: '过滤选中项',
+    //   describe: "设置hideSelected为true",
+    //   cmp: Demo8
+    // },
   ]
 }
 

@@ -5,28 +5,30 @@
       //   background-color: rgba(128, 128, 128, 0.1)
       // }
     }
-    .gant-cell-validate-sign {
-      &::before {
-        content: '';
-        width: 98%;
-        bottom: 0px;
-        border-bottom: 1px dashed #ff4d4f;
-        position: absolute;
-        left: 1%;
+    .ag-root {
+      .gant-cell-validate-sign {
+        &::before {
+          content: '';
+          width: 98%;
+          bottom: 0px;
+          border-bottom: 1px dashed #ff4d4f;
+          position: absolute;
+          left: 1%;
+        }
       }
-    }
-    .gant-header-cell-required {
-      .ag-header-cell-text::before {
-        content: '*';
-        margin-right: 2px;
-        color: #ff4d4f;
+      .gant-header-cell-required {
+        .ag-header-cell-text::before {
+          content: '*';
+          margin-right: 2px;
+          color: #ff4d4f;
+        }
       }
-    }
-    .gant-header-cell-edit {
-      .ag-header-cell-text::before {
-        content: '*';
-        margin-right: 2px;
-        color: #1890ff;
+      .gant-header-cell-edit {
+        .ag-header-cell-text::before {
+          content: '*';
+          margin-right: 2px;
+          color: #1890ff;
+        }
       }
     }
   }
@@ -166,4 +168,5 @@
       top: 0px;
     }
   }
+  
 }
