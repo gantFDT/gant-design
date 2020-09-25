@@ -409,7 +409,7 @@ const withSelector = compose(
             {
               storageList.length
                 ?
-                transformDataToList(storageList, true)
+                transformDataToList(storageList)
                 :
                 <Select.Option key='empty' disabled>没有最近选择</Select.Option>
             }
@@ -599,6 +599,7 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
       <Select
         showArrow
         loading={loading}
+        dropdownMatchSelectWidth={false}
         {...props}
         onFocus={onFocus}
         ref={setSelectRef}

@@ -145,6 +145,7 @@ class Select extends React.Component {
     const { dataSource = [], style: { width, ...style }, children, setSelectRef, valueProp, labelProp, ...props } = this.props
     return (
       <AntSelect
+        dropdownMatchSelectWidth={false}
         {...props}
         ref={setSelectRef}
         labelInValue
