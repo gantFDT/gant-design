@@ -15,10 +15,7 @@ import {
 } from '@ag-grid-community/core';
 import '@ag-grid-community/core/dist/styles/ag-grid.css';
 import '@ag-grid-community/core/dist/styles/ag-theme-balham.css';
-import {
-  LicenseManager,
-  AllModules,
-} from '@ag-grid-enterprise/all-modules';
+import { LicenseManager, AllModules } from '@ag-grid-enterprise/all-modules';
 import { Spin } from 'antd';
 import { get, isEmpty, isEqual, cloneDeep, set, max, min, findIndex, uniq } from 'lodash';
 import key from './license';
@@ -359,10 +356,8 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       columnsRef.current = params.columnApi;
       gridManager.agGridApi = params.api;
       onReady && onReady(params, gridManager);
-      params.api.setRowData(dataSource);
-      params.api.showLoadingOverlay;
     },
-    [onReady, dataSource],
+    [onReady],
   );
   const onSuppressKeyboardEvent = useCallback((params: SuppressKeyboardEventParams) => {
     const { event, colDef, data, api } = params;
@@ -441,10 +436,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   const hideBox = useMemo(() => {
     return hideSelcetedBox || rowSelection !== 'multiple';
   }, [hideSelcetedBox, rowSelection]);
-  const gridProps = useMemo(() => {
-    if (gridKey) return { key: gridKey };
-    return {};
-  }, [gridKey]);
   //编辑结束
   const onCellEditingStopped = useCallback((params: CellEditingStoppedEvent) => {
     const tipDoms = document.querySelectorAll('.gant-cell-tooltip.ag-tooltip-custom');
@@ -516,7 +507,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                 >
                   {!hideBox && <SelectedGrid apiRef={apiRef} onChange={onBoxSelectionChanged} getRowNodeId={getRowNodeId} columnDefs={selectedColumns as any} rowData={boxSelectedRows} />}
                   <AgGridReact
-                    {...gridProps}
                     frameworkComponents={{
                       ...frameworkComponentsMaps,
                       ...frameworkComponents,
@@ -550,12 +540,12 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     stopEditingWhenGridLosesFocus={false}
                     treeData={treeData}
                     getDataPath={getDataPath}
-                    immutableData
+                    suppressScrollOnNewData
                     columnDefs={columnDefs}
-                    immutableColumns
                     tooltipShowDelay={10}
                     {...selection}
                     {...orignProps}
+                    rowData={dataSource}
                     gridOptions={{
                       ...orignProps.gridOptions,
                     }}

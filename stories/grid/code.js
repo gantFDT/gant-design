@@ -39,15 +39,12 @@ const basicColumns = [
         },
       ],
     },
-    rowSpan: params => {
-      if (params.node.rowIndex % 3===0) return 3;
-      return 0;
-    },
+    render: value => value,
   },
   {
     fieldName: 'age',
     title: '年龄',
-    render: value => value,
+    // render: value => value,
     editConfig: {
       component: InputNumber,
       signable: true,
@@ -64,7 +61,7 @@ const basicColumns = [
   {
     fieldName: 'county',
     title: '国家',
-    render: value => value + 222,
+    // render: value => value + 222,
   },
   {
     fieldName: 'recored.address',
@@ -132,7 +129,7 @@ const BaiscGrid = () => {
     setDataSource(dataSource);
   }, []);
   useEffect(() => {
-    queryData();
+    setDataSource(mockData);
   }, []);
   const onPageChange = useCallback(
     (beginIndex, pageSize, page, countLimit) => {
@@ -255,6 +252,8 @@ const BaiscGrid = () => {
         openEditSign
         showCut
         getDataPath={data => data.path}
+        debounceVerticalScrollbar
+        suppressAnimationFrame
         pagination={{
           total: 400,
           onChange: onPageChange,

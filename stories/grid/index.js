@@ -39,15 +39,12 @@ const basicColumns = [
         },
       ],
     },
-    rowSpan: params => {
-      if (params.node.rowIndex % 3===0) return 3;
-      return 0;
-    },
+    render: value => value,
   },
   {
     fieldName: 'age',
     title: '年龄',
-    render: value => value,
+    // render: value => value,
     editConfig: {
       component: InputNumber,
       signable: true,
@@ -64,7 +61,7 @@ const basicColumns = [
   {
     fieldName: 'county',
     title: '国家',
-    render: value => value + 222,
+    // render: value => value + 222,
   },
   {
     fieldName: 'recored.address',
@@ -132,7 +129,7 @@ const BaiscGrid = () => {
     setDataSource(dataSource);
   }, []);
   useEffect(() => {
-    queryData();
+    setDataSource(mockData);
   }, []);
   const onPageChange = useCallback(
     (beginIndex, pageSize, page, countLimit) => {
@@ -255,6 +252,8 @@ const BaiscGrid = () => {
         openEditSign
         showCut
         getDataPath={data => data.path}
+        debounceVerticalScrollbar
+        suppressAnimationFrame
         pagination={{
           total: 400,
           onChange: onPageChange,
@@ -344,12 +343,15 @@ const treeDataSource = [
   },
   {
     id: 14,
-    filePath: ['Music', 'mp4', 'jazz'],
+    filePath: ['Music', 'mp3', 'jazz'],
     dateModified: 'Aug 12 2016 10:50:00 PM',
     size: 101,
   },
 ];
 const treeColumns = [
+  {
+    fieldName: 'id',
+  },
   {
     title: 'dateModified',
     fieldName: 'dateModified',
@@ -388,6 +390,18 @@ const TreeGrid = () => {
   const onCancelEdit = useCallback(() => {
     setEditable(false);
     gridManagerRef.current.cancel();
+  }, []);
+
+  const serverGroupExpend = useCallback(async (gridParams, cb) => {
+    const { node } = gridParams;
+    const { data } = node;
+    const itemData={
+      filePath:[...data.filePath,Random.county()],
+      id:Random.id(),
+      dateModified:Random.datetime(),
+      size:Random.integer()
+    }
+    cb([itemData], 1);
   }, []);
   return (
     <Fragment>
@@ -430,8 +444,9 @@ const TreeGrid = () => {
         onReady={onReady}
         openEditSign
         getDataPath={data => data.filePath}
+        isServerSideGroup={data => true}
+        serverGroupExpend={serverGroupExpend}
         groupSelectsChildren
-        suppressAggFuncInHeader
       />
     </Fragment>
   );
@@ -459,7 +474,7 @@ const config = {
     {
       title: '基础Grid',
       describe: '基础Grid',
-      cmp: BaiscGrid,
+      cmp: TreeGrid,
     },
   ],
 };
