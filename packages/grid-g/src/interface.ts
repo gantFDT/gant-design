@@ -91,7 +91,7 @@ export type EditConfig<T> = {
   refName?: string;
   valuePropName?: string;
   rules?: RuleItem | RuleItem[];
-  signable: ColumnSignable;
+  signable?: ColumnSignable;
   initValueFormatter?: (params: any) => any;
 };
 export interface CreateConfig {

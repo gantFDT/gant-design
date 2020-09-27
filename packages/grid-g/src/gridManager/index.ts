@@ -162,7 +162,7 @@ export default class GridManage {
   cancelCut() {
     try {
       const update = onSetcutData(this.cutRows, true);
-      this.agGridApi.batchUpdateRowData({ update });
+      this.agGridApi.applyTransactionAsync({ update });
       this.cutRows = [];
     } catch (error) {
       console.error('cancelCut---->', error);
@@ -173,7 +173,7 @@ export default class GridManage {
       const oldUpdate = onSetcutData(this.cutRows, true);
       const newUpdate = onSetcutData(rowsNodes);
       if (!isEmpty(this.cutRows)) onSetcutData(rowsNodes);
-      this.agGridApi.batchUpdateRowData({ update: [...oldUpdate, ...newUpdate] });
+      this.agGridApi.applyTransactionAsync({ update: [...oldUpdate, ...newUpdate] });
       this.cutRows = rowsNodes;
     } catch (error) {
       console.error(error);
@@ -187,7 +187,7 @@ export default class GridManage {
           const { _rowCut, ...data } = get(itemNode, 'data', {});
           return data;
         });
-        this.agGridApi.batchUpdateRowData({ remove: oldData }, () => {
+        this.agGridApi.applyTransactionAsync({ remove: oldData }, () => {
           const rowData = this.getRowData();
           const rowIndex = findIndex(rowData, itemData => getRowNodeId(get(node, 'data', {})) === getRowNodeId(itemData));
           const newDataSource = up
@@ -208,7 +208,7 @@ export default class GridManage {
         parentPath = brotherPath.slice(0, brotherPath.length - 1);
       }
       const { newRowData, oldRowData } = getRowsToUpdate(this.cutRows, parentPath, createConfig, this.agGridConfig);
-      this.agGridApi.batchUpdateRowData({ remove: oldRowData }, () => {
+      this.agGridApi.applyTransactionAsync({ remove: oldRowData }, () => {
         const rowData = this.getRowData();
         const rowIndex = findIndex(rowData, itemData => getRowNodeId(get(node, 'data', {})) === getRowNodeId(itemData));
         const newDataSource = up
@@ -231,12 +231,6 @@ export default class GridManage {
   }
   dataSourceChanged(dataSource: any[]) {
     this.reset({ dataSource });
-    if (!this.agGridApi) return;
-    const rowsData = this.getRowData();
-    if (isEqual(dataSource, rowsData) && dataSource.length) return;
-    if (dataSource.length === 0 || rowsData.length === 0) return this.agGridApi.setRowData(dataSource);
-    this.agGridApi.setRowData([]);
-    this.agGridApi.setRowData(dataSource);
   }
   getRowData() {
     var rowData = [];
