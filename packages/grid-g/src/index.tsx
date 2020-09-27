@@ -541,7 +541,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     treeData={treeData}
                     getDataPath={getDataPath}
                     suppressScrollOnNewData
-                    debounceVerticalScrollbar
                     columnDefs={columnDefs}
                     tooltipShowDelay={10}
                     {...selection}
