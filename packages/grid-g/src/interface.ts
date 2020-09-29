@@ -111,7 +111,7 @@ export interface Columns<T extends {} = {}> extends ColDef {
   /**索引的字段名 */
   fieldName: string;
   /**单元格渲染函数 */
-  render?: (text: string, record: any, rowIndex: number) => React.ReactNode;
+  render?: (text: string, record: any, rowIndex: number,params:any) => React.ReactNode;
   /**子节点 */
   children?: Columns<T>[];
   /**当前列宽度,如果没有，将以defaultColumnWidth显示 */
@@ -175,6 +175,7 @@ export interface Props<T extends any> {
   onReady: OnReady;
   rowSelection: RowSelection | true;
   rowkey: RowKey<T> | string;
+  gridKey?:string,
   editable: boolean;
   width?: string | number;
   height?: string | number;
@@ -199,6 +200,7 @@ export interface Props<T extends any> {
   onRowsPasteEnd?: (data: any) => void;
   hideSelcetedBox?: boolean;
   editChangeCallback?: (isChanged: boolean) => void;
+
   onContextChangeRender?: (
     context: any,
     diffKeys: string[],

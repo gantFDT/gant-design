@@ -22,7 +22,7 @@ export interface AgGridConfig {
   isCompute?: boolean;
   treeDataChildrenName?: string;
   editChangeCallback?: (boolean) => void;
-  setErrors: any;
+  gridKey?:string
 }
 export interface BatchUpdateDataSourceParams {
   add: any[];
