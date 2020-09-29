@@ -12,6 +12,9 @@ import {
   RowNode,
   GetContextMenuItemsParams,
   RowSelectedEvent,
+  ColumnVisibleEvent,
+  ColumnResizedEvent,
+  ColumnMovedEvent,
 } from '@ag-grid-community/core';
 import '@ag-grid-community/core/dist/styles/ag-grid.css';
 import '@ag-grid-community/core/dist/styles/ag-theme-balham.css';
@@ -19,7 +22,15 @@ import { LicenseManager, AllModules } from '@ag-grid-enterprise/all-modules';
 import { Spin } from 'antd';
 import { get, isEmpty, isEqual, cloneDeep, set, max, min, findIndex, uniq } from 'lodash';
 import key from './license';
-import { mapColumns, flattenTreeData, usePagination, getSizeClassName, selectedMapColumns, groupNodeSelectedToggle, checkParentGroupSelectedStatus } from './utils';
+import {
+  mapColumns,
+  flattenTreeData,
+  usePagination,
+  getSizeClassName,
+  selectedMapColumns,
+  groupNodeSelectedToggle,
+  checkParentGroupSelectedStatus,
+} from './utils';
 import { Size, GridPropsPartial, RowSelection, DataActions } from './interface';
 import SelectedGrid from './SelectedGrid';
 import GantPagination from './Pagination';
@@ -83,6 +94,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     rowSelection: rowSel,
     size,
     rowkey,
+    gridKey,
     resizable,
     filter,
     sortable,
@@ -126,6 +138,9 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     onRowSelected: propsOnRowSelected,
     onRowDataUpdated: propOnRowDataUpdated,
     groupSelectsChildren,
+    onColumnMoved,
+    onColumnResized,
+    onColumnVisible,
     ...orignProps
   } = props;
   const apiRef = useRef<GridApi>();
@@ -134,7 +149,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   const columnsRef = useRef<ColumnApi>();
   const selectedRowsRef = useRef<string[]>([]);
   const selectedLoadingRef = useRef<boolean>(false);
-  const [gridKey, setGridKey] = useState<number>(-1);
   const [innerSelectedRows, setInnerSelectedRows] = useState([]);
   const gridManager = useMemo(() => {
     return new GridManager();
@@ -155,7 +169,8 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   );
   // 判断数据分别处理 treeTable 和普通table
   const dataSource = useMemo(() => {
-    if (treeData && isCompute) return flattenTreeData(initDataSource, getRowNodeId, treeDataChildrenName);
+    if (treeData && isCompute)
+      return flattenTreeData(initDataSource, getRowNodeId, treeDataChildrenName);
     return initDataSource;
   }, [initDataSource, treeData, treeDataChildrenName]);
 
@@ -167,12 +182,23 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     if (rowSel) return { ...defaultRowSelection, ...rowSel };
     return {};
   }, [rowSel]);
-  const { onSelect, selectedRows, showDefalutCheckbox, type: rowSelection, onSelectedChanged, defaultSelectionCol, ...selection } = gantSelection;
+  const {
+    onSelect,
+    selectedRows,
+    showDefalutCheckbox,
+    type: rowSelection,
+    onSelectedChanged,
+    defaultSelectionCol,
+    ...selection
+  } = gantSelection;
   /**fix: 解决保存时候标记状态无法清楚的问题 */
 
   // 分页事件
   const computedPagination: any = useMemo(() => usePagination(pagination), [pagination]);
   // 初始注册配置信息；
+  useEffect(() => {
+    gridManager.gridKey = gridKey;
+  }, [gridKey]);
   useEffect(() => {
     gridManager.reset({
       getRowNodeId,
@@ -239,7 +265,11 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
         const index = findIndex(dataSource, function(itemData) {
           return getRowNodeId(itemData) === getRowNodeId(itemRow);
         });
-        if (index < 0 && !apiRef.current.getRowNode(getRowNodeId(itemRow)) && get(itemRow, '_rowType') !== DataActions.add) {
+        if (
+          index < 0 &&
+          !apiRef.current.getRowNode(getRowNodeId(itemRow)) &&
+          get(itemRow, '_rowType') !== DataActions.add
+        ) {
           extraKeys.push(getRowNodeId(itemRow));
           extraRows.push(itemRow);
         }
@@ -281,7 +311,11 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       propsOnRowSelected && propsOnRowSelected(event);
       if (!groupSelectsChildren || !treeData) return;
       const gridSelectedRows = event.api.getSelectedRows();
-      if (gridSelectedRows.length === 0 || gridManager.getRowData().length === gridSelectedRows.length) return;
+      if (
+        gridSelectedRows.length === 0 ||
+        gridManager.getRowData().length === gridSelectedRows.length
+      )
+        return;
       if (selectedLoadingRef.current) return;
       selectedLoadingRef.current = true;
       const { node } = event;
@@ -318,7 +352,15 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   //columns
   const defaultSelection = !isEmpty(gantSelection) && showDefalutCheckbox;
   const { columnDefs, validateFields } = useMemo(() => {
-    return mapColumns<T>(columns, getRowNodeId, defaultSelection, defaultSelectionCol, rowSelection, serialNumber, groupSelectsChildren);
+    return mapColumns<T>(
+      columns,
+      getRowNodeId,
+      defaultSelection,
+      defaultSelectionCol,
+      rowSelection,
+      serialNumber,
+      groupSelectsChildren,
+    );
   }, [columns]);
   // 选中栏grid  columns;
   const selectedColumns = useMemo(() => {
@@ -345,19 +387,42 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   useEffect(() => {
     gridManager.validateFields = validateFields;
   }, [validateFields]);
-  //设置动态列
-  useEffect(() => {
-    setGridKey(key => key + 1);
-  }, [columnDefs]);
+  // 监听columns变换
+  const onColumnsChange = useCallback(
+    (event: ColumnMovedEvent | ColumnResizedEvent | ColumnVisibleEvent) => {
+      switch (event.type) {
+        case 'columnVisible':
+          onColumnVisible && onColumnVisible(event as any);
+          break;
+        case 'columnResized':
+          onColumnResized && onColumnResized(event as any);
+          break;
+        case 'columnMoved':
+          onColumnMoved && onColumnMoved(event as any);
+          break;
+      }
+      // console.log(columnApi.getColumnGroupState(),columnApi.getAllColumns(),columnApi.getAllGridColumns(),columnApi.getPrimaryColumns())
+      gridManager.setLocalStorageColumns();
+    },
+    [onColumnMoved, onColumnResized, onColumnVisible],
+  );
+  // useEffect(()=>{
+  //   gridManager.getLocalStorageColumns(columnsRef.current, gridKey)
+  // },[gridKey])
+  // const localColumnsDefs = useMemo(() => {
+  //   return gridManager.getLocalStorageColumns(columnDefs,gridKey)
+  // }, [columnDefs, gridKey]);
   // columns-end
   const onGridReady = useCallback(
     (params: GridReadyEvent) => {
       apiRef.current = params.api;
       columnsRef.current = params.columnApi;
       gridManager.agGridApi = params.api;
+      gridManager.agGridColumnApi=params.columnApi;
       onReady && onReady(params, gridManager);
+      // gridManager.setLocalStorageColumnsState();
     },
-    [onReady],
+    [onReady, gridKey],
   );
   const onSuppressKeyboardEvent = useCallback((params: SuppressKeyboardEventParams) => {
     const { event, colDef, data, api } = params;
@@ -399,7 +464,16 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       onCellChanged,
       ...propsContext,
     };
-  }, [propsContext, size, computedPagination, editable, showCut, onCellEditChange, onCellEditingChange, onCellChanged]);
+  }, [
+    propsContext,
+    size,
+    computedPagination,
+    editable,
+    showCut,
+    onCellEditChange,
+    onCellEditingChange,
+    onCellChanged,
+  ]);
   const [cancheContext, setCancheContext] = useState(context);
   useEffect(() => {
     setCancheContext(cancheContext => {
@@ -452,7 +526,10 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       const gridSelectedRows = api.getSelectedRows();
       let changed = false;
       const newSelectedRows = selectedRows.map(item => {
-        const gridIndex = findIndex(gridSelectedRows, gridItem => getRowNodeId(gridItem) === getRowNodeId(item));
+        const gridIndex = findIndex(
+          gridSelectedRows,
+          gridItem => getRowNodeId(gridItem) === getRowNodeId(item),
+        );
         if (gridIndex >= 0) {
           const newSelectedItem = gridSelectedRows[gridIndex];
           const diff = !isEqual(newSelectedItem, item);
@@ -497,15 +574,35 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                 ...context,
               }}
             >
-              <div style={{ width, height }} className={classnames('gant-grid', `gant-grid-${getSizeClassName(size)}`, openEditSign && `gant-grid-edit`, editable && 'gant-grid-editable')}>
+              <div
+                style={{ width, height }}
+                className={classnames(
+                  'gant-grid',
+                  `gant-grid-${getSizeClassName(size)}`,
+                  openEditSign && `gant-grid-edit`,
+                  editable && 'gant-grid-editable',
+                )}
+              >
                 <div
-                  className={classnames('ag-theme-balham', 'gant-ag-wrapper', editable && 'no-zebra')}
+                  className={classnames(
+                    'ag-theme-balham',
+                    'gant-ag-wrapper',
+                    editable && 'no-zebra',
+                  )}
                   style={{
                     width: '100%',
                     height: computedPagination ? 'calc(100% - 30px)' : '100%',
                   }}
                 >
-                  {!hideBox && <SelectedGrid apiRef={apiRef} onChange={onBoxSelectionChanged} getRowNodeId={getRowNodeId} columnDefs={selectedColumns as any} rowData={boxSelectedRows} />}
+                  {!hideBox && (
+                    <SelectedGrid
+                      apiRef={apiRef}
+                      onChange={onBoxSelectionChanged}
+                      getRowNodeId={getRowNodeId}
+                      columnDefs={selectedColumns as any}
+                      rowData={boxSelectedRows}
+                    />
+                  )}
                   <AgGridReact
                     frameworkComponents={{
                       ...frameworkComponentsMaps,
@@ -541,10 +638,11 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     treeData={treeData}
                     getDataPath={getDataPath}
                     suppressScrollOnNewData
-                    columnDefs={columnDefs}
                     tooltipShowDelay={10}
                     {...selection}
                     {...orignProps}
+                    columnDefs={columnDefs}
+                    // columnDefs={localColumnsDefs}
                     rowData={dataSource}
                     gridOptions={{
                       ...orignProps.gridOptions,
@@ -553,6 +651,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     defaultColDef={{
                       resizable,
                       sortable,
+                      // lockPosition: true,
                       filter,
                       minWidth: 30,
                       tooltipValueGetter: (params: any) => params,
@@ -565,7 +664,8 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     groupDefaultExpanded={groupDefaultExpanded}
                     localeText={locale}
                     rowClassRules={{
-                      'gant-grid-row-isdeleted': params => get(params, 'data._rowType') === DataActions.removeTag,
+                      'gant-grid-row-isdeleted': params =>
+                        get(params, 'data._rowType') === DataActions.removeTag,
                       'gant-grid-row-cut': params => get(params, 'data._rowCut'),
                       ...rowClassRules,
                     }}
@@ -574,6 +674,9 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     suppressKeyboardEvent={onSuppressKeyboardEvent}
                     onCellEditingStopped={onCellEditingStopped}
                     onRowDataUpdated={onRowDataUpdated}
+                    onColumnMoved={onColumnsChange}
+                    onColumnVisible={onColumnsChange}
+                    onColumnResized={onColumnsChange}
                   />
                 </div>
                 {computedPagination && <GantPagination {...computedPagination} />}
