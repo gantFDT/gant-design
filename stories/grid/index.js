@@ -58,39 +58,84 @@ const basicColumns = [
       },
     },
   },
+  // {
+  //   groupId: 'group-level-1',
+  //   title: 'group-level-1',
+  //   children: [
+  //     {
+  //       groupId: 'group-level-1-1',
+  //       title: 'group-level-1-1',
+  //       children: [
+  //         {
+  //           fieldName: 'group-level-1-1-1',
+  //         },
+  //       ],
+  //     },
+  //   ],
+  // },
   {
     fieldName: 'county',
     title: '国家',
     // render: value => value + 222,
   },
-  {
-    fieldName: 'recored.address',
-    title: '地址',
-    editConfig: {
-      component: Input,
-      editable: true,
-      signable: true,
-      rules: [
-        {
-          required: true,
-          message: '地址不能为空',
-        },
-        {
-          min: 6,
-          type: 'string',
-          message: '地址不能小于个字符串',
-        },
-      ],
-    },
-  },
-  {
-    fieldName: 'time',
-    title: '时间',
-  },
-  {
-    fieldName: 'time2',
-    title: '时间2',
-  },
+
+  // {
+  //   groupId:"group-level-1",
+  //   title:"group-level-1",
+  //   children:[
+  //     {
+  //       groupId: 'roup-level-1-1',
+  //       title:"roup-level-1-1",
+  //       children: [
+  //         {
+  //           fieldName:'roup-level-1-1-2',
+  //         }
+  //       ],
+  //     },
+  //     {
+  //       groupId: 'group-level-1-2',
+  //       title:"group-level-1-2",
+  //       children: [
+  //         {
+  //           fieldName: 'group-level-1-2-1',
+  //         },
+  //         {
+  //           fieldName:'group-level-1-2-2',
+  //         }
+  //       ],
+  //     }
+  //   ]
+  // },
+  // {
+  //   groupId: 'group-level-1',
+  //   title: 'group-level-1',
+  //   children: [
+  //     {
+  //       groupId: 'group-level-1-1',
+  //       title: 'group-level-1-1',
+  //       children: [
+  //         {
+  //           fieldName: 'group-level-1-1-1',
+  //         },
+  //         {
+  //           fieldName: 'group-level-1-1-2',
+  //         },
+  //       ],
+  //     },
+  //     {
+  //       groupId: 'group-level-1-2',
+  //       title: 'group-level-1-2',
+  //       children: [
+  //         {
+  //           fieldName: 'group-level-1-2-1',
+  //         },
+  //         {
+  //           fieldName: 'group-level-1-2-2',
+  //         },
+  //       ],
+  //     },
+  //   ],
+  // },
 ];
 const RandomCreate = () => ({
   ip: Random.ip(),
@@ -103,7 +148,7 @@ const RandomCreate = () => ({
     address: Random.county(true),
   },
 });
-const mockData = Array(100)
+const mockData = Array(1000)
   .fill()
   .map((_, Idx) => RandomCreate());
 const BaiscGrid = () => {
@@ -182,7 +227,6 @@ const BaiscGrid = () => {
   }, []);
   return (
     <Fragment>
-      <Selector edit="EDIT" autoFocus />
       <Header
         extra={
           <Fragment>
@@ -197,9 +241,8 @@ const BaiscGrid = () => {
             >
               添加列
             </Button>
-            <Button size="small" onClick={() => setLoading(loading => !loading)}>
-              {' '}
-              toggle loading{' '}
+            <Button size="small" onClick={() => gridManagerRef.current.clearLocalStorageColumns()}>
+              reset columns
             </Button>
             {!editable ? (
               <Button size="small" icon="edit" onClick={() => setEditable(true)} />
@@ -241,9 +284,10 @@ const BaiscGrid = () => {
           selectedRows,
           onSelect,
           onSelectedChanged: (keys, rows) => {
-            console.log('----->onSelectedChanged', keys, rows);
+            // console.log('----->onSelectedChanged', keys, rows);
           },
         }}
+        gridKey="grid-test"
         hideSelectedBox
         rowBuffer={1}
         groupSuppressAutoColumn
@@ -252,7 +296,7 @@ const BaiscGrid = () => {
         openEditSign
         showCut
         getDataPath={data => data.path}
-        debounceVerticalScrollbar
+        // debounceVerticalScrollbar
         suppressAnimationFrame
         pagination={{
           total: 400,
@@ -395,12 +439,12 @@ const TreeGrid = () => {
   const serverGroupExpend = useCallback(async (gridParams, cb) => {
     const { node } = gridParams;
     const { data } = node;
-    const itemData={
-      filePath:[...data.filePath,Random.county()],
-      id:Random.id(),
-      dateModified:Random.datetime(),
-      size:Random.integer()
-    }
+    const itemData = {
+      filePath: [...data.filePath, Random.county()],
+      id: Random.id(),
+      dateModified: Random.datetime(),
+      size: Random.integer(),
+    };
     cb([itemData], 1);
   }, []);
   return (
@@ -408,7 +452,11 @@ const TreeGrid = () => {
       <Header
         extra={
           <Fragment>
-            <Button size="small" icon="poweroff" onClick={() => console.log(apiRef.current.getBestCostNodeSelection())} />
+            <Button
+              size="small"
+              icon="poweroff"
+              onClick={() => console.log(apiRef.current.getBestCostNodeSelection())}
+            />
             {!editable ? (
               <Button size="small" icon="edit" onClick={() => setEditable(true)} />
             ) : (
@@ -457,7 +505,9 @@ const config = {
   useage: (
     <div>
       <div>依赖于ag-grid的高性能表格</div>
-      <div style={{ fontWeight: 'bold' }}>ag-grid-enterprise需商业授权，如需使用ag-grid-enterprise功能，请自行获得LicenseKey</div>
+      <div style={{ fontWeight: 'bold' }}>
+        ag-grid-enterprise需商业授权，如需使用ag-grid-enterprise功能，请自行获得LicenseKey
+      </div>
       <div>
         <a href="https://www.ag-grid.com/" target="_blank">
           Ag-Grid官网
@@ -474,7 +524,7 @@ const config = {
     {
       title: '基础Grid',
       describe: '基础Grid',
-      cmp: TreeGrid,
+      cmp: BaiscGrid,
     },
   ],
 };
