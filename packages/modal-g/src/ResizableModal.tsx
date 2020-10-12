@@ -6,7 +6,7 @@ import ModalContext from './Context'
 import { getModalState, ActionTypes } from './Reducer'
 import { useDrag, useResize, usePrev } from './Hooks'
 import { InnerModalProps } from './interface'
-const modalStyle = { margin: 0, paddingBottom: 0 }
+const modalStyle: React.CSSProperties = { position: 'absolute', margin: 0, paddingBottom: 0 }
 
 interface Props extends InnerModalProps {
     id: string,
@@ -50,7 +50,7 @@ const ModalInner: React.FC<Props> = function ModalInner(props) {
 
     const { zIndex, x, y, width, height, isMaximized } = modalState
 
-    const _style = useMemo(() => ({ ...style, ...modalStyle, top: y, left: x, height }), [y, x, height])
+    const _style: React.CSSProperties = useMemo(() => ({ ...style, ...modalStyle, top: y, left: x, height }), [y, x, height])
 
     const onFocus = useCallback(() => dispatch({
         type: ActionTypes.focus, id
