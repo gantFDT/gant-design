@@ -50,7 +50,7 @@ const ModalInner: React.FC<Props> = function ModalInner(props) {
 
     const { zIndex, x, y, width, height, isMaximized } = modalState
 
-    const _style: React.CSSProperties = useMemo(() => ({ ...style, ...modalStyle, position: 'absolute', top: y, left: x, height }), [y, x, height])
+    const _style = useMemo(() => ({ ...style, ...modalStyle, top: y, left: x, height }), [y, x, height])
 
     const onFocus = useCallback(() => dispatch({
         type: ActionTypes.focus, id
