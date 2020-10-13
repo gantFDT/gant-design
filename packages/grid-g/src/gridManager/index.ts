@@ -39,6 +39,7 @@ import { DataActions } from '../interface';
 export default class GridManage {
   public agGridApi: GridApi;
   public agGridColumnApi: ColumnApi;
+  columnsDefs: any[];
   public gridKey?: string;
   public agGridConfig: AgGridConfig;
   public historyStack: any[] = [];
@@ -283,7 +284,18 @@ export default class GridManage {
     this.cutRows = [];
   }
   dataSourceChanged(dataSource: any[]) {
+    if (!Array.isArray(dataSource) || !this.agGridApi) return;
     this.reset({ dataSource });
+    try {
+      const gridDataSource = [];
+      if (dataSource.length === 0 || this.agGridConfig.dataSource.length === 0) return;
+      this.agGridApi.forEachNode(node => {
+        if (node.data) gridDataSource.push(node.data);
+      });
+      if (isEqual(dataSource, gridDataSource)) return;
+      this.agGridApi.setRowData([]);
+      this.agGridApi.setRowData(dataSource);
+    } catch (error) {}
   }
   getRowData() {
     var rowData = [];
@@ -676,9 +688,11 @@ export default class GridManage {
     return dataSource;
   }
   // LocalStorage columns
-  getLocalStorageColumns(columns: (ColDef | ColGroupDef)[]) {
-    const localColumnsJson = localStorage.getItem(`gantd-grid-${this.gridKey}`);
-    if (!localColumnsJson || !this.gridKey) return columns;
+  getLocalStorageColumns(columns: (ColDef | ColGroupDef)[], gridKey) {
+    const localColumnsJson = localStorage.getItem(`gantd-grid-column-${gridKey}`);
+    if (!localColumnsJson || !gridKey) return columns;
+    this.gridKey = gridKey;
+    this.columnsDefs = columns;
     try {
       const localColumns = JSON.parse(localColumnsJson);
       return sortAndMergeColumns(columns, localColumns);
@@ -687,26 +701,34 @@ export default class GridManage {
       return columns;
     }
   }
-  setLocalStorageColumnsState() {
-    const localColumnsJson = localStorage.getItem(`gantd-grid-${this.gridKey}`);
+  getLocalStorageColumnsState(columnApi: ColumnApi) {
+    const localColumnsJson = localStorage.getItem(`gantd-grid-column-state-${this.gridKey}`);
     if (!localColumnsJson || !this.gridKey || !this.agGridColumnApi) return;
     try {
       const localColumns = JSON.parse(localColumnsJson);
       this.agGridColumnApi.setColumnState(localColumns);
-      // return sortAndMergeColumns(columns, localColumns);
     } catch (err) {
       console.error(err);
-      // return columns;
     }
   }
-  setLocalStorageColumns() {
+  setLocalStorageColumnsState() {
     if (!this.gridKey || !this.agGridColumnApi) return;
     const columns = this.agGridColumnApi.getColumnState();
     const localColumnsJson = JSON.stringify(columns);
-    localStorage.setItem(`gantd-grid-${this.gridKey}`, localColumnsJson);
+    localStorage.setItem(`gantd-grid-column-state-${this.gridKey}`, localColumnsJson);
+  }
+  setLocalStorageColumns() {
+    if (!this.gridKey || !this.agGridColumnApi) return;
+    try {
+      const columns = this.agGridColumnApi.getColumnState();
+      const localColumnsJson = JSON.stringify(columns);
+      localStorage.setItem(`gantd-grid-column-${this.gridKey}`, localColumnsJson);
+    } catch (error) {}
   }
   clearLocalStorageColumns() {
-    localStorage.removeItem(`gantd-grid-${this.gridKey}`);
-    this.agGridColumnApi.resetState();
+    localStorage.removeItem(`gantd-grid-column-${this.gridKey}`);
+    localStorage.removeItem(`gantd-grid-column-state-${this.gridKey}`);
+    this.agGridApi.setColumnDefs(this.columnsDefs);
+    this.agGridColumnApi.resetColumnState();
   }
 }
