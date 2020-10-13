@@ -6,6 +6,7 @@ import {
   ColumnApi,
   GridReadyEvent,
   RowDataUpdatedEvent,
+  RowDataChangedEvent,
   SelectionChangedEvent,
   SuppressKeyboardEventParams,
   CellEditingStoppedEvent,
@@ -137,10 +138,12 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     onSelectionChanged: propsOnSelectionChanged,
     onRowSelected: propsOnRowSelected,
     onRowDataUpdated: propOnRowDataUpdated,
+    onRowDataChanged: propOnRowDataChanged,
     groupSelectsChildren,
     onColumnMoved,
     onColumnResized,
     onColumnVisible,
+    memoryMode,
     ...orignProps
   } = props;
   const apiRef = useRef<GridApi>();
@@ -196,9 +199,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   // 分页事件
   const computedPagination: any = useMemo(() => usePagination(pagination), [pagination]);
   // 初始注册配置信息；
-  useEffect(() => {
-    gridManager.gridKey = gridKey;
-  }, [gridKey]);
   useEffect(() => {
     gridManager.reset({
       getRowNodeId,
@@ -401,26 +401,27 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
           onColumnMoved && onColumnMoved(event as any);
           break;
       }
-      // console.log(columnApi.getColumnGroupState(),columnApi.getAllColumns(),columnApi.getAllGridColumns(),columnApi.getPrimaryColumns())
-      gridManager.setLocalStorageColumns();
+      console.log(event.columnApi.getColumnState())
+      memoryMode ? gridManager.setLocalStorageColumnsState() : gridManager.setLocalStorageColumns();
     },
-    [onColumnMoved, onColumnResized, onColumnVisible],
+    [onColumnMoved, onColumnResized, onColumnVisible, memoryMode],
   );
-  // useEffect(()=>{
-  //   gridManager.getLocalStorageColumns(columnsRef.current, gridKey)
-  // },[gridKey])
-  // const localColumnsDefs = useMemo(() => {
-  //   return gridManager.getLocalStorageColumns(columnDefs,gridKey)
-  // }, [columnDefs, gridKey]);
+  useEffect(() => {
+    gridManager.gridKey = gridKey;
+    gridManager.columnsDefs=columnDefs
+  }, [gridKey]);
+  const localColumnsDefs = useMemo(() => {
+    return gridManager.getLocalStorageColumns(columnDefs, gridKey);
+  }, [columnDefs, gridKey]);
   // columns-end
   const onGridReady = useCallback(
     (params: GridReadyEvent) => {
       apiRef.current = params.api;
       columnsRef.current = params.columnApi;
       gridManager.agGridApi = params.api;
-      gridManager.agGridColumnApi=params.columnApi;
+      gridManager.agGridColumnApi = params.columnApi;
       onReady && onReady(params, gridManager);
-      // gridManager.setLocalStorageColumnsState();
+      memoryMode && gridManager.getLocalStorageColumnsState(params.columnApi);
     },
     [onReady, gridKey],
   );
@@ -546,6 +547,13 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     },
     [selectedRows, onSelectedChanged],
   );
+  // const onRowDataCHanged = useCallback(
+  //   (event: RowDataChangedEvent) => {
+  //     propOnRowDataChanged && propOnRowDataChanged(event);
+  //     if (apiRef.current) garidShowSelectedRows(selectedRowsRef.current);
+  //   },
+  //   [propOnRowDataChanged],
+  // );
   return (
     <LocaleReceiver>
       {(local, localeCode = 'zh-cn') => {
@@ -641,7 +649,8 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     tooltipShowDelay={10}
                     {...selection}
                     {...orignProps}
-                    columnDefs={columnDefs}
+                    immutableData
+                    columnDefs={memoryMode ? columnDefs : localColumnsDefs}
                     // columnDefs={localColumnsDefs}
                     rowData={dataSource}
                     gridOptions={{
@@ -651,7 +660,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     defaultColDef={{
                       resizable,
                       sortable,
-                      // lockPosition: true,
                       filter,
                       minWidth: 30,
                       tooltipValueGetter: (params: any) => params,
@@ -674,6 +682,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     suppressKeyboardEvent={onSuppressKeyboardEvent}
                     onCellEditingStopped={onCellEditingStopped}
                     onRowDataUpdated={onRowDataUpdated}
+                    // onRowDataChanged={onRowDataCHanged}
                     onColumnMoved={onColumnsChange}
                     onColumnVisible={onColumnsChange}
                     onColumnResized={onColumnsChange}

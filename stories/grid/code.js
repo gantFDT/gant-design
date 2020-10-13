@@ -6,6 +6,17 @@ import Grid from 'grid';
 import { Button, message, Dropdown, Menu, Switch, Checkbox, Modal } from 'antd';
 import { Input, InputCellPhone, DatePicker, InputNumber, EditStatus, Selector } from 'data-cell';
 import Header from 'header';
+const RandomCreate = () => ({
+  ip: Random.ip(),
+  name: Random.name(),
+  age: Random.natural(10, 50),
+  county: Random.county(true),
+  leaf: [true, false][Random.natural(0, 1)],
+  path: [Random.ip()],
+  recored: {
+    address: Random.county(true),
+  },
+});
 
 
 const basicColumns = [
@@ -58,96 +69,43 @@ const basicColumns = [
       },
     },
   },
-  // {
-  //   groupId: 'group-level-1',
-  //   title: 'group-level-1',
-  //   children: [
-  //     {
-  //       groupId: 'group-level-1-1',
-  //       title: 'group-level-1-1',
-  //       children: [
-  //         {
-  //           fieldName: 'group-level-1-1-1',
-  //         },
-  //       ],
-  //     },
-  //   ],
-  // },
   {
     fieldName: 'county',
     title: '国家',
     // render: value => value + 222,
   },
-
-  // {
-  //   groupId:"group-level-1",
-  //   title:"group-level-1",
-  //   children:[
-  //     {
-  //       groupId: 'roup-level-1-1',
-  //       title:"roup-level-1-1",
-  //       children: [
-  //         {
-  //           fieldName:'roup-level-1-1-2',
-  //         }
-  //       ],
-  //     },
-  //     {
-  //       groupId: 'group-level-1-2',
-  //       title:"group-level-1-2",
-  //       children: [
-  //         {
-  //           fieldName: 'group-level-1-2-1',
-  //         },
-  //         {
-  //           fieldName:'group-level-1-2-2',
-  //         }
-  //       ],
-  //     }
-  //   ]
-  // },
-  // {
-  //   groupId: 'group-level-1',
-  //   title: 'group-level-1',
-  //   children: [
-  //     {
-  //       groupId: 'group-level-1-1',
-  //       title: 'group-level-1-1',
-  //       children: [
-  //         {
-  //           fieldName: 'group-level-1-1-1',
-  //         },
-  //         {
-  //           fieldName: 'group-level-1-1-2',
-  //         },
-  //       ],
-  //     },
-  //     {
-  //       groupId: 'group-level-1-2',
-  //       title: 'group-level-1-2',
-  //       children: [
-  //         {
-  //           fieldName: 'group-level-1-2-1',
-  //         },
-  //         {
-  //           fieldName: 'group-level-1-2-2',
-  //         },
-  //       ],
-  //     },
-  //   ],
-  // },
-];
-const RandomCreate = () => ({
-  ip: Random.ip(),
-  name: Random.name(),
-  age: Random.natural(10, 50),
-  county: Random.county(true),
-  leaf: [true, false][Random.natural(0, 1)],
-  path: [Random.ip()],
-  recored: {
-    address: Random.county(true),
+  {
+    groupId: 'group-level-1',
+    title: 'group-level-1',
+    children: [
+      {
+        groupId: 'group-level-1-1',
+        title: 'group-level-1-1',
+        children: [
+          {
+            fieldName: 'group-level-1-1-1',
+          },
+          {
+            fieldName: 'group-level-1-1-2',
+          },
+        ],
+      },
+      {
+        groupId: 'group-level-1-2',
+        title: 'group-level-1-2',
+        children: [
+          {
+            fieldName: 'group-level-1-2-1',
+          },
+          {
+            fieldName: 'group-level-1-2-2',
+          },
+        ],
+      },
+    ],
   },
-});
+];
+
 const mockData = Array(1000)
   .fill()
   .map((_, Idx) => RandomCreate());
@@ -204,6 +162,7 @@ const BaiscGrid = () => {
   }, [gridChange]);
   const onCreate = useCallback(() => {
     const createData = RandomCreate();
+   
     gridManagerRef.current.create(createData, selectedKeys);
   }, [selectedKeys]);
   const onTagRemove = useCallback(() => {
@@ -297,6 +256,7 @@ const BaiscGrid = () => {
         showCut
         getDataPath={data => data.path}
         // debounceVerticalScrollbar
+        memoryMode
         suppressAnimationFrame
         pagination={{
           total: 400,
