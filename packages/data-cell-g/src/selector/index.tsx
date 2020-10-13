@@ -485,10 +485,9 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
 
 
   getItem = (realKey: string) => {
-    const { selectorId, dataList, storageList, getValue } = this.props
-    const isStorage = realKey.startsWith(selectorId)
-    let dataSource = isStorage ? storageList : dataList
-    return dataSource.find(item => getValue(item) === realKey)
+    const { valueProp, dataList, storageList, getValue, storageToReal } = this.props
+    let item = dataList.find(item => getValue(item) === realKey) || storageList.find(item => storageToReal(getValue(item)) === realKey)
+    return item ? { ...item, [valueProp]: realKey } : undefined
   }
 
   onChange = (...args) => {
@@ -505,7 +504,7 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
           const realKey = storageToReal(key)
           if (!keyMap.has(realKey)) {
             keyMap.set(realKey, label)
-            ItemMap.set(realKey, this.getItem(key))
+            ItemMap.set(realKey, this.getItem(realKey))
           } else {
             // 如果已经有相同的key了，那么说明这是需要删除的项
             keyMap.delete(realKey)
@@ -513,14 +512,15 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
           }
         })
         if (keyMap.size) {
-          keys = [...keyMap.keys()].map(key => valueFormatter[valuePropType](key))
+          keys = [...keyMap.keys()].map(k => valueFormatter[valuePropType](k))
           labels = [...keyMap.values()]
           items = [...ItemMap.values()]
         }
       } else {
-        keys = valueFormatter[valuePropType](storageToReal(value.key))
+        const readKey = storageToReal(value.key)
+        keys = valueFormatter[valuePropType](readKey)
         labels = value.label
-        items = [this.getItem(value.key)]
+        items = [this.getItem(readKey)]
       }
     }
     setCacheLabel(labels)
