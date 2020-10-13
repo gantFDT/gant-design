@@ -193,29 +193,45 @@ export function getAllChildrenNode(
   }
   return allNodes;
 }
-
+function findColumnIndex(itemCol, localColumns) {
+  const itemIndex = findIndex(
+    localColumns,
+    localItemCol =>
+      get(localItemCol, 'colId') === get(itemCol, 'colId') ||
+      get(localItemCol, 'colId') === get(itemCol, 'field'),
+  );
+  return itemIndex;
+}
+function getColumnItem(itemCol) {
+  if (Array.isArray(itemCol.children) && itemCol.children.length >= 0)
+    return getColumnItem(get(itemCol, 'children[0]', itemCol));
+  return itemCol;
+}
 export function sortAndMergeColumns(
   columns: any[],
   localColumns: (ColGroupDef | ColDef)[],
 ): (ColGroupDef | ColDef)[] {
-  return columns.map(itemCol => {
-    const itemIndex = findIndex(
-      localColumns,
-      localItemCol =>
-        get(localItemCol, 'colId') === get(itemCol, 'colId') ||
-        get(localItemCol, 'colId') === get(itemCol, 'field'),
-    );
-    if (get(itemCol, 'children', []).length > 0)
-      itemCol.children = sortAndMergeColumns(get(itemCol, 'children', []), localColumns);
-    if (itemIndex > -1)
-      return {
-        ...itemCol,
-        ...get(localColumns, `[${itemIndex}]`),
-      };
-    return itemCol;
-  });
+  return columns
+    .map(itemCol => {
+      const itemIndex = findColumnIndex(itemCol, localColumns);
+      if (itemCol.children)
+        itemCol.children = sortAndMergeColumns(get(itemCol, 'children', []), localColumns);
+      if (itemIndex > -1)
+        return {
+          ...itemCol,
+          ...get(localColumns, `[${itemIndex}]`),
+          pivotIndex: itemIndex,
+          sortIndex: itemIndex,
+        };
+      return itemCol;
+    })
+    .sort((aitem: any, bitem: any) => {
+      const aIndex = findColumnIndex(getColumnItem(aitem), localColumns);
+      const bIndex = findColumnIndex(getColumnItem(bitem), localColumns);
+      return aIndex - bIndex;
+    });
 }
-export function getAllCoumns(columns: any[], parendId?:string) {
+export function getAllCoumns(columns: any[], parendId?: string) {
   const _columns: any[] = [];
   columns.map(item => {
     _columns.push(item);

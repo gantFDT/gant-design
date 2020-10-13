@@ -14,7 +14,7 @@ import { defaultProps, defaultRowSelection } from './index';
 import { Rules, RuleType, RuleItem } from 'async-validator';
 import { PaginationProps } from 'antd/lib/pagination';
 import GridManager from './gridManager';
-export * from '@ag-grid-community/core'
+export * from '@ag-grid-community/core';
 // 编辑框大小
 export enum Size {
   small = 'small',
@@ -111,7 +111,7 @@ export interface Columns<T extends {} = {}> extends ColDef {
   /**索引的字段名 */
   fieldName: string;
   /**单元格渲染函数 */
-  render?: (text: string, record: any, rowIndex: number,params:any) => React.ReactNode;
+  render?: (text: string, record: any, rowIndex: number, params: any) => React.ReactNode;
   /**子节点 */
   children?: Columns<T>[];
   /**当前列宽度,如果没有，将以defaultColumnWidth显示 */
@@ -151,7 +151,12 @@ export type GantPaginationProps = Omit<
     PaginationProps,
     {
       beginIndex?: number;
-      onChange?: (beginIndex: number, pageSize?: number, current?: number, countLimit?: number) => void;
+      onChange?: (
+        beginIndex: number,
+        pageSize?: number,
+        current?: number,
+        countLimit?: number,
+      ) => void;
       addonAfter?: string | React.ReactNode;
       addonBefore?: string | React.ReactNode;
       countLimit?: number;
@@ -175,7 +180,7 @@ export interface Props<T extends any> {
   onReady: OnReady;
   rowSelection: RowSelection | true;
   rowkey: RowKey<T> | string;
-  gridKey?:string,
+  gridKey?: string;
   editable: boolean;
   width?: string | number;
   height?: string | number;
@@ -200,7 +205,6 @@ export interface Props<T extends any> {
   onRowsPasteEnd?: (data: any) => void;
   hideSelcetedBox?: boolean;
   editChangeCallback?: (isChanged: boolean) => void;
-
   onContextChangeRender?: (
     context: any,
     diffKeys: string[],
@@ -211,6 +215,7 @@ export interface Props<T extends any> {
       }
     | null
     | false;
+  memoryMode: boolean;
 }
 
 export type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>;

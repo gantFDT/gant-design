@@ -1,6 +1,13 @@
 import { useCallback, useMemo } from 'react';
 import classnames from 'classnames';
-import { ColGroupDef, ColDef, IsColumnFunc, IServerSideGetRowsParams, RowNode, GridApi } from '@ag-grid-community/core';
+import {
+  ColGroupDef,
+  ColDef,
+  IsColumnFunc,
+  IServerSideGetRowsParams,
+  RowNode,
+  GridApi,
+} from '@ag-grid-community/core';
 import { get, isEmpty } from 'lodash';
 import { isEqualObj } from './gridManager/utils';
 import { Size, DataActions, GantPaginationProps, ColumnEdiatble, Columns } from './interface';
@@ -69,12 +76,19 @@ const serialNumberCol: ColDef = {
     } = params;
     const computedPagination = get(context, 'computedPagination', {});
 
-    const { defaultPageSize = 20, pageSize = defaultPageSize, current = 1 }: any = computedPagination;
+    const {
+      defaultPageSize = 20,
+      pageSize = defaultPageSize,
+      current = 1,
+    }: any = computedPagination;
     const serial = rowIndex + 1 + Math.floor(pageSize * (current - 1));
     return serial;
   },
 };
-export const selectedMapColumns = <T>(columns: Columns<T>[], index: number | string | string[] = 0) => {
+export const selectedMapColumns = <T>(
+  columns: Columns<T>[],
+  index: number | string | string[] = 0,
+) => {
   if (columns.length <= 0) return [];
   let colArray = [];
   if (typeof index !== 'number') {
@@ -89,7 +103,10 @@ export const selectedMapColumns = <T>(columns: Columns<T>[], index: number | str
     const { fieldName: field, title: headerName } = colItem;
     if (colArray.indexOf(field) >= 0) selectedCol.push({ field, headerName, flex: true });
   });
-  return [{ ...defaultCheckboxColSelectionCol, headerCheckboxSelection: 'multiple' }, ...selectedCol];
+  return [
+    { ...defaultCheckboxColSelectionCol, headerCheckboxSelection: 'multiple' },
+    ...selectedCol,
+  ];
 };
 export const mapColumns = <T>(
   columns: Columns<T>[],
@@ -106,106 +123,126 @@ export const mapColumns = <T>(
   // 移除所有已添加事件
   function getColumnDefs(columns: Columns<T>[]) {
     let validateFields: Rules = {};
-    const columnDefs = columns.map(({ title: headerName, fieldName: field, children, render, editConfig, fixed, headerClass, cellClassRules, cellClass, cellRendererParams, ...item }, index) => {
-      const ColEditable = typeof editConfig !== 'undefined';
-      const colDef = {
-        headerName,
-        field,
-        cellRendererParams: {
+    const columnDefs = columns.map(
+      (
+        {
+          title: headerName,
+          fieldName: field,
+          children,
           render,
-          ...cellRendererParams,
+          editConfig,
+          fixed,
+          headerClass,
+          cellClassRules,
+          cellClass,
+          cellRendererParams,
+          ...item
         },
-        cellClass: classnames('gant-grid-cell', cellClass),
-        cellClassRules: {
-          'gant-grid-cell-modify': params => {
-            const {
-              data: { _rowType, ...itemData } = {} as any,
-              colDef: { field },
-            } = params;
-            const value = get(itemData, field);
-            const _rowData = get(itemData, `_rowData`, itemData);
-            const originValue = get(_rowData, field);
-            return _rowType === DataActions.modify && !isEqualObj(value, originValue);
+        index,
+      ) => {
+        const ColEditable = typeof editConfig !== 'undefined';
+        const colDef = {
+          headerName,
+          field,
+          cellRendererParams: {
+            render,
+            ...cellRendererParams,
           },
-          // 'gant-grid-cell-add': params => get(params, 'data._rowType') === DataActions.add,
-          'gant-grid-cell-edit': (params: any) => {
-            const {
-              context: { globalEditable },
-              data,
-            } = params;
-            const editable = get(editConfig, 'editable', false);
-            if (typeof editable == 'boolean') return editable;
-            return editable(data, params);
+          cellClass: classnames('gant-grid-cell', cellClass),
+          cellClassRules: {
+            'gant-grid-cell-modify': params => {
+              const {
+                data: { _rowType, ...itemData } = {} as any,
+                colDef: { field },
+              } = params;
+              const value = get(itemData, field);
+              const _rowData = get(itemData, `_rowData`, itemData);
+              const originValue = get(_rowData, field);
+              return _rowType === DataActions.modify && !isEqualObj(value, originValue);
+            },
+            // 'gant-grid-cell-add': params => get(params, 'data._rowType') === DataActions.add,
+            'gant-grid-cell-edit': (params: any) => {
+              const {
+                context: { globalEditable },
+                data,
+              } = params;
+              const editable = get(editConfig, 'editable', false);
+              if (typeof editable == 'boolean') return editable;
+              return editable(data, params);
+            },
+            // 'gant-cell-disable-sign': (params: any) => {
+            //   const {
+            //     context: { globalEditable },
+            //     data,
+            //   } = params;
+            //   const editable = get(editConfig, 'editable', false);
+            //   if (typeof editable == 'boolean') return !editable;
+            //   return !editable(data, params);
+            // },
+            ...cellClassRules,
           },
-          // 'gant-cell-disable-sign': (params: any) => {
-          //   const {
-          //     context: { globalEditable },
-          //     data,
-          //   } = params;
-          //   const editable = get(editConfig, 'editable', false);
-          //   if (typeof editable == 'boolean') return !editable;
-          //   return !editable(data, params);
-          // },
-          ...cellClassRules,
-        },
-        cellRenderer: render ? 'gantRenderCol' : undefined,
-        headerClass,
-        ...item,
-      } as Col;
+          cellRenderer: render ? 'gantRenderCol' : undefined,
+          headerClass,
+          ...item,
+        } as Col;
 
-      if (!itemisgroup(colDef, children)) {
-        // 当前列允许编辑
-        if (ColEditable) {
-          const { props, changeFormatter, component, rules, signable, ...params } = editConfig;
-          let required = false;
-          const validateField = field.replace(/\./g, '-');
-          if (Array.isArray(rules)) {
-            const fieldsRules: RuleItem[] = rules.map(item => {
-              const hasRequired = Reflect.has(item, 'required');
-              required = hasRequired ? Reflect.get(item, 'required') : required;
-              return { ...item };
-            });
-            validateFields[validateField] = fieldsRules;
-          } else {
-            if (!isEmpty(rules)) {
-              validateFields[validateField] = { ...rules };
-              required = rules['required'];
+        if (!itemisgroup(colDef, children)) {
+          // 当前列允许编辑
+          if (ColEditable) {
+            const { props, changeFormatter, component, rules, signable, ...params } = editConfig;
+            let required = false;
+            const validateField = field.replace(/\./g, '-');
+            if (Array.isArray(rules)) {
+              const fieldsRules: RuleItem[] = rules.map(item => {
+                const hasRequired = Reflect.has(item, 'required');
+                required = hasRequired ? Reflect.get(item, 'required') : required;
+                return { ...item };
+              });
+              validateFields[validateField] = fieldsRules;
+            } else {
+              if (!isEmpty(rules)) {
+                validateFields[validateField] = { ...rules };
+                required = rules['required'];
+              }
             }
-          }
-          colDef.cellEditorParams = {
-            props,
-            changeFormatter,
-            rowkey: getRowNodeId,
-            required,
-            ...params,
-          };
-          colDef.cellEditorFramework = EditorCol(component);
-          colDef.editable = ColEditableFn(editConfig.editable);
-          colDef.headerClass = classnames(headerClass, required ? 'gant-header-cell-required' : 'gant-header-cell-edit');
-          if (typeof signable === 'boolean' || typeof signable === 'function')
-            colDef.cellClassRules = {
-              'gant-cell-validate-sign': params => {
-                const show = typeof signable === 'boolean' ? signable : signable(params);
-                if (!show) return false;
-                const {
-                  data: { _rowError, ...itemData } = {} as any,
-                  colDef: { field },
-                } = params;
-                return typeof get(_rowError, field, null) === 'string';
-              },
-              ...colDef.cellClassRules,
+            colDef.cellEditorParams = {
+              props,
+              changeFormatter,
+              rowkey: getRowNodeId,
+              required,
+              ...params,
             };
+            colDef.cellEditorFramework = EditorCol(component);
+            colDef.editable = ColEditableFn(editConfig.editable);
+            colDef.headerClass = classnames(
+              headerClass,
+              required ? 'gant-header-cell-required' : 'gant-header-cell-edit',
+            );
+            if (typeof signable === 'boolean' || typeof signable === 'function')
+              colDef.cellClassRules = {
+                'gant-cell-validate-sign': params => {
+                  const show = typeof signable === 'boolean' ? signable : signable(params);
+                  if (!show) return false;
+                  const {
+                    data: { _rowError, ...itemData } = {} as any,
+                    colDef: { field },
+                  } = params;
+                  return typeof get(_rowError, field, null) === 'string';
+                },
+                ...colDef.cellClassRules,
+              };
+          }
+          if (fixed) colDef.pinned = fixed;
+        } else if (itemisgroup(colDef, children)) {
+          if (children && children.length) {
+            const groupChildren = getColumnDefs(children);
+            colDef.children = groupChildren.columnDefs;
+            validateFields = { ...validateFields, ...groupChildren.validateFields };
+          }
         }
-        if (fixed) colDef.pinned = fixed;
-      } else if (itemisgroup(colDef, children)) {
-        if (children && children.length) {
-          const groupChildren = getColumnDefs(children);
-          colDef.children = groupChildren.columnDefs;
-          validateFields = { ...validateFields, ...groupChildren.validateFields };
-        }
-      }
-      return colDef;
-    });
+        return colDef;
+      },
+    );
     return { columnDefs, validateFields };
   }
 
@@ -230,7 +267,9 @@ export const mapColumns = <T>(
           ...defaultSelectionCol,
           cellClassRules: {
             'gant-grid-cell-checkbox-indeterminate': params => {
-              const { node } = params;
+              const { node, context } = params;
+              const { groupSelectsChildren } = context;
+              if (!groupSelectsChildren) return false;
               if (!node.isSelected()) return false;
               const { allLeafChildren = [] } = node;
               for (let itemNode of allLeafChildren) {
@@ -274,14 +313,24 @@ export function isfunc(t: any): t is Function {
 export function ispromise(t: any): t is Promise<any> {
   return t && isfunc(t.then);
 }
-export function flattenTreeData(dataSoruce: any[], getRowNodeId, treeDataChildrenName = 'children', pathArray: string[] = []): any[] {
+export function flattenTreeData(
+  dataSoruce: any[],
+  getRowNodeId,
+  treeDataChildrenName = 'children',
+  pathArray: string[] = [],
+): any[] {
   let treeData: any[] = [];
   dataSoruce.map((item: any) => {
     const { [treeDataChildrenName]: children, ...itemData } = item;
     const treeDataPath = [...pathArray, getRowNodeId(itemData)];
     if (children && children.length) {
       treeData.push({ ...item, treeDataPath, parent: true });
-      const childrenTreeData = flattenTreeData(children, getRowNodeId, treeDataChildrenName, treeDataPath);
+      const childrenTreeData = flattenTreeData(
+        children,
+        getRowNodeId,
+        treeDataChildrenName,
+        treeDataPath,
+      );
       Array.prototype.push.apply(treeData, childrenTreeData);
     } else {
       treeData.push({ ...item, treeDataPath });
@@ -348,15 +397,15 @@ export function checkParentGroupSelectedStatus(node: RowNode, selected: boolean,
   }
   const { childrenAfterFilter = [] } = parent;
   for (let itemNode of childrenAfterFilter) {
-    if (itemNode.isSelected()){
+    if (itemNode.isSelected()) {
       parent.setSelected(true);
       api.refreshCells({
         columns: ['defalutSelection'],
         rowNodes: [parent],
         force: true,
       });
-      return 
-    };
+      return;
+    }
   }
   parent.setSelected(false);
   checkParentGroupSelectedStatus(parent, selected, api);
