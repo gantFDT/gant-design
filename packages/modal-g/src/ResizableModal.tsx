@@ -3,36 +3,49 @@ import classnames from 'classnames'
 import { Modal } from 'antd'
 import { Icon } from '@data-cell'
 import ModalContext from './Context'
-import { getModalState, ActionTypes } from './Reducer'
+import { getModalState } from './Reducer'
 import { useDrag, useResize, usePrev } from './Hooks'
-import { InnerModalProps } from './interface'
+import { InnerModalProps, ActionTypes } from './interface'
 const modalStyle: React.CSSProperties = { position: 'absolute', margin: 0, paddingBottom: 0 }
-
-interface Props extends InnerModalProps {
-    id: string,
-}
+interface Props extends InnerModalProps { id: string }
 
 const ModalInner: React.FC<Props> = function ModalInner(props) {
     const {
-        prefixCls: customizePrefixCls = 'gant', //自定义class前缀
-        id,                                     //弹窗唯一标识
-        itemState,                              //单个弹窗的自定义属性
-        visible,                                //弹窗标题
-        title,                                  //弹窗标题
-        style,                                  //弹窗额外样式
-        wrapClassName,                          //弹窗层自定义class
-        canMaximize,                            //是否可以最大化
-        canResize,                              //是否可以拖动
-        isModalDialog,                          //是否为模态窗口
-        onCancel,                               //取消按钮回调
-        onOk,                                   //提交按钮回调
-        cancelButtonProps,                      //antd-按钮属性
-        okButtonProps,                          //antd-按钮属性
-        children,                               //自定义弹窗内容
-        ...restProps                            //弹窗组件接受的其他antd支持的属性值
+        //** 自定义class前缀 */
+        prefixCls: customizePrefixCls,
+        //** 弹窗唯一标识 */
+        id,
+        //** 单个弹窗的自定义属性 */
+        itemState,
+        //** 弹窗标题 */
+        visible,
+        //** 弹窗标题 */
+        title,
+        //** 弹窗额外样式 */
+        style,
+        //** 弹窗层自定义class */
+        wrapClassName,
+        //** 是否可以最大化 */
+        canMaximize,
+        //** 是否可以拖动 */
+        canResize,
+        //** 是否为模态窗口 */
+        isModalDialog,
+        //** 取消按钮回调 */
+        onCancel,
+        //** 提交按钮回调 */
+        onOk,
+        /** antd-按钮属性 */
+        cancelButtonProps,
+        //** antd-按钮属性 */
+        okButtonProps,
+        //** 自定义弹窗内容 */
+        children,
+        //** 弹窗组件接受的其他antd支持的属性值 */
+        ...restProps
     } = props
 
-    const prefixCls = customizePrefixCls + '-modal'
+    const prefixCls = customizePrefixCls || 'gant' + '-modal'
     const { dispatch, state } = useContext(ModalContext)
     const modalState = getModalState(state, id)
     const visiblePrev = usePrev(visible)
@@ -43,9 +56,7 @@ const ModalInner: React.FC<Props> = function ModalInner(props) {
     }, [])
 
     useEffect(() => {
-        if (visible !== visiblePrev) {
-            dispatch({ type: visible ? ActionTypes.show : ActionTypes.hide, id })
-        }
+        if (visible !== visiblePrev) dispatch({ type: visible ? ActionTypes.show : ActionTypes.hide, id })
     }, [visible, visiblePrev, id])
 
     const { zIndex, x, y, width, height, isMaximized } = modalState
@@ -70,7 +81,8 @@ const ModalInner: React.FC<Props> = function ModalInner(props) {
     }, [id, isMaximized, canMaximize])
 
     const onMouseDrag = useDrag(x, y, onDrag)
-    const onMouseResize = useResize(x, y, width, height, onResize)
+    const onMouseResize = useResize(x, y, Number(width), Number(height), onResize)
+
     const titleElement = useMemo(() => (
         <div
             className={classnames(`${prefixCls}-resizableModalTitle`, isMaximized ? '' : `${prefixCls}-canDrag`)}
@@ -108,12 +120,13 @@ const ModalInner: React.FC<Props> = function ModalInner(props) {
         okButtonProps={{ size: 'small', ...okButtonProps }}
         {...restProps}
     >
-        <div className={`${prefixCls}-resizableModalContent`} onClick={onFocus}>
-            {children}
-        </div>
+        {/*弹窗内容 */}
+        <div className={`${prefixCls}-resizableModalContent`} onClick={onFocus}>{children}</div>
+        {/*最大化按钮 */}
         {canMaximize && <div className={`${prefixCls}-maximizeAnchor`} onClick={toggleMaximize}>
             <Icon value={isMaximized ? 'switcher' : 'border'} />
         </div>}
+        {/*resize节点 */}
         {canResize && !isMaximized && <div className={`${prefixCls}-resizeAnchor`} onMouseDown={onMouseResize}><i></i></div>}
     </Modal>
 }
