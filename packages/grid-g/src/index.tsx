@@ -640,6 +640,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                       getDataPath: getDataPath,
                       computedPagination,
                       treeData,
+                      groupSelectsChildren,
                       ...context,
                     }}
                     stopEditingWhenGridLosesFocus={false}
