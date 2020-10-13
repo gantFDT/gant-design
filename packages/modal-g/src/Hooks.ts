@@ -1,6 +1,8 @@
 import React, { useEffect, useCallback, useRef } from 'react'
 
-function useDrag(x: number, y: number, onDrag = (c: { x: number, y: number }) => { }) {
+type OnDragFunc = (c: { x: number, y: number }) => void
+
+function useDrag(x: number, y: number, onDrag: OnDragFunc) {
     const isDragging = useRef(false)
     const initialDragState = useRef({
         initX: 0,
@@ -49,9 +51,9 @@ function useDrag(x: number, y: number, onDrag = (c: { x: number, y: number }) =>
     return onMouseDown
 }
 
-type OnResize = (c: { x: number, y: number, width: number, height: number }) => void
+type OnResizeFunc = (c: { x: number, y: number, width: number, height: number }) => void
 
-function useResize(x: number, y: number, width: number, height: number, onResize: OnResize = _ => _) {
+function useResize(x: number, y: number, width: number, height: number, onResize: OnResizeFunc) {
     const isDragging = useRef(false)
     const initialDragState = useRef({
         initX: 0,
