@@ -28,6 +28,7 @@ class Modal extends React.Component<ModalProps, {}>{
     static ModalContext: typeof ModalContext
 
     static defaultProps = {
+        id: uuid,
         debounce: 0,
         maxZIndex: 999,
         isModalDialog: true
@@ -35,6 +36,7 @@ class Modal extends React.Component<ModalProps, {}>{
 
     render() {
         const {
+            id,
             debounce,
             children,
             onSizeChange,
@@ -42,8 +44,8 @@ class Modal extends React.Component<ModalProps, {}>{
         } = this.props
 
         return <ResizableProvider {...pick(restProps, providerPropKeys)}>
-            <ResizableModal id={uuid} {...omit(restProps, providerPropKeys)}>
-                <ContextContent id={uuid} children={children} debounceTime={debounce} onSizeChange={onSizeChange} />
+            <ResizableModal id={id} {...omit(restProps, providerPropKeys)}>
+                <ContextContent id={id} children={children} debounceTime={debounce} onSizeChange={onSizeChange} />
             </ResizableModal>
         </ResizableProvider>
     }

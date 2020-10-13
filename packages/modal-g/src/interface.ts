@@ -37,7 +37,7 @@ export interface ResizableProviderProps {
 }
 
 export interface ModalsState {
-    modals: { [key: string]: PrivateModalStateProps },
+    modals: { [modalId: string]: PrivateModalStateProps },
     maxZIndex: number,
     minWidth: number,
     minHeight: number,
@@ -45,6 +45,7 @@ export interface ModalsState {
     initialModalState: ModalStateProps
 }
 export interface InnerModalProps extends antdModalProps {
+    id?:string,
     prefixCls?: string,
     itemState?: ModalStateProps,
     canMaximize?: boolean,

@@ -7,9 +7,8 @@ import { getModalState } from './Reducer'
 import { useDrag, useResize, usePrev } from './Hooks'
 import { InnerModalProps, ActionTypes } from './interface'
 const modalStyle: React.CSSProperties = { position: 'absolute', margin: 0, paddingBottom: 0 }
-interface Props extends InnerModalProps { id: string }
 
-const ModalInner: React.FC<Props> = function ModalInner(props) {
+const ModalInner: React.FC<InnerModalProps> = function ModalInner(props) {
     const {
         //** 自定义class前缀 */
         prefixCls: customizePrefixCls,
@@ -142,5 +141,5 @@ const defaultProps = {
 }
 ModalInner.defaultProps = defaultProps
 
-const ResizableModal = memo<Props>(ModalInner)
+const ResizableModal = memo<InnerModalProps>(ModalInner)
 export default ResizableModal
