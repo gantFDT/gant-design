@@ -1,5 +1,5 @@
 import React, { useContext, useCallback, useEffect } from 'react'
-import { pick, omit, debounce } from 'lodash'
+import { pick, omit, throttle } from 'lodash'
 import ModalContext from './Context'
 import ResizableModal from './ResizableModal'
 import ResizableProvider from './ResizableProvider'
@@ -7,7 +7,7 @@ import { ModalProps, ContextContentProps } from './interface'
 const uuid = 'modal-g-uuid'
 const providerPropKeys = ['initalState', 'maxZIndex', 'minWidth', 'minHeight']
 
-const ContextContent: React.FC<ContextContentProps> = ({ id, onSizeChange, debounceTime, children }) => {
+const ContextContent: React.FC<ContextContentProps> = ({ id, onSizeChange, throttleTime, children }) => {
     const { state: { modals } } = useContext(ModalContext)
     const { width, height } = modals[id]
 
@@ -15,9 +15,9 @@ const ContextContent: React.FC<ContextContentProps> = ({ id, onSizeChange, debou
         sizeChange(width, height)
     }, [width, height])
 
-    const sizeChange = useCallback(debounce((width, height) => {
+    const sizeChange = useCallback(throttle((width, height) => {
         onSizeChange && onSizeChange(width, height)
-    }, [debounceTime]), [])
+    }, throttleTime), [])
 
     return <>{children}</>
 }
@@ -29,7 +29,7 @@ class Modal extends React.Component<ModalProps, {}>{
 
     static defaultProps = {
         id: uuid,
-        debounce: 0,
+        throttle: 0,
         maxZIndex: 999,
         isModalDialog: true
     }
@@ -37,7 +37,7 @@ class Modal extends React.Component<ModalProps, {}>{
     render() {
         const {
             id,
-            debounce,
+            throttle,
             children,
             onSizeChange,
             ...restProps
@@ -45,7 +45,7 @@ class Modal extends React.Component<ModalProps, {}>{
 
         return <ResizableProvider {...pick(restProps, providerPropKeys)}>
             <ResizableModal id={id} {...omit(restProps, providerPropKeys)}>
-                <ContextContent id={id} children={children} debounceTime={debounce} onSizeChange={onSizeChange} />
+                <ContextContent id={id} children={children} throttleTime={throttle} onSizeChange={onSizeChange} />
             </ResizableModal>
         </ResizableProvider>
     }
