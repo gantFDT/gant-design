@@ -609,7 +609,7 @@ export default class GridManage {
         if (isRecorded) return;
         const rowNode = this.agGridApi.getRowNode(getRowNodeId(recordItem));
         const _nextRowData = get(rowNode, 'data', recordItem);
-        let { _rowData, _rowType, _rowError, ...data } = _nextRowData;
+        let { _rowData, _rowType, _rowError,undefined,...data } = _nextRowData;
         _rowData = isEmpty(_rowData) ? data : _rowData;
         diffRecords.push(getRowNodeId(_nextRowData));
         switch (type) {
