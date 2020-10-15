@@ -701,23 +701,7 @@ export default class GridManage {
       return columns;
     }
   }
-  getLocalStorageColumnsState(columnApi: ColumnApi) {
-    const localColumnsJson = localStorage.getItem(`gantd-grid-column-state-${this.gridKey}`);
-    if (!localColumnsJson || !this.gridKey || !this.agGridColumnApi) return;
-    try {
-      const localColumns = JSON.parse(localColumnsJson);
-      this.agGridColumnApi.setColumnState(localColumns);
-    } catch (err) {
-      console.error(err);
-    }
-  }
   setLocalStorageColumnsState() {
-    if (!this.gridKey || !this.agGridColumnApi) return;
-    const columns = this.agGridColumnApi.getColumnState();
-    const localColumnsJson = JSON.stringify(columns);
-    localStorage.setItem(`gantd-grid-column-state-${this.gridKey}`, localColumnsJson);
-  }
-  setLocalStorageColumns() {
     if (!this.gridKey || !this.agGridColumnApi) return;
     try {
       const columns = this.agGridColumnApi.getColumnState();

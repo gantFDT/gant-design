@@ -343,12 +343,10 @@ const basicColumns2 = [
   {
     groupId:"group-level-1",
     title:"group-level-1",
-    marryChildren:true,
     children:[
       {
         groupId: 'roup-level-1-1',
         title:"roup-level-1-1",
-        marryChildren:true,
         children: [
           {
             fieldName:'roup-level-1-1-2',
@@ -358,7 +356,6 @@ const basicColumns2 = [
       {
         groupId: 'group-level-1-2',
         title:"group-level-1-2",
-        marryChildren:true,
         children: [
           {
             fieldName: 'group-level-1-2-1',
