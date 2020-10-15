@@ -648,7 +648,7 @@ export default class GridManage {
     this.agGridApi.forEachNode(function(node, index) {
       let cloneData = cloneDeep(get(node, 'data', {}));
       if (!isEmpty(cloneData)) {
-        const { _rowType, _rowData, _rowCut, _rowError, treeDataPath, ...itemData } = cloneData;
+        const { _rowType, _rowData, _rowCut, _rowError, ...itemData } = cloneData;
         if (_rowType !== DataActions.removeTag) data.push({ ...itemData, dataNumber: index });
       }
     } as any);
