@@ -237,6 +237,7 @@ export const mapColumns = <T>(
           if (children && children.length) {
             const groupChildren = getColumnDefs(children);
             colDef.children = groupChildren.columnDefs;
+            colDef.marryChildren = true;
             validateFields = { ...validateFields, ...groupChildren.validateFields };
           }
         }

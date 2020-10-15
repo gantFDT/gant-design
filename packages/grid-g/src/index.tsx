@@ -6,7 +6,6 @@ import {
   ColumnApi,
   GridReadyEvent,
   RowDataUpdatedEvent,
-  RowDataChangedEvent,
   SelectionChangedEvent,
   SuppressKeyboardEventParams,
   CellEditingStoppedEvent,
@@ -401,15 +400,10 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
           onColumnMoved && onColumnMoved(event as any);
           break;
       }
-      console.log(event.columnApi.getColumnState())
-      memoryMode ? gridManager.setLocalStorageColumnsState() : gridManager.setLocalStorageColumns();
+      gridManager.setLocalStorageColumnsState();
     },
-    [onColumnMoved, onColumnResized, onColumnVisible, memoryMode],
+    [onColumnMoved, onColumnResized, onColumnVisible],
   );
-  useEffect(() => {
-    gridManager.gridKey = gridKey;
-    gridManager.columnsDefs=columnDefs
-  }, [gridKey]);
   const localColumnsDefs = useMemo(() => {
     return gridManager.getLocalStorageColumns(columnDefs, gridKey);
   }, [columnDefs, gridKey]);
@@ -421,7 +415,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       gridManager.agGridApi = params.api;
       gridManager.agGridColumnApi = params.columnApi;
       onReady && onReady(params, gridManager);
-      memoryMode && gridManager.getLocalStorageColumnsState(params.columnApi);
     },
     [onReady, gridKey],
   );
@@ -547,13 +540,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     },
     [selectedRows, onSelectedChanged],
   );
-  // const onRowDataCHanged = useCallback(
-  //   (event: RowDataChangedEvent) => {
-  //     propOnRowDataChanged && propOnRowDataChanged(event);
-  //     if (apiRef.current) garidShowSelectedRows(selectedRowsRef.current);
-  //   },
-  //   [propOnRowDataChanged],
-  // );
   return (
     <LocaleReceiver>
       {(local, localeCode = 'zh-cn') => {

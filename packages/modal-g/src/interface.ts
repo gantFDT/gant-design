@@ -57,14 +57,14 @@ export interface InnerModalProps extends antdModalProps {
 export declare type OnSizeChangeFunc = (width: number, height: number) => void
 
 export interface ModalProps extends InnerModalProps, ResizableProviderProps {
-    debounce?: number,
+    throttle?: number,
     onSizeChange?: OnSizeChangeFunc
 }
 export interface ContextContentProps {
     id: string,
     children: React.ReactNode,
     /** resize时的节流时长控制 */
-    debounceTime?: number,
+    throttleTime?: number,
     /** 弹窗尺寸变化时的回调 */
     onSizeChange?: OnSizeChangeFunc
 }

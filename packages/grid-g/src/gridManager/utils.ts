@@ -126,6 +126,9 @@ export function getRowsToUpdate(nodes, parentPath, createConfig, agGridConfig) {
     if (node.data) {
       node.data[path] = toPath(parentPath, node.data);
       newPath = agGridConfig.getDataPath(node.data);
+      const { _rowCut, ...data } = node.data;
+      res = res.concat([data]);
+      oldRowData = oldRowData.concat([itemData]);
     }
     if (node.childrenAfterGroup) {
       let { newRowData: childrenNewRowData, oldRowData: childrenOldRowData } = getRowsToUpdate(
@@ -136,11 +139,6 @@ export function getRowsToUpdate(nodes, parentPath, createConfig, agGridConfig) {
       );
       res = res.concat(childrenNewRowData);
       oldRowData = oldRowData.concat(childrenOldRowData);
-    }
-    if (node.data) {
-      const { _rowCut, ...data } = node.data;
-      res = res.concat([data]);
-      oldRowData = oldRowData.concat([itemData]);
     }
   });
   return { newRowData: res, oldRowData };

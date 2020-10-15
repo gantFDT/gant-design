@@ -609,7 +609,7 @@ export default class GridManage {
         if (isRecorded) return;
         const rowNode = this.agGridApi.getRowNode(getRowNodeId(recordItem));
         const _nextRowData = get(rowNode, 'data', recordItem);
-        let { _rowData, _rowType, _rowError, ...data } = _nextRowData;
+        let { _rowData, _rowType, _rowError,undefined,...data } = _nextRowData;
         _rowData = isEmpty(_rowData) ? data : _rowData;
         diffRecords.push(getRowNodeId(_nextRowData));
         switch (type) {
@@ -648,7 +648,7 @@ export default class GridManage {
     this.agGridApi.forEachNode(function(node, index) {
       let cloneData = cloneDeep(get(node, 'data', {}));
       if (!isEmpty(cloneData)) {
-        const { _rowType, _rowData, _rowCut, _rowError, treeDataPath, ...itemData } = cloneData;
+        const { _rowType, _rowData, _rowCut, _rowError, ...itemData } = cloneData;
         if (_rowType !== DataActions.removeTag) data.push({ ...itemData, dataNumber: index });
       }
     } as any);
@@ -701,23 +701,7 @@ export default class GridManage {
       return columns;
     }
   }
-  getLocalStorageColumnsState(columnApi: ColumnApi) {
-    const localColumnsJson = localStorage.getItem(`gantd-grid-column-state-${this.gridKey}`);
-    if (!localColumnsJson || !this.gridKey || !this.agGridColumnApi) return;
-    try {
-      const localColumns = JSON.parse(localColumnsJson);
-      this.agGridColumnApi.setColumnState(localColumns);
-    } catch (err) {
-      console.error(err);
-    }
-  }
   setLocalStorageColumnsState() {
-    if (!this.gridKey || !this.agGridColumnApi) return;
-    const columns = this.agGridColumnApi.getColumnState();
-    const localColumnsJson = JSON.stringify(columns);
-    localStorage.setItem(`gantd-grid-column-state-${this.gridKey}`, localColumnsJson);
-  }
-  setLocalStorageColumns() {
     if (!this.gridKey || !this.agGridColumnApi) return;
     try {
       const columns = this.agGridColumnApi.getColumnState();

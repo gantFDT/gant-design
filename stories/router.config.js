@@ -53,6 +53,10 @@ export default [
         nameZh: '基础选择器',
       },
       {
+        name: 'TreeSelector',
+        nameZh: '树形选择器',
+      },
+      {
         name: 'LocationSelector',
         nameZh: '地址选择器',
       },
@@ -70,7 +74,6 @@ export default [
         nameZh: '图标选择器',
       },
     ],
-
   },
   {
     name: '组件| 表单',
@@ -86,9 +89,9 @@ export default [
     name: '组件| 列表',
     children: [
       {
-        name: "grid",
-        nameZh: "表格",
-        package: "grid-g"
+        name: 'grid',
+        nameZh: '表格',
+        package: 'grid-g',
       },
       {
         name: 'SmartGrid',
@@ -104,7 +107,7 @@ export default [
         name: 'SmartTable',
         nameZh: '智能表格',
         package: 'smart-table-g',
-      }
+      },
     ],
   },
   {
@@ -152,7 +155,7 @@ export default [
     children: [
       {
         name: 'Keyevent',
-        nameZh: '快捷键'
+        nameZh: '快捷键',
       },
       //   {
       //   name: 'Icon',
