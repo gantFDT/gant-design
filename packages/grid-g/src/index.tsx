@@ -415,6 +415,8 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       gridManager.agGridApi = params.api;
       gridManager.agGridColumnApi = params.columnApi;
       onReady && onReady(params, gridManager);
+      const { dataSource = [] } = gridManager.agGridConfig;
+      gridManager.dataSourceChanged(dataSource);
     },
     [onReady, gridKey],
   );
@@ -639,7 +641,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     immutableData
                     columnDefs={memoryMode ? columnDefs : localColumnsDefs}
                     // columnDefs={localColumnsDefs}
-                    rowData={dataSource}
+                    // rowData={[]}
                     gridOptions={{
                       ...orignProps.gridOptions,
                     }}
