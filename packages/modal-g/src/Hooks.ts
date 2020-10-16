@@ -1,6 +1,8 @@
 import React, { useEffect, useCallback, useRef } from 'react'
 
-function useDrag(x: number, y: number, onDrag = (c: { x: number, y: number }) => { }) {
+type OnDragFunc = (c: { x: number, y: number }) => void
+
+function useDrag(x: number, y: number, onDrag: OnDragFunc) {
     const isDragging = useRef(false)
     const initialDragState = useRef({
         initX: 0,
@@ -11,6 +13,7 @@ function useDrag(x: number, y: number, onDrag = (c: { x: number, y: number }) =>
 
     const onMouseDown = useCallback((e: React.MouseEvent) => {
         e.stopPropagation()
+        setTextSelectable(false)
         initialDragState.current = {
             initX: x,
             initY: y,
@@ -37,7 +40,10 @@ function useDrag(x: number, y: number, onDrag = (c: { x: number, y: number }) =>
     }, [])
 
     useEffect(() => {
-        const onMouseUp = () => isDragging.current = false
+        const onMouseUp = () => {
+            isDragging.current = false
+            setTextSelectable(true)
+        }
         window.addEventListener('mouseup', onMouseUp)
         return () => window.removeEventListener('mouseup', onMouseUp)
     }, [])
@@ -45,9 +51,9 @@ function useDrag(x: number, y: number, onDrag = (c: { x: number, y: number }) =>
     return onMouseDown
 }
 
-type OnResize = (c: { x: number, y: number, width: number, height: number }) => void
+type OnResizeFunc = (c: { x: number, y: number, width: number, height: number }) => void
 
-function useResize(x: number, y: number, width: number, height: number, onResize: OnResize = _ => _) {
+function useResize(x: number, y: number, width: number, height: number, onResize: OnResizeFunc) {
     const isDragging = useRef(false)
     const initialDragState = useRef({
         initX: 0,
@@ -60,6 +66,7 @@ function useResize(x: number, y: number, width: number, height: number, onResize
 
     const onMouseDown = useCallback((e) => {
         e.stopPropagation()
+        setTextSelectable(false)
         initialDragState.current = {
             initX: x,
             initY: y,
@@ -95,7 +102,10 @@ function useResize(x: number, y: number, width: number, height: number, onResize
     }, [])
 
     useEffect(() => {
-        const onMouseUp = () => isDragging.current = false
+        const onMouseUp = () => {
+            isDragging.current = false
+            setTextSelectable(true)
+        }
         window.addEventListener('mouseup', onMouseUp)
         return () => window.removeEventListener('mouseup', onMouseUp)
     }, [])
@@ -107,6 +117,10 @@ function usePrev(value: boolean) {
     const ref = useRef(value)
     useEffect(() => { ref.current = value })
     return ref.current
+}
+
+function setTextSelectable(selectable: boolean) {
+    document.onselectstart = () => selectable
 }
 
 export { useDrag, useResize, usePrev }

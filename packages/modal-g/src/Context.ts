@@ -1,6 +1,5 @@
 import React from 'react'
-import { Action } from './Reducer'
-import { ModalsState } from './interface'
+import { ModalsState, Action } from './interface'
 
 const ModalContext = React.createContext({} as {
     state: ModalsState,

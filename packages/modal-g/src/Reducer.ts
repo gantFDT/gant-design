@@ -1,33 +1,18 @@
 import React from 'react'
-import { ModalsState } from './interface'
+import { ModalsState, PrivateModalStateProps, ActionTypes, Action } from './interface'
 
-export enum ActionTypes {
-    mount = 'mount',
-    unmount = 'unmount',
-    focus = 'focus',
-    show = 'show',
-    hide = 'hide',
-    max = 'max',
-    reset = 'reset',
-    resize = 'resize',
-    drag = 'drag',
-    windowResize = 'windowResize',
-}
-
-export type Action = { type: ActionTypes, [key: string]: any }
-
-export const getModalState = (state: ModalsState, id: string): any => state.modals[id] || state.initialModalState
+export const getModalState = (state: ModalsState, id: string): PrivateModalStateProps => state.modals[id] || state.initialModalState
 
 const clamp = (min: number, max: number, value: number) => Math.max(min, Math.min(max, value))
 
-const getAxis = (windowMeter: number, targetMeter: number, num?: any) => {
+const getAxis = (windowMeter: number, targetMeter: number, num?: number | string) => {
     if (typeof num == 'number') return num
     return (windowMeter - targetMeter) / 2
 }
-const convertPercentage = (target: any, windowSize: number, inital: number) => {
+const convertPercentage = (target: string | number, windowSize: number, inital: number) => {
     if (typeof target == 'number') return target
     let reg = new RegExp(/^\d+%$/)
-    if (reg.test(target)) return Math.floor(windowSize * (target.replace("%", "") / 100))
+    if (reg.test(target)) return Math.floor(windowSize * (Number(target.replace("%", "")) / 100))
     return inital
 }
 
