@@ -3,6 +3,7 @@ import classnames from 'classnames';
 import { ICellRendererParams, RowNode } from '@ag-grid-community/core';
 import { Icon } from 'antd';
 import { stopPropagationForAgGrid } from './utils';
+import { isEqualObj } from './gridManager/utils';
 export interface GantGroupCellRendererProps extends ICellRendererParams {
   render?: (showValue: any, data: any, rowIndex: number, params: ICellRendererParams) => any;
   showFolder?: boolean;
@@ -29,7 +30,7 @@ export default memo(
       node,
       api,
       data,
-      context: { serverDataRequest, getDataPath, treeData, isServerSideGroup },
+      context: { serverDataRequest, getDataPath, treeData, isServerSideGroup, getRowNodeId },
       render,
       value,
       valueFormatted,
@@ -39,8 +40,15 @@ export default memo(
     const getTreeDataInfo = useCallback(
       (node: RowNode) => {
         const { expanded: nodeExpanded, childrenAfterFilter = [], data } = node;
-        const hasChildren = (childrenAfterFilter.length > 0 || (isServerSideGroup && isServerSideGroup(data))) && treeData;
-        const treeDataType = childrenAfterFilter.length > 0 ? 'sync' : isServerSideGroup && isServerSideGroup(data) ? 'async' : 'none';
+        const hasChildren =
+          (childrenAfterFilter.length > 0 || (isServerSideGroup && isServerSideGroup(data))) &&
+          treeData;
+        const treeDataType =
+          childrenAfterFilter.length > 0
+            ? 'sync'
+            : isServerSideGroup && isServerSideGroup(data)
+            ? 'async'
+            : 'none';
         const expanded = nodeExpanded && treeDataType == 'sync';
         return {
           hasChildren,
@@ -78,7 +86,7 @@ export default memo(
       } = params;
       setState(state => ({ ...state, expanded }));
     }
-    function dataChangedCallback(params) {
+    function childrenCountChangedCallback(params) {
       setState({ ...getTreeDataInfo(params.node) });
     }
     const getLeveLine = useCallback(() => {
@@ -97,17 +105,18 @@ export default memo(
             })}
           ></span>
         ) : (
-          <span key={index + 'folder-icon'} className={classnames('gant-level-line', 'gant-folder-line')}></span>
+          <span
+            key={index + 'folder-icon'}
+            className={classnames('gant-level-line', 'gant-folder-line')}
+          ></span>
         );
       });
     }, [node, hasChildren, showFolder]);
-    function selectedChangedCallback(params) {
-      const node = params.node;
-      node.gridApi.refreshCells({
-        columns: ['defalutSelection'],
-        rowNodes: [node],
-        force: true,
-      });
+    function dataChange(params) {
+      if (isEqualObj(data, node.data)) return;
+      const newState = getTreeDataInfo(node);
+      if (isEqualObj(newState, state)) return;
+      setState(newState)
     }
     useEffect(() => {
       if (eContracted.current) {
@@ -116,10 +125,10 @@ export default memo(
       if (eExpanded.current) {
         eExpanded.current.addEventListener('click', onClose);
       }
-      // node.addEventListener(RowNode.EVENT_ROW_SELECTED, selectedChangedCallback);
       node.addEventListener(RowNode.EVENT_EXPANDED_CHANGED, expandedChangedCallback);
-      node.addEventListener(RowNode.EVENT_ALL_CHILDREN_COUNT_CHANGED, dataChangedCallback);
+      node.addEventListener(RowNode.EVENT_ALL_CHILDREN_COUNT_CHANGED, childrenCountChangedCallback);
       node.addEventListener(RowNode.EVENT_ROW_INDEX_CHANGED, rowIndexChanged);
+      // node.addEventListener(RowNode.EVENT_DATA_CHANGED, dataChange);
       return () => {
         if (eContracted.current) {
           eContracted.current.removeEventListener('click', onExpend);
@@ -127,10 +136,13 @@ export default memo(
         if (eExpanded.current) {
           eExpanded.current.removeEventListener('click', onClose);
         }
-        // node.removeEventListener(RowNode.EVENT_ROW_SELECTED, selectedChangedCallback);
         node.removeEventListener(RowNode.EVENT_EXPANDED_CHANGED, expandedChangedCallback);
-        node.removeEventListener(RowNode.EVENT_ALL_CHILDREN_COUNT_CHANGED, dataChangedCallback);
+        node.removeEventListener(
+          RowNode.EVENT_ALL_CHILDREN_COUNT_CHANGED,
+          childrenCountChangedCallback,
+        );
         node.removeEventListener(RowNode.EVENT_ROW_INDEX_CHANGED, rowIndexChanged);
+        // node.addEventListener(RowNode.EVENT_DATA_CHANGED, dataChange);
       };
     }, []);
     const showValue = useMemo(() => {
@@ -142,7 +154,9 @@ export default memo(
           'ag-cell-wrapper',
           treeData && `ag-row-group-indent-${node.level}`,
           treeData && showFolder && `gant-row-group-indent-${node.level}`,
-          ((!hasChildren && !showFolder) || (!hasChildren && node.level == 0)) && treeData && 'ag-row-group-leaf-indent ',
+          ((!hasChildren && !showFolder) || (!hasChildren && node.level == 0)) &&
+            treeData &&
+            'ag-row-group-leaf-indent ',
         )}
       >
         {getLeveLine()}
@@ -179,7 +193,9 @@ export default memo(
             )
           )
         ) : null}
-        <span className="ag-group-value">{render ? render(showValue, data, rowIndex, props) : showValue}</span>
+        <span className="ag-group-value">
+          {render ? render(showValue, data, rowIndex, props) : showValue}
+        </span>
       </span>
     );
   }),

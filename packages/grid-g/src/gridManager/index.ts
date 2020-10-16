@@ -288,7 +288,7 @@ export default class GridManage {
     this.reset({ dataSource });
     try {
       const gridDataSource = [];
-      if (dataSource.length === 0 || this.agGridConfig.dataSource.length === 0) return;
+      if (dataSource.length === 0 || this.agGridConfig.dataSource.length === 0) return this.agGridApi.setRowData(dataSource);;
       this.agGridApi.forEachNode(node => {
         if (node.data) gridDataSource.push(node.data);
       });
