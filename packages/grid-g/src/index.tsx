@@ -142,7 +142,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     onColumnMoved,
     onColumnResized,
     onColumnVisible,
-    memoryMode,
     ...orignProps
   } = props;
   const apiRef = useRef<GridApi>();
@@ -639,9 +638,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     {...selection}
                     {...orignProps}
                     immutableData
-                    columnDefs={memoryMode ? columnDefs : localColumnsDefs}
-                    // columnDefs={localColumnsDefs}
-                    // rowData={[]}
+                    columnDefs={localColumnsDefs}
                     gridOptions={{
                       ...orignProps.gridOptions,
                     }}
