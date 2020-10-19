@@ -23,7 +23,7 @@ const basicColumns = [
   {
     fieldName: 'name',
     title: '姓名',
-    // cellRenderer: 'gantGroupCellRenderer',
+    cellRenderer: 'gantGroupCellRenderer',
     toolTipRender: params => {
       const { data } = params;
       return data.age > 30 ? <div>{data.name}</div> : null;
@@ -69,46 +69,55 @@ const basicColumns = [
       },
     },
   },
+  // {
+  //   groupId: 'group-level-1',
+  //   title: 'group-level-1',
+  //   children: [
+  //     {
+  //       groupId: 'group-level-1-1',
+  //       title: 'group-level-1-1',
+  //       children: [
+  //         {
+  //           fieldName: 'group-level-1-1-1',
+  //         },
+  //       ],
+  //     },
+  //   ],
+  // },
   {
     fieldName: 'county',
     title: '国家',
+   
     // render: value => value + 222,
   },
   {
-    groupId: 'group-level-1',
-    title: 'group-level-1',
-    children: [
+    groupId:"group-level-1",
+    title:"group-level-1",
+    children:[
       {
-        groupId: 'group-level-1-1',
-        title: 'group-level-1-1',
+        groupId: 'roup-level-1-1',
+        title:"roup-level-1-1",
         children: [
           {
-            fieldName: 'group-level-1-1-1',
-          },
-          {
-            fieldName: 'group-level-1-1-2',
-          },
+            fieldName:'roup-level-1-1-2',
+          }
         ],
       },
       {
         groupId: 'group-level-1-2',
-        title: 'group-level-1-2',
+        title:"group-level-1-2",
         children: [
           {
             fieldName: 'group-level-1-2-1',
           },
           {
-            fieldName: 'group-level-1-2-2',
-          },
+            fieldName:'group-level-1-2-2',
+          }
         ],
-      },
-    ],
+      }
+    ]
   },
 ];
-
-const mockData = Array(1000)
-  .fill()
-  .map((_, Idx) => RandomCreate());
 const BaiscGrid = () => {
   const [editable, setEditable] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -162,7 +171,6 @@ const BaiscGrid = () => {
   }, [gridChange]);
   const onCreate = useCallback(() => {
     const createData = RandomCreate();
-   
     gridManagerRef.current.create(createData, selectedKeys);
   }, [selectedKeys]);
   const onTagRemove = useCallback(() => {
@@ -246,7 +254,7 @@ const BaiscGrid = () => {
             // console.log('----->onSelectedChanged', keys, rows);
           },
         }}
-        gridKey="grid-test"
+        gridKey="grid-test-2"
         hideSelectedBox
         rowBuffer={1}
         groupSuppressAutoColumn
@@ -256,7 +264,6 @@ const BaiscGrid = () => {
         showCut
         getDataPath={data => data.path}
         // debounceVerticalScrollbar
-        memoryMode
         suppressAnimationFrame
         pagination={{
           total: 400,

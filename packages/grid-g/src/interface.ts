@@ -14,6 +14,7 @@ import { defaultProps, defaultRowSelection } from './index';
 import { Rules, RuleType, RuleItem } from 'async-validator';
 import { PaginationProps } from 'antd/lib/pagination';
 import GridManager from './gridManager';
+import { types } from '@babel/core';
 export * from '@ag-grid-community/core';
 // 编辑框大小
 export enum Size {
@@ -199,7 +200,7 @@ export interface Props<T extends any> {
   onCellChanged: (record: any, fieldName: string, newValue: any, oldValue: any) => void;
   openEditSign: boolean;
   createConfig?: CreateConfig;
-  showCut?: (params: GetContextMenuItemsParams) => boolean | boolean;
+  showCut?: ((params: GetContextMenuItemsParams) => boolean) | boolean;
   onRowsCut?: (rows: RowNode[]) => boolean;
   onRowsPaste?: (rows: RowNode[], targetRow?: RowNode) => boolean;
   onRowsPasteEnd?: (data: any) => void;
@@ -215,7 +216,6 @@ export interface Props<T extends any> {
       }
     | null
     | false;
-  memoryMode: boolean;
 }
 
 export type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>;

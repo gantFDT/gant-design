@@ -54,6 +54,7 @@ export const gantGetcontextMenuItems = function(params: GetContextMenuItemsParam
     ? getContextMenuItems({
         selectedRows: gridSelectedRows,
         selectedKeys: gridSelectedKeys,
+        selectedRowKeys: gridSelectedKeys,
         ...params,
       } as any)
     : [];
