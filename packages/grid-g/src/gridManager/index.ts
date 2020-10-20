@@ -691,8 +691,8 @@ export default class GridManage {
   getLocalStorageColumns(columns: (ColDef | ColGroupDef)[], gridKey) {
     const localColumnsJson = localStorage.getItem(`gantd-grid-column-${gridKey}`);
     this.gridKey = gridKey;
-    if (!localColumnsJson || !gridKey) return columns;
     this.columnsDefs = columns;
+    if (!localColumnsJson || !gridKey) return columns;
     try {
       const localColumns = JSON.parse(localColumnsJson);
       return sortAndMergeColumns(columns, localColumns);
