@@ -41,6 +41,7 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
 
   const { columns, systemViews } = useMemo(() => formatSchema(schema), [schema]);
   const [baseView] = systemViews;
+  const [gridKey, setGridKey] = useState(tableKey);
   const [configModalVisible, setConfigModalVisible] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
   const [saveAsLoading, setSaveAsLoading] = useState(false);
@@ -102,6 +103,12 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
     }
   }, [viewSchema]);
 
+  // 处理视图修改
+  const handleViewChange = useCallback((view) => {
+    setGridKey('gridKey:'+view.viewId)
+    onViewChange && onViewChange(view);
+  },[onViewChange])
+  
   const handlerSaveViews = useCallback(
     ({ views, hideModal, type }) => {
       let saveLoadngFunc: Function | undefined;
@@ -271,6 +278,7 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
             height={
               gridHeight
             }
+            gridKey={gridKey}
             {...restProps}
           />
         )
@@ -287,7 +295,7 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
         onSaveAs={onViewSaveAs}
         onOk={handlerSaveConfig}
         onCancel={() => setConfigModalVisible(false)}
-        onViewChange={onViewChange}
+        onViewChange={handleViewChange}
       />
     </div>
   );
