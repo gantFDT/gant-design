@@ -6,6 +6,8 @@ import Grid from 'grid';
 import { Button, message, Dropdown, Menu, Switch, Checkbox, Modal } from 'antd';
 import { Input, InputCellPhone, DatePicker, InputNumber, EditStatus, Selector } from 'data-cell';
 import Header from 'header';
+
+
 const RandomCreate = () => ({
   ip: Random.ip(),
   name: Random.name(),
@@ -17,8 +19,9 @@ const RandomCreate = () => ({
     address: Random.county(true),
   },
 });
-
-
+const mockData = Array(1000)
+  .fill('')
+  .map(() => RandomCreate());
 const basicColumns = [
   {
     fieldName: 'name',
@@ -27,6 +30,14 @@ const basicColumns = [
     toolTipRender: params => {
       const { data } = params;
       return data.age > 30 ? <div>{data.name}</div> : null;
+    },
+    valueGetter: props => {
+      console.log('valueGetter-->', props);
+      return props.data.name+'getter';
+    },
+    valueFormatter: props => {
+      console.log('valueFormatter-->', props);
+      return props.value+'formatter';
     },
     editConfig: {
       component: props => {
@@ -87,35 +98,35 @@ const basicColumns = [
   {
     fieldName: 'county',
     title: '国家',
-   
+
     // render: value => value + 222,
   },
   {
-    groupId:"group-level-1",
-    title:"group-level-1",
-    children:[
+    groupId: 'group-level-1',
+    title: 'group-level-1',
+    children: [
       {
         groupId: 'roup-level-1-1',
-        title:"roup-level-1-1",
+        title: 'roup-level-1-1',
         children: [
           {
-            fieldName:'roup-level-1-1-2',
-          }
+            fieldName: 'roup-level-1-1-2',
+          },
         ],
       },
       {
         groupId: 'group-level-1-2',
-        title:"group-level-1-2",
+        title: 'group-level-1-2',
         children: [
           {
             fieldName: 'group-level-1-2-1',
           },
           {
-            fieldName:'group-level-1-2-2',
-          }
+            fieldName: 'group-level-1-2-2',
+          },
         ],
-      }
-    ]
+      },
+    ],
   },
 ];
 const BaiscGrid = () => {
@@ -275,4 +286,4 @@ const BaiscGrid = () => {
   );
 };
 
-ReactDOM.render(<basicColumns />, mountNode)`,]
+ReactDOM.render(<RandomCreate />, mountNode)`,]

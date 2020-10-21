@@ -48,6 +48,7 @@ export default class GridManage {
   private dataAsyncStack: any[] = [];
   public cutRows: any[];
   setingLoading: boolean = false;
+  clearloding: boolean;
   get loading() {
     return this.setingLoading;
   }
@@ -288,7 +289,8 @@ export default class GridManage {
     if (!Array.isArray(dataSource) || !this.agGridApi) return;
     try {
       const gridDataSource = [];
-      if (dataSource.length === 0 || this.agGridConfig.dataSource.length === 0) return this.agGridApi.setRowData(dataSource);;
+      if (dataSource.length === 0 || this.agGridConfig.dataSource.length === 0)
+        return this.agGridApi.setRowData(dataSource);
       this.agGridApi.forEachNode(node => {
         if (node.data) gridDataSource.push(node.data);
       });
@@ -609,7 +611,7 @@ export default class GridManage {
         if (isRecorded) return;
         const rowNode = this.agGridApi.getRowNode(getRowNodeId(recordItem));
         const _nextRowData = get(rowNode, 'data', recordItem);
-        let { _rowData, _rowType, _rowError,undefined,...data } = _nextRowData;
+        let { _rowData, _rowType, _rowError, undefined, ...data } = _nextRowData;
         _rowData = isEmpty(_rowData) ? data : _rowData;
         diffRecords.push(getRowNodeId(_nextRowData));
         switch (type) {
@@ -691,8 +693,8 @@ export default class GridManage {
   getLocalStorageColumns(columns: (ColDef | ColGroupDef)[], gridKey) {
     const localColumnsJson = localStorage.getItem(`gantd-grid-column-${gridKey}`);
     this.gridKey = gridKey;
-    if (!localColumnsJson || !gridKey) return columns;
     this.columnsDefs = columns;
+    if (!localColumnsJson || !gridKey) return columns;
     try {
       const localColumns = JSON.parse(localColumnsJson);
       return sortAndMergeColumns(columns, localColumns);
@@ -702,7 +704,7 @@ export default class GridManage {
     }
   }
   setLocalStorageColumnsState() {
-    if (!this.gridKey || !this.agGridColumnApi) return;
+    if (!this.gridKey || !this.agGridColumnApi||this.clearloding) return;
     try {
       const columns = this.agGridColumnApi.getColumnState();
       const localColumnsJson = JSON.stringify(columns);
@@ -710,9 +712,12 @@ export default class GridManage {
     } catch (error) {}
   }
   clearLocalStorageColumns() {
+    this.clearloding = true;
     localStorage.removeItem(`gantd-grid-column-${this.gridKey}`);
-    localStorage.removeItem(`gantd-grid-column-state-${this.gridKey}`);
     this.agGridApi.setColumnDefs(this.columnsDefs);
     this.agGridColumnApi.resetColumnState();
+    setTimeout(() => {
+      this.clearloding=false
+    },10);
   }
 }
