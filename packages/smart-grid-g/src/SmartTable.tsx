@@ -34,6 +34,7 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
     height,
     style,
     hideHeader = false,
+    onReady,
     ...restProps
   } = props;
 
@@ -61,6 +62,18 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
     systemViews: systemViews,
     customViews: customViews || [],
   });
+
+  const apiRef: any = useRef(null)
+  const managerRef: any = useRef(null)
+
+  //Grid渲染完成之后的回调方法
+  const handleReady = useCallback((params, manager) => {
+
+    apiRef.current = params
+    managerRef.current = manager
+
+    onReady && onReady(params, manager)
+  }, [onReady])
 
   useEffect(() => {
     if (baseView) {
@@ -105,8 +118,12 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
 
   // 处理视图修改
   const handleViewChange = useCallback((view) => {
-    setGridKey('gridKey:'+view.viewId)
-    onViewChange && onViewChange(view);
+    // apiRef.current && apiRef.current.clearLocalStorageColumns()
+    managerRef.current && managerRef.current.clearLocalStorageColumns()
+    setTimeout(() => {
+      setGridKey('gridKey:'+view.viewId)
+      onViewChange && onViewChange(view)
+    }, 200);
   },[onViewChange])
   
   const handlerSaveViews = useCallback(
@@ -278,6 +295,7 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
             height={
               gridHeight
             }
+            onReady={handleReady}
             gridKey={gridKey}
             {...restProps}
           />
