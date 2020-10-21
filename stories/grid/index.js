@@ -7,6 +7,7 @@ import Grid from '@grid';
 import { Button, message, Dropdown, Menu, Switch, Checkbox, Modal } from 'antd';
 import { Input, InputCellPhone, DatePicker, InputNumber, EditStatus, Selector } from '@data-cell';
 import Header from '@header';
+/*! Split !*/
 const RandomCreate = () => ({
   ip: Random.ip(),
   name: Random.name(),
@@ -18,7 +19,7 @@ const RandomCreate = () => ({
     address: Random.county(true),
   },
 });
-/*! Split !*/
+const mockData=Array(1000).fill('').map(()=>RandomCreate()) 
 const basicColumns = [
   {
     fieldName: 'name',
@@ -487,16 +488,16 @@ const config = {
     </div>
   ),
   children: [
-    // {
-    //   title: '基础Grid',
-    //   describe: '基础Grid',
-    //   cmp: BaiscGrid,
-    // },
     {
-      title: '树形Grid',
-      describe: 'tree',
-      cmp: TreeGrid,
+      title: '基础Grid',
+      describe: '基础Grid',
+      cmp: BaiscGrid,
     },
+    // {
+    //   title: '树形Grid',
+    //   describe: 'tree',
+    //   cmp: TreeGrid,
+    // },
   ],
 };
 

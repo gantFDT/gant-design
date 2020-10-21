@@ -230,7 +230,7 @@ export const useRowSelection = <T extends Record>(rowSelection: RowSelection<T>,
     padding: '0 8px 0 4px',
     marginLeft: '-4px',
     width: parseInt(columnWidth as string) + 4,
-    visibility: (isMultiple ? 'show' : 'hidden') as CSS.Property.Visibility,
+    visibility: (isMultiple ? 'show' : 'hidden') as any,
     borderRight: bordered ? '1px solid transparent' : undefined
   }), [isMultiple, columnWidth, bordered])
 

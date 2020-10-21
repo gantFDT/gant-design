@@ -34,6 +34,7 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
     height,
     style,
     hideHeader = false,
+    onReady,
     ...restProps
   } = props;
 
@@ -41,6 +42,7 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
 
   const { columns, systemViews } = useMemo(() => formatSchema(schema), [schema]);
   const [baseView] = systemViews;
+  const [gridKey, setGridKey] = useState(tableKey);
   const [configModalVisible, setConfigModalVisible] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
   const [saveAsLoading, setSaveAsLoading] = useState(false);
@@ -60,6 +62,18 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
     systemViews: systemViews,
     customViews: customViews || [],
   });
+
+  const apiRef: any = useRef(null)
+  const managerRef: any = useRef(null)
+
+  //Grid渲染完成之后的回调方法
+  const handleReady = useCallback((params, manager) => {
+
+    apiRef.current = params
+    managerRef.current = manager
+
+    onReady && onReady(params, manager)
+  }, [onReady])
 
   useEffect(() => {
     if (baseView) {
@@ -102,6 +116,16 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
     }
   }, [viewSchema]);
 
+  // 处理视图修改
+  const handleViewChange = useCallback((view) => {
+    // apiRef.current && apiRef.current.clearLocalStorageColumns()
+    managerRef.current && managerRef.current.clearLocalStorageColumns()
+    setTimeout(() => {
+      setGridKey('gridKey:'+view.viewId)
+      onViewChange && onViewChange(view)
+    }, 200);
+  },[onViewChange])
+  
   const handlerSaveViews = useCallback(
     ({ views, hideModal, type }) => {
       let saveLoadngFunc: Function | undefined;
@@ -271,6 +295,8 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
             height={
               gridHeight
             }
+            onReady={handleReady}
+            gridKey={gridKey}
             {...restProps}
           />
         )
@@ -287,7 +313,7 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
         onSaveAs={onViewSaveAs}
         onOk={handlerSaveConfig}
         onCancel={() => setConfigModalVisible(false)}
-        onViewChange={onViewChange}
+        onViewChange={handleViewChange}
       />
     </div>
   );
