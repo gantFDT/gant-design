@@ -81,14 +81,14 @@ export const setFields = (cmpMap) => {
   ComponentsMap = { ...ComponentsMap, ...cmpMap }
 }
 
-export default function formatSchema<R>(schema: SchemaProp<R> | CustomColumnProps<R>[]) {
+export default function formatSchema<R>(schema: SchemaProp<R> | CustomColumnProps<R>[], originGridKey: string | undefined) {
   // 简洁模式
   if (Array.isArray(schema)) {
     schema = {
       supportColumnFields: schema,
       systemViews: [
         {
-          viewId: 'systemView',
+          viewId: originGridKey ? 'systemView' : `systemView:${originGridKey}`,
           name: '系统视图',
           version: 'default',
           panelConfig: {

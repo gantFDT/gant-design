@@ -414,7 +414,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       gridManager.agGridApi = params.api;
       gridManager.agGridColumnApi = params.columnApi;
       onReady && onReady(params, gridManager);
-      const { dataSource = [] } = gridManager.agGridConfig;
+      const dataSource= get(gridManager,'agGridConfig.dataSource',[]);
       gridManager.dataSourceChanged(dataSource);
     },
     [onReady, gridKey],

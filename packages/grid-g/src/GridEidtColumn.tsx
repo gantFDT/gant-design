@@ -1,4 +1,12 @@
-import React, { forwardRef, useImperativeHandle, useState, useRef, useCallback, useMemo, useEffect } from 'react';
+import React, {
+  forwardRef,
+  useImperativeHandle,
+  useState,
+  useRef,
+  useCallback,
+  useMemo,
+  useEffect,
+} from 'react';
 import { RowNode } from '@ag-grid-community/core';
 import classnames from 'classnames';
 import { EditStatus } from '@data-cell';
@@ -20,12 +28,19 @@ export default WrapperComponent =>
       props: fieldProps,
       changeFormatter,
       initValueFormatter,
-      context: { size, gridManager, onCellEditChange, onCellEditingChange, getRowNodeId, onCellChanged },
+      context: {
+        size,
+        gridManager,
+        onCellEditChange,
+        onCellEditingChange,
+        getRowNodeId,
+        onCellChanged,
+      },
       refName = 'wrapperRef',
       valuePropName = 'value',
       node,
     } = props;
-    const [newValue, setNewValue] = useState(initValueFormatter ? initValueFormatter(props) : value);
+    const [newValue, setNewValue] = useState(value);
     const divRef = useRef<HTMLDivElement>(null);
     const inputRef: any = useRef();
     const compoentProps = useMemo(() => {
@@ -48,7 +63,7 @@ export default WrapperComponent =>
         if (isEmpty(res)) return console.warn('celleditingChange must be callbak result');
         await gridManager.modify(res);
         typeof onCellChanged == 'function' && onCellChanged(editData, field, chageVal, value);
-        gridManager.loading = false
+        gridManager.loading = false;
       },
       [onCellEditingChange, onCellChanged],
     );
@@ -123,7 +138,16 @@ export default WrapperComponent =>
     }, [valuePropName, refName, newValue]);
     return (
       <div className={classnames('gant-grid-cell-editing')} ref={divRef}>
-        <WrapperComponent autoFocus={true} wrapperRef={inputRef} {...compoentProps} {...defalutProps} {...wrapperProps} onChange={onChange} size={size} onBlur={onBlur} />
+        <WrapperComponent
+          autoFocus={true}
+          wrapperRef={inputRef}
+          {...compoentProps}
+          {...defalutProps}
+          {...wrapperProps}
+          onChange={onChange}
+          size={size}
+          onBlur={onBlur}
+        />
       </div>
     );
   });

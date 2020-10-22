@@ -32,8 +32,6 @@ export default (props: PanelProps) => {
     setShowModal,
     setViewName,
     setEditView,
-    defaultViewId,
-    onDefaultViewChange,
     extra,
   } = props;
 
@@ -68,15 +66,6 @@ export default (props: PanelProps) => {
     setEditView && setEditView(item);
   }, []);
 
-  // 设置默认
-  const onSetDefault = (type: ViewType, viewId: string) => {
-    onDefaultViewChange &&
-      onDefaultViewChange({
-        type,
-        viewId,
-      });
-  };
-
   return (
     <Receiver>
       {(locale) => <div className={`gant-smart-table-viewpicker-panel`}>
@@ -91,14 +80,8 @@ export default (props: PanelProps) => {
               <li key={name}>
                 <div className="leftContent" onClick={onViewChange.bind(null, item)}>
                   <span>{name}</span>
-                  {id === defaultViewId && <Tag className="tag">&nbsp;{locale.default}</Tag>}
                 </div>
                 <div className="operates">
-                  {id !== defaultViewId && (
-                    <span className="operate" onClick={onSetDefault.bind(null, viewType, id)}>
-                      {locale.setDefault}
-                    </span>
-                  )}
                   {viewType === 'custom' && (
                     <>
                       <Tooltip title={locale.rename}>

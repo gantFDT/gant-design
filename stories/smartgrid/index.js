@@ -317,61 +317,61 @@ var tableColumns = [
     ),
   },
 ]
-function MultiViewUse() {
-  const tableSchema = {
-    supportColumnFields: tableColumns,
-    systemViews: [
-      {
-        viewId: 'systemView1',
-        name: "隐藏年龄",
-        version: '2020-02-10 09:45:37',
-        panelConfig: {
-          columnFields: [
-            {
-              fieldName: 'tags',
-              fixed: 'left',
-              width: 300
-            },
-            {
-              fieldName: 'name',
-            },
-            {
-              fieldName: 'address',
-            },
-            {
-              fieldName: 'action',
-            },
-          ]
-        }
-      },
-      {
-        viewId: 'systemView2',
-        name: "禁止操作",
-        version: '2020-02-10 09:45:37',
-        panelConfig: {
-          columnFields: [
-            {
-              fieldName: 'name',
-            },
-            {
-              fieldName: 'address',
-            },
-            {
-              fieldName: 'age',
-            },
-            {
-              fieldName: 'tags',
-              width: 300
-            },
-          ]
-        }
+const tableSchema = {
+  supportColumnFields: tableColumns,
+  systemViews: [
+    {
+      viewId: 'systemView-MultiViewUse-1',
+      name: "隐藏年龄",
+      version: '2020-02-10 09:45:37',
+      panelConfig: {
+        columnFields: [
+          {
+            fieldName: 'tags',
+            fixed: 'left',
+            width: 300
+          },
+          {
+            fieldName: 'name',
+          },
+          {
+            fieldName: 'address',
+          },
+          {
+            fieldName: 'action',
+          },
+        ]
       }
-    ]
-  }
+    },
+    {
+      viewId: 'systemView-MultiViewUse-2',
+      name: "禁止操作",
+      version: '2020-02-10 09:45:37',
+      panelConfig: {
+        columnFields: [
+          {
+            fieldName: 'name',
+          },
+          {
+            fieldName: 'address',
+          },
+          {
+            fieldName: 'age',
+          },
+          {
+            fieldName: 'tags',
+            width: 300
+          },
+        ]
+      }
+    }
+  ]
+}
+function MultiViewUse() {
   return (
     <div style={{ margin: 10 }}>
       <SmartGrid
-        tableKey="MultiViewUse"
+        gridKey="MultiViewUse"
         schema={tableSchema}
         dataSource={dataSource}
       />
@@ -791,41 +791,41 @@ const config = {
 `,
   // inline: true,
   children: [
-    {
-      title: '基本用法',
-      describe: '最简单的用法，鼠标悬浮表格可配置视图。<br/>简洁数据模型，数组格式，快速实现表格展示。列数据不应包含UI配置信息。',
-      cmp: BasicUse
-    },
-    {
-      title: '动态配置列属性用法',
-      describe: '配置列属性，包括显示与否、列的排序、固定、对齐方式等。<br/>此处预设隐藏 <b>年龄</b> 字段, 并将 <b>标签</b> 列放置第一列。',
-      cmp: ConfigColumnsUse
-    },
-    {
-      title: '动态配置表格样式属性用法',
-      describe: '配置表格样式，包括文字是否限制折行、是否显示斑马线、是否显示列边框、分页条位置、高度策略等。<br/>此处预设 不换行 、不显示斑马线、 不显示边框、 取消点击选中行、 分页条放右边、 表格高度适应内容。',
-      cmp: ConfigDisplayUse
-    },
+    // {
+    //   title: '基本用法',
+    //   describe: '最简单的用法，鼠标悬浮表格可配置视图。<br/>简洁数据模型，数组格式，快速实现表格展示。列数据不应包含UI配置信息。',
+    //   cmp: BasicUse
+    // },
+    // {
+    //   title: '动态配置列属性用法',
+    //   describe: '配置列属性，包括显示与否、列的排序、固定、对齐方式等。<br/>此处预设隐藏 <b>年龄</b> 字段, 并将 <b>标签</b> 列放置第一列。',
+    //   cmp: ConfigColumnsUse
+    // },
+    // {
+    //   title: '动态配置表格样式属性用法',
+    //   describe: '配置表格样式，包括文字是否限制折行、是否显示斑马线、是否显示列边框、分页条位置、高度策略等。<br/>此处预设 不换行 、不显示斑马线、 不显示边框、 取消点击选中行、 分页条放右边、 表格高度适应内容。',
+    //   cmp: ConfigDisplayUse
+    // },
     {
       title: '多视图动态切换用法',
       describe: '配置多个视图配置，可以快速动态切换。',
       cmp: MultiViewUse
     },
-    {
-      title: '初始视图配置用法',
-      describe: '配置初始视图，可以记录上次视图的配置。',
-      cmp: InitViewUse
-    },
-    {
-      title: '国际化用法',
-      describe: '可进行语言的切换，同时支持自定义（需要antd-ConfigProvider的上下文环境），默认中文',
-      cmp: LocalUse
-    },
-    {
-      title: '行内编辑用法',
-      describe: '可进行编辑状态的切换，一键进入编辑模式',
-      cmp: EditInlineUse
-    }
+    // {
+    //   title: '初始视图配置用法',
+    //   describe: '配置初始视图，可以记录上次视图的配置。',
+    //   cmp: InitViewUse
+    // },
+    // {
+    //   title: '国际化用法',
+    //   describe: '可进行语言的切换，同时支持自定义（需要antd-ConfigProvider的上下文环境），默认中文',
+    //   cmp: LocalUse
+    // },
+    // {
+    //   title: '行内编辑用法',
+    //   describe: '可进行编辑状态的切换，一键进入编辑模式',
+    //   cmp: EditInlineUse
+    // }
   ]
 };
 

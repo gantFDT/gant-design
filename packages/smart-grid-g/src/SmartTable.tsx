@@ -17,7 +17,7 @@ const getPrefixCls = (cls, customizePrefixCls) => customizePrefixCls || 'gant' +
 
 function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
   const {
-    tableKey,
+    gridKey: originGridKey,
     title,
     schema,
     viewSchema,
@@ -40,9 +40,9 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
 
   const prefixCls = getPrefixCls('smart-table', customizePrefixCls);
 
-  const { columns, systemViews } = useMemo(() => formatSchema(schema), [schema]);
+  const { columns, systemViews } = useMemo(() => formatSchema(schema, originGridKey), [schema]);
   const [baseView] = systemViews;
-  const [gridKey, setGridKey] = useState(tableKey);
+  const [gridKey, setGridKey] = useState(originGridKey);
   const [configModalVisible, setConfigModalVisible] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
   const [saveAsLoading, setSaveAsLoading] = useState(false);
@@ -50,12 +50,12 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
   const [updateViewLoading, setUpdateViewLoading] = useState(false);
   const [activeView, setActiveView] = useState<ViewConfig>(baseView as ViewConfig);
   const { panelConfig } = activeView;
-  const [defaultView, setDefaultView] = useLocalStorage<DefaultView>(
-    `tableKey:${tableKey}`,
-    {} as DefaultView,
+  const [lastViewKey, setLastViewKey] = useLocalStorage<string>(
+    `tableKey:${originGridKey}-lastViewKey`,
+    baseView.viewId,
   );
   const [customViews, setCustomViews] = useLocalStorage<ViewConfig[]>(
-    `tableKey:${tableKey}-customViews`,
+    `tableKey:${originGridKey}-customViews`,
     [] as ViewConfig[],
   );
   const [viewList, setViewList] = useState<ViewListProps>({
@@ -85,21 +85,26 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
   }, [baseView]);
 
   const handlerChangeView = useCallback(view => {
+    managerRef.current && managerRef.current.clearLocalStorageColumns()
     setActiveView(view);
-  }, []);
+    setLastViewKey(view.viewId)
+    setTimeout(() => {
+      setGridKey('gridKey:' + originGridKey + ':' + view.viewId)
+    }, 50);
+  }, [originGridKey]);
 
   useEffect(() => {
     let usedView;
 
-    usedView = initView || [...systemViews, ...customViews].find((sV: ViewConfig) => {
-      return sV.viewId === defaultView.viewId;
-    });
+    if(!originGridKey){
+      usedView = initView
+    }else{
+      usedView = initView || [...systemViews, ...customViews].find((sV: ViewConfig) => {
+        return sV.viewId === lastViewKey;
+      });
+    }
 
     if (!usedView) {
-      setDefaultView({
-        type: 'system',
-        viewId: baseView['viewId'],
-      });
       usedView = baseView;
     }
 
@@ -115,16 +120,6 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
       });
     }
   }, [viewSchema]);
-
-  // 处理视图修改
-  const handleViewChange = useCallback((view) => {
-    // apiRef.current && apiRef.current.clearLocalStorageColumns()
-    managerRef.current && managerRef.current.clearLocalStorageColumns()
-    setTimeout(() => {
-      setGridKey('gridKey:'+view.viewId)
-      onViewChange && onViewChange(view)
-    }, 200);
-  },[onViewChange])
   
   const handlerSaveViews = useCallback(
     ({ views, hideModal, type }) => {
@@ -157,7 +152,7 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
         hideModal();
       }
     },
-    [viewList, tableKey],
+    [viewList],
   );
 
   const handlerSaveConfig = useCallback(
@@ -207,7 +202,7 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
     tableConfig: panelConfig,
     columns,
 
-    tableKey,
+    tableKey: originGridKey,
   });
 
   const titleRef = useRef(null);
@@ -226,8 +221,6 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
           loading={updateViewLoading}
           withoutAnimation={withoutAnimation}
           splitLine={!!title}
-          defaultView={defaultView}
-          onDefaultViewChange={setDefaultView}
           config={
             <Tooltip title={locale.config}>
               <Button
@@ -242,7 +235,7 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
         />}
       </Receiver>
     ),
-    [activeView, viewList, renameLoading, updateViewLoading, defaultView, titleRef, title],
+    [activeView, viewList, renameLoading, updateViewLoading, titleRef, title],
   );
 
   const HeaderRightElem: ReactNode = useMemo(()=>(
@@ -296,7 +289,7 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
               gridHeight
             }
             onReady={handleReady}
-            gridKey={gridKey}
+            gridKey={originGridKey ? gridKey : undefined}
             {...restProps}
           />
         )
@@ -307,13 +300,13 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
         withoutAnimation={withoutAnimation}
         showDisplayConfig={showDisplayConfig}
         dataSource={activeView}
-        tableKey={tableKey}
+        gridKey={originGridKey}
         views={viewList}
         onSaveViews={handlerSaveViews}
         onSaveAs={onViewSaveAs}
         onOk={handlerSaveConfig}
         onCancel={() => setConfigModalVisible(false)}
-        onViewChange={handleViewChange}
+        onViewChange={onViewChange}
       />
     </div>
   );

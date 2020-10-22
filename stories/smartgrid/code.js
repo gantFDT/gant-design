@@ -335,61 +335,61 @@ var tableColumns = [
     ),
   },
 ]
-function MultiViewUse() {
-  const tableSchema = {
-    supportColumnFields: tableColumns,
-    systemViews: [
-      {
-        viewId: 'systemView1',
-        name: "隐藏年龄",
-        version: '2020-02-10 09:45:37',
-        panelConfig: {
-          columnFields: [
-            {
-              fieldName: 'tags',
-              fixed: 'left',
-              width: 300
-            },
-            {
-              fieldName: 'name',
-            },
-            {
-              fieldName: 'address',
-            },
-            {
-              fieldName: 'action',
-            },
-          ]
-        }
-      },
-      {
-        viewId: 'systemView2',
-        name: "禁止操作",
-        version: '2020-02-10 09:45:37',
-        panelConfig: {
-          columnFields: [
-            {
-              fieldName: 'name',
-            },
-            {
-              fieldName: 'address',
-            },
-            {
-              fieldName: 'age',
-            },
-            {
-              fieldName: 'tags',
-              width: 300
-            },
-          ]
-        }
+const tableSchema = {
+  supportColumnFields: tableColumns,
+  systemViews: [
+    {
+      viewId: 'systemView-MultiViewUse-1',
+      name: "隐藏年龄",
+      version: '2020-02-10 09:45:37',
+      panelConfig: {
+        columnFields: [
+          {
+            fieldName: 'tags',
+            fixed: 'left',
+            width: 300
+          },
+          {
+            fieldName: 'name',
+          },
+          {
+            fieldName: 'address',
+          },
+          {
+            fieldName: 'action',
+          },
+        ]
       }
-    ]
-  }
+    },
+    {
+      viewId: 'systemView-MultiViewUse-2',
+      name: "禁止操作",
+      version: '2020-02-10 09:45:37',
+      panelConfig: {
+        columnFields: [
+          {
+            fieldName: 'name',
+          },
+          {
+            fieldName: 'address',
+          },
+          {
+            fieldName: 'age',
+          },
+          {
+            fieldName: 'tags',
+            width: 300
+          },
+        ]
+      }
+    }
+  ]
+}
+function MultiViewUse() {
   return (
     <div style={{ margin: 10 }}>
       <SmartGrid
-        tableKey="MultiViewUse"
+        gridKey="MultiViewUse"
         schema={tableSchema}
         dataSource={dataSource}
       />
@@ -397,7 +397,7 @@ function MultiViewUse() {
   )
 }
 
-ReactDOM.render(<MultiViewUse />, mountNode)`,`
+ReactDOM.render(<tableSchema />, mountNode)`,`
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { Divider, Tag, Radio, Button, message, ConfigProvider, Rate } from 'antd'
 import { SmartGrid, EditStatus, SwitchStatus } from 'gantd'

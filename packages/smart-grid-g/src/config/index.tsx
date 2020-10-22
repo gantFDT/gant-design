@@ -11,11 +11,11 @@ interface ConfigModalProps extends ModalProps {
   dataSource: any
   originColumns: any
   views: any
+  gridKey: string
   onSaveViews: (vals: any) => void
   withoutAnimation?: boolean,
   showDisplayConfig?: boolean,
   onSaveAs: (vals: any, cb: () => void) => void;
-  tableKey?: string;
   onOk?: (config: any) => void;
   onCancel?: () => void;
   onViewChange?: (viewSchema: any) => void;
@@ -26,10 +26,10 @@ function ConfigModal(props: ConfigModalProps) {
     visible,
     originColumns,
     dataSource,
-    tableKey,
     views,
     onSaveViews,
     onSaveAs,
+    gridKey,
     onOk,
     onCancel,
     onViewChange,
@@ -155,7 +155,7 @@ function ConfigModal(props: ConfigModalProps) {
         }
         {...restProps}
       >
-        <UIContent viewConfig={fakeView.panelConfig} showDisplayConfig={showDisplayConfig} onChange={handlerChangeConfig} />
+        <UIContent viewConfig={fakeView.panelConfig} gridKey={gridKey} showDisplayConfig={showDisplayConfig} onChange={handlerChangeConfig} />
       </Modal>
       <SaveAsModal
         visible={titleModalVisible}
