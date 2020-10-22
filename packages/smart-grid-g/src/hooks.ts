@@ -6,16 +6,22 @@ import { merge } from 'lodash';
 export function useLocalStorage<T>(storageKey: string, initValue: T): [T, (params: T) => void] {
   const getLocaLStorageData = () => {
     let localDataString = localStorage.getItem(storageKey)
-    return localDataString ? merge(JSON.parse(localDataString), initValue) : initValue
+
+    if(!localDataString) return initValue
+
+    return localDataString[0] === '{' || localDataString[0] === '[' ? merge(JSON.parse(localDataString), initValue) : localDataString
   }
 
   const [localData, setLocalData] = useState<T>(getLocaLStorageData())
 
-  const setLocalStorage = useCallback((list: T) => {
-    setLocalData(list)
-    localStorage.setItem(storageKey, JSON.stringify(
-      Array.isArray(list) ? list : Object.assign({}, localData, list)
-    ))
+  const setLocalStorage = useCallback((data: T) => {
+    setLocalData(data)
+    localStorage.setItem(storageKey, 
+      typeof data !== 'object' ? data.toString() :
+      JSON.stringify(
+        Array.isArray(data) ? data : Object.assign({}, localData, data)
+      )
+    )
   }, [])
 
   return [localData, setLocalStorage]

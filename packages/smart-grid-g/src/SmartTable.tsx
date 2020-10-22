@@ -50,9 +50,9 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
   const [updateViewLoading, setUpdateViewLoading] = useState(false);
   const [activeView, setActiveView] = useState<ViewConfig>(baseView as ViewConfig);
   const { panelConfig } = activeView;
-  const [defaultView, setDefaultView] = useLocalStorage<DefaultView>(
-    `tableKey:${tableKey}`,
-    {} as DefaultView,
+  const [lastViewKey, setLastViewKey] = useLocalStorage<string>(
+    `tableKey:${tableKey}-lastViewKey`,
+    baseView.viewId,
   );
   const [customViews, setCustomViews] = useLocalStorage<ViewConfig[]>(
     `tableKey:${tableKey}-customViews`,
@@ -85,21 +85,22 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
   }, [baseView]);
 
   const handlerChangeView = useCallback(view => {
+    managerRef.current && managerRef.current.clearLocalStorageColumns()
     setActiveView(view);
+    setLastViewKey(view.viewId)
+    setTimeout(() => {
+      setGridKey('gridKey:'+view.viewId)
+    }, 50);
   }, []);
 
   useEffect(() => {
     let usedView;
 
     usedView = initView || [...systemViews, ...customViews].find((sV: ViewConfig) => {
-      return sV.viewId === defaultView.viewId;
+      return sV.viewId === lastViewKey;
     });
 
     if (!usedView) {
-      setDefaultView({
-        type: 'system',
-        viewId: baseView['viewId'],
-      });
       usedView = baseView;
     }
 
@@ -115,16 +116,6 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
       });
     }
   }, [viewSchema]);
-
-  // 处理视图修改
-  const handleViewChange = useCallback((view) => {
-    // apiRef.current && apiRef.current.clearLocalStorageColumns()
-    managerRef.current && managerRef.current.clearLocalStorageColumns()
-    setTimeout(() => {
-      setGridKey('gridKey:'+view.viewId)
-      onViewChange && onViewChange(view)
-    }, 200);
-  },[onViewChange])
   
   const handlerSaveViews = useCallback(
     ({ views, hideModal, type }) => {
@@ -226,8 +217,6 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
           loading={updateViewLoading}
           withoutAnimation={withoutAnimation}
           splitLine={!!title}
-          defaultView={defaultView}
-          onDefaultViewChange={setDefaultView}
           config={
             <Tooltip title={locale.config}>
               <Button
@@ -242,7 +231,7 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
         />}
       </Receiver>
     ),
-    [activeView, viewList, renameLoading, updateViewLoading, defaultView, titleRef, title],
+    [activeView, viewList, renameLoading, updateViewLoading, titleRef, title],
   );
 
   const HeaderRightElem: ReactNode = useMemo(()=>(
@@ -313,7 +302,7 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
         onSaveAs={onViewSaveAs}
         onOk={handlerSaveConfig}
         onCancel={() => setConfigModalVisible(false)}
-        onViewChange={handleViewChange}
+        onViewChange={onViewChange}
       />
     </div>
   );
