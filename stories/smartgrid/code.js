@@ -389,7 +389,7 @@ function MultiViewUse() {
   return (
     <div style={{ margin: 10 }}>
       <SmartGrid
-        tableKey="MultiViewUse"
+        gridKey="MultiViewUse"
         schema={tableSchema}
         dataSource={dataSource}
       />

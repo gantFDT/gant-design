@@ -8,6 +8,7 @@ import Receiver from '../locale/Receiver';
 
 interface UIContentProps {
   viewConfig: any;
+  gridKey: string;
   schema?: any;
   uiFields?: string[];
   showDisplayConfig?: boolean;
@@ -18,6 +19,7 @@ function UIContent(props: UIContentProps) {
   const {
     viewConfig = {},
     schema,
+    gridKey,
     showDisplayConfig,
     uiFields = ['clickable', 'footerDirection'],
     onChange,
@@ -25,13 +27,13 @@ function UIContent(props: UIContentProps) {
 
   useEffect(() => {
     if (schema && viewConfig && !viewConfig.columnFields) {
-      const { columnConfigs: columnFields } = formatSchema(schema);
+      const { columnConfigs: columnFields } = formatSchema(schema, gridKey);
       onChange({
         ...viewConfig,
         columnFields,
       });
     }
-  }, [schema]);
+  }, [schema, gridKey]);
 
   const {
     clickable = true,
