@@ -19,29 +19,19 @@ const RandomCreate = () => ({
     address: Random.county(true),
   },
 });
-const mockData = Array(1000)
+const mockData = Array(10)
   .fill('')
   .map(() => RandomCreate());
 const basicColumns = [
   {
     fieldName: 'name',
     title: '姓名',
-    cellRenderer: 'gantGroupCellRenderer',
     toolTipRender: params => {
       const { data } = params;
       return data.age > 30 ? <div>{data.name}</div> : null;
     },
-    valueGetter: props => {
-      console.log('valueGetter-->', props);
-      return props.data.name+'getter';
-    },
-    valueFormatter: props => {
-      console.log('valueFormatter-->', props);
-      return props.value+'formatter';
-    },
     editConfig: {
       component: props => {
-        console.log('component', props);
         return <Input {...props} />;
       },
       props: record => {
@@ -61,12 +51,14 @@ const basicColumns = [
         },
       ],
     },
-    render: value => value,
   },
   {
     fieldName: 'age',
     title: '年龄',
-    // render: value => value,
+    pinnedRowCellRenderer: 'gantPinnedRowRenderer',
+    pinnedRowCellRendererParams: {
+      render: value => \`平均年龄：\${value}\`,
+    },
     editConfig: {
       component: InputNumber,
       signable: true,
@@ -80,54 +72,41 @@ const basicColumns = [
       },
     },
   },
+  {
+    fieldName: 'county',
+    title: '国家',
+
+    // cellRenderer: 'gantGroupCellRenderer',
+
+    // render: value => value + 222,
+  },
   // {
   //   groupId: 'group-level-1',
   //   title: 'group-level-1',
   //   children: [
   //     {
-  //       groupId: 'group-level-1-1',
-  //       title: 'group-level-1-1',
+  //       groupId: 'roup-level-1-1',
+  //       title: 'roup-level-1-1',
   //       children: [
   //         {
-  //           fieldName: 'group-level-1-1-1',
+  //           fieldName: 'roup-level-1-1-2',
+  //         },
+  //       ],
+  //     },
+  //     {
+  //       groupId: 'group-level-1-2',
+  //       title: 'group-level-1-2',
+  //       children: [
+  //         {
+  //           fieldName: 'group-level-1-2-1',
+  //         },
+  //         {
+  //           fieldName: 'group-level-1-2-2',
   //         },
   //       ],
   //     },
   //   ],
   // },
-  {
-    fieldName: 'county',
-    title: '国家',
-
-    // render: value => value + 222,
-  },
-  {
-    groupId: 'group-level-1',
-    title: 'group-level-1',
-    children: [
-      {
-        groupId: 'roup-level-1-1',
-        title: 'roup-level-1-1',
-        children: [
-          {
-            fieldName: 'roup-level-1-1-2',
-          },
-        ],
-      },
-      {
-        groupId: 'group-level-1-2',
-        title: 'group-level-1-2',
-        children: [
-          {
-            fieldName: 'group-level-1-2-1',
-          },
-          {
-            fieldName: 'group-level-1-2-2',
-          },
-        ],
-      },
-    ],
-  },
 ];
 const BaiscGrid = () => {
   const [editable, setEditable] = useState(false);
@@ -274,12 +253,15 @@ const BaiscGrid = () => {
         openEditSign
         showCut
         getDataPath={data => data.path}
-        // debounceVerticalScrollbar
+        pinnedTopRowData={[{ age: 24 }]}
         suppressAnimationFrame
         pagination={{
           total: 400,
           onChange: onPageChange,
           current,
+        }}
+        defaultExportJsonParams={{
+          title: '基本数据',
         }}
       />
     </Fragment>

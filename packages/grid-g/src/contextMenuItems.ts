@@ -1,5 +1,7 @@
 import { GetContextMenuItemsParams, RowNode } from '@ag-grid-community/core';
+import { DefaultExportJsonParams } from './interface';
 import { get, max, min, isEmpty } from 'lodash';
+import FileSaver from 'file-saver';
 interface ContextMenuItemsConfig {
   downShift?: boolean;
   locale: any;
@@ -7,14 +9,26 @@ interface ContextMenuItemsConfig {
   onRowsPaste?: any;
   getContextMenuItems?: any;
   getDefalutContextMenuItems?: () => any[];
+  defaultExportJsonParams?: DefaultExportJsonParams;
 }
-export const gantGetcontextMenuItems = function(params: GetContextMenuItemsParams, config: ContextMenuItemsConfig) {
-  const { downShift, locale, onRowsCut, onRowsPaste, getContextMenuItems } = config;
+export const gantGetcontextMenuItems = function(
+  params: GetContextMenuItemsParams,
+  config: ContextMenuItemsConfig,
+) {
+  const {
+    downShift,
+    locale,
+    onRowsCut,
+    onRowsPaste,
+    getContextMenuItems,
+    defaultExportJsonParams = {},
+  } = config;
   const {
     context: { globalEditable, treeData, createConfig, getRowNodeId, gridManager, showCut },
     node,
     api,
   } = params;
+  const exportJson = !isEmpty(defaultExportJsonParams);
   const rowIndex = get(node, 'rowIndex', 0);
   let selectedRowNodes: RowNode[] = [];
   if (node) {
@@ -49,7 +63,10 @@ export const gantGetcontextMenuItems = function(params: GetContextMenuItemsParam
   }, []);
   const gridSelectedKeys = gridSelectedRows.map(item => getRowNodeId(item), []);
   const hasCut = selectedRowNodes.length <= 0 || (treeData && isEmpty(createConfig));
-  const hasPaste = selectedRowNodes.length > 1 || (treeData && isEmpty(createConfig)) || isEmpty(gridManager.cutRows);
+  const hasPaste =
+    selectedRowNodes.length > 1 ||
+    (treeData && isEmpty(createConfig)) ||
+    isEmpty(gridManager.cutRows);
   const items = getContextMenuItems
     ? getContextMenuItems({
         selectedRows: gridSelectedRows,
@@ -58,8 +75,74 @@ export const gantGetcontextMenuItems = function(params: GetContextMenuItemsParam
         ...params,
       } as any)
     : [];
-  const defultMenu = treeData ? ['expandAll', 'contractAll', ...items, 'separator', 'export'] : [...items, 'export'];
+  let defultMenu = treeData
+    ? ['expandAll', 'contractAll', ...items, 'separator', 'export']
+    : [...items, 'export'];
+  defultMenu = exportJson
+    ? [
+        ...defultMenu,
+        exportJson
+          ? {
+              name: locale.exportJson,
+              action: () => {
+                const { title = 'gantdGrid', onlySelected } = defaultExportJsonParams;
+                let data = [];
+                if (onlySelected) {
+                  data = api.getSelectedRows();
+                } else {
+                  api.forEachNode(node => {
+                    if (node.data) data.push(node.data);
+                  });
+                }
+                const jsonBlob = new Blob([JSON.stringify(data)], {
+                  type: 'text/plain;charset=utf-8',
+                });
+                FileSaver.saveAs(jsonBlob, `${title}.json`);
+              },
+            }
+          : null,
+      ]
+    : defultMenu;
+
   if (!globalEditable) return defultMenu;
+
+  defultMenu = exportJson
+    ? [
+        ...defultMenu,
+        {
+          name: locale.importJson,
+          action: () => {
+            const { coverData } = defaultExportJsonParams;
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'application/json';
+            input.onchange = (event: any) => {
+              const [file] = event.target.files;
+              const reader = new FileReader();
+              reader.readAsText(file);
+              reader.onload = function(event: any) {
+                try {
+                  const update = [],
+                    add = [];
+                  const json = JSON.parse(event.target.result);
+                  if (coverData) return api.applyTransaction({ update: json });
+                  json.map((itemData: any) => {
+                    const rowNode = api.getRowNode(getRowNodeId(itemData));
+                    if (rowNode && rowNode.data) {
+                      update.push({ ...itemData, ...rowNode.data });
+                    } else add.push(itemData);
+                  });
+                  api.applyTransactionAsync({ update }, () => {
+                    gridManager.create(add);
+                  });
+                } catch (error) {}
+              };
+            };
+            input.click();
+          },
+        },
+      ]
+    : [];
   const showCutBtns = typeof showCut === 'function' ? showCut(params) : showCut;
   const editMenu = !showCutBtns
     ? [...defultMenu]

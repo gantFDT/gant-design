@@ -71,11 +71,11 @@ const serialNumberCol: ColDef = {
   },
   valueFormatter: (params: any) => {
     const {
-      node: { rowIndex, data },
+      node: { rowIndex, data, rowPinned },
       context,
     } = params;
+    if (rowPinned) return;
     const computedPagination = get(context, 'computedPagination', {});
-
     const {
       defaultPageSize = 20,
       pageSize = defaultPageSize,

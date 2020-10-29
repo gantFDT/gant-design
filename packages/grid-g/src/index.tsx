@@ -129,6 +129,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     showCut = false,
     onContextChangeRender,
     defaultExportParams,
+    defaultExportJsonParams,
     editChangeCallback,
     isRowSelectable,
     boxColumnIndex,
@@ -553,6 +554,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
             onRowsPaste,
             locale,
             getContextMenuItems,
+            defaultExportJsonParams,
           });
         };
         return (
