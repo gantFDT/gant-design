@@ -92,7 +92,7 @@ export default function formatSchema<R>(schema: SchemaProp<R> | CustomColumnProp
       systemViews: [
         {
           viewId: 'systemView',
-          name: '系统视图',
+          name: '全字段',
           version: 'default',
           panelConfig: {
             columnFields: schema.map(column => ({
