@@ -260,9 +260,9 @@ const BaiscGrid = () => {
           onChange: onPageChange,
           current,
         }}
-        defaultExportJsonParams={{
-          title: '基本数据',
-        }}
+        // defaultExportJsonParams={{
+        //   title: '基本数据',
+        // }}
       />
     </Fragment>
   );

@@ -81,26 +81,24 @@ export const gantGetcontextMenuItems = function(
   defultMenu = exportJson
     ? [
         ...defultMenu,
-        exportJson
-          ? {
-              name: locale.exportJson,
-              action: () => {
-                const { title = 'gantdGrid', onlySelected } = defaultExportJsonParams;
-                let data = [];
-                if (onlySelected) {
-                  data = api.getSelectedRows();
-                } else {
-                  api.forEachNode(node => {
-                    if (node.data) data.push(node.data);
-                  });
-                }
-                const jsonBlob = new Blob([JSON.stringify(data)], {
-                  type: 'text/plain;charset=utf-8',
-                });
-                FileSaver.saveAs(jsonBlob, `${title}.json`);
-              },
+        {
+          name: locale.exportJson,
+          action: () => {
+            const { title = 'gantdGrid', onlySelected } = defaultExportJsonParams;
+            let data = [];
+            if (onlySelected) {
+              data = api.getSelectedRows();
+            } else {
+              api.forEachNode(node => {
+                if (node.data) data.push(node.data);
+              });
             }
-          : null,
+            const jsonBlob = new Blob([JSON.stringify(data)], {
+              type: 'text/plain;charset=utf-8',
+            });
+            FileSaver.saveAs(jsonBlob, `${title}.json`);
+          },
+        },
       ]
     : defultMenu;
 
@@ -142,7 +140,7 @@ export const gantGetcontextMenuItems = function(
           },
         },
       ]
-    : [];
+    : defultMenu;
   const showCutBtns = typeof showCut === 'function' ? showCut(params) : showCut;
   const editMenu = !showCutBtns
     ? [...defultMenu]
