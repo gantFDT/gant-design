@@ -148,8 +148,8 @@ const resizableReducer: React.Reducer<ModalsState, Action> = (state, action) => 
         case ActionTypes.hide: {
             const modalState = state.modals[action.id]
             let newState = { ...modalState }
-            if (!modalState.keepStateOnClose) {
-                let target = modalState.inital
+            let target = modalState.inital
+            if (!modalState.keepStateOnClose && target.x == undefined && target.y == undefined) {
                 target.width = convertPercentage(target.width, windowSize.width, <number>initialModalState.width)
                 target.height = convertPercentage(target.height, windowSize.height, <number>initialModalState.height)
                 const position = clampDrag(
