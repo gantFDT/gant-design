@@ -55,7 +55,6 @@ export interface ViewListProps {
 export type GantTableProps<T> = Omit<Partial<GridPropsPartial<T>>, 'columns'>
 
 export interface SmartTableProps<T> extends GantTableProps<T> {
-  tableKey: string,
   schema: SchemaProp<T> | CustomColumnProps<T>[],
   title?: string | React.ReactElement,
   headerRight?: React.ReactElement,
