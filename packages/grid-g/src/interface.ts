@@ -168,7 +168,7 @@ export type GantPaginationProps = Omit<
   >,
   'onShowSizeChange'
 >;
-export interface DefaultExportJsonParams {
+export interface DefaultJsonParams {
   title?: string;
   onlySelected?: boolean;
   coverData?: boolean;
@@ -196,7 +196,7 @@ export interface Props<T extends any> {
   isServerSideGroup: (data: any) => boolean;
   treeDataChildrenName: string;
   locale: object;
-  defaultExportJsonParams?: DefaultExportJsonParams;
+  defaultJsonParams?: DefaultJsonParams;
   serverGroupExpend: (param: IServerSideGetRowsParams, cd: (row: any[]) => void) => void;
   serialNumber?: boolean | ColDef;
   isCompute?: boolean;
