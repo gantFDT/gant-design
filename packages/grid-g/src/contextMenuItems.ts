@@ -1,5 +1,5 @@
 import { GetContextMenuItemsParams, RowNode } from '@ag-grid-community/core';
-import { DefaultExportJsonParams } from './interface';
+import { DefaultJsonParams } from './interface';
 import { get, max, min, isEmpty } from 'lodash';
 import FileSaver from 'file-saver';
 interface ContextMenuItemsConfig {
@@ -9,7 +9,7 @@ interface ContextMenuItemsConfig {
   onRowsPaste?: any;
   getContextMenuItems?: any;
   getDefalutContextMenuItems?: () => any[];
-  defaultExportJsonParams?: DefaultExportJsonParams;
+  defaultJsonParams?: DefaultJsonParams;
 }
 export const gantGetcontextMenuItems = function(
   params: GetContextMenuItemsParams,
@@ -21,14 +21,14 @@ export const gantGetcontextMenuItems = function(
     onRowsCut,
     onRowsPaste,
     getContextMenuItems,
-    defaultExportJsonParams = {},
+    defaultJsonParams = {},
   } = config;
   const {
     context: { globalEditable, treeData, createConfig, getRowNodeId, gridManager, showCut },
     node,
     api,
   } = params;
-  const exportJson = !isEmpty(defaultExportJsonParams);
+  const exportJson = !isEmpty(defaultJsonParams);
   const rowIndex = get(node, 'rowIndex', 0);
   let selectedRowNodes: RowNode[] = [];
   if (node) {
@@ -84,7 +84,7 @@ export const gantGetcontextMenuItems = function(
         {
           name: locale.exportJson,
           action: () => {
-            const { title = 'gantdGrid', onlySelected } = defaultExportJsonParams;
+            const { title = 'gantdGrid', onlySelected } = defaultJsonParams;
             let data = [];
             if (onlySelected) {
               data = api.getSelectedRows();
@@ -110,7 +110,7 @@ export const gantGetcontextMenuItems = function(
         {
           name: locale.importJson,
           action: () => {
-            const { coverData } = defaultExportJsonParams;
+            const { coverData } = defaultJsonParams;
             const input = document.createElement('input');
             input.type = 'file';
             input.accept = 'application/json';
@@ -123,7 +123,11 @@ export const gantGetcontextMenuItems = function(
                   const update = [],
                     add = [];
                   const json = JSON.parse(event.target.result);
-                  if (coverData) return api.applyTransaction({ update: json });
+                  if (coverData) {
+                    api.setRowData(json);
+                    gridManager.reset();
+                    return;
+                  }
                   json.map((itemData: any) => {
                     const rowNode = api.getRowNode(getRowNodeId(itemData));
                     if (rowNode && rowNode.data) {
