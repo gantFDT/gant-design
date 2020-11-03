@@ -253,7 +253,7 @@ const BaiscGrid = () => {
         openEditSign
         showCut
         getDataPath={data => data.path}
-        pinnedTopRowData={[{ age: 24 }]}
+        pinnedBottomRowData={[{ age: 24 }]}
         suppressAnimationFrame
         pagination={{
           total: 400,
