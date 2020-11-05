@@ -168,7 +168,11 @@ export type GantPaginationProps = Omit<
   >,
   'onShowSizeChange'
 >;
-
+export interface DefaultJsonParams {
+  title?: string;
+  onlySelected?: boolean;
+  coverData?: boolean;
+}
 // Grid Api
 export interface Props<T extends any> {
   columns: Columns<T>[];
@@ -192,6 +196,7 @@ export interface Props<T extends any> {
   isServerSideGroup: (data: any) => boolean;
   treeDataChildrenName: string;
   locale: object;
+  defaultJsonParams?: DefaultJsonParams;
   serverGroupExpend: (param: IServerSideGetRowsParams, cd: (row: any[]) => void) => void;
   serialNumber?: boolean | ColDef;
   isCompute?: boolean;

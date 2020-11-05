@@ -228,4 +228,6 @@ export default {
   pasteTop: '粘贴至上面',
   pasteBottom: '粘贴至下面',
   cancelCut: '取消剪切',
+  exportJson: '导出json',
+  importJson: '导入json',
 };

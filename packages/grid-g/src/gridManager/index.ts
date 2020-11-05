@@ -352,7 +352,7 @@ export default class GridManage {
     this.agGridApi.setSortModel([]);
     if (typeof targetId !== 'number' && !targetId) {
       addRecords = addRecords.map(item => ({ ...item, _rowType: DataActions.add }));
-      this.agGridApi.setRowData([...addRecords, ...rowData]);
+      this.agGridApi.setRowData([...rowData, ...addRecords]);
       this.validate(addRecords);
       this.historyStack.push({
         type: DataActions.add,
@@ -704,7 +704,7 @@ export default class GridManage {
     }
   }
   setLocalStorageColumnsState() {
-    if (!this.gridKey || !this.agGridColumnApi||this.clearloding) return;
+    if (!this.gridKey || !this.agGridColumnApi || this.clearloding) return;
     try {
       const columns = this.agGridColumnApi.getColumnState();
       const localColumnsJson = JSON.stringify(columns);
@@ -717,7 +717,7 @@ export default class GridManage {
     this.agGridApi.setColumnDefs(this.columnsDefs);
     this.agGridColumnApi.resetColumnState();
     setTimeout(() => {
-      this.clearloding=false
-    },10);
+      this.clearloding = false;
+    }, 10);
   }
 }
