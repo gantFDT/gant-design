@@ -28,6 +28,7 @@ import {
   getAllChildrenNode,
   sortAndMergeColumns,
   getAllCoumns,
+  replaceRowData,
 } from './utils';
 import { bindAll } from 'lodash-decorators';
 import { generateUuid } from '@util';
@@ -216,63 +217,48 @@ export default class GridManage {
   paste(node, up = true) {
     try {
       const { getDataPath, createConfig, treeData, getRowNodeId } = this.agGridConfig;
+      
+      let removeData: any[] = [],
+        addData: any[] = [];
       if (!treeData) {
-        const oldData = this.cutRows.map(itemNode => {
+        removeData = this.cutRows.map(itemNode => {
           const { _rowCut, ...data } = get(itemNode, 'data', {});
           return data;
         });
-        this.agGridApi.applyTransactionAsync({ remove: oldData }, () => {
-          const rowData = this.getRowData();
-          const rowIndex = findIndex(
-            rowData,
-            itemData => getRowNodeId(get(node, 'data', {})) === getRowNodeId(itemData),
-          );
-          const newDataSource = up
-            ? [...rowData.slice(0, rowIndex), ...oldData, ...rowData.slice(rowIndex)]
-            : [
-                ...rowData.slice(0, rowIndex),
-                rowData[rowIndex],
-                ...oldData,
-                ...rowData.slice(rowIndex + 1),
-              ];
-          this.agGridApi.setRowData(newDataSource);
-          this.cutRows = [];
-          this.agGridConfig.onRowsPasteEnd && this.agGridConfig.onRowsPasteEnd(newDataSource);
-        });
-        return;
-      }
-      if (!canQuickCreate(createConfig)) return console.warn('createConfig is error');
-      let { defaultParentPath = [] } = createConfig;
-      defaultParentPath = Array.isArray(defaultParentPath) ? defaultParentPath : [];
-      let parentPath = !node ? defaultParentPath : [];
-      if (node) {
-        const brotherPath = getDataPath(get(node, 'data', []));
-        parentPath = brotherPath.slice(0, brotherPath.length - 1);
-      }
-      const { newRowData, oldRowData } = getRowsToUpdate(
-        this.cutRows,
-        parentPath,
-        createConfig,
-        this.agGridConfig,
-      );
-      this.agGridApi.applyTransactionAsync({ remove: oldRowData }, () => {
-        const rowData = this.getRowData();
-        const rowIndex = findIndex(
-          rowData,
-          itemData => getRowNodeId(get(node, 'data', {})) === getRowNodeId(itemData),
+        addData = removeData;
+      } else {
+        if (!canQuickCreate(createConfig)) return console.warn('createConfig is error');
+        let { defaultParentPath = [] } = createConfig;
+        defaultParentPath = Array.isArray(defaultParentPath) ? defaultParentPath : [];
+        let parentPath = !node ? defaultParentPath : [];
+        if (node) {
+          const brotherPath = getDataPath(get(node, 'data', []));
+          parentPath = brotherPath.slice(0, brotherPath.length - 1);
+        }
+        const { newRowData, oldRowData } = getRowsToUpdate(
+          this.cutRows,
+          parentPath,
+          createConfig,
+          this.agGridConfig,
         );
-        const newDataSource = up
-          ? [...rowData.slice(0, rowIndex), ...newRowData, ...rowData.slice(rowIndex)]
-          : [
-              ...rowData.slice(0, rowIndex),
-              rowData[rowIndex],
-              ...newRowData,
-              ...rowData.slice(rowIndex + 1),
-            ];
+        removeData = oldRowData;
+        addData = newRowData;
+      }
+
+      this.agGridApi.applyTransactionAsync({ remove: removeData },(params)=>{
+        const rowData = this.getRowData();
+        const newDataSource = replaceRowData({
+          rowData,
+          targetData: node.data,
+          newData: addData,
+          getRowNodeId,
+          up,
+        });
         this.agGridApi.setRowData(newDataSource);
         this.cutRows = [];
         this.agGridConfig.onRowsPasteEnd && this.agGridConfig.onRowsPasteEnd(newDataSource);
       });
+      
     } catch (error) {
       console.error(error);
     }
