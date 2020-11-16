@@ -12,12 +12,12 @@ import { getOrders, getUIData, getEdit, getTitle, getBackgroundColor } from './u
 interface SchemaFormProps {
 	schema: Schema,
 	uiSchema?: UISchema,
-  titleConfig?: TitleSchema,
-  withoutAnimation?: boolean,
+	titleConfig?: TitleSchema,
+	withoutAnimation?: boolean,
 }
 export default function SchemaForm(props: SchemaFormProps) {
 	const { uiSchema, schema, titleConfig, withoutAnimation } = props
-  const { edit, prefixCls } = useContext(FormContext)
+	const { edit, prefixCls } = useContext(FormContext)
 
 	const renderPropTypeContent: any = useCallback((item: Schema, pathName: string, required: string[]) => {
 		const { type, hide } = item
@@ -32,16 +32,16 @@ export default function SchemaForm(props: SchemaFormProps) {
 				const isRequired = required && required.indexOf(itemName) >= 0
 				const filedTitle = item.title
 				const filedEdit = getEdit(edit, pathName)
-        const { orders, gutter, ...itemUiData } = getUIData(uiSchema, "field", pathName)
-        if (withoutAnimation) {
-          if(['DatePicker', 'RangePicker', "Selector", "LocationSelector"].includes(item.componentType)){
-            if(item.props){
-              item.props.transitionName = ""
-            }else{
-              item.props = { transitionName: "" }
-            }
-          }
-        }
+				const { orders, gutter, ...itemUiData } = getUIData(uiSchema, "field", pathName)
+				if (withoutAnimation) {
+					if (['DatePicker', 'RangePicker', "Selector", "LocationSelector"].includes(item.componentType)) {
+						if (item.props) {
+							item.props.transitionName = ""
+						} else {
+							item.props = { transitionName: "" }
+						}
+					}
+				}
 				return <SchemaField
 					key={pathName} {...item}
 					title={filedTitle}
@@ -88,7 +88,7 @@ export default function SchemaForm(props: SchemaFormProps) {
 		</div>
 	}, [schema, edit, titleConfig, uiSchema])
 
-	return <Form className={`${prefixCls}-schemaForm`} hideRequiredMark  >
+	return <Form className={`${prefixCls}-schemaForm`} hideRequiredMark>
 		{renderContent()}
 	</Form>
 }
