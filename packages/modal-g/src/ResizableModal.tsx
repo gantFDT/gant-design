@@ -55,8 +55,8 @@ const ModalInner: React.FC<InnerModalProps> = function ModalInner(props) {
     }, [])
 
     useEffect(() => {
-        if (visible !== visiblePrev) dispatch({ type: visible ? ActionTypes.show : ActionTypes.hide, id })
-    }, [visible, visiblePrev, id])
+        if (visible || visible !== visiblePrev) dispatch({ type: visible ? ActionTypes.show : ActionTypes.hide, id })
+    }, [visible])
 
     const { visible: modalVisible, zIndex, x, y, width, height, isMaximized } = modalState
 
