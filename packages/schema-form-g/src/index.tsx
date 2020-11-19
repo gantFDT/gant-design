@@ -52,7 +52,7 @@ class SchemaForm extends React.Component<Props, { schemaCount: number }> {
     }
   }
 
-  resetDependencies(cb: (a, b) => boolean, names?: string[], ) {
+  resetDependencies(cb: (a, b) => boolean, names?: string[],) {
     const {
       form: { getFieldsValue },
       resetDependenciesChange,
@@ -115,6 +115,9 @@ class SchemaForm extends React.Component<Props, { schemaCount: number }> {
     const { onSizeChange } = this.props;
     onSizeChange && onSizeChange({ width, height });
   }
+  getFormNode = () => {
+    return this.refs.formNodeRef
+  }
   render() {
     const {
       schema,
@@ -131,9 +134,9 @@ class SchemaForm extends React.Component<Props, { schemaCount: number }> {
       withoutAnimation = false,
       prefixCls: customizePrefixCls = 'gant',
       size,
-      hideTitle
+      hideTitle,
+      formKey
     } = this.props;
-
     if (isEmpty(schema)) {
       return null;
     }
@@ -155,7 +158,7 @@ class SchemaForm extends React.Component<Props, { schemaCount: number }> {
         }}
       >
         <ReactResizeDetector handleWidth handleHeight onResize={this.onResize}>
-          <div className={classnames(className)} style={{ backgroundColor }}>
+          <div className={classnames(className)} style={{ backgroundColor }} ref='formNodeRef' data-refId={formKey}>
             <_SchemaForm
               schema={schema}
               uiSchema={uiSchema}

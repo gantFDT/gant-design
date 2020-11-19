@@ -55,10 +55,10 @@ const ModalInner: React.FC<InnerModalProps> = function ModalInner(props) {
     }, [])
 
     useEffect(() => {
-        if (visible !== visiblePrev) dispatch({ type: visible ? ActionTypes.show : ActionTypes.hide, id })
-    }, [visible, visiblePrev, id])
+        if (visible || visible !== visiblePrev) dispatch({ type: visible ? ActionTypes.show : ActionTypes.hide, id })
+    }, [visible])
 
-    const { zIndex, x, y, width, height, isMaximized } = modalState
+    const { visible: modalVisible, zIndex, x, y, width, height, isMaximized } = modalState
 
     const _style: React.CSSProperties = useMemo(() => ({ ...style, ...modalStyle, top: y, left: x, height }), [y, x, height])
 
@@ -107,7 +107,7 @@ const ModalInner: React.FC<InnerModalProps> = function ModalInner(props) {
         wrapClassName={combineWrapClassName}
         title={title && titleElement}
         width={width}
-        visible={visible}
+        visible={modalVisible}
         zIndex={zIndex}
         style={_style}
         mask={isModalDialog}

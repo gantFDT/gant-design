@@ -20,7 +20,7 @@ const defalutProps = {
 export default WrapperComponent =>
   forwardRef(function GridEidtColumn(props: any, ref: any) {
     const {
-      value,
+      value: nodeValue,
       stopEditing,
       api,
       data,
@@ -40,6 +40,7 @@ export default WrapperComponent =>
       valuePropName = 'value',
       node,
     } = props;
+    const value = useMemo(() => (initValueFormatter ? initValueFormatter(props) : nodeValue), [nodeValue]);
     const [newValue, setNewValue] = useState(value);
     const divRef = useRef<HTMLDivElement>(null);
     const inputRef: any = useRef();

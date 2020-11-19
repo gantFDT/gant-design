@@ -14,8 +14,8 @@ import { defaultProps, defaultRowSelection } from './index';
 import { Rules, RuleType, RuleItem } from 'async-validator';
 import { PaginationProps } from 'antd/lib/pagination';
 import GridManager from './gridManager';
-import { types } from '@babel/core';
 export * from '@ag-grid-community/core';
+export { default as GridManager } from './gridManager';
 // 编辑框大小
 export enum Size {
   small = 'small',
@@ -175,35 +175,31 @@ export interface DefaultJsonParams {
 }
 // Grid Api
 export interface Props<T extends any> {
-  columns: Columns<T>[];
+  columns?: Columns<T>[];
   boxColumnIndex?: number | string[] | string;
-  dataSource: T[];
-  removeShowLine: boolean;
-  filter?: boolean;
-  resizable: boolean;
-  sortable: boolean;
-  onReady: OnReady;
-  rowSelection: RowSelection | true;
+  dataSource?: T[];
+  onReady?: OnReady;
+  rowSelection?: RowSelection | true;
   rowkey: RowKey<T> | string;
   gridKey?: string;
-  editable: boolean;
+  editable?: boolean;
   width?: string | number;
   height?: string | number;
   treeData?: boolean;
-  pagination: GantPaginationProps;
-  loading: boolean;
-  className: string;
-  isServerSideGroup: (data: any) => boolean;
-  treeDataChildrenName: string;
-  locale: object;
+  pagination?: GantPaginationProps;
+  loading?: boolean;
+  className?: string;
+  isServerSideGroup?: (data: any) => boolean;
+  treeDataChildrenName?: string;
+  locale?: object;
   defaultJsonParams?: DefaultJsonParams;
-  serverGroupExpend: (param: IServerSideGetRowsParams, cd: (row: any[]) => void) => void;
+  serverGroupExpend?: (param: IServerSideGetRowsParams, cd: (row: any[]) => void) => void;
   serialNumber?: boolean | ColDef;
   isCompute?: boolean;
-  onCellEditChange: (record: any, fieldName: string, newValue: any, oldValue: any) => any;
-  onCellEditingChange: (record: any, fieldName: string, newValue: any, oldValue: any) => any;
-  onCellChanged: (record: any, fieldName: string, newValue: any, oldValue: any) => void;
-  openEditSign: boolean;
+  onCellEditChange?: (record: any, fieldName: string, newValue: any, oldValue: any) => any;
+  onCellEditingChange?: (record: any, fieldName: string, newValue: any, oldValue: any) => any;
+  onCellChanged?: (record: any, fieldName: string, newValue: any, oldValue: any) => void;
+  openEditSign?: boolean;
   createConfig?: CreateConfig;
   showCut?: ((params: GetContextMenuItemsParams) => boolean) | boolean;
   onRowsCut?: (rows: RowNode[]) => boolean;
@@ -229,4 +225,4 @@ export type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>;
 
 export type GridProps<T> = ProtoExtends<AgGridReactProps, CustomProps<T>>;
 
-export type GridPropsPartial<T> = PartRequired<GridProps<T>, 'columns' | 'dataSource' | 'rowkey'>;
+export type GridPropsPartial<T> = PartRequired<GridProps<T>, 'rowkey'>;

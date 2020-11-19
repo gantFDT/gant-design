@@ -8,6 +8,7 @@ import {
   uniqBy,
   min,
   isPlainObject,
+  filter,
 } from 'lodash';
 import { DataActions, CreateConfig } from '../interface';
 import { generateUuid } from '@util';
@@ -124,11 +125,11 @@ export function getRowsToUpdate(nodes, parentPath, createConfig, agGridConfig) {
     let itemData = cloneDeep(node.data);
     let newPath = [];
     if (node.data) {
-      node.data[path] = toPath(parentPath, node.data);
-      newPath = agGridConfig.getDataPath(node.data);
-      const { _rowCut, ...data } = node.data;
+      itemData[path] = toPath(parentPath, itemData);
+      newPath = agGridConfig.getDataPath(itemData);
+      const { _rowCut, ...data } = itemData;
       res = res.concat([data]);
-      oldRowData = oldRowData.concat([itemData]);
+      oldRowData = oldRowData.concat([node.data]);
     }
     if (node.childrenAfterGroup) {
       let { newRowData: childrenNewRowData, oldRowData: childrenOldRowData } = getRowsToUpdate(
@@ -237,4 +238,32 @@ export function getAllCoumns(columns: any[], parendId?: string) {
       return _columns.push(...getAllCoumns(item.children, item.field));
   });
   return _columns;
+}
+
+export function replaceRowData({
+  rowData,
+  targetData,
+  newData,
+  getRowNodeId,
+  up,
+}: {
+  rowData: any[];
+  targetData: any;
+  newData: any[];
+  getRowNodeId: any;
+  up: boolean;
+}): any[] {
+  const targetIndex = findIndex(
+    rowData,
+    itemData => getRowNodeId(targetData) === getRowNodeId(itemData),
+  );
+  const newDataSource = up
+    ? [...rowData.slice(0, targetIndex), ...newData, ...rowData.slice(targetIndex)]
+    : [
+        ...rowData.slice(0, targetIndex),
+        rowData[targetIndex],
+        ...newData,
+        ...rowData.slice(targetIndex + 1),
+      ];
+  return newDataSource;
 }

@@ -1,9 +1,17 @@
 import CodeDecorator from '../_util/CodeDecorator';
 import codes from './code';
 /*! Start !*/
-import React, { useMemo, useEffect, useCallback, useState, useRef, Fragment } from 'react';
+import React, {
+  useMemo,
+  useEffect,
+  useCallback,
+  useState,
+  useRef,
+  Fragment,
+  useContext,
+} from 'react';
 import { mock, Random } from 'mockjs';
-import Grid from '@grid';
+import Grid, { GridContext } from '@grid';
 import { Button, message, Dropdown, Menu, Switch, Checkbox, Modal } from 'antd';
 import { Input, InputCellPhone, DatePicker, InputNumber, EditStatus, Selector } from '@data-cell';
 import Header from '@header';
@@ -19,6 +27,11 @@ const RandomCreate = () => ({
     address: Random.county(true),
   },
 });
+// function Test() {
+//   const context = useContext(GridContext);
+//   console.log('=====>', context);
+//   return <div>1111</div>;
+// }
 const mockData = Array(10)
   .fill('')
   .map(() => RandomCreate());
@@ -253,7 +266,7 @@ const BaiscGrid = () => {
         openEditSign
         showCut
         getDataPath={data => data.path}
-        pinnedBottomRowData={[{ age: 24 }]}
+        pinnedTopRowData={[{ age: 24 }]}
         suppressAnimationFrame
         pagination={{
           total: 400,

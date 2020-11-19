@@ -80,6 +80,7 @@ export interface Props extends OptionalProps {
   // emitDependenciesChange: (key: string, value: any) => void;
   resetDependenciesChange: (changedValue: Object) => void;
   withoutAnimation?: boolean;
+  formKey?:string;
 }
 export interface UISchema {
   'ui:orders'?: string[];
