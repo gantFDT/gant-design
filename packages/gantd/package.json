@@ -143,7 +143,8 @@
     "smart-table-g": "^0.1.50",
     "submenu-g": "^0.1.16",
     "table-g": "^0.1.29",
-    "util-g": "^0.1.2"
+    "util-g": "^0.1.2",
+    "file-saver": "^2.0.2"
   },
   "browserslist": [
     "last 2 version",
