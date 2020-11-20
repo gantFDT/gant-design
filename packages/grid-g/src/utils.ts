@@ -160,7 +160,6 @@ export const mapColumns = <T>(
               const originValue = get(_rowData, field);
               return _rowType === DataActions.modify && !isEqualObj(value, originValue);
             },
-            // 'gant-grid-cell-add': params => get(params, 'data._rowType') === DataActions.add,
             'gant-grid-cell-edit': (params: any) => {
               const {
                 context: { globalEditable },
@@ -170,15 +169,6 @@ export const mapColumns = <T>(
               if (typeof editable == 'boolean') return editable;
               return editable(data, params);
             },
-            // 'gant-cell-disable-sign': (params: any) => {
-            //   const {
-            //     context: { globalEditable },
-            //     data,
-            //   } = params;
-            //   const editable = get(editConfig, 'editable', false);
-            //   if (typeof editable == 'boolean') return !editable;
-            //   return !editable(data, params);
-            // },
             ...cellClassRules,
           },
           cellRenderer: render ? 'gantRenderCol' : undefined,
