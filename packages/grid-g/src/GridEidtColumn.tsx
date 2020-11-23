@@ -28,6 +28,7 @@ export default WrapperComponent =>
       props: fieldProps,
       changeFormatter,
       initValueFormatter,
+      valueGetter,
       context: {
         size,
         gridManager,
@@ -60,11 +61,22 @@ export default WrapperComponent =>
           const resIndex = findIndex(res, function(item) {
             return getRowNodeId(item) === getRowNodeId(data);
           });
-          const chageVal2 = initValueFormatter(get(res, `[${resIndex}].${field}`));
-          if (!isEqualObj(chageVal2, chageVal)) setNewValue(chageVal2);
+          const changeData = get(res, `[${resIndex}]`, {});
+          const callValue = get(changeData, `${field}`);
+          const editChangeValue = initValueFormatter
+            ? initValueFormatter({
+                ...props,
+                node: { ...node, data: { ...changeData } },
+                data: { ...changeData },
+                value: callValue,
+              })
+            : callValue;
+          if (!isEqualObj(editChangeValue, chageVal)) setNewValue(editChangeValue);
         }
+
         if (isEmpty(res)) return console.warn('celleditingChange must be callbak result');
         await gridManager.modify(res);
+
         typeof onCellChanged == 'function' && onCellChanged(editData, field, chageVal, value);
         gridManager.loading = false;
       },
@@ -84,7 +96,6 @@ export default WrapperComponent =>
     );
     const handleCellEditChange = useCallback(
       async newValue => {
-        if (isEqualObj(value, newValue)) return;
         const editData = cloneDeep(get(node, `data`));
         set(editData, `${field}`, newValue);
         if (onCellEditChange) {
@@ -111,13 +122,14 @@ export default WrapperComponent =>
             return false;
           },
           getValue: () => {
+            const nodeValue = get(node, `data.${field}`);
             if (isEqualObj(value, newValue)) return nodeValue;
             handleCellEditChange(newValue);
-            return newValue;
+            return nodeValue;
           },
         };
       },
-      [value, newValue, field, node, handleCellEditChange, onCellEditChange],
+      [value, newValue, field, handleCellEditChange],
     );
     useEffect(() => {
       setTimeout(() => {
