@@ -124,6 +124,7 @@ export default class GridManage {
       });
       return newItem;
     });
+    
     let descriptor: any = {
       type: 'object',
       source: {
@@ -217,7 +218,7 @@ export default class GridManage {
   paste(node, up = true) {
     try {
       const { getDataPath, createConfig, treeData, getRowNodeId } = this.agGridConfig;
-      
+
       let removeData: any[] = [],
         addData: any[] = [];
       if (!treeData) {
@@ -245,7 +246,7 @@ export default class GridManage {
         addData = newRowData;
       }
 
-      this.agGridApi.applyTransactionAsync({ remove: removeData },(params)=>{
+      this.agGridApi.applyTransactionAsync({ remove: removeData }, params => {
         const rowData = this.getRowData();
         const newDataSource = replaceRowData({
           rowData,
@@ -258,7 +259,6 @@ export default class GridManage {
         this.cutRows = [];
         this.agGridConfig.onRowsPasteEnd && this.agGridConfig.onRowsPasteEnd(newDataSource);
       });
-      
     } catch (error) {
       console.error(error);
     }
@@ -328,7 +328,7 @@ export default class GridManage {
   @hisDecorator()
   public create(
     records: any,
-    targetId?: string | string[] | number | number[],
+    targetId?: boolean | string | string[] | number | number[],
     isSub: boolean = true,
   ) {
     const { getRowNodeId } = this.agGridConfig;
@@ -336,9 +336,12 @@ export default class GridManage {
     if (addRecords.length <= 0) return;
     let rowData = this.getRowData();
     this.agGridApi.setSortModel([]);
-    if (typeof targetId !== 'number' && !targetId) {
+    if ((typeof targetId !== 'number' && !targetId) || typeof targetId === 'boolean') {
+      const isFirst: boolean = typeof targetId === 'boolean'&& targetId
       addRecords = addRecords.map(item => ({ ...item, _rowType: DataActions.add }));
-      this.agGridApi.setRowData([...rowData, ...addRecords]);
+      this.agGridApi.setRowData(
+        isFirst ? [...addRecords, ...rowData] : [...rowData, ...addRecords],
+      );
       this.validate(addRecords);
       this.historyStack.push({
         type: DataActions.add,

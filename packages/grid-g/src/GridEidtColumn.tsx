@@ -40,7 +40,9 @@ export default WrapperComponent =>
       valuePropName = 'value',
       node,
     } = props;
-    const value = useMemo(() => (initValueFormatter ? initValueFormatter(props) : nodeValue), [nodeValue]);
+    const value = useMemo(() => (initValueFormatter ? initValueFormatter(props) : nodeValue), [
+      nodeValue,
+    ]);
     const [newValue, setNewValue] = useState(value);
     const divRef = useRef<HTMLDivElement>(null);
     const inputRef: any = useRef();
@@ -58,7 +60,7 @@ export default WrapperComponent =>
           const resIndex = findIndex(res, function(item) {
             return getRowNodeId(item) === getRowNodeId(data);
           });
-          const chageVal2 = get(res, `[${resIndex}].${field}`);
+          const chageVal2 = initValueFormatter(get(res, `[${resIndex}].${field}`));
           if (!isEqualObj(chageVal2, chageVal)) setNewValue(chageVal2);
         }
         if (isEmpty(res)) return console.warn('celleditingChange must be callbak result');
@@ -109,9 +111,9 @@ export default WrapperComponent =>
             return false;
           },
           getValue: () => {
-            if (!onCellEditChange) return newValue;
+            if (isEqualObj(value, newValue)) return nodeValue;
             handleCellEditChange(newValue);
-            return value;
+            return newValue;
           },
         };
       },
