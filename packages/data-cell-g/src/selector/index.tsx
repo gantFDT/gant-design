@@ -316,10 +316,12 @@ const withSelector = compose(
         setLoading(false)
         if (Array.isArray(data)) {
           setDataList(data)
+        }else{
+          setDataList([])
         }
-        else {
-          throw new Error('选择器选项列表只能是数组格式')
-        }
+        // else {
+        //   throw new Error('选择器选项列表只能是数组格式')
+        // }
       })
     },
   }),

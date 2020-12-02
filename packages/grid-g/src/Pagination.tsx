@@ -25,7 +25,14 @@ export default memo(function GantPagination(props: GantPaginationProps) {
     ...resetProps
   } = props;
   const [innerMode, setInnerMode] = useState<'limit' | 'default'>('limit');
-  const [pageInfo, setPageInfo] = useState<Page>({ current: defaultCurrent, pageSize: defaultPageSize, beginIndex: 0 });
+  const [pageInfo, setPageInfo] = useState<Page>({
+    current: defaultCurrent,
+    pageSize: defaultPageSize,
+    beginIndex: 0,
+  });
+  const disableLimit = useMemo(() => {
+    return total > countLimit;
+  }, [total, countLimit]);
   useEffect(() => {
     const pageSize = PropPageSize ? PropPageSize : defaultPageSize;
     let current = propCurrent ? propCurrent : defaultCurrent;
@@ -35,22 +42,26 @@ export default memo(function GantPagination(props: GantPaginationProps) {
     return () => {};
   }, [propCurrent, PropPageSize, beginIndex]);
   const limit = useMemo(() => {
-    return mode === 'limit' && innerMode === 'limit';
-  }, [mode, innerMode]);
+    return mode === 'limit' && innerMode === 'limit' && !disableLimit;
+  }, [mode, innerMode, disableLimit]);
 
   const onPageChange = useCallback(
     (page, pageSize) => {
       const beginIndex = (page - 1) * pageSize;
       setPageInfo({ beginIndex, pageSize, current: page });
       if (onChange) {
-        limit ? onChange(beginIndex, pageSize, page, countLimit) : onChange(beginIndex, pageSize, page);
+        limit
+          ? onChange(beginIndex, pageSize, page, countLimit)
+          : onChange(beginIndex, pageSize, page);
       }
     },
     [onChange, limit, countLimit],
   );
   const showTotal = useCallback(
     (total: number, range: number[]) => {
-      return <PaginationTotal total={total} range={range} limit={limit} tooltipTotal={tooltipTotal} />;
+      return (
+        <PaginationTotal total={total} range={range} limit={limit} tooltipTotal={tooltipTotal} />
+      );
     },
     [limit, tooltipTotal],
   );
@@ -69,7 +80,9 @@ export default memo(function GantPagination(props: GantPaginationProps) {
   const onSwitchChange = useCallback(
     value => {
       const { current, pageSize, beginIndex } = pageInfo;
-      !value ? onChange(beginIndex, pageSize, current, countLimit) : onChange(beginIndex, pageSize, current);
+      !value
+        ? onChange(beginIndex, pageSize, current, countLimit)
+        : onChange(beginIndex, pageSize, current);
       const _mode = value ? 'default' : 'limit';
       setInnerMode(_mode);
     },
@@ -78,7 +91,9 @@ export default memo(function GantPagination(props: GantPaginationProps) {
 
   return (
     <div className="gantd-grid-footer">
-      <div style={{ display: 'flex', flex: 1, alignItems: 'center', height: 30, overflow: 'hidden' }}>
+      <div
+        style={{ display: 'flex', flex: 1, alignItems: 'center', height: 30, overflow: 'hidden' }}
+      >
         {addonBefore && <div>{addonBefore}</div>}
         <Pagination className="gant-grid-pagination" {...paginationProps} />
         {onRefresh && (
@@ -129,7 +144,12 @@ function PaginationTotal(props: any) {
             visible && onHover();
           }}
         >
-          <Button size="small" className="gantd-pagination-total-btn" type="link" icon="exclamation-circle"></Button>
+          <Button
+            size="small"
+            className="gantd-pagination-total-btn"
+            type="link"
+            icon="exclamation-circle"
+          ></Button>
         </Tooltip>
       </>
     );

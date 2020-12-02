@@ -58,7 +58,7 @@ export const defaultProps = {
   /**是否处于编辑状态 */
   editable: false,
   /**单列的过滤器 */
-  filter: false,
+  filter: true,
   /**禁止调整列顺序 */
   // lockPosition: false,
   /**直接在列头下面显示过滤器 */
