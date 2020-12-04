@@ -586,7 +586,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     'gant-ag-wrapper',
                     editable && 'no-zebra',
                   )}
-                  data-refId={gridKey}
+                  data-refid={gridKey}
                   style={{
                     width: '100%',
                     height: computedPagination ? 'calc(100% - 30px)' : '100%',
