@@ -1,14 +1,13 @@
 @import '../../style/index.less';
 @gant-select: ~'@{gant-prefix}-calendar';
-:global {
-    .@{gant-select}-picker {
-        //   .display-table-cell();
-        vertical-align: middle;
-        width: 100%;
-        &:not(:last-child) {
-            .ant-calendar-picker-input {
-                .input-group-left();
-            }
+
+.@{gant-select}-picker {
+    //   .display-table-cell();
+    vertical-align: middle;
+    width: 100%;
+    &:not(:last-child) {
+        .ant-calendar-picker-input {
+            .input-group-left();
         }
     }
 }

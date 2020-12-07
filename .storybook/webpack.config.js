@@ -26,10 +26,10 @@ module.exports = async ({ config, mode }) => {
 						'style-loader',
 						{
 							loader: 'css-loader',
-							options: {
-								modules: true,
-								localIdentName: '[name]__[local]-[hash:base64:5]'
-							}
+							// options: {
+							// 	modules: false,
+							// 	localIdentName: '[name]__[local]-[hash:base64:5]'
+							// }
 						},
 						{
 							loader: 'less-loader',

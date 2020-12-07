@@ -158,7 +158,7 @@ class SchemaForm extends React.Component<Props, { schemaCount: number }> {
         }}
       >
         <ReactResizeDetector handleWidth handleHeight onResize={this.onResize}>
-          <div className={classnames(className)} style={{ backgroundColor }} ref='formNodeRef' data-refId={formKey}>
+          <div className={classnames(className)} style={{ backgroundColor }} ref='formNodeRef' data-refid={formKey}>
             <_SchemaForm
               schema={schema}
               uiSchema={uiSchema}

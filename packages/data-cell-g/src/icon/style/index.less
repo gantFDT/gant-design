@@ -4,107 +4,105 @@
 @wrapper: ~'@{component}-wrapper';
 @select: ~'@{gant-prefix}-icon-select';
 
-:global {
-    .ant-drawer-header {
-        padding: 9px 10px !important;
+.ant-drawer-header {
+    padding: 9px 10px !important;
+}
+
+.ant-drawer-close {
+    width: 40px !important;
+    height: 40px !important;
+    line-height: 40px !important;
+}
+
+.@{select} {
+    width: 100%;
+    height: 32px;
+    box-sizing: border-box;
+    display: inline-block;
+    cursor: pointer;
+    border: 1px solid #d9d9d9;
+    padding: 0 6px;
+    // 解决再单元格编辑中的位置问题
+    position: relative;
+
+    &>* {
+        transform: translateY(-50%);
+        position: absolute;
+        top: 50%;
     }
 
-    .ant-drawer-close {
-        width: 40px !important;
-        height: 40px !important;
-        line-height: 40px !important;
+    &.small{
+      height: 24px;
+    }
+}
+
+.@{component} {
+    &-search {
+        display: flex;
+        align-items: center;
     }
 
-    .@{select} {
-        width: 100%;
-        height: 32px;
-        box-sizing: border-box;
-        display: inline-block;
-        cursor: pointer;
-        border: 1px solid #d9d9d9;
-        padding: 0 6px;
-        // 解决再单元格编辑中的位置问题
-        position: relative;
-
-        &>* {
-            transform: translateY(-50%);
-            position: absolute;
-            top: 50%;
-        }
-
-        &.small{
-          height: 24px;
-        }
+    &-scroll {
+        margin-top: 10px;
+        margin-right: -10px;
+        height: calc(100vh - 90px);
+        max-height: calc(100vh - 90px);
+        overflow: auto;
+        // flex:1
     }
 
-    .@{component} {
-        &-search {
-            display: flex;
-            align-items: center;
-        }
+    &-content {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-gap: 20px 8px;
+        gap: 20px 8px;
 
-        &-scroll {
-            margin-top: 10px;
-            margin-right: -10px;
-            height: calc(100vh - 90px);
-            max-height: calc(100vh - 90px);
-            overflow: auto;
-            // flex:1
-        }
+        &-item {
+            cursor: pointer;
+            text-align: center;
+            overflow: hidden;
+            position: relative;
+            padding: 10px 4px;
+            border-radius: 3px;
 
-        &-content {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            grid-gap: 20px 8px;
-            gap: 20px 8px;
-
-            &-item {
-                cursor: pointer;
-                text-align: center;
+            >div {
                 overflow: hidden;
-                position: relative;
-                padding: 10px 4px;
-                border-radius: 3px;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
 
-                >div {
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
-                }
+            &-iconitem {
+                font-size: 36px;
+                margin: 15px 0;
+                transition: transform .2s ease-in-out;
+            }
+
+            &:hover {
+                color: white;
+                background: var(--primary-color);
 
                 &-iconitem {
-                    font-size: 36px;
-                    margin: 15px 0;
-                    transition: transform .2s ease-in-out;
-                }
-
-                &:hover {
-                    color: white;
-                    background: var(--primary-color);
-
-                    &-iconitem {
-                        transform: scale(1.6);
-                    }
+                    transform: scale(1.6);
                 }
             }
         }
+    }
 
-        // 搜索
-        &-content-search {
-            position: relative;
+    // 搜索
+    &-content-search {
+        position: relative;
 
-            &:after {
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                left: 0;
-                top: 0;
-            }
+        &:after {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            top: 0;
         }
+    }
 
-        &-btn {
-            color: var(--primary-color);
-            font-size: 12px;
-        }
+    &-btn {
+        color: var(--primary-color);
+        font-size: 12px;
     }
 }

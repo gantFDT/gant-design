@@ -117,8 +117,8 @@ module.exports = {
                     loader: 'css-loader',
                     options: {
                         sourceMap: true,
-                        modules: true,
-                        getLocalIdent: (context, localIdentName, localName) => localName
+                        // modules: true,
+                        // getLocalIdent: (context, localIdentName, localName) => localName
                     },
                 },
                 {

@@ -1,34 +1,32 @@
-:global {
-    .gant-input-moeny {
-        display: flex;
-        width: 100%;
-    }
-    .gant-input-money-select {
-        .ant-select-selection {
-            border-top-right-radius: 0px;
-            border-bottom-right-radius: 0px;
-            background-color: #fafafa;
-            border-right: 0px;
-            &:focus,
-            &:active,
-            &:hover {
-                border-color: #d9d9d9;
-                box-shadow: none;
-                color: var(--primary-color);
-            }
+.gant-input-moeny {
+    display: flex;
+    width: 100%;
+}
+.gant-input-money-select {
+    .ant-select-selection {
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: 0px;
+        background-color: #fafafa;
+        border-right: 0px;
+        &:focus,
+        &:active,
+        &:hover {
+            border-color: #d9d9d9;
+            box-shadow: none;
+            color: var(--primary-color);
         }
-        .ant-select-selection
     }
-    .gant-input-moeny-number {
-		vertical-align: top;
-        flex: 1;
-        .gant-input-group.ant-input-group {
-            .gant-input-group-inner {
-                width: 100%;
-                .gant-input-number {
-                    border-top-left-radius: 0px;
-                    border-bottom-left-radius: 0px;
-                }
+    .ant-select-selection
+}
+.gant-input-moeny-number {
+vertical-align: top;
+    flex: 1;
+    .gant-input-group.ant-input-group {
+        .gant-input-group-inner {
+            width: 100%;
+            .gant-input-number {
+                border-top-left-radius: 0px;
+                border-bottom-left-radius: 0px;
             }
         }
     }

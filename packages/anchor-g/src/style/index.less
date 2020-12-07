@@ -4,153 +4,150 @@
 @standard: 40px;
 @theme: #1890FF;
 
+.ant-tooltip-inner {
+  min-height: 20px !important;
+}
 
-:global {
-  .ant-tooltip-inner {
-    min-height: 20px !important;
+.ant-popover-inner-content {
+  padding: 10px !important;
+}
+
+.ant-tooltip {
+  font-size: 12px !important;
+  line-height: 1 !important;
+}
+
+//锚点
+.ant-anchor {
+  font-size: 12px !important;
+}
+
+.ant-anchor-wrapper {
+  background-color: transparent !important;
+}
+
+.@{profilecard-prefix-cls} {
+  box-sizing: border-box;
+  height: @standard;
+  background: #fff;
+  border-bottom: 1px solid rgba(126, 126, 126, 0.3);
+  width: 100%;
+  font-size: 12px;
+  z-index: 1;
+
+  &-silderCss {
+    width: calc(100% - 160px);
+    height: 100%;
+    overflow: hidden;
+    float: left;
+    display: block;
+    position: relative;
+    user-select: none;
   }
 
-  .ant-popover-inner-content {
-    padding: 10px !important;
+  &-contentCss {
+    width: auto;
+    position: absolute;
+    white-space: nowrap;
+    display: inline-block;
+    vertical-align: top;
+    height: auto;
+    height: 100%;
   }
-
-  .ant-tooltip {
-    font-size: 12px !important;
-    line-height: 1 !important;
+  &-isInvalid {
+    width: auto;
+    height: 100%;
+    line-height: @standard - 3;
+    text-decoration: none;
+    color: rgba(0, 0, 0, 0.65);
+    padding-right: 20px;
+    display: inline-block;
+    vertical-align: top;
+    white-space: nowrap;
+    cursor: not-allowed;
+    opacity: 0.6;
   }
+  &-aCss {
+    width: auto;
+    height: 100%;
+    line-height: @standard - 3;
+    text-decoration: none;
+    color: rgba(0, 0, 0, 0.65);
+    padding-right: 20px;
+    display: inline-block;
+    vertical-align: top;
+    white-space: nowrap;
 
-  //锚点
-  .ant-anchor {
-    font-size: 12px !important;
-  }
-
-  .ant-anchor-wrapper {
-    background-color: transparent !important;
-  }
-
-  .@{profilecard-prefix-cls} {
-    box-sizing: border-box;
-    height: @standard;
-    background: #fff;
-    border-bottom: 1px solid rgba(126, 126, 126, 0.3);
-    width: 100%;
-    font-size: 12px;
-    z-index: 1;
-
-    &-silderCss {
-      width: calc(100% - 160px);
-      height: 100%;
-      overflow: hidden;
-      float: left;
-      display: block;
-      position: relative;
-      user-select: none;
-    }
-
-    &-contentCss {
-      width: auto;
-      position: absolute;
-      white-space: nowrap;
-      display: inline-block;
-      vertical-align: top;
-      height: auto;
-      height: 100%;
-    }
-    &-isInvalid {
-      width: auto;
-      height: 100%;
-      line-height: @standard - 3;
-      text-decoration: none;
-      color: rgba(0, 0, 0, 0.65);
-      padding-right: 20px;
-      display: inline-block;
-      vertical-align: top;
-      white-space: nowrap;
-      cursor: not-allowed;
-      opacity: 0.6;
-    }
-    &-aCss {
-      width: auto;
-      height: 100%;
-      line-height: @standard - 3;
-      text-decoration: none;
-      color: rgba(0, 0, 0, 0.65);
-      padding-right: 20px;
-      display: inline-block;
-      vertical-align: top;
-      white-space: nowrap;
-
-      :hover {
-        color: @theme;
-      }
-
-      span {
-        width: 100%;
-        height: 100%;
-        padding: 0 10px;
-        display: inline-block;
-      }
-    }
-
-    &-activeCss {
+    :hover {
       color: @theme;
-      border-bottom: 3px solid @theme;
-      height: @standard - 1;
     }
 
-    &-aCss:last-child {
-      /*最后一个 class为aCss 的元素*/
-      padding-right: 0;
-    }
-
-    &-iconCss {
-      display: inline-block;
-      width: @standard;
-      line-height: @standard  !important;
-
-      :hover {
-        cursor: pointer;
-      }
-    }
-
-    &-activeScroll {
-      position: fixed;
-      -webkit-transform: translateZ(0);
-    }
-
-    &-horAnchorOut {
+    span {
       width: 100%;
-      height: @standard;
-
-      &__hidden {
-        display: none;
-      }
+      height: 100%;
+      padding: 0 10px;
+      display: inline-block;
     }
+  }
 
-    &-verticallayout {
-      display: flex;
+  &-activeCss {
+    color: @theme;
+    border-bottom: 3px solid @theme;
+    height: @standard - 1;
+  }
+
+  &-aCss:last-child {
+    /*最后一个 class为aCss 的元素*/
+    padding-right: 0;
+  }
+
+  &-iconCss {
+    display: inline-block;
+    width: @standard;
+    line-height: @standard  !important;
+
+    :hover {
+      cursor: pointer;
     }
+  }
 
-    &-content>div {
-      width: 100% !important;
+  &-activeScroll {
+    position: fixed;
+    -webkit-transform: translateZ(0);
+  }
+
+  &-horAnchorOut {
+    width: 100%;
+    height: @standard;
+
+    &__hidden {
+      display: none;
     }
+  }
 
-    &-wrapper {
-      // display: flex;
-      &:after {
-        content: '';
-        width: 100%;
-        display: block;
-        height: 0px;
-        clear: both;
-        visibility: hidden;
-      }
+  &-verticallayout {
+    display: flex;
+  }
+
+  &-content>div {
+    width: 100% !important;
+  }
+
+  &-wrapper {
+    // display: flex;
+    &:after {
+      content: '';
+      width: 100%;
+      display: block;
+      height: 0px;
+      clear: both;
+      visibility: hidden;
     }
+  }
 
-    &-verticalbox {
-      &__hidden {
-        display: none;
-      }
+  &-verticalbox {
+    &__hidden {
+      display: none;
     }
   }
 }

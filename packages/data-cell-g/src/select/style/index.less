@@ -1,15 +1,13 @@
 @import '../../style/index.less';
 @gant-select: ~'gant-select';
 
-:global{
-  .@{gant-select}.ant-select{
-    .display-table-cell();
-    width: 100%;
+.@{gant-select}.ant-select{
+  .display-table-cell();
+  width: 100%;
 
-    &:not(:last-child){
-        .ant-select-selection{
-            .input-group-left();
-        }
-    }
+  &:not(:last-child){
+      .ant-select-selection{
+          .input-group-left();
+      }
   }
 }

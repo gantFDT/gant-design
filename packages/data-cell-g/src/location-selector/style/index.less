@@ -1,16 +1,15 @@
 @import '../../style/index.less';
 @gant-location :~'gant-location';
-:global {
-    .ant-cascader-picker-small {
-        font-size: 12px;
-    }
-    .@{gant-location}-cascader {
-        vertical-align: middle;
-        width: 100%;
-        &:not(:last-child) {
-            .ant-cascader-input {
-                .input-group-left();
-            }
+
+.ant-cascader-picker-small {
+    font-size: 12px;
+}
+.@{gant-location}-cascader {
+    vertical-align: middle;
+    width: 100%;
+    &:not(:last-child) {
+        .ant-cascader-input {
+            .input-group-left();
         }
     }
 }

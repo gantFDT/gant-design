@@ -1,51 +1,50 @@
 @import '../../style/index.less';
 @input-prefix-cls: ~'@{gant-prefix}-input';
-:global {
-    .@{input-prefix-cls} {
-        .@{input-prefix-cls}-group.ant-input-group {
+
+.@{input-prefix-cls} {
+    .@{input-prefix-cls}-group.ant-input-group {
+        position: relative;
+        display: block;
+        .gant-input-group-inner {
             position: relative;
+            z-index: 1;
+            margin-right: 0px;
             display: block;
-            .gant-input-group-inner {
-                position: relative;
-                z-index: 1;
-                margin-right: 0px;
-                display: block;
-                .ant-input{
-                    float: none;
-                }
-                &>* {
-                    border-radius: 3px;
-                }
+            .ant-input{
+                float: none;
             }
-            .gant-input-group-addon {
-                z-index: 0;
-                position: absolute;
-                right: 0px;
-                top: 0px;
-                width: 60px;
-                display: flex;
-                height: 100%;
-                align-items: center;
-                justify-content: space-around;
-                .input-group-right();
+            &>* {
+                border-radius: 3px;
             }
-            &.@{input-prefix-cls}-group-edit {
-                .gant-input-group-inner {
-                    margin-right: 59px;
-                    >*,
-                    .ant-input,
-                    .ant-select-selection {
-                        .input-group-left();
-                    }
-                }
-            } // &>* {
-            //     &:not(:last-child),
-            //     &:not(:last-child).ant-input-group-inner>* {
-            //         .input-group-left();
-            //     }
-            //     &:not(:first-child),
-            //     &:not(:first-child).ant-input-group-inner>* {}
-            // }
         }
+        .gant-input-group-addon {
+            z-index: 0;
+            position: absolute;
+            right: 0px;
+            top: 0px;
+            width: 60px;
+            display: flex;
+            height: 100%;
+            align-items: center;
+            justify-content: space-around;
+            .input-group-right();
+        }
+        &.@{input-prefix-cls}-group-edit {
+            .gant-input-group-inner {
+                margin-right: 59px;
+                >*,
+                .ant-input,
+                .ant-select-selection {
+                    .input-group-left();
+                }
+            }
+        } // &>* {
+        //     &:not(:last-child),
+        //     &:not(:last-child).ant-input-group-inner>* {
+        //         .input-group-left();
+        //     }
+        //     &:not(:first-child),
+        //     &:not(:first-child).ant-input-group-inner>* {}
+        // }
     }
 }
