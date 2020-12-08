@@ -1,6 +1,6 @@
 {
   "name": "anchor-g",
-  "version": "0.1.17",
+  "version": "0.1.18",
   "description": "gantd anchor",
   "main": "lib/index.js",
   "scripts": {},
