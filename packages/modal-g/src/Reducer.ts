@@ -33,6 +33,7 @@ const clampDrag = (windowWidth: number, windowHeight: number, x: number, y: numb
     return { x: clampedX, y: clampedY }
 }
 
+
 const clampResize = (minWidth: number, minHeight: number, windowWidth: number, windowHeight: number, x: number, y: number, width: number, height: number): { width: number, height: number } => {
     const maxWidth = windowWidth - x
     const maxHeight = windowHeight - y

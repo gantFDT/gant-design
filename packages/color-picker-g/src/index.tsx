@@ -16,6 +16,8 @@ const inputStyles = {
   }
 };
 
+
+
 function ColorPicker(props) {
   const {
     rgb,

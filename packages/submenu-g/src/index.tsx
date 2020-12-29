@@ -38,6 +38,7 @@ export interface SubmenuIF {
   onSelectedChange: (key: string, record: menuItem, e?: Event) => void;
 }
 
+
 export default class Submenu extends React.Component<any, Partial<SubmenuIF>> {
   static defaultProps = {
     collapsed: false,

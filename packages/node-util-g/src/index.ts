@@ -28,6 +28,7 @@ const utils = {
       fs.rmdirSync(path);
     }
   },
+  
 
   //文件替换内容
   fileReplace(path, regexp, content) {

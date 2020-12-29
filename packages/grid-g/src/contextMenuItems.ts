@@ -11,6 +11,7 @@ interface ContextMenuItemsConfig {
   getDefalutContextMenuItems?: () => any[];
   defaultJsonParams?: DefaultJsonParams;
 }
+
 export const gantGetcontextMenuItems = function(
   params: GetContextMenuItemsParams,
   config: ContextMenuItemsConfig,
