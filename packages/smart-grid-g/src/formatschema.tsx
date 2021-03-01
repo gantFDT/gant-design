@@ -115,11 +115,6 @@ export default function formatSchema<R>(schema: SchemaProp<R> | CustomColumnProp
         'SmartTable的schema格式错误，参照：https://gant.yuque.com/fdt/gantreact/hyeday',
       );
     }
-    if (column.width || column.fixed) {
-      console.warn(
-        'SmartTable的schema在简洁模式下，不能包含UI属性，参照：https://gant.yuque.com/fdt/gantreact/hyeday',
-      );
-    }
     const columnData = formatColumn(column);
     columns.push(columnData);
     columnMaps[column.fieldName] = columnData;

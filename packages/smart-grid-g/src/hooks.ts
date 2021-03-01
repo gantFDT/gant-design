@@ -90,7 +90,7 @@ export const useTableConfig = (props: useTableConfigProps) => {
   } = tableConfig;
   // 列渲染
   const fakeColumns = useMemo(() => {
-    if(columnFields.length !== columns.length) return [];
+    // if(columnFields.length !== columns.length) return [];
     return columnFields
     .filter((item: any) => item.checked)
     .map((ck: any) => {
