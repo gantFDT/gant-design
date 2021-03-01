@@ -22,6 +22,7 @@ const BodyRow = ({ isDeleted, rowIndex, className, sortable, children, originRec
         return s
     }, [props.style, rowData])
     const [trRef, setTrRef] = useState(null)
+    
     const row = useMemo(() => {
         // 非拖动排序
         if (!sortable) {

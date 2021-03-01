@@ -288,6 +288,7 @@ const GantAnchor = (props: GantAnchorProps) => {
             />
           </div>
         </div>
+        
         <div className='gant-anchor-content' style={{ padding: '0px', minHeight }}>
           {content}
         </div>

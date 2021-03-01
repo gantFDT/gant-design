@@ -23,6 +23,7 @@ export function call(method, valid, message) {
 export function warningOnce(valid, message) {
     call(warning, valid, message);
 }
+
 export function noteOnce(valid, message) {
     call(note, valid, message);
 }
