@@ -124,7 +124,7 @@ export default class GridManage {
       });
       return newItem;
     });
-    
+
     let descriptor: any = {
       type: 'object',
       source: {
@@ -270,20 +270,19 @@ export default class GridManage {
     this.redoStack = [];
     this.cutRows = [];
   }
-  dataSourceChanged(dataSource: any[]) {
-    this.reset({ dataSource });
+  dataSourceChanged(dataSource: any[] = []) {
     if (!Array.isArray(dataSource) || !this.agGridApi) return;
-    try {
-      const gridDataSource = [];
-      if (dataSource.length === 0 || this.agGridConfig.dataSource.length === 0)
-        return this.agGridApi.setRowData(dataSource);
-      this.agGridApi.forEachNode(node => {
-        if (node.data) gridDataSource.push(node.data);
-      });
-      if (isEqual(dataSource, gridDataSource)) return;
-      this.agGridApi.setRowData([]);
-      this.agGridApi.setRowData(dataSource);
-    } catch (error) {}
+    const gridDataSource = [];
+    this.agGridApi.forEachNode(node => {
+      if (node.data) gridDataSource.push(node.data);
+    });
+    if (isEqual(dataSource, gridDataSource) || isEqual(dataSource, this.agGridConfig.dataSource))
+      return;
+    this.reset({
+      dataSource: dataSource,
+    });
+    this.agGridApi.setRowData([]);
+    this.agGridApi.setRowData(dataSource);
   }
   getRowData() {
     var rowData = [];
@@ -337,7 +336,7 @@ export default class GridManage {
     let rowData = this.getRowData();
     this.agGridApi.setSortModel([]);
     if ((typeof targetId !== 'number' && !targetId) || typeof targetId === 'boolean') {
-      const isFirst: boolean = typeof targetId === 'boolean'&& targetId
+      const isFirst: boolean = typeof targetId === 'boolean' && targetId;
       addRecords = addRecords.map(item => ({ ...item, _rowType: DataActions.add }));
       this.agGridApi.setRowData(
         isFirst ? [...addRecords, ...rowData] : [...rowData, ...addRecords],
