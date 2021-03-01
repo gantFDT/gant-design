@@ -200,7 +200,7 @@ export const mapColumns = <T>(
               changeFormatter,
               rowkey: getRowNodeId,
               required,
-              valueGetter:item.valueGetter,
+              valueGetter: item.valueGetter,
               ...params,
             };
             colDef.cellEditorFramework = EditorCol(component);

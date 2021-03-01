@@ -23,7 +23,7 @@ export interface SubmenuIF {
   selectedKey?: string;
   width: number | string;
   fixedTopHeight?: number;
-  zIndex?: number,
+  zIndex?: number;
   subMinHeight: number | string;
   collapsedWidth: number | string;
   extra?: React.ReactNode;
@@ -37,7 +37,6 @@ export interface SubmenuIF {
   onCollapseChange: (collapsed: boolean) => void;
   onSelectedChange: (key: string, record: menuItem, e?: Event) => void;
 }
-
 
 export default class Submenu extends React.Component<any, Partial<SubmenuIF>> {
   static defaultProps = {
@@ -168,7 +167,11 @@ export default class Submenu extends React.Component<any, Partial<SubmenuIF>> {
             disabled={item.disabled}
             key={item.key}
           >
-            {typeof item.icon == 'string' ? <Icon type={item.icon} wrapperStyle={{ width: "auto" }} /> : item.icon}
+            {typeof item.icon == 'string' ? (
+              <Icon type={item.icon} wrapperStyle={{ width: 'auto' }} />
+            ) : (
+              item.icon
+            )}
             <span>{item.title}</span>
             {item.count && (
               <span className={`${prefixCls}-item-count`}>
@@ -193,9 +196,12 @@ export default class Submenu extends React.Component<any, Partial<SubmenuIF>> {
         <div className={`${prefixCls}-wrap`} style={{ width: 'calc(100% - 1px)' }}>
           <div
             className={`${prefixCls}-collapsebtn`}
-            style={{ width: collapsed ? collapsedWidth : '100%', lineHeight: collapsedWidth + 'px', textAlign: 'right' }}
+            style={{
+              width: collapsed ? collapsedWidth : '100%',
+              lineHeight: collapsedWidth + 'px',
+              textAlign: 'right',
+            }}
           >
-
             <Icon.Ant
               type={collapsed ? 'menu-unfold' : 'menu-fold'}
               onClick={this.toggleCollapsed}
@@ -222,10 +228,7 @@ export default class Submenu extends React.Component<any, Partial<SubmenuIF>> {
               <div className={`${prefixCls}-horMenu`}>{this.renderSubMenu(prefixCls)}</div>
             </div>
             <div className={`${prefixCls}-menuright`}>
-              <Icon.Ant
-                type="switcher"
-                onClick={this.onSwitchClick}
-              />
+              <Icon.Ant type="switcher" onClick={this.onSwitchClick} />
             </div>
           </div>
         </div>
@@ -242,7 +245,7 @@ export default class Submenu extends React.Component<any, Partial<SubmenuIF>> {
       selectedKey,
       menuData,
       showFlipOverFooter,
-      bordered
+      bordered,
     } = this.props;
     this.prefixCls = getPrefixCls('-submenu', customizePrefixCls);
     const isInline = this.state.mode == 'inline';
@@ -271,5 +274,3 @@ export default class Submenu extends React.Component<any, Partial<SubmenuIF>> {
     );
   }
 }
-
-

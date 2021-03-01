@@ -15,6 +15,7 @@ export const FormContext = React.createContext({} as Context);
 export * from './interface';
 export * from './maps';
 import * as maps from './maps';
+
 class SchemaForm extends React.Component<Props, { schemaCount: number }> {
   static maps = maps;
   static defaultProps = {
@@ -26,16 +27,15 @@ class SchemaForm extends React.Component<Props, { schemaCount: number }> {
     backgroundColor: 'transparent',
   };
 
-  
   /**收集所有子级节点的初始数据 */
   initialValueMap = new Map();
 
   constructor(props) {
     super(props);
-    const { schema } = props
+    const { schema } = props;
     this.state = {
-      schemaCount: getSchemaRenderCount(schema)
-    }
+      schemaCount: getSchemaRenderCount(schema),
+    };
   }
 
   componentDidUpdate(pervPops: Props) {
@@ -53,7 +53,7 @@ class SchemaForm extends React.Component<Props, { schemaCount: number }> {
     }
   }
 
-  resetDependencies(cb: (a, b) => boolean, names?: string[],) {
+  resetDependencies(cb: (a, b) => boolean, names?: string[]) {
     const {
       form: { getFieldsValue },
       resetDependenciesChange,
@@ -62,26 +62,30 @@ class SchemaForm extends React.Component<Props, { schemaCount: number }> {
     const currentValues = getFieldsValue();
     /**initialValueMap中包含所有当前field的值 */
     // 需要被重置的所有字段
-    const resetsValue = [...initialValueMap.entries()].filter(([key, initialValue]) => {
-      if (!names || names.includes(key)) {
-        const currentValue = get(currentValues, key);
-        return cb(initialValue, currentValue)
-      }
-      return false
-    }).reduce((result, [key, value]) => {
-      const changedValue = [...key.split('.'), value].reverse().reduce((v, k) => ({ [k]: v }));
-      return {
-        ...result,
-        ...changedValue
-      }
-    }, {})
+    const resetsValue = [...initialValueMap.entries()]
+      .filter(([key, initialValue]) => {
+        if (!names || names.includes(key)) {
+          const currentValue = get(currentValues, key);
+          return cb(initialValue, currentValue);
+        }
+        return false;
+      })
+      .reduce((result, [key, value]) => {
+        const changedValue = [...key.split('.'), value].reverse().reduce((v, k) => ({ [k]: v }));
+        return {
+          ...result,
+          ...changedValue,
+        };
+      }, {});
     resetDependenciesChange(resetsValue);
   }
 
   /**names:["user.name", "user.addr.street"] */
   resetFields = (names?: string[]) => {
-    const { form: { resetFields, getFieldsValue }, } = this.props
-    this.resetDependencies((init, current) => init !== current, names)
+    const {
+      form: { resetFields, getFieldsValue },
+    } = this.props;
+    this.resetDependencies((init, current) => init !== current, names);
     return resetFields(names);
   };
   validateForm = (names: string[]) => {
@@ -108,7 +112,7 @@ class SchemaForm extends React.Component<Props, { schemaCount: number }> {
     const { schemaCount } = this.state;
     this.initialValueMap.set(name, initialValue);
     if (this.initialValueMap.size === schemaCount) {
-      this.resetDependencies(init => ![null, undefined].includes(init))
+      this.resetDependencies(init => ![null, undefined].includes(init));
     }
   };
   @bind()
@@ -117,8 +121,8 @@ class SchemaForm extends React.Component<Props, { schemaCount: number }> {
     onSizeChange && onSizeChange({ width, height });
   }
   getFormNode = () => {
-    return this.refs.formNodeRef
-  }
+    return this.refs.formNodeRef;
+  };
   render() {
     const {
       schema,
@@ -136,7 +140,7 @@ class SchemaForm extends React.Component<Props, { schemaCount: number }> {
       prefixCls: customizePrefixCls = 'gant',
       size,
       hideTitle,
-      formKey
+      formKey,
     } = this.props;
     if (isEmpty(schema)) {
       return null;
@@ -155,11 +159,16 @@ class SchemaForm extends React.Component<Props, { schemaCount: number }> {
           prefixCls,
           defalutProps,
           collectInitialValue: this.collectInitialValue.bind(this),
-          hideTitle
+          hideTitle,
         }}
       >
         <ReactResizeDetector handleWidth handleHeight onResize={this.onResize}>
-          <div className={classnames(className)} style={{ backgroundColor }} ref='formNodeRef' data-refid={formKey}>
+          <div
+            className={classnames(className)}
+            style={{ backgroundColor }}
+            ref="formNodeRef"
+            data-refid={formKey}
+          >
             <_SchemaForm
               schema={schema}
               uiSchema={uiSchema}
@@ -188,7 +197,7 @@ export default compose(
       props.onChange &&
         props.onChange(changedValue, {
           ...form.getFieldsValue(), // 保证其他组件的值已经更新
-          ...changedValue,  // 保证当前改变值的组件值更新
+          ...changedValue, // 保证当前改变值的组件值更新
         });
     },
   }),
