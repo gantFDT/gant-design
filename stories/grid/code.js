@@ -32,7 +32,7 @@ const RandomCreate = () => ({
 //   console.log('=====>', context);
 //   return <div>1111</div>;
 // }
-const mockData = Array(10)
+const mockData = Array(100000)
   .fill('')
   .map(() => RandomCreate());
 const basicColumns = [
@@ -144,11 +144,10 @@ const BaiscGrid = () => {
     setDataSource(dataSource);
   }, []);
   useEffect(() => {
-    setDataSource(mockData);
+    setDataSource(mockData.slice(20));
   }, []);
   const onPageChange = useCallback(
     (beginIndex, pageSize, page, countLimit) => {
-      console.log('--->', beginIndex, pageSize, page, countLimit);
       if (page === current) return;
       setCurrent(page);
       queryData(beginIndex);
@@ -195,6 +194,7 @@ const BaiscGrid = () => {
       });
     });
   }, []);
+
   return (
     <Fragment>
       <Header

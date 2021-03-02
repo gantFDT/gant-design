@@ -415,10 +415,9 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       gridManager.agGridApi = params.api;
       gridManager.agGridColumnApi = params.columnApi;
       onReady && onReady(params, gridManager);
-      const dataSource= get(gridManager,'agGridConfig.dataSource',[]);
       gridManager.dataSourceChanged(dataSource);
     },
-    [onReady, gridKey],
+    [onReady, gridKey,dataSource],
   );
   const onSuppressKeyboardEvent = useCallback((params: SuppressKeyboardEventParams) => {
     const { event, colDef, data, api } = params;
