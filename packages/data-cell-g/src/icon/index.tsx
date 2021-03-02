@@ -5,11 +5,11 @@ import classnames from 'classnames';
 import _ from 'lodash';
 import { compose, defaultProps, toClass, withProps } from 'recompose';
 
-import Icon, { IconComponent, IconProps } from './Icon'
-import { withEdit } from '../compose'
-import Input from '../input'
-import EditStatus from '../edit-status'
-import { WithEditInProps } from '../with-edit'
+import Icon, { IconComponent, IconProps } from './Icon';
+import { withEdit } from '../compose';
+import Input from '../input';
+import EditStatus from '../edit-status';
+import { WithEditInProps } from '../with-edit';
 
 const tr = a => a;
 
@@ -52,7 +52,7 @@ type BasicProps = PropExtend<
 type IconHouseProps<T> = any;
 
 type IconSelectorProps<T> = PropExtend<WithEditInProps<T>, BasicProps>;
-const drawerClassname = "gant-icon-selector-drawer-wrapper"
+const drawerClassname = 'gant-icon-selector-drawer-wrapper';
 const IconHouse: React.FC<IconHouseProps<string>> = ({
   onChange,
   value,
@@ -61,7 +61,7 @@ const IconHouse: React.FC<IconHouseProps<string>> = ({
   allowEdit,
   onEnter,
   perfix,
-  size="normal",
+  size = 'normal',
   controlMode,
   ...props
 }) => {
@@ -139,9 +139,11 @@ const IconHouse: React.FC<IconHouseProps<string>> = ({
   return (
     <>
       <div className={classnames('gant-icon-select', size)} onClick={toggleVisible}>
-        {
-          currentId ? <Icon type={currentId} title={tr('点击切换')} perfix={perfix} {...props} /> : <span className={prefixCls + '-btn'}>{tr('点击选择')}</span>
-        }
+        {currentId ? (
+          <Icon type={currentId} title={tr('点击切换')} perfix={perfix} {...props} />
+        ) : (
+          <span className={prefixCls + '-btn'}>{tr('点击选择')}</span>
+        )}
       </div>
       <Drawer
         width={visible ? 500 : 0}
@@ -195,8 +197,8 @@ const IconHouse: React.FC<IconHouseProps<string>> = ({
         </div>
       </Drawer>
     </>
-  )
-}
+  );
+};
 
 interface IconSelectorCmp {
   (props: IconSelectorProps<string>): React.ReactElement;
@@ -213,7 +215,7 @@ const IconSelector = compose(
     const controlMode = !(_.isUndefined(value) || _.isUndefined(onChange));
     if (!controlMode) {
       cStyle.display = 'inline-block';
-      cStyle.width="auto"
+      cStyle.width = 'auto';
     }
     return {
       wrapperStyle: cStyle,
@@ -224,7 +226,19 @@ const IconSelector = compose(
     };
   }),
   withEdit(
-    ({ value, style, theme, spin, rotate, component, twoToneColor, controlMode, perfix, className, onClick }) => {
+    ({
+      value,
+      style,
+      theme,
+      spin,
+      rotate,
+      component,
+      twoToneColor,
+      controlMode,
+      perfix,
+      className,
+      onClick,
+    }) => {
       const element = (
         <Icon
           type={value}
@@ -243,7 +257,8 @@ const IconSelector = compose(
         return element;
       }
       return value ? element : undefined;
-    }, drawerClassname
+    },
+    drawerClassname,
   ),
 )(IconHouse) as IconSelectorCmp;
 
