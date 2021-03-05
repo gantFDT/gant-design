@@ -195,6 +195,9 @@ export const mapColumns = <T>(
                 required = rules['required'];
               }
             }
+            if (required) {
+              colDef.tooltipValueGetter = params => ({ ...params, required } as any);
+            }
             colDef.cellEditorParams = {
               props,
               changeFormatter,

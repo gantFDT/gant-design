@@ -31,7 +31,7 @@ export const gantGetcontextMenuItems = function(
   } = params;
   const exportJson = !isEmpty(defaultJsonParams);
   const rowIndex = get(node, 'rowIndex', 0);
-  let selectedRowNodes: RowNode[] = [];
+  let selectedRowNodes: RowNode[] = api.getSelectedNodes();
   if (node) {
     const rowNodes = api.getSelectedNodes();
     if (!downShift || rowNodes.length == 0) {
