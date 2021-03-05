@@ -75,9 +75,7 @@ const basicColumns = [
     editConfig: {
       component: InputNumber,
       signable: true,
-      editable: data => {
-        return data.age > 30;
-      },
+      editable: true,
       rules: {
         type: 'number',
         min: 10,

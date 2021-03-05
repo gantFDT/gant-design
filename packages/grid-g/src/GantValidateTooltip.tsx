@@ -18,15 +18,17 @@ export default class GantValidateTooltip extends Component<any> {
       value: params,
       column,
     } = this.props;
-    const { data } = params;
+    const { data, required } = params;
     let errorMsg = get(data, `_rowError.${field}`, null);
-    errorMsg = isEmptyObj(get(data, `${field}`, null)) ? null : errorMsg;
+    errorMsg = isEmptyObj(get(data, `${field}`, null)) && required ? null : errorMsg;
     const ToolTipRender = tooltipRender ? tooltipRender(params) : null;
     if (!ToolTipRender && !errorMsg) return null;
 
     return (
       <div className="gant-cell-tooltip">
-        <div className={classnames('gant-cell-tooltip-content', errorMsg && 'gant-cell-tooltip-error')}>
+        <div
+          className={classnames('gant-cell-tooltip-content', errorMsg && 'gant-cell-tooltip-error')}
+        >
           {ToolTipRender && <div>{ToolTipRender}</div>}
           {errorMsg && <div className="gant-cell-tooltip-errorMsg">{errorMsg}</div>}
         </div>
