@@ -25,6 +25,7 @@ class SchemaForm extends React.Component<Props, { schemaCount: number }> {
     customFields: [],
     uiSchema: {},
     backgroundColor: 'transparent',
+    frameworkComponents:{}
   };
 
   /**收集所有子级节点的初始数据 */
@@ -141,6 +142,7 @@ class SchemaForm extends React.Component<Props, { schemaCount: number }> {
       size,
       hideTitle,
       formKey,
+      frameworkComponents
     } = this.props;
     if (isEmpty(schema)) {
       return null;
@@ -160,6 +162,8 @@ class SchemaForm extends React.Component<Props, { schemaCount: number }> {
           defalutProps,
           collectInitialValue: this.collectInitialValue.bind(this),
           hideTitle,
+          frameworkComponents
+          
         }}
       >
         <ReactResizeDetector handleWidth handleHeight onResize={this.onResize}>
@@ -174,6 +178,7 @@ class SchemaForm extends React.Component<Props, { schemaCount: number }> {
               uiSchema={uiSchema}
               titleConfig={titleConfig}
               withoutAnimation={withoutAnimation}
+              frameworkComponents={frameworkComponents}
             />
           </div>
         </ReactResizeDetector>

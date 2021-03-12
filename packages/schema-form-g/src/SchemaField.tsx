@@ -2,7 +2,7 @@ import React, { useMemo, useContext, useCallback, useEffect, Fragment } from 're
 import classnames from 'classnames';
 import { EditStatus, Input } from '@data-cell';
 import { FormContext } from './index';
-import { Form, Col } from 'antd';
+import { Form, Col, Popover } from 'antd';
 import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
 import { Schema } from './interface';
 import { get, findIndex } from 'lodash';
@@ -33,6 +33,8 @@ const SchemaField = (props: SchemaField) => {
     uiData,
   } = props;
 
+  
+
   const {
     form: { getFieldDecorator, resetFields, validateFieldsAndScroll },
     onSave,
@@ -41,8 +43,11 @@ const SchemaField = (props: SchemaField) => {
     // emitDependenciesChange,
     defalutProps,
     collectInitialValue,
-    hideTitle
+    hideTitle,
+    frameworkComponents
   } = useContext(FormContext);
+
+  const { Annotation } = frameworkComponents;
 
   const onCancel = useCallback(() => name && resetFields([name]), [componentType, name]);
   const onItemSave = useCallback(
@@ -101,7 +106,10 @@ const SchemaField = (props: SchemaField) => {
           let locale = langs[localeCode] || langs['zh-cn'];
           return (
             <Form.Item
-              label={hideTitle ? <>{title}</> : title}
+              label={
+                // hideTitle ? <>{title}</> : title
+                Annotation ? <Annotation title={title} /> : title
+              }
               className={classnames(className, getFieldItemSizeClass(renderFieldProps.size))}
               style={style}
               wrapperCol={wrapperColayout}

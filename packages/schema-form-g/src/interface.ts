@@ -26,6 +26,10 @@ export interface Context {
   defalutProps?: any;
   collectInitialValue: (name: string, value: any) => void;
   hideTitle?: boolean;
+  frameworkComponents?:{
+    Annotation:any;
+    [key:string]:any
+  }
 }
 export interface Schema {
   name?: string;
@@ -68,6 +72,10 @@ export interface OptionalProps {
   size?: 'small' | 'defalut' | 'large';
   onSizeChange?: (size: { height: number; width: number }) => void;
   hideTitle?: boolean;
+  frameworkComponents?:{
+    Annotation:{};
+    [key:string]:any
+  }
 }
 
 export interface LocaleProps {

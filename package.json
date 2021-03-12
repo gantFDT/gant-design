@@ -18,7 +18,7 @@
   "module": "packages/gantd/lib/index.js",
   "publishConfig": { "registry": "https://npm.pkg.github.com/" },
   "scripts": {
-    "dev": "gulp watch:code & start-storybook -p 60004 -s public",
+    "dev": "gulp watch:code & start-storybook -p 60000 -s public",
     "build-storybook": "build-storybook -o docs",
     "compile": "gulp",
     "compile:lib": "gulp lib",

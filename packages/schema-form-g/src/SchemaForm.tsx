@@ -14,9 +14,10 @@ interface SchemaFormProps {
 	uiSchema?: UISchema,
 	titleConfig?: TitleSchema,
 	withoutAnimation?: boolean,
+	frameworkComponents?:object
 }
 export default function SchemaForm(props: SchemaFormProps) {
-	const { uiSchema, schema, titleConfig, withoutAnimation } = props
+	const { uiSchema, schema, titleConfig, withoutAnimation,frameworkComponents } = props
 	const { edit, prefixCls } = useContext(FormContext)
 
 	const renderPropTypeContent: any = useCallback((item: Schema, pathName: string, required: string[]) => {
@@ -48,7 +49,8 @@ export default function SchemaForm(props: SchemaFormProps) {
 					name={pathName}
 					uiData={itemUiData}
 					isRequired={isRequired}
-					edit={filedEdit} />
+					edit={filedEdit} 
+					/>
 		}
 	}, [uiSchema, schema, edit, withoutAnimation])
 
