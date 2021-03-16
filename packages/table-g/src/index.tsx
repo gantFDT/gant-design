@@ -7,7 +7,6 @@ import { TooltipPlacement } from 'antd/lib/tooltip'
 import { PaginationConfig as AntPaginationConfig } from 'antd/lib/pagination'
 import { compose } from 'recompose'
 import _ from 'lodash'
-import * as math from 'mathjs'
 
 import warning from '@util/warning'
 import {
@@ -346,7 +345,8 @@ const GantTableList = function GantTableList<T extends Record>(props: GantTableL
         }
     }, [virtualScrollConfigInner, padddingBorder, virtualScroll])
     // 计算滚动比例
-    const rate = useMemo(() => math.ceil(math.chain(renderRowKeys.length).multiply(originRowHeight).divide(3e+7).done()), [renderRowKeys, originRowHeight])
+    const rate = 1
+    // const rate = useMemo(() => Math.ceil(Math.chain(renderRowKeys.length).multiply(originRowHeight).divide(3e+7).done()), [renderRowKeys, originRowHeight])
     // 逻辑上的行高，包括border
     const rowHeight = useMemo(() => originRowHeight / rate + 1, [originRowHeight, rate])
     const mainHeight = useMemo(() => renderRowKeys.length * rowHeight, [renderRowKeys, rowHeight])
