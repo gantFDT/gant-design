@@ -11,6 +11,7 @@ interface DataCellProps extends WithEditInProps<any> {
 	[propsname: string]: any
 
 }
+
 @withBasic()
 export default class DataEditCell extends Component<DataCellProps> {
 	componentDidUpdate(prevProps) {

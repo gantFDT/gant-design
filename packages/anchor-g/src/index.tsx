@@ -7,7 +7,6 @@ import getScroll from 'antd/es/_util/getScroll';
 const customizePrefixCls = 'gant';
 const prefixCls = customizePrefixCls + '-anchor';
 type layout = 'vertical' | 'horizontal';
-
 interface ListItem {
   key: string;
   id: string;

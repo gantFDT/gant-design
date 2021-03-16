@@ -7,7 +7,6 @@ import en from './locale/en-US';
 import zh from './locale/zh-CN';
 const format = 'hh:mm:ss';
 
-
 export interface LocaleProps {
   tips: string;
   close: string;

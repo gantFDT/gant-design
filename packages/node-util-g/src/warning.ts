@@ -11,6 +11,7 @@ export function note(valid, message) {
     console.warn('Note: '.concat(message));
   }
 }
+
 export function resetWarned() {
   warned = {};
 }
