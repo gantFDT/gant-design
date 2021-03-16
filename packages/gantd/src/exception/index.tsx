@@ -6,7 +6,6 @@ import React, { Component, createElement } from 'react';
 import { Button } from 'antd';
 import config from './typeConfig';
 import classnames from 'classnames';
-
 export interface IExceptionProps {
   type?: '403' | '404' | '500';
   title?: React.ReactNode;
