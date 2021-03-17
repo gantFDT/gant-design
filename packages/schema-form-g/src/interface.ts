@@ -27,7 +27,7 @@ export interface Context {
   collectInitialValue: (name: string, value: any) => void;
   hideTitle?: boolean;
   frameworkComponents?:{
-    LabelComponent:ComponentProps;
+    LabelComponent:any;
     [key:string]:any
   }
 }
@@ -73,7 +73,7 @@ export interface OptionalProps {
   onSizeChange?: (size: { height: number; width: number }) => void;
   hideTitle?: boolean;
   frameworkComponents?:{
-    LabelComponent:ComponentProps;
+    LabelComponent:any;
     [key:string]:any
   }
 }
