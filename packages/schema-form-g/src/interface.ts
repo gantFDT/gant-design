@@ -1,4 +1,4 @@
-import { ReactElement, ReactHTML } from 'react';
+import { ReactElement, ReactHTML,ComponentProps } from 'react';
 import { EditStatus } from '@data-cell';
 import { Gutter } from 'antd/lib/grid/row';
 import { ColProps } from 'antd/lib/grid/col';
@@ -27,7 +27,7 @@ export interface Context {
   collectInitialValue: (name: string, value: any) => void;
   hideTitle?: boolean;
   frameworkComponents?:{
-    Annotation:any;
+    LabelComponent:ComponentProps;
     [key:string]:any
   }
 }
@@ -73,7 +73,7 @@ export interface OptionalProps {
   onSizeChange?: (size: { height: number; width: number }) => void;
   hideTitle?: boolean;
   frameworkComponents?:{
-    Annotation:{};
+    LabelComponent:ComponentProps;
     [key:string]:any
   }
 }

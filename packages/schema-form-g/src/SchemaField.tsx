@@ -47,7 +47,7 @@ const SchemaField = (props: SchemaField) => {
     frameworkComponents
   } = useContext(FormContext);
 
-  const { Annotation } = frameworkComponents;
+  const { LabelComponent } = frameworkComponents;
 
   const onCancel = useCallback(() => name && resetFields([name]), [componentType, name]);
   const onItemSave = useCallback(
@@ -108,7 +108,7 @@ const SchemaField = (props: SchemaField) => {
             <Form.Item
               label={
                 // hideTitle ? <>{title}</> : title
-                Annotation ? <Annotation title={title} /> : title
+                LabelComponent ? <LabelComponent title={title} /> : title
               }
               className={classnames(className, getFieldItemSizeClass(renderFieldProps.size))}
               style={style}
