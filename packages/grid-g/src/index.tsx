@@ -41,6 +41,8 @@ import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
 import en from './locale/en-US';
 import './style';
 import zh from './locale/zh-CN';
+import CustomHeader from './CustomHeader';
+
 export * from './interface';
 export { default as GantGroupCellRenderer } from './GantGroupCellRenderer';
 export { setComponentsMaps, setFrameworkComponentsMaps } from './maps';
@@ -105,7 +107,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     loading,
     isServerSideGroup,
     getServerSideGroupKey,
-    frameworkComponents,
+    frameworkComponents={},
     treeDataChildrenName,
     locale: customLocale,
     serverGroupExpend,
@@ -152,6 +154,8 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   const selectedRowsRef = useRef<string[]>([]);
   const selectedLoadingRef = useRef<boolean>(false);
   const [innerSelectedRows, setInnerSelectedRows] = useState([]);
+  //自定义列头文字
+  const { ColumnLabelComponent } = frameworkComponents;
   const gridManager = useMemo(() => {
     return new GridManager();
   }, []);
@@ -417,7 +421,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       onReady && onReady(params, gridManager);
       gridManager.dataSourceChanged(dataSource);
     },
-    [onReady, gridKey,dataSource],
+    [onReady, gridKey, dataSource],
   );
   const onSuppressKeyboardEvent = useCallback((params: SuppressKeyboardEventParams) => {
     const { event, colDef, data, api } = params;
@@ -541,6 +545,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     },
     [selectedRows, onSelectedChanged],
   );
+
   return (
     <LocaleReceiver>
       {(local, localeCode = 'zh-cn') => {
@@ -602,6 +607,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                   )}
                   <AgGridReact
                     frameworkComponents={{
+                      agColumnHeader: CustomHeader,
                       ...frameworkComponentsMaps,
                       ...frameworkComponents,
                     }}
@@ -652,6 +658,9 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                       minWidth: 30,
                       tooltipValueGetter: (params: any) => params,
                       tooltipComponent: 'gantValidateTooltip',
+                      headerComponentParams: {
+                        ColumnLabelComponent,
+                      },
                       ...defaultColDef,
                     }}
                     groupSelectsChildren={treeData ? false : groupSelectsChildren}
