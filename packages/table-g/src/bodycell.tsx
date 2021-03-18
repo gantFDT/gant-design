@@ -10,6 +10,7 @@ const invalidateValue = ['', null, undefined];
 
 const getPrefixCls = cls => 'gant-' + cls;
 
+
 interface BodyCellProps<T> {
   record: T;
   dataIndex: string;

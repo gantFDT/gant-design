@@ -4,6 +4,7 @@ import _ from 'lodash';
 /**
  * 判断ie版本
  */
+
 export function IEVersion() {
   const { userAgent } = navigator; // 取得浏览器的userAgent字符串
   const isIE = userAgent.indexOf('compatible') > -1 && userAgent.indexOf('MSIE') > -1; // 判断是否IE<11浏览器

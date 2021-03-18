@@ -2,6 +2,7 @@ import React, { useEffect, useCallback, useRef } from 'react'
 
 type OnDragFunc = (c: { x: number, y: number }) => void
 
+
 function useDrag(x: number, y: number, onDrag: OnDragFunc) {
     const isDragging = useRef(false)
     const initialDragState = useRef({

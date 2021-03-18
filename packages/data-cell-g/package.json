@@ -1,6 +1,6 @@
 {
   "name": "data-cell-g",
-  "version": "0.1.50",
+  "version": "0.1.52",
   "description": "gantd data-cell-g",
   "main": "lib/index.js",
   "scripts": {},

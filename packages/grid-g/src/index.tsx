@@ -44,7 +44,8 @@ import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
 import en from './locale/en-US';
 import './style';
 import zh from './locale/zh-CN';
-import { composition } from 'mathjs';
+import CustomHeader from './CustomHeader';
+
 export * from './interface';
 export { default as GantGroupCellRenderer } from './GantGroupCellRenderer';
 export { setComponentsMaps, setFrameworkComponentsMaps } from './maps';
@@ -109,7 +110,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     loading,
     isServerSideGroup,
     getServerSideGroupKey,
-    frameworkComponents,
+    frameworkComponents = {},
     treeDataChildrenName,
     locale: customLocale,
     serverGroupExpend,
@@ -162,6 +163,8 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   const [clickedEvent, setClickedEvent] = useState<RowClickedEvent>();
   const [innerSelectedRows, setInnerSelectedRows] = useState([]);
   const [ready, setReady] = useState(false);
+  //自定义列头文字
+  const { ColumnLabelComponent } = frameworkComponents;
   const gridManager = useMemo(() => {
     return new GridManager();
   }, []);
@@ -638,6 +641,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     )}
                     <AgGridReact
                       frameworkComponents={{
+                        agColumnHeader: CustomHeader,
                         ...frameworkComponentsMaps,
                         ...frameworkComponents,
                       }}
@@ -688,6 +692,9 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                         minWidth: 30,
                         tooltipValueGetter: (params: any) => params,
                         tooltipComponent: 'gantValidateTooltip',
+                        headerComponentParams: {
+                          ColumnLabelComponent,
+                        },
                         ...defaultColDef,
                       }}
                       groupSelectsChildren={treeData ? false : groupSelectsChildren}

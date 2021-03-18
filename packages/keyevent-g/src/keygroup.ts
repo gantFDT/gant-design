@@ -9,6 +9,7 @@ const isSpecialKey = (key: string) => {
   return ['Alt', 'Ctrl', 'Meta', 'Shift'].includes(key);
 };
 
+
 export default {
   ...KeyCode,
   checkKeyGroup: function checkKeyGroup(e: KeyboardEvent, ename: string) {

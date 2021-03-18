@@ -236,5 +236,28 @@
         }
       }
     }
+    //重写列头
+    .ag-header-cell {
+      padding-left: 3px;
+      padding-right: 3px;
+      .ag-react-container {
+        width: 100%;
+        display: flex;
+        overflow: hidden;
+        .customHeaderMenuButton {
+          display: none;
+          i{vertical-align: middle;}
+        }
+        &:hover{
+          .customHeaderMenuButton {
+            display: block;
+          }
+        }
+        .customHeaderSort {
+          i{vertical-align: middle;}
+          flex: 1;
+        }
+      }
+    }
   }
 }

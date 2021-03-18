@@ -16,6 +16,7 @@ import { isEmpty, cloneDeep, merge, get } from 'lodash';
 import { SchemaProp, PanelConfig, CustomColumnProps, ColumnConfig, Fields } from './interface';
 import { getType } from '@util';
 
+
 const DEFAULT_VIEW: PanelConfig = {
   clickable: true,
   footerDirection: 'row',

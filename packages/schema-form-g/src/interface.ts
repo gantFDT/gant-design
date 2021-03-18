@@ -1,4 +1,4 @@
-import { ReactElement, ReactHTML } from 'react';
+import { ReactElement, ReactHTML,ComponentProps } from 'react';
 import { EditStatus } from '@data-cell';
 import { Gutter } from 'antd/lib/grid/row';
 import { ColProps } from 'antd/lib/grid/col';
@@ -26,6 +26,10 @@ export interface Context {
   defalutProps?: any;
   collectInitialValue: (name: string, value: any) => void;
   hideTitle?: boolean;
+  frameworkComponents?:{
+    LabelComponent:any;
+    [key:string]:any
+  }
 }
 export interface Schema {
   name?: string;
@@ -68,6 +72,10 @@ export interface OptionalProps {
   size?: 'small' | 'defalut' | 'large';
   onSizeChange?: (size: { height: number; width: number }) => void;
   hideTitle?: boolean;
+  frameworkComponents?:{
+    LabelComponent:any;
+    [key:string]:any
+  }
 }
 
 export interface LocaleProps {

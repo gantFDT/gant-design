@@ -2,6 +2,7 @@ import React from 'react'
 import { EditStatus } from '@data-cell'
 import { Record, RowKey, RowSelection, GColumnProps } from './index'
 
+
 const DataContext = React.createContext({} as {
     isTree: boolean,
     cellPadding: number | string,

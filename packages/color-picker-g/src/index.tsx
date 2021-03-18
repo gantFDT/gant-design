@@ -5,6 +5,7 @@ import Chrome from './chrome';
 import SubPicker from './subpicker';
 import { PrimaryColors, fillText } from './utils';
 
+
 const inputStyles = {
   input: {
     width: 60,
