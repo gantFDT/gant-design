@@ -98,7 +98,6 @@ export function getOrders(orders: string[], targetArray: string[]): string[] {
 			}
 
 		}
-
 	}
 	return targetArray
 }

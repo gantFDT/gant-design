@@ -8,12 +8,13 @@ import {
   RowNode,
   GridApi,
 } from '@ag-grid-community/core';
-import { get, isEmpty } from 'lodash';
+import { get, isEmpty, set, findIndex } from 'lodash';
 import { isEqualObj } from './gridManager/utils';
 import { Size, DataActions, GantPaginationProps, ColumnEdiatble, Columns } from './interface';
 import EditorCol from './GridEidtColumn';
 import { Rules, RuleItem } from 'async-validator';
 import { paginationShowTotal } from './Pagination';
+import { Schema } from '../../schema-form-g';
 
 type Col = ColGroupDef | ColDef;
 
@@ -21,7 +22,7 @@ function itemisgroup(item, children): item is ColGroupDef {
   return !!children;
 }
 
-function ColEditableFn(fn: ColumnEdiatble<any>): IsColumnFunc | boolean {
+function ColEditableFn(fn: ColumnEdiatble<any>): IsColumnFunc {
   return (params: any) => {
     const {
       data,
@@ -108,6 +109,89 @@ export const selectedMapColumns = <T>(
     ...selectedCol,
   ];
 };
+
+export const toFormMap = <T>(columns: Columns<T>[], params: any) => {
+  const customFields = [];
+  const valueMap = {};
+  const schema: Schema = {
+    type: 'object',
+    propertyType: {},
+  };
+  if (!Array.isArray(columns)) return { customFields, schema, valueMap };
+  columns.map(({ fieldName, title, type, editConfig = {}, valueGetter, valueFormatter }) => {
+    if (valueGetter || valueFormatter) {
+      valueMap[fieldName] = function(fieldName, params) {
+        let initialValue = valueGetter
+          ? typeof valueGetter === 'string'
+            ? valueGetter
+            : valueGetter(params)
+          : get(params, `data.${fieldName}`);
+        initialValue = valueFormatter
+          ? valueFormatter({ ...params, value: initialValue })
+          : initialValue;
+        return initialValue;
+      };
+    }
+    if (isEmpty(editConfig)) {
+      return set(schema, `propertyType.${fieldName}`, {
+        title,
+        props: {
+          allowEdit: false,
+        },
+      });
+    }
+
+    const {
+      props,
+      changeFormatter,
+      initValueFormatter,
+      valuePropName,
+      rules,
+      component,
+      editable,
+    } = editConfig;
+    customFields.push({
+      type: fieldName,
+      component,
+    });
+    let itemProps = props;
+
+    if (typeof props === 'function') itemProps = props(params, params.rowIndex);
+
+    if (valueGetter || valueFormatter || initValueFormatter) {
+      valueMap[fieldName] = function(fieldName, params) {
+        let initialValue = valueGetter
+          ? typeof valueGetter === 'string'
+            ? valueGetter
+            : valueGetter(params)
+          : get(params, `data.${fieldName}`);
+        initialValue = valueFormatter
+          ? valueFormatter({ ...params, value: initialValue })
+          : initialValue;
+        initialValue = initValueFormatter
+          ? initValueFormatter({ ...params, value: initialValue })
+          : initialValue;
+        return initialValue;
+      };
+    }
+
+    set(schema, `propertyType.${fieldName}`, {
+      title,
+      props: {
+        ...itemProps,
+        allowEdit: ColEditableFn(editable)(params),
+      },
+      options: {
+        rules: Array.isArray(rules) ? rules : [rules],
+        getValueFromEvent: changeFormatter,
+        valuePropName: valuePropName ? valuePropName : 'value',
+      },
+      componentType: fieldName,
+    });
+  });
+  return { customFields, schema, valueMap };
+};
+
 export const mapColumns = <T>(
   columns: Columns<T>[],
   getRowNodeId: any,
@@ -263,10 +347,15 @@ export const mapColumns = <T>(
           cellClassRules: {
             'gant-grid-cell-checkbox-indeterminate': params => {
               const { node, context } = params;
-              const { groupSelectsChildren } = context;
+              const { groupSelectsChildren, selectedRows, getRowNodeId } = context;
+
+              const index = findIndex(selectedRows, item => getRowNodeId(item) === node.id);
+
               if (!groupSelectsChildren) return false;
-              if (!node.isSelected()) return false;
+
+              if (!node.isSelected() && index < 0) return false;
               const { allLeafChildren = [] } = node;
+
               for (let itemNode of allLeafChildren) {
                 if (!itemNode.isSelected()) return true;
               }

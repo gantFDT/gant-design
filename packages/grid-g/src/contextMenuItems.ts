@@ -78,7 +78,9 @@ export const gantGetcontextMenuItems = function(
     : [];
   let defultMenu = treeData
     ? ['expandAll', 'contractAll', ...items, 'separator', 'export']
-    : [...items, 'separator', 'export'];
+    : items.length > 0
+    ? [...items, 'separator', 'export']
+    : ['export'];
   defultMenu = exportJson
     ? [
         ...defultMenu,

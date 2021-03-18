@@ -86,7 +86,7 @@ export type EditConfig<T> = {
   component: React.ComponentClass<EditComponentProps> | React.FunctionComponent<EditComponentProps>;
   /**是否开启编辑，当全局editable为true时生效 */
   editable?: ColumnEdiatble<T>;
-  props?: (record: T, rowIndex: number) => Object;
+  props?: ((record: T, rowIndex: number) => any) | any;
   changeFormatter?: (v: any, record: any) => any;
   onCellChange?: (value: any, record: T, records: T[]) => void;
   refName?: string;
@@ -207,6 +207,7 @@ export interface Props<T extends any> {
   onRowsPasteEnd?: (data: any) => void;
   hideSelcetedBox?: boolean;
   editChangeCallback?: (isChanged: boolean) => void;
+  drawerEditable?: boolean;
   onContextChangeRender?: (
     context: any,
     diffKeys: string[],

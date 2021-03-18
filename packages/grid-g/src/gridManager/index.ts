@@ -294,10 +294,11 @@ export default class GridManage {
   }
   @modifyDecorator()
   @hisDecorator()
-  public async modify(records: any | any[], oldRecords?: any | any[]) {
+  public async modify(records: any | any[], oldRecords: any | any[] = []) {
     if (isEmpty(records) && typeof records !== 'object') return;
     records = Array.isArray(records) ? records : [records];
     if (records.length <= 0) return;
+
     const { hisRecords, newRecords } = getModifyData(
       records,
       this.getRowItemData,
