@@ -18,7 +18,7 @@ interface GantGridRowFormRendererProps {
   onCellEditingChange?: (record: any, fieldName: string, newValue: any, oldValue: any) => any;
 }
 
-export default memo(function GantGridRowFormRenderer(props: GantGridRowFormRendererProps) {
+export default function GantGridRowFormRenderer(props: GantGridRowFormRendererProps) {
   const {
     columns,
     clickedEvent,
@@ -132,4 +132,4 @@ export default memo(function GantGridRowFormRenderer(props: GantGridRowFormRende
       </div>
     </div>
   );
-});
+};

@@ -14,7 +14,7 @@ import { Size, DataActions, GantPaginationProps, ColumnEdiatble, Columns } from 
 import EditorCol from './GridEidtColumn';
 import { Rules, RuleItem } from 'async-validator';
 import { paginationShowTotal } from './Pagination';
-import { Schema } from '../../schema-form-g';
+import { Schema } from '@schema-form';
 
 type Col = ColGroupDef | ColDef;
 
