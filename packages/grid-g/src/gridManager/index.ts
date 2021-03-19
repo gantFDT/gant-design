@@ -317,11 +317,19 @@ export default class GridManage {
         resolve(params);
       });
     });
-    await this.validate(updateRowData);
+
     this.historyStack.push({
       type: DataActions.modify,
       records: hisRecords,
     });
+    if (this.agGridConfig?.multiLineVerify) {
+      const { diff } = this;
+      const { modify, add } = diff;
+      const data = [...modify, ...add];
+      this.validate(data)
+      return;
+    }
+    await this.validate(updateRowData);
   }
 
   // 创建;

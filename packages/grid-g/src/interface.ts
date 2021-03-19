@@ -196,6 +196,7 @@ export interface Props<T extends any> {
   serverGroupExpend?: (param: IServerSideGetRowsParams, cd: (row: any[]) => void) => void;
   serialNumber?: boolean | ColDef;
   isCompute?: boolean;
+  multiLineVerify: boolean;
   onCellEditChange?: (record: any, fieldName: string, newValue: any, oldValue: any) => any;
   onCellEditingChange?: (record: any, fieldName: string, newValue: any, oldValue: any) => any;
   onCellChanged?: (record: any, fieldName: string, newValue: any, oldValue: any) => void;

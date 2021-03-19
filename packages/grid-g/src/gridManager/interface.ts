@@ -23,6 +23,7 @@ export interface AgGridConfig {
   treeDataChildrenName?: string;
   editChangeCallback?: (boolean) => void;
   gridKey?:string
+  multiLineVerify?:boolean
 }
 export interface BatchUpdateDataSourceParams {
   add: any[];

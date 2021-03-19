@@ -151,6 +151,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     onRowClicked,
     drawerEditable,
     sideBar,
+    multiLineVerify,
     ...orignProps
   } = props;
   const apiRef = useRef<GridApi>();
@@ -221,6 +222,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       treeDataChildrenName,
       editChangeCallback,
       onRowsPasteEnd,
+      multiLineVerify,
     });
   }, []);
   useEffect(() => {
