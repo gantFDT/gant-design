@@ -294,10 +294,11 @@ export default class GridManage {
   }
   @modifyDecorator()
   @hisDecorator()
-  public async modify(records: any | any[], oldRecords?: any | any[]) {
+  public async modify(records: any | any[], oldRecords: any | any[] = []) {
     if (isEmpty(records) && typeof records !== 'object') return;
     records = Array.isArray(records) ? records : [records];
     if (records.length <= 0) return;
+
     const { hisRecords, newRecords } = getModifyData(
       records,
       this.getRowItemData,
@@ -316,11 +317,19 @@ export default class GridManage {
         resolve(params);
       });
     });
-    await this.validate(updateRowData);
+
     this.historyStack.push({
       type: DataActions.modify,
       records: hisRecords,
     });
+    if (this.agGridConfig?.multiLineVerify) {
+      const { diff } = this;
+      const { modify, add } = diff;
+      const data = [...modify, ...add];
+      this.validate(data)
+      return;
+    }
+    await this.validate(updateRowData);
   }
 
   // 创建;

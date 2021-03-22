@@ -16,7 +16,9 @@
   ],
   "main": "packages/gantd/lib/index.js",
   "module": "packages/gantd/lib/index.js",
-  "publishConfig": { "registry": "https://npm.pkg.github.com/" },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "scripts": {
     "dev": "gulp watch:code & start-storybook -p 60000 -s public",
     "build-storybook": "build-storybook -o docs",

@@ -75,7 +75,9 @@ const basicColumns = [
     editConfig: {
       component: InputNumber,
       signable: true,
-      editable: true,
+      editable: (data, params) => {
+        return true;
+      },
       rules: {
         type: 'number',
         min: 10,
@@ -251,9 +253,6 @@ const BaiscGrid = () => {
           selectedKeys,
           selectedRows,
           onSelect,
-          onSelectedChanged: (keys, rows) => {
-            // console.log('----->onSelectedChanged', keys, rows);
-          },
         }}
         gridKey="grid-test-2"
         hideSelectedBox
@@ -271,6 +270,7 @@ const BaiscGrid = () => {
           onChange: onPageChange,
           current,
         }}
+        drawerEditable
         // defaultExportJsonParams={{
         //   title: '基本数据',
         // }}
@@ -321,8 +321,19 @@ const treeColumns = [
   },
 ];
 const TreeGrid = () => {
-  const [selectedKeys, setSelectedKeys] = useState([]);
-  const [selectedRows, setSelectedRows] = useState([]);
+  const [selectedKeys, setSelectedKeys] = useState([1, 2]);
+  const [selectedRows, setSelectedRows] = useState([
+    {
+      id: 1,
+      filePath: ['Documents'],
+      dateModified: 'Aug 12 2016 10:50:00 PM',
+    },
+    {
+      id: 2,
+      filePath: ['Documents', 'txt'],
+      dateModified: 'Aug 12 2016 10:50:00 PM',
+    },
+  ]);
   const [editable, setEditable] = useState(false);
   const apiRef = useRef(null);
   const gridManagerRef = useRef(null);
@@ -342,17 +353,20 @@ const TreeGrid = () => {
     gridManagerRef.current.cancel();
   }, []);
 
-  const serverGroupExpend = useCallback(async (gridParams, cb) => {
-    const { node } = gridParams;
-    const { data } = node;
-    const itemData = {
-      filePath: [...data.filePath, Random.county()],
-      id: Random.id(),
-      dateModified: Random.datetime(),
-      size: Random.integer(),
-    };
-    cb([itemData], 1);
-  }, []);
+  // const serverGroupExpend = useCallback(async (gridParams, cb) => {
+  //   const { node } = gridParams;
+  //   const { data } = node;
+  //   const itemData = {
+  //     filePath: [...data.filePath, Random.county()],
+  //     id: Random.id(),
+  //     dateModified: Random.datetime(),
+  //     size: Random.integer(),
+  //   };
+  //   cb([itemData], 1);
+  // }, []);
+
+  console.log('---->',selectedRows)
+
   return (
     <Fragment>
       <Header
@@ -399,7 +413,8 @@ const TreeGrid = () => {
         openEditSign
         getDataPath={data => data.filePath}
         isServerSideGroup={data => true}
-        serverGroupExpend={serverGroupExpend}
+        
+        // serverGroupExpend={serverGroupExpend}
         groupSelectsChildren
       />
     </Fragment>
@@ -427,16 +442,16 @@ const config = {
     </div>
   ),
   children: [
-    {
-      title: '基础Grid',
-      describe: '基础Grid',
-      cmp: BaiscGrid,
-    },
     // {
-    //   title: '树形Grid',
-    //   describe: 'tree',
-    //   cmp: TreeGrid,
+    //   title: '基础Grid',
+    //   describe: '基础Grid',
+    //   cmp: BaiscGrid,
     // },
+    {
+      title: '树形Grid',
+      describe: 'tree',
+      cmp: TreeGrid,
+    },
   ],
 };
 

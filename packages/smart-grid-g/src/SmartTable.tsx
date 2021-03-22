@@ -88,9 +88,6 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
     managerRef.current && managerRef.current.clearLocalStorageColumns()
     setActiveView(view);
     setLastViewKey(view.viewId)
-    setTimeout(() => {
-      setGridKey('gridKey:' + originGridKey + ':' + view.viewId)
-    }, 50);
   }, [originGridKey]);
 
   useEffect(() => {
@@ -205,6 +202,10 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
     tableKey: originGridKey,
   });
 
+  useEffect(() => {
+    setGridKey('gridKey:' + originGridKey + ':' + activeView.viewId)
+  }, [finalColumns, originGridKey, activeView])
+
   const titleRef = useRef(null);
 
   const TableTitle = useMemo(
@@ -290,6 +291,7 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
             }
             onReady={handleReady}
             gridKey={originGridKey ? gridKey : undefined}
+            key={originGridKey ? gridKey : undefined}
             {...restProps}
           />
         )

@@ -75,7 +75,9 @@ const basicColumns = [
     editConfig: {
       component: InputNumber,
       signable: true,
-      editable: true,
+      editable: (data, params) => {
+        return true;
+      },
       rules: {
         type: 'number',
         min: 10,
@@ -251,9 +253,6 @@ const BaiscGrid = () => {
           selectedKeys,
           selectedRows,
           onSelect,
-          onSelectedChanged: (keys, rows) => {
-            // console.log('----->onSelectedChanged', keys, rows);
-          },
         }}
         gridKey="grid-test-2"
         hideSelectedBox
@@ -271,6 +270,7 @@ const BaiscGrid = () => {
           onChange: onPageChange,
           current,
         }}
+        drawerEditable
         // defaultExportJsonParams={{
         //   title: '基本数据',
         // }}
