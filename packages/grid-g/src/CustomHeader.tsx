@@ -10,7 +10,7 @@ export default props => {
     setSort,
     enableMenu,
     enableSorting,
-    ColumnLabelComponent=null,
+    ColumnLabelComponent = null,
   } = props;
   const [ascSort, setAscSort] = useState(false);
   const [descSort, setDescSort] = useState(false);
@@ -45,8 +45,6 @@ export default props => {
     );
   }
 
-  let sort = null;
-
   const handleSortChange = useCallback(
     event => {
       if (ascSort) {
@@ -62,14 +60,13 @@ export default props => {
     [ascSort, descSort, noSort],
   );
 
-  if (enableSorting) {
-    sort = (
-      <div className="customHeaderSort" onClick={handleSortChange}>
-        {ascSort && <Icon type="arrow-down" />}
-        {descSort && <Icon type="arrow-up" />}
-      </div>
-    );
-  }
+
+  const sort = (
+    <div className="customHeaderSort" onClick={enableSorting ? handleSortChange : () => {}}>
+      {ascSort && <Icon type="arrow-down" />}
+      {descSort && <Icon type="arrow-up" />}
+    </div>
+  );
 
   return (
     <>
