@@ -232,8 +232,9 @@ export const mapColumns = <T>(
             render,
             ...cellRendererParams,
           },
-          cellClass: classnames('gant-grid-cell', cellClass),
+          cellClass: cellClass,
           cellClassRules: {
+            'gant-grid-cell': () => true,
             'gant-grid-cell-modify': params => {
               const {
                 data: { _rowType, ...itemData } = {} as any,

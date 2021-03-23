@@ -227,7 +227,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   }, []);
   useEffect(() => {
     gridManager.dataSourceChanged(dataSource);
-  }, [dataSource]);
+  }, [dataSource, ready]);
   const serverDataCallback = useCallback((groupKeys, successCallback) => {
     return rows => {
       successCallback(rows, rows.length);
@@ -356,7 +356,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
           rowNodes: [node],
           force: true,
         });
-      }, 300);
+      }, 200);
     },
     [propsOnRowSelected],
   );
@@ -437,6 +437,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   const localColumnsDefs = useMemo(() => {
     return gridManager.getLocalStorageColumns(columnDefs, gridKey);
   }, [columnDefs, gridKey]);
+
   // columns-end
   const onGridReady = useCallback(
     (params: GridReadyEvent) => {
@@ -446,7 +447,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       gridManager.agGridColumnApi = params.columnApi;
       onReady && onReady(params, gridManager);
       setReady(true);
-      gridManager.dataSourceChanged(dataSource);
+      // gridManager.dataSourceChanged(dataSource);
     },
     [onReady, gridKey, dataSource],
   );
@@ -592,7 +593,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
           });
         };
         return (
-          <Spin spinning={loading}>
+          <Spin spinning={loading || !ready}>
             <GridContext.Provider
               value={{
                 serverDataRequest,
@@ -715,7 +716,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                       suppressKeyboardEvent={onSuppressKeyboardEvent}
                       onCellEditingStopped={onCellEditingStopped}
                       onRowDataUpdated={onRowDataUpdated}
-                      // onRowDataChanged={onRowDataCHanged}
                       onColumnMoved={onColumnsChange}
                       onColumnVisible={onColumnsChange}
                       onColumnResized={onColumnsChange}

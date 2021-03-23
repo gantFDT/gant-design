@@ -19,7 +19,7 @@ import Header from '@header';
 const RandomCreate = () => ({
   ip: Random.ip(),
   name: Random.name(),
-  age: Random.natural(10, 50),
+  age: '00000',
   county: Random.county(true),
   leaf: [true, false][Random.natural(0, 1)],
   path: [Random.ip()],
@@ -39,10 +39,10 @@ const basicColumns = [
   {
     fieldName: 'name',
     title: '姓名',
-    toolTipRender: params => {
-      const { data } = params;
-      return data.age > 30 ? <div>{data.name}</div> : null;
-    },
+    // toolTipRender: params => {
+    //   const { data } = params;
+    //   return data.age > 30 ? <div>{data.name}</div> : null;
+    // },
     editConfig: {
       component: props => {
         return <Input {...props} />;
@@ -68,58 +68,12 @@ const basicColumns = [
   {
     fieldName: 'age',
     title: '年龄',
-    pinnedRowCellRenderer: 'gantPinnedRowRenderer',
-    pinnedRowCellRendererParams: {
-      render: value => `平均年龄：${value}`,
-    },
-    editConfig: {
-      component: InputNumber,
-      signable: true,
-      editable: (data, params) => {
-        return true;
-      },
-      rules: {
-        type: 'number',
-        min: 10,
-        message: '年龄不能小于10岁',
-      },
-    },
+    cellClass: 'stringType',
   },
   {
     fieldName: 'county',
     title: '国家',
-
-    // cellRenderer: 'gantGroupCellRenderer',
-
-    // render: value => value + 222,
   },
-  // {
-  //   groupId: 'group-level-1',
-  //   title: 'group-level-1',
-  //   children: [
-  //     {
-  //       groupId: 'roup-level-1-1',
-  //       title: 'roup-level-1-1',
-  //       children: [
-  //         {
-  //           fieldName: 'roup-level-1-1-2',
-  //         },
-  //       ],
-  //     },
-  //     {
-  //       groupId: 'group-level-1-2',
-  //       title: 'group-level-1-2',
-  //       children: [
-  //         {
-  //           fieldName: 'group-level-1-2-1',
-  //         },
-  //         {
-  //           fieldName: 'group-level-1-2-2',
-  //         },
-  //       ],
-  //     },
-  //   ],
-  // },
 ];
 const BaiscGrid = () => {
   const [editable, setEditable] = useState(false);
@@ -130,6 +84,7 @@ const BaiscGrid = () => {
   const [selectedKeys, setselectedKeys] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
   const [columns, setColumns] = useState(basicColumns);
+  const [drawerEditable, setDrawerEditable] = useState(false);
   const apiRef = useRef();
   const gridManagerRef = useRef();
   const onReady = useCallback((params, manager) => {
@@ -203,6 +158,14 @@ const BaiscGrid = () => {
             <Button
               size="small"
               onClick={() => {
+                setDrawerEditable(bl => !bl);
+              }}
+            >
+              切换编辑模式
+            </Button>
+            <Button
+              size="small"
+              onClick={() => {
                 setColumns(cols => {
                   const addIndex = cols.length - basicColumns.length + 1;
                   return [...cols, { fieldName: `test${addIndex}`, title: `动态列${addIndex}` }];
@@ -263,14 +226,17 @@ const BaiscGrid = () => {
         openEditSign
         showCut
         getDataPath={data => data.path}
-        pinnedTopRowData={[{ age: 24 }]}
         suppressAnimationFrame
         pagination={{
           total: 400,
           onChange: onPageChange,
           current,
         }}
-        drawerEditable
+        gridOptions={{
+          suppressQuotes: true,
+          excelStyles: [{ id: 'stringType', dataType: 'string' }],
+        }}
+        drawerEditable={drawerEditable}
         // defaultExportJsonParams={{
         //   title: '基本数据',
         // }}
@@ -322,6 +288,7 @@ const treeColumns = [
 ];
 const TreeGrid = () => {
   const [selectedKeys, setSelectedKeys] = useState([1, 2]);
+
   const [selectedRows, setSelectedRows] = useState([
     {
       id: 1,
@@ -365,7 +332,7 @@ const TreeGrid = () => {
   //   cb([itemData], 1);
   // }, []);
 
-  console.log('---->',selectedRows)
+  console.log('---->', selectedRows);
 
   return (
     <Fragment>
@@ -413,7 +380,6 @@ const TreeGrid = () => {
         openEditSign
         getDataPath={data => data.filePath}
         isServerSideGroup={data => true}
-        
         // serverGroupExpend={serverGroupExpend}
         groupSelectsChildren
       />
@@ -442,16 +408,16 @@ const config = {
     </div>
   ),
   children: [
-    // {
-    //   title: '基础Grid',
-    //   describe: '基础Grid',
-    //   cmp: BaiscGrid,
-    // },
     {
-      title: '树形Grid',
-      describe: 'tree',
-      cmp: TreeGrid,
+      title: '基础Grid',
+      describe: '基础Grid',
+      cmp: BaiscGrid,
     },
+    // {
+    //   title: '树形Grid',
+    //   describe: 'tree',
+    //   cmp: TreeGrid,
+    // },
   ],
 };
 
