@@ -149,8 +149,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     onColumnResized,
     onColumnVisible,
     onRowClicked,
-    drawerEditable,
-    sideBar,
+    drawerMode,
     multiLineVerify,
     ...orignProps
   } = props;
@@ -323,13 +322,13 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
 
   const handleRowClicked = useCallback(
     (event: RowClickedEvent) => {
-      if (editable) {
+      if (drawerMode) {
         setVisibleDarwer(true);
         setClickedEvent(event);
       }
       onRowClicked && onRowClicked(event);
     },
-    [onRowClicked, editable],
+    [onRowClicked, drawerMode],
   );
 
   const onRowSelected = useCallback(
@@ -474,7 +473,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   // context 变化
   const context = useMemo(() => {
     return {
-      globalEditable: editable && !drawerEditable,
+      globalEditable: editable && !drawerMode,
       serverDataRequest,
       isServerSideGroup,
       size,
@@ -497,7 +496,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     size,
     computedPagination,
     editable,
-    drawerEditable,
+    drawerMode,
     showCut,
     onCellEditChange,
     onCellEditingChange,
@@ -611,7 +610,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                   'gant-grid',
                   `gant-grid-${getSizeClassName(size)}`,
                   openEditSign && `gant-grid-edit`,
-                  editable && 'gant-grid-editable',
+                  (editable || (drawerMode && visibleDarwer)) && 'gant-grid-editable',
                 )}
               >
                 <div
@@ -724,7 +723,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                   <GantGridFormToolPanelRenderer
                     columns={columns}
                     clickedEvent={clickedEvent}
-                    editable={editable && drawerEditable}
+                    drawerMode={drawerMode}
                     context={context}
                     gridManager={gridManager}
                     visible={visibleDarwer}

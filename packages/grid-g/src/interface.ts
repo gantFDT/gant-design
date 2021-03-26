@@ -208,7 +208,7 @@ export interface Props<T extends any> {
   onRowsPasteEnd?: (data: any) => void;
   hideSelcetedBox?: boolean;
   editChangeCallback?: (isChanged: boolean) => void;
-  drawerEditable?: boolean;
+  drawerMode?: boolean;
   onContextChangeRender?: (
     context: any,
     diffKeys: string[],

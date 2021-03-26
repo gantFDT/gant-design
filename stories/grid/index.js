@@ -236,7 +236,7 @@ const BaiscGrid = () => {
           suppressQuotes: true,
           excelStyles: [{ id: 'stringType', dataType: 'string' }],
         }}
-        drawerEditable={drawerEditable}
+        drawerMode
         // defaultExportJsonParams={{
         //   title: '基本数据',
         // }}
