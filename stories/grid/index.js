@@ -71,6 +71,34 @@ const basicColumns = [
     fieldName: 'county',
     title: '国家',
   },
+  {
+    fieldName: 'county2',
+    title: '国家',
+  },
+  {
+    fieldName: 'county3',
+    title: '国家',
+  },
+  {
+    fieldName: 'county4',
+    title: '国家',
+  },
+  {
+    fieldName: 'county5',
+    title: '国家',
+  },
+  {
+    fieldName: 'county6',
+    title: '国家',
+  },
+  {
+    fieldName: 'county7',
+    title: '国家',
+  },
+  {
+    fieldName: 'county8',
+    title: '国家',
+  },
 ];
 const BaiscGrid = () => {
   const [editable, setEditable] = useState(false);

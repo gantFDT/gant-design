@@ -630,6 +630,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     style={{
                       width: '100%',
                       height: '100%',
+                      flex:1
                     }}
                   >
                     {!hideBox && (

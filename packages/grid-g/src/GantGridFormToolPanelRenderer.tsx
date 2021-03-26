@@ -116,37 +116,32 @@ export default function GantGridRowFormRenderer(props: GantGridRowFormRendererPr
 
   return (
     <div className="gant-grid-form-wrapper">
+      <div
+        className='gant-grid-form-header'
+      >
+        <Tooltip title="关闭窗口">
+          <span onClick={closeDrawer} style={{ padding: '0px 10px', cursor: 'pointer' }}>
+            <Icon type="close" />
+          </span>
+        </Tooltip>
+
+        {!ediable ? (
+          <Tooltip title="编辑">
+            <div style={{ cursor: 'pointer' }} onClick={() => setEditable(true)}>
+              <Icon type="edit" />
+            </div>
+          </Tooltip>
+        ) : (
+          <Tooltip title="取消编辑">
+            <div style={{ cursor: 'pointer' }} onClick={() => setEditable(false)}>
+              <Icon type="poweroff" />
+            </div>
+          </Tooltip>
+        )}
+      </div>
       <div className="gant-grid-form" style={{ width }}>
         <div className="gant-grid-form-cursor" onMouseDown={onMouseDown}></div>
-        <div
-          style={{
-            padding: '0px 10px',
-            lineHeight: '30px',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
-        >
-          <Tooltip title="关闭窗口">
-            <span onClick={closeDrawer} style={{ padding: '0px 10px', cursor: 'pointer' }}>
-              <Icon type="close" />
-            </span>
-          </Tooltip>
 
-          {!ediable ? (
-            <Tooltip title="编辑">
-              <div style={{ cursor: 'pointer' }} onClick={() => setEditable(true)}>
-                <Icon type="edit" />
-              </div>
-            </Tooltip>
-          ) : (
-            <Tooltip title="取消编辑">
-              <div style={{ cursor: 'pointer' }} onClick={() => setEditable(false)}>
-                <Icon type="poweroff" />
-              </div>
-            </Tooltip>
-          )}
-        </div>
         <SchemaForm
           schema={schema}
           uiSchema={uiSchema}
