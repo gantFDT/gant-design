@@ -39,10 +39,7 @@ const basicColumns = [
   {
     fieldName: 'name',
     title: '姓名',
-    // toolTipRender: params => {
-    //   const { data } = params;
-    //   return data.age > 30 ? <div>{data.name}</div> : null;
-    // },
+    cellRenderer: 'gantGroupCellRenderer',
     editConfig: {
       component: props => {
         return <Input {...props} />;
@@ -74,6 +71,34 @@ const basicColumns = [
     fieldName: 'county',
     title: '国家',
   },
+  {
+    fieldName: 'county2',
+    title: '国家',
+  },
+  {
+    fieldName: 'county3',
+    title: '国家',
+  },
+  {
+    fieldName: 'county4',
+    title: '国家',
+  },
+  {
+    fieldName: 'county5',
+    title: '国家',
+  },
+  {
+    fieldName: 'county6',
+    title: '国家',
+  },
+  {
+    fieldName: 'county7',
+    title: '国家',
+  },
+  {
+    fieldName: 'county8',
+    title: '国家',
+  },
 ];
 const BaiscGrid = () => {
   const [editable, setEditable] = useState(false);
@@ -84,7 +109,7 @@ const BaiscGrid = () => {
   const [selectedKeys, setselectedKeys] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
   const [columns, setColumns] = useState(basicColumns);
-  const [drawerEditable, setDrawerEditable] = useState(false);
+  const [drawerEditable, setDrawerEditable] = useState(true);
   const apiRef = useRef();
   const gridManagerRef = useRef();
   const onReady = useCallback((params, manager) => {
@@ -128,7 +153,7 @@ const BaiscGrid = () => {
   }, [gridChange]);
   const onCreate = useCallback(() => {
     const createData = RandomCreate();
-    gridManagerRef.current.create(createData, selectedKeys);
+    gridManagerRef.current.create(createData, selectedKeys.length > 0 ? selectedKeys : true);
   }, [selectedKeys]);
   const onTagRemove = useCallback(() => {
     gridManagerRef.current.tagRemove(selectedKeys);
@@ -161,23 +186,18 @@ const BaiscGrid = () => {
                 setDrawerEditable(bl => !bl);
               }}
             >
-              切换编辑模式
+              切换模式
             </Button>
-            <Button
-              size="small"
-              onClick={() => {
-                setColumns(cols => {
-                  const addIndex = cols.length - basicColumns.length + 1;
-                  return [...cols, { fieldName: `test${addIndex}`, title: `动态列${addIndex}` }];
-                });
-              }}
-            >
-              添加列
-            </Button>
-            <Button size="small" onClick={() => gridManagerRef.current.clearLocalStorageColumns()}>
-              reset columns
-            </Button>
-            {!editable ? (
+            {drawerEditable ? (
+              <>
+                <Button size="small" icon="plus" onClick={onCreate} />
+                <Button size="small" icon="minus" onClick={onTagRemove} />
+                <Button size="small" icon="delete" onClick={onRemove} />
+                <Button size="small" icon="undo" onClick={() => gridManagerRef.current.undo()} />
+                <Button size="small" icon="redo" onClick={() => gridManagerRef.current.redo()} />
+                <Button size="small" icon="save" onClick={onSave} />
+              </>
+            ) : !editable ? (
               <Button size="small" icon="edit" onClick={() => setEditable(true)} />
             ) : (
               <Fragment>
@@ -236,7 +256,7 @@ const BaiscGrid = () => {
           suppressQuotes: true,
           excelStyles: [{ id: 'stringType', dataType: 'string' }],
         }}
-        drawerEditable={drawerEditable}
+        drawerMode={drawerEditable}
         // defaultExportJsonParams={{
         //   title: '基本数据',
         // }}

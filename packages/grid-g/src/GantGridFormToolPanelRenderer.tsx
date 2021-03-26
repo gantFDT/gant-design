@@ -1,6 +1,6 @@
 import React, { memo, useCallback, useMemo, useState, useRef, useEffect } from 'react';
 import SchemaForm from '@schema-form';
-import { Icon } from 'antd';
+import { Icon, Tooltip } from 'antd';
 import { toFormMap } from './utils';
 import { GridApi, ColumnApi, RowClickedEvent } from '@ag-grid-enterprise/all-modules';
 import GridManager from './gridManager';
@@ -8,7 +8,7 @@ import { isEmpty, get } from 'lodash';
 interface GantGridRowFormRendererProps {
   columns?: any[];
   clickedEvent?: RowClickedEvent;
-  editable?: boolean;
+  drawerMode?: boolean;
   context?: any;
   defaultDrawerWidth?: number;
   gridManager?: GridManager;
@@ -22,7 +22,7 @@ export default function GantGridRowFormRenderer(props: GantGridRowFormRendererPr
   const {
     columns,
     clickedEvent,
-    editable,
+    drawerMode,
     context,
     defaultDrawerWidth = 600,
     gridManager,
@@ -31,7 +31,7 @@ export default function GantGridRowFormRenderer(props: GantGridRowFormRendererPr
     onCellEditChange,
     onCellEditingChange,
   } = props;
-
+  const [ediable, setEditable] = useState(false);
   const [formWidth, setFormWidth] = useState(defaultDrawerWidth);
   const [distance, setDistance] = useState(0);
   const [data, setData] = useState({});
@@ -40,16 +40,19 @@ export default function GantGridRowFormRenderer(props: GantGridRowFormRendererPr
 
   const mouseDownRef = useRef(false);
   const { schema, customFields, valueMap } = useMemo(() => {
-    if (!editable || isEmpty(clickedEvent)) return { schema: {}, customFields: {}, valueMap: {} };
+    if (!drawerMode || isEmpty(clickedEvent)) return { schema: {}, customFields: {}, valueMap: {} };
     return toFormMap(columns, {
       ...clickedEvent,
-      context: { ...get(clickedEvent, 'context', {}), globalEditable: editable },
+      context: { ...get(clickedEvent, 'context', {}), globalEditable: drawerMode && ediable },
     });
-  }, [columns, get(clickedEvent, 'rowIndex'), editable]);
+  }, [columns, get(clickedEvent, 'rowIndex'), drawerMode, ediable]);
   const onMouseDown = useCallback((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     mouseDownRef.current = true;
     startPositionRef.current = event.clientX;
   }, []);
+  useEffect(() => {
+    !visible && setEditable(false);
+  }, [visible]);
   useEffect(() => {
     if (isEmpty(get(clickedEvent, 'data'))) return;
     setData(get(clickedEvent, 'data'));
@@ -109,17 +112,36 @@ export default function GantGridRowFormRenderer(props: GantGridRowFormRendererPr
     return newData;
   }, [data, valueMap, clickedEvent]);
 
-  if (!editable || !visible || isEmpty(clickedEvent)) return null;
+  if (!drawerMode || !visible || isEmpty(clickedEvent)) return null;
 
   return (
     <div className="gant-grid-form-wrapper">
+      <div
+        className='gant-grid-form-header'
+      >
+        <Tooltip title="关闭窗口">
+          <span onClick={closeDrawer} style={{ padding: '0px 10px', cursor: 'pointer' }}>
+            <Icon type="close" />
+          </span>
+        </Tooltip>
+
+        {!ediable ? (
+          <Tooltip title="编辑">
+            <div style={{ cursor: 'pointer' }} onClick={() => setEditable(true)}>
+              <Icon type="edit" />
+            </div>
+          </Tooltip>
+        ) : (
+          <Tooltip title="取消编辑">
+            <div style={{ cursor: 'pointer' }} onClick={() => setEditable(false)}>
+              <Icon type="poweroff" />
+            </div>
+          </Tooltip>
+        )}
+      </div>
       <div className="gant-grid-form" style={{ width }}>
         <div className="gant-grid-form-cursor" onMouseDown={onMouseDown}></div>
-        <div style={{ padding: '0px 10px', lineHeight: '30px' }}>
-          <span onClick={closeDrawer} style={{ padding: '0px 10px', cursor: 'pointer' }}>
-            关闭
-          </span>
-        </div>
+
         <SchemaForm
           schema={schema}
           uiSchema={uiSchema}
@@ -128,8 +150,9 @@ export default function GantGridRowFormRenderer(props: GantGridRowFormRendererPr
           data={formData}
           key={clickedEvent.rowIndex}
           ref={formRef}
+          editable={ediable}
         />
       </div>
     </div>
   );
-};
+}
