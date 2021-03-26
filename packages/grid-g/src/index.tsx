@@ -151,6 +151,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     onRowClicked,
     drawerMode,
     multiLineVerify,
+    defaultDrawerWidth,
     ...orignProps
   } = props;
   const apiRef = useRef<GridApi>();
@@ -731,6 +732,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     closeDrawer={() => setVisibleDarwer(false)}
                     onCellEditChange={onCellEditChange}
                     onCellEditingChange={onCellEditingChange}
+                    defaultDrawerWidth={defaultDrawerWidth}
                   />
                 </div>
                 {computedPagination && <GantPagination {...computedPagination} />}

@@ -209,6 +209,7 @@ export interface Props<T extends any> {
   hideSelcetedBox?: boolean;
   editChangeCallback?: (isChanged: boolean) => void;
   drawerMode?: boolean;
+  defaultDrawerWidth?:number
   onContextChangeRender?: (
     context: any,
     diffKeys: string[],
