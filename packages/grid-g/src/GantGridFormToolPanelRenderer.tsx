@@ -1,6 +1,6 @@
 import React, { memo, useCallback, useMemo, useState, useRef, useEffect } from 'react';
 import SchemaForm from '@schema-form';
-import { Icon } from 'antd';
+import { Icon, Tooltip } from 'antd';
 import { toFormMap } from './utils';
 import { GridApi, ColumnApi, RowClickedEvent } from '@ag-grid-enterprise/all-modules';
 import GridManager from './gridManager';
@@ -127,17 +127,24 @@ export default function GantGridRowFormRenderer(props: GantGridRowFormRendererPr
             alignItems: 'center',
           }}
         >
-          <span onClick={closeDrawer} style={{ padding: '0px 10px', cursor: 'pointer' }}>
-            关闭
-          </span>
-          {ediable ? (
-            <div style={{ cursor: 'pointer' }} onClick={() => setEditable(false)}>
-              结束编辑
-            </div>
+          <Tooltip title="关闭窗口">
+            <span onClick={closeDrawer} style={{ padding: '0px 10px', cursor: 'pointer' }}>
+              <Icon type="close" />
+            </span>
+          </Tooltip>
+
+          {!ediable ? (
+            <Tooltip title="编辑">
+              <div style={{ cursor: 'pointer' }} onClick={() => setEditable(true)}>
+                <Icon type="edit" />
+              </div>
+            </Tooltip>
           ) : (
-            <div style={{ cursor: 'pointer' }} onClick={() => setEditable(true)}>
-              编辑
-            </div>
+            <Tooltip title="取消编辑">
+              <div style={{ cursor: 'pointer' }} onClick={() => setEditable(false)}>
+                <Icon type="poweroff" />
+              </div>
+            </Tooltip>
           )}
         </div>
         <SchemaForm

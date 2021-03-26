@@ -310,14 +310,14 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   );
   const onSelectionChanged = useCallback(
     (event: SelectionChangedEvent) => {
-      if (selectedChanged.current) return;
       const rows = event.api.getSelectedRows();
+      if (selectedChanged.current && isEqual(selectedRows, rows)) return;
       if (isEqual(rows, selectedRowsRef.current)) return;
       const keys = rows.map(item => getRowNodeId(item));
       onSelectionChange(keys, rows);
       propsOnSelectionChanged && propsOnSelectionChanged(event);
     },
-    [onSelectionChange, propsOnSelectionChanged],
+    [onSelectionChange, propsOnSelectionChanged, selectedRows],
   );
 
   const handleRowClicked = useCallback(
