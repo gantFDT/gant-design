@@ -39,8 +39,9 @@ export default function GantGridRowFormRenderer(props: GantGridRowFormRendererPr
   const formRef = useRef<any>();
 
   const mouseDownRef = useRef(false);
-  const { schema, customFields, valueMap } = useMemo(() => {
-    if (!drawerMode || isEmpty(clickedEvent)) return { schema: {}, customFields: {}, valueMap: {} };
+  const { schema, customFields, valueMap, translationName } = useMemo(() => {
+    if (!drawerMode || isEmpty(clickedEvent))
+      return { schema: {}, customFields: {}, valueMap: {}, translationName: [] };
     return toFormMap(columns, {
       ...clickedEvent,
       context: { ...get(clickedEvent, 'context', {}), globalEditable: drawerMode && ediable },
@@ -88,37 +89,49 @@ export default function GantGridRowFormRenderer(props: GantGridRowFormRendererPr
 
   const onChange = useCallback(
     async (val, vals, ...ags) => {
-      const filed = Object.keys(val)[0];
+      let filed = Object.keys(val)[0];
       if (!formRef.current?.props?.form?.isFieldTouched(filed)) return;
+      const index = translationName.indexOf(filed);
       const newValue = val[filed];
-      const oldValue = get(clickedEvent, `data.${filed}`);
-      let data = { ...get(clickedEvent, 'data', {}), ...vals };
+      filed = index >= 0 ? filed.replace(/\_/g, '.') : filed;
+
+      const oldValue = get(clickedEvent, `node.data.${filed}`);
+      let data = { ...get(clickedEvent, 'node.data', {}), ...vals };
+
+      console.log('----->', data);
+
       data = onCellEditingChange
         ? await onCellEditingChange(data, filed, newValue, oldValue)
         : data;
+
       data = onCellEditChange ? await onCellEditChange(data, filed, newValue, oldValue) : data;
       if (isEmpty(data)) return;
       setData(data);
       gridManager.modify([data]);
     },
-    [clickedEvent, onCellEditChange, onCellEditingChange],
+    [clickedEvent, onCellEditChange, onCellEditingChange, translationName],
   );
 
   const formData = useMemo(() => {
     const newData = {};
-    Object.keys(data).map(name => {
-      newData[name] = valueMap[name] ? valueMap[name](name, clickedEvent) : data[name];
+
+    const proptypeType = get(schema, 'propertyType', {});
+
+    Object.keys(proptypeType).map(name => {
+      const itemData =
+        translationName.indexOf(name) >= 0 ? get(data, name.replace(/\_/g, '.')) : data[name];
+      newData[name] = itemData;
     });
     return newData;
-  }, [data, valueMap, clickedEvent]);
+  }, [data, valueMap, clickedEvent, translationName, schema]);
 
   if (!drawerMode || !visible || isEmpty(clickedEvent)) return null;
 
+  console.log('---->', formData, schema, translationName);
+
   return (
     <div className="gant-grid-form-wrapper">
-      <div
-        className='gant-grid-form-header'
-      >
+      <div className="gant-grid-form-header">
         <Tooltip title="关闭窗口">
           <span onClick={closeDrawer} style={{ padding: '0px 10px', cursor: 'pointer' }}>
             <Icon type="close" />

@@ -117,15 +117,18 @@ export const toFormMap = <T>(columns: Columns<T>[], params: any) => {
     type: 'object',
     propertyType: {},
   };
+  const translationName = [];
   if (!Array.isArray(columns)) return { customFields, schema, valueMap };
   columns.map(({ fieldName, title, type, editConfig = {}, valueGetter, valueFormatter }) => {
+    const itemName = fieldName.replace(/\./g, '_');
+    if (fieldName.indexOf('.') >= 0) translationName.push(itemName);
     if (valueGetter || valueFormatter) {
-      valueMap[fieldName] = function(fieldName, params) {
+      valueMap[itemName] = function(itemName, params) {
         let initialValue = valueGetter
           ? typeof valueGetter === 'string'
             ? valueGetter
             : valueGetter(params)
-          : get(params, `data.${fieldName}`);
+          : get(params, `data.${itemName}`);
         initialValue = valueFormatter
           ? valueFormatter({ ...params, value: initialValue })
           : initialValue;
@@ -133,7 +136,7 @@ export const toFormMap = <T>(columns: Columns<T>[], params: any) => {
       };
     }
     if (isEmpty(editConfig)) {
-      return set(schema, `propertyType.${fieldName}`, {
+      return set(schema, `propertyType.${itemName}`, {
         title,
         props: {
           allowEdit: false,
@@ -151,7 +154,7 @@ export const toFormMap = <T>(columns: Columns<T>[], params: any) => {
       editable,
     } = editConfig;
     customFields.push({
-      type: fieldName,
+      type: itemName,
       component,
     });
     let itemProps = props;
@@ -159,12 +162,12 @@ export const toFormMap = <T>(columns: Columns<T>[], params: any) => {
     if (typeof props === 'function') itemProps = props(params, params.rowIndex);
 
     if (valueGetter || valueFormatter || initValueFormatter) {
-      valueMap[fieldName] = function(fieldName, params) {
+      valueMap[itemName] = function(itemName, params) {
         let initialValue = valueGetter
           ? typeof valueGetter === 'string'
             ? valueGetter
             : valueGetter(params)
-          : get(params, `data.${fieldName}`);
+          : get(params, `data.${itemName}`);
         initialValue = valueFormatter
           ? valueFormatter({ ...params, value: initialValue })
           : initialValue;
@@ -175,7 +178,7 @@ export const toFormMap = <T>(columns: Columns<T>[], params: any) => {
       };
     }
 
-    set(schema, `propertyType.${fieldName}`, {
+    set(schema, `propertyType.${itemName}`, {
       title,
       props: {
         ...itemProps,
@@ -186,10 +189,10 @@ export const toFormMap = <T>(columns: Columns<T>[], params: any) => {
         getValueFromEvent: changeFormatter,
         valuePropName: valuePropName ? valuePropName : 'value',
       },
-      componentType: fieldName,
+      componentType: itemName,
     });
   });
-  return { customFields, schema, valueMap };
+  return { customFields, schema, valueMap, translationName };
 };
 
 export const mapColumns = <T>(

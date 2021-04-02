@@ -68,11 +68,11 @@ const basicColumns = [
     cellClass: 'stringType',
   },
   {
-    fieldName: 'county',
-    title: '国家',
+    fieldName: 'recored.address',
+    title: '地址',
   },
   {
-    fieldName: 'county2',
+    fieldName: 'county',
     title: '国家',
   },
   {
