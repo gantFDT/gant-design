@@ -71,13 +71,7 @@ function SaveAsModal(props: SaveAsModalProps) {
                   }
                 }
               ],
-            })(<Input placeholder={locale.viewNamePlaceholder} maxLength={500} />)}
-          </Form.Item>
-          <Form.Item>
-            {getFieldDecorator('isDefault', {
-              valuePropName: 'checked',
-              initialValue: false,
-            })(<Checkbox>{locale.setDefault}</Checkbox>)}
+            })(<Input placeholder={locale.viewNamePlaceholder} maxLength={500} autoComplete="off" />)}
           </Form.Item>
         </Form>
       </Modal>}

@@ -89,7 +89,7 @@ const EditModal = (props: EditModalProps) => {
                     }
                   }
                 ],
-              })(<Input placeholder={locale.viewNamePlaceholder} maxLength={500} />)}
+              })(<Input placeholder={locale.viewNamePlaceholder} maxLength={500} autoComplete="off" />)}
             </Form.Item>
           </Form>
         </Modal>
