@@ -192,7 +192,13 @@ function Sortable(props: SortableProps) {
 
   const handlerSortEnd: SortEndHandler = useCallback(
     ({ oldIndex, newIndex }) => {
-      onChange(arrayMove(dataSource, oldIndex, newIndex));
+      console.log('dataSource',dataSource)
+      console.log('oldIndex',oldIndex)
+      console.log('newIndex',newIndex)
+      const res = arrayMove(dataSource, oldIndex, newIndex)
+      console.log('res',res)
+      
+      // onChange(arrayMove(dataSource, oldIndex, newIndex));
     },
     [dataSource],
   );

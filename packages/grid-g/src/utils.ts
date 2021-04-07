@@ -44,6 +44,7 @@ const defaultCheckboxColSelectionCol: ColDef = {
   suppressMenu: true,
   lockPosition: true,
   lockVisible: true,
+  filter:false,
   cellStyle: {
     padding: '0px 3px',
   },
@@ -60,6 +61,7 @@ const serialNumberCol: ColDef = {
   lockPosition: true,
   lockVisible: true,
   field: 'g-index',
+  filter:false,
   cellClassRules: {
     'gant-grid-cell-serial-add': params => {
       const {
