@@ -41,8 +41,9 @@ export default {
     setViewName: '视图名称修改',
     onlySide: '只能从两侧开始锁定',
     onlyNearUnlock: '只能从靠近未锁定的列开始解锁',
-    setNormalColumn: '设为普通列',
-    setFixedColumn: '设为固定列',
+    setNormalColumn: '清除固定',
+    setFixedLeftColumn: '固定在左边',
+    setFixedRightColumn: '固定在右边',
     checkAll: '全选',
     align: '对齐方式',
 }

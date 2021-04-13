@@ -154,6 +154,7 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
 
   const handlerSaveConfig = useCallback(
     config => {
+      config.version = moment().format(viewVersionFormat);
       setActiveView({ ...config });
       let curViewIndex;
       curViewIndex = viewList.customViews.findIndex(
@@ -203,7 +204,8 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
   });
 
   useEffect(() => {
-    setGridKey('gridKey:' + originGridKey + ':' + activeView.viewId)
+    const columnKeys = finalColumns.map(_column => _column.fieldName).join('');
+    setGridKey('gridKey:' + originGridKey + ':' + activeView.viewId +':' + activeView.version + ':' + columnKeys);
   }, [finalColumns, originGridKey, activeView])
 
   const titleRef = useRef(null);
