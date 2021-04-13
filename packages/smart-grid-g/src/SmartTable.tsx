@@ -4,7 +4,7 @@ import moment from 'moment';
 import Grid from '@grid';
 import ConfigModal from './config';
 import { SmartTableType, SmartTableProps, ViewConfig, ViewListProps } from './interface';
-import formatSchema from './formatschema';
+import formatSchema, { formatColumnFields } from './formatschema';
 import ViewPicker, { DefaultView } from './viewpicker';
 import { useTableConfig, useLocalStorage } from './hooks';
 import withKeyevent from '@keyevent';
@@ -38,30 +38,17 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
     ...restProps
   } = props;
 
-  const prefixCls = getPrefixCls('smart-table', customizePrefixCls);
+  // const prefixCls = getPrefixCls('smart-table', customizePrefixCls);
 
   const { columns, systemViews } = useMemo(() => formatSchema(schema, originGridKey), [schema]);
   const [baseView] = systemViews;
   const [gridKey, setGridKey] = useState(originGridKey);
   const [configModalVisible, setConfigModalVisible] = useState(false);
-  const [saveLoading, setSaveLoading] = useState(false);
-  const [saveAsLoading, setSaveAsLoading] = useState(false);
-  const [renameLoading, setRenameLoading] = useState(false);
-  const [updateViewLoading, setUpdateViewLoading] = useState(false);
   const [activeView, setActiveView] = useState<ViewConfig>(baseView as ViewConfig);
   const { panelConfig } = activeView;
-  const [lastViewKey, setLastViewKey] = useLocalStorage<string>(
-    `tableKey:${originGridKey}-lastViewKey`,
-    baseView.viewId,
-  );
-  const [customViews, setCustomViews] = useLocalStorage<ViewConfig[]>(
-    `tableKey:${originGridKey}-customViews`,
-    [] as ViewConfig[],
-  );
-  const [viewList, setViewList] = useState<ViewListProps>({
-    systemViews: systemViews,
-    customViews: customViews || [],
-  });
+  const [lastViewKey, setLastViewKey] = useLocalStorage<string>(`grid-last-view-key:${originGridKey}`, baseView.viewId);
+  const [customViews, setCustomViews] = useLocalStorage<ViewConfig[]>(`grid-custom-views:${originGridKey}`, [] as ViewConfig[]);
+  const [viewList, setViewList] = useState<ViewListProps>({ systemViews, customViews: customViews || []});
 
   const apiRef: any = useRef(null)
   const managerRef: any = useRef(null)
@@ -75,23 +62,16 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
     onReady && onReady(params, manager)
   }, [onReady])
 
-  useEffect(() => {
-    if (baseView) {
-      setActiveView({
-        ...activeView,
-        ...baseView,
-      });
-    }
-  }, [baseView]);
-
   const handlerChangeView = useCallback(view => {
+    if(view.viewId === lastViewKey) return;
     managerRef.current && managerRef.current.clearLocalStorageColumns()
     setActiveView(view);
     setLastViewKey(view.viewId)
-  }, [originGridKey]);
+  }, [originGridKey, lastViewKey]);
 
   useEffect(() => {
     let usedView;
+    const [baseView] = systemViews;
 
     if(!originGridKey){
       usedView = initView
@@ -106,8 +86,9 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
     }
 
     setActiveView(usedView);
+    setLastViewKey(usedView.viewId)
     onViewChange && onViewChange(usedView);
-  }, []);
+  }, [systemViews, customViews, lastViewKey]);
 
   useEffect(() => {
     if (viewSchema) {
@@ -119,28 +100,8 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
   }, [viewSchema]);
   
   const handlerSaveViews = useCallback(
-    ({ views, hideModal, type }) => {
-      let saveLoadngFunc: Function | undefined;
-      switch (type) {
-        case 'save':
-          saveLoadngFunc = setSaveLoading;
-          break;
-        case 'saveAs':
-          saveLoadngFunc = setSaveAsLoading;
-          break;
-        case 'setDefault':
-          saveLoadngFunc = setUpdateViewLoading;
-          break;
-        case 'delete':
-          saveLoadngFunc = setUpdateViewLoading;
-          break;
-        case 'rename':
-          saveLoadngFunc = setRenameLoading;
-          break;
-      }
-      saveLoadngFunc && saveLoadngFunc(true);
+    ({ views, hideModal }) => {
       setCustomViews(views);
-      saveLoadngFunc && saveLoadngFunc(false);
       setViewList({
         ...viewList,
         customViews: views,
@@ -156,6 +117,7 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
     config => {
       config.version = moment().format(viewVersionFormat);
       setActiveView({ ...config });
+      setLastViewKey(config.viewId)
       let curViewIndex;
       curViewIndex = viewList.customViews.findIndex(
         (cV: ViewConfig) => cV.viewId === config.viewId,
@@ -190,6 +152,7 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
       handlerSaveViews({ views: newCustomViews });
       setViewList(viewList);
       setActiveView(newView);
+      setLastViewKey(newView.viewId)
       hideModal();
       setConfigModalVisible(false);
     },
@@ -202,6 +165,17 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
 
     tableKey: originGridKey,
   });
+
+  // 动态列修改用户自定义视图
+  useEffect(() => {
+    setCustomViews((_customViews: ViewConfig[]) => {
+      for (const _customView of _customViews) {
+        const __columnFields = _customView.panelConfig.columnFields;
+        _customView.panelConfig.columnFields = formatColumnFields(__columnFields, columns)
+      }
+      return [..._customViews];
+    })
+  }, [columns])
 
   useEffect(() => {
     const columnKeys = finalColumns.map(_column => _column.fieldName).join('');
@@ -220,8 +194,6 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
           systemViews={viewList.systemViews}
           switchActiveView={handlerChangeView}
           updateView={handlerSaveViews}
-          renameLoading={renameLoading}
-          loading={updateViewLoading}
           withoutAnimation={withoutAnimation}
           splitLine={!!title}
           config={
@@ -238,7 +210,7 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
         />}
       </Receiver>
     ),
-    [activeView, viewList, renameLoading, updateViewLoading, titleRef, title],
+    [activeView, viewList, titleRef, title],
   );
 
   const HeaderRightElem: ReactNode = useMemo(()=>(

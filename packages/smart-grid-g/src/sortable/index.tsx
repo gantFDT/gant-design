@@ -17,6 +17,7 @@ interface RecordProps {
   title: string;
   checked: boolean;
   clickable?: boolean;
+  dynamic?: boolean;
   fixed?: 'left' | 'right';
 }
 
@@ -106,6 +107,7 @@ function Sortable(props: SortableProps) {
       <div className="sortableList">
         {
           dataSource.map((dataItem, dataIdx) => (
+            dataItem.dynamic ? null :
             <SortableItem
               key={dataItem.fieldName}
               index={dataIdx}
