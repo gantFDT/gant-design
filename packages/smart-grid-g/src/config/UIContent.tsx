@@ -3,7 +3,7 @@ import { Switch, Radio } from 'antd';
 import BlockHeader from '@header';
 import { getType } from '@util';
 import Sortable from '../sortable';
-import formatSchema from '../formatschema';
+import { useGridSchema } from '../hooks';
 import Receiver from '../locale/Receiver';
 
 interface UIContentProps {
@@ -27,11 +27,8 @@ function UIContent(props: UIContentProps) {
 
   useEffect(() => {
     if (schema && viewConfig && !viewConfig.columnFields) {
-      const { columnConfigs: columnFields } = formatSchema(schema, gridKey);
-      onChange({
-        ...viewConfig,
-        columnFields,
-      });
+      const { systemViews: [ baseView ] } = useGridSchema(gridKey, schema);
+      onChange(baseView);
     }
   }, [schema, gridKey]);
 
@@ -66,20 +63,6 @@ function UIContent(props: UIContentProps) {
     },
     [viewConfig],
   );
-
-  const hasFixed = useMemo(() => {
-    if (!viewConfig.columnFields) return false;
-    return viewConfig.columnFields.some((V: any) => {
-      if (V.lock && viewConfig.wrap) {
-        onChange({
-          ...viewConfig,
-          wrap: false,
-        });
-      }
-
-      return !!V.lock;
-    });
-  }, [viewConfig]);
 
   return (
     <Receiver>

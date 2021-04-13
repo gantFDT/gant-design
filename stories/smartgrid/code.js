@@ -79,15 +79,17 @@ import { SmartGrid, EditStatus, SwitchStatus } from 'gantd'
 const { Random } = Mock
 
 
-var dataSource = Array(10).fill().map((_, Idx) => ({
+var dataSource1 = Array(10).fill().map((_, Idx) => ({
   key: Idx,
   name: Random.cname(),
-  age: Random.natural(20, 70),
+  age: Random.natural(10, 80),
+  height: Random.natural(160, 190) + 'cm',
+  sex: [ '♂', '♀' ][Random.natural(0, 1)],
   address: Random.county(true),
   tags: [[ '宅', '程序猿', '高富帅', '矮矬穷', '教师' ][Random.natural(0, 4)]]
 }))
 
-var tableColumns = [
+var tableColumns1 = [
   {
     title: '姓名',
     fieldName: 'name',
@@ -100,6 +102,7 @@ var tableColumns = [
   {
     title: '住址',
     fieldName: 'address',
+    width: 200
   },
   {
     title: '标签',
@@ -133,40 +136,51 @@ var tableColumns = [
   },
 ]
 function ConfigColumnsUse() {
-  const tableSchema = {
-    supportColumnFields: tableColumns,
-    systemViews: [
-      {
-        viewId: 'systemView1',
-        name: "系统视图1",
-        version: '2020-02-10 09:45:37',
-        panelConfig: {
-          columnFields: [
-            {
-              fieldName: 'tags',
-              fixed: 'left',
-              width: 300
-            },
-            {
-              fieldName: 'name',
-            },
-            {
-              fieldName: 'address',
-            },
-            {
-              fieldName: 'action',
-            },
-          ]
+  const [dynamicColumns, setDynamicColumns] = useState([])
+
+  const finalSchema = useMemo(() => [
+    ...tableColumns1.slice(0, 3),
+    ...dynamicColumns,
+    ...tableColumns1.slice(3)
+  ],[tableColumns1, dynamicColumns])
+
+  useEffect(() => {
+    setTimeout(() => {
+      setDynamicColumns([
+        {
+          title: '性别',
+          fieldName: 'sex'
+        },
+        {
+          title: '身高',
+          fieldName: 'height'
         }
+      ])
+    }, 250)
+  }, [])
+
+  const handlerToggleColumn = useCallback((type) => {
+    setDynamicColumns(type === 'height' ? [
+      {
+        title: '身高',
+        fieldName: 'height'
       }
-    ]
-  }
+    ] : [
+      {
+        title: '性别',
+        fieldName: 'sex'
+      }
+    ])
+  },[])
+
   return (
     <div style={{ margin: 10 }}>
+      <Button onClick={handlerToggleColumn.bind(null, 'height')}>只添加身高列</Button>
+      <Button onClick={handlerToggleColumn.bind(null, 'sex')}>只添加性别列</Button>
       <SmartGrid
-        tableKey="ConfigViewUse"
-        schema={tableSchema}
-        dataSource={dataSource}
+        gridKey="ConfigColumnsUse"
+        schema={finalSchema}
+        dataSource={dataSource1}
       />
     </div>
   )

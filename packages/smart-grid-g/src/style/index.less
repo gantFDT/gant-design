@@ -1,31 +1,31 @@
-@test:#999;
+@test: #999;
 
-  
-  .gant{
-    &-dropbutton {
-      font-weight: bold;
-      font-size: 12px;
-      line-height: 20px;
-      display: inline-block;
-      opacity: 0;
-      cursor: pointer;
-      transition: all 0.3s;
-    
-      &.DefaultShow {
-        opacity: 1;
-      }
-      &.SplitLine {
-        border-left: 1px solid rgba(128,128,128,0.2);
-        padding-left: 10px;
-        margin-left: 10px;
-      }
+.gant {
+  &-dropbutton {
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 20px;
+    display: inline-block;
+    opacity: 0;
+    cursor: pointer;
+    transition: all 0.3s;
+
+    &.DefaultShow {
+      opacity: 1;
     }
-  
-    &-smart-table-wrapper {
-      &:hover {
-        .gant-dropbutton {
-          opacity: 1;
-        }
+
+    &.SplitLine {
+      border-left: 1px solid rgba(128, 128, 128, 0.2);
+      padding-left: 10px;
+      margin-left: 10px;
+    }
+  }
+
+  &-smart-table-wrapper {
+    &:hover {
+      .gant-dropbutton {
+        opacity: 1;
       }
     }
   }
+}

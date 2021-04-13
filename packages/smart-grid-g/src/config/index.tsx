@@ -58,6 +58,7 @@ function ConfigModal(props: ConfigModalProps) {
       return notification.info({
         message: <Receiver>{(locale) => <>{locale.saveMessage}</>}</Receiver>,
       })
+    
     onOk && onOk(fakeView)
   }, [fakeView])
 
