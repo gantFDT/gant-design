@@ -41,8 +41,9 @@ export default {
     setViewName: 'Set viewName',
     onlySide: 'Can only be locked from both sides',
     onlyNearUnlock: 'Can only be unlocked starting from near the unlocked column',
-    setNormalColumn: 'Set normal column',
-    setFixedColumn: 'Set Fixed column',
+    setNormalColumn: 'Clear Fixed',
+    setFixedLeftColumn: 'Fix to left',
+    setFixedRightColumn: 'Fix to right',
     checkAll: 'Check All',
     align: 'Align',
 }
