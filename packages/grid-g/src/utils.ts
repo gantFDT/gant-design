@@ -104,7 +104,7 @@ export const selectedMapColumns = <T>(
   const selectedCol: any = [];
   columns.map(colItem => {
     const { fieldName: field, title: headerName } = colItem;
-    if (colArray.indexOf(field) >= 0) selectedCol.push({ field, headerName, flex: true });
+    if (colArray.indexOf(field) >= 0) selectedCol.push({ field, headerName, flex: 1 });
   });
   return [
     { ...defaultCheckboxColSelectionCol, headerCheckboxSelection: 'multiple' },
@@ -282,7 +282,7 @@ export const mapColumns = <T>(
             } else {
               if (!isEmpty(rules)) {
                 validateFields[validateField] = { ...rules };
-                required = rules['required'];
+                required = get(rules, 'required', false);
               }
             }
             if (required) {

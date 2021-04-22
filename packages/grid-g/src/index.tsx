@@ -152,6 +152,8 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     drawerMode,
     multiLineVerify,
     defaultDrawerWidth,
+    selectedBoxHeight,
+    selectedBoxWidth = 240,
     ...orignProps
   } = props;
   const apiRef = useRef<GridApi>();
@@ -631,7 +633,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     style={{
                       width: '100%',
                       height: '100%',
-                      flex:1
+                      flex: 1,
                     }}
                   >
                     {!hideBox && (
@@ -641,6 +643,8 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                         getRowNodeId={getRowNodeId}
                         columnDefs={selectedColumns as any}
                         rowData={boxSelectedRows}
+                        selectedBoxHeight={selectedBoxHeight}
+                        selectedBoxWidth={selectedBoxWidth}
                       />
                     )}
                     <AgGridReact
