@@ -125,7 +125,7 @@
     "webpackbar": "^3.2.0"
   },
   "dependencies": {
-    "-": "0.0.1",
+   
     "@ag-grid-community/react": "24.0.0",
     "@ag-grid-enterprise/all-modules": "24.0.0",
     "@ant-design/colors": "^3.1.0",
