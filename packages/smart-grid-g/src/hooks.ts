@@ -3,7 +3,7 @@ import { PaginationConfig } from '@table'
 import { merge } from 'lodash';
 
 // localStorage相关
-export function useLocalStorage<T>(storageKey: string, initValue: T): [T, (params: T) => void] {
+export function useLocalStorage<T>(storageKey: string, initValue: T): [T, React.Dispatch<React.SetStateAction<T>>] {
   const getLocaLStorageData = () => {
     let localDataString = localStorage.getItem(storageKey)
 
@@ -14,17 +14,16 @@ export function useLocalStorage<T>(storageKey: string, initValue: T): [T, (param
 
   const [localData, setLocalData] = useState<T>(getLocaLStorageData())
 
-  const setLocalStorage = useCallback((data: T) => {
-    setLocalData(data)
-    localStorage.setItem(storageKey, 
-      typeof data !== 'object' ? data.toString() :
+  useEffect(() => {
+    localData && localStorage.setItem(storageKey, 
+      typeof localData !== 'object' ? localData.toString() :
       JSON.stringify(
-        Array.isArray(data) ? data : Object.assign({}, localData, data)
+        Array.isArray(localData) ? localData : Object.assign({}, localData, localData)
       )
     )
-  }, [])
+  }, [localData])
 
-  return [localData, setLocalStorage]
+  return [localData, setLocalData]
 }
 
 //  分页相关
@@ -90,20 +89,17 @@ export const useTableConfig = (props: useTableConfigProps) => {
     columnFields = []
   } = tableConfig;
   // 列渲染
-  const fakeColumns = useMemo(() => {
-    // if(columnFields.length !== columns.length) return [];
-    return columnFields
-    .filter((item: any) => item.checked)
-    .map((ck: any) => {
-      let columnItem = columns.find((oc: any) => oc.fieldName === ck.fieldName) || {};
-      let finalWidth = columnItem.width || ck.width;
-      return {
-        ...columnItem,
-        width: finalWidth || (ck.fixed ? 120 : undefined),
-        fixed: ck.fixed
+
+  const fakeColumns = [];
+  for (const _columnField of columnFields) {
+    if(_columnField.checked) {
+      const _columnItem = columns.find(_column => _column.fieldName === _columnField.fieldName);
+      if(_columnItem) {
+        fakeColumns.push(Object.assign({}, _columnItem, _columnField, { width: _columnItem.width || _columnField.width || 120 }))
       }
-    })
-  }, [columnFields, columns])
+    }
+  }
+
   return [
     fakeColumns
   ]

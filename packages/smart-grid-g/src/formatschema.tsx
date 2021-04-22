@@ -82,6 +82,26 @@ export const setFields = (cmpMap) => {
   ComponentsMap = { ...ComponentsMap, ...cmpMap }
 }
 
+export const formatColumnFields = (columnFields, originColumns) => {
+  // 剔除原始数据中不存在的数据列
+  const __filterdFields = [];
+  for (const columnField of columnFields) {
+    const _columnItem = originColumns.find(_column => _column.fieldName === columnField.fieldName);
+    if(_columnItem) {
+      __filterdFields.push(Object.assign({}, _columnItem, columnField, { checked: columnField.checked !== undefined ? columnField.checked : true }))
+    }
+  }
+  // 添加视图中隐藏的列
+  const __hiddenFields = [];
+  for (const _column of originColumns) {
+    if(__filterdFields.every(__filterdField => __filterdField.fieldName !== _column.fieldName)) {
+      __hiddenFields.push(Object.assign({}, _column, { checked: _column.dynamic || false }))
+    }
+  }
+
+  return [...__filterdFields, ...__hiddenFields];
+}
+
 export default function formatSchema<R>(schema: SchemaProp<R> | CustomColumnProps<R>[], originGridKey: string | undefined) {
   // 简洁模式
   if (Array.isArray(schema)) {
@@ -130,33 +150,10 @@ export default function formatSchema<R>(schema: SchemaProp<R> | CustomColumnProp
 
   // 匹配系统视图
   systemViews.forEach(view => {
-    let configs = cloneDeep(columns);
-    let { columnFields: columnConfigs } = view.panelConfig;
-
-    for (let idx = 0; idx < columnConfigs.length; idx++) {
-      const columnConfig = columnConfigs[idx];
-      columnConfigs[idx] = {
-        ...columnMaps[columnConfig.fieldName],
-        ...columnConfig,
-        checked: true,
-        lock: !!columnConfig.fixed || false,
-      };
-    }
-
-    // 隐藏列
-    let hiddenColumns = configs
-      .filter(C => columnConfigs.every(CC => CC.fieldName !== C.fieldName))
-      .map(C => ({
-        ...C,
-        checked: false,
-        lock: false,
-      }));
-    columnConfigs = [...columnConfigs, ...hiddenColumns] as ColumnConfig[];
-
     view.panelConfig = {
       ...DEFAULT_VIEW,
       ...view.panelConfig,
-      columnFields: columnConfigs,
+      columnFields: formatColumnFields(view.panelConfig.columnFields, columns),
     };
   });
 

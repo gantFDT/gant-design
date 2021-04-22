@@ -75,15 +75,17 @@ function BasicUse() {
   )
 }
 /*! Split !*/
-var dataSource = Array(10).fill().map((_, Idx) => ({
+var dataSource1 = Array(10).fill().map((_, Idx) => ({
   key: Idx,
   name: Random.cname(),
-  age: Random.natural(20, 70),
+  age: Random.natural(10, 80),
+  height: Random.natural(160, 190) + 'cm',
+  sex: [ '♂', '♀' ][Random.natural(0, 1)],
   address: Random.county(true),
   tags: [[ '宅', '程序猿', '高富帅', '矮矬穷', '教师' ][Random.natural(0, 4)]]
 }))
 
-var tableColumns = [
+var tableColumns1 = [
   {
     title: '姓名',
     fieldName: 'name',
@@ -96,6 +98,7 @@ var tableColumns = [
   {
     title: '住址',
     fieldName: 'address',
+    width: 200
   },
   {
     title: '标签',
@@ -129,40 +132,70 @@ var tableColumns = [
   },
 ]
 function ConfigColumnsUse() {
-  const tableSchema = {
-    supportColumnFields: tableColumns,
-    systemViews: [
-      {
-        viewId: 'systemView1',
-        name: "系统视图1",
-        version: '2020-02-10 09:45:37',
-        panelConfig: {
-          columnFields: [
-            {
-              fieldName: 'tags',
-              fixed: 'left',
-              width: 300
-            },
-            {
-              fieldName: 'name',
-            },
-            {
-              fieldName: 'address',
-            },
-            {
-              fieldName: 'action',
-            },
-          ]
+  const [dynamicColumns, setDynamicColumns] = useState([])
+
+  const finalSchema = useMemo(() => [
+    ...tableColumns1.slice(0, 3),
+    ...dynamicColumns,
+    ...tableColumns1.slice(3)
+  ],[tableColumns1, dynamicColumns])
+
+  useEffect(() => {
+    setTimeout(() => {
+      setDynamicColumns([
+        {
+          title: '性别',
+          fieldName: 'sex',
+          dynamic: true
+        },
+        {
+          title: '身高',
+          fieldName: 'height',
+          dynamic: true
         }
-      }
-    ]
-  }
+      ])
+    }, 250)
+  }, [])
+
+  const handlerToggleColumn = useCallback((type) => {
+    setDynamicColumns(
+      type === 'height' ? [
+        {
+          title: '身高',
+          fieldName: 'height',
+          dynamic: true
+        }
+      ]:
+      type === 'all' ? [
+        {
+          title: '性别',
+          fieldName: 'sex',
+          dynamic: true
+        },
+        {
+          title: '身高',
+          fieldName: 'height',
+          dynamic: true
+        }
+      ]: [
+        {
+          title: '性别',
+          fieldName: 'sex',
+          dynamic: true
+        }
+      ])
+  },[])
+
   return (
     <div style={{ margin: 10 }}>
+      <Button style={{ margin: 10 }} onClick={handlerToggleColumn.bind(null, 'height')}>只添加身高列</Button>
+      <Button style={{ margin: 10 }} onClick={handlerToggleColumn.bind(null, 'sex')}>只添加性别列</Button>
+      <Button style={{ margin: 10 }} onClick={handlerToggleColumn.bind(null, 'all')}>添加身高/性别列</Button>
+      <span>{finalSchema.map(schema => schema.title).join(' , ')}</span>
       <SmartGrid
-        tableKey="ConfigViewUse"
-        schema={tableSchema}
-        dataSource={dataSource}
+        gridKey="ConfigColumnsUse"
+        schema={finalSchema}
+        dataSource={dataSource1}
       />
     </div>
   )
@@ -796,11 +829,11 @@ const config = {
     //   describe: '最简单的用法，鼠标悬浮表格可配置视图。<br/>简洁数据模型，数组格式，快速实现表格展示。列数据不应包含UI配置信息。',
     //   cmp: BasicUse
     // },
-    // {
-    //   title: '动态配置列属性用法',
-    //   describe: '配置列属性，包括显示与否、列的排序、固定、对齐方式等。<br/>此处预设隐藏 <b>年龄</b> 字段, 并将 <b>标签</b> 列放置第一列。',
-    //   cmp: ConfigColumnsUse
-    // },
+    {
+      title: '动态配置列属性用法',
+      describe: '配置列属性，包括显示与否、列的排序、固定、对齐方式等。<br/>此处预设隐藏 <b>年龄</b> 字段, 并将 <b>标签</b> 列放置第一列。',
+      cmp: ConfigColumnsUse
+    },
     // {
     //   title: '动态配置表格样式属性用法',
     //   describe: '配置表格样式，包括文字是否限制折行、是否显示斑马线、是否显示列边框、分页条位置、高度策略等。<br/>此处预设 不换行 、不显示斑马线、 不显示边框、 取消点击选中行、 分页条放右边、 表格高度适应内容。',
