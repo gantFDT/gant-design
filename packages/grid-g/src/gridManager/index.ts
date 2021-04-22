@@ -178,7 +178,7 @@ export default class GridManage {
       if (errorsArr) {
         const _rowError: any = {};
         errorsArr.map(itemError => {
-          _rowError[itemError.field] = itemError.message;
+          set(_rowError, itemError.field, itemError.message);
         });
         rowNode.setData({ ...newItemData, _rowError });
       } else {
@@ -327,7 +327,7 @@ export default class GridManage {
       const { diff } = this;
       const { modify, add } = diff;
       const data = [...modify, ...add];
-      this.validate(data)
+      this.validate(data);
       return;
     }
     await this.validate(updateRowData);

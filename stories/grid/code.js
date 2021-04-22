@@ -70,10 +70,38 @@ const basicColumns = [
   {
     fieldName: 'recored.address',
     title: '地址',
+    editConfig: {
+      component: props => {
+        return <Input {...props} />;
+      },
+      editable: true,
+      signable: true,
+      rules: [
+        {
+          min: 4,
+          type: 'string',
+          message: '姓名不能小于四个字符串',
+        },
+      ],
+    },
   },
   {
     fieldName: 'county',
     title: '国家',
+    editConfig: {
+      component: props => {
+        return <Input {...props} />;
+      },
+      editable: true,
+      signable: true,
+      rules: [
+        {
+          min: 4,
+          type: 'string',
+          message: '姓名不能小于四个字符串',
+        },
+      ],
+    },
   },
   {
     fieldName: 'county3',
@@ -256,6 +284,7 @@ const BaiscGrid = () => {
           suppressQuotes: true,
           excelStyles: [{ id: 'stringType', dataType: 'string' }],
         }}
+        selectedBoxWidth={500}
         drawerMode={drawerEditable}
         // defaultExportJsonParams={{
         //   title: '基本数据',
