@@ -35,8 +35,8 @@ export default {
   // for text filter
   contains: '包含',
   notContains: '不包含',
-  startsWith: '从……开始',
-  endsWith: '从……结束',
+  startsWith: '开头是',
+  endsWith: '结尾是',
 
   // filter conditions
   andCondition: '与',
