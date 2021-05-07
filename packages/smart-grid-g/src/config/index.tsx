@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { notification, Icon, Button } from 'antd'
 import Modal from '@modal'
 import { ModalProps } from 'antd/lib/modal'
-import { deepCopy4JSON } from '@util'
+import { cloneDeep } from 'lodash'
 import ViewPicker from '../viewpicker'
 import SaveAsModal from './SaveAsModal'
 import UIContent from './UIContent'
@@ -40,11 +40,11 @@ function ConfigModal(props: ConfigModalProps) {
 
   const [titleModalVisible, setTitleModalVisible] = useState(false)
 
-  const [fakeView, setFakeView] = useState(deepCopy4JSON(dataSource))
+  const [fakeView, setFakeView] = useState(cloneDeep(dataSource))
   const { panelConfig } = fakeView
 
   useEffect(() => {
-    const view = deepCopy4JSON(dataSource)
+    const view = cloneDeep(dataSource)
     visible && setFakeView(view)
     onViewChange && onViewChange(view)
   }, [dataSource, visible])
@@ -62,7 +62,7 @@ function ConfigModal(props: ConfigModalProps) {
   }, [fakeView])
 
   const handlerChooseView = useCallback(view => {
-    const _view = deepCopy4JSON(view)
+    const _view = cloneDeep(view)
     setFakeView(_view)
     onViewChange && onViewChange(_view)
   }, [])
