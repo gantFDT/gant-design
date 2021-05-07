@@ -1,6 +1,12 @@
 import React, { useState, useEffect, memo, useMemo, useCallback, useRef } from 'react';
 import { AgGridReact } from '@ag-grid-community/react';
-import { ColDef, SelectionChangedEvent, GridApi, GridReadyEvent, RowClickedEvent } from '@ag-grid-community/core';
+import {
+  ColDef,
+  SelectionChangedEvent,
+  GridApi,
+  GridReadyEvent,
+  RowClickedEvent,
+} from '@ag-grid-community/core';
 import { Badge, Icon, Popover, Button } from 'antd';
 import { findIndex, get } from 'lodash';
 interface SelectedGridProps {
@@ -9,9 +15,19 @@ interface SelectedGridProps {
   onChange: (keys: string[], rows: any[]) => void;
   getRowNodeId: any;
   apiRef?: any;
+  selectedBoxHeight?: number;
+  selectedBoxWidth?: number;
 }
 export default memo(function SelectedGrid(props: SelectedGridProps) {
-  const { columnDefs, rowData = [], onChange, getRowNodeId, apiRef: gridApiRef } = props;
+  const {
+    columnDefs,
+    rowData = [],
+    onChange,
+    getRowNodeId,
+    apiRef: gridApiRef,
+    selectedBoxHeight,
+    selectedBoxWidth,
+  } = props;
   const [selectedRows, setSelectedRows] = useState([]);
   const apiRef = useRef<GridApi>();
   const onSelectionChanged = useCallback((event: SelectionChangedEvent) => {
@@ -34,10 +50,11 @@ export default memo(function SelectedGrid(props: SelectedGridProps) {
     apiRef.current = api;
   }, []);
   const girdHeight = useMemo(() => {
+    if (selectedBoxHeight) return selectedBoxHeight;
     let count = rowData.length < 4 ? 4 : rowData.length;
     count = count > 10 ? 10 : count;
     return (count + 1) * 24 + 4;
-  }, [rowData]);
+  }, [rowData, selectedBoxHeight]);
   const onClearSelection = useCallback(() => {
     const rows: any[] = [];
     rowData.map(itemRowData => {
@@ -57,7 +74,7 @@ export default memo(function SelectedGrid(props: SelectedGridProps) {
     if (gridApiRef && gridApiRef.current) {
       const node = gridApiRef.current.getRowNode(id);
       if (node) {
-        gridApiRef.current.ensureIndexVisible(node.rowIndex,'top');
+        gridApiRef.current.ensureIndexVisible(node.rowIndex, 'top');
       }
     }
   }, []);
@@ -72,7 +89,10 @@ export default memo(function SelectedGrid(props: SelectedGridProps) {
             </Button>
           </div>
         </div>
-        <div className="ag-theme-balham gant-ag-wrapper" style={{ width: 240, height: girdHeight }}>
+        <div
+          className="ag-theme-balham gant-ag-wrapper"
+          style={{ width: selectedBoxWidth, height: girdHeight }}
+        >
           <AgGridReact
             onRowClicked={onRowClicked}
             onSelectionChanged={onSelectionChanged}
@@ -85,6 +105,10 @@ export default memo(function SelectedGrid(props: SelectedGridProps) {
             getRowNodeId={getRowNodeId}
             onGridReady={onGridReady}
             immutableData
+            defaultColDef={{
+              suppressMenu: true,
+              resizable: true,
+            }}
           />
         </div>
       </div>

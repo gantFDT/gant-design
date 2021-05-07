@@ -98,8 +98,6 @@ export default function GantGridRowFormRenderer(props: GantGridRowFormRendererPr
       const oldValue = get(clickedEvent, `node.data.${filed}`);
       let data = { ...get(clickedEvent, 'node.data', {}), ...vals };
 
-      console.log('----->', data);
-
       data = onCellEditingChange
         ? await onCellEditingChange(data, filed, newValue, oldValue)
         : data;
