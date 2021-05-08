@@ -64,6 +64,12 @@ export default memo(
     const { hasChildren, expanded, treeDataType } = state;
     const eContracted = useRef<HTMLSpanElement>(null);
     const eExpanded = useRef<HTMLSpanElement>(null);
+
+    const renderIcon = useMemo(() => {
+      if (typeof customIcon === 'function') return customIcon(data);
+      if (!customIcon) return null;
+      return customIcon
+    }, []);
     const onExpend = useCallback((event: MouseEvent) => {
       stopPropagationForAgGrid(event);
       if (node.childrenAfterFilter && node.childrenAfterFilter.length > 0) {
@@ -181,20 +187,20 @@ export default memo(
         {showFolder ? (
           hasChildren ? (
             <span className="gant-treedata-icon gant-treedata-folder">
-              {customIcon ? (
-                customIcon
+              {renderIcon ? (
+                renderIcon
               ) : (
                 <Icon type={expanded ? 'folder-open' : 'folder'} theme="filled" />
               )}
             </span>
           ) : node.level > 0 ? (
             <span className="gant-treedata-icon gant-treedata-file">
-              {customIcon ? customIcon : <Icon type="file" theme="filled" />}
+              {renderIcon ? renderIcon : <Icon type="file" theme="filled" />}
             </span>
           ) : (
             treeData && (
               <span className="gant-treedata-icon gant-treedata-first-file">
-                {customIcon ? customIcon : <Icon type="file" theme="filled" />}
+                {renderIcon ? renderIcon : <Icon type="file" theme="filled" />}
               </span>
             )
           )
