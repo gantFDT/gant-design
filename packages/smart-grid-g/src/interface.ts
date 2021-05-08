@@ -66,6 +66,10 @@ export interface SmartTableProps<T> extends GantTableProps<T> {
   emptyDescription?: string;
   prefixCls?: string;
 
+  customViews?: ViewConfig[];
+  lastViewKey?: string;
+  onCustomViewsChange?: (customViews: ViewConfig[]) => void;
+
   bindKeys?: any;
   onReload?: () => void;
 

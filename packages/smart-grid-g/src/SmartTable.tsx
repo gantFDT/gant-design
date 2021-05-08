@@ -28,6 +28,11 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
     withoutAnimation = false,
     headerProps = {},
     onViewChange,
+
+    customViews: customViewsProp,
+    lastViewKey: lastViewKeyProp,
+    onCustomViewsChange,
+
     initView,
     showDisplayConfig = false,
     prefixCls: customizePrefixCls,
@@ -46,9 +51,8 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
   const [configModalVisible, setConfigModalVisible] = useState(false);
   const [activeView, setActiveView] = useState<ViewConfig>(baseView as ViewConfig);
   const { panelConfig } = activeView;
-  const [lastViewKey, setLastViewKey] = useLocalStorage<string>(`grid-last-view-key:${originGridKey}`, baseView.viewId);
+  const [lastViewKey, setLastViewKey] = useLocalStorage<string>(`grid-last-view-key:${originGridKey}`, '');
   const [customViews, setCustomViews] = useLocalStorage<ViewConfig[]>(`grid-custom-views:${originGridKey}`, [] as ViewConfig[]);
-  const [viewList, setViewList] = useState<ViewListProps>({ systemViews, customViews: customViews || []});
 
   const apiRef: any = useRef(null)
   const managerRef: any = useRef(null)
@@ -62,22 +66,28 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
     onReady && onReady(params, manager)
   }, [onReady])
 
+  useEffect(() => {
+    setCustomViews(customViewsProp)
+  }, [customViewsProp])
+
   const handlerChangeView = useCallback(view => {
     if(view.viewId === lastViewKey) return;
     managerRef.current && managerRef.current.clearLocalStorageColumns()
     setActiveView(view);
-    setLastViewKey(view.viewId)
-  }, [originGridKey, lastViewKey]);
+    onViewChange && onViewChange(view);
+    setLastViewKey(view.viewId);
+  }, [originGridKey, lastViewKey, onViewChange]);
 
   useEffect(() => {
     let usedView;
     const [baseView] = systemViews;
+    const viewKey = lastViewKeyProp || lastViewKey;
 
     if(!originGridKey){
       usedView = initView
     }else{
       usedView = initView || [...systemViews, ...customViews].find((sV: ViewConfig) => {
-        return sV.viewId === lastViewKey;
+        return sV.viewId === viewKey;
       });
     }
 
@@ -87,8 +97,8 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
 
     setActiveView(usedView);
     setLastViewKey(usedView.viewId)
-    onViewChange && onViewChange(usedView);
-  }, [systemViews, customViews, lastViewKey]);
+    // onViewChange && onViewChange(usedView); 接口自定义视图，customViewsProp属性冲突
+  }, [systemViews, customViews, lastViewKey, lastViewKeyProp]);
 
   useEffect(() => {
     if (viewSchema) {
@@ -101,16 +111,13 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
   
   const handlerSaveViews = useCallback(
     ({ views, hideModal }) => {
+      onCustomViewsChange && onCustomViewsChange(views)
       setCustomViews(views);
-      setViewList({
-        ...viewList,
-        customViews: views,
-      });
       if (hideModal) {
         hideModal();
       }
     },
-    [viewList],
+    [],
   );
 
   const handlerSaveConfig = useCallback(
@@ -119,16 +126,16 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
       setActiveView({ ...config });
       setLastViewKey(config.viewId)
       let curViewIndex;
-      curViewIndex = viewList.customViews.findIndex(
+      curViewIndex = customViews.findIndex(
         (cV: ViewConfig) => cV.viewId === config.viewId,
       );
       if (curViewIndex > -1) {
-        viewList.customViews[curViewIndex] = config;
+        customViews[curViewIndex] = config;
       }
-      handlerSaveViews({ views: viewList.customViews });
+      handlerSaveViews({ views: customViews });
       setConfigModalVisible(false);
     },
-    [viewList],
+    [customViews],
   );
 
   // 另存视图
@@ -142,21 +149,19 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
         version: moment().format(viewVersionFormat),
         panelConfig,
       };
-      newCustomViews = viewList.customViews.map(item => {
+      newCustomViews = customViews.map(item => {
         return {
           ...item,
         };
       });
       newCustomViews.push(newView);
-      viewList.customViews = newCustomViews;
       handlerSaveViews({ views: newCustomViews });
-      setViewList(viewList);
       setActiveView(newView);
       setLastViewKey(newView.viewId)
       hideModal();
       setConfigModalVisible(false);
     },
-    [viewList],
+    [customViews],
   );
 
   const [finalColumns] = useTableConfig({
@@ -190,8 +195,8 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
         {(locale) => <ViewPicker
           viewName={activeView.name}
           viewId={activeView.viewId}
-          customViews={viewList.customViews}
-          systemViews={viewList.systemViews}
+          customViews={customViews}
+          systemViews={systemViews}
           switchActiveView={handlerChangeView}
           updateView={handlerSaveViews}
           withoutAnimation={withoutAnimation}
@@ -210,7 +215,7 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
         />}
       </Receiver>
     ),
-    [activeView, viewList, titleRef, title],
+    [activeView, customViews, systemViews, titleRef, title],
   );
 
   const HeaderRightElem: ReactNode = useMemo(()=>(
@@ -277,7 +282,8 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
         showDisplayConfig={showDisplayConfig}
         dataSource={activeView}
         gridKey={originGridKey}
-        views={viewList}
+        customViews={customViews}
+        systemViews={systemViews}
         onSaveViews={handlerSaveViews}
         onSaveAs={onViewSaveAs}
         onOk={handlerSaveConfig}

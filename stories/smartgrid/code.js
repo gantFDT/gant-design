@@ -137,6 +137,10 @@ var tableColumns1 = [
 ]
 function ConfigColumnsUse() {
   const [dynamicColumns, setDynamicColumns] = useState([])
+  const [editing, setEditing] = useState(false)
+
+  const [customViews, setCustomViews] = useState([])
+  const [laskViewKey, setLaskViewKey] = useState('')
 
   const finalSchema = useMemo(() => [
     ...tableColumns1.slice(0, 3),
@@ -158,6 +162,10 @@ function ConfigColumnsUse() {
           dynamic: true
         }
       ])
+
+      setLaskViewKey('971300163669')
+
+      setCustomViews([{"viewId":"971300163669","name":"222","version":"2021-05-08 11:27:4520","panelConfig":{"clickable":true,"footerDirection":"row","pageSize":50,"columnFields":[{"title":"姓名","fieldName":"name","checked":true},{"title":"年龄","fieldName":"age","checked":true},{"title":"住址","fieldName":"address","width":200,"checked":false},{"title":"性别","fieldName":"sex","dynamic":true,"checked":true},{"title":"身高","fieldName":"height","dynamic":true,"checked":true},{"title":"标签","fieldName":"tags","checked":false},{"title":"操作","fieldName":"action","checked":false}]}}])
     }, 250)
   }, [])
 
@@ -200,6 +208,24 @@ function ConfigColumnsUse() {
         gridKey="ConfigColumnsUse"
         schema={finalSchema}
         dataSource={dataSource1}
+        editable={editing}
+
+        customViews={customViews}
+        lastViewKey={laskViewKey}
+        onCustomViewsChange={(views) => {setCustomViews(views)}}
+        onViewChange={(view) => { setLaskViewKey(view.viewId) }}
+
+        headerRight={
+          <>
+            <Button
+              icon={editing ? "roolback" : "edit"}
+              size="small"
+              onClick={() => { if (!editing) { message.info('请单击单元格进行编辑') }; setEditing(!editing) }}
+            >
+              {editing ? "结束" : "进入"}编辑
+            </Button>
+          </>
+        }
       />
     </div>
   )
