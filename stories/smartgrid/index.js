@@ -206,10 +206,10 @@ function ConfigColumnsUse() {
         dataSource={dataSource1}
         editable={editing}
 
-        customViews={customViews}
-        lastViewKey={laskViewKey}
-        onCustomViewsChange={(views) => {setCustomViews(views)}}
-        onViewChange={(view) => { setLaskViewKey(view.viewId) }}
+        // customViews={customViews}
+        // lastViewKey={laskViewKey}
+        // onCustomViewsChange={(views) => {setCustomViews(views)}}
+        // onViewChange={(view) => { setLaskViewKey(view.viewId) }}
 
         headerRight={
           <>

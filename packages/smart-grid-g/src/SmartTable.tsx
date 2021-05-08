@@ -67,7 +67,7 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
   }, [onReady])
 
   useEffect(() => {
-    setCustomViews(customViewsProp)
+    customViewsProp && setCustomViews(customViewsProp)
   }, [customViewsProp])
 
   const handlerChangeView = useCallback(view => {
