@@ -133,6 +133,10 @@ var tableColumns1 = [
 ]
 function ConfigColumnsUse() {
   const [dynamicColumns, setDynamicColumns] = useState([])
+  const [editing, setEditing] = useState(false)
+
+  const [customViews, setCustomViews] = useState([])
+  const [laskViewKey, setLaskViewKey] = useState('')
 
   const finalSchema = useMemo(() => [
     ...tableColumns1.slice(0, 3),
@@ -154,6 +158,10 @@ function ConfigColumnsUse() {
           dynamic: true
         }
       ])
+
+      setLaskViewKey('971300163669')
+
+      setCustomViews([{"viewId":"971300163669","name":"222","version":"2021-05-08 11:27:4520","panelConfig":{"clickable":true,"footerDirection":"row","pageSize":50,"columnFields":[{"title":"姓名","fieldName":"name","checked":true},{"title":"年龄","fieldName":"age","checked":true},{"title":"住址","fieldName":"address","width":200,"checked":false},{"title":"性别","fieldName":"sex","dynamic":true,"checked":true},{"title":"身高","fieldName":"height","dynamic":true,"checked":true},{"title":"标签","fieldName":"tags","checked":false},{"title":"操作","fieldName":"action","checked":false}]}}])
     }, 250)
   }, [])
 
@@ -196,6 +204,24 @@ function ConfigColumnsUse() {
         gridKey="ConfigColumnsUse"
         schema={finalSchema}
         dataSource={dataSource1}
+        editable={editing}
+
+        // customViews={customViews}
+        // lastViewKey={laskViewKey}
+        // onCustomViewsChange={(views) => {setCustomViews(views)}}
+        // onViewChange={(view) => { setLaskViewKey(view.viewId) }}
+
+        headerRight={
+          <>
+            <Button
+              icon={editing ? "roolback" : "edit"}
+              size="small"
+              onClick={() => { if (!editing) { message.info('请单击单元格进行编辑') }; setEditing(!editing) }}
+            >
+              {editing ? "结束" : "进入"}编辑
+            </Button>
+          </>
+        }
       />
     </div>
   )
@@ -839,11 +865,11 @@ const config = {
     //   describe: '配置表格样式，包括文字是否限制折行、是否显示斑马线、是否显示列边框、分页条位置、高度策略等。<br/>此处预设 不换行 、不显示斑马线、 不显示边框、 取消点击选中行、 分页条放右边、 表格高度适应内容。',
     //   cmp: ConfigDisplayUse
     // },
-    {
-      title: '多视图动态切换用法',
-      describe: '配置多个视图配置，可以快速动态切换。',
-      cmp: MultiViewUse
-    },
+    // {
+    //   title: '多视图动态切换用法',
+    //   describe: '配置多个视图配置，可以快速动态切换。',
+    //   cmp: MultiViewUse
+    // },
     // {
     //   title: '初始视图配置用法',
     //   describe: '配置初始视图，可以记录上次视图的配置。',

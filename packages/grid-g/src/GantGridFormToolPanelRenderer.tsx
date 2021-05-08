@@ -125,8 +125,6 @@ export default function GantGridRowFormRenderer(props: GantGridRowFormRendererPr
 
   if (!drawerMode || !visible || isEmpty(clickedEvent)) return null;
 
-  console.log('---->', formData, schema, translationName);
-
   return (
     <div className="gant-grid-form-wrapper">
       <div className="gant-grid-form-header">

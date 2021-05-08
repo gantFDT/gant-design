@@ -12,7 +12,7 @@ import React, {
 } from 'react';
 import { mock, Random } from 'mockjs';
 import Grid, { GridContext } from '@grid';
-import { Button, message, Dropdown, Menu, Switch, Checkbox, Modal } from 'antd';
+import { Button, message, Dropdown, Menu, Switch, Checkbox, Modal, Icon } from 'antd';
 import { Input, InputCellPhone, DatePicker, InputNumber, EditStatus, Selector } from '@data-cell';
 import Header from '@header';
 /*! Split !*/
@@ -40,6 +40,7 @@ const basicColumns = [
     fieldName: 'name',
     title: '姓名',
     cellRenderer: 'gantGroupCellRenderer',
+   
     editConfig: {
       component: props => {
         return <Input {...props} />;
@@ -70,6 +71,7 @@ const basicColumns = [
   {
     fieldName: 'recored.address',
     title: '地址',
+
     editConfig: {
       component: props => {
         return <Input {...props} />;
@@ -286,6 +288,8 @@ const BaiscGrid = () => {
         }}
         selectedBoxWidth={500}
         drawerMode={drawerEditable}
+        defaultDrawerWidth={800}
+
         // defaultExportJsonParams={{
         //   title: '基本数据',
         // }}
@@ -322,6 +326,9 @@ const treeColumns = [
     fieldName: 'dateModified',
     minWidth: 250,
     cellRenderer: 'gantGroupCellRenderer',
+    cellRendererParams: {
+      customIcon: <Icon type="down" />,
+    },
     comparator: function(d1, d2) {
       return new Date(d1).getTime() < new Date(d2).getTime() ? -1 : 1;
     },
@@ -457,16 +464,16 @@ const config = {
     </div>
   ),
   children: [
-    {
-      title: '基础Grid',
-      describe: '基础Grid',
-      cmp: BaiscGrid,
-    },
     // {
-    //   title: '树形Grid',
-    //   describe: 'tree',
-    //   cmp: TreeGrid,
+    //   title: '基础Grid',
+    //   describe: '基础Grid',
+    //   cmp: BaiscGrid,
     // },
+    {
+      title: '树形Grid',
+      describe: 'tree',
+      cmp: TreeGrid,
+    },
   ],
 };
 
