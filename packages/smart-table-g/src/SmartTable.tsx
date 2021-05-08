@@ -289,6 +289,7 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
         )(
           <Receiver>
             {(locale) => <Table
+              expandIcon={(_prop: any) => CustomExpandIcon(_prop, isTreeTable)}
               {...restProps}
               title={
                 <div ref={titleRef}>
@@ -305,7 +306,6 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
               wrap={panelConfig.wrap}
               isZebra={panelConfig.isZebra}
               tableKey={`tableKey:${tableKey}`}
-              expandIcon={(_prop: any) => CustomExpandIcon(_prop, isTreeTable)}
               rowSelection={fakeRowSelection}
               childrenColumnName={childrenColumnName}
               footerDirection={panelConfig.footerDirection}

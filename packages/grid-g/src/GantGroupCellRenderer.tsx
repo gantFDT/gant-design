@@ -7,6 +7,7 @@ import { isEqualObj } from './gridManager/utils';
 export interface GantGroupCellRendererProps extends ICellRendererParams {
   render?: (showValue: any, data: any, rowIndex: number, params: ICellRendererParams) => any;
   showFolder?: boolean;
+  [propsname: string]: any;
 }
 
 interface GantGroupCellRendererState {
@@ -36,6 +37,7 @@ export default memo(
       valueFormatted,
       showFolder = true,
       rowIndex,
+      customIcon,
     } = props;
     const getTreeDataInfo = useCallback(
       (node: RowNode) => {
@@ -116,7 +118,7 @@ export default memo(
       if (isEqualObj(data, node.data)) return;
       const newState = getTreeDataInfo(node);
       if (isEqualObj(newState, state)) return;
-      setState(newState)
+      setState(newState);
     }
     useEffect(() => {
       if (eContracted.current) {
@@ -179,16 +181,20 @@ export default memo(
         {showFolder ? (
           hasChildren ? (
             <span className="gant-treedata-icon gant-treedata-folder">
-              <Icon type={expanded ? 'folder-open' : 'folder'} theme="filled" />
+              {customIcon ? (
+                customIcon
+              ) : (
+                <Icon type={expanded ? 'folder-open' : 'folder'} theme="filled" />
+              )}
             </span>
           ) : node.level > 0 ? (
             <span className="gant-treedata-icon gant-treedata-file">
-              <Icon type="file" theme="filled" />
+              {customIcon ? customIcon : <Icon type="file" theme="filled" />}
             </span>
           ) : (
             treeData && (
               <span className="gant-treedata-icon gant-treedata-first-file">
-                <Icon type="file" theme="filled" />
+                {customIcon ? customIcon : <Icon type="file" theme="filled" />}
               </span>
             )
           )

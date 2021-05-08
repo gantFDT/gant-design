@@ -11,7 +11,7 @@ import React, {
 } from 'react';
 import { mock, Random } from 'mockjs';
 import Grid, { GridContext } from 'grid';
-import { Button, message, Dropdown, Menu, Switch, Checkbox, Modal } from 'antd';
+import { Button, message, Dropdown, Menu, Switch, Checkbox, Modal, Icon } from 'antd';
 import { Input, InputCellPhone, DatePicker, InputNumber, EditStatus, Selector } from 'data-cell';
 import Header from 'header';
 
@@ -40,6 +40,7 @@ const basicColumns = [
     fieldName: 'name',
     title: '姓名',
     cellRenderer: 'gantGroupCellRenderer',
+   
     editConfig: {
       component: props => {
         return <Input {...props} />;
@@ -70,6 +71,7 @@ const basicColumns = [
   {
     fieldName: 'recored.address',
     title: '地址',
+
     editConfig: {
       component: props => {
         return <Input {...props} />;
@@ -287,7 +289,7 @@ const BaiscGrid = () => {
         selectedBoxWidth={500}
         drawerMode={drawerEditable}
         defaultDrawerWidth={800}
-        
+
         // defaultExportJsonParams={{
         //   title: '基本数据',
         // }}

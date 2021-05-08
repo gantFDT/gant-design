@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { notification, Icon, Button } from 'antd'
 import Modal from '@modal'
 import { ModalProps } from 'antd/lib/modal'
-import { deepCopy4JSON } from '@util'
+import { cloneDeep } from 'lodash'
 import ViewPicker from '../viewpicker'
 import SaveAsModal from './SaveAsModal'
 import UIContent from './UIContent'
@@ -10,7 +10,8 @@ import Receiver from '../locale/Receiver'
 interface ConfigModalProps extends ModalProps {
   dataSource: any
   originColumns: any
-  views: any
+  systemViews: any[]
+  customViews: any[]
   gridKey: string
   onSaveViews: (vals: any) => void
   withoutAnimation?: boolean,
@@ -26,7 +27,8 @@ function ConfigModal(props: ConfigModalProps) {
     visible,
     originColumns,
     dataSource,
-    views,
+    systemViews,
+    customViews,
     onSaveViews,
     onSaveAs,
     gridKey,
@@ -40,13 +42,13 @@ function ConfigModal(props: ConfigModalProps) {
 
   const [titleModalVisible, setTitleModalVisible] = useState(false)
 
-  const [fakeView, setFakeView] = useState(deepCopy4JSON(dataSource))
+  const [fakeView, setFakeView] = useState(cloneDeep(dataSource))
   const { panelConfig } = fakeView
 
   useEffect(() => {
-    const view = deepCopy4JSON(dataSource)
+    const view = cloneDeep(dataSource)
     visible && setFakeView(view)
-    onViewChange && onViewChange(view)
+    // onViewChange && onViewChange(view) 接口自定义视图，customViewsProp属性冲突
   }, [dataSource, visible])
 
   const handlerClose = useCallback(() => {
@@ -62,7 +64,7 @@ function ConfigModal(props: ConfigModalProps) {
   }, [fakeView])
 
   const handlerChooseView = useCallback(view => {
-    const _view = deepCopy4JSON(view)
+    const _view = cloneDeep(view)
     setFakeView(_view)
     onViewChange && onViewChange(_view)
   }, [])
@@ -113,8 +115,8 @@ function ConfigModal(props: ConfigModalProps) {
               viewName={fakeView.name}
               withoutAnimation={withoutAnimation}
               viewId={fakeView.viewId}
-              customViews={views.customViews}
-              systemViews={views.systemViews}
+              customViews={customViews}
+              systemViews={systemViews}
               switchActiveView={handlerChooseView}
               updateView={onSaveViews}
             />
@@ -163,8 +165,8 @@ function ConfigModal(props: ConfigModalProps) {
         onCancel={() => {
           setTitleModalVisible(false)
         }}
-        systemViews={views.systemViews}
-        customViews={views.customViews}
+        systemViews={systemViews}
+        customViews={customViews}
       />
     </>
   )
