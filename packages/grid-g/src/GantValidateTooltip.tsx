@@ -22,8 +22,6 @@ export default class GantValidateTooltip extends Component<any> {
     let errorMsg = get(data, `_rowError.${field}`, null);
     errorMsg = isEmptyObj(get(data, `${field}`, null)) && required ? null : errorMsg;
     const ToolTipRender = tooltipRender ? tooltipRender(params) : null;
-    console.log('----->',params)
-    console.log("---->",errorMsg,required)
     if (!ToolTipRender && !errorMsg) return null;
   
     return (

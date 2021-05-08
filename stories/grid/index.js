@@ -286,6 +286,8 @@ const BaiscGrid = () => {
         }}
         selectedBoxWidth={500}
         drawerMode={drawerEditable}
+        defaultDrawerWidth={800}
+        
         // defaultExportJsonParams={{
         //   title: '基本数据',
         // }}

@@ -125,12 +125,11 @@
     "webpackbar": "^3.2.0"
   },
   "dependencies": {
-    "-": "0.0.1",
     "@ag-grid-community/react": "24.0.0",
     "@ag-grid-enterprise/all-modules": "24.0.0",
     "@ant-design/colors": "^3.1.0",
     "@ant-design/icons": "2.1.1",
-    "@types/react": "^16.9.43",
+    "@types/react": "^16.9.52",
     "antd": "^3.22.0",
     "array-move": "^2.2.1",
     "async-validate": "^1.0.1",
