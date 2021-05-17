@@ -95,7 +95,10 @@ export const useTableConfig = (props: useTableConfigProps) => {
     if(_columnField.checked) {
       const _columnItem = columns.find(_column => _column.fieldName === _columnField.fieldName);
       if(_columnItem) {
-        fakeColumns.push(Object.assign({}, _columnItem, { width: _columnItem.width || _columnField.width || 120, fixed: _columnItem.fixed }))
+        fakeColumns.push(Object.assign({}, _columnItem, {
+          width: _columnField.width || _columnItem.width ||  120,
+          fixed: _columnField.fixed || _columnItem.fixed
+        }))
       }
     }
   }

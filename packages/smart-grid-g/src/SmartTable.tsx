@@ -132,7 +132,7 @@ function SmartTable<T>(props: SmartTableProps<T>): React.ReactElement {
       if (curViewIndex > -1) {
         customViews[curViewIndex] = config;
       }
-      handlerSaveViews({ views: customViews });
+      handlerSaveViews({ views: [...customViews] });
       setConfigModalVisible(false);
     },
     [customViews],
