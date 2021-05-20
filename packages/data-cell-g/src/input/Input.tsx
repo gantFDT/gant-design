@@ -1,11 +1,11 @@
-import React from 'react'
 import { Input as AntInput } from 'antd'
+import { InputProps } from 'antd/lib/input'
+import React from 'react'
+import { WithBasicProps } from '../compose/withbasic'
 import DataEditCell from '../data-edit-cell'
-import TextArea from './TextArea'
 import Password from './Password'
 import Search from './Search'
-import { InputProps } from 'antd/lib/input'
-import { WithBasicProps } from '../compose/withbasic';
+import TextArea from './TextArea'
 export interface GantInputProps extends InputProps, WithBasicProps {
   strict?: boolean,
   onChange?: (value: any) => void,
@@ -32,6 +32,7 @@ class Input extends React.Component<GantInputProps> {
         {
           ({ onEnter, onChange, wrapperRef: ref, ...childProps }) => {
             return <AntInput
+              autoComplete={false}
               {...childProps}
               ref={wrapperRef}
               onChange={(e: any) => this.onChange(e)}
