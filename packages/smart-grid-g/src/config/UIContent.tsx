@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import { Switch, Radio } from 'antd';
+import { Switch, Radio, Input } from 'antd';
 import BlockHeader from '@header';
 import { getType } from '@util';
 import Sortable from '../sortable';
@@ -67,19 +67,18 @@ function UIContent(props: UIContentProps) {
     [viewConfig],
   );
 
-  const hasFixed = useMemo(() => {
-    if (!viewConfig.columnFields) return false;
-    return viewConfig.columnFields.some((V: any) => {
-      if (V.lock && viewConfig.wrap) {
-        onChange({
-          ...viewConfig,
-          wrap: false,
-        });
-      }
+  /** 筛选列 start */
+  const [fieldName, setFieldName] = useState('')
 
-      return !!V.lock;
-    });
-  }, [viewConfig]);
+  const sortDataSource = useMemo(() => columnFields.map(column => ({
+    ...column,
+    display: !fieldName || ~column.title.indexOf(fieldName) ? 'block' : 'none'
+  })), [fieldName, columnFields])
+
+  const handleInput = useCallback((value) => {
+    setFieldName(value)
+  },[])
+  /** 筛选列 end */
 
   return (
     <Receiver>
@@ -101,8 +100,9 @@ function UIContent(props: UIContentProps) {
               </Radio.Button>
             </Radio.Group>
           }
+          <Input.Search size="small" placeholder="请输入关键词" onSearch={handleInput} style={{ marginBottom: 5 }} />
           {tabKey === 'field' ? (
-            <Sortable dataSource={columnFields} onChange={handlerChangeColumnKeys} />
+            <Sortable dataSource={sortDataSource} onChange={handlerChangeColumnKeys} />
           ) : (
               <>
                 {uiFields.map((K: string, I: number) => {
