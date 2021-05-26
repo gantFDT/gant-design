@@ -32,11 +32,11 @@ class Input extends React.Component<GantInputProps> {
         {
           ({ onEnter, onChange, wrapperRef: ref, ...childProps }) => {
             return <AntInput
-              autoComplete={false}
               {...childProps}
               ref={wrapperRef}
               onChange={(e: any) => this.onChange(e)}
               onPressEnter={onEnter}
+              autoComplete={'off'}
             />
           }
         }
