@@ -1,56 +1,55 @@
-import React, { useState, useCallback, useRef, useMemo, useEffect, createContext } from 'react';
-import classnames from 'classnames';
-import { AgGridReact } from '@ag-grid-community/react';
 import {
-  GridApi,
-  ColumnApi,
-  GridReadyEvent,
-  RowDataUpdatedEvent,
-  SelectionChangedEvent,
-  SuppressKeyboardEventParams,
   CellEditingStoppedEvent,
-  RowNode,
-  GetContextMenuItemsParams,
-  RowSelectedEvent,
-  ColumnVisibleEvent,
-  ColumnResizedEvent,
+  ColumnApi,
   ColumnMovedEvent,
+  ColumnResizedEvent,
+  ColumnVisibleEvent,
+  GetContextMenuItemsParams,
+  GridApi,
+  GridReadyEvent,
   RowClickedEvent,
+  RowDataUpdatedEvent,
+  RowNode,
+  RowSelectedEvent,
+  SelectionChangedEvent,
+  SuppressKeyboardEventParams
 } from '@ag-grid-community/core';
 import '@ag-grid-community/core/dist/styles/ag-grid.css';
 import '@ag-grid-community/core/dist/styles/ag-theme-balham.css';
-import { LicenseManager, AllModules } from '@ag-grid-enterprise/all-modules';
+import { AgGridReact } from '@ag-grid-community/react';
+import { AllModules, LicenseManager } from '@ag-grid-enterprise/all-modules';
 import { Spin } from 'antd';
-import { get, isEmpty, isEqual, cloneDeep, set, max, min, findIndex, uniq } from 'lodash';
-import key from './license';
-import {
-  mapColumns,
-  flattenTreeData,
-  usePagination,
-  getSizeClassName,
-  selectedMapColumns,
-  groupNodeSelectedToggle,
-  checkParentGroupSelectedStatus,
-  toFormMap,
-} from './utils';
-import { Size, GridPropsPartial, RowSelection, DataActions } from './interface';
-import SelectedGrid from './SelectedGrid';
-import GantPagination from './Pagination';
+import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
+import classnames from 'classnames';
+import { findIndex, get, isEmpty, isEqual, uniq } from 'lodash';
+import React, { createContext, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { gantGetcontextMenuItems } from './contextMenuItems';
+import CustomHeader from './CustomHeader';
 import GantGridFormToolPanelRenderer from './GantGridFormToolPanelRenderer';
 import GridManager from './gridManager';
-import { gantGetcontextMenuItems } from './contextMenuItems';
-import { getAllComponentsMaps } from './maps';
-import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
+import { DataActions, GridPropsPartial, RowSelection, Size } from './interface';
+import key from './license';
 import en from './locale/en-US';
-import './style';
 import zh from './locale/zh-CN';
-import CustomHeader from './CustomHeader';
+import { getAllComponentsMaps } from './maps';
+import GantPagination from './Pagination';
+import SelectedGrid from './SelectedGrid';
+import './style';
+import {
+  checkParentGroupSelectedStatus,
+  flattenTreeData,
+  getSizeClassName,
+  groupNodeSelectedToggle,
+  mapColumns,
+  selectedMapColumns,
+  usePagination
+} from './utils';
 
-export * from './interface';
 export { default as GantGroupCellRenderer } from './GantGroupCellRenderer';
+export { default as GantPromiseCellRender } from './GantPromiseCellRender';
+export * from './interface';
 export { setComponentsMaps, setFrameworkComponentsMaps } from './maps';
 LicenseManager.setLicenseKey(key);
-export { default as GantPromiseCellRender } from './GantPromiseCellRender';
 const langs = {
   en: en,
   'zh-cn': zh,
@@ -684,7 +683,8 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                       treeData={treeData}
                       getDataPath={getDataPath}
                       suppressScrollOnNewData
-                      tooltipShowDelay={10}
+                      tooltipShowDelay={0}
+                      tooltipMouseTrack
                       {...selection}
                       {...orignProps}
                       immutableData
