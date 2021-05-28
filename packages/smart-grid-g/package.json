@@ -1,6 +1,6 @@
 {
   "name": "smart-grid-g",
-  "version": "0.1.134",
+  "version": "0.1.135",
   "description": "gantd smart-grid-g",
   "main": "lib/index.js",
   "scripts": {},
