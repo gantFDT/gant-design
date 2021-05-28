@@ -40,7 +40,7 @@ const basicColumns = [
     fieldName: 'name',
     title: '姓名',
     cellRenderer: 'gantGroupCellRenderer',
-   
+
     editConfig: {
       component: props => {
         return <Input {...props} />;
@@ -289,7 +289,7 @@ const BaiscGrid = () => {
         selectedBoxWidth={500}
         drawerMode={drawerEditable}
         defaultDrawerWidth={800}
-
+        customDrawerContent={() => <div>自定义</div>}
         // defaultExportJsonParams={{
         //   title: '基本数据',
         // }}
@@ -464,16 +464,16 @@ const config = {
     </div>
   ),
   children: [
-    // {
-    //   title: '基础Grid',
-    //   describe: '基础Grid',
-    //   cmp: BaiscGrid,
-    // },
     {
-      title: '树形Grid',
-      describe: 'tree',
-      cmp: TreeGrid,
+      title: '基础Grid',
+      describe: '基础Grid',
+      cmp: BaiscGrid,
     },
+    // {
+    //   title: '树形Grid',
+    //   describe: 'tree',
+    //   cmp: TreeGrid,
+    // },
   ],
 };
 

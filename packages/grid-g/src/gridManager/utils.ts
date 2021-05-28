@@ -9,6 +9,7 @@ import {
   min,
   isPlainObject,
   filter,
+  isNull,
 } from 'lodash';
 import { DataActions, CreateConfig } from '../interface';
 import { generateUuid } from '@util';
@@ -65,6 +66,7 @@ export function removeTagData(removeNodes: RowNode[], rowData: any[], getRowNode
 }
 
 export const isEmptyObj = value => {
+  if (typeof value === 'boolean') return false;
   if (typeof value === 'number') return false;
   if (typeof value === 'object') return isEmpty(value);
   return !value;
@@ -75,6 +77,8 @@ export const isEqualObj = (obj, obj2) => {
     if (isEmptyObj(obj) && isEmptyObj(obj2)) return true;
     return isEqual(obj, obj2);
   }
+  if (isNull(obj) && isNull(obj2)) return true;
+  if (isNull(obj) || isNull(obj2)) return false;
   const newObj = { ...obj, ...obj2 };
   for (let i in newObj) {
     let value1 = get(obj, i),

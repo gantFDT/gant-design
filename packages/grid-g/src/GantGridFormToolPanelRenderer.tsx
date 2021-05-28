@@ -16,6 +16,7 @@ interface GantGridRowFormRendererProps {
   closeDrawer: () => void;
   onCellEditChange?: (record: any, fieldName: string, newValue: any, oldValue: any) => any;
   onCellEditingChange?: (record: any, fieldName: string, newValue: any, oldValue: any) => any;
+  customDrawerContent?: (params: any) => any;
 }
 
 export default function GantGridRowFormRenderer(props: GantGridRowFormRendererProps) {
@@ -30,6 +31,7 @@ export default function GantGridRowFormRenderer(props: GantGridRowFormRendererPr
     closeDrawer,
     onCellEditChange,
     onCellEditingChange,
+    customDrawerContent,
   } = props;
   const [ediable, setEditable] = useState(false);
   const [formWidth, setFormWidth] = useState(defaultDrawerWidth);
@@ -37,8 +39,8 @@ export default function GantGridRowFormRenderer(props: GantGridRowFormRendererPr
   const [data, setData] = useState({});
   const startPositionRef = useRef(0);
   const formRef = useRef<any>();
-
   const mouseDownRef = useRef(false);
+
   const { schema, customFields, valueMap, translationName } = useMemo(() => {
     if (!drawerMode || isEmpty(clickedEvent))
       return { schema: {}, customFields: {}, valueMap: {}, translationName: [] };
@@ -51,6 +53,7 @@ export default function GantGridRowFormRenderer(props: GantGridRowFormRendererPr
     mouseDownRef.current = true;
     startPositionRef.current = event.clientX;
   }, []);
+
   useEffect(() => {
     !visible && setEditable(false);
   }, [visible]);
@@ -126,42 +129,47 @@ export default function GantGridRowFormRenderer(props: GantGridRowFormRendererPr
   if (!drawerMode || !visible || isEmpty(clickedEvent)) return null;
 
   return (
-    <div className="gant-grid-form-wrapper">
-      <div className="gant-grid-form-header">
-        <Tooltip title="关闭窗口">
-          <span onClick={closeDrawer} style={{ padding: '0px 10px', cursor: 'pointer' }}>
-            <Icon type="close" />
-          </span>
-        </Tooltip>
+    <div className="gant-grid-form-wrapper" style={{ width }}>
+      <div className="gant-grid-form-cursor" onMouseDown={onMouseDown}></div>
+      {customDrawerContent ? (
+        customDrawerContent({ formWidth, columns, clickedEvent })
+      ) : (
+        <>
+          <div className="gant-grid-form-header">
+            <Tooltip title="关闭窗口">
+              <span onClick={closeDrawer} style={{ padding: '0px 10px', cursor: 'pointer' }}>
+                <Icon type="close" />
+              </span>
+            </Tooltip>
 
-        {!ediable ? (
-          <Tooltip title="编辑">
-            <div style={{ cursor: 'pointer' }} onClick={() => setEditable(true)}>
-              <Icon type="edit" />
-            </div>
-          </Tooltip>
-        ) : (
-          <Tooltip title="取消编辑">
-            <div style={{ cursor: 'pointer' }} onClick={() => setEditable(false)}>
-              <Icon type="poweroff" />
-            </div>
-          </Tooltip>
-        )}
-      </div>
-      <div className="gant-grid-form" style={{ width }}>
-        <div className="gant-grid-form-cursor" onMouseDown={onMouseDown}></div>
-
-        <SchemaForm
-          schema={schema}
-          uiSchema={uiSchema}
-          onChange={onChange}
-          customFields={customFields}
-          data={formData}
-          key={clickedEvent.rowIndex}
-          ref={formRef}
-          editable={ediable}
-        />
-      </div>
+            {!ediable ? (
+              <Tooltip title="编辑">
+                <div style={{ cursor: 'pointer' }} onClick={() => setEditable(true)}>
+                  <Icon type="edit" />
+                </div>
+              </Tooltip>
+            ) : (
+              <Tooltip title="取消编辑">
+                <div style={{ cursor: 'pointer' }} onClick={() => setEditable(false)}>
+                  <Icon type="poweroff" />
+                </div>
+              </Tooltip>
+            )}
+          </div>
+          <div className="gant-grid-form">
+            <SchemaForm
+              schema={schema}
+              uiSchema={uiSchema}
+              onChange={onChange}
+              customFields={customFields}
+              data={formData}
+              key={clickedEvent.rowIndex}
+              ref={formRef}
+              editable={ediable}
+            />
+          </div>
+        </>
+      )}
     </div>
   );
 }
