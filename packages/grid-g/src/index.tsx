@@ -9,9 +9,13 @@ import {
   GridReadyEvent,
   RowClickedEvent,
   RowDataUpdatedEvent,
-  RowNode,
+
+
+
+  RowDoubleClickedEvent, RowNode,
   RowSelectedEvent,
   SelectionChangedEvent,
+
   SuppressKeyboardEventParams
 } from '@ag-grid-community/core';
 import '@ag-grid-community/core/dist/styles/ag-grid.css';
@@ -153,6 +157,9 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     defaultDrawerWidth,
     selectedBoxHeight,
     selectedBoxWidth = 240,
+    onRowDoubleClicked,
+    customDrawerContent,
+    visibleDrawer: propVisibleDrawer,
     ...orignProps
   } = props;
   const apiRef = useRef<GridApi>();
@@ -161,7 +168,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   const columnsRef = useRef<ColumnApi>();
   const selectedRowsRef = useRef<string[]>([]);
   const selectedLoadingRef = useRef<boolean>(false);
-  const [visibleDarwer, setVisibleDarwer] = useState(false);
+  const [visibleDrawer, setVisibleDrawer] = useState(false);
   const [clickedEvent, setClickedEvent] = useState<RowClickedEvent>();
   const [innerSelectedRows, setInnerSelectedRows] = useState([]);
   const [ready, setReady] = useState(false);
@@ -184,6 +191,13 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     },
     [orignGetDataPath],
   );
+
+  useEffect(() => {
+    if (typeof visibleDrawer === 'boolean') {
+      setVisibleDrawer(visibleDrawer);
+    }
+  }, [visibleDrawer]);
+
   // 判断数据分别处理 treeTable 和普通table
   const dataSource = useMemo(() => {
     if (treeData && isCompute)
@@ -325,12 +339,21 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   const handleRowClicked = useCallback(
     (event: RowClickedEvent) => {
       if (drawerMode) {
-        setVisibleDarwer(true);
+        setVisibleDrawer(true);
         setClickedEvent(event);
       }
       onRowClicked && onRowClicked(event);
     },
     [onRowClicked, drawerMode],
+  );
+
+  const handleRowDoubleClicked = useCallback(
+    (event: RowDoubleClickedEvent) => {
+      if (onRowDoubleClicked) onRowDoubleClicked(event);
+      const { node } = event;
+      if (node.childrenAfterGroup.length > 0) node.setExpanded(!node.expanded);
+    },
+    [onRowDoubleClicked],
   );
 
   const onRowSelected = useCallback(
@@ -612,7 +635,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                   'gant-grid',
                   `gant-grid-${getSizeClassName(size)}`,
                   openEditSign && `gant-grid-edit`,
-                  (editable || (drawerMode && visibleDarwer)) && 'gant-grid-editable',
+                  (editable || (drawerMode && visibleDrawer)) && 'gant-grid-editable',
                 )}
               >
                 <div
@@ -699,12 +722,13 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                         filter,
                         minWidth: 30,
                         tooltipValueGetter: (params: any) => params,
-                        tooltipComponent: 'gantValidateTooltip',
+                        tooltipComponent: 'gantTooltip',
                         headerComponentParams: {
                           ColumnLabelComponent,
                         },
                         ...defaultColDef,
                       }}
+                      onRowDoubleClicked={handleRowDoubleClicked}
                       groupSelectsChildren={treeData ? false : groupSelectsChildren}
                       enableCellTextSelection
                       ensureDomOrder
@@ -732,11 +756,12 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     drawerMode={drawerMode}
                     context={context}
                     gridManager={gridManager}
-                    visible={visibleDarwer}
-                    closeDrawer={() => setVisibleDarwer(false)}
+                    visible={visibleDrawer}
+                    closeDrawer={() => setVisibleDrawer(false)}
                     onCellEditChange={onCellEditChange}
                     onCellEditingChange={onCellEditingChange}
                     defaultDrawerWidth={defaultDrawerWidth}
+                    customDrawerContent={customDrawerContent}
                   />
                 </div>
                 {computedPagination && <GantPagination {...computedPagination} />}

@@ -1,13 +1,13 @@
-import RenderCol from './GirdRenderColumn';
-import GantGroupCellRenderer, { GantGroupCellRendererProps } from './GantGroupCellRenderer';
-import GantValidateTooltip from './GantValidateTooltip';
-import GantPinnedRowRenderer from './GantPinnedRowRenderer';
 import GantGridFormToolPanelRenderer from './GantGridFormToolPanelRenderer';
+import GantGroupCellRenderer from './GantGroupCellRenderer';
+import GantPinnedRowRenderer from './GantPinnedRowRenderer';
+import GantTooltip from './GantTooltip';
+import RenderCol from './GirdRenderColumn';
 let componentsMaps = {};
 let frameworkComponentsMaps = {
   gantGroupCellRenderer: GantGroupCellRenderer,
   gantRenderCol: RenderCol,
-  gantValidateTooltip: GantValidateTooltip,
+  gantTooltip: GantTooltip,
   gantPinnedRowRenderer:GantPinnedRowRenderer,
   gantGridFormToolPanelRenderer:GantGridFormToolPanelRenderer
 };

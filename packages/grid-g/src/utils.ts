@@ -44,7 +44,7 @@ const defaultCheckboxColSelectionCol: ColDef = {
   suppressMenu: true,
   lockPosition: true,
   lockVisible: true,
-  filter:false,
+  filter: false,
   cellStyle: {
     padding: '0px 3px',
   },
@@ -61,7 +61,7 @@ const serialNumberCol: ColDef = {
   lockPosition: true,
   lockVisible: true,
   field: 'g-index',
-  filter:false,
+  filter: false,
   cellClassRules: {
     'gant-grid-cell-serial-add': params => {
       const {
@@ -187,7 +187,7 @@ export const toFormMap = <T>(columns: Columns<T>[], params: any) => {
         allowEdit: ColEditableFn(editable)(params),
       },
       options: {
-        rules: Array.isArray(rules) ? rules : [rules],
+        rules: rules ? (Array.isArray(rules) ? rules : [rules]) : undefined,
         getValueFromEvent: changeFormatter,
         valuePropName: valuePropName ? valuePropName : 'value',
       },
