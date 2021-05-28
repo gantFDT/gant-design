@@ -41,6 +41,7 @@ function ConfigModal(props: ConfigModalProps) {
   } = props
 
   const [titleModalVisible, setTitleModalVisible] = useState(false)
+  const [modalHeight, setModalHeight] = useState(0)
 
   const [fakeView, setFakeView] = useState(cloneDeep(dataSource))
   const { panelConfig } = fakeView
@@ -68,6 +69,10 @@ function ConfigModal(props: ConfigModalProps) {
     setFakeView(_view)
     onViewChange && onViewChange(_view)
   }, [])
+
+  const handleModalSizeChange = useCallback((width, height) => {
+    setModalHeight(height)
+  },[])
 
   const isSystem = useMemo(() => fakeView.viewId && fakeView.viewId.includes('sys'), [fakeView])
 
@@ -97,7 +102,7 @@ function ConfigModal(props: ConfigModalProps) {
         panelConfig: config,
       }
       setFakeView(_view)
-      onViewChange && onViewChange(_view)
+      // onViewChange && onViewChange(_view)
     },
     [fakeView],
   )
@@ -124,6 +129,7 @@ function ConfigModal(props: ConfigModalProps) {
         }
         visible={visible}
         onCancel={handlerClose}
+        onSizeChange={handleModalSizeChange}
         destroyOnClose
         isModalDialog
         footer={
@@ -157,7 +163,7 @@ function ConfigModal(props: ConfigModalProps) {
         }
         {...restProps}
       >
-        <UIContent viewConfig={fakeView.panelConfig} gridKey={gridKey} showDisplayConfig={showDisplayConfig} onChange={handlerChangeConfig} />
+        <UIContent height={modalHeight} viewConfig={fakeView.panelConfig} gridKey={gridKey} showDisplayConfig={showDisplayConfig} onChange={handlerChangeConfig} />
       </Modal>
       <SaveAsModal
         visible={titleModalVisible}
@@ -172,4 +178,4 @@ function ConfigModal(props: ConfigModalProps) {
   )
 }
 
-export default ConfigModal
+export default React.memo(ConfigModal)

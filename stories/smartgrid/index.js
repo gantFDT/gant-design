@@ -140,6 +140,10 @@ function ConfigColumnsUse() {
 
   const finalSchema = useMemo(() => [
     ...tableColumns1.slice(0, 3),
+    ...Array.from({length: 90}, (_, idx) => ({
+      title: '字段' + idx,
+      fieldName: 'field' + idx,
+    })),
     ...dynamicColumns,
     ...tableColumns1.slice(3)
   ],[tableColumns1, dynamicColumns])

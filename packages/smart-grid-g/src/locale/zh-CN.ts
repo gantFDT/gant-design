@@ -46,4 +46,5 @@ export default {
     setFixedRightColumn: '固定在右边',
     checkAll: '全选',
     align: '对齐方式',
+    inputKeyword: '请输入关键词',
 }
