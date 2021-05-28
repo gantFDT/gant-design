@@ -46,4 +46,5 @@ export default {
     setFixedRightColumn: 'Fix to right',
     checkAll: 'Check All',
     align: 'Align',
+    inputKeyword: 'Please input keyword',
 }
