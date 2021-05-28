@@ -2,7 +2,7 @@ import classnames from 'classnames';
 import { get, isEmpty } from 'lodash';
 import React, { forwardRef, useEffect, useImperativeHandle } from 'react';
 
-const cellPadding = 11;
+const cellPadding = 15;
 
 const isEmptyObj = value => {
   if (typeof value === 'number') return false;

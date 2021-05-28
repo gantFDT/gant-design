@@ -9,10 +9,13 @@ import {
   GridReadyEvent,
   RowClickedEvent,
   RowDataUpdatedEvent,
-  RowNode,
+
+
+
+  RowDoubleClickedEvent, RowNode,
   RowSelectedEvent,
   SelectionChangedEvent,
-  RowDoubleClickedEvent,
+
   SuppressKeyboardEventParams
 } from '@ag-grid-community/core';
 import '@ag-grid-community/core/dist/styles/ag-grid.css';
@@ -719,7 +722,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                         filter,
                         minWidth: 30,
                         tooltipValueGetter: (params: any) => params,
-                        tooltipComponent: 'gantValidateTooltip',
+                        tooltipComponent: 'gantTooltip',
                         headerComponentParams: {
                           ColumnLabelComponent,
                         },
