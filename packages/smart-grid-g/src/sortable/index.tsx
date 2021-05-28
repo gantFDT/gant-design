@@ -18,16 +18,18 @@ interface RecordProps {
   checked: boolean;
   clickable?: boolean;
   dynamic?: boolean;
+  display?: string;
   fixed?: 'left' | 'right';
 }
 
 interface SortableProps {
   dataSource: RecordProps[];
   onChange: (records: RecordProps[]) => void;
+  height?: number;
 }
 
 function Sortable(props: SortableProps) {
-  const { dataSource, onChange } = props;
+  const { dataSource, onChange, height } = props;
 
   if (!dataSource || !dataSource.length) return null;
 
@@ -59,7 +61,7 @@ function Sortable(props: SortableProps) {
     onChange(dataSource);
   }, [dataSource]);
 
-  const DragHandler = SortableHandle(() => <Icon className="dragHandler" type="icon-drag" />);
+  const DragHandler = useMemo(() => SortableHandle(() => <Icon className="dragHandler" type="icon-drag" />), []);
 
   const SortableItem = SortableElement(
     ({ dataItem: { title, checked, fixed }, dataIdx}: any) => (
@@ -107,7 +109,7 @@ function Sortable(props: SortableProps) {
       <div className="sortableList">
         {
           dataSource.map((dataItem, dataIdx) => (
-            dataItem.dynamic ? null :
+            dataItem.dynamic || dataItem.display === 'none' ? null :
             <SortableItem
               key={dataItem.fieldName}
               index={dataIdx}
@@ -163,7 +165,7 @@ function Sortable(props: SortableProps) {
           </div>
           <div style={{ flexGrow: 0, width: 56 }}></div>
         </Row>
-        <div>
+        <div style={{height: height - 142, overflowY: 'auto', border: '1px solid var(--border-color-split)'}}>
           <SortableList
             onSortEnd={handlerSortEnd}
             axis="y"
@@ -176,4 +178,4 @@ function Sortable(props: SortableProps) {
   );
 }
 
-export default Sortable;
+export default React.memo(Sortable);

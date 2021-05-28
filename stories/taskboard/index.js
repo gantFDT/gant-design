@@ -57,6 +57,7 @@ function BasicUse() {
             {hideAddBtn ? '显示' : '隐藏'}-快速新增按钮
         </Button>
         <TaskBoard
+            style={{height:1500}}
             dataSource={data}
             hideQuickAdd={hideAddBtn}
             handleAddBtn={(column) => {
