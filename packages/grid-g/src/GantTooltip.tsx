@@ -59,6 +59,7 @@ export default forwardRef((props: any, ref) => {
               width: 'fit-content',
               position: 'fixed',
               opacity: 0,
+              whiteSpace: 'pre',
             }}
           >
             {render}
