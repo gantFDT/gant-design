@@ -1,8 +1,8 @@
 import classnames from 'classnames';
 import { get, isEmpty } from 'lodash';
-import React, { forwardRef, useEffect, useImperativeHandle } from 'react';
-
-const cellPadding = 15;
+import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import ReactDOM from 'react-dom';
+const cellPadding = 22;
 
 const isEmptyObj = value => {
   if (typeof value === 'number') return false;
@@ -18,19 +18,16 @@ export default forwardRef((props: any, ref) => {
     rowIndex,
     colDef: { tooltip, tooltipRender, field },
   } = props;
+
+  const containerRef = useRef<any>(null);
+  const [showTip, setTipShow] = useState(false);
   const { value, valueFormatted, data, required } = _value;
   const actualColumnWidth = column.actualWidth;
 
+  //获取render内容
+  const renderFn = get(props, 'colDef.cellRendererParams.render');
   let overflowText = valueFormatted ? valueFormatted : value;
-
-  //临时div用于获取渲染宽度
-  var tempDiv = document.createElement('tempDiv');
-  tempDiv.innerHTML = overflowText;
-  tempDiv.style.width = 'fit-content';
-  tempDiv.style.position = 'fixed';
-  tempDiv.style.opacity = '0';
-  document.body.appendChild(tempDiv);
-  const strWidth = tempDiv.clientWidth;
+  const render = renderFn ? renderFn(value, data, rowIndex, props) : overflowText;
 
   useImperativeHandle(ref, () => {
     return {
@@ -41,26 +38,45 @@ export default forwardRef((props: any, ref) => {
   });
 
   useEffect(() => {
-    return () => {
-      document.body.removeChild(tempDiv);
-    };
+    const width = containerRef.current.clientWidth;
+    if (width + cellPadding > actualColumnWidth) {
+      setTipShow(true);
+    }
   }, []);
-
-  if (strWidth + cellPadding < actualColumnWidth) {
-    overflowText = null;
-  }
 
   let errorMsg = get(data, `_rowError.${field}`, null);
   errorMsg = isEmptyObj(get(data, `${field}`, null)) && required ? null : errorMsg;
   const ToolTipRender = tooltipRender ? tooltipRender(_value) : null;
 
-  if (overflowText || ToolTipRender || errorMsg) {
+  if (!showTip) {
+    return (
+      <>
+        {ReactDOM.createPortal(
+          <div
+            id="tempDiv"
+            ref={containerRef}
+            style={{
+              width: 'fit-content',
+              position: 'fixed',
+              opacity: 0,
+              whiteSpace: 'pre',
+            }}
+          >
+            {render}
+          </div>,
+          document.body,
+        )}
+      </>
+    );
+  }
+
+  if (render || ToolTipRender || errorMsg) {
     return (
       <div className="gant-cell-tooltip">
         <div
           className={classnames('gant-cell-tooltip-content', errorMsg && 'gant-cell-tooltip-error')}
         >
-          {overflowText && overflowText}
+          {showTip && <>{render}</>}
           {ToolTipRender && <div>{ToolTipRender}</div>}
           {errorMsg && <div className="gant-cell-tooltip-errorMsg">{errorMsg}</div>}
         </div>

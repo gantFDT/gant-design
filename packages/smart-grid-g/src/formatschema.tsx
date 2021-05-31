@@ -115,6 +115,7 @@ export default function formatSchema<R>(schema: SchemaProp<R> | CustomColumnProp
           panelConfig: {
             columnFields: schema.map(column => ({
               fieldName: column.fieldName,
+              hide: column.hide,
               width: column.width,
               fixed: column.fixed,
             })),

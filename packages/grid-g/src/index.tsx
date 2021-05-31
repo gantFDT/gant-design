@@ -193,10 +193,10 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   );
 
   useEffect(() => {
-    if (typeof visibleDrawer === 'boolean') {
-      setVisibleDrawer(visibleDrawer);
+    if (typeof propVisibleDrawer === 'boolean') {
+      setVisibleDrawer(propVisibleDrawer);
     }
-  }, [visibleDrawer]);
+  }, [propVisibleDrawer]);
 
   // 判断数据分别处理 treeTable 和普通table
   const dataSource = useMemo(() => {
