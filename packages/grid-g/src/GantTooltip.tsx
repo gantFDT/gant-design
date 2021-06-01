@@ -38,9 +38,11 @@ export default forwardRef((props: any, ref) => {
   });
 
   useEffect(() => {
-    const width = containerRef.current.clientWidth;
-    if (width + cellPadding > actualColumnWidth) {
-      setTipShow(true);
+    const width = get(containerRef.current, 'clientWidth');
+    if (width) {
+      if (width + cellPadding > actualColumnWidth) {
+        setTipShow(true);
+      }
     }
   }, []);
 
@@ -48,7 +50,7 @@ export default forwardRef((props: any, ref) => {
   errorMsg = isEmptyObj(get(data, `${field}`, null)) && required ? null : errorMsg;
   const ToolTipRender = tooltipRender ? tooltipRender(_value) : null;
 
-  if (!showTip) {
+  if (!showTip && !ToolTipRender && !errorMsg) {
     return (
       <>
         {ReactDOM.createPortal(

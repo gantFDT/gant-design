@@ -1,14 +1,14 @@
-import React, { useMemo, useContext, useCallback, useEffect, Fragment } from 'react';
-import classnames from 'classnames';
 import { EditStatus, Input } from '@data-cell';
-import { FormContext } from './index';
-import { Form, Col, Popover } from 'antd';
+import { Col, Form } from 'antd';
 import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
+import classnames from 'classnames';
+import { findIndex, get } from 'lodash';
+import React, { useCallback, useContext, useEffect, useMemo } from 'react';
+import { FormContext } from './index';
 import { Schema } from './interface';
-import { get, findIndex } from 'lodash';
-import { getFields } from './maps';
 import en from './locale/en-US';
 import zh from './locale/zh-CN';
+import { getFields } from './maps';
 import { getFieldItemSizeClass } from './utils';
 
 const langs = {
@@ -33,8 +33,6 @@ const SchemaField = (props: SchemaField) => {
     uiData,
   } = props;
 
-  
-
   const {
     form: { getFieldDecorator, resetFields, validateFieldsAndScroll },
     onSave,
@@ -44,7 +42,7 @@ const SchemaField = (props: SchemaField) => {
     defalutProps,
     collectInitialValue,
     hideTitle,
-    frameworkComponents
+    frameworkComponents,
   } = useContext(FormContext);
 
   const { LabelComponent } = frameworkComponents;
@@ -99,6 +97,7 @@ const SchemaField = (props: SchemaField) => {
     //   emitDependenciesChange(name as string, initialValue);
     // }
   }, []);
+  const requiredFinally = typeof required === 'boolean' ? required : isRequired;
   return (
     <Col {...colLayout}>
       <LocaleReceiver>
@@ -110,7 +109,11 @@ const SchemaField = (props: SchemaField) => {
                 // hideTitle ? <>{title}</> : title
                 LabelComponent ? <LabelComponent title={title} /> : title
               }
-              className={classnames(className, getFieldItemSizeClass(renderFieldProps.size))}
+              className={classnames(
+                className,
+                getFieldItemSizeClass(renderFieldProps.size),
+                requiredFinally ? 'field-required' : '',
+              )}
               style={style}
               wrapperCol={wrapperColayout}
               labelAlign={labelAlign}
@@ -123,7 +126,7 @@ const SchemaField = (props: SchemaField) => {
                   initialValue,
                   rules: [
                     {
-                      required: typeof required === 'boolean' ? required : isRequired,
+                      required: requiredFinally,
                       message: `${title}${locale.required}`,
                     },
                     ...optionsRules,
