@@ -24,10 +24,16 @@ export default forwardRef((props: any, ref) => {
   const { value, valueFormatted, data, required } = _value;
   const actualColumnWidth = column.actualWidth;
 
-  //获取render内容
-  const renderFn = get(props, 'colDef.cellRendererParams.render');
-  let overflowText = valueFormatted ? valueFormatted : value;
-  const render = renderFn ? renderFn(value, data, rowIndex, props) : overflowText;
+  //获取要显示的内容内容
+  let renderOverflow = value;
+  const valueFormatter = get(props,'colDef.valueFormatter')
+  const render = get(props, 'colDef.cellRendererParams.render');
+  if(valueFormatter){
+    renderOverflow = valueFormatted
+  }
+  if(render){
+    renderOverflow = render(value, data, rowIndex, props)
+  }
 
   useImperativeHandle(ref, () => {
     return {
@@ -64,7 +70,7 @@ export default forwardRef((props: any, ref) => {
               whiteSpace: 'pre',
             }}
           >
-            {render}
+            {renderOverflow}
           </div>,
           document.body,
         )}
@@ -72,13 +78,13 @@ export default forwardRef((props: any, ref) => {
     );
   }
 
-  if (render || ToolTipRender || errorMsg) {
+  if (renderOverflow || ToolTipRender || errorMsg) {
     return (
       <div className="gant-cell-tooltip">
         <div
           className={classnames('gant-cell-tooltip-content', errorMsg && 'gant-cell-tooltip-error')}
         >
-          {showTip && <>{render}</>}
+          {showTip && <>{renderOverflow}</>}
           {ToolTipRender && <div>{ToolTipRender}</div>}
           {errorMsg && <div className="gant-cell-tooltip-errorMsg">{errorMsg}</div>}
         </div>
