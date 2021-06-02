@@ -70,7 +70,7 @@ export default forwardRef((props: any, ref) => {
               whiteSpace: 'pre',
             }}
           >
-            {renderOverflow}
+            {renderOverflow && renderOverflow}
           </div>,
           document.body,
         )}
@@ -84,7 +84,7 @@ export default forwardRef((props: any, ref) => {
         <div
           className={classnames('gant-cell-tooltip-content', errorMsg && 'gant-cell-tooltip-error')}
         >
-          {showTip && <>{renderOverflow}</>}
+          {showTip && renderOverflow && <>{renderOverflow}</>}
           {ToolTipRender && <div>{ToolTipRender}</div>}
           {errorMsg && <div className="gant-cell-tooltip-errorMsg">{errorMsg}</div>}
         </div>
