@@ -1,20 +1,17 @@
-import CodeDecorator from '../_util/CodeDecorator';
-import codes from './code';
+import { Input } from '@data-cell';
+import Grid from '@grid';
+import Header from '@header';
+import { Button, Icon, Modal } from 'antd';
+import { Random } from 'mockjs';
 /*! Start !*/
 import React, {
-  useMemo,
-  useEffect,
-  useCallback,
-  useState,
-  useRef,
-  Fragment,
-  useContext,
+  Fragment, useCallback, useEffect,
+
+
+  useRef, useState
 } from 'react';
-import { mock, Random } from 'mockjs';
-import Grid, { GridContext } from '@grid';
-import { Button, message, Dropdown, Menu, Switch, Checkbox, Modal, Icon } from 'antd';
-import { Input, InputCellPhone, DatePicker, InputNumber, EditStatus, Selector } from '@data-cell';
-import Header from '@header';
+import CodeDecorator from '../_util/CodeDecorator';
+import codes from './code';
 /*! Split !*/
 const RandomCreate = () => ({
   ip: Random.ip(),
@@ -71,7 +68,6 @@ const basicColumns = [
   {
     fieldName: 'recored.address',
     title: '地址',
-
     editConfig: {
       component: props => {
         return <Input {...props} />;
