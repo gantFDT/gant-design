@@ -202,6 +202,7 @@ export interface Props<T extends any> {
   onCellChanged?: (record: any, fieldName: string, newValue: any, oldValue: any) => void;
   openEditSign?: boolean;
   createConfig?: CreateConfig;
+  hideMenuItemExport?: boolean;
   showCut?: ((params: GetContextMenuItemsParams) => boolean) | boolean;
   onRowsCut?: (rows: RowNode[]) => boolean;
   onRowsPaste?: (rows: RowNode[], targetRow?: RowNode) => boolean;
