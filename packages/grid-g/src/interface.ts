@@ -202,6 +202,7 @@ export interface Props<T extends any> {
   onCellChanged?: (record: any, fieldName: string, newValue: any, oldValue: any) => void;
   openEditSign?: boolean;
   createConfig?: CreateConfig;
+  hideMenuItemExport?: boolean;
   showCut?: ((params: GetContextMenuItemsParams) => boolean) | boolean;
   onRowsCut?: (rows: RowNode[]) => boolean;
   onRowsPaste?: (rows: RowNode[], targetRow?: RowNode) => boolean;
@@ -213,7 +214,7 @@ export interface Props<T extends any> {
   drawerMode?: boolean;
   defaultDrawerWidth?: number;
   customDrawerContent?: (params: any) => any;
-  visibleDrawer?: boolean;
+  visibleDrawer?: undefined;
   onContextChangeRender?: (
     context: any,
     diffKeys: string[],

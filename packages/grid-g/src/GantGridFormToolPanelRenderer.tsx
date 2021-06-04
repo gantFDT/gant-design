@@ -126,7 +126,7 @@ export default function GantGridRowFormRenderer(props: GantGridRowFormRendererPr
     return newData;
   }, [data, valueMap, clickedEvent, translationName, schema]);
 
-  if (!drawerMode || !visible || isEmpty(clickedEvent)) return null;
+  if (!drawerMode || !visible) return null;
 
   return (
     <div className="gant-grid-form-wrapper" style={{ width }}>
@@ -163,7 +163,7 @@ export default function GantGridRowFormRenderer(props: GantGridRowFormRendererPr
               onChange={onChange}
               customFields={customFields}
               data={formData}
-              key={clickedEvent.rowIndex}
+              key={get(clickedEvent,'rowIndex',-1)}
               ref={formRef}
               editable={ediable}
             />

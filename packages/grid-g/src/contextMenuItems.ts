@@ -10,8 +10,8 @@ interface ContextMenuItemsConfig {
   getContextMenuItems?: any;
   getDefalutContextMenuItems?: () => any[];
   defaultJsonParams?: DefaultJsonParams;
+  hideMenuItemExport?: boolean;
 }
-
 
 export const gantGetcontextMenuItems = function(
   params: GetContextMenuItemsParams,
@@ -24,6 +24,7 @@ export const gantGetcontextMenuItems = function(
     onRowsPaste,
     getContextMenuItems,
     defaultJsonParams = {},
+    hideMenuItemExport,
   } = config;
   const {
     context: { globalEditable, treeData, createConfig, getRowNodeId, gridManager, showCut },
@@ -82,6 +83,7 @@ export const gantGetcontextMenuItems = function(
     : items.length > 0
     ? [...items, 'separator', 'export']
     : ['export'];
+  if (hideMenuItemExport) defultMenu.pop();
   defultMenu = exportJson
     ? [
         ...defultMenu,

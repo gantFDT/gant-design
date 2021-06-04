@@ -75,7 +75,7 @@ export const findDependencies = (
                     if (changeKeys.includes(deKey)) return get(changedValueObject, deKey)
                     return form.getFieldValue(deKey)
                 })
-                const mergeSchema = onDependenciesChange(dependenciesValues, cloneDeep(restSchema), { setFieldsValue })
+                const mergeSchema = onDependenciesChange(dependenciesValues, cloneDeep(restSchema), { ...form, setFieldsValue })
                 changedSchema.push(
                     Promise.resolve(mergeSchema).then(
                         newSubSchema => ({ key: schemaKey, schema: { ...subSchema, ...newSubSchema } })

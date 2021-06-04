@@ -9,14 +9,11 @@ import {
   GridReadyEvent,
   RowClickedEvent,
   RowDataUpdatedEvent,
-
-
-
-  RowDoubleClickedEvent, RowNode,
+  RowDoubleClickedEvent,
+  RowNode,
   RowSelectedEvent,
   SelectionChangedEvent,
-
-  SuppressKeyboardEventParams
+  SuppressKeyboardEventParams,
 } from '@ag-grid-community/core';
 import '@ag-grid-community/core/dist/styles/ag-grid.css';
 import '@ag-grid-community/core/dist/styles/ag-theme-balham.css';
@@ -46,7 +43,7 @@ import {
   groupNodeSelectedToggle,
   mapColumns,
   selectedMapColumns,
-  usePagination
+  usePagination,
 } from './utils';
 
 export { default as GantGroupCellRenderer } from './GantGroupCellRenderer';
@@ -160,6 +157,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     onRowDoubleClicked,
     customDrawerContent,
     visibleDrawer: propVisibleDrawer,
+    hideMenuItemExport,
     ...orignProps
   } = props;
   const apiRef = useRef<GridApi>();
@@ -339,12 +337,12 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   const handleRowClicked = useCallback(
     (event: RowClickedEvent) => {
       if (drawerMode) {
-        setVisibleDrawer(true);
+        if (typeof propVisibleDrawer !== 'boolean') setVisibleDrawer(true);
         setClickedEvent(event);
       }
       onRowClicked && onRowClicked(event);
     },
-    [onRowClicked, drawerMode],
+    [onRowClicked, drawerMode, propVisibleDrawer],
   );
 
   const handleRowDoubleClicked = useCallback(
@@ -614,6 +612,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
             locale,
             getContextMenuItems,
             defaultJsonParams,
+            hideMenuItemExport,
           });
         };
         return (
@@ -757,7 +756,9 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     context={context}
                     gridManager={gridManager}
                     visible={visibleDrawer}
-                    closeDrawer={() => setVisibleDrawer(false)}
+                    closeDrawer={() =>
+                      typeof propVisibleDrawer !== 'boolean' && setVisibleDrawer(false)
+                    }
                     onCellEditChange={onCellEditChange}
                     onCellEditingChange={onCellEditingChange}
                     defaultDrawerWidth={defaultDrawerWidth}
