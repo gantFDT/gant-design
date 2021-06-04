@@ -213,7 +213,7 @@ export interface Props<T extends any> {
   drawerMode?: boolean;
   defaultDrawerWidth?: number;
   customDrawerContent?: (params: any) => any;
-  visibleDrawer?: boolean;
+  visibleDrawer?: undefined;
   onContextChangeRender?: (
     context: any,
     diffKeys: string[],
