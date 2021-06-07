@@ -215,6 +215,7 @@ export interface Props<T extends any> {
   defaultDrawerWidth?: number;
   customDrawerContent?: (params: any) => any;
   visibleDrawer?: undefined;
+  doubleClickedExpanded?: boolean;
   onContextChangeRender?: (
     context: any,
     diffKeys: string[],
