@@ -155,6 +155,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     selectedBoxHeight,
     selectedBoxWidth = 240,
     onRowDoubleClicked,
+    doubleClickedExpanded,
     customDrawerContent,
     visibleDrawer: propVisibleDrawer,
     hideMenuItemExport,
@@ -348,10 +349,11 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   const handleRowDoubleClicked = useCallback(
     (event: RowDoubleClickedEvent) => {
       if (onRowDoubleClicked) onRowDoubleClicked(event);
+      if(!doubleClickedExpanded) return
       const { node } = event;
       if (node.childrenAfterGroup.length > 0) node.setExpanded(!node.expanded);
     },
-    [onRowDoubleClicked],
+    [onRowDoubleClicked,doubleClickedExpanded],
   );
 
   const onRowSelected = useCallback(
