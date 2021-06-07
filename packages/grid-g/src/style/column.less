@@ -57,14 +57,20 @@
   .gant-grid-editable {
     .gant-grid-cell {
       &-edit {
-        &::after {
-          border-color: #1890ff transparent transparent #1890ff;
-        }
+        // &::before {
+        //   border-color: #1890ff transparent transparent #1890ff;
+        // }
+        background-image:linear-gradient(to top left, transparent 0%, transparent 49.9%, blue 50%,blue 100%);
+        background-size:6px 6px;
+        background-repeat: no-repeat;
       }
       &-modify {
-        &::after {
-          border-color: #ff4d4f transparent transparent #ff4d4f;
-        }
+        background-image:linear-gradient(to top left, transparent 0%, transparent 49.9%, red 50%,red 100%);
+        background-size:6px 6px;
+        background-repeat: no-repeat;
+        // &::before {
+        //   border-color: #ff4d4f transparent transparent #ff4d4f;
+        // }
       }
       // &-add {
       //   &::after {
@@ -72,9 +78,12 @@
       //   }
       // }
       &-delete {
-        &::after {
-          border-color: #faad14 transparent transparent #faad14;
-        }
+        background-image:linear-gradient(to top left, transparent 0%, transparent 49.9%, orange 50%,orange 100%);
+        background-size:6px 6px;
+        background-repeat: no-repeat;
+        // &::after {
+        //   border-color: #faad14 transparent transparent #faad14;
+        // }
       }
     }
   }
@@ -154,18 +163,20 @@
         }
       }
     }
-    &::after {
-      content: '';
-      display: block;
-      width: 0;
-      height: 0;
-      // border-width: 4px;
-      // border-color： transparent;
-      // border-style: solid;
-      border: 3px solid transparent;
-      position: absolute;
-      left: 0px;
-      top: 0px;
-    }
+    // &::before {
+    //   content: '';
+    //   display: block;
+    //   width: 0;
+    //   height: 0;
+    //   // border-width: 4px;
+    //   // border-color： transparent;
+    //   // border-style: solid;
+    //   border: 3px solid transparent;
+    //   position: absolute;
+    //   left: 0px;
+    //   top: 0px;
+    // }
+
   }
+
   
