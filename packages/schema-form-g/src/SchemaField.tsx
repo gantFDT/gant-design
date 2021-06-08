@@ -127,7 +127,7 @@ const SchemaField = (props: SchemaField) => {
                   rules: [
                     {
                       required: requiredFinally,
-                      message: `${title}${locale.required}`,
+                      message: <>{title}{locale.required}</>,
                     },
                     ...optionsRules,
                   ],
