@@ -34,7 +34,7 @@ function Sortable(props: SortableProps) {
 
   if (!dataSource || !dataSource.length) return null;
 
-  const [ leftSpinIdx, rightSpinIdx ] = useMemo(() => {
+  const [ leftSpinIdx, rightSpinIdx, hiddenCount ] = useMemo(() => {
     return dataSource.reduce((total, dataItem, dataIdx) => {
       if(dataItem.fixed === 'left') {
         total[0] = dataIdx;
@@ -42,8 +42,11 @@ function Sortable(props: SortableProps) {
       if(dataItem.fixed === 'right' && total[1] === -1) {
         total[1] = dataIdx;
       }
+      if(dataItem.dynamic || dataItem.hide || dataItem.display === 'none') {
+        total[2]++;
+      }
       return total;
-    }, [-1, -1])
+    }, [-1, -1, 0])
   }, [dataSource])
 
   const handlerLock = useCallback((index, fixed) => {
@@ -125,11 +128,17 @@ function Sortable(props: SortableProps) {
 
   // 选择
   const selectedRows = useMemo(() => dataSource.filter(dataItem => dataItem.checked), [dataSource]);
-  const indeterminate = useMemo(() => !!selectedRows.length && selectedRows.length < dataSource.length, [selectedRows, dataSource]);
+  const indeterminate = useMemo(() => !!selectedRows.length && selectedRows.length > hiddenCount && selectedRows.length < dataSource.length, [selectedRows, dataSource, hiddenCount]);
   const checkedAll = useMemo(() => !!selectedRows.length && selectedRows.length === dataSource.length, [selectedRows, dataSource]);
 
   const onCheckAllChange = useCallback(({target: { checked }}) => {
-    dataSource.forEach(dataItem => { dataItem.checked = !!checked });
+    dataSource.forEach(dataItem => {
+      if (dataItem.dynamic || dataItem.display === 'none' || dataItem.hide) {
+        dataItem.checked = true
+      } else {
+        dataItem.checked = !!checked
+      }
+    });
     onChange(dataSource);
   }, [dataSource]);
 
@@ -162,7 +171,7 @@ function Sortable(props: SortableProps) {
             />
           </div>
           <div style={{ flexGrow: 1 }}>
-            {locale.checkAll}（{`${selectedRows.length}/${dataSource.length}`}）
+            {locale.checkAll}（{`${selectedRows.length - hiddenCount}/${dataSource.length - hiddenCount}`}）
           </div>
           <div style={{ flexGrow: 0, width: 56 }}></div>
         </Row>

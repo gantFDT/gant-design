@@ -24,7 +24,6 @@ export interface CustomColumnProps<R> extends Columns<R> {
 export interface ColumnConfig {
   fieldName: string;
   checked?: boolean;
-  lock?: boolean;
   fixed?: 'left' | 'right';
   width?: number | string;
   hidden?: boolean;
