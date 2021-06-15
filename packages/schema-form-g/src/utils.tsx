@@ -1,12 +1,13 @@
-import { UISchema, TitleSchema, Schema, Types } from './interface'
-import { EditStatus } from '@data-cell'
+import { EditStatus } from '@data-cell';
 import { get, isNil } from 'lodash';
+import { Schema, TitleSchema, UISchema } from './interface';
 interface UIArrayItem {
 	alias: string,
 	belong: "field" | "form" | string[],
 	name: string | string[],
 	defaultValue?: any
 }
+
 const uiArray = [
 	{
 		alias: "className",
