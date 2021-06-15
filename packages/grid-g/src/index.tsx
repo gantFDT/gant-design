@@ -159,6 +159,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     customDrawerContent,
     visibleDrawer: propVisibleDrawer,
     hideMenuItemExport,
+    hideMenuItemExpand,
     ...orignProps
   } = props;
   const apiRef = useRef<GridApi>();
@@ -615,6 +616,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
             getContextMenuItems,
             defaultJsonParams,
             hideMenuItemExport,
+            hideMenuItemExpand,
           });
         };
         return (

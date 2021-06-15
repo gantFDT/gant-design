@@ -11,6 +11,7 @@ interface ContextMenuItemsConfig {
   getDefalutContextMenuItems?: () => any[];
   defaultJsonParams?: DefaultJsonParams;
   hideMenuItemExport?: boolean;
+  hideMenuItemExpand?: boolean;
 }
 
 export const gantGetcontextMenuItems = function(
@@ -25,6 +26,7 @@ export const gantGetcontextMenuItems = function(
     getContextMenuItems,
     defaultJsonParams = {},
     hideMenuItemExport,
+    hideMenuItemExpand,
   } = config;
   const {
     context: { globalEditable, treeData, createConfig, getRowNodeId, gridManager, showCut },
@@ -78,12 +80,18 @@ export const gantGetcontextMenuItems = function(
         ...params,
       } as any)
     : [];
-  let defultMenu = treeData
-    ? ['expandAll', 'contractAll', ...items, 'separator', 'export']
-    : items.length > 0
-    ? [...items, 'separator', 'export']
-    : ['export'];
-  if (hideMenuItemExport) defultMenu.pop();
+
+  let defultMenu =
+    treeData && !hideMenuItemExpand
+      ? ['expandAll', 'contractAll', ...items, 'separator', 'export']
+      : items.length > 0
+      ? hideMenuItemExport
+        ? [...items, 'separator', 'export']
+        : [...items]
+      : hideMenuItemExport
+      ? ['export']
+      : [];
+
   defultMenu = exportJson
     ? [
         ...defultMenu,
