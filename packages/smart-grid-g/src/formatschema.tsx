@@ -95,7 +95,7 @@ export const formatColumnFields = (columnFields, originColumns) => {
   const __hiddenFields = [];
   for (const _column of originColumns) {
     if(__filterdFields.every(__filterdField => __filterdField.fieldName !== _column.fieldName)) {
-      __hiddenFields.push(Object.assign({}, _column, { checked: _column.dynamic || false }))
+      __hiddenFields.push(Object.assign({}, _column, { checked: _column.dynamic || _column.hide || false }))
     }
   }
 
@@ -145,8 +145,7 @@ export default function formatSchema<R>(schema: SchemaProp<R> | CustomColumnProp
   // 默认的列配置数据
   const columnConfigs: ColumnConfig[] = columns.map(C => ({
     ...C,
-    checked: true,
-    lock: false,
+    checked: true
   }));
 
   // 匹配系统视图

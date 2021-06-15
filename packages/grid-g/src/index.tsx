@@ -13,7 +13,7 @@ import {
   RowNode,
   RowSelectedEvent,
   SelectionChangedEvent,
-  SuppressKeyboardEventParams,
+  SuppressKeyboardEventParams
 } from '@ag-grid-community/core';
 import '@ag-grid-community/core/dist/styles/ag-grid.css';
 import '@ag-grid-community/core/dist/styles/ag-theme-balham.css';
@@ -43,7 +43,7 @@ import {
   groupNodeSelectedToggle,
   mapColumns,
   selectedMapColumns,
-  usePagination,
+  usePagination
 } from './utils';
 
 export { default as GantGroupCellRenderer } from './GantGroupCellRenderer';
@@ -705,6 +705,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                         groupSelectsChildren,
                         ...context,
                       }}
+                      suppressCsvExport
                       stopEditingWhenGridLosesFocus={false}
                       treeData={treeData}
                       getDataPath={getDataPath}
