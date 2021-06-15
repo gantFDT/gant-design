@@ -203,6 +203,7 @@ export interface Props<T extends any> {
   openEditSign?: boolean;
   createConfig?: CreateConfig;
   hideMenuItemExport?: boolean;
+  hideMenuItemExpand?: boolean;
   showCut?: ((params: GetContextMenuItemsParams) => boolean) | boolean;
   onRowsCut?: (rows: RowNode[]) => boolean;
   onRowsPaste?: (rows: RowNode[], targetRow?: RowNode) => boolean;
