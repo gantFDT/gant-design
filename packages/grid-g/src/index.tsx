@@ -174,6 +174,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   const gridVariableRef = useRef<GridVariableRef>({
     hasSelectedRows: typeof rowSel !== 'boolean' && Reflect.has(rowSel, 'selectedRows'),
     hideSelectedBox,
+    selectedRows: [],
   });
   const [innerSelectedRows, setInnerSelectedRows] = useState([]);
   const [ready, setReady] = useState(false);
@@ -308,7 +309,9 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       propsOnSelectionChanged && propsOnSelectionChanged(event);
       if (gridVariableRef.current?.hasSelectedRows) {
         const rows = event.api.getSelectedRows();
-        const { extraRows, currentRows } = getSelectedRows(gridVariableRef.current.selectedRows);
+        const { extraRows, currentRows } = getSelectedRows(
+          get(gridVariableRef.current, 'selectedRows', []),
+        );
         if (isEqual(currentRows, rows)) return;
         const selectedRows = [...extraRows, ...rows];
         return (
