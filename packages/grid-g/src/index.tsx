@@ -13,7 +13,7 @@ import {
   RowNode,
   RowSelectedEvent,
   SelectionChangedEvent,
-  SuppressKeyboardEventParams
+  SuppressKeyboardEventParams,
 } from '@ag-grid-community/core';
 import '@ag-grid-community/core/dist/styles/ag-grid.css';
 import '@ag-grid-community/core/dist/styles/ag-theme-balham.css';
@@ -28,7 +28,7 @@ import { gantGetcontextMenuItems } from './contextMenuItems';
 import CustomHeader from './CustomHeader';
 import GantGridFormToolPanelRenderer from './GantGridFormToolPanelRenderer';
 import GridManager from './gridManager';
-import { DataActions, GridPropsPartial, RowSelection, Size } from './interface';
+import { DataActions, GridPropsPartial, RowSelection, Size, GridVariableRef } from './interface';
 import key from './license';
 import en from './locale/en-US';
 import zh from './locale/zh-CN';
@@ -43,13 +43,14 @@ import {
   groupNodeSelectedToggle,
   mapColumns,
   selectedMapColumns,
-  usePagination
+  usePagination,
 } from './utils';
 
 export { default as GantGroupCellRenderer } from './GantGroupCellRenderer';
 export { default as GantPromiseCellRender } from './GantPromiseCellRender';
 export * from './interface';
 export { setComponentsMaps, setFrameworkComponentsMaps } from './maps';
+import { contextHooks, selectedHooks } from './hooks';
 LicenseManager.setLicenseKey(key);
 const langs = {
   en: en,
@@ -138,7 +139,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     editChangeCallback,
     isRowSelectable,
     boxColumnIndex,
-    hideSelcetedBox,
+    hideSelectedBox,
     suppressKeyboardEvent,
     onSelectionChanged: propsOnSelectionChanged,
     onRowSelected: propsOnRowSelected,
@@ -166,10 +167,14 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   const shiftRef = useRef<boolean>(false);
   const selectedChanged = useRef<boolean>(false);
   const columnsRef = useRef<ColumnApi>();
-  const selectedRowsRef = useRef<string[]>([]);
   const selectedLoadingRef = useRef<boolean>(false);
   const [visibleDrawer, setVisibleDrawer] = useState(false);
   const [clickedEvent, setClickedEvent] = useState<RowClickedEvent>();
+
+  const gridVariableRef = useRef<GridVariableRef>({
+    hasSelectedRows: typeof rowSel !== 'boolean' && Reflect.has(rowSel, 'selectedRows'),
+    hideSelectedBox,
+  });
   const [innerSelectedRows, setInnerSelectedRows] = useState([]);
   const [ready, setReady] = useState(false);
   //自定义列头文字
@@ -223,7 +228,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     ...selection
   } = gantSelection;
   /**fix: 解决保存时候标记状态无法清楚的问题 */
-
   // 分页事件
   const computedPagination: any = useMemo(() => usePagination(pagination), [pagination]);
   // 初始注册配置信息；
@@ -262,79 +266,75 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   const { componentsMaps, frameworkComponentsMaps } = useMemo(() => {
     return getAllComponentsMaps();
   }, []);
-  // 处理selection- 双向绑定selectKeys
-  // 根据数据显示选中行；
-  const garidShowSelectedRows = useCallback(
-    selectedRows => {
-      const gridSelectedRows = apiRef.current.getSelectedRows();
-      const gridSelcetedKeys = gridSelectedRows.map((item = {}) => getRowNodeId(item));
-      const selectedKeys: string[] = selectedRows.map((item = {}) => getRowNodeId(item));
-      if (selectedKeys.length === 0) apiRef.current.deselectAll();
-      const allKeys = uniq([...gridSelcetedKeys, ...selectedKeys]);
-      if (rowSelection === 'single') {
-        const [key] = selectedKeys;
-        const singleNode = apiRef.current.getRowNode(key);
-        singleNode && singleNode.setSelected(true, true);
-        return;
-      }
-      allKeys.map(id => {
-        const nodeItem = apiRef.current.getRowNode(id);
-        if (!nodeItem) return;
-        if (selectedKeys.indexOf(id) >= 0) nodeItem.setSelected(true);
-        else nodeItem.setSelected(false);
+  // 获取selected 数据
+  const getSelectedRows = useCallback(selectedRows => {
+    const dataSource = gridManager.getRowData();
+    const currentRows: string[] = [];
+    const extraRows: any[] = [];
+    selectedRows.map(itemRow => {
+      const index = findIndex(dataSource, function(itemData) {
+        return getRowNodeId(itemData) === getRowNodeId(itemRow);
       });
-    },
-    [rowSelection],
-  );
-  const onSelectionChange = useCallback(
-    (keys: string[], rows: any[]) => {
-      const extraKeys: string[] = [];
-      const extraRows: any[] = [];
-      selectedRowsRef.current.map(itemRow => {
-        const index = findIndex(dataSource, function(itemData) {
-          return getRowNodeId(itemData) === getRowNodeId(itemRow);
-        });
-        if (
-          index < 0 &&
-          !apiRef.current.getRowNode(getRowNodeId(itemRow)) &&
-          get(itemRow, '_rowType') !== DataActions.add
-        ) {
-          extraKeys.push(getRowNodeId(itemRow));
-          extraRows.push(itemRow);
-        }
-      });
-      const newSelectedKeys = [...extraKeys, ...keys];
-      const newSelectedRows = [...extraRows, ...rows];
-      selectedRowsRef.current = newSelectedRows;
-      if (selectedRows === undefined) {
-        setInnerSelectedRows(newSelectedRows);
+      if (
+        index < 0 &&
+        !apiRef.current.getRowNode(getRowNodeId(itemRow)) &&
+        get(itemRow, '_rowType') !== DataActions.add
+      )
+        extraRows.push(itemRow);
+      else {
+        currentRows.push(itemRow);
       }
-      onSelect && onSelect(newSelectedKeys, newSelectedRows);
-    },
-    [onSelect, dataSource, selectedRows],
-  );
+    });
+    return { extraRows, currentRows };
+  }, []);
   const onBoxSelectionChanged = useCallback(
     (keys, rows) => {
-      garidShowSelectedRows(rows);
-      if (selectedRows === undefined) {
-        setInnerSelectedRows(rows);
-        selectedRowsRef.current = rows;
+      if (!gridVariableRef.current.hasSelectedRows) {
+        const nodes = apiRef.current?.getSelectedNodes();
+        const innerSelectedRows: any[] = [];
+        nodes.map(node => {
+          const nodeId = getRowNodeId(get(node, 'data'));
+          if (keys.indexOf(nodeId) < 0) return node.setSelected(false);
+          innerSelectedRows.push(get(node, 'data'));
+        });
+        setInnerSelectedRows(innerSelectedRows);
       }
       onSelect && onSelect(keys, rows);
     },
-    [selectedRows, garidShowSelectedRows, groupSelectsChildren],
+    [onSelect],
   );
   const onSelectionChanged = useCallback(
     (event: SelectionChangedEvent) => {
-      const rows = event.api.getSelectedRows();
-      if (selectedChanged.current && isEqual(selectedRows, rows)) return;
-      if (isEqual(rows, selectedRowsRef.current)) return;
-      const keys = rows.map(item => getRowNodeId(item));
-      onSelectionChange(keys, rows);
       propsOnSelectionChanged && propsOnSelectionChanged(event);
+      if (gridVariableRef.current?.hasSelectedRows) {
+        const rows = event.api.getSelectedRows();
+        const { extraRows, currentRows } = getSelectedRows(gridVariableRef.current.selectedRows);
+        if (isEqual(currentRows, rows)) return;
+        const selectedRows = [...extraRows, ...rows];
+        return (
+          onSelect &&
+          onSelect(
+            selectedRows.map(item => getRowNodeId(item)),
+            selectedRows,
+          )
+        );
+      }
+      if (gridVariableRef.current?.hideSelectedBox) return;
+      const rows = event.api.getSelectedRows();
+      gridVariableRef.current.selectedRows = rows;
+      setInnerSelectedRows(rows);
     },
-    [onSelectionChange, propsOnSelectionChanged, selectedRows],
+    [getSelectedRows, propsOnSelectionChanged],
   );
+  selectedHooks({
+    gridVariable: gridVariableRef.current,
+    ready,
+    apiRef,
+    dataSource,
+    getRowNodeId,
+    selectedRows,
+    isSingle: rowSelection === 'single',
+  });
 
   const handleRowClicked = useCallback(
     (event: RowClickedEvent) => {
@@ -350,11 +350,11 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   const handleRowDoubleClicked = useCallback(
     (event: RowDoubleClickedEvent) => {
       if (onRowDoubleClicked) onRowDoubleClicked(event);
-      if(!doubleClickedExpanded) return
+      if (!doubleClickedExpanded) return;
       const { node } = event;
       if (node.childrenAfterGroup.length > 0) node.setExpanded(!node.expanded);
     },
-    [onRowDoubleClicked,doubleClickedExpanded],
+    [onRowDoubleClicked, doubleClickedExpanded],
   );
 
   const onRowSelected = useCallback(
@@ -385,23 +385,10 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     },
     [propsOnRowSelected],
   );
-  useEffect(() => {
-    if (!apiRef.current) return;
-    selectedChanged.current = true;
-    if (selectedRows && dataSource.length > 0) {
-      garidShowSelectedRows(selectedRows);
-      if (!isEqual(selectedRows, selectedRowsRef.current)) {
-        selectedRowsRef.current = selectedRows;
-      }
-    }
-    setTimeout(() => {
-      selectedChanged.current = false;
-    }, 300);
-  }, [selectedRows, dataSource, garidShowSelectedRows, ready]);
   const boxSelectedRows = useMemo(() => {
-    if (selectedRows) return selectedRows;
+    if (gridVariableRef.current.hasSelectedRows) return selectedRows;
     return innerSelectedRows;
-  }, [selectedRows, innerSelectedRows]);
+  }, [innerSelectedRows, selectedRows]);
   // 处理selection-end
   //columns
   const defaultSelection = !isEmpty(gantSelection) && showDefalutCheckbox;
@@ -529,31 +516,10 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     onCellChanged,
     selectedRows,
   ]);
-  const [cancheContext, setCancheContext] = useState(context);
-  useEffect(() => {
-    setCancheContext(cancheContext => {
-      const newContext = { ...cancheContext, ...context };
-      const diffKeys: string[] = [];
-      Object.keys(newContext).map(key => {
-        if (!isEqual(cancheContext[key], context[key])) diffKeys.push(key);
-      });
-      if (diffKeys.length === 0) return cancheContext;
-      const params = onContextChangeRender && onContextChangeRender(context, diffKeys);
-      if (!params) return context;
-      const { columns, nodeIds = [] } = params;
-      let rowNodes = null;
-      if (nodeIds && nodeIds.length > 0)
-        rowNodes = nodeIds.map(id => {
-          return apiRef.current?.getRowNode(id);
-        });
-      apiRef.current?.refreshCells({
-        columns,
-        rowNodes,
-        force: true,
-      });
-      return context;
-    });
-  }, [context]);
+
+  // 监听context变换并更新
+  contextHooks(context, apiRef, onContextChangeRender);
+
   const exportParams = useMemo(() => {
     return {
       columnKeys: exportColumns,
@@ -563,8 +529,8 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     };
   }, [defaultExportParams, exportColumns]);
   const hideBox = useMemo(() => {
-    return hideSelcetedBox || rowSelection !== 'multiple';
-  }, [hideSelcetedBox, rowSelection]);
+    return hideSelectedBox || rowSelection !== 'multiple';
+  }, [hideSelectedBox, rowSelection]);
   //编辑结束
   const onCellEditingStopped = useCallback((params: CellEditingStoppedEvent) => {
     const tipDoms = document.querySelectorAll('.gant-cell-tooltip.ag-tooltip-custom');
