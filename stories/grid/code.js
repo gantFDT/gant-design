@@ -256,12 +256,7 @@ const BaiscGrid = () => {
         dataSource={dataSource}
         serialNumber
         boxColumnIndex={['name', 'county', 'age']}
-        rowSelection={{
-          type: 'multiple',
-          // selectedKeys,
-          selectedRows,
-          onSelect,
-        }}
+        // rowSelection={}
         gridKey="grid-test-2"
         hideSelectedBox
         rowBuffer={1}

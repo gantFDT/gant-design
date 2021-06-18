@@ -13,7 +13,7 @@ import {
   RowNode,
   RowSelectedEvent,
   SelectionChangedEvent,
-  SuppressKeyboardEventParams
+  SuppressKeyboardEventParams,
 } from '@ag-grid-community/core';
 import '@ag-grid-community/core/dist/styles/ag-grid.css';
 import '@ag-grid-community/core/dist/styles/ag-theme-balham.css';
@@ -22,7 +22,7 @@ import { AllModules, LicenseManager } from '@ag-grid-enterprise/all-modules';
 import { Spin } from 'antd';
 import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
 import classnames from 'classnames';
-import { findIndex, get, isEmpty, isEqual } from 'lodash';
+import { findIndex, get, isEmpty, isEqual, isObject } from 'lodash';
 import React, { createContext, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { gantGetcontextMenuItems } from './contextMenuItems';
 import CustomHeader from './CustomHeader';
@@ -44,7 +44,7 @@ import {
   groupNodeSelectedToggle,
   mapColumns,
   selectedMapColumns,
-  usePagination
+  usePagination,
 } from './utils';
 
 export { default as GantGroupCellRenderer } from './GantGroupCellRenderer';
@@ -163,7 +163,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     visibleDrawer: propVisibleDrawer,
     hideMenuItemExport,
     hideMenuItemExpand,
-    excelStyles=[],
+    excelStyles = [],
     ...orignProps
   } = props;
   const apiRef = useRef<GridApi>();
@@ -175,7 +175,8 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   const [clickedEvent, setClickedEvent] = useState<RowClickedEvent>();
 
   const gridVariableRef = useRef<GridVariableRef>({
-    hasSelectedRows: typeof rowSel !== 'boolean' && Reflect.has(rowSel, 'selectedRows'),
+    hasSelectedRows:
+      typeof rowSel !== 'boolean' && isObject(rowSel) && Reflect.has(rowSel, 'selectedRows'),
     hideSelectedBox: hideSelcetedBox || hideSelectedBox,
     selectedRows: [],
   });
@@ -685,7 +686,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                       tooltipShowDelay={0}
                       tooltipMouseTrack
                       {...selection}
-                      excelStyles={[{ id: 'stringType', dataType: 'string' }, ...excelStyles ]}
+                      excelStyles={[{ id: 'stringType', dataType: 'string' }, ...excelStyles]}
                       {...orignProps}
                       immutableData
                       columnDefs={localColumnsDefs}
