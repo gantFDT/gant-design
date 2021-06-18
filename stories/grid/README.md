@@ -27,6 +27,10 @@
 | sortable | 否 | boolean | true | 默认单列排序 |
 | width | 否 | string 或 number | "100%" | grid 宽度 |
 | height | 否 | string 或 number | 400 | grid 宽度 |
+| hideMenuItemExport | 否 | boolean | false | 隐藏右键导出 |
+| hideMenuItemExpand | 否 | boolean | false | 隐藏右键展开 |
+| hideSelectedBox | 否 | boolean | false | 隐藏 selectedBox|
+
 
 更多属性参考 [ag-grid](https://www.ag-grid.com/documentation-main/documentation.php)
 
