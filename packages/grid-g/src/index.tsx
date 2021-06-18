@@ -140,6 +140,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     isRowSelectable,
     boxColumnIndex,
     hideSelectedBox,
+    hideSelcetedBox,
     suppressKeyboardEvent,
     onSelectionChanged: propsOnSelectionChanged,
     onRowSelected: propsOnRowSelected,
@@ -173,7 +174,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
 
   const gridVariableRef = useRef<GridVariableRef>({
     hasSelectedRows: typeof rowSel !== 'boolean' && Reflect.has(rowSel, 'selectedRows'),
-    hideSelectedBox,
+    hideSelectedBox: hideSelcetedBox || hideSelectedBox,
     selectedRows: [],
   });
   const [innerSelectedRows, setInnerSelectedRows] = useState([]);
@@ -532,8 +533,8 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     };
   }, [defaultExportParams, exportColumns]);
   const hideBox = useMemo(() => {
-    return hideSelectedBox || rowSelection !== 'multiple';
-  }, [hideSelectedBox, rowSelection]);
+    return hideSelectedBox || rowSelection !== 'multiple' || hideSelcetedBox;
+  }, [hideSelectedBox, rowSelection, hideSelcetedBox]);
   //编辑结束
   const onCellEditingStopped = useCallback((params: CellEditingStoppedEvent) => {
     const tipDoms = document.querySelectorAll('.gant-cell-tooltip.ag-tooltip-custom');

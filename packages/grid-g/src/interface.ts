@@ -209,6 +209,7 @@ export interface Props<T extends any> {
   onRowsPaste?: (rows: RowNode[], targetRow?: RowNode) => boolean;
   onRowsPasteEnd?: (data: any) => void;
   hideSelectedBox?: boolean;
+  hideSelcetedBox?: boolean;
   selectedBoxHeight?: number;
   selectedBoxWidth?: number;
   editChangeCallback?: (isChanged: boolean) => void;
