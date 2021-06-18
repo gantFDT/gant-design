@@ -190,7 +190,7 @@ const BaiscGrid = () => {
       if (errors) return;
       gridManagerRef.current.save(() => {
         const dataSource = getPureData();
-        setDataSource(dataSource);
+        // setDataSource(dataSource);
         setEditable(false);
         return dataSource;
       });
@@ -261,7 +261,7 @@ const BaiscGrid = () => {
         boxColumnIndex={['name', 'county', 'age']}
         rowSelection={{
           type: 'multiple',
-          selectedKeys,
+          // selectedKeys,
           selectedRows,
           onSelect,
         }}
