@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'react';
 import { GridVariableRef } from './interface';
-import { isEqual, uniq } from 'lodash';
+import { isEqual, uniq, map } from 'lodash';
 interface selectedHooksParams {
   dataSource?: any[];
   selectedRows?: any[];
@@ -41,13 +41,10 @@ export function selectedHooks(params: selectedHooksParams) {
     isSingle,
   } = params;
   useEffect(() => {
-    if (
-      !gridVariable.hasSelectedRows ||
-      !ready ||
-      isEqual(selectedRows, gridVariable.selectedRows) ||
-      dataSource.length <= 0
-    )
-      return;
+    if (!gridVariable.hasSelectedRows || !ready || !apiRef.current) return;
+    const selectedKeys = map(selectedRows, (item: any) => getRowNodeId(item));
+    const gridKeys = map(apiRef.current?.getSelectedRows(), (item: any) => getRowNodeId(item));
+    if (isEqual(gridKeys, selectedKeys) || dataSource.length <= 0) return;
     gridVariable.selectedRows = selectedRows;
     garidShowSelectedRows(selectedRows, apiRef, getRowNodeId, isSingle);
   }, [dataSource, ready, selectedRows]);
