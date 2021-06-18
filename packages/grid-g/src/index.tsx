@@ -13,7 +13,7 @@ import {
   RowNode,
   RowSelectedEvent,
   SelectionChangedEvent,
-  SuppressKeyboardEventParams,
+  SuppressKeyboardEventParams
 } from '@ag-grid-community/core';
 import '@ag-grid-community/core/dist/styles/ag-grid.css';
 import '@ag-grid-community/core/dist/styles/ag-theme-balham.css';
@@ -22,13 +22,14 @@ import { AllModules, LicenseManager } from '@ag-grid-enterprise/all-modules';
 import { Spin } from 'antd';
 import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
 import classnames from 'classnames';
-import { findIndex, get, isEmpty, isEqual, uniq } from 'lodash';
+import { findIndex, get, isEmpty, isEqual } from 'lodash';
 import React, { createContext, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { gantGetcontextMenuItems } from './contextMenuItems';
 import CustomHeader from './CustomHeader';
 import GantGridFormToolPanelRenderer from './GantGridFormToolPanelRenderer';
 import GridManager from './gridManager';
-import { DataActions, GridPropsPartial, RowSelection, Size, GridVariableRef } from './interface';
+import { contextHooks, selectedHooks } from './hooks';
+import { DataActions, GridPropsPartial, GridVariableRef, RowSelection, Size } from './interface';
 import key from './license';
 import en from './locale/en-US';
 import zh from './locale/zh-CN';
@@ -43,14 +44,13 @@ import {
   groupNodeSelectedToggle,
   mapColumns,
   selectedMapColumns,
-  usePagination,
+  usePagination
 } from './utils';
 
 export { default as GantGroupCellRenderer } from './GantGroupCellRenderer';
 export { default as GantPromiseCellRender } from './GantPromiseCellRender';
 export * from './interface';
 export { setComponentsMaps, setFrameworkComponentsMaps } from './maps';
-import { contextHooks, selectedHooks } from './hooks';
 LicenseManager.setLicenseKey(key);
 const langs = {
   en: en,
@@ -162,6 +162,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     visibleDrawer: propVisibleDrawer,
     hideMenuItemExport,
     hideMenuItemExpand,
+    excelStyles=[],
     ...orignProps
   } = props;
   const apiRef = useRef<GridApi>();
@@ -683,6 +684,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                       tooltipShowDelay={0}
                       tooltipMouseTrack
                       {...selection}
+                      excelStyles={[{ id: 'stringType', dataType: 'string' }, ...excelStyles ]}
                       {...orignProps}
                       immutableData
                       columnDefs={localColumnsDefs}
