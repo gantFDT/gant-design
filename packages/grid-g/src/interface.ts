@@ -208,6 +208,7 @@ export interface Props<T extends any> {
   onRowsCut?: (rows: RowNode[]) => boolean;
   onRowsPaste?: (rows: RowNode[], targetRow?: RowNode) => boolean;
   onRowsPasteEnd?: (data: any) => void;
+  hideSelectedBox?: boolean;
   hideSelcetedBox?: boolean;
   selectedBoxHeight?: number;
   selectedBoxWidth?: number;
@@ -236,3 +237,9 @@ export type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>;
 export type GridProps<T> = ProtoExtends<AgGridReactProps, CustomProps<T>>;
 
 export type GridPropsPartial<T> = PartRequired<GridProps<T>, 'rowkey'>;
+
+export type GridVariableRef = {
+  hasSelectedRows?: boolean;
+  hideSelectedBox?: boolean;
+  selectedRows?: any[];
+};

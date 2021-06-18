@@ -81,16 +81,15 @@ export const gantGetcontextMenuItems = function(
       } as any)
     : [];
 
-  let defultMenu =
-    treeData && !hideMenuItemExpand
-      ? ['expandAll', 'contractAll', ...items, 'separator', 'export']
-      : items.length > 0
-      ? hideMenuItemExport
-        ? [...items, 'separator', 'export']
-        : [...items]
-      : hideMenuItemExport
-      ? ['export']
-      : [];
+  let defultMenu = [];
+  if (treeData && !hideMenuItemExpand) {
+    defultMenu = ['expandAll', 'contractAll'];
+  }
+  defultMenu = defultMenu.length > 0 ? [...defultMenu, 'separator', ...items] : [...items];
+
+  if (!hideMenuItemExport) {
+    defultMenu = defultMenu.length > 0 ? [...defultMenu, 'separator', 'export'] : ['export'];
+  }
 
   defultMenu = exportJson
     ? [

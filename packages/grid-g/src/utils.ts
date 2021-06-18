@@ -1,20 +1,11 @@
-import { useCallback, useMemo } from 'react';
-import classnames from 'classnames';
-import {
-  ColGroupDef,
-  ColDef,
-  IsColumnFunc,
-  IServerSideGetRowsParams,
-  RowNode,
-  GridApi,
-} from '@ag-grid-community/core';
-import { get, isEmpty, set, findIndex } from 'lodash';
-import { isEqualObj } from './gridManager/utils';
-import { Size, DataActions, GantPaginationProps, ColumnEdiatble, Columns } from './interface';
-import EditorCol from './GridEidtColumn';
-import { Rules, RuleItem } from 'async-validator';
-import { paginationShowTotal } from './Pagination';
+import { ColDef, ColGroupDef, GridApi, IsColumnFunc, RowNode } from '@ag-grid-community/core';
 import { Schema } from '@schema-form';
+import { RuleItem, Rules } from 'async-validator';
+import classnames from 'classnames';
+import { findIndex, get, isEmpty, set } from 'lodash';
+import EditorCol from './GridEidtColumn';
+import { isEqualObj } from './gridManager/utils';
+import { ColumnEdiatble, Columns, DataActions, GantPaginationProps, Size } from './interface';
 
 type Col = ColGroupDef | ColDef;
 
@@ -223,7 +214,7 @@ export const mapColumns = <T>(
           fixed,
           headerClass,
           cellClassRules,
-          cellClass,
+          cellClass='stringType',
           cellRendererParams,
           ...item
         },

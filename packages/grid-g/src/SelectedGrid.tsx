@@ -8,7 +8,7 @@ import {
   RowClickedEvent,
 } from '@ag-grid-community/core';
 import { Badge, Icon, Popover, Button } from 'antd';
-import { findIndex, get } from 'lodash';
+import { findIndex, get, isEqual } from 'lodash';
 interface SelectedGridProps {
   columnDefs: ColDef[];
   rowData: any[];
@@ -34,17 +34,6 @@ export default memo(function SelectedGrid(props: SelectedGridProps) {
     const rows = event.api.getSelectedRows();
     setSelectedRows(rows);
   }, []);
-  useEffect(() => {
-    const selectedNodes = apiRef.current?.getSelectedNodes();
-    if (selectedNodes) {
-      selectedNodes.map(rowNode => {
-        const index = findIndex(rowData, function(itemRowData) {
-          return getRowNodeId(itemRowData) == getRowNodeId(get(rowNode, 'data', {}));
-        });
-        if (index < 0) rowNode.setSelected(false);
-      });
-    } else setSelectedRows([]);
-  }, [rowData]);
   const onGridReady = useCallback((event: GridReadyEvent) => {
     const { api } = event;
     apiRef.current = api;
@@ -57,11 +46,8 @@ export default memo(function SelectedGrid(props: SelectedGridProps) {
   }, [rowData, selectedBoxHeight]);
   const onClearSelection = useCallback(() => {
     const rows: any[] = [];
-    rowData.map(itemRowData => {
-      const selectedIndex = findIndex(selectedRows, function(selectedItem) {
-        return getRowNodeId(selectedItem) === getRowNodeId(itemRowData);
-      });
-      if (selectedIndex < 0) rows.push(itemRowData);
+    apiRef.current?.forEachNode(node => {
+      if (!node.isSelected()) rows.push(node.data);
     });
     onChange(
       rows.map(itemData => getRowNodeId(itemData)),

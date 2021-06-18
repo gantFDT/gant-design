@@ -1,11 +1,6 @@
 export default [
 `
-import React, {
-  Fragment, useCallback, useEffect,
-
-
-  useRef, useState
-} from 'react';
+import React, { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import CodeDecorator from '../_util/CodeDecorator';
 import codes from './code';
 
@@ -13,7 +8,7 @@ import codes from './code';
 const RandomCreate = () => ({
   ip: Random.ip(),
   name: Random.name(),
-  age: '00000',
+  age: 9999999999999,
   county: Random.county(true),
   leaf: [true, false][Random.natural(0, 1)],
   path: [Random.ip()],
@@ -26,7 +21,7 @@ const RandomCreate = () => ({
 //   console.log('=====>', context);
 //   return <div>1111</div>;
 // }
-const mockData = Array(100000)
+const mockData = Array(10000)
   .fill('')
   .map(() => RandomCreate());
 const basicColumns = [
@@ -132,7 +127,7 @@ const BaiscGrid = () => {
   const [selectedKeys, setselectedKeys] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
   const [columns, setColumns] = useState(basicColumns);
-  const [drawerEditable, setDrawerEditable] = useState(true);
+  const [drawerEditable, setDrawerEditable] = useState(false);
   const apiRef = useRef();
   const gridManagerRef = useRef();
   const onReady = useCallback((params, manager) => {
@@ -147,7 +142,7 @@ const BaiscGrid = () => {
     setDataSource(dataSource);
   }, []);
   useEffect(() => {
-    setDataSource(mockData.slice(20));
+    setDataSource(mockData);
   }, []);
   const onPageChange = useCallback(
     (beginIndex, pageSize, page, countLimit) => {
@@ -158,6 +153,7 @@ const BaiscGrid = () => {
     [current],
   );
   const onSelect = useCallback((keys, rows) => {
+    console.log('onSelect====>',rows)
     setselectedKeys(keys);
     setSelectedRows(rows);
   }, []);
@@ -197,12 +193,19 @@ const BaiscGrid = () => {
       });
     });
   }, []);
-
   return (
     <Fragment>
       <Header
         extra={
           <Fragment>
+            <Button
+              size="small"
+              onClick={() => {
+                setSelectedRows([...mockData.slice(0,10)]);
+              }}
+            >
+              切换模式
+            </Button>
             <Button
               size="small"
               onClick={() => {
@@ -242,11 +245,10 @@ const BaiscGrid = () => {
             )}
           </Fragment>
         }
-        title="基本Grid"
+        title="基本Grid1"
         type="line"
       />
       <Grid
-        tooltipShowDelay={10}
         rowkey="ip"
         loading={loading}
         columns={columns}
@@ -269,20 +271,20 @@ const BaiscGrid = () => {
         openEditSign
         showCut
         getDataPath={data => data.path}
-        suppressAnimationFrame
-        pagination={{
-          total: 400,
-          onChange: onPageChange,
-          current,
-        }}
+        
+        // pagination={{
+        //   total: 400,
+        //   onChange: onPageChange,
+        //   current,
+        // }}
         gridOptions={{
           suppressQuotes: true,
-          excelStyles: [{ id: 'stringType', dataType: 'string' }],
+          // excelStyles: [{ id: 'stringType', dataType: 'string' }],
         }}
         selectedBoxWidth={500}
         drawerMode={drawerEditable}
         defaultDrawerWidth={800}
-        customDrawerContent={() => <div>自定义</div>}
+        // customDrawerContent={() => <div>自定义</div>}
         // defaultExportJsonParams={{
         //   title: '基本数据',
         // }}
