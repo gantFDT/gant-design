@@ -8,7 +8,7 @@ import codes from './code';
 const RandomCreate = () => ({
   ip: Random.ip(),
   name: Random.name(),
-  age: '00000',
+  age: 9999999999999,
   county: Random.county(true),
   leaf: [true, false][Random.natural(0, 1)],
   path: [Random.ip()],
@@ -245,7 +245,7 @@ const BaiscGrid = () => {
             )}
           </Fragment>
         }
-        title="基本Grid"
+        title="基本Grid1"
         type="line"
       />
       <Grid
@@ -271,6 +271,7 @@ const BaiscGrid = () => {
         openEditSign
         showCut
         getDataPath={data => data.path}
+        
         // pagination={{
         //   total: 400,
         //   onChange: onPageChange,
@@ -278,7 +279,7 @@ const BaiscGrid = () => {
         // }}
         gridOptions={{
           suppressQuotes: true,
-          excelStyles: [{ id: 'stringType', dataType: 'string' }],
+          // excelStyles: [{ id: 'stringType', dataType: 'string' }],
         }}
         selectedBoxWidth={500}
         drawerMode={drawerEditable}
