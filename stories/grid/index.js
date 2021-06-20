@@ -259,7 +259,7 @@ const BaiscGrid = () => {
         dataSource={dataSource}
         serialNumber
         boxColumnIndex={['name', 'county', 'age']}
-        // rowSelection={}
+        rowSelection
         gridKey="grid-test-2"
         hideSelectedBox
         rowBuffer={1}
@@ -269,7 +269,7 @@ const BaiscGrid = () => {
         openEditSign
         showCut
         getDataPath={data => data.path}
-        
+        suppressRightClickSelected
         // pagination={{
         //   total: 400,
         //   onChange: onPageChange,

@@ -164,6 +164,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     hideMenuItemExport,
     hideMenuItemExpand,
     excelStyles = [],
+    suppressRightClickSelected,
     ...orignProps
   } = props;
   const apiRef = useRef<GridApi>();
@@ -590,6 +591,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
             defaultJsonParams,
             hideMenuItemExport,
             hideMenuItemExpand,
+            suppressRightClickSelected,
           });
         };
         return (
