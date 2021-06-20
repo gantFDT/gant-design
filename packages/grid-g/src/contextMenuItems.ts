@@ -12,6 +12,7 @@ interface ContextMenuItemsConfig {
   defaultJsonParams?: DefaultJsonParams;
   hideMenuItemExport?: boolean;
   hideMenuItemExpand?: boolean;
+  suppressRightClickSelected?: boolean;
 }
 
 export const gantGetcontextMenuItems = function(
@@ -27,6 +28,7 @@ export const gantGetcontextMenuItems = function(
     defaultJsonParams = {},
     hideMenuItemExport,
     hideMenuItemExpand,
+    suppressRightClickSelected,
   } = config;
   const {
     context: { globalEditable, treeData, createConfig, getRowNodeId, gridManager, showCut },
@@ -36,7 +38,7 @@ export const gantGetcontextMenuItems = function(
   const exportJson = !isEmpty(defaultJsonParams);
   const rowIndex = get(node, 'rowIndex', 0);
   let selectedRowNodes: RowNode[] = api.getSelectedNodes();
-  if (node) {
+  if (node && !suppressRightClickSelected) {
     const rowNodes = api.getSelectedNodes();
     if (!downShift || rowNodes.length == 0) {
       node.setSelected(true, true);
@@ -63,10 +65,11 @@ export const gantGetcontextMenuItems = function(
       }
     }
   }
+  const gridSelectedKeys: string[] = [];
   const gridSelectedRows = selectedRowNodes.map(item => {
+    gridSelectedKeys.push(getRowNodeId(get(item, 'data', {})));
     return item.data;
   }, []);
-  const gridSelectedKeys = gridSelectedRows.map(item => getRowNodeId(item), []);
   const hasCut = selectedRowNodes.length <= 0 || (treeData && isEmpty(createConfig));
   const hasPaste =
     selectedRowNodes.length > 1 ||

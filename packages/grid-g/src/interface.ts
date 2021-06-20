@@ -218,6 +218,7 @@ export interface Props<T extends any> {
   customDrawerContent?: (params: any) => any;
   visibleDrawer?: undefined;
   doubleClickedExpanded?: boolean;
+  suppressRightClickSelected?:boolean;
   onContextChangeRender?: (
     context: any,
     diffKeys: string[],
