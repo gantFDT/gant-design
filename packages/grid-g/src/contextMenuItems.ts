@@ -1,6 +1,6 @@
 import { GetContextMenuItemsParams, RowNode } from '@ag-grid-community/core';
 import { DefaultJsonParams } from './interface';
-import { get, max, min, isEmpty } from 'lodash';
+import { get, max, min, isEmpty, remove } from 'lodash';
 import FileSaver from 'file-saver';
 interface ContextMenuItemsConfig {
   downShift?: boolean;
@@ -12,6 +12,7 @@ interface ContextMenuItemsConfig {
   defaultJsonParams?: DefaultJsonParams;
   hideMenuItemExport?: boolean;
   hideMenuItemExpand?: boolean;
+  hiddenMenuItemNames?: string[];
   suppressRightClickSelected?: boolean;
 }
 
@@ -28,6 +29,7 @@ export const gantGetcontextMenuItems = function(
     defaultJsonParams = {},
     hideMenuItemExport,
     hideMenuItemExpand,
+    hiddenMenuItemNames,
     suppressRightClickSelected,
   } = config;
   const {
@@ -83,6 +85,10 @@ export const gantGetcontextMenuItems = function(
         ...params,
       } as any)
     : [];
+
+  if (hiddenMenuItemNames && hiddenMenuItemNames.length) {
+    remove(items, (menuItem => hiddenMenuItemNames.some(menuName => menuName === menuItem.name)))
+  }
 
   let defultMenu = [];
   if (treeData && !hideMenuItemExpand) {
