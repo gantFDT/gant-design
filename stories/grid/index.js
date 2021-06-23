@@ -1,5 +1,6 @@
 import { Input } from '@data-cell';
 import Grid from '@grid';
+import { filterDateComparator } from '@grid';
 import Header from '@header';
 import { Button, Icon, Modal } from 'antd';
 import { Random } from 'mockjs';
@@ -7,32 +8,128 @@ import { Random } from 'mockjs';
 import React, { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import CodeDecorator from '../_util/CodeDecorator';
 import codes from './code';
+import moment from 'moment'
 /*! Split !*/
-const RandomCreate = () => ({
-  ip: Random.ip(),
-  name: Random.name(),
-  age: 9999999999999,
-  county: Random.county(true),
-  leaf: [true, false][Random.natural(0, 1)],
-  path: [Random.ip()],
-  recored: {
-    address: Random.county(true),
-  },
-});
+const RandomCreate = () => {
+  const ip = Random.ip();
+  return {
+    ip: ip,
+    name: Random.name(),
+    age: Random.natural(2, 40),
+    county: Random.county(true),
+    date: Random.date('yyyy-MM-dd'),
+    path: ['1', ip],
+  };
+};
 // function Test() {
 //   const context = useContext(GridContext);
 //   console.log('=====>', context);
 //   return <div>1111</div>;
 // }
-const mockData = Array(10000)
+let mockData = Array(10)
   .fill('')
   .map(() => RandomCreate());
+mockData = [
+  ...mockData,
+  {
+    ip: Random.ip(),
+    name: Random.name(),
+    age: Random.natural(2, 40),
+    county: Random.county(true),
+    date: Random.date('yyyy-MM-dd'),
+    path: ['1'],
+  },
+];
+
+const testTreeDataSource = [
+  {
+    ip: '1',
+    name: Random.name(),
+    age: Random.natural(2, 40),
+    county: Random.county(true),
+    date: Random.date('yyyy-MM-dd'),
+    path: ['1'],
+  },
+  {
+    ip: '1-1',
+    name: Random.name(),
+    age: Random.natural(2, 40),
+    county: Random.county(true),
+    date: Random.date('yyyy-MM-dd'),
+    path: ['1', '1-1'],
+    parentId: '1',
+  },
+  {
+    ip: '1-2',
+    name: Random.name(),
+    age: Random.natural(2, 40),
+    county: Random.county(true),
+    date: Random.date('yyyy-MM-dd'),
+    path: ['1', '1-2'],
+    parentId: '1',
+  },
+  {
+    ip: '2',
+    name: Random.name(),
+    age: Random.natural(2, 40),
+    county: Random.county(true),
+    date: Random.date('yyyy-MM-dd'),
+    path: ['2'],
+  },
+  {
+    ip: '2-1',
+    name: Random.name(),
+    age: Random.natural(2, 40),
+    county: Random.county(true),
+    date: Random.date('yyyy-MM-dd'),
+    path: ['2', '2-1'],
+    parentId: '2',
+  },
+  {
+    ip: '2-1-1',
+    name: Random.name(),
+    age: Random.natural(2, 40),
+    county: Random.county(true),
+    date: Random.date('yyyy-MM-dd'),
+    path: ['2', '2-1', '2-1-1'],
+    parentId: '2-1',
+  },
+  {
+    ip: '2-1-2',
+    name: Random.name(),
+    age: Random.natural(2, 40),
+    county: Random.county(true),
+    date: Random.date('yyyy-MM-dd'),
+    path: ['2', '2-1', '2-1-2'],
+    parentId: '2-1',
+  },
+  {
+    ip: '2-2',
+    name: Random.name(),
+    age: Random.natural(2, 40),
+    county: Random.county(true),
+    date: Random.date('yyyy-MM-dd'),
+    path: ['2', '2-2'],
+    parentId: '2',
+  },
+  {
+    ip: '2-3',
+    name: Random.name(),
+    age: Random.natural(2, 40),
+    county: Random.county(true),
+    date: Random.date('yyyy-MM-dd'),
+    path: ['2', '2-3'],
+    parentId: '2',
+  },
+];
+
 const basicColumns = [
   {
     fieldName: 'name',
     title: '姓名',
     cellRenderer: 'gantGroupCellRenderer',
-
+    valueGett: params => params.data?.name,
+    // filter: 'agTextColumnFilter',
     editConfig: {
       component: props => {
         return <Input {...props} />;
@@ -58,67 +155,61 @@ const basicColumns = [
   {
     fieldName: 'age',
     title: '年龄',
-    cellClass: 'stringType',
+    filter: 'agNumberColumnFilter',
   },
   {
-    fieldName: 'recored.address',
-    title: '地址',
-    editConfig: {
-      component: props => {
-        return <Input {...props} />;
-      },
-      editable: true,
-      signable: true,
-      rules: [
-        {
-          min: 4,
-          type: 'string',
-          message: '姓名不能小于四个字符串',
-        },
-      ],
-    },
+    fieldName: 'date',
+    title: '时间',
+    filter: 'agDateColumnFilter',
+    // filterParams: {
+    //   comparator: function filterDateComparator(filterLocalDateAtMidnight, cellValue) {
+    //     console.log('filterDateComparator----->', filterLocalDateAtMidnight,cellValue);
+    //     if (!cellValue) return -1;
+    //     const filterTime = moment(filterLocalDateAtMidnight).valueOf();
+    //     const cellTime = moment(cellValue).valueOf();
+
+    //     if (filterTime == cellTime) {
+    //       return 0;
+    //     }
+
+    //     if (cellTime < filterTime) {
+    //       return -1;
+    //     }
+
+    //     if (cellTime > filterTime) {
+    //       return 1;
+    //     }
+    //     return 0;
+    //   },
+    //   // comparator: (filterLocalDateAtMidnight, cellValue) => {
+    //   //   const dateAsString = cellValue;
+
+    //   //   if (dateAsString == null) {
+    //   //     return 0;
+    //   //   }
+
+    //   //   // In the example application, dates are stored as dd/mm/yyyy
+    //   //   // We create a Date object for comparison against the filter date
+    //   //   const dateParts = dateAsString.split('/');
+    //   //   const day = Number(dateParts[2]);
+    //   //   const month = Number(dateParts[1]) - 1;
+    //   //   const year = Number(dateParts[0]);
+    //   //   const cellDate = new Date(year, month, day);
+
+    //   //   // Now that both parameters are Date objects, we can compare
+    //   //   if (cellDate < filterLocalDateAtMidnight) {
+    //   //     return -1;
+    //   //   } else if (cellDate > filterLocalDateAtMidnight) {
+    //   //     return 1;
+    //   //   }
+    //   //   return 0;
+    //   // },
+    // },
   },
   {
     fieldName: 'county',
     title: '国家',
-    editConfig: {
-      component: props => {
-        return <Input {...props} />;
-      },
-      editable: true,
-      signable: true,
-      rules: [
-        {
-          min: 4,
-          type: 'string',
-          message: '姓名不能小于四个字符串',
-        },
-      ],
-    },
-  },
-  {
-    fieldName: 'county3',
-    title: '国家',
-  },
-  {
-    fieldName: 'county4',
-    title: '国家',
-  },
-  {
-    fieldName: 'county5',
-    title: '国家',
-  },
-  {
-    fieldName: 'county6',
-    title: '国家',
-  },
-  {
-    fieldName: 'county7',
-    title: '国家',
-  },
-  {
-    fieldName: 'county8',
-    title: '国家',
+    filter: 'agTextColumnFilter',
   },
 ];
 const BaiscGrid = () => {
@@ -140,12 +231,8 @@ const BaiscGrid = () => {
   const onEditChangeCallback = useCallback(isChange => {
     setGridChange(isChange);
   }, []);
-  const queryData = useCallback((beginIndex = 0) => {
-    var dataSource = mockData.slice(beginIndex, beginIndex + 20);
-    setDataSource(dataSource);
-  }, []);
   useEffect(() => {
-    setDataSource(mockData);
+    setDataSource(testTreeDataSource);
   }, []);
   const onPageChange = useCallback(
     (beginIndex, pageSize, page, countLimit) => {
@@ -156,7 +243,6 @@ const BaiscGrid = () => {
     [current],
   );
   const onSelect = useCallback((keys, rows) => {
-    console.log('onSelect====>',rows)
     setselectedKeys(keys);
     setSelectedRows(rows);
   }, []);
@@ -204,7 +290,7 @@ const BaiscGrid = () => {
             <Button
               size="small"
               onClick={() => {
-                setSelectedRows([...mockData.slice(0,10)]);
+                setSelectedRows([...mockData.slice(0, 10)]);
               }}
             >
               切换模式
@@ -259,17 +345,29 @@ const BaiscGrid = () => {
         dataSource={dataSource}
         serialNumber
         boxColumnIndex={['name', 'county', 'age']}
-        rowSelection
+        rowSelection={{
+          // selectedRows,
+          onSelect: (keys, rows) => {
+            setSelectedRows(rows);
+            console.log('--->', rows);
+          },
+        }}
+        treeData
+        treeDataForcedFilter
+        treeDataParentName="parentId"
         gridKey="grid-test-2"
         hideSelectedBox
         rowBuffer={1}
         groupSuppressAutoColumn
         editChangeCallback={onEditChangeCallback}
+        getDataPath={data => data.path}
         onReady={onReady}
         openEditSign
         showCut
-        getDataPath={data => data.path}
-        suppressRightClickSelected
+        getDataPath={data => {
+          // console.log('---->', data.path);
+          return data.path;
+        }}
         // pagination={{
         //   total: 400,
         //   onChange: onPageChange,
@@ -279,6 +377,7 @@ const BaiscGrid = () => {
           suppressQuotes: true,
           // excelStyles: [{ id: 'stringType', dataType: 'string' }],
         }}
+        groupDefaultExpanded={-1}
         selectedBoxWidth={500}
         drawerMode={drawerEditable}
         defaultDrawerWidth={800}

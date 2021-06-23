@@ -191,6 +191,7 @@ export interface Props<T extends any> {
   className?: string;
   isServerSideGroup?: (data: any) => boolean;
   treeDataChildrenName?: string;
+  treeDataParentName?:string;
   locale?: object;
   defaultJsonParams?: DefaultJsonParams;
   serverGroupExpend?: (param: IServerSideGetRowsParams, cd: (row: any[]) => void) => void;
@@ -219,6 +220,7 @@ export interface Props<T extends any> {
   visibleDrawer?: undefined;
   doubleClickedExpanded?: boolean;
   suppressRightClickSelected?:boolean;
+  treeDataForcedFilter?:boolean;
   onContextChangeRender?: (
     context: any,
     diffKeys: string[],
