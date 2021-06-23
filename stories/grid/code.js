@@ -278,6 +278,42 @@ const BaiscGrid = () => {
       });
     });
   }, []);
+
+  //右键菜单
+  const getContextMenuItems = useCallback((res) => {
+    const {
+      context: { 
+        gridManagerRef,
+        onCancelEdit,
+        editable
+      }
+    } = res;
+    if(!editable){
+      return [
+        {
+          name: "进入编辑",
+          action: () => {
+            setEditable(true)
+          }
+        },
+      ]
+    }
+    return [
+      {
+        name: "结束编辑",
+        action: onCancelEdit
+      },
+      {
+        name: "恢复",
+        action: () => gridManagerRef.current.cancel()
+      },
+      {
+        name: "保存",
+        action: () => {}
+      }
+    ]
+  }, [])
+
   return (
     <Fragment>
       <Header
@@ -377,6 +413,13 @@ const BaiscGrid = () => {
         selectedBoxWidth={500}
         drawerMode={drawerEditable}
         defaultDrawerWidth={800}
+        context={{
+          gridManagerRef,
+          onCancelEdit,
+          editable
+        }}
+        getContextMenuItems={getContextMenuItems}
+        hiddenMenuItemNames={['进入编辑', '结束编辑']}
         // customDrawerContent={() => <div>自定义</div>}
         // defaultExportJsonParams={{
         //   title: '基本数据',
