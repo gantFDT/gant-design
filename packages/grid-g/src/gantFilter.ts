@@ -12,7 +12,6 @@ import {
   FilterModifiedEvent,
 } from '@ag-grid-enterprise/all-modules';
 import moment from 'moment';
-import { isEmptyObj } from 'packages/gantd/lib/grid/gridManager/utils';
 interface filterHooksParams {
   treeData?: boolean;
   treeDataForcedFilter?: boolean;
