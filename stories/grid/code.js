@@ -3,7 +3,7 @@ export default [
 import React, { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import CodeDecorator from '../_util/CodeDecorator';
 import codes from './code';
-import moment from 'moment'
+import moment from 'moment';
 
 
 const RandomCreate = () => {
@@ -40,7 +40,7 @@ mockData = [
 const testTreeDataSource = [
   {
     ip: '1',
-    name: Random.name(),
+    name: '',
     age: Random.natural(2, 40),
     county: Random.county(true),
     date: Random.date('yyyy-MM-dd'),
@@ -125,6 +125,9 @@ const basicColumns = [
     title: '姓名',
     cellRenderer: 'gantGroupCellRenderer',
     valueGett: params => params.data?.name,
+    // filterParams: {
+    //   values: [''],
+    // },
     // filter: 'agTextColumnFilter',
     editConfig: {
       component: props => {
@@ -280,39 +283,35 @@ const BaiscGrid = () => {
   }, []);
 
   //右键菜单
-  const getContextMenuItems = useCallback((res) => {
+  const getContextMenuItems = useCallback(res => {
     const {
-      context: { 
-        gridManagerRef,
-        onCancelEdit,
-        editable
-      }
+      context: { gridManagerRef, onCancelEdit, editable },
     } = res;
-    if(!editable){
+    if (!editable) {
       return [
         {
-          name: "进入编辑",
+          name: '进入编辑',
           action: () => {
-            setEditable(true)
-          }
+            setEditable(true);
+          },
         },
-      ]
+      ];
     }
     return [
       {
-        name: "结束编辑",
-        action: onCancelEdit
+        name: '结束编辑',
+        action: onCancelEdit,
       },
       {
-        name: "恢复",
-        action: () => gridManagerRef.current.cancel()
+        name: '恢复',
+        action: () => gridManagerRef.current.cancel(),
       },
       {
-        name: "保存",
-        action: () => {}
-      }
-    ]
-  }, [])
+        name: '保存',
+        action: () => {},
+      },
+    ];
+  }, []);
 
   return (
     <Fragment>
@@ -416,7 +415,7 @@ const BaiscGrid = () => {
         context={{
           gridManagerRef,
           onCancelEdit,
-          editable
+          editable,
         }}
         getContextMenuItems={getContextMenuItems}
         hiddenMenuItemNames={['进入编辑', '结束编辑']}

@@ -1,6 +1,6 @@
 import { useRef, useEffect, useCallback } from 'react';
 import { GridVariableRef } from './interface';
-import { isEqual, uniq, map, get } from 'lodash';
+import { isEqual, uniq, map, get, isEmpty } from 'lodash';
 import {
   ColDef,
   ColumnApi,
@@ -12,6 +12,7 @@ import {
   FilterModifiedEvent,
 } from '@ag-grid-enterprise/all-modules';
 import moment from 'moment';
+import { isEmptyObj } from 'packages/gantd/lib/grid/gridManager/utils';
 interface filterHooksParams {
   treeData?: boolean;
   treeDataForcedFilter?: boolean;
@@ -88,6 +89,7 @@ export function filterHooks(params: filterHooksParams) {
             const node = api.getRowNode(nodeId);
             const itemValue = getNodeCellValue(node, itemData);
             const isAdopt = judgeFilter(FilterInstanceItem, itemValue);
+
             filterDataRef.current[nodeId] = false;
             if (isAdopt) {
               filterDataRef.current[nodeId] = true;
@@ -100,7 +102,16 @@ export function filterHooks(params: filterHooksParams) {
           });
           return filterData;
         }
-        api.setRowData(newData);
+        api.refreshCells({
+          force: true,
+        });
+        const testData = dataSourceRef.current.map(itemData => ({
+          ...itemData,
+          optCounter: get(itemData, 'optCounter', 0) + 1,
+        }));
+        dataSourceRef.current = testData;
+        api.setRowData(testData);
+       
         debounceRef.current = null;
       }, 500);
     }, []),
@@ -153,6 +164,7 @@ function judgeFilter(filterIn: any, value: any) {
   switch (appliedModel.filterType) {
     case 'set':
       const { appliedModelValues } = filterIn;
+      if (typeof value !== 'boolean' && !value) return appliedModelValues['null'];
       return appliedModelValues[value];
     case 'text': {
       const { condition1, condition2, operator } = appliedModel;

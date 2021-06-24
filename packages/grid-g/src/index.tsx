@@ -265,15 +265,19 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       let dataPath = orignGetDataPath ? orignGetDataPath(data) : isCompute ? data.treeDataPath : [];
       if (!treeDataForcedFilter || !treeDataParentName) return dataPath;
       if (isEmpty(filterDataRef.current)) return dataPath;
+      if (dataPath.length <= 1) return dataPath;
+      const self = dataPath[dataPath.length - 1];
+      if(!filterDataRef.current[self]) return [self]
       const newPath: string[] = [];
       dataPath.map(itemPath => {
         if (filterDataRef.current[itemPath]) newPath.push(itemPath);
       });
-      if (isEqual(dataPath, dataPath))
-        apiRef.current?.refreshCells({
-          force: true,
-          rowNodes: [apiRef.current.getRowNode(getRowNodeId(data))],
-        });
+      // if (isEqual(dataPath, dataPath))
+      //   apiRef.current?.refreshCells({
+      //     force: true,
+      //     rowNodes: [apiRef.current.getRowNode(getRowNodeId(data))],
+      //   });
+      if (newPath.length <= 0) return [getRowNodeId(data)];
       return newPath;
     },
     [orignGetDataPath, treeData],
