@@ -113,7 +113,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     getServerSideGroupKey,
     frameworkComponents = {},
     treeDataChildrenName,
-    treeDataParentName,
     locale: customLocale,
     serverGroupExpend,
     groupDefaultExpanded,
@@ -263,7 +262,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     data => {
       if (!treeData) return [];
       let dataPath = orignGetDataPath ? orignGetDataPath(data) : isCompute ? data.treeDataPath : [];
-      if (!treeDataForcedFilter || !treeDataParentName) return dataPath;
+      if (!treeDataForcedFilter) return dataPath;
       if (isEmpty(filterDataRef.current)) return dataPath;
       if (dataPath.length <= 1) return dataPath;
       const self = dataPath[dataPath.length - 1];

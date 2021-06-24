@@ -191,7 +191,6 @@ export interface Props<T extends any> {
   className?: string;
   isServerSideGroup?: (data: any) => boolean;
   treeDataChildrenName?: string;
-  treeDataParentName?:string;
   locale?: object;
   defaultJsonParams?: DefaultJsonParams;
   serverGroupExpend?: (param: IServerSideGetRowsParams, cd: (row: any[]) => void) => void;

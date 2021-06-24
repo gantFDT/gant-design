@@ -67,6 +67,7 @@ export function filterHooks(params: filterHooksParams) {
     onFilterModified: useCallback((filterModifiedEvent: FilterModifiedEvent) => {
       handleFilterModified && handleFilterModified(filterModifiedEvent);
       const { api, columnApi, column } = filterModifiedEvent;
+      api.showLoadingOverlay();
       if (debounceRef.current) clearTimeout(debounceRef.current);
       debounceRef.current = setTimeout(() => {
         const columns = columnApi.getAllColumns();
@@ -91,7 +92,7 @@ export function filterHooks(params: filterHooksParams) {
         dataSourceRef.current = testData;
         optCounterRef.current = optCounterRef.current + 1;
         api.setRowData(testData);
-
+        api.hideOverlay()
         debounceRef.current = null;
       }, 500);
     }, []),
