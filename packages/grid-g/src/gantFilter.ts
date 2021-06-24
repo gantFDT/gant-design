@@ -42,6 +42,7 @@ export function filterDateComparator(filterLocalDateAtMidnight, cellValue) {
 
 export function filterHooks(params: filterHooksParams) {
   const filterDataRef = useRef({});
+  const optCounterRef = useRef(0);
   const dataSourceRef = useRef([]);
   const debounceRef = useRef(null);
   const {
@@ -65,52 +66,32 @@ export function filterHooks(params: filterHooksParams) {
   return {
     onFilterModified: useCallback((filterModifiedEvent: FilterModifiedEvent) => {
       handleFilterModified && handleFilterModified(filterModifiedEvent);
-      const { api, columnApi, filterInstance, column } = filterModifiedEvent;
+      const { api, columnApi, column } = filterModifiedEvent;
       if (debounceRef.current) clearTimeout(debounceRef.current);
       debounceRef.current = setTimeout(() => {
         const columns = columnApi.getAllColumns();
         filterDataRef.current = {};
-        let newData: any[] = dataSourceRef.current;
-        if (Array.isArray(columns)) {
-          const FilterInstances = columns.map(itemColumn => {
-            const FilterInstanceItem = api.getFilterInstance(itemColumn.getColId());
-            newData = getFilterData(itemColumn, FilterInstanceItem, newData);
-          });
-        }
-        function getFilterData(column, FilterInstanceItem, data = []) {
-          const field = get(column, 'colDef.field');
+        const filterInstance = api.getFilterInstance(column.getColId());
+        api.forEachNodeAfterFilter(node => {
           const getNodeCellValue = toParamsValue(api, columnApi, column, context);
-          const { appliedModel } = FilterInstanceItem as any;
-          if (!appliedModel) return data;
-          const filterData: any[] = [];
-          data.map((itemData: any) => {
-            const nodeId = getRowNodeId(itemData);
-            const node = api.getRowNode(nodeId);
-            const itemValue = getNodeCellValue(node, itemData);
-            const isAdopt = judgeFilter(FilterInstanceItem, itemValue);
-
-            filterDataRef.current[nodeId] = false;
-            if (isAdopt) {
-              filterDataRef.current[nodeId] = true;
-              filterData.push({
-                ...itemData,
-                optCounter: get(node, 'data.optCounter', 0) + 1,
-              });
-            }
-            return itemData;
-          });
-          return filterData;
-        }
+          const { appliedModel } = filterInstance as any;
+          const itemValue = getNodeCellValue(node, get(node, 'data', {}));
+          const isAdopt = judgeFilter(filterInstance, itemValue);
+          if (isAdopt) {
+            filterDataRef.current[node.id] = true;
+          }
+        });
         api.refreshCells({
           force: true,
         });
-        const testData = dataSourceRef.current.map(itemData => ({
+        const testData = dataSourceRef.current.map((itemData, index) => ({
           ...itemData,
-          optCounter: get(itemData, 'optCounter', 0) + 1,
+          _optCounter: optCounterRef.current + index,
         }));
         dataSourceRef.current = testData;
+        optCounterRef.current = optCounterRef.current + 1;
         api.setRowData(testData);
-       
+
         debounceRef.current = null;
       }, 500);
     }, []),
@@ -159,7 +140,8 @@ function toParamsValue(api: GridApi, columnApi: ColumnApi, column: Column, conte
 }
 
 function judgeFilter(filterIn: any, value: any) {
-  const { appliedModel } = filterIn;
+  let appliedModel = get(filterIn, 'appliedModel', {});
+  appliedModel = appliedModel ? appliedModel : {};
   switch (appliedModel.filterType) {
     case 'set':
       const { appliedModelValues } = filterIn;
