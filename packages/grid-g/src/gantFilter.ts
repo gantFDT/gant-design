@@ -44,6 +44,7 @@ export function filterHooks(params: filterHooksParams) {
   const filterDataRef = useRef({});
   const dataSourceRef = useRef([]);
   const debounceRef = useRef(null);
+  const columnIdRef = useRef<any>();
   const filterModelRef = useRef<any>();
   const [forcedGridKey, setForcedGridKey] = useState(0);
   const {
@@ -113,6 +114,7 @@ export function filterHooks(params: filterHooksParams) {
         // api.hideOverlay();
         if (isEmpty(filterModelRef.current) != isEmpty(filterModel)) {
           filterModelRef.current = filterModel;
+          columnIdRef.current = column.getColId();
           setForcedGridKey((key = 0) => key + 1);
         }
         filterModelRef.current = filterModel;
@@ -123,6 +125,7 @@ export function filterHooks(params: filterHooksParams) {
     filterDataRef,
     forcedGridKey,
     filterModelRef,
+    columnIdRef
   };
 }
 

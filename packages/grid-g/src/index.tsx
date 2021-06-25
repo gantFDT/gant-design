@@ -249,7 +249,13 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     onCellChanged,
   ]);
 
-  const { filterDataRef, onFilterModified, forcedGridKey, filterModelRef } = filterHooks({
+  const {
+    filterDataRef,
+    onFilterModified,
+    forcedGridKey,
+    filterModelRef,
+    columnIdRef,
+  } = filterHooks({
     treeData,
     treeDataForcedFilter,
     handleFilterModified,
@@ -541,6 +547,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       if (filterModelRef.current && treeDataForcedFilter) {
         params.api.setRowData(get(gridManager, 'agGridConfig.dataSource', []));
         params.api.setFilterModel(filterModelRef.current);
+        params.api.ensureColumnVisible(columnIdRef?.current);
       }
       // gridManager.dataSourceChanged(dataSource);
     },
