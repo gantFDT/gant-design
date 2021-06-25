@@ -94,8 +94,9 @@ export const selectedMapColumns = <T>(
   }
   const selectedCol: any = [];
   columns.map(colItem => {
-    const { fieldName: field, title: headerName } = colItem;
-    if (colArray.indexOf(field) >= 0) selectedCol.push({ field, headerName, flex: 1 });
+    const { fieldName: field, title: headerName, valueGetter, valueFormatter } = colItem;
+    if (colArray.indexOf(field) >= 0)
+      selectedCol.push({ field, headerName, valueGetter, valueFormatter, flex: 1 });
   });
   return [
     { ...defaultCheckboxColSelectionCol, headerCheckboxSelection: 'multiple' },
@@ -214,7 +215,7 @@ export const mapColumns = <T>(
           fixed,
           headerClass,
           cellClassRules,
-          cellClass='stringType',
+          cellClass = 'stringType',
           cellRendererParams,
           ...item
         },

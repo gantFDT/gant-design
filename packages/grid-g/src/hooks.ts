@@ -1,6 +1,15 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useCallback } from 'react';
 import { GridVariableRef } from './interface';
-import { isEqual, uniq, map } from 'lodash';
+import { isEqual, uniq, map, get } from 'lodash';
+import {
+  ColDef,
+  ColumnApi,
+  GridApi,
+  Column,
+  ValueGetterParams,
+  ValueFormatterParams,
+  RowNode,
+} from '@ag-grid-enterprise/all-modules';
 interface selectedHooksParams {
   dataSource?: any[];
   selectedRows?: any[];
@@ -42,10 +51,10 @@ export function selectedHooks(params: selectedHooksParams) {
   } = params;
   useEffect(() => {
     if (!gridVariable.hasSelectedRows || !ready || !apiRef.current) return;
+    gridVariable.selectedRows = selectedRows;
     const selectedKeys = map(selectedRows, (item: any) => getRowNodeId(item));
     const gridKeys = map(apiRef.current?.getSelectedRows(), (item: any) => getRowNodeId(item));
     if (isEqual(gridKeys, selectedKeys) || dataSource.length <= 0) return;
-    gridVariable.selectedRows = selectedRows;
     garidShowSelectedRows(selectedRows, apiRef, getRowNodeId, isSingle);
   }, [dataSource, ready, selectedRows]);
 }

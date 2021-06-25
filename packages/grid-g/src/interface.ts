@@ -204,6 +204,7 @@ export interface Props<T extends any> {
   createConfig?: CreateConfig;
   hideMenuItemExport?: boolean;
   hideMenuItemExpand?: boolean;
+  hiddenMenuItemNames?: string[];
   showCut?: ((params: GetContextMenuItemsParams) => boolean) | boolean;
   onRowsCut?: (rows: RowNode[]) => boolean;
   onRowsPaste?: (rows: RowNode[], targetRow?: RowNode) => boolean;
@@ -219,6 +220,7 @@ export interface Props<T extends any> {
   visibleDrawer?: undefined;
   doubleClickedExpanded?: boolean;
   suppressRightClickSelected?:boolean;
+  treeDataForcedFilter?:boolean;
   onContextChangeRender?: (
     context: any,
     diffKeys: string[],

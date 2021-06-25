@@ -29,6 +29,7 @@ import CustomHeader from './CustomHeader';
 import GantGridFormToolPanelRenderer from './GantGridFormToolPanelRenderer';
 import GridManager from './gridManager';
 import { contextHooks, selectedHooks } from './hooks';
+import { filterHooks, filterDateComparator } from './gantFilter';
 import { DataActions, GridPropsPartial, GridVariableRef, RowSelection, Size } from './interface';
 import key from './license';
 import en from './locale/en-US';
@@ -46,7 +47,6 @@ import {
   selectedMapColumns,
   usePagination,
 } from './utils';
-
 export { default as GantGroupCellRenderer } from './GantGroupCellRenderer';
 export { default as GantPromiseCellRender } from './GantPromiseCellRender';
 export * from './interface';
@@ -158,13 +158,16 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     selectedBoxHeight,
     selectedBoxWidth = 240,
     onRowDoubleClicked,
+    onFilterModified: handleFilterModified,
     doubleClickedExpanded,
     customDrawerContent,
     visibleDrawer: propVisibleDrawer,
     hideMenuItemExport,
     hideMenuItemExpand,
+    hiddenMenuItemNames,
     excelStyles = [],
     suppressRightClickSelected,
+    treeDataForcedFilter,
     ...orignProps
   } = props;
   const apiRef = useRef<GridApi>();
@@ -172,6 +175,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   const selectedChanged = useRef<boolean>(false);
   const columnsRef = useRef<ColumnApi>();
   const selectedLoadingRef = useRef<boolean>(false);
+  const gridRef = useRef<any>();
   const [visibleDrawer, setVisibleDrawer] = useState(false);
   const [clickedEvent, setClickedEvent] = useState<RowClickedEvent>();
 
@@ -195,13 +199,8 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     }
     return rowkey(data);
   }, []);
-  const getDataPath = useCallback(
-    data => {
-      if (orignGetDataPath) return orignGetDataPath(data);
-      return data.treeDataPath;
-    },
-    [orignGetDataPath],
-  );
+
+  // filter
 
   useEffect(() => {
     if (typeof propVisibleDrawer === 'boolean') {
@@ -215,6 +214,81 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       return flattenTreeData(initDataSource, getRowNodeId, treeDataChildrenName);
     return initDataSource;
   }, [initDataSource, treeData, treeDataChildrenName]);
+
+  /**fix: 解决保存时候标记状态无法清楚的问题 */
+  // 分页事件
+  const computedPagination: any = useMemo(() => usePagination(pagination), [pagination]);
+
+  // context 变化
+  const context = useMemo(() => {
+    return {
+      globalEditable: editable && !drawerMode,
+      serverDataRequest,
+      isServerSideGroup,
+      size,
+      getDataPath: getDataPath,
+      computedPagination,
+      treeData,
+      gridManager,
+      showCut,
+      createConfig,
+      getRowNodeId,
+      watchEditChange: typeof onCellEditChange === 'function',
+      onCellEditChange,
+      onCellEditingChange,
+      onCellChanged,
+      ...propsContext,
+    };
+  }, [
+    propsContext,
+    size,
+    computedPagination,
+    editable,
+    drawerMode,
+    showCut,
+    onCellEditChange,
+    onCellEditingChange,
+    onCellChanged,
+  ]);
+
+  const {
+    filterDataRef,
+    onFilterModified,
+    forcedGridKey,
+    filterModelRef,
+    columnIdRef,
+  } = filterHooks({
+    treeData,
+    treeDataForcedFilter,
+    handleFilterModified,
+    getRowNodeId,
+    dataSource,
+    context,
+  });
+  const gridForcedProps = useMemo(() => {
+    if (!treeDataForcedFilter && forcedGridKey) return {};
+    return {
+      key: forcedGridKey,
+    };
+  }, [forcedGridKey]);
+  const getDataPath = useCallback(
+    data => {
+      if (!treeData) return [];
+      let dataPath = orignGetDataPath ? orignGetDataPath(data) : isCompute ? data.treeDataPath : [];
+      // if (!treeDataForcedFilter) return dataPath;
+      // if (isEmpty(filterDataRef.current)) return dataPath;
+      // if (dataPath.length <= 1) return dataPath;
+      // const self = dataPath[dataPath.length - 1];
+      // if (!filterDataRef.current[self]) return [self];
+      // const newPath: string[] = [];
+      // dataPath.map(itemPath => {
+      //   if (filterDataRef.current[itemPath]) newPath.push(itemPath);
+      // });
+      // if (newPath.length <= 0) return [getRowNodeId(data)];
+      return dataPath;
+    },
+    [orignGetDataPath, treeData],
+  );
 
   // 处理selection
   const gantSelection: RowSelection = useMemo(() => {
@@ -233,9 +307,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     defaultSelectionCol,
     ...selection
   } = gantSelection;
-  /**fix: 解决保存时候标记状态无法清楚的问题 */
-  // 分页事件
-  const computedPagination: any = useMemo(() => usePagination(pagination), [pagination]);
+
   // 初始注册配置信息；
   useEffect(() => {
     gridManager.reset({
@@ -273,7 +345,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     return getAllComponentsMaps();
   }, []);
   // 获取selected 数据
-  const getSelectedRows = useCallback(selectedRows => {
+  const getAllSelectedRows = useCallback(selectedRows => {
     const dataSource = gridManager.getRowData();
     const currentRows: string[] = [];
     const extraRows: any[] = [];
@@ -314,7 +386,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       propsOnSelectionChanged && propsOnSelectionChanged(event);
       if (gridVariableRef.current?.hasSelectedRows) {
         const rows = event.api.getSelectedRows();
-        const { extraRows, currentRows } = getSelectedRows(
+        const { extraRows, currentRows } = getAllSelectedRows(
           get(gridVariableRef.current, 'selectedRows', []),
         );
         if (isEqual(currentRows, rows)) return;
@@ -327,12 +399,18 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
           )
         );
       }
-      if (gridVariableRef.current?.hideSelectedBox) return;
       const rows = event.api.getSelectedRows();
+      onSelect &&
+        onSelect(
+          rows.map(item => getRowNodeId(item)),
+          rows,
+        );
+      if (gridVariableRef.current?.hideSelectedBox) return;
+
       gridVariableRef.current.selectedRows = rows;
       setInnerSelectedRows(rows);
     },
-    [getSelectedRows, propsOnSelectionChanged],
+    [getAllSelectedRows, propsOnSelectionChanged],
   );
   selectedHooks({
     gridVariable: gridVariableRef.current,
@@ -393,6 +471,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     },
     [propsOnRowSelected],
   );
+
   const boxSelectedRows = useMemo(() => {
     if (gridVariableRef.current.hasSelectedRows) return selectedRows;
     return innerSelectedRows;
@@ -467,6 +546,15 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       gridManager.agGridColumnApi = params.columnApi;
       onReady && onReady(params, gridManager);
       setReady(true);
+      if (filterModelRef.current && treeDataForcedFilter) {
+        params.api.setRowData(get(gridManager, 'agGridConfig.dataSource', []));
+        params.api.setFilterModel(filterModelRef.current);
+        // params.api.ensureColumnVisible(columnIdRef?.current);
+        // const {lef} = get(columnIdRef, 'current',{});
+        gridRef.current?.eGridDiv
+          .querySelector('.ag-center-cols-viewport')
+          ?.scrollTo(columnIdRef.current, 0);
+      }
       // gridManager.dataSourceChanged(dataSource);
     },
     [onReady, gridKey, dataSource],
@@ -490,40 +578,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     }
     return notRemove;
   }, []);
-
-  // context 变化
-  const context = useMemo(() => {
-    return {
-      globalEditable: editable && !drawerMode,
-      serverDataRequest,
-      isServerSideGroup,
-      size,
-      getDataPath: getDataPath,
-      computedPagination,
-      treeData,
-      gridManager,
-      showCut,
-      createConfig,
-      getRowNodeId,
-      watchEditChange: typeof onCellEditChange === 'function',
-      onCellEditChange,
-      onCellEditingChange,
-      onCellChanged,
-      selectedRows,
-      ...propsContext,
-    };
-  }, [
-    propsContext,
-    size,
-    computedPagination,
-    editable,
-    drawerMode,
-    showCut,
-    onCellEditChange,
-    onCellEditingChange,
-    onCellChanged,
-    selectedRows,
-  ]);
 
   // 监听context变换并更新
   contextHooks(context, apiRef, onContextChangeRender);
@@ -575,7 +629,11 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     },
     [selectedRows, onSelectedChanged],
   );
-
+  const currentTreeData = useMemo(() => {
+    if (!treeDataForcedFilter || !treeData) return treeData;
+    if (isEmpty(filterModelRef.current)) return true;
+    return false;
+  }, [forcedGridKey]);
   return (
     <LocaleReceiver>
       {(local, localeCode = 'zh-cn') => {
@@ -591,6 +649,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
             defaultJsonParams,
             hideMenuItemExport,
             hideMenuItemExpand,
+            hiddenMenuItemNames,
             suppressRightClickSelected,
           });
         };
@@ -603,7 +662,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                 size,
                 getDataPath: getDataPath,
                 computedPagination,
-                treeData,
+                treeData: currentTreeData,
                 ...context,
               }}
             >
@@ -635,6 +694,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                       height: '100%',
                       flex: 1,
                     }}
+                    {...gridForcedProps}
                   >
                     {!hideBox && (
                       <SelectedGrid
@@ -653,6 +713,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                         ...frameworkComponentsMaps,
                         ...frameworkComponents,
                       }}
+                      ref={gridRef}
                       components={{
                         ...componentsMaps,
                         ...components,
@@ -676,13 +737,14 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                         size,
                         getDataPath: getDataPath,
                         computedPagination,
-                        treeData,
                         groupSelectsChildren,
                         ...context,
+                        treeData: currentTreeData,
                       }}
+                      onFilterModified={onFilterModified}
                       suppressCsvExport
                       stopEditingWhenGridLosesFocus={false}
-                      treeData={treeData}
+                      treeData={currentTreeData}
                       getDataPath={getDataPath}
                       suppressScrollOnNewData
                       tooltipShowDelay={0}
@@ -707,6 +769,9 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                           ColumnLabelComponent,
                         },
                         ...defaultColDef,
+                        filterParams: {
+                          buttons: ['reset'],
+                        },
                       }}
                       onRowDoubleClicked={handleRowDoubleClicked}
                       groupSelectsChildren={treeData ? false : groupSelectsChildren}
