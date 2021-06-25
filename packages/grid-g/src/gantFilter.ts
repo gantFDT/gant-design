@@ -114,7 +114,7 @@ export function filterHooks(params: filterHooksParams) {
         // api.hideOverlay();
         if (isEmpty(filterModelRef.current) != isEmpty(filterModel)) {
           filterModelRef.current = filterModel;
-          columnIdRef.current = column.getColId();
+          columnIdRef.current = api.getHorizontalPixelRange().left;
           setForcedGridKey((key = 0) => key + 1);
         }
         filterModelRef.current = filterModel;
@@ -125,7 +125,7 @@ export function filterHooks(params: filterHooksParams) {
     filterDataRef,
     forcedGridKey,
     filterModelRef,
-    columnIdRef
+    columnIdRef,
   };
 }
 

@@ -207,6 +207,33 @@ const basicColumns = [
     title: '国家',
     filter: 'agTextColumnFilter',
   },
+  {
+    fieldName: 'county1',
+    title: '国家',
+    filter: 'agTextColumnFilter',
+  },
+  {
+    fieldName: 'county2',
+    title: '国家',
+    filter: 'agTextColumnFilter',
+  },
+  {
+    fieldName: 'county3',
+    title: '国家',
+    filter: 'agTextColumnFilter',
+  },{
+    fieldName: 'county4',
+    title: '国家',
+    filter: 'agTextColumnFilter',
+  },{
+    fieldName: 'county5',
+    title: '国家',
+    filter: 'agTextColumnFilter',
+  },{
+    fieldName: 'county6',
+    title: '国家',
+    filter: 'agTextColumnFilter',
+  },
 ];
 const BaiscGrid = () => {
   const [editable, setEditable] = useState(false);

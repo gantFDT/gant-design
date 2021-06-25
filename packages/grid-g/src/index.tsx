@@ -174,6 +174,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   const selectedChanged = useRef<boolean>(false);
   const columnsRef = useRef<ColumnApi>();
   const selectedLoadingRef = useRef<boolean>(false);
+  const gridRef = useRef<any>();
   const [visibleDrawer, setVisibleDrawer] = useState(false);
   const [clickedEvent, setClickedEvent] = useState<RowClickedEvent>();
 
@@ -547,7 +548,11 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       if (filterModelRef.current && treeDataForcedFilter) {
         params.api.setRowData(get(gridManager, 'agGridConfig.dataSource', []));
         params.api.setFilterModel(filterModelRef.current);
-        params.api.ensureColumnVisible(columnIdRef?.current);
+        // params.api.ensureColumnVisible(columnIdRef?.current);
+        // const {lef} = get(columnIdRef, 'current',{});
+        gridRef.current?.eGridDiv
+          .querySelector('.ag-center-cols-viewport')
+          ?.scrollTo(columnIdRef.current, 0);
       }
       // gridManager.dataSourceChanged(dataSource);
     },
@@ -707,6 +712,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                         ...frameworkComponentsMaps,
                         ...frameworkComponents,
                       }}
+                      ref={gridRef}
                       components={{
                         ...componentsMaps,
                         ...components,

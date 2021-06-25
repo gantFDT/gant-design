@@ -60,7 +60,6 @@ export default memo(
       },
       [treeData],
     );
-    console.log('treeData---->',treeData)
     const [state, setState]: [GantGroupCellRendererState, any] = useState(getTreeDataInfo(node));
     const { hasChildren, expanded, treeDataType } = state;
     const eContracted = useRef<HTMLSpanElement>(null);
