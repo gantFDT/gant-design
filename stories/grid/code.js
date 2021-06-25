@@ -380,7 +380,7 @@ const BaiscGrid = () => {
         treeDataForcedFilter
         treeDataParentName="parentId"
         gridKey="grid-test-2"
-        hideSelectedBox
+        // hideSelectedBox
         rowBuffer={1}
         groupSuppressAutoColumn
         editChangeCallback={onEditChangeCallback}
