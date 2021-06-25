@@ -249,7 +249,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     onCellChanged,
   ]);
 
-  const { filterDataRef, onFilterModified } = filterHooks({
+  const { filterDataRef, onFilterModified, forcedGridKey, filterModelRef } = filterHooks({
     treeData,
     treeDataForcedFilter,
     handleFilterModified,
@@ -257,27 +257,27 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     dataSource,
     context,
   });
-
+  const gridForcedProps = useMemo(() => {
+    if (!treeDataForcedFilter && forcedGridKey) return {};
+    return {
+      key: forcedGridKey,
+    };
+  }, [forcedGridKey]);
   const getDataPath = useCallback(
     data => {
       if (!treeData) return [];
       let dataPath = orignGetDataPath ? orignGetDataPath(data) : isCompute ? data.treeDataPath : [];
-      if (!treeDataForcedFilter) return dataPath;
-      if (isEmpty(filterDataRef.current)) return dataPath;
-      if (dataPath.length <= 1) return dataPath;
-      const self = dataPath[dataPath.length - 1];
-      if(!filterDataRef.current[self]) return [self]
-      const newPath: string[] = [];
-      dataPath.map(itemPath => {
-        if (filterDataRef.current[itemPath]) newPath.push(itemPath);
-      });
-      // if (isEqual(dataPath, dataPath))
-      //   apiRef.current?.refreshCells({
-      //     force: true,
-      //     rowNodes: [apiRef.current.getRowNode(getRowNodeId(data))],
-      //   });
-      if (newPath.length <= 0) return [getRowNodeId(data)];
-      return newPath;
+      // if (!treeDataForcedFilter) return dataPath;
+      // if (isEmpty(filterDataRef.current)) return dataPath;
+      // if (dataPath.length <= 1) return dataPath;
+      // const self = dataPath[dataPath.length - 1];
+      // if (!filterDataRef.current[self]) return [self];
+      // const newPath: string[] = [];
+      // dataPath.map(itemPath => {
+      //   if (filterDataRef.current[itemPath]) newPath.push(itemPath);
+      // });
+      // if (newPath.length <= 0) return [getRowNodeId(data)];
+      return dataPath;
     },
     [orignGetDataPath, treeData],
   );
@@ -538,6 +538,10 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       gridManager.agGridColumnApi = params.columnApi;
       onReady && onReady(params, gridManager);
       setReady(true);
+      if (filterModelRef.current && treeDataForcedFilter) {
+        params.api.setRowData(get(gridManager, 'agGridConfig.dataSource', []));
+        params.api.setFilterModel(filterModelRef.current);
+      }
       // gridManager.dataSourceChanged(dataSource);
     },
     [onReady, gridKey, dataSource],
@@ -612,7 +616,11 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     },
     [selectedRows, onSelectedChanged],
   );
-
+  const currentTreeData = useMemo(() => {
+    if (!treeDataForcedFilter || !treeData) return treeData;
+    if (isEmpty(filterModelRef.current)) return true;
+    return false;
+  }, [forcedGridKey]);
   return (
     <LocaleReceiver>
       {(local, localeCode = 'zh-cn') => {
@@ -641,7 +649,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                 size,
                 getDataPath: getDataPath,
                 computedPagination,
-                treeData,
+                treeData: currentTreeData,
                 ...context,
               }}
             >
@@ -673,6 +681,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                       height: '100%',
                       flex: 1,
                     }}
+                    {...gridForcedProps}
                   >
                     {!hideBox && (
                       <SelectedGrid
@@ -714,14 +723,14 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                         size,
                         getDataPath: getDataPath,
                         computedPagination,
-                        treeData,
                         groupSelectsChildren,
                         ...context,
+                        treeData: currentTreeData,
                       }}
                       onFilterModified={onFilterModified}
                       suppressCsvExport
                       stopEditingWhenGridLosesFocus={false}
-                      treeData={treeData}
+                      treeData={currentTreeData}
                       getDataPath={getDataPath}
                       suppressScrollOnNewData
                       tooltipShowDelay={0}

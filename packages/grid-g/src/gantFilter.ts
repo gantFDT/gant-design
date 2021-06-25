@@ -1,4 +1,4 @@
-import { useRef, useEffect, useCallback } from 'react';
+import { useRef, useEffect, useCallback, useState } from 'react';
 import { GridVariableRef } from './interface';
 import { isEqual, uniq, map, get, isEmpty } from 'lodash';
 import {
@@ -42,9 +42,10 @@ export function filterDateComparator(filterLocalDateAtMidnight, cellValue) {
 
 export function filterHooks(params: filterHooksParams) {
   const filterDataRef = useRef({});
-  const optCounterRef = useRef(0);
   const dataSourceRef = useRef([]);
   const debounceRef = useRef(null);
+  const filterModelRef = useRef<any>();
+  const [forcedGridKey, setForcedGridKey] = useState(0);
   const {
     treeData,
     treeDataForcedFilter,
@@ -58,6 +59,8 @@ export function filterHooks(params: filterHooksParams) {
     return {
       onFilterModified: handleFilterModified,
       filterDataRef: filterDataRef,
+      forcedGridKey,
+      filterModelRef,
     };
   useEffect(() => {
     dataSourceRef.current = dataSource;
@@ -66,78 +69,75 @@ export function filterHooks(params: filterHooksParams) {
   return {
     onFilterModified: useCallback((filterModifiedEvent: FilterModifiedEvent) => {
       handleFilterModified && handleFilterModified(filterModifiedEvent);
+      if (!treeDataForcedFilter || !treeData) return;
       const { api, columnApi, column } = filterModifiedEvent;
       api.showLoadingOverlay();
       if (debounceRef.current) clearTimeout(debounceRef.current);
       debounceRef.current = setTimeout(() => {
-        const columns = columnApi.getAllColumns();
         filterDataRef.current = {};
-        const filterInstance = api.getFilterInstance(column.getColId());
-        api.forEachNodeAfterFilter(node => {
-          const getNodeCellValue = toParamsValue(api, columnApi, column, context);
-          const { appliedModel } = filterInstance as any;
-          const itemValue = getNodeCellValue(node, get(node, 'data', {}));
-          const isAdopt = judgeFilter(filterInstance, itemValue);
-          if (isAdopt) {
-            filterDataRef.current[node.id] = true;
-          }
-        });
-        api.refreshCells({
-          force: true,
-        });
-        const testData = dataSourceRef.current.map((itemData, index) => ({
-          ...itemData,
-          _optCounter: optCounterRef.current + index,
-        }));
-        dataSourceRef.current = testData;
-        optCounterRef.current = optCounterRef.current + 1;
-        api.setRowData(testData);
-        api.hideOverlay()
+        // const filterInstance = api.getFilterInstance(column.getColId());
+        // const newData: any[] = [];
+        // const rowNodes: RowNode[] = [];
+        const filterModel = api.getFilterModel();
+        // const startIndex = api.getFirstDisplayedRow();
+        // const lastIndex = api.getLastDisplayedRow();
+        // api.showLoadingOverlay();
+        // api.forEachNodeAfterFilter((node, index) => {
+        //   const { appliedModel } = filterInstance as any;
+        //   const itemValue = api.getValue(column, node);
+        //   const isAdopt = judgeFilter(filterInstance, itemValue);
+        //   if (isAdopt) {
+        //     filterDataRef.current[node.id] = true;
+        //   }
+        //   if (node.rowIndex >= startIndex && node.rowIndex <= lastIndex)
+        //     newData.push({
+        //       ...get(node, 'data', {}),
+        //       _optCounter: optCounterRef.current + index,
+        //     });
+        // });
+        // // console.log('---->',newData)
+        // // applyTransactionAddAsync(
+        // //   api,
+        // //   newData,
+        // //   () => {},
+        // // );
+        // api.setFilterModel({});
+        // api.setRowData([]);
+        // api.setRowData(
+        //   dataSourceRef.current.map((item, index) => ({
+        //     ...item,
+        //     _optCounter: optCounterRef.current + index,
+        //   })),
+        // );
+        // api.setFilterModel(filterModel);
+        // api.hideOverlay();
+        if (isEmpty(filterModelRef.current) != isEmpty(filterModel)) {
+          filterModelRef.current = filterModel;
+          setForcedGridKey((key = 0) => key + 1);
+        }
+        filterModelRef.current = filterModel;
+        api.hideOverlay();
         debounceRef.current = null;
       }, 500);
     }, []),
     filterDataRef,
+    forcedGridKey,
+    filterModelRef,
   };
 }
 
-function toParamsValue(api: GridApi, columnApi: ColumnApi, column: Column, context: any) {
-  const colDef = get(column, 'colDef');
-  const userProvidedColDef = get(column, 'userProvidedColDef');
-  const { field } = colDef;
-  return (node: RowNode, data: any) => {
-    let value = get(data, field);
-    if (!userProvidedColDef.valueGetter && !userProvidedColDef.valueFormatter) return value;
-    if (userProvidedColDef.valueGetter && typeof userProvidedColDef.valueGetter == 'function') {
-      const valueGetterParams: ValueGetterParams = {
-        api,
-        columnApi,
-        column,
-        colDef,
-        context,
-        node,
-        data,
-        getValue: (field: string) => node.data,
-      };
-      value = userProvidedColDef.valueGetter(valueGetterParams);
-    }
-    if (
-      userProvidedColDef.valueFormatter &&
-      typeof userProvidedColDef.valueFormatter === 'function'
-    ) {
-      const valueFormatterParams: ValueFormatterParams = {
-        api,
-        columnApi,
-        column,
-        colDef,
-        context,
-        node,
-        data,
-        value,
-      };
-      value = userProvidedColDef.valueFormatter(valueFormatterParams);
-    }
-    return value;
-  };
+function applyTransactionAddAsync(api: GridApi, data: any = [], callback: () => void, num = 1000) {
+  let nowData = data;
+  let nextData = [];
+  if (nowData.length > num) {
+    nextData = nowData.slice(num);
+    nowData = nowData.slice(0, num);
+  }
+
+  api.applyTransactionAsync({ update: nowData }, () => {
+    if (nextData.length > 0) return applyTransactionAddAsync(api, nextData, callback, num);
+    callback();
+  });
 }
 
 function judgeFilter(filterIn: any, value: any) {

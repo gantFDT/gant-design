@@ -26,19 +26,11 @@ const RandomCreate = () => {
 //   console.log('=====>', context);
 //   return <div>1111</div>;
 // }
-let mockData = Array(10)
+let mockData = Array(10000)
   .fill('')
   .map(() => RandomCreate());
 mockData = [
   ...mockData,
-  {
-    ip: Random.ip(),
-    name: Random.name(),
-    age: Random.natural(2, 40),
-    county: Random.county(true),
-    date: Random.date('yyyy-MM-dd'),
-    path: ['1'],
-  },
 ];
 
 const testTreeDataSource = [
@@ -121,6 +113,7 @@ const testTreeDataSource = [
     path: ['2', '2-3'],
     parentId: '2',
   },
+  ...mockData
 ];
 
 const basicColumns = [
@@ -403,11 +396,6 @@ const BaiscGrid = () => {
           // console.log('---->', data.path);
           return data.path;
         }}
-        // pagination={{
-        //   total: 400,
-        //   onChange: onPageChange,
-        //   current,
-        // }}
         gridOptions={{
           suppressQuotes: true,
           // excelStyles: [{ id: 'stringType', dataType: 'string' }],
