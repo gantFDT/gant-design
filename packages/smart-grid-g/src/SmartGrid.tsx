@@ -64,7 +64,7 @@ function SmartGrid<T>(props: SmartGridProps<T>): React.ReactElement {
   const [activeView, setActiveView] = useState<ViewConfig>(baseView as ViewConfig);
   const { panelConfig } = activeView;
   const [lastViewKey, setLastViewKey] = useLocalStorage<string>(`grid-last-view-key:${originGridKey}`, '');
-  const [customViews, setCustomViews] = useLocalStorage<ViewConfig[]>(`grid-custom-views:${originGridKey}`, [] as ViewConfig[]);
+  const [customViews, setCustomViews] = useLocalStorage<ViewConfig[]>(`grid-custom-views:${originGridKey}:${userId}`, [] as ViewConfig[]);
   const [companyViews, setCompanyViews] = useLocalStorage<ViewConfig[]>(`grid-company-views:${originGridKey}`, [] as ViewConfig[]);
 
   const apiRef: any = useRef(null)
