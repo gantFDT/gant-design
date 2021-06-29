@@ -1,15 +1,17 @@
 import React, { useState, useCallback, memo, useMemo } from 'react'
-import { Modal, Form, Input, Checkbox, Button } from 'antd'
+import { Modal, Form, Input, Checkbox, Button, Radio } from 'antd'
 import Receiver from '../locale/Receiver'
 
 export interface SaveAsModalProps {
   form: any
   visible?: boolean
   loading?: boolean
+  companyViewAuth?: boolean
   onCancel?: () => void
   onSubmit?: (values: object) => void
   systemViews: any[]
   customViews: any[]
+  companyViews: any[]
 }
 
 function SaveAsModal(props: SaveAsModalProps) {
@@ -21,10 +23,12 @@ function SaveAsModal(props: SaveAsModalProps) {
     onSubmit,
     systemViews,
     customViews,
+    companyViews,
+    companyViewAuth,
     ...nextProps
   } = props
 
-  const allNames = useMemo(() => { return [...systemViews, ...customViews].map(item => (item.name)) }, [systemViews, customViews])
+  const allNames = useMemo(() => { return [...systemViews, ...customViews, ...companyViews].map(item => (item.name)) }, [systemViews, customViews, companyViews])
 
   const onOk = useCallback(() => {
     validateFieldsAndScroll((errors: any, values: object) => {
@@ -54,6 +58,16 @@ function SaveAsModal(props: SaveAsModalProps) {
         {...nextProps}
       >
         <Form>
+          <Form.Item label={locale.viewType} style={{marginBottom: 0}}>
+            {getFieldDecorator('type', {
+              initialValue: 'custom'
+            })(
+              <Radio.Group size="small" buttonStyle="solid">
+                <Radio value="custom">{locale.customView}</Radio>
+                { companyViewAuth && <Radio value="company">{locale.companyView}</Radio> }
+              </Radio.Group>
+            )}
+          </Form.Item>
           <Form.Item label={locale.viewName}>
             {getFieldDecorator('name', {
               rules: [

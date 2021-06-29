@@ -18,9 +18,9 @@ import { getType } from '@util';
 
 
 const DEFAULT_VIEW: PanelConfig = {
-  clickable: true,
-  footerDirection: 'row',
-  pageSize: 50,
+  // clickable: true,
+  // footerDirection: 'row',
+  // pageSize: 50,
   columnFields: [],
 };
 
@@ -109,7 +109,7 @@ export default function formatSchema<R>(schema: SchemaProp<R> | CustomColumnProp
       supportColumnFields: schema,
       systemViews: [
         {
-          viewId: originGridKey ? 'systemView' : `systemView:${originGridKey}`,
+          viewId: originGridKey ? `system-${originGridKey}` : 'system',
           name: '全字段',
           version: 'default',
           panelConfig: {
@@ -118,6 +118,7 @@ export default function formatSchema<R>(schema: SchemaProp<R> | CustomColumnProp
               hide: column.hide,
               width: column.width,
               fixed: column.fixed,
+              sort: column.sort,
             })),
           },
         },

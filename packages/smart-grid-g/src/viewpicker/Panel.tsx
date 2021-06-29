@@ -7,6 +7,7 @@ import Receiver from '../locale/Receiver';
 
 interface PanelProps {
   viewId?: string; // 当前视图id
+  userId?: string; // 用户id
   viewType: ViewType; // 视图类型
   title: string | ReactNode; // 标题
   views: any[]; // 视图列表
@@ -24,6 +25,7 @@ interface PanelProps {
 export default (props: PanelProps) => {
   const {
     viewId,
+    userId,
     title,
     views,
     viewType,
@@ -76,13 +78,15 @@ export default (props: PanelProps) => {
           )}
           {views.map(item => {
             const { viewId: id, name } = item;
+            const [ _, _userId ] = id.split('-');
+            const editable = viewType === 'custom' || viewType === 'company' && _userId === userId;
             return (
               <li key={name}>
                 <div className="leftContent" onClick={onViewChange.bind(null, item)}>
                   <span>{name}</span>
                 </div>
                 <div className="operates">
-                  {viewType === 'custom' && (
+                  {editable && (
                     <>
                       <Tooltip title={locale.rename}>
                         <Icon

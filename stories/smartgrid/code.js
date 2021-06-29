@@ -6,6 +6,42 @@ import { SmartGrid, EditStatus, SwitchStatus } from 'gantd'
 const { Random } = Mock
 
 
+SmartGrid.setProps({
+  headerRight: <><Button size="small">全局按钮</Button></>,
+  getCustomViews(gridKey) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (gridKey === 'grid-custom-views:ConfigColumnsUse') {
+          resolve([{"viewId":"custom-1231231-723926391334","name":"远程用户视图","version":"2021-06-10 14:56:9460","panelConfig":{"clickable":true,"footerDirection":"row","pageSize":50,"columnFields":[{"title":"姓名","fieldName":"name","hide":true,"checked":true,"display":"block"},{"title":"年龄","fieldName":"age","checked":true,"display":"block"},{"title":"住址","fieldName":"address","width":200,"checked":false,"display":"block"},{"title":"标签","fieldName":"tags","checked":false,"display":"block"},{"title":"操作","fieldName":"action","checked":false,"display":"block"},{"title":"性别","fieldName":"sex","dynamic":true,"checked":true},{"title":"身高","fieldName":"height","dynamic":true,"checked":true}]}}])
+        } else {
+          resolve([])
+        }
+      }, 200)
+    })
+  },
+  getCompanyViews(gridKey) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (gridKey === 'grid-custom-views:ConfigColumnsUse') {
+          resolve([{"viewId":"company-1231231-723926391334","name":"共享1","version":"2021-06-10 14:56:9460","panelConfig":{"clickable":true,"footerDirection":"row","pageSize":50,"columnFields":[{"title":"姓名","fieldName":"name","hide":true,"checked":true,"display":"block"},{"title":"年龄","fieldName":"age","checked":true,"display":"block"},{"title":"住址","fieldName":"address","width":200,"checked":false,"display":"block"},{"title":"标签","fieldName":"tags","checked":false,"display":"block"},{"title":"操作","fieldName":"action","checked":false,"display":"block"},{"title":"性别","fieldName":"sex","dynamic":true,"checked":true},{"title":"身高","fieldName":"height","dynamic":true,"checked":true}]}}])
+        } else {
+          resolve([{"viewId":"company-1231231-71456576","name":"共享1","version":"2021-06-29 14:13:1070","panelConfig":{"clickable":true,"footerDirection":"row","pageSize":50,"columnFields":[{"title":"姓名","fieldName":"name","checked":true,"display":"block"},{"title":"年龄","fieldName":"age","checked":true,"display":"block"},{"title":"住址","fieldName":"address","checked":false,"display":"block"},{"title":"标签","fieldName":"tags","checked":false,"display":"block"},{"title":"操作","fieldName":"action","checked":false,"display":"block"}]}}])
+        }
+      }, 200)
+    })
+  },
+  setCustomViews(gridKey, views) {
+    console.log(\`gridKey\`, gridKey)
+    console.log(\`views\`, views)
+  },
+  setCompanyViews(gridKey, views) {
+    console.log(\`gridKey\`, gridKey)
+    console.log(\`views\`, views)
+  },
+  companyViewAuth: true,
+  userId: '1231231'
+})
+
 var dataSource = Array(10).fill().map((_, Idx) => ({
   key: Idx,
   name: Random.cname(),
@@ -63,7 +99,7 @@ function BasicUse() {
   return (
     <div style={{ margin: 10 }}>
       <SmartGrid
-        tableKey="BasicUse"
+        gridKey="BasicUse"
         schema={tableColumns}
         dataSource={dataSource}
         withoutAnimation

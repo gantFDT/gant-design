@@ -14,6 +14,7 @@ export default {
     viewNameRequired: '视图名称必填',
     viewNamePlaceholder: '视图名称必填',
     viewNameRepeat: '视图名称重复',
+    viewType: '视图类型',
     setDefault: '设为默认',
     fieldConfig: '字段配置',
     displayConfig: '显示配置',
@@ -32,7 +33,7 @@ export default {
     view: '视图',
     noView: '暂无视图',
     sysView: '预定义视图',
-    companyView: '企业视图',
+    companyView: '共享视图',
     customView: '自定义视图',
     default: '默认',
     rename: '重命名',
@@ -47,4 +48,6 @@ export default {
     checkAll: '全选',
     align: '对齐方式',
     inputKeyword: '请输入关键词',
+    sortAsc: '正序',
+    sortDesc: '倒序',
 }

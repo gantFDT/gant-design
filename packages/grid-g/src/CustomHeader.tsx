@@ -63,8 +63,8 @@ export default props => {
 
   const sort = (
     <div className="customHeaderSort" onClick={enableSorting ? handleSortChange : () => {}}>
-      {ascSort && <Icon type="arrow-down" />}
-      {descSort && <Icon type="arrow-up" />}
+      {descSort && <Icon type="arrow-down" />}
+      {ascSort && <Icon type="arrow-up" />}
     </div>
   );
 
