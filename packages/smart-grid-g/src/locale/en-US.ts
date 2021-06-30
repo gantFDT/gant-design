@@ -14,6 +14,7 @@ export default {
     viewNameRequired: 'ViewName Required',
     viewNamePlaceholder: 'ViewName Required',
     viewNameRepeat: 'ViewName Repeated',
+    viewType: 'View Type',
     setDefault: 'Set default',
     fieldConfig: 'Field config',
     displayConfig: 'Display config',
@@ -47,4 +48,6 @@ export default {
     checkAll: 'Check All',
     align: 'Align',
     inputKeyword: 'Please input keyword',
+    sortAsc: 'Asc',
+    sortDesc: 'Desc',
 }

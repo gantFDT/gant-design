@@ -1,6 +1,5 @@
 import React from 'react';
 import { GridPropsPartial, Columns } from '@grid';
-import { copyMetadata } from 'lodash-decorators/utils';
 
 export enum Fields {
   Input = 'Input',
@@ -25,14 +24,15 @@ export interface ColumnConfig {
   fieldName: string;
   checked?: boolean;
   fixed?: 'left' | 'right';
+  sort?: string;
   width?: number | string;
   hidden?: boolean;
 }
 
 export interface PanelConfig {
-  clickable?: boolean;
-  footerDirection?: 'row' | 'row-reverse';
-  pageSize?: number;
+  // clickable?: boolean;
+  // footerDirection?: 'row' | 'row-reverse';
+  // pageSize?: number;
   columnFields: ColumnConfig[];
 }
 export interface ViewConfig {
@@ -52,9 +52,9 @@ export interface ViewListProps {
   customViews: ViewConfig[];
 }
 
-export type GantTableProps<T> = Omit<Partial<GridPropsPartial<T>>, 'columns'>;
+export type GantGridProps<T> = Omit<Partial<GridPropsPartial<T>>, 'columns'>;
 
-export interface SmartTableProps<T> extends GantTableProps<T> {
+export interface SmartGridProps<T> extends GantGridProps<T> {
   schema: SchemaProp<T> | CustomColumnProps<T>[];
   title?: string | React.ReactElement;
   headerRight?: React.ReactElement;
@@ -66,8 +66,17 @@ export interface SmartTableProps<T> extends GantTableProps<T> {
   prefixCls?: string;
 
   customViews?: ViewConfig[];
+  companyViews?: ViewConfig[];
   lastViewKey?: string;
-  onCustomViewsChange?: (customViews: ViewConfig[]) => void;
+  onCustomViewsChange?: (views: ViewConfig[]) => void;
+  onCompanyViewsChange?: (views: ViewConfig[]) => void;
+  userId?: string;
+  companyViewAuth?: boolean;
+
+  getCustomViews?: (gridKey: string) => Promise<ViewConfig[]>;
+  getCompanyViews?: (gridKey: string) => Promise<ViewConfig[]>;
+  setCustomViews?: (gridKey: string, views: ViewConfig[]) => void;
+  setCompanyViews?: (gridKey: string, views: ViewConfig[]) => void;
 
   bindKeys?: any;
   onReload?: () => void;
@@ -79,9 +88,13 @@ export interface SmartTableProps<T> extends GantTableProps<T> {
   style?: object;
 }
 
-export interface SmartTableType {
-  <T>(props: SmartTableProps<T>): React.ReactElement;
+/** 兼容旧写法 */
+export type SmartTableProps<T> = SmartGridProps<T>;
+
+export interface SmartGridType {
+  <T>(props: SmartGridProps<T>): React.ReactElement;
   setFields?: (field: Object) => void;
+  setProps?: (props: Object) => void;
 }
 
 export enum langEnum {
@@ -89,7 +102,7 @@ export enum langEnum {
   'en-US' = 'en-US',
 }
 
-export interface LocalWrapperProps<T> extends SmartTableProps<T> {
+export interface LocalWrapperProps<T> extends SmartGridProps<T> {
   locale?: any;
   i18n?: langEnum;
 }
