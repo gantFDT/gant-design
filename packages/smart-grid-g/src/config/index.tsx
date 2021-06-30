@@ -12,8 +12,11 @@ interface ConfigModalProps extends ModalProps {
   originColumns: any
   systemViews: any[]
   customViews: any[]
+  companyViews: any[]
   gridKey: string
   onSaveViews: (vals: any) => void
+  companyViewAuth?: boolean,
+  userId?: string,
   withoutAnimation?: boolean,
   showDisplayConfig?: boolean,
   onSaveAs: (vals: any, cb: () => void) => void;
@@ -29,6 +32,9 @@ function ConfigModal(props: ConfigModalProps) {
     dataSource,
     systemViews,
     customViews,
+    companyViews,
+    companyViewAuth,
+    userId,
     onSaveViews,
     onSaveAs,
     gridKey,
@@ -74,38 +80,35 @@ function ConfigModal(props: ConfigModalProps) {
     setModalHeight(height)
   },[])
 
-  const isSystem = useMemo(() => fakeView.viewId && fakeView.viewId.includes('sys'), [fakeView])
+  const saveDisabled = useMemo(() => {
+    if (fakeView.viewId.startsWith('system')) return true;
+    const [viewType, _userId] = fakeView.viewId.split('-');
+    if (viewType === 'company' && _userId !== userId) {
+      return true;
+    }
+    return false;
+  }, [fakeView, userId])
 
-  const handleSaveAs = useCallback(
-    values => {
-      let cb = () => {
-        setTitleModalVisible(false)
-      }
-      onSaveAs &&
-        onSaveAs(
-          {
-            panelConfig: {
-              ...fakeView.panelConfig,
-            },
-            ...values,
-          },
-          cb,
-        )
-    },
-    [fakeView, onSaveAs],
-  )
+  const handleSaveAs = useCallback(values => {
+    const cb = () => {
+      setTitleModalVisible(false)
+    }
+    onSaveAs && onSaveAs({
+      panelConfig: {
+        ...fakeView.panelConfig,
+      },
+      ...values,
+    }, cb)
+  }, [fakeView, onSaveAs])
 
-  const handlerChangeConfig = useCallback(
-    config => {
-      const _view = {
-        ...fakeView,
-        panelConfig: config,
-      }
-      setFakeView(_view)
-      // onViewChange && onViewChange(_view)
-    },
-    [fakeView],
-  )
+  const handlerChangeConfig = useCallback(config => {
+    const _view = {
+      ...fakeView,
+      panelConfig: config,
+    }
+    setFakeView(_view)
+    // onViewChange && onViewChange(_view)
+  }, [fakeView])
 
   return (
     <>
@@ -121,6 +124,7 @@ function ConfigModal(props: ConfigModalProps) {
               withoutAnimation={withoutAnimation}
               viewId={fakeView.viewId}
               customViews={customViews}
+              companyViews={companyViews}
               systemViews={systemViews}
               switchActiveView={handlerChooseView}
               updateView={onSaveViews}
@@ -142,9 +146,7 @@ function ConfigModal(props: ConfigModalProps) {
                 <Button
                   size="small"
                   icon="diff"
-                  onClick={() => {
-                    setTitleModalVisible(true)
-                  }}
+                  onClick={setTitleModalVisible.bind(null, true)}
                 >
                   {locale.saveAs}
                 </Button>
@@ -153,7 +155,7 @@ function ConfigModal(props: ConfigModalProps) {
                   type="primary"
                   icon="save"
                   onClick={handlerSave}
-                  disabled={isSystem}
+                  disabled={saveDisabled}
                 >
                   {locale.save}
                 </Button>
@@ -168,11 +170,11 @@ function ConfigModal(props: ConfigModalProps) {
       <SaveAsModal
         visible={titleModalVisible}
         onSubmit={handleSaveAs}
-        onCancel={() => {
-          setTitleModalVisible(false)
-        }}
+        onCancel={setTitleModalVisible.bind(null, false)}
         systemViews={systemViews}
         customViews={customViews}
+        companyViews={companyViews}
+        companyViewAuth={companyViewAuth}
       />
     </>
   )

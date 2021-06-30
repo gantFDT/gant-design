@@ -9,6 +9,7 @@ import {
 import arrayMove from 'array-move';
 import { Icon } from '@data-cell';
 import Receiver from '../locale/Receiver';
+import { locale } from 'moment';
 
 Icon.updateFromIconfontCN({ scriptUrl: '//at.alicdn.com/t/font_1252237_yp35yr9jf6.js'})
 
@@ -16,11 +17,12 @@ interface RecordProps {
   fieldName: string;
   title: string;
   checked: boolean;
-  clickable?: boolean;
+  // clickable?: boolean;
   dynamic?: boolean;
   hide?: boolean;
   display?: string;
   fixed?: 'left' | 'right';
+  sort?: 'asc' | 'desc' | 'none';
 }
 
 interface SortableProps {
@@ -60,6 +62,12 @@ function Sortable(props: SortableProps) {
     onChange(arrayMove(dataSource, index, oldFixed === 'left' ? leftSpinIdx : (rightSpinIdx === -1 ? -1 : rightSpinIdx)));
   }, [dataSource, leftSpinIdx, rightSpinIdx]);
 
+  const handleSort = useCallback((index) => {
+    const _sort = dataSource[index].sort;
+    dataSource[index].sort = !_sort || _sort === 'none' ? 'asc' : _sort === 'asc' ? 'desc' : 'none';
+    onChange(dataSource);
+  }, [dataSource]);
+
   const handlerFieldVisible = useCallback((index, event) => {
     dataSource[index].checked = event.target.checked;
     onChange(dataSource);
@@ -68,41 +76,57 @@ function Sortable(props: SortableProps) {
   const DragHandler = useMemo(() => SortableHandle(() => <Icon className="dragHandler" type="icon-drag" />), []);
 
   const SortableItem = SortableElement(
-    ({ dataItem: { title, checked, fixed }, dataIdx}: any) => (
+    ({ dataItem: { title, checked, fixed, sort }, dataIdx}: any) => (
       <Row type="flex" align="middle" justify="space-between" className="tableRow gant-table-config-row">
         <div style={{ flexGrow: 0 }}>
           <Checkbox checked={checked} onChange={handlerFieldVisible.bind(null, dataIdx)} />
         </div>
-        <div
-          style={{
-            flexGrow: 1,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
-        >
-          <span style={{ flex: 1 }}>{title}</span>
-        </div>
-        <Receiver>{
-          (locale) => <div style={{ flexGrow: 0, display: 'flex', width: 64, flexDirection: 'row-reverse' }}>
-            <DragHandler />
-            {
-              fixed ? (
-                <Tooltip style={{ flex: 0 }} placement="top" title={locale.setNormalColumn}>
-                  <div><Icon type="lock" onClick={() => handlerUnlock(dataIdx)} className="disabledIcon" /></div>
-                </Tooltip>
-              ) : (
-                <>
-                  <Tooltip style={{ flex: 0 }} placement="top" title={locale.setFixedRightColumn}>
-                    <div><Icon style={{transform: 'rotateY(180deg)'}} type="pushpin" onClick={() => handlerLock(dataIdx, 'right')} className="disabledIcon" /></div>
-                  </Tooltip>
-                  <Tooltip style={{ flex: 0 }} placement="top" title={locale.setFixedLeftColumn}>
-                    <div><Icon type="pushpin" onClick={() => handlerLock(dataIdx, 'left')} className="disabledIcon" /></div>
-                  </Tooltip>
-                </>
-              )
-            }
-          </div>}
+        <Receiver>
+          {(locale) => 
+            <>
+              <div
+                style={{
+                  flexGrow: 1,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}
+                onClick={handleSort.bind(null, dataIdx)}
+              >
+                <span style={{ display: 'flex', flex: 1, cursor: 'pointer' }}>
+                  {title}
+                  {
+                    sort && sort !== 'none' && <Tooltip
+                      style={{ flex: 0 }}
+                      placement="top"
+                      title={sort === 'asc' ? locale.sortAsc : locale.sortDesc}
+                    >
+                      <div><Icon className="gant-margin-h-5" type={sort === 'asc' ? 'arrow-up' : 'arrow-down'} /></div>
+                    </Tooltip>
+                  }
+                </span>
+              </div>
+              <div style={{ flexGrow: 0, display: 'flex', width: 64, flexDirection: 'row-reverse' }}>
+                <DragHandler />
+                {
+                  fixed ? (
+                    <Tooltip style={{ flex: 0 }} placement="top" title={locale.setNormalColumn}>
+                      <div><Icon type="lock" onClick={() => handlerUnlock(dataIdx)} className="disabledIcon" /></div>
+                    </Tooltip>
+                  ) : (
+                    <>
+                      <Tooltip style={{ flex: 0 }} placement="top" title={locale.setFixedRightColumn}>
+                        <div><Icon style={{transform: 'rotateY(180deg)'}} type="pushpin" onClick={() => handlerLock(dataIdx, 'right')} className="disabledIcon" /></div>
+                      </Tooltip>
+                      <Tooltip style={{ flex: 0 }} placement="top" title={locale.setFixedLeftColumn}>
+                        <div><Icon type="pushpin" onClick={() => handlerLock(dataIdx, 'left')} className="disabledIcon" /></div>
+                      </Tooltip>
+                    </>
+                  )
+                }
+              </div>
+            </>
+          }
         </Receiver>
       </Row>
     ),

@@ -26,6 +26,7 @@ export interface ViewProps {
   viewId: string // 当前视图id
   viewName: string // 视图名称
   defaultView?: DefaultView // 默认视图
+  userId?: string // 用户id，共享视图权限判断
   systemViews: any[] // 系统视图
   customViews: any[] // 用户视图
   companyViews?: any[] // 企业视图
@@ -46,6 +47,7 @@ export interface ViewProps {
 export default function View(props: ViewProps) {
   const {
     viewId,
+    userId,
     viewName,
     systemViews = [],
     companyViews = [],
@@ -128,9 +130,10 @@ export default function View(props: ViewProps) {
                 />
                 {companyViews.length > 0 && (
                   <Panel
-                    title={<><Icon type="user" className="gant-margin-h-5" />{locale.companyView}</>}
+                    title={<><Icon type="global" className="gant-margin-h-5" />{locale.companyView}</>}
                     views={companyViews}
                     viewType="company"
+                    userId={userId}
                     switchActiveView={switchActiveViewImpl.bind(null, 'company')}
                     updateView={updateView}
                     defaultViewId={activeDefaultView.viewId}
