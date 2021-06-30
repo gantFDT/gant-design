@@ -199,6 +199,15 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     return rowkey(data);
   }, []);
 
+  const getDataPath = useCallback(
+    data => {
+      if (!treeData) return [];
+      let dataPath = orignGetDataPath ? orignGetDataPath(data) : isCompute ? data.treeDataPath : [];
+      return dataPath;
+    },
+    [orignGetDataPath, treeData],
+  );
+
   // filter
 
   useEffect(() => {
@@ -218,7 +227,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   // 分页事件
   const computedPagination: any = useMemo(() => usePagination(pagination), [pagination]);
 
-  // context 变化
+  // context 
   const context = useMemo(() => {
     return {
       globalEditable: editable && !drawerMode,
@@ -248,6 +257,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     onCellEditChange,
     onCellEditingChange,
     onCellChanged,
+    getDataPath
   ]);
 
   const {
@@ -270,24 +280,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       key: forcedGridKey,
     };
   }, [forcedGridKey]);
-  const getDataPath = useCallback(
-    data => {
-      if (!treeData) return [];
-      let dataPath = orignGetDataPath ? orignGetDataPath(data) : isCompute ? data.treeDataPath : [];
-      // if (!treeDataForcedFilter) return dataPath;
-      // if (isEmpty(filterDataRef.current)) return dataPath;
-      // if (dataPath.length <= 1) return dataPath;
-      // const self = dataPath[dataPath.length - 1];
-      // if (!filterDataRef.current[self]) return [self];
-      // const newPath: string[] = [];
-      // dataPath.map(itemPath => {
-      //   if (filterDataRef.current[itemPath]) newPath.push(itemPath);
-      // });
-      // if (newPath.length <= 0) return [getRowNodeId(data)];
-      return dataPath;
-    },
-    [orignGetDataPath, treeData],
-  );
+
 
   // 处理selection
   const gantSelection: RowSelection = useMemo(() => {
@@ -744,13 +737,13 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                       suppressCsvExport
                       stopEditingWhenGridLosesFocus={false}
                       treeData={currentTreeData}
-                      getDataPath={getDataPath}
                       suppressScrollOnNewData
                       tooltipShowDelay={0}
                       tooltipMouseTrack
                       {...selection}
                       excelStyles={[{ id: 'stringType', dataType: 'string' }, ...excelStyles]}
                       {...orignProps}
+                      getDataPath={getDataPath}
                       immutableData
                       columnDefs={localColumnsDefs}
                       gridOptions={{

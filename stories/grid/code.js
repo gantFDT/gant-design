@@ -393,7 +393,7 @@ const BaiscGrid = () => {
         loading={loading}
         columns={columns}
         editable={editable}
-        dataSource={dataSource}
+        dataSource={[]}
         serialNumber
         boxColumnIndex={['name', 'county', 'age']}
         rowSelection={{
@@ -404,8 +404,9 @@ const BaiscGrid = () => {
           },
         }}
         treeData
-        treeDataForcedFilter
-        treeDataParentName="parentId"
+        // treeDataForcedFilter
+        // treeDataParentName="parentId"
+        excludeChildrenWhenTreeDataFiltering
         gridKey="grid-test-2"
         // hideSelectedBox
         rowBuffer={1}
