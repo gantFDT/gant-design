@@ -222,7 +222,15 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       return flattenTreeData(initDataSource, getRowNodeId, treeDataChildrenName);
     return initDataSource;
   }, [initDataSource, treeData, treeDataChildrenName]);
-
+  const serverDataRequest = useCallback(
+    (params, groupKeys, successCallback) => {
+      if (serverGroupExpend) {
+        return serverGroupExpend(params, serverDataCallback(groupKeys, successCallback));
+      }
+      return successCallback([], 0);
+    },
+    [serverGroupExpend],
+  );
   /**fix: 解决保存时候标记状态无法清楚的问题 */
   // 分页事件
   const computedPagination: any = useMemo(() => usePagination(pagination), [pagination]);
@@ -323,15 +331,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       gridManager.appendChild(groupKeys, rows);
     };
   }, []);
-  const serverDataRequest = useCallback(
-    (params, groupKeys, successCallback) => {
-      if (serverGroupExpend) {
-        return serverGroupExpend(params, serverDataCallback(groupKeys, successCallback));
-      }
-      return successCallback([], 0);
-    },
-    [serverGroupExpend],
-  );
+
 
   const { componentsMaps, frameworkComponentsMaps } = useMemo(() => {
     return getAllComponentsMaps();
