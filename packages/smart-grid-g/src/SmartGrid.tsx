@@ -63,7 +63,7 @@ function SmartGrid<T>(props: SmartGridProps<T>): React.ReactElement {
   const [configModalVisible, setConfigModalVisible] = useState(false);
   const [activeView, setActiveView] = useState<ViewConfig>(baseView as ViewConfig);
   const { panelConfig } = activeView;
-  const [lastViewKey, setLastViewKey] = useLocalStorage<string>(`grid-last-view-key:${originGridKey}`, '');
+  const [lastViewKey, setLastViewKey] = useLocalStorage<string>(`grid-last-view-key:${originGridKey}:${userId}`, '');
   const [customViews, setCustomViews] = useLocalStorage<ViewConfig[]>(`grid-custom-views:${originGridKey}:${userId}`, [] as ViewConfig[]);
   const [companyViews, setCompanyViews] = useLocalStorage<ViewConfig[]>(`grid-company-views:${originGridKey}`, [] as ViewConfig[]);
 
@@ -152,7 +152,7 @@ function SmartGrid<T>(props: SmartGridProps<T>): React.ReactElement {
       setCompanyViews(views);
     } else {
       onCustomViewsChange && onCustomViewsChange(views)
-      setCustomViewsProp && setCustomViewsProp(`grid-custom-views:${originGridKey}`, views)
+      setCustomViewsProp && setCustomViewsProp(`grid-custom-views:${originGridKey}:${userId}`, views)
       setCustomViews(views);
     }
     hideModal && hideModal();
@@ -216,11 +216,21 @@ function SmartGrid<T>(props: SmartGridProps<T>): React.ReactElement {
         _customView.panelConfig.columnFields = formatColumnFields(__columnFields, columns)
       }
 
-      setCustomViewsProp && setCustomViewsProp(`grid-custom-views:${originGridKey}`, _customViews)
+      setCustomViewsProp && setCustomViewsProp(`grid-custom-views:${originGridKey}:${userId}`, _customViews)
 
       return [..._customViews];
     })
-  }, [columns, setCustomViewsProp])
+    setCompanyViews((_companyViews: ViewConfig[]) => {
+      for (const _companyView of _companyViews) {
+        const __columnFields = _companyView.panelConfig.columnFields;
+        _companyView.panelConfig.columnFields = formatColumnFields(__columnFields, columns)
+      }
+
+      setCompanyViewsProp && setCompanyViewsProp(`grid-company-views:${originGridKey}:${userId}`, _companyViews)
+
+      return [..._companyViews];
+    })
+  }, [columns, setCustomViewsProp, setCompanyViewsProp])
 
   useEffect(() => {
     const columnKeys = finalColumns.map(_column => _column.fieldName).join('');
