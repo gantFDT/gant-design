@@ -9,7 +9,7 @@ import ViewPicker from './viewpicker';
 import { useTableConfig, useLocalStorage } from './hooks';
 import withKeyevent from '@keyevent';
 import Header from '@header';
-import { generateUuid } from '@util';
+import { generateUuid, deepCopy4JSON, JSONisEqual } from '@util';
 import Receiver from './locale/Receiver';
 
 const viewVersionFormat: string = 'YYYY-MM-DD HH:mm:SSSS';
@@ -87,9 +87,12 @@ function SmartGrid<T>(props: SmartGridProps<T>): React.ReactElement {
     companyViewsProp && setCompanyViews(companyViewsProp)
   }, [companyViewsProp])
 
+  const originCustomViewsRef = useRef(null);
+  const originCompanyViewsRef = useRef(null);
   useEffect(() => {
     if (getCustomViews) {
-      getCustomViews(`grid-custom-views:${originGridKey}`).then(views => {
+      getCustomViews(`grid-custom-views:${originGridKey}:${userId}`).then(views => {
+        originCustomViewsRef.current = deepCopy4JSON(views)
         setCustomViews(views)
       })
     }
@@ -98,6 +101,7 @@ function SmartGrid<T>(props: SmartGridProps<T>): React.ReactElement {
   useEffect(() => {
     if (getCompanyViews) {
       getCompanyViews(`grid-company-views:${originGridKey}`).then(views => {
+        originCompanyViewsRef.current = deepCopy4JSON(views)
         setCompanyViews(views)
       })
     }
@@ -216,7 +220,9 @@ function SmartGrid<T>(props: SmartGridProps<T>): React.ReactElement {
         _customView.panelConfig.columnFields = formatColumnFields(__columnFields, columns)
       }
 
-      setCustomViewsProp && setCustomViewsProp(`grid-custom-views:${originGridKey}:${userId}`, _customViews)
+      if (setCustomViewsProp && originCustomViewsRef.current && !JSONisEqual(originCustomViewsRef.current, _customViews)) {
+        setCustomViewsProp(`grid-custom-views:${originGridKey}:${userId}`, _customViews)
+      }
 
       return [..._customViews];
     })
@@ -226,11 +232,13 @@ function SmartGrid<T>(props: SmartGridProps<T>): React.ReactElement {
         _companyView.panelConfig.columnFields = formatColumnFields(__columnFields, columns)
       }
 
-      setCompanyViewsProp && setCompanyViewsProp(`grid-company-views:${originGridKey}:${userId}`, _companyViews)
+      if (setCompanyViewsProp && originCompanyViewsRef.current && !JSONisEqual(originCompanyViewsRef.current, _companyViews)) {
+        setCompanyViewsProp(`grid-company-views:${originGridKey}`, _companyViews)
+      }
 
       return [..._companyViews];
     })
-  }, [columns, setCustomViewsProp, setCompanyViewsProp])
+  }, [columns, originGridKey, setCustomViewsProp, setCompanyViewsProp])
 
   useEffect(() => {
     const columnKeys = finalColumns.map(_column => _column.fieldName).join('');
