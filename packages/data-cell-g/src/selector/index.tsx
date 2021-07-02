@@ -46,6 +46,7 @@ const defaultprop = {
   onSelect: _ => _,
   onChange: _ => _,
   onDeselect: _ => _,
+  afterQuery: _ => _,
   onDropdownVisibleChange: _ => _,
   blurOnSelect: false,
   wrap: false
@@ -293,7 +294,7 @@ const withSelector = compose(
       setStorageList([]) // 更新list
       localStorage.setItem(selectorStorageId, JSON.stringify([])) // 更新缓存
     },
-    getData: ({ taskId, useCache, loading, setLoading, query, filter, setDataList }) => () => {
+    getData: ({ taskId, useCache, loading, setLoading, query, afterQuery, filter, setDataList }) => () => {
       if (!query) return
       let task = null
 
@@ -313,12 +314,10 @@ const withSelector = compose(
 
       if (!(task.then && typeof task.then === 'function')) task = Promise.resolve(task)
       task.then(data => {
+        let list = Array.isArray(data) ? data : [];
         setLoading(false)
-        if (Array.isArray(data)) {
-          setDataList(data)
-        }else{
-          setDataList([])
-        }
+        setDataList(list)
+        afterQuery && afterQuery(list, setDataList)
         // else {
         //   throw new Error('选择器选项列表只能是数组格式')
         // }
