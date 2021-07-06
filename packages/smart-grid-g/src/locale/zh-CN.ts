@@ -34,7 +34,7 @@ export default {
     noView: '暂无视图',
     sysView: '预定义视图',
     companyView: '共享视图',
-    customView: '自定义视图',
+    customView: '个人视图',
     default: '默认',
     rename: '重命名',
     confirmDelView: '确认删除当前视图？',

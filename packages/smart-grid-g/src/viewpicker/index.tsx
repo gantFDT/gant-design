@@ -1,11 +1,12 @@
-import React, { useMemo, useCallback, useState, ReactNode, CSSProperties } from 'react'
-import { Icon, Popover, Spin, Empty } from 'antd'
+import BlockHeader from '@header'
+import { Empty, Icon, Popover, Spin } from 'antd'
 import classnames from 'classnames'
 import _ from 'lodash'
-import Panel from './Panel'
-import EditModal from './EditModal'
-import { getActiveDefaultView } from './utils'
+import React, { ReactNode, useCallback, useMemo, useState } from 'react'
 import Receiver from '../locale/Receiver'
+import EditModal from './EditModal'
+import Panel from './Panel'
+import { getActiveDefaultView } from './utils'
 
 export type ViewType = 'company' | 'system' | 'custom'
 
@@ -118,9 +119,16 @@ export default function View(props: ViewProps) {
         <Spin spinning={currentLoading}>
           <Receiver>
             {(locale) => {
-              return <>
+              return <div>
+                <BlockHeader 
+                title={locale.view} 
+                type="icon" 
+                bottomLine 
+                icon="unordered-list"
+                style={{padding:'0 5px'}}
+                />
                 <Panel
-                  title={<><Icon type="hdd" className="gant-margin-h-5" />{locale.sysView}</>}
+                  title={<>{locale.sysView}</>}
                   views={systemViews}
                   viewType="system"
                   switchActiveView={switchActiveViewImpl.bind(null, 'system')}
@@ -130,7 +138,7 @@ export default function View(props: ViewProps) {
                 />
                 {companyViews.length > 0 && (
                   <Panel
-                    title={<><Icon type="global" className="gant-margin-h-5" />{locale.companyView}</>}
+                    title={<>{locale.companyView}</>}
                     views={companyViews}
                     viewType="company"
                     userId={userId}
@@ -142,7 +150,7 @@ export default function View(props: ViewProps) {
                 )}
                 <Panel
                   viewId={viewId}
-                  title={<><Icon type="user" className="gant-margin-h-5" />{locale.customView}</>}
+                  title={<>{locale.customView}</>}
                   views={customViews}
                   viewType="custom"
                   switchActiveView={switchActiveViewImpl.bind(null, 'custom')}
@@ -154,7 +162,7 @@ export default function View(props: ViewProps) {
                   onDefaultViewChange={onDefaultViewChange}
                   extra={config}
                 />
-              </>
+              </div>
             }}
           </Receiver>
         </Spin>
