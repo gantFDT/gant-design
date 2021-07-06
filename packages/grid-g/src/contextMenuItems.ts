@@ -77,7 +77,7 @@ export const gantGetcontextMenuItems = function(
     selectedRowNodes.length > 1 ||
     (treeData && isEmpty(createConfig)) ||
     isEmpty(gridManager.cutRows);
-  const items = getContextMenuItems
+  let items = getContextMenuItems
     ? getContextMenuItems({
         selectedRows: gridSelectedRows,
         selectedKeys: gridSelectedKeys,
@@ -87,15 +87,19 @@ export const gantGetcontextMenuItems = function(
     : [];
 
   if (hiddenMenuItemNames && hiddenMenuItemNames.length) {
-    remove(items, (menuItem => hiddenMenuItemNames.some(menuName => menuName === menuItem.name)))
+    remove(items, menuItem => hiddenMenuItemNames.some(menuName => menuName === menuItem.name));
   }
 
   let defultMenu = [];
   if (treeData && !hideMenuItemExpand) {
     defultMenu = ['expandAll', 'contractAll'];
   }
-  defultMenu = defultMenu.length > 0 ? [...defultMenu, 'separator', ...items] : [...items];
-
+  defultMenu =
+    defultMenu.length > 0
+      ? items.length > 0
+        ? [...defultMenu, 'separator', ...items]
+        : defultMenu
+      : [...items];
   if (!hideMenuItemExport) {
     defultMenu = defultMenu.length > 0 ? [...defultMenu, 'separator', 'export'] : ['export'];
   }
