@@ -1,9 +1,9 @@
-import React, { useCallback, ReactNode } from 'react';
-import { Icon, Tag, Tooltip, Popconfirm, Empty } from 'antd';
-import _ from 'lodash';
-import { UpdateViewProps, ViewType, DefaultView } from './index';
 import BlockHeader from '@header';
+import { Empty, Icon, Popconfirm, Tooltip } from 'antd';
+import _ from 'lodash';
+import React, { ReactNode, useCallback } from 'react';
 import Receiver from '../locale/Receiver';
+import { DefaultView, UpdateViewProps, ViewType } from './index';
 
 interface PanelProps {
   viewId?: string; // 当前视图id
@@ -71,7 +71,7 @@ export default (props: PanelProps) => {
   return (
     <Receiver>
       {(locale) => <div className={`gant-smart-table-viewpicker-panel`}>
-        <BlockHeader title={title} extra={extra} />
+        <BlockHeader title={title} extra={extra} type="line" style={{paddingLeft:10,fontWeight:'normal'}}/>
         <ul className="content">
           {views.length === 0 && (
             <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={locale.noView}></Empty>

@@ -1,11 +1,12 @@
-import React, { useMemo, useCallback, useState, ReactNode, CSSProperties } from 'react'
-import { Icon, Popover, Spin, Empty } from 'antd'
+import BlockHeader from '@header'
+import { Empty, Icon, Popover, Spin } from 'antd'
 import classnames from 'classnames'
 import _ from 'lodash'
-import Panel from './Panel'
-import EditModal from './EditModal'
-import { getActiveDefaultView } from './utils'
+import React, { ReactNode, useCallback, useMemo, useState } from 'react'
 import Receiver from '../locale/Receiver'
+import EditModal from './EditModal'
+import Panel from './Panel'
+import { getActiveDefaultView } from './utils'
 
 export type ViewType = 'company' | 'system' | 'custom'
 
@@ -66,7 +67,7 @@ export default function View(props: ViewProps) {
 
   const [showModal, setShowModal] = useState(false)
   const [editViewName, setEditViewName] = useState('')
-  const [editView, setEditView] = useState({ name: '' })
+  const [editView, setEditView] = useState<any>({ name: '' })
   const currentLoading = loading || renameLoading ? true : false
   const [showPop, setShowPop] = useState(false)
 
@@ -84,8 +85,8 @@ export default function View(props: ViewProps) {
       setShowModal(false)
       return
     }
-    let newViews: any[] = []
-    newViews = customViews.map(item => {
+    const [viewType, _userId] = editView.viewId.split('-');
+    const newViews = [...viewType === 'company' ? companyViews : customViews].map(item => {
       return {
         ...item,
         name: _.isEqual(item, editView) ? name : item.name,
@@ -118,9 +119,17 @@ export default function View(props: ViewProps) {
         <Spin spinning={currentLoading}>
           <Receiver>
             {(locale) => {
-              return <>
+              return <div>
+                <BlockHeader
+                  title={locale.view}
+                  type="icon"
+                  bottomLine
+                  icon="unordered-list"
+                  style={{padding:'0 5px'}}
+                  extra={config}
+                />
                 <Panel
-                  title={<><Icon type="hdd" className="gant-margin-h-5" />{locale.sysView}</>}
+                  title={<>{locale.sysView}</>}
                   views={systemViews}
                   viewType="system"
                   switchActiveView={switchActiveViewImpl.bind(null, 'system')}
@@ -130,19 +139,22 @@ export default function View(props: ViewProps) {
                 />
                 {companyViews.length > 0 && (
                   <Panel
-                    title={<><Icon type="global" className="gant-margin-h-5" />{locale.companyView}</>}
+                    title={<>{locale.companyView}</>}
                     views={companyViews}
                     viewType="company"
                     userId={userId}
                     switchActiveView={switchActiveViewImpl.bind(null, 'company')}
                     updateView={updateView}
+                    setViewName={setEditViewName}
+                    setShowModal={setShowModal}
+                    setEditView={setEditView}
                     defaultViewId={activeDefaultView.viewId}
                     onDefaultViewChange={onDefaultViewChange}
                   />
                 )}
                 <Panel
                   viewId={viewId}
-                  title={<><Icon type="user" className="gant-margin-h-5" />{locale.customView}</>}
+                  title={<>{locale.customView}</>}
                   views={customViews}
                   viewType="custom"
                   switchActiveView={switchActiveViewImpl.bind(null, 'custom')}
@@ -152,9 +164,8 @@ export default function View(props: ViewProps) {
                   setEditView={setEditView}
                   defaultViewId={activeDefaultView.viewId}
                   onDefaultViewChange={onDefaultViewChange}
-                  extra={config}
                 />
-              </>
+              </div>
             }}
           </Receiver>
         </Spin>

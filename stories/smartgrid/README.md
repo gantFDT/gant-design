@@ -3,7 +3,7 @@
 #### 1. smartGrid
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| tableKey | 本地存储配置的键名，必填。 | string | - |
+| gridKey | 本地存储配置的键名，不需要绑定userId，必填。 | string | - |
 | title | 表格标题 | string &#124; ReactNode | - |
 | schema | 表格模型的配置描述，具体项见下表 | smartGridSchema[] | - |
 | viewConfig | 当前配置 | viewConfig | - |
@@ -21,6 +21,12 @@
 | totalCount | 数据总数 | number | 0 |
 | pageSizeOptions | 分页条选项 | string[] | ['50', '100', '150', '200'] |
 | withoutAnimation | 是否去掉弹框以及下拉框的动画效果 | boolean | false |
+| userId | 用户id，用以区分自定义视图 | string | false |
+| companyViewAuth | 是否可以保存共享视图 | boolean | false |
+| getCustomViews  | 异步获取自定义视图方法 | Function(gridKey: string):Promise<ViewConfig[]> | - |
+| getCompanyViews  | 异步获取共享视图方法 | Function(gridKey: string):Promise<ViewConfig[]> | - |
+| setCustomViews  | 设置自定义视图方法 | Function(gridKey: string, views: ViewConfig[]) | - |
+| setCompanyViews  | 设置共享视图方法 | Function(gridKey: string, views: ViewConfig[]) | - |
 
 #### 2. Schema
 简洁数据模型对象是一个数组，不应包含UI配置项，包括宽度对齐方式等。每一项的属性为：
@@ -48,12 +54,6 @@ PanelConfig：
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| wrap | 表格是否折行 | boolean | true |
-| isZebra | 是否显示斑马线 | boolean | true |
-| bordered | 是否显示列边框 | boolean | true |
-| clickable | 是否可以点击行选中 | boolean | true |
-| footerDirection | 表格底部分页位置 | 'row' 、 'row-reverse' | 'row' |
-| heightMode | 表格高度策略 | 'full' 、 'auto' | 'full' |
 | columnFields | 列UI配置, 未写的列则隐藏 | ColumnField[] | [] |
 
 
@@ -64,6 +64,7 @@ ColumnField:
 | fieldName | 列字段名 | string | - |
 | width | 列宽度 | number | - |
 | fixed | 列固定方式 | 'left' 、 'right' | - |
+| sort | 数据排序方式 | 'asc' 、 'desc' | - |
 | align | 列对齐方式 | 'left' 、 'center' 、 'right'  | 'left' |
 
 #### 3. TableConfig
@@ -96,3 +97,5 @@ ColumnField:
 ## FAQ
 #### 1.如何拓展自定义组件？
 导出的默认组件, 包含静态属性 setFields, setFields接收一个类型为 {\[componentType\]: React.ReactElement} 的对象, 即可扩展schema的componentType类型, 详情参考 示例(行内编辑用法)
+#### 2.如何在同一个项目设置公用属性？
+导出的默认组件, 包含静态属性 setProps, setProps接收一个类型为 {\[propName\]: any} 的对象, 即可设置项目组件的默认值
