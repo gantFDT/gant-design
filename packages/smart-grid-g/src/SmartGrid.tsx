@@ -265,7 +265,7 @@ function SmartGrid<T>(props: SmartGridProps<T>): React.ReactElement {
             <Button
               size="small"
               icon="setting"
-              className=""
+              style={{marginRight: 0}}
               onClick={() => setConfigModalVisible(true)}
             />
           </Tooltip>

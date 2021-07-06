@@ -2,7 +2,7 @@ export default {
     yes: '是',
     no: '否',
     reload: '刷新',
-    config: '表格配置',
+    config: '视图配置',
     empty: '暂无数据',
     saveMessage: '必须保留一列',
     ok: '确定',

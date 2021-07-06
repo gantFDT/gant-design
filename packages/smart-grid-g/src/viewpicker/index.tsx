@@ -67,7 +67,7 @@ export default function View(props: ViewProps) {
 
   const [showModal, setShowModal] = useState(false)
   const [editViewName, setEditViewName] = useState('')
-  const [editView, setEditView] = useState({ name: '' })
+  const [editView, setEditView] = useState<any>({ name: '' })
   const currentLoading = loading || renameLoading ? true : false
   const [showPop, setShowPop] = useState(false)
 
@@ -85,8 +85,8 @@ export default function View(props: ViewProps) {
       setShowModal(false)
       return
     }
-    let newViews: any[] = []
-    newViews = customViews.map(item => {
+    const [viewType, _userId] = editView.viewId.split('-');
+    const newViews = [...viewType === 'company' ? companyViews : customViews].map(item => {
       return {
         ...item,
         name: _.isEqual(item, editView) ? name : item.name,
@@ -120,12 +120,13 @@ export default function View(props: ViewProps) {
           <Receiver>
             {(locale) => {
               return <div>
-                <BlockHeader 
-                title={locale.view} 
-                type="icon" 
-                bottomLine 
-                icon="unordered-list"
-                style={{padding:'0 5px'}}
+                <BlockHeader
+                  title={locale.view}
+                  type="icon"
+                  bottomLine
+                  icon="unordered-list"
+                  style={{padding:'0 5px'}}
+                  extra={config}
                 />
                 <Panel
                   title={<>{locale.sysView}</>}
@@ -144,6 +145,9 @@ export default function View(props: ViewProps) {
                     userId={userId}
                     switchActiveView={switchActiveViewImpl.bind(null, 'company')}
                     updateView={updateView}
+                    setViewName={setEditViewName}
+                    setShowModal={setShowModal}
+                    setEditView={setEditView}
                     defaultViewId={activeDefaultView.viewId}
                     onDefaultViewChange={onDefaultViewChange}
                   />
@@ -160,7 +164,6 @@ export default function View(props: ViewProps) {
                   setEditView={setEditView}
                   defaultViewId={activeDefaultView.viewId}
                   onDefaultViewChange={onDefaultViewChange}
-                  extra={config}
                 />
               </div>
             }}

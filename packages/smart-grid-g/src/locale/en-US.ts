@@ -2,7 +2,7 @@ export default {
     yes: 'Yes',
     no: 'No',
     reload: 'Reload',
-    config: 'Table config',
+    config: 'View config',
     empty: 'No data',
     saveMessage: 'One column required',
     ok: 'OK',
