@@ -1,51 +1,58 @@
 ## API
 
-| 属性 | 是否必传 | 类型 | 默认值 | 说明 |
-| --- | --- | --- | --- | --- |
-| columns | 是 | Column[] | [] |  |
-| dataSource | 否 | any[] | [] | 数据源 |
-| rowkey | 是 | string 或 (data:any)=>string | - | 唯一标示 |
-| rowSelection | 否 | boolean 或 RowSelection | false | selection 配置 |
-| pagination | 否 | Pagination | - | Pagination 配置 |
-| onReady | 否 | (params,dataManage)=>void | - | gird 初始完成回调 传递 grid 的 params 和控制数据的 dataManage，参考 manager API |
-| editable | 否 | boolean | false | 是否进入编辑状态 |
-| groupSuppressAutoColumn | 否 | boolean | false | 是否禁止开启自动生成 group 列 |
-| isServerSideGroup | 否 | (data:any)=>boolean | null | 判断是否是子节点 |
-| serverGroupExpend | 否 | (params,cb)=>void | - | 异步 tree 当加载异步 children 时调用 |
-| treeDataChildrenName | 否 | string | "children" | 树形数据打平计算的 children 数据字段名称 |
-| treeData | 否 | boolean | false | 是否开启树形渲染模式 |
-| serialNumber | 否 | boolean | false | 添加序号列 序号要与 gantGroupCellRenderer 联用 |
-| isCompute | 否 | boolean | true | treeData 为 true 情况下 是否要需要转换为平行数据并在数据中添加 treeDataPath 字段 |
-| onCellEditChange | 否 | （newData,filedName,newValue,oldValue）=>record / record[] | - | 在结束编辑时调用，返回需要修改的数据 |
-| onCellEditingChange | 否 | （newData,filedName,newValue,oldValue）=>record / record[] | - | 在编辑过程中时调用，返回需要修改的数据 |
-| getDataPath | 否 | (data:any)=>array | (data)=>data.treeDataPath | treeData 下判断树形结构路径 ，默认根据数据中的 treeDataPath 字段判断，若数据中没该字段需自己添加获取路径方法 |
-| openEditSign | 否 | boolean | false | 是否在 grid header 添加编辑标示 |
-| loading | 否 | boolean | false | grid loading 状态 |
-| className | 否 | string | - | className |
-| filter | 否 | boolean | false | 默认单列过滤 |
-| resizable | 否 | boolean | true | 默认单列伸缩 |
-| sortable | 否 | boolean | true | 默认单列排序 |
-| width | 否 | string 或 number | "100%" | grid 宽度 |
-| height | 否 | string 或 number | 400 | grid 宽度 |
-| hideMenuItemExport | 否 | boolean | false | 隐藏右键导出 |
-| hideMenuItemExpand | 否 | boolean | false | 隐藏右键展开 |
-| hideSelectedBox | 否 | boolean | false | 隐藏 selectedBox|
-
+| 属性                    | 是否必传 | 类型                                                       | 默认值                    | 说明                                                                                                         |
+| ----------------------- | -------- | ---------------------------------------------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| columns                 | 是       | Column[]                                                   | []                        |                                                                                                              |
+| dataSource              | 否       | any[]                                                      | []                        | 数据源                                                                                                       |
+| rowkey                  | 是       | string 或 (data:any)=>string                               | -                         | 唯一标示                                                                                                     |
+| rowSelection            | 否       | boolean 或 RowSelection                                    | false                     | selection 配置                                                                                               |
+| pagination              | 否       | Pagination                                                 | -                         | Pagination 配置                                                                                              |
+| onReady                 | 否       | (params,dataManage)=>void                                  | -                         | gird 初始完成回调 传递 grid 的 params 和控制数据的 dataManage，参考 manager API                              |
+| editable                | 否       | boolean                                                    | false                     | 是否进入编辑状态                                                                                             |
+| groupSuppressAutoColumn | 否       | boolean                                                    | false                     | 是否禁止开启自动生成 group 列                                                                                |
+| isServerSideGroup       | 否       | (data:any)=>boolean                                        | null                      | 判断是否是子节点                                                                                             |
+| serverGroupExpend       | 否       | (params,cb)=>void                                          | -                         | 异步 tree 当加载异步 children 时调用                                                                         |
+| treeDataChildrenName    | 否       | string                                                     | "children"                | 树形数据打平计算的 children 数据字段名称                                                                     |
+| treeData                | 否       | boolean                                                    | false                     | 是否开启树形渲染模式                                                                                         |
+| serialNumber            | 否       | boolean                                                    | false                     | 添加序号列 序号要与 gantGroupCellRenderer 联用                                                               |
+| isCompute               | 否       | boolean                                                    | true                      | treeData 为 true 情况下 是否要需要转换为平行数据并在数据中添加 treeDataPath 字段                             |
+| onCellEditChange        | 否       | （newData,filedName,newValue,oldValue）=>record / record[] | -                         | 在结束编辑时调用，返回需要修改的数据                                                                         |
+| onCellEditingChange     | 否       | （newData,filedName,newValue,oldValue）=>record / record[] | -                         | 在编辑过程中时调用，返回需要修改的数据                                                                       |
+| getDataPath             | 否       | (data:any)=>array                                          | (data)=>data.treeDataPath | treeData 下判断树形结构路径 ，默认根据数据中的 treeDataPath 字段判断，若数据中没该字段需自己添加获取路径方法 |
+| openEditSign            | 否       | boolean                                                    | false                     | 是否在 grid header 添加编辑标示                                                                              |
+| loading                 | 否       | boolean                                                    | false                     | grid loading 状态                                                                                            |
+| className               | 否       | string                                                     | -                         | className                                                                                                    |
+| filter                  | 否       | boolean                                                    | false                     | 默认单列过滤                                                                                                 |
+| resizable               | 否       | boolean                                                    | true                      | 默认单列伸缩                                                                                                 |
+| sortable                | 否       | boolean                                                    | true                      | 默认单列排序                                                                                                 |
+| width                   | 否       | string 或 number                                           | "100%"                    | grid 宽度                                                                                                    |
+| height                  | 否       | string 或 number                                           | 400                       | grid 宽度                                                                                                    |
+| hideMenuItemExport      | 否       | boolean                                                    | false                     | 隐藏右键导出                                                                                                 |
+| hideMenuItemExpand      | 否       | boolean                                                    | false                     | 隐藏右键展开                                                                                                 |
+| hideSelectedBox         | 否       | boolean                                                    | false                     | 隐藏 selectedBox                                                                                             |
+| boxColumnIndex          | 否       | `number` `string` `string[]`                               | 0                         | selectedBox 显示列                                                                                           |
+| selectedBoxWidth        | 否       | `number`                                                   | 240                       | selectedBox宽度                                                                                              |
+| selectedBoxHeight       | 否       | `number`                                                   | 自适应                    | selectedBox宽度                                                                                              |
+| multiLineVerify         | 否       | boolean                                                    | false                     | 每次数据更改验证所以更改的数据                                                                               |
+| drawerMode              | 否       | boolean                                                    | false                     | 开启窗口模式                                                                                                 |
+| defaultDrawerWidth      | 否       | `number`                                                   | 600                       | 窗口width                                                                                                    |
+| customDrawerContent      | 否       | (params)=>any                                                   | 600                       | 自定义窗口内容                                                                                             |
+| visibleDrawer      | 否       | `boolean`                                                   |                        | 外部控制窗口显示                                                                                             |
 
 更多属性参考 [ag-grid](https://www.ag-grid.com/documentation-main/documentation.php)
 
 ### RowSelection
 
-| 属性 | 是否必传 | 类型 | 默认值 | 说明 |
-| --- | --- | --- | --- | --- |
-| type | 否 | "single"或"multiple" | "multiple" | selection 类型 |
-| checkboxIndex | 否 | number | - | checkbox 出现在哪列 |
-| selectedKeys | 否 | string[] | - | 双向绑定选择 keys |
-| onSelect | 否 | (keys,rows)=>void | - | selection change 变化回调 |
-| showDefalutCheckbox | 否 | boolean | true | 开启默认 selection 列 |
-| defaultSelectionCol | 否 | ColDef | - | 默认 selection 列配置 |
-| rowMultiSelectWithClick | 否 | boolean | true | 是否允许单击选择多个行 |
-| rowDeselection | 否 | boolean | true | 是否可在按住 Ctrl 键并单击该行的情况下取消选择行 |
+| 属性                    | 是否必传 | 类型                 | 默认值     | 说明                                             |
+| ----------------------- | -------- | -------------------- | ---------- | ------------------------------------------------ |
+| type                    | 否       | "single"或"multiple" | "multiple" | selection 类型                                   |
+| checkboxIndex           | 否       | number               | -          | checkbox 出现在哪列                              |
+| selectedKeys            | 否       | string[]             | -          | 双向绑定选择 keys                                |
+| onSelect                | 否       | (keys,rows)=>void    | -          | selection change 变化回调                        |
+| showDefalutCheckbox     | 否       | boolean              | true       | 开启默认 selection 列                            |
+| defaultSelectionCol     | 否       | ColDef               | -          | 默认 selection 列配置                            |
+| rowMultiSelectWithClick | 否       | boolean              | true       | 是否允许单击选择多个行                           |
+| rowDeselection          | 否       | boolean              | true       | 是否可在按住 Ctrl 键并单击该行的情况下取消选择行 |
 
 ### Pagination
 
@@ -57,32 +64,32 @@
 
 ### Column
 
-| 属性 | 是否必传 | 类型 | 默认值 | 说明 |
-| --- | --- | --- | --- | --- |
-| fieldName | 否 | string | - | 字段名 |
-| title | 否 | string | - | header 列名 |
-| render | 否 | （text,record,index，params）=>React.Node | - | 自定义 render |
-| editConfig | 否 | EditConfig | - | 行内编辑配置 |
-| width | 否 | string 或 number | 150 | 列宽 |
-| checkboxSelection | 否 | boolean | false | 该列是否显示 checkbox |
-| sortable | 否 | boolean | true | 该列是否可排序 |
-| filter | 否 | boolean | true | 该列是否过滤 |
-| hide | 否 | boolean | false | 该列是否隐藏 |
-| fixed | 否 | "left"、"right"、 undefined | - | 该列是否固定 |
+| 属性              | 是否必传 | 类型                                      | 默认值 | 说明                  |
+| ----------------- | -------- | ----------------------------------------- | ------ | --------------------- |
+| fieldName         | 否       | string                                    | -      | 字段名                |
+| title             | 否       | string                                    | -      | header 列名           |
+| render            | 否       | （text,record,index，params）=>React.Node | -      | 自定义 render         |
+| editConfig        | 否       | EditConfig                                | -      | 行内编辑配置          |
+| width             | 否       | string 或 number                          | 150    | 列宽                  |
+| checkboxSelection | 否       | boolean                                   | false  | 该列是否显示 checkbox |
+| sortable          | 否       | boolean                                   | true   | 该列是否可排序        |
+| filter            | 否       | boolean                                   | true   | 该列是否过滤          |
+| hide              | 否       | boolean                                   | false  | 该列是否隐藏          |
+| fixed             | 否       | "left"、"right"、 undefined               | -      | 该列是否固定          |
 
 更多 Column 属性 [ag-grid Columns](https://www.ag-grid.com/javascript-grid-column-properties/)
 
 ### EditConfig
 
-| 属性 | 是否必传 | 类型 | 默认值 | 说明 |
-| --- | --- | --- | --- | --- |
-| component | 是 | Compoent | - | 数据单元组件 |
-| editable | 是 | boolean 或(data)=>boolean | false | 单元格是否能编辑 |
-| props | 否 | any | - | 传递数据单元组件属性 |
-| changeFormatter | 否 | (val,recrod)=>val | - | 单元格 onChange 时调用 必须要返回一个数作为该单元的值 |
-| rules | 否 | Rules | - | 验证机制请参考   [https://ant.design/components/form-cn/#Rule](https://ant.design/components/form-cn/#Rule) |
-| refName | 否 | string | "warpperRef" | 设置 ref 字段 key 名 (Antd ref) |
-| valuePropName | 否 | string | "value" | 设置 value 字段 key 名 （Switch: checked） |
+| 属性            | 是否必传 | 类型                      | 默认值       | 说明                                                                                                        |
+| --------------- | -------- | ------------------------- | ------------ | ----------------------------------------------------------------------------------------------------------- |
+| component       | 是       | Compoent                  | -            | 数据单元组件                                                                                                |
+| editable        | 是       | boolean 或(data)=>boolean | false        | 单元格是否能编辑                                                                                            |
+| props           | 否       | any                       | -            | 传递数据单元组件属性                                                                                        |
+| changeFormatter | 否       | (val,recrod)=>val         | -            | 单元格 onChange 时调用 必须要返回一个数作为该单元的值                                                       |
+| rules           | 否       | Rules                     | -            | 验证机制请参考   [https://ant.design/components/form-cn/#Rule](https://ant.design/components/form-cn/#Rule) |
+| refName         | 否       | string                    | "warpperRef" | 设置 ref 字段 key 名 (Antd ref)                                                                             |
+| valuePropName   | 否       | string                    | "value"      | 设置 value 字段 key 名 （Switch: checked）                                                                  |
 **rules 如何验证**
 
 ```js

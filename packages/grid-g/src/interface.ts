@@ -210,10 +210,10 @@ export interface Props<T extends any> {
   onRowsPaste?: (rows: RowNode[], targetRow?: RowNode) => boolean;
   onRowsPasteEnd?: (data: any) => void;
   hideSelectedBox?: boolean;
-  hideSelcetedBox?: boolean;
+  hideSelcetedBox?: boolean; //可删除
   selectedBoxHeight?: number;
   selectedBoxWidth?: number;
-  editChangeCallback?: (isChanged: boolean) => void;
+  editChangeCallback?: (isChanged: boolean) => void; //可删除
   drawerMode?: boolean;
   defaultDrawerWidth?: number;
   customDrawerContent?: (params: any) => any;
@@ -230,7 +230,7 @@ export interface Props<T extends any> {
         nodeIds?: string[];
       }
     | null
-    | false;
+    | false; // 可删除
 }
 
 export type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>;
