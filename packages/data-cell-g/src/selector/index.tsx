@@ -151,7 +151,7 @@ const withSelector = compose(
     //将最近选择的项的key转化为真实的key
     storageToReal: ({ selectorId, reg }) => (value) => {
       // 最近选择
-      if (value.startsWith(selectorId)) return value.replace(reg, '$1')
+      if (value?.startsWith(selectorId)) return value.replace(reg, '$1')
       return value
     }
   }),
@@ -169,7 +169,7 @@ const withSelector = compose(
       let list = concat(dataList, storageList)
       // 启用缓存的情况下执行判断
       // fix: 解决当storageId恰好是value的前缀的情况
-      if (useStorage && value.startsWith(selectorId)) {
+      if (useStorage && value?.startsWith(selectorId)) {
         list = storageList
       }
       const valueItem = list.find(item => storageToReal(getValue(item)) === value)
@@ -541,7 +541,7 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
     const key = storageToReal(select.key) // 获取真实的key值
     const originItem = dataList.find(item => getValue(item) === key)
 
-    let isStorage = select.key.startsWith(selectorId)
+    let isStorage = select.key?.startsWith(selectorId)
     if (!isStorage || originItem) { // 从搜索出来的数据中选择.或者在最近选择中选择了有搜索出来的数据
       onSelect(key, originItem)
       updateStorage([originItem], isStorage) // isStorage为true,表示当前只是更新操作.加快updateStorage的速度
