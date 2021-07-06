@@ -89,13 +89,17 @@ export const gantGetcontextMenuItems = function(
   if (hiddenMenuItemNames && hiddenMenuItemNames.length) {
     remove(items, menuItem => hiddenMenuItemNames.some(menuName => menuName === menuItem.name));
   }
-  items = items.length > 0 ? ['separator', ...items] : [];
+
   let defultMenu = [];
   if (treeData && !hideMenuItemExpand) {
     defultMenu = ['expandAll', 'contractAll'];
   }
-  defultMenu = defultMenu.length > 0 ? [...defultMenu, ...items] : [...items];
-
+  defultMenu =
+    defultMenu.length > 0
+      ? items.length > 0
+        ? [...defultMenu, 'separator', ...items]
+        : defultMenu
+      : [...items];
   if (!hideMenuItemExport) {
     defultMenu = defultMenu.length > 0 ? [...defultMenu, 'separator', 'export'] : ['export'];
   }
