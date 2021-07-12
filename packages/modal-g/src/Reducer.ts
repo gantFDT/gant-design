@@ -42,9 +42,30 @@ const clampResize = (minWidth: number, minHeight: number, windowWidth: number, w
     return { width: clampedWidth, height: clampedHeight }
 }
 
+/**
+ * 获取当前页面以展示的所有modal的最大zIndex
+ * @param originMaxZindex 原有的maxZIndex
+ * @returns
+ */
+ function getPageMaxZIndex(originMaxZindex: number) {
+  const allModals = document.querySelectorAll('.ant-modal-wrap');
+  let maxZindex = originMaxZindex;
+  allModals.forEach((modal: HTMLDivElement) => {
+    let zIndex = Number(modal?.style?.zIndex || 0);
+    let display = modal?.style?.display;
+    if (display != 'none' && zIndex && zIndex > maxZindex) {
+      maxZindex = zIndex;
+    }
+  });
+
+  return maxZindex + 1;
+}
+
 const resizableReducer: React.Reducer<ModalsState, Action> = (state, action) => {
     const { minWidth, minHeight, initialModalState, windowSize } = state
     const needIncrease = Object.keys(state.modals).length != 1
+    const maxZIndex = getPageMaxZIndex(state.maxZIndex)
+    
     switch (action.type) {
         case ActionTypes.mount:
             let combineState = { ...initialModalState, ...action.itemState }
@@ -60,14 +81,14 @@ const resizableReducer: React.Reducer<ModalsState, Action> = (state, action) => 
             const y = getAxis(windowSize.height, combineState.height, combineState.y)
             return {
                 ...state,
-                maxZIndex: state.maxZIndex + 1,
+                maxZIndex,
                 modals: {
                     ...state.modals,
                     [action.id]: {
                         inital,
                         ...combineState,
                         x, y,
-                        zIndex: state.maxZIndex + 1,
+                        zIndex: maxZIndex,
                     },
                 },
             }
@@ -80,7 +101,6 @@ const resizableReducer: React.Reducer<ModalsState, Action> = (state, action) => 
             }
         case ActionTypes.focus:
             const modalState = state.modals[action.id]
-            const maxZIndex = needIncrease ? state.maxZIndex + 1 : state.maxZIndex
             return {
                 ...state,
                 maxZIndex,
@@ -101,7 +121,6 @@ const resizableReducer: React.Reducer<ModalsState, Action> = (state, action) => 
                 typeof inital.width == 'string' && (modalState.width = convertPercentage(inital.width, windowSize.width, <number>initialModalState.width))
                 typeof inital.height == 'string' && (modalState.height = convertPercentage(inital.height, windowSize.height, <number>initialModalState.height))
             }
-            const maxZIndex = needIncrease ? state.maxZIndex + 1 : state.maxZIndex
             const centerX = getAxis(windowSize.width, <number>modalState.width, target.x)
             const centerY = getAxis(windowSize.height, <number>modalState.height, target.y)
 
@@ -241,20 +260,20 @@ const resizableReducer: React.Reducer<ModalsState, Action> = (state, action) => 
             )
             return {
                 ...state,
-                maxZIndex: getNextZIndex(state, action.id),
+                maxZIndex,
                 modals: {
                     ...state.modals,
                     [action.id]: {
                         ...state.modals[action.id],
                         ...size,
-                        zIndex: getNextZIndex(state, action.id),
+                        zIndex: maxZIndex,
                     },
                 },
             }
         case ActionTypes.drag:
             return {
                 ...state,
-                maxZIndex: getNextZIndex(state, action.id),
+                maxZIndex,
                 modals: {
                     ...state.modals,
                     [action.id]: {
@@ -267,7 +286,7 @@ const resizableReducer: React.Reducer<ModalsState, Action> = (state, action) => 
                             <number>state.modals[action.id].width,
                             <number>state.modals[action.id].height,
                         ),
-                        zIndex: getNextZIndex(state, action.id),
+                        zIndex: maxZIndex,
                     },
                 },
             }
