@@ -1,6 +1,6 @@
 //自定义列头，主要解决label自主渲染的问题
-import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Icon } from 'antd';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 export default props => {
   const {
@@ -12,16 +12,27 @@ export default props => {
     enableSorting,
     ColumnLabelComponent = null,
   } = props;
+
+  const sortInfo = props.api.sortController.getSortModel()
+
   const [ascSort, setAscSort] = useState(false);
   const [descSort, setDescSort] = useState(false);
   const [noSort, setNoSort] = useState(true);
+  const [sortIndex, setSortIndex] = useState(undefined);
+  const [sortCount, setSortCount] = useState(sortInfo.length);
   const refButton = useRef(null);
+
+  
 
   const onMenuClicked = () => {
     showColumnMenu(refButton.current);
   };
 
   const onSortChanged = () => {
+    setTimeout(()=>{
+      setSortIndex(column.sortIndex);
+      setSortCount(sortInfo.length)
+    })
     setAscSort(column.isSortAscending());
     setDescSort(column.isSortDescending());
     setNoSort(!column.isSortAscending() && !column.isSortDescending());
@@ -60,13 +71,16 @@ export default props => {
     [ascSort, descSort, noSort],
   );
 
-
-  const sort = (
-    <div className="customHeaderSort" onClick={enableSorting ? handleSortChange : () => {}}>
-      {descSort && <Icon type="arrow-down" />}
-      {ascSort && <Icon type="arrow-up" />}
-    </div>
-  );
+  const sort = useMemo(() => {
+    return (
+      <div className="customHeaderSort" onClick={enableSorting ? handleSortChange : () => {}}>
+        {sortIndex !== undefined && !noSort && <>{sortIndex + 1}</>}
+        {/* {sortIndex} */}
+        {descSort && <Icon type="arrow-down" />}
+        {ascSort && <Icon type="arrow-up" />}
+      </div>
+    );
+  }, [sortIndex,descSort,ascSort,noSort,enableSorting,handleSortChange,sortCount]);
 
   return (
     <>
