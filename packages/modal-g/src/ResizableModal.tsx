@@ -8,6 +8,11 @@ import { useDrag, useResize, usePrev } from './Hooks'
 import { InnerModalProps, ActionTypes } from './interface'
 const modalStyle: React.CSSProperties = { position: 'absolute', margin: 0, paddingBottom: 0 }
 
+// 对角方向
+const diagonalDirections = ['rightTop', 'rightBottom', 'leftBottom', 'leftTop']
+// 坐标轴方向
+const axialDirections = ['top', 'right', 'bottom', 'left']
+
 const ModalInner: React.FC<InnerModalProps> = function ModalInner(props) {
     const {
         //** 自定义class前缀 */
@@ -49,6 +54,12 @@ const ModalInner: React.FC<InnerModalProps> = function ModalInner(props) {
     const modalState = getModalState(state, id)
     const visiblePrev = usePrev(visible)
 
+    const { 
+        minHeight,
+        minWidth,
+        windowSize,
+     } = state
+
     useEffect(() => {
         dispatch({ type: ActionTypes.mount, id, itemState })
         return () => dispatch({ type: ActionTypes.unmount, id })
@@ -80,7 +91,16 @@ const ModalInner: React.FC<InnerModalProps> = function ModalInner(props) {
     }, [id, isMaximized, canMaximize])
 
     const onMouseDrag = useDrag(x, y, onDrag)
-    const onMouseResize = useResize(x, y, Number(width), Number(height), onResize)
+    const onMouseResize = useResize(
+        x,
+        y,
+        Number(width),
+        Number(height),
+        minWidth,
+        minHeight,
+        windowSize,
+        onResize,
+    )
 
     const titleElement = useMemo(() => (
         <div
@@ -126,7 +146,28 @@ const ModalInner: React.FC<InnerModalProps> = function ModalInner(props) {
             <Icon value={isMaximized ? 'switcher' : 'border'} />
         </div>}
         {/*resize节点 */}
-        {canResize && !isMaximized && <div className={`${prefixCls}-resizeAnchor`} onMouseDown={onMouseResize}><i></i></div>}
+        {canResize && !isMaximized && (
+            <>
+            {diagonalDirections.map((direction) => {
+                return (
+                <div
+                    key={direction}
+                    className={`${prefixCls}-${direction}-resizeAnchor`}
+                    onMouseDown={onMouseResize.bind(null, direction)}
+                />
+                )
+            })}
+            {axialDirections.map((direction) => {
+                return (
+                <div
+                    key={direction}
+                    className={`${prefixCls}-${direction}-resizeAnchor`}
+                    onMouseDown={onMouseResize.bind(null, direction)}
+                />
+                )
+            })}
+            </>
+        )}
     </Modal>
 }
 

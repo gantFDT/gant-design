@@ -248,16 +248,6 @@ const resizableReducer: React.Reducer<ModalsState, Action> = (state, action) => 
             }
         }
         case ActionTypes.resize:
-            const size = clampResize(
-                minWidth,
-                minHeight,
-                windowSize.width,
-                windowSize.height,
-                action.x,
-                action.y,
-                action.width,
-                action.height,
-            )
             return {
                 ...state,
                 maxZIndex,
@@ -265,7 +255,10 @@ const resizableReducer: React.Reducer<ModalsState, Action> = (state, action) => 
                     ...state.modals,
                     [action.id]: {
                         ...state.modals[action.id],
-                        ...size,
+                        height:action.height,
+                        width:action.width,
+                        x:action.x,
+                        y:action.y,
                         zIndex: maxZIndex,
                     },
                 },
