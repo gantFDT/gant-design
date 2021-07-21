@@ -35,5 +35,6 @@
     "react": "^16.12.0",
     "react-sortable-hoc": "^1.11.0",
     "util-g": "^0.1.8"
-  }
+  },
+  "gitHead": "d00ff98a718b0b8f4356ac9e709a6ca07a9eea78"
 }
