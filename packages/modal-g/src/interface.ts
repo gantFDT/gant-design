@@ -83,3 +83,5 @@ export enum ActionTypes {
 }
 
 export type Action = { type: ActionTypes, [key: string]: any }
+
+export type ResizeDirection = 'top' | 'right' | 'bottom' | 'left' | 'rightTop' | 'rightBottom' | 'leftBottom' | 'leftTop'

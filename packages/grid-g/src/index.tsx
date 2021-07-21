@@ -236,7 +236,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   // 分页事件
   const computedPagination: any = useMemo(() => usePagination(pagination), [pagination]);
 
-  // context 
+  // context
   const context = useMemo(() => {
     return {
       globalEditable: editable && !drawerMode,
@@ -266,7 +266,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     onCellEditChange,
     onCellEditingChange,
     onCellChanged,
-    getDataPath
+    getDataPath,
   ]);
 
   const {
@@ -289,7 +289,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       key: forcedGridKey,
     };
   }, [forcedGridKey]);
-
 
   // 处理selection
   const gantSelection: RowSelection = useMemo(() => {
@@ -332,7 +331,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       gridManager.appendChild(groupKeys, rows);
     };
   }, []);
-
 
   const { componentsMaps, frameworkComponentsMaps } = useMemo(() => {
     return getAllComponentsMaps();
@@ -377,7 +375,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   const onSelectionChanged = useCallback(
     (event: SelectionChangedEvent) => {
       propsOnSelectionChanged && propsOnSelectionChanged(event);
-      if (gridVariableRef.current?.hasSelectedRows) {
+      if (gridVariableRef.current?.hasSelectedRows && rowSelection === 'multiple') {
         const rows = event.api.getSelectedRows();
         const { extraRows, currentRows } = getAllSelectedRows(
           get(gridVariableRef.current, 'selectedRows', []),
@@ -393,6 +391,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
         );
       }
       const rows = event.api.getSelectedRows();
+      if (isEqual(gridVariableRef.current?.selectedRows, rows)) return;
       onSelect &&
         onSelect(
           rows.map(item => getRowNodeId(item)),
@@ -403,7 +402,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
       gridVariableRef.current.selectedRows = rows;
       setInnerSelectedRows(rows);
     },
-    [getAllSelectedRows, propsOnSelectionChanged],
+    [getAllSelectedRows, propsOnSelectionChanged, rowSelection],
   );
   selectedHooks({
     gridVariable: gridVariableRef.current,
