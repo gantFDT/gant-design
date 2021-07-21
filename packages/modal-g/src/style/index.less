@@ -1,6 +1,14 @@
 @gant-prefix: gant;
 @component: ~'@{gant-prefix}-modal';
 @activeIconColor: var(--modal-header-icon-hover-color);
+// 对角方向
+@diagonalDirections: rightTop, rightBottom, leftBottom, leftTop;
+// 坐标轴方向
+@axialDirections: top, right, bottom, left;
+@diagonalSize: 20px;
+@diagonalOffset: 12px;
+@axialSize: 10px;
+@axialcOffset: @axialSize / 2;
 
 
 
@@ -59,6 +67,25 @@
     }
   }
 
+  .diagonalPositionMixin(@direction){
+    top: if((@direction=leftTop) or (@direction=rightTop), -@diagonalOffset, none);
+    right: if((@direction=rightTop) or (@direction=rightBottom), -@diagonalOffset, none);
+    bottom: if((@direction=rightBottom) or (@direction=leftBottom), -@diagonalOffset, none);
+    left: if((@direction=leftBottom) or (@direction=leftTop), -@diagonalOffset, none);
+    cursor: if((@direction=leftBottom) or (@direction=rightTop), ne-resize, se-resize);
+    z-index: 11;
+  }
+
+  .axialPositionMixin(@direction){
+    top: if(@direction=top, -@axialcOffset, if((@direction=left) or (@direction=right), @diagonalOffset, none));
+    right: if(@direction=right, -@axialcOffset, none);
+    bottom: if(@direction=bottom, -@axialcOffset, none);
+    left: if(@direction=left, -@axialcOffset, none);
+    cursor: if(@direction=top, n-resize, if(@direction=right, e-resize, if(@direction=bottom, s-resize, w-resize)));
+    width:if((@direction=top) or (@direction=bottom), calc(100% - @diagonalSize), @axialSize);
+    height:if((@direction=top) or (@direction=bottom), @axialSize, calc(100% - @diagonalSize));
+    z-index: 11;
+  }
 
   .@{component} {
     &-resizableModalDefault {
@@ -152,37 +179,22 @@
         }
       }
 
-      .@{component}-resizeAnchor {
-        right: -10px;
-        width: 30px;
-        bottom: -10px;
-        cursor: se-resize;
-        height: 30px;
-        position: absolute;
-
-        i {
-          opacity: 0;
-          visibility: hidden;
-          width: 12px;
-          right: 14px;
-          border: 2px solid transparent;
-          height: 12px;
-          bottom: 14px;
+      each(@diagonalDirections, {
+        .@{component}-@{value}-resizeAnchor {
+          .diagonalPositionMixin(@value);
+          width: @diagonalSize;
+          height:  @diagonalSize;
           position: absolute;
-          border-top: 0;
-          border-left: 0;
-          transition: all 0.3s;
         }
+      })
 
-        &:hover {
-          i {
-            opacity: 1;
-            visibility: visible;
-            border-color: var(--modal-footer-reset-color);
-            transition: all 0.3s;
-          }
+      each(@axialDirections, {
+        .@{component}-@{value}-resizeAnchor {
+          .axialPositionMixin(@value);
+          position: absolute;
         }
-      }
+      })
+      
     }
 
     &-maximize {
