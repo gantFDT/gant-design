@@ -5,8 +5,8 @@ import { debounce, isPlainObject, isNil, cloneDeep, isEqual, zipWith, groupBy, p
 import { compose, defaultProps, withProps, withPropsOnChange, withState, mapProps, withHandlers, lifecycle, toClass, setDisplayName } from 'recompose'
 import warning from '@util/warning'
 import classnames from 'classnames'
-import { default as withEdit, WithEditInProps } from '../with-edit';
-import { WithBasicProps } from '../compose/withbasic';
+import { default as withEdit, WithEditInProps } from '../with-edit'
+import { WithBasicProps } from '../compose/withbasic'
 
 type ProtoExtends<T, U> = U & {
   [K in Exclude<keyof T, keyof U>]?: NonNullable<T[K]>
@@ -342,20 +342,25 @@ const withSelector = compose(
 
         try {
           result = dataList.filter(item => {
-            const LastIndex = filter.split('').reduce(
-              (index, char) => {
-                if (index === -1) return -1;
-                let label = getLabel(item)
-                if (!label) {
-                  throw new Error(`应用选择器的过滤功能，请确保列表数据中${labelProp}属性存在，或修改'labelProp'对应的属性名称,作为过滤的依据`)
-                }
-                label = label.toUpperCase()
-                char = char.toUpperCase()
-                return label.slice(index).indexOf(char)
-              },
-              0
-            )
-            return ~LastIndex
+            const label = getLabel(item)
+            if (!label) {
+              throw new Error(`应用选择器的过滤功能，请确保列表数据中${labelProp}属性存在，或修改'labelProp'对应的属性名称,作为过滤的依据`)
+            }
+            return label.toLowerCase().indexOf(filter.toLowerCase()) > -1
+            // const LastIndex = filter.split('').reduce(
+            //   (index, char) => {
+            //     if (index === -1) return -1;
+            //     let label = getLabel(item)
+            //     if (!label) {
+            //       throw new Error(`应用选择器的过滤功能，请确保列表数据中${labelProp}属性存在，或修改'labelProp'对应的属性名称,作为过滤的依据`)
+            //     }
+            //     label = label.toUpperCase()
+            //     char = char.toUpperCase()
+            //     return label.slice(index).indexOf(char)
+            //   },
+            //   0
+            // )
+            // return ~LastIndex
           })
         }
         catch (e) {
