@@ -755,6 +755,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                         filter,
                         minWidth: 30,
                         tooltipValueGetter: (params: any) => params,
+                        headerCheckboxSelectionFilteredOnly: true,
                         tooltipComponent: 'gantTooltip',
                         headerComponentParams: {
                           ColumnLabelComponent,

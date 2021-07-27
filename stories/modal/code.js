@@ -242,6 +242,7 @@ function MultipleModalsUse() {
     const [visible2, setVisible2] = useState(false)
     const [visible3, setVisible3] = useState(false)
     const [visible4, setVisible4] = useState(false)
+    
     return (
         <>
             <div style={{ marginBottom: 10 }}>
@@ -280,7 +281,7 @@ function MultipleModalsUse() {
                     title='第三个弹窗'
                     visible={visible3}
                     footer={null}
-                    onCancel={() => { setVisible(false) }}
+                    onCancel={() => { setVisible3(false) }}
                 >   
                     第三个弹窗-content
                 </ResizableModal>
@@ -290,7 +291,7 @@ function MultipleModalsUse() {
                     title='第四个弹窗'
                     okBtnSolid
                     visible={visible4}
-                    onCancel={() => { setVisible2(false) }}
+                    onCancel={() => { setVisible4(false) }}
                 >
                     第四个弹窗-content
                 </ResizableModal>

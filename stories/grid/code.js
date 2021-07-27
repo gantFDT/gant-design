@@ -25,9 +25,7 @@ const RandomCreate = () => {
 let mockData = Array(10000)
   .fill('')
   .map(() => RandomCreate());
-mockData = [
-  ...mockData,
-];
+mockData = [...mockData];
 
 const testTreeDataSource = [
   {
@@ -109,7 +107,7 @@ const testTreeDataSource = [
     path: ['2', '2-3'],
     parentId: '2',
   },
-  ...mockData
+  ...mockData,
 ];
 
 const basicColumns = [
@@ -217,15 +215,18 @@ const basicColumns = [
     fieldName: 'county3',
     title: '国家',
     filter: 'agTextColumnFilter',
-  },{
+  },
+  {
     fieldName: 'county4',
     title: '国家',
     filter: 'agTextColumnFilter',
-  },{
+  },
+  {
     fieldName: 'county5',
     title: '国家',
     filter: 'agTextColumnFilter',
-  },{
+  },
+  {
     fieldName: 'county6',
     title: '国家',
     filter: 'agTextColumnFilter',
@@ -393,7 +394,7 @@ const BaiscGrid = () => {
         loading={loading}
         columns={columns}
         editable={editable}
-        dataSource={[]}
+        dataSource={dataSource}
         serialNumber
         boxColumnIndex={['name', 'county', 'age']}
         rowSelection={{
