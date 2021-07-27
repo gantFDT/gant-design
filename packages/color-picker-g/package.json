@@ -1,6 +1,6 @@
 {
   "name": "color-picker-g",
-  "version": "0.1.18",
+  "version": "0.1.19",
   "description": "Simple colorpicker used with value & onChange property",
   "main": "lib/index.js",
   "scripts": {},
