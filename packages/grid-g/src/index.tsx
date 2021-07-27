@@ -13,7 +13,7 @@ import {
   RowNode,
   RowSelectedEvent,
   SelectionChangedEvent,
-  SuppressKeyboardEventParams,
+  SuppressKeyboardEventParams
 } from '@ag-grid-community/core';
 import '@ag-grid-community/core/dist/styles/ag-grid.css';
 import '@ag-grid-community/core/dist/styles/ag-theme-balham.css';
@@ -26,10 +26,10 @@ import { findIndex, get, isEmpty, isEqual, isObject } from 'lodash';
 import React, { createContext, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { gantGetcontextMenuItems } from './contextMenuItems';
 import CustomHeader from './CustomHeader';
+import { filterHooks } from './gantFilter';
 import GantGridFormToolPanelRenderer from './GantGridFormToolPanelRenderer';
 import GridManager from './gridManager';
 import { contextHooks, selectedHooks } from './hooks';
-import { filterHooks, filterDateComparator } from './gantFilter';
 import { DataActions, GridPropsPartial, GridVariableRef, RowSelection, Size } from './interface';
 import key from './license';
 import en from './locale/en-US';
@@ -45,7 +45,7 @@ import {
   groupNodeSelectedToggle,
   mapColumns,
   selectedMapColumns,
-  usePagination,
+  usePagination
 } from './utils';
 export { default as GantGroupCellRenderer } from './GantGroupCellRenderer';
 export { default as GantPromiseCellRender } from './GantPromiseCellRender';
