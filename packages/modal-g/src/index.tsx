@@ -1,12 +1,13 @@
-import React, { useContext, useCallback, useEffect } from 'react';
-import { pick, omit, throttle } from 'lodash';
+import { omit, pick, throttle } from 'lodash';
+import React, { useCallback, useContext, useEffect } from 'react';
 import ModalContext from './Context';
+import { ContextContentProps, ModalProps } from './interface';
 import ResizableModal from './ResizableModal';
 import ResizableProvider from './ResizableProvider';
-import { ModalProps, ContextContentProps } from './interface';
 
 const uuid = 'modal-g-uuid';
 const providerPropKeys = ['initalState', 'maxZIndex', 'minWidth', 'minHeight'];
+
 
 const ContextContent: React.FC<ContextContentProps> = ({
   id,
