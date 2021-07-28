@@ -760,9 +760,12 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                         headerComponentParams: {
                           ColumnLabelComponent,
                         },
+                        menuTabs: ['generalMenuTab', 'filterMenuTab'],
+                        lockVisible: true,
                         ...defaultColDef,
                         filterParams: {
                           buttons: ['reset'],
+                          ...get(defaultColDef, 'filterParams', {}),
                         },
                       }}
                       onRowDoubleClicked={handleRowDoubleClicked}
