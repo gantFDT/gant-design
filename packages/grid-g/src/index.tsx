@@ -167,6 +167,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     excelStyles = [],
     suppressRightClickSelected,
     treeDataForcedFilter,
+    themeClass='ag-theme-balham',
     ...orignProps
   } = props;
   const apiRef = useRef<GridApi>();
@@ -675,7 +676,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                 >
                   <div
                     className={classnames(
-                      'ag-theme-balham',
+                      themeClass,
                       'gant-ag-wrapper',
                       editable && 'no-zebra',
                     )}
