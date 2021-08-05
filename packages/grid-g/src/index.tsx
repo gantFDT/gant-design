@@ -168,6 +168,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     excelStyles = [],
     suppressRightClickSelected,
     treeDataForcedFilter,
+    themeClass='ag-theme-balham',
     ...orignProps
   } = props;
   const apiRef = useRef<GridApi>();
@@ -676,7 +677,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                 >
                   <div
                     className={classnames(
-                      'ag-theme-balham',
+                      themeClass,
                       'gant-ag-wrapper',
                       editable && 'no-zebra',
                     )}
@@ -761,9 +762,12 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                         headerComponentParams: {
                           ColumnLabelComponent,
                         },
+                        menuTabs: ['generalMenuTab', 'filterMenuTab'],
+                        lockVisible: false,
                         ...defaultColDef,
                         filterParams: {
                           buttons: ['reset'],
+                          ...get(defaultColDef, 'filterParams', {}),
                         },
                       }}
                       onRowDoubleClicked={handleRowDoubleClicked}

@@ -1,19 +1,11 @@
-import { AgGridReactProps } from '@ag-grid-community/react';
 import {
-  GridApi as AgGridApi,
-  ITooltipParams,
-  GridReadyEvent,
-  ValueFormatterParams,
-  ColDef,
-  IServerSideGetRowsParams,
-  GetContextMenuItemsParams,
-  ColumnApi as AgColumnApi,
-  RowNode,
+  ColDef, ColumnApi as AgColumnApi, GetContextMenuItemsParams, GridApi as AgGridApi, GridReadyEvent, IServerSideGetRowsParams, ITooltipParams, RowNode, ValueFormatterParams
 } from '@ag-grid-community/core';
-import { defaultProps, defaultRowSelection } from './index';
-import { Rules, RuleType, RuleItem } from 'async-validator';
+import { AgGridReactProps } from '@ag-grid-community/react';
 import { PaginationProps } from 'antd/lib/pagination';
+import { RuleItem } from 'async-validator';
 import GridManager from './gridManager';
+import { defaultProps } from './index';
 export * from '@ag-grid-community/core';
 export { default as GridManager } from './gridManager';
 // 编辑框大小
@@ -221,6 +213,7 @@ export interface Props<T extends any> {
   doubleClickedExpanded?: boolean;
   suppressRightClickSelected?:boolean;
   treeDataForcedFilter?:boolean;
+  themeClass?:string;
   onContextChangeRender?: (
     context: any,
     diffKeys: string[],
