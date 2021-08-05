@@ -762,7 +762,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                           ColumnLabelComponent,
                         },
                         menuTabs: ['generalMenuTab', 'filterMenuTab'],
-                        lockVisible: true,
+                        lockVisible: false,
                         ...defaultColDef,
                         filterParams: {
                           buttons: ['reset'],
