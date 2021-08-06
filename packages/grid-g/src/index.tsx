@@ -740,6 +740,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                       suppressScrollOnNewData
                       tooltipShowDelay={0}
                       tooltipMouseTrack
+                      excludeChildrenWhenTreeDataFiltering
                       {...selection}
                       excelStyles={[{ id: 'stringType', dataType: 'string' }, ...excelStyles]}
                       {...orignProps}
@@ -789,6 +790,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                       onColumnMoved={onColumnsChange}
                       onColumnVisible={onColumnsChange}
                       onColumnResized={onColumnsChange}
+                      
                     />
                   </div>
                   <GantGridFormToolPanelRenderer
