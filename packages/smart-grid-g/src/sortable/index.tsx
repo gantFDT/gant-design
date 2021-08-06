@@ -1,5 +1,5 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import { Checkbox, Row, notification, Tooltip, Popover, Button } from 'antd';
+import React, { useCallback, useMemo } from 'react';
+import { Checkbox, Row, Tooltip } from 'antd';
 import {
   SortableContainer,
   SortableElement,
@@ -9,9 +9,6 @@ import {
 import arrayMove from 'array-move';
 import { Icon } from '@data-cell';
 import Receiver from '../locale/Receiver';
-import { locale } from 'moment';
-
-Icon.updateFromIconfontCN({ scriptUrl: '//at.alicdn.com/t/font_1252237_yp35yr9jf6.js'})
 
 interface RecordProps {
   fieldName: string;
@@ -36,19 +33,22 @@ function Sortable(props: SortableProps) {
 
   if (!dataSource || !dataSource.length) return null;
 
-  const [ leftSpinIdx, rightSpinIdx, hiddenCount ] = useMemo(() => {
+  const [ leftSpinIdx, rightSpinIdx, selectableCount, checkedCount ] = useMemo(() => {
     return dataSource.reduce((total, dataItem, dataIdx) => {
-      if(dataItem.fixed === 'left') {
+      if (dataItem.fixed === 'left') {
         total[0] = dataIdx;
       }
-      if(dataItem.fixed === 'right' && total[1] === -1) {
+      if (dataItem.fixed === 'right' && total[1] === -1) {
         total[1] = dataIdx;
       }
-      if(dataItem.dynamic || dataItem.hide || dataItem.display === 'none') {
+      if (!dataItem.dynamic && !dataItem.hide && dataItem.display === 'block') {
         total[2]++;
+        if (dataItem.checked) {
+          total[3]++;
+        }
       }
       return total;
-    }, [-1, -1, 0])
+    }, [-1, -1, 0, 0])
   }, [dataSource])
 
   const handlerLock = useCallback((index, fixed) => {
@@ -73,7 +73,7 @@ function Sortable(props: SortableProps) {
     onChange(dataSource);
   }, [dataSource]);
 
-  const DragHandler = useMemo(() => SortableHandle(() => <Icon className="dragHandler" type="icon-drag" />), []);
+  const DragHandler = useMemo(() => SortableHandle(() => <Icon className="dragHandler" type="more" />), []);
 
   const SortableItem = SortableElement(
     ({ dataItem: { title, checked, fixed, sort }, dataIdx}: any) => (
@@ -150,22 +150,6 @@ function Sortable(props: SortableProps) {
     );
   });
 
-  // 选择
-  const selectedRows = useMemo(() => dataSource.filter(dataItem => dataItem.checked), [dataSource]);
-  const indeterminate = useMemo(() => !!selectedRows.length && selectedRows.length > hiddenCount && selectedRows.length < dataSource.length, [selectedRows, dataSource, hiddenCount]);
-  const checkedAll = useMemo(() => !!selectedRows.length && selectedRows.length === dataSource.length, [selectedRows, dataSource]);
-
-  const onCheckAllChange = useCallback(({target: { checked }}) => {
-    dataSource.forEach(dataItem => {
-      if (dataItem.dynamic || dataItem.display === 'none' || dataItem.hide) {
-        dataItem.checked = true
-      } else {
-        dataItem.checked = !!checked
-      }
-    });
-    onChange(dataSource);
-  }, [dataSource]);
-
   const handlerSortEnd: SortEndHandler = useCallback(({ oldIndex, newIndex }) => {
     const dataItem = dataSource[oldIndex];
     // 移出固定区
@@ -183,6 +167,20 @@ function Sortable(props: SortableProps) {
     onChange(arrayMove(dataSource, oldIndex, newIndex));
   }, [dataSource, leftSpinIdx, rightSpinIdx]);
 
+  // 选择
+  const indeterminate = useMemo(() => checkedCount && checkedCount < selectableCount, [checkedCount, selectableCount]);
+  const checkedAll = useMemo(() => checkedCount && checkedCount === selectableCount, [checkedCount, selectableCount]);
+  const onCheckAllChange = useCallback(({target: { checked }}) => {
+    dataSource.forEach(dataItem => {
+      if (dataItem.dynamic || dataItem.hide) {
+        dataItem.checked = true
+      } else if (dataItem.display !== 'none') {
+        dataItem.checked = !!checked
+      }
+    });
+    onChange(dataSource);
+  }, [dataSource]);
+
   return (
     <Receiver>
       {(locale) => <div style={{ paddingBottom: 10 }} className="gant-smart-table-sortable">
@@ -195,7 +193,7 @@ function Sortable(props: SortableProps) {
             />
           </div>
           <div style={{ flexGrow: 1 }}>
-            {locale.checkAll}（{`${selectedRows.length - hiddenCount}/${dataSource.length - hiddenCount}`}）
+            {locale.checkAll}（{`${checkedCount}/${selectableCount}`}）
           </div>
           <div style={{ flexGrow: 0, width: 56 }}></div>
         </Row>
