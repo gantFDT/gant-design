@@ -56,6 +56,13 @@ function ConfigModal(props: ConfigModalProps) {
     const view = cloneDeep(dataSource)
     visible && setFakeView(view)
     // onViewChange && onViewChange(view) 接口自定义视图，customViewsProp属性冲突
+    const onselectstart = (event) => {
+      event.returnValue = false;
+    }
+    document.addEventListener('selectstart', onselectstart)
+    return () => {
+      document.removeEventListener('selectstart', onselectstart)
+    }
   }, [dataSource, visible])
 
   const handlerClose = useCallback(() => {

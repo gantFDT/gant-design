@@ -20,6 +20,7 @@ interface RecordProps {
   display?: string;
   fixed?: 'left' | 'right';
   sort?: 'asc' | 'desc' | 'none';
+  sortIndex?: number;
 }
 
 interface SortableProps {
@@ -62,9 +63,32 @@ function Sortable(props: SortableProps) {
     onChange(arrayMove(dataSource, index, oldFixed === 'left' ? leftSpinIdx : (rightSpinIdx === -1 ? -1 : rightSpinIdx)));
   }, [dataSource, leftSpinIdx, rightSpinIdx]);
 
-  const handleSort = useCallback((index) => {
-    const _sort = dataSource[index].sort;
-    dataSource[index].sort = !_sort || _sort === 'none' ? 'asc' : _sort === 'asc' ? 'desc' : 'none';
+  const handleSort = useCallback((index, event) => {
+    if (event.shiftKey) {
+      const targetRow = dataSource[index];
+      targetRow.sort = targetRow.sort === 'asc' ? 'desc' : targetRow.sort === 'desc' ? 'none' : 'asc';
+      const sortIndex = dataSource.reduce((memo, row, rowIdx) => 'sortIndex' in row && rowIdx !== index ? memo + 1 : memo, 0)
+      dataSource.forEach((row, rowIdx) => {
+        if (rowIdx !== index && row.sortIndex > targetRow.sortIndex) {
+          row.sortIndex--;
+        }
+      })
+      if (targetRow.sort === 'none') {
+        delete targetRow.sortIndex
+      } else {
+        targetRow.sortIndex = sortIndex;
+      }
+    } else {
+      dataSource.forEach((row, rowIdx) => {
+        if (rowIdx !== index) {
+          row.sort = 'none'
+          delete row.sortIndex;
+        } else {
+          row.sort = row.sort === 'asc' ? 'desc' : row.sort === 'desc' ? 'none' : 'asc';
+          row.sortIndex = 0;
+        }
+      })
+    }
     onChange(dataSource);
   }, [dataSource]);
 
@@ -76,7 +100,7 @@ function Sortable(props: SortableProps) {
   const DragHandler = useMemo(() => SortableHandle(() => <Icon className="dragHandler" type="more" />), []);
 
   const SortableItem = SortableElement(
-    ({ dataItem: { title, checked, fixed, sort }, dataIdx}: any) => (
+    ({ dataItem: { title, checked, fixed, sort, sortIndex }, dataIdx}: any) => (
       <Row type="flex" align="middle" justify="space-between" className="tableRow gant-table-config-row">
         <div style={{ flexGrow: 0 }}>
           <Checkbox checked={checked} onChange={handlerFieldVisible.bind(null, dataIdx)} />
@@ -101,7 +125,7 @@ function Sortable(props: SortableProps) {
                       placement="top"
                       title={sort === 'asc' ? locale.sortAsc : locale.sortDesc}
                     >
-                      <div><Icon className="gant-margin-h-5" type={sort === 'asc' ? 'arrow-up' : 'arrow-down'} /></div>
+                      <div>{sortIndex !== undefined && sortIndex + 1}<Icon className="gant-margin-h-5" style={{ verticalAlign: 'baseline' }} type={sort === 'asc' ? 'arrow-up' : 'arrow-down'} /></div>
                     </Tooltip>
                   }
                 </span>

@@ -99,6 +99,7 @@ export const useTableConfig = (props: useTableConfigProps) => {
           width: _columnField.width || _columnItem.width ||  120,
           fixed: _columnField.fixed || _columnItem.fixed,
           sort: _columnField.sort || _columnItem.sort,
+          sortIndex: _columnField.sortIndex ?? _columnItem.sortIndex,
         }))
       }
     }
