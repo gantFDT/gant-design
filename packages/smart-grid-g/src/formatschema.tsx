@@ -12,7 +12,7 @@ import {
   InputLanguage,
   InputMoney,
 } from '@data-cell';
-import { isEmpty, cloneDeep, merge, get } from 'lodash';
+import { isEmpty, pick, merge, get } from 'lodash';
 import { SchemaProp, PanelConfig, CustomColumnProps, ColumnConfig, Fields } from './interface';
 import { getType } from '@util';
 
@@ -113,13 +113,7 @@ export default function formatSchema<R>(schema: SchemaProp<R> | CustomColumnProp
           name: '全字段',
           version: 'default',
           panelConfig: {
-            columnFields: schema.map(column => ({
-              fieldName: column.fieldName,
-              hide: column.hide,
-              width: column.width,
-              fixed: column.fixed,
-              sort: column.sort,
-            })),
+            columnFields: schema.map(column => pick(column, ['fieldName', 'hide', 'width', 'fixed', 'sort', 'sortIndex'])),
           },
         },
       ],

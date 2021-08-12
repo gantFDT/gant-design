@@ -12,30 +12,35 @@ export default props => {
     enableSorting,
     ColumnLabelComponent = null,
   } = props;
-
-  const sortInfo = props.api.sortController.getSortModel()
+  console.log('props', props);
+  const sortInfo = props.api.sortController.getSortModel();
 
   const [ascSort, setAscSort] = useState(false);
   const [descSort, setDescSort] = useState(false);
   const [noSort, setNoSort] = useState(true);
   const [sortIndex, setSortIndex] = useState(undefined);
   const [sortCount, setSortCount] = useState(sortInfo.length);
-  const refButton = useRef(null);
 
-  
+  const [isFilterActive, setIsFilterActive] = useState(false);
+
+  const refButton = useRef(null);
 
   const onMenuClicked = () => {
     showColumnMenu(refButton.current);
   };
 
   const onSortChanged = () => {
-    setTimeout(()=>{
+    setTimeout(() => {
       setSortIndex(column.sortIndex);
-      setSortCount(sortInfo.length)
-    })
+      setSortCount(sortInfo.length);
+    });
     setAscSort(column.isSortAscending());
     setDescSort(column.isSortDescending());
     setNoSort(!column.isSortAscending() && !column.isSortDescending());
+  };
+
+  const filterChanged = () => {
+    setIsFilterActive(column.isFilterActive());
   };
 
   const onSortRequested = (order, event) => {
@@ -45,6 +50,7 @@ export default props => {
   useEffect(() => {
     column.addEventListener('sortChanged', onSortChanged);
     onSortChanged();
+    column.addEventListener('filterChanged', filterChanged);
   }, []);
 
   let menu = null;
@@ -80,13 +86,18 @@ export default props => {
         {ascSort && <Icon type="arrow-up" />}
       </div>
     );
-  }, [sortIndex,descSort,ascSort,noSort,enableSorting,handleSortChange,sortCount]);
+  }, [sortIndex, descSort, ascSort, noSort, enableSorting, handleSortChange, sortCount]);
 
   return (
     <>
       <div className="customHeaderLabel">
         {ColumnLabelComponent ? <ColumnLabelComponent title={displayName} /> : displayName}
       </div>
+      {isFilterActive && (
+        <div className="customHeaderFilter">
+          <Icon type="filter" />
+        </div>
+      )}
       {sort}
       {menu}
     </>
