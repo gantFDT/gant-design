@@ -2,12 +2,28 @@
 @gant-select: ~'@{gant-prefix}-calendar';
 
 .@{gant-select}-picker {
-    //   .display-table-cell();
-    vertical-align: middle;
-    width: 100%;
-    &:not(:last-child) {
-        .ant-calendar-picker-input {
-            .input-group-left();
-        }
+  //   .display-table-cell();
+  vertical-align: middle;
+  width: 100%;
+  &:not(:last-child) {
+    .ant-calendar-picker-input {
+      .input-group-left();
     }
+  }
+}
+.gant-calendar {
+  .ant-calendar-active-week {
+    background-color: transparent !important;
+  }
+  .ant-calendar-body tr:hover {
+    background-color: transparent !important;
+  }
+  .ant-calendar-body tr.ant-calendar-active-week {
+    font-weight: normal !important;
+    background-color: transparent !important;
+  }
+  .ant-calendar-selected-date .ant-calendar-selected-day {
+    font-weight: bold;
+    background: #bae7ff;
+  }
 }

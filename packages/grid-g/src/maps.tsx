@@ -8,8 +8,8 @@ let frameworkComponentsMaps = {
   gantGroupCellRenderer: GantGroupCellRenderer,
   gantRenderCol: RenderCol,
   gantTooltip: GantTooltip,
-  gantPinnedRowRenderer:GantPinnedRowRenderer,
-  gantGridFormToolPanelRenderer:GantGridFormToolPanelRenderer
+  gantPinnedRowRenderer: GantPinnedRowRenderer,
+  gantGridFormToolPanelRenderer: GantGridFormToolPanelRenderer,
 };
 
 export function setComponentsMaps(components) {

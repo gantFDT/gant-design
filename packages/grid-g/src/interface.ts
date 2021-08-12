@@ -1,5 +1,13 @@
 import {
-  ColDef, ColumnApi as AgColumnApi, GetContextMenuItemsParams, GridApi as AgGridApi, GridReadyEvent, IServerSideGetRowsParams, ITooltipParams, RowNode, ValueFormatterParams
+  ColDef,
+  ColumnApi as AgColumnApi,
+  GetContextMenuItemsParams,
+  GridApi as AgGridApi,
+  GridReadyEvent,
+  IServerSideGetRowsParams,
+  ITooltipParams,
+  RowNode,
+  ValueFormatterParams,
 } from '@ag-grid-community/core';
 import { AgGridReactProps } from '@ag-grid-community/react';
 import { PaginationProps } from 'antd/lib/pagination';
@@ -211,9 +219,10 @@ export interface Props<T extends any> {
   customDrawerContent?: (params: any) => any;
   visibleDrawer?: undefined;
   doubleClickedExpanded?: boolean;
-  suppressRightClickSelected?:boolean;
-  treeDataForcedFilter?:boolean;
-  themeClass?:string;
+  suppressRightClickSelected?: boolean;
+  treeDataForcedFilter?: boolean;
+  themeClass?: string;
+  gantDateComponent?: boolean;
   onContextChangeRender?: (
     context: any,
     diffKeys: string[],
