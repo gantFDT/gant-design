@@ -5,7 +5,6 @@ export default forwardRef(function GantDateComponent(props: any, ref: any) {
   const { onDateChanged } = props;
   const [placeholder, setplaceholder] = useState('');
   const [date, setDate] = useState<string>();
-  const dateRef = useRef<any>();
   useImperativeHandle(
     ref,
     () => ({
@@ -32,7 +31,7 @@ export default forwardRef(function GantDateComponent(props: any, ref: any) {
         setDate(value ? value.format() : null);
         onDateChanged();
       }}
-      format="gggg-wo"
+      format="gggg-w[周]"
     />
   );
 });

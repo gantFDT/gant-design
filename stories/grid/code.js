@@ -151,9 +151,12 @@ const basicColumns = [
     fieldName: 'date',
     title: '时间',
     filter: 'agDateColumnFilter',
+    valueFormatter: ({ value }) => {
+      return moment(value).format('gggg-w[周]');
+    },
     filterParams: {
       comparator: function filterDateComparator(filterLocalDateAtMidnight, cellValue) {
-        console.log('filterDateComparator----->', filterLocalDateAtMidnight,cellValue);
+        console.log('filterDateComparator----->', filterLocalDateAtMidnight, cellValue);
         if (!cellValue) return -1;
         const filterTime = moment(filterLocalDateAtMidnight).valueOf();
         const cellTime = moment(cellValue).valueOf();
