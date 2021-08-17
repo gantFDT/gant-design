@@ -50,4 +50,5 @@ export default {
     inputKeyword: 'Please input keyword',
     sortAsc: 'Asc',
     sortDesc: 'Desc',
+    sync: 'Sync view'
 }

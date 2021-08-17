@@ -50,4 +50,5 @@ export default {
     inputKeyword: '请输入关键词',
     sortAsc: '正序',
     sortDesc: '倒序',
+    sync: '同步视图'
 }
