@@ -1,7 +1,7 @@
 //自定义列头，主要解决label自主渲染的问题
 import { Icon } from 'antd';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-
+import { SortChangedEvent } from '@ag-grid-enterprise/all-modules';
 export default props => {
   const {
     column,
@@ -11,17 +11,17 @@ export default props => {
     enableMenu,
     enableSorting,
     ColumnLabelComponent = null,
+    columnApi,
+    api,
   } = props;
-  console.log('props', props);
   const sortInfo = props.api.sortController.getSortModel();
-
   const [ascSort, setAscSort] = useState(false);
   const [descSort, setDescSort] = useState(false);
   const [noSort, setNoSort] = useState(true);
   const [sortIndex, setSortIndex] = useState(undefined);
   const [sortCount, setSortCount] = useState(sortInfo.length);
-
   const [isFilterActive, setIsFilterActive] = useState(false);
+  const [visibleSortNumber, setVisibleSortNumber] = useState(false);
 
   const refButton = useRef(null);
 
@@ -29,11 +29,12 @@ export default props => {
     showColumnMenu(refButton.current);
   };
 
-  const onSortChanged = () => {
-    setTimeout(() => {
-      setSortIndex(column.sortIndex);
-      setSortCount(sortInfo.length);
-    });
+  const onSortChanged = (event: SortChangedEvent) => {
+    let stateColumns = event.columnApi.getColumnState();
+    const filterColumns = stateColumns.filter(item => item.sort);
+    setVisibleSortNumber(filterColumns.length > 1);
+    setSortIndex(column.sortIndex);
+    setSortCount(sortInfo.length);
     setAscSort(column.isSortAscending());
     setDescSort(column.isSortDescending());
     setNoSort(!column.isSortAscending() && !column.isSortDescending());
@@ -48,9 +49,12 @@ export default props => {
   };
 
   useEffect(() => {
-    column.addEventListener('sortChanged', onSortChanged);
-    onSortChanged();
+    api.addEventListener('sortChanged', onSortChanged);
     column.addEventListener('filterChanged', filterChanged);
+    return () => {
+      api.removeEventListener('sortChanged', onSortChanged);
+      column.removeEventListener('filterChanged', filterChanged);
+    };
   }, []);
 
   let menu = null;
@@ -80,13 +84,22 @@ export default props => {
   const sort = useMemo(() => {
     return (
       <div className="customHeaderSort" onClick={enableSorting ? handleSortChange : () => {}}>
-        {sortIndex !== undefined && !noSort && <>{sortIndex + 1}</>}
+        {visibleSortNumber && sortIndex !== undefined && !noSort && <>{sortIndex + 1}</>}
         {/* {sortIndex} */}
         {descSort && <Icon type="arrow-down" />}
         {ascSort && <Icon type="arrow-up" />}
       </div>
     );
-  }, [sortIndex, descSort, ascSort, noSort, enableSorting, handleSortChange, sortCount]);
+  }, [
+    sortIndex,
+    descSort,
+    ascSort,
+    noSort,
+    enableSorting,
+    handleSortChange,
+    sortCount,
+    visibleSortNumber,
+  ]);
 
   return (
     <>

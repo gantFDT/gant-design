@@ -76,42 +76,7 @@ export function filterHooks(params: filterHooksParams) {
       if (debounceRef.current) clearTimeout(debounceRef.current);
       debounceRef.current = setTimeout(() => {
         filterDataRef.current = {};
-        // const filterInstance = api.getFilterInstance(column.getColId());
-        // const newData: any[] = [];
-        // const rowNodes: RowNode[] = [];
         const filterModel = api.getFilterModel();
-        // const startIndex = api.getFirstDisplayedRow();
-        // const lastIndex = api.getLastDisplayedRow();
-        // api.showLoadingOverlay();
-        // api.forEachNodeAfterFilter((node, index) => {
-        //   const { appliedModel } = filterInstance as any;
-        //   const itemValue = api.getValue(column, node);
-        //   const isAdopt = judgeFilter(filterInstance, itemValue);
-        //   if (isAdopt) {
-        //     filterDataRef.current[node.id] = true;
-        //   }
-        //   if (node.rowIndex >= startIndex && node.rowIndex <= lastIndex)
-        //     newData.push({
-        //       ...get(node, 'data', {}),
-        //       _optCounter: optCounterRef.current + index,
-        //     });
-        // });
-        // // console.log('---->',newData)
-        // // applyTransactionAddAsync(
-        // //   api,
-        // //   newData,
-        // //   () => {},
-        // // );
-        // api.setFilterModel({});
-        // api.setRowData([]);
-        // api.setRowData(
-        //   dataSourceRef.current.map((item, index) => ({
-        //     ...item,
-        //     _optCounter: optCounterRef.current + index,
-        //   })),
-        // );
-        // api.setFilterModel(filterModel);
-        // api.hideOverlay();
         if (isEmpty(filterModelRef.current) != isEmpty(filterModel)) {
           filterModelRef.current = filterModel;
           columnIdRef.current = api.getHorizontalPixelRange().left;
