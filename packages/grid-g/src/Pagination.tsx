@@ -31,7 +31,7 @@ export default memo(function GantPagination(props: GantPaginationProps) {
     beginIndex: 0,
   });
   const disableLimit = useMemo(() => {
-    return total > countLimit;
+    return total != countLimit;
   }, [total, countLimit]);
   useEffect(() => {
     const pageSize = PropPageSize ? PropPageSize : defaultPageSize;

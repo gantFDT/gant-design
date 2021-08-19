@@ -26,7 +26,7 @@ const RandomCreate = () => {
 //   console.log('=====>', context);
 //   return <div>1111</div>;
 // }
-let mockData = Array(10000)
+let mockData = Array(100)
   .fill('')
   .map(() => RandomCreate());
 mockData = [...mockData];
@@ -155,83 +155,56 @@ const basicColumns = [
     fieldName: 'date',
     title: '时间',
     filter: 'agDateColumnFilter',
-    // filterParams: {
-    //   comparator: function filterDateComparator(filterLocalDateAtMidnight, cellValue) {
-    //     console.log('filterDateComparator----->', filterLocalDateAtMidnight,cellValue);
-    //     if (!cellValue) return -1;
-    //     const filterTime = moment(filterLocalDateAtMidnight).valueOf();
-    //     const cellTime = moment(cellValue).valueOf();
+    valueFormatter: ({ value }) => {
+      return moment(value).format('gggg-w[周]');
+    },
+    filterParams: {
+      comparator: function filterDateComparator(filterLocalDateAtMidnight, cellValue) {
+        console.log('filterDateComparator----->', filterLocalDateAtMidnight, cellValue);
+        if (!cellValue) return -1;
+        const filterTime = moment(filterLocalDateAtMidnight).valueOf();
+        const cellTime = moment(cellValue).valueOf();
 
-    //     if (filterTime == cellTime) {
-    //       return 0;
-    //     }
+        if (filterTime == cellTime) {
+          return 0;
+        }
 
-    //     if (cellTime < filterTime) {
-    //       return -1;
-    //     }
+        if (cellTime < filterTime) {
+          return -1;
+        }
 
-    //     if (cellTime > filterTime) {
-    //       return 1;
-    //     }
-    //     return 0;
-    //   },
-    //   // comparator: (filterLocalDateAtMidnight, cellValue) => {
-    //   //   const dateAsString = cellValue;
+        if (cellTime > filterTime) {
+          return 1;
+        }
+        return 0;
+      },
+      // comparator: (filterLocalDateAtMidnight, cellValue) => {
+      //   const dateAsString = cellValue;
 
-    //   //   if (dateAsString == null) {
-    //   //     return 0;
-    //   //   }
+      //   if (dateAsString == null) {
+      //     return 0;
+      //   }
 
-    //   //   // In the example application, dates are stored as dd/mm/yyyy
-    //   //   // We create a Date object for comparison against the filter date
-    //   //   const dateParts = dateAsString.split('/');
-    //   //   const day = Number(dateParts[2]);
-    //   //   const month = Number(dateParts[1]) - 1;
-    //   //   const year = Number(dateParts[0]);
-    //   //   const cellDate = new Date(year, month, day);
+      //   // In the example application, dates are stored as dd/mm/yyyy
+      //   // We create a Date object for comparison against the filter date
+      //   const dateParts = dateAsString.split('/');
+      //   const day = Number(dateParts[2]);
+      //   const month = Number(dateParts[1]) - 1;
+      //   const year = Number(dateParts[0]);
+      //   const cellDate = new Date(year, month, day);
 
-    //   //   // Now that both parameters are Date objects, we can compare
-    //   //   if (cellDate < filterLocalDateAtMidnight) {
-    //   //     return -1;
-    //   //   } else if (cellDate > filterLocalDateAtMidnight) {
-    //   //     return 1;
-    //   //   }
-    //   //   return 0;
-    //   // },
-    // },
+      //   // Now that both parameters are Date objects, we can compare
+      //   if (cellDate < filterLocalDateAtMidnight) {
+      //     return -1;
+      //   } else if (cellDate > filterLocalDateAtMidnight) {
+      //     return 1;
+      //   }
+      //   return 0;
+      // },
+    },
   },
   {
     fieldName: 'county',
-    title: '国家',
-    filter: 'agTextColumnFilter',
-  },
-  {
-    fieldName: 'county1',
-    title: '国家',
-    filter: 'agTextColumnFilter',
-  },
-  {
-    fieldName: 'county2',
-    title: '国家',
-    filter: 'agTextColumnFilter',
-  },
-  {
-    fieldName: 'county3',
-    title: '国家',
-    filter: 'agTextColumnFilter',
-  },
-  {
-    fieldName: 'county4',
-    title: '国家',
-    filter: 'agTextColumnFilter',
-  },
-  {
-    fieldName: 'county5',
-    title: '国家',
-    filter: 'agTextColumnFilter',
-  },
-  {
-    fieldName: 'county6',
     title: '国家',
     filter: 'agTextColumnFilter',
   },
@@ -421,6 +394,7 @@ const BaiscGrid = () => {
         onReady={onReady}
         openEditSign
         showCut
+        gantDateComponent
         getDataPath={data => {
           // console.log('---->', data.path);
           return data.path;

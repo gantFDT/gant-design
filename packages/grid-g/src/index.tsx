@@ -13,7 +13,7 @@ import {
   RowNode,
   RowSelectedEvent,
   SelectionChangedEvent,
-  SuppressKeyboardEventParams
+  SuppressKeyboardEventParams,
 } from '@ag-grid-community/core';
 import '@ag-grid-community/core/dist/styles/ag-grid.css';
 import '@ag-grid-community/core/dist/styles/ag-theme-balham.css';
@@ -37,6 +37,7 @@ import zh from './locale/zh-CN';
 import { getAllComponentsMaps } from './maps';
 import GantPagination from './Pagination';
 import SelectedGrid from './SelectedGrid';
+import GantDateComponent from './GantDateComponent';
 import './style';
 import {
   checkParentGroupSelectedStatus,
@@ -45,11 +46,12 @@ import {
   groupNodeSelectedToggle,
   mapColumns,
   selectedMapColumns,
-  usePagination
+  usePagination,
 } from './utils';
 export { default as GantGroupCellRenderer } from './GantGroupCellRenderer';
 export { default as GantPromiseCellRender } from './GantPromiseCellRender';
 export * from './interface';
+export { default as GantDateComponent } from './GantDateComponent';
 export { setComponentsMaps, setFrameworkComponentsMaps } from './maps';
 LicenseManager.setLicenseKey(key);
 const langs = {
@@ -168,7 +170,8 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     excelStyles = [],
     suppressRightClickSelected,
     treeDataForcedFilter,
-    themeClass='ag-theme-balham',
+    themeClass = 'ag-theme-balham',
+    gantDateComponent,
     ...orignProps
   } = props;
   const apiRef = useRef<GridApi>();
@@ -676,11 +679,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                   }}
                 >
                   <div
-                    className={classnames(
-                      themeClass,
-                      'gant-ag-wrapper',
-                      editable && 'no-zebra',
-                    )}
+                    className={classnames(themeClass, 'gant-ag-wrapper', editable && 'no-zebra')}
                     data-refid={gridKey}
                     style={{
                       width: '100%',
@@ -703,6 +702,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                     <AgGridReact
                       frameworkComponents={{
                         agColumnHeader: CustomHeader,
+                        agDateInput: gantDateComponent ? GantDateComponent : null,
                         ...frameworkComponentsMaps,
                         ...frameworkComponents,
                       }}
@@ -791,7 +791,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                       onColumnMoved={onColumnsChange}
                       onColumnVisible={onColumnsChange}
                       onColumnResized={onColumnsChange}
-                      
                     />
                   </div>
                   <GantGridFormToolPanelRenderer

@@ -1,5 +1,5 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import { Checkbox, Row, notification, Tooltip, Popover, Button } from 'antd';
+import React, { useCallback, useMemo } from 'react';
+import { Checkbox, Row, Tooltip } from 'antd';
 import {
   SortableContainer,
   SortableElement,
@@ -9,9 +9,6 @@ import {
 import arrayMove from 'array-move';
 import { Icon } from '@data-cell';
 import Receiver from '../locale/Receiver';
-import { locale } from 'moment';
-
-Icon.updateFromIconfontCN({ scriptUrl: '//at.alicdn.com/t/font_1252237_yp35yr9jf6.js'})
 
 interface RecordProps {
   fieldName: string;
@@ -23,6 +20,7 @@ interface RecordProps {
   display?: string;
   fixed?: 'left' | 'right';
   sort?: 'asc' | 'desc' | 'none';
+  sortIndex?: number;
 }
 
 interface SortableProps {
@@ -36,19 +34,22 @@ function Sortable(props: SortableProps) {
 
   if (!dataSource || !dataSource.length) return null;
 
-  const [ leftSpinIdx, rightSpinIdx, hiddenCount ] = useMemo(() => {
+  const [ leftSpinIdx, rightSpinIdx, selectableCount, checkedCount ] = useMemo(() => {
     return dataSource.reduce((total, dataItem, dataIdx) => {
-      if(dataItem.fixed === 'left') {
+      if (dataItem.fixed === 'left') {
         total[0] = dataIdx;
       }
-      if(dataItem.fixed === 'right' && total[1] === -1) {
+      if (dataItem.fixed === 'right' && total[1] === -1) {
         total[1] = dataIdx;
       }
-      if(dataItem.dynamic || dataItem.hide || dataItem.display === 'none') {
+      if (!dataItem.dynamic && !dataItem.hide && dataItem.display === 'block') {
         total[2]++;
+        if (dataItem.checked) {
+          total[3]++;
+        }
       }
       return total;
-    }, [-1, -1, 0])
+    }, [-1, -1, 0, 0])
   }, [dataSource])
 
   const handlerLock = useCallback((index, fixed) => {
@@ -62,9 +63,32 @@ function Sortable(props: SortableProps) {
     onChange(arrayMove(dataSource, index, oldFixed === 'left' ? leftSpinIdx : (rightSpinIdx === -1 ? -1 : rightSpinIdx)));
   }, [dataSource, leftSpinIdx, rightSpinIdx]);
 
-  const handleSort = useCallback((index) => {
-    const _sort = dataSource[index].sort;
-    dataSource[index].sort = !_sort || _sort === 'none' ? 'asc' : _sort === 'asc' ? 'desc' : 'none';
+  const handleSort = useCallback((index, event) => {
+    if (event.shiftKey) {
+      const targetRow = dataSource[index];
+      targetRow.sort = targetRow.sort === 'asc' ? 'desc' : targetRow.sort === 'desc' ? 'none' : 'asc';
+      const sortIndex = dataSource.reduce((memo, row, rowIdx) => row.sortIndex !== undefined && row.sortIndex !== null && rowIdx !== index ? memo + 1 : memo, 0)
+      dataSource.forEach((row, rowIdx) => {
+        if (rowIdx !== index && row.sortIndex > targetRow.sortIndex) {
+          row.sortIndex--;
+        }
+      })
+      if (targetRow.sort === 'none') {
+        delete targetRow.sortIndex
+      } else {
+        targetRow.sortIndex = sortIndex;
+      }
+    } else {
+      dataSource.forEach((row, rowIdx) => {
+        if (rowIdx !== index) {
+          row.sort = 'none'
+          delete row.sortIndex;
+        } else {
+          row.sort = row.sort === 'asc' ? 'desc' : row.sort === 'desc' ? 'none' : 'asc';
+          row.sortIndex = 0;
+        }
+      })
+    }
     onChange(dataSource);
   }, [dataSource]);
 
@@ -73,10 +97,10 @@ function Sortable(props: SortableProps) {
     onChange(dataSource);
   }, [dataSource]);
 
-  const DragHandler = useMemo(() => SortableHandle(() => <Icon className="dragHandler" type="icon-drag" />), []);
+  const DragHandler = useMemo(() => SortableHandle(() => <Icon className="dragHandler" type="more" />), []);
 
   const SortableItem = SortableElement(
-    ({ dataItem: { title, checked, fixed, sort }, dataIdx}: any) => (
+    ({ dataItem: { title, checked, fixed, sort, sortIndex }, dataIdx}: any) => (
       <Row type="flex" align="middle" justify="space-between" className="tableRow gant-table-config-row">
         <div style={{ flexGrow: 0 }}>
           <Checkbox checked={checked} onChange={handlerFieldVisible.bind(null, dataIdx)} />
@@ -101,7 +125,7 @@ function Sortable(props: SortableProps) {
                       placement="top"
                       title={sort === 'asc' ? locale.sortAsc : locale.sortDesc}
                     >
-                      <div><Icon className="gant-margin-h-5" type={sort === 'asc' ? 'arrow-up' : 'arrow-down'} /></div>
+                      <div>{sortIndex !== undefined && sortIndex + 1}<Icon className="gant-margin-h-5" style={{ verticalAlign: 'baseline' }} type={sort === 'asc' ? 'arrow-up' : 'arrow-down'} /></div>
                     </Tooltip>
                   }
                 </span>
@@ -150,22 +174,6 @@ function Sortable(props: SortableProps) {
     );
   });
 
-  // 选择
-  const selectedRows = useMemo(() => dataSource.filter(dataItem => dataItem.checked), [dataSource]);
-  const indeterminate = useMemo(() => !!selectedRows.length && selectedRows.length > hiddenCount && selectedRows.length < dataSource.length, [selectedRows, dataSource, hiddenCount]);
-  const checkedAll = useMemo(() => !!selectedRows.length && selectedRows.length === dataSource.length, [selectedRows, dataSource]);
-
-  const onCheckAllChange = useCallback(({target: { checked }}) => {
-    dataSource.forEach(dataItem => {
-      if (dataItem.dynamic || dataItem.display === 'none' || dataItem.hide) {
-        dataItem.checked = true
-      } else {
-        dataItem.checked = !!checked
-      }
-    });
-    onChange(dataSource);
-  }, [dataSource]);
-
   const handlerSortEnd: SortEndHandler = useCallback(({ oldIndex, newIndex }) => {
     const dataItem = dataSource[oldIndex];
     // 移出固定区
@@ -183,6 +191,20 @@ function Sortable(props: SortableProps) {
     onChange(arrayMove(dataSource, oldIndex, newIndex));
   }, [dataSource, leftSpinIdx, rightSpinIdx]);
 
+  // 选择
+  const indeterminate = useMemo(() => checkedCount && checkedCount < selectableCount, [checkedCount, selectableCount]);
+  const checkedAll = useMemo(() => checkedCount && checkedCount === selectableCount, [checkedCount, selectableCount]);
+  const onCheckAllChange = useCallback(({target: { checked }}) => {
+    dataSource.forEach(dataItem => {
+      if (dataItem.dynamic || dataItem.hide) {
+        dataItem.checked = true
+      } else if (dataItem.display !== 'none') {
+        dataItem.checked = !!checked
+      }
+    });
+    onChange(dataSource);
+  }, [dataSource]);
+
   return (
     <Receiver>
       {(locale) => <div style={{ paddingBottom: 10 }} className="gant-smart-table-sortable">
@@ -195,7 +217,7 @@ function Sortable(props: SortableProps) {
             />
           </div>
           <div style={{ flexGrow: 1 }}>
-            {locale.checkAll}（{`${selectedRows.length - hiddenCount}/${dataSource.length - hiddenCount}`}）
+            {locale.checkAll}（{`${checkedCount}/${selectableCount}`}）
           </div>
           <div style={{ flexGrow: 0, width: 56 }}></div>
         </Row>

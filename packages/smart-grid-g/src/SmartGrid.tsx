@@ -200,10 +200,41 @@ function SmartGrid<T>(props: SmartGridProps<T>): React.ReactElement {
       ]
     });
     setActiveView(newView);
-    setLastViewKey(newView.viewId)
-    hideModal();
+    setLastViewKey(newView.viewId);
+    hideModal && hideModal();
     setConfigModalVisible(false);
   }, [customViews, companyViews, userId]);
+
+  const handleSync = useCallback(() => {
+    const columnFieldsMap = activeView.panelConfig.columnFields.reduce((memo, columnField) => ({
+      ...memo,
+      [columnField.fieldName]: columnField
+    }), {})
+
+    const columnDefs = managerRef.current.agGridColumnApi.getColumnState();
+
+    columnDefs.sort((prev, next) => {
+      if (
+        prev.pinned === 'left' && next.pinned !== 'left' ||
+        prev.pinned !== 'right' && next.pinned === 'right'
+      ) {
+        return -1;
+      }
+    })
+
+    console.log('columnDefs :>> ', columnDefs.map(row => row.colId));
+    console.log('columnDefs :>> ', columnDefs.map(row => row.pinned));
+
+    activeView.panelConfig.columnFields = columnDefs.map(columnDef => Object.assign({}, columnFieldsMap[columnDef.colId], {
+      fixed: columnDef.pinned,
+      sort: columnDef.sort,
+      sortIndex: columnDef.sortIndex,
+      checked: !columnDef.hide,
+      width: columnDef.width
+    }))
+
+    handlerSaveConfig(activeView)
+  }, [activeView])
 
   const [finalColumns] = useTableConfig({
     tableConfig: panelConfig,
@@ -261,14 +292,25 @@ function SmartGrid<T>(props: SmartGridProps<T>): React.ReactElement {
         withoutAnimation={withoutAnimation}
         splitLine={!!title}
         config={
-          <Tooltip title={locale.config}>
-            <Button
-              size="small"
-              icon="setting"
-              style={{marginRight: 0}}
-              onClick={() => setConfigModalVisible(true)}
-            />
-          </Tooltip>
+          <>
+            <Tooltip title={locale.sync}>
+              <Button
+                size="small"
+                icon="sync"
+                style={{marginRight: 5}}
+                onClick={handleSync}
+                disabled={activeView.viewId.startsWith('system')}
+              />
+            </Tooltip>
+            <Tooltip title={locale.config}>
+              <Button
+                size="small"
+                icon="setting"
+                style={{marginRight: 0}}
+                onClick={setConfigModalVisible.bind(null, true)}
+              />
+            </Tooltip>
+          </>
         }
         getPopupContainer={() => titleRef.current || document.body}
       />}
