@@ -67,7 +67,7 @@ function Sortable(props: SortableProps) {
     if (event.shiftKey) {
       const targetRow = dataSource[index];
       targetRow.sort = targetRow.sort === 'asc' ? 'desc' : targetRow.sort === 'desc' ? 'none' : 'asc';
-      const sortIndex = dataSource.reduce((memo, row, rowIdx) => 'sortIndex' in row && rowIdx !== index ? memo + 1 : memo, 0)
+      const sortIndex = dataSource.reduce((memo, row, rowIdx) => row.sortIndex !== undefined && row.sortIndex !== null && rowIdx !== index ? memo + 1 : memo, 0)
       dataSource.forEach((row, rowIdx) => {
         if (rowIdx !== index && row.sortIndex > targetRow.sortIndex) {
           row.sortIndex--;
