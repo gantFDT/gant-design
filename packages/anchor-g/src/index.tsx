@@ -26,6 +26,20 @@ export interface GantAnchorProps extends AnchorProps {
 
 const FIXED_HEIGHT = 40;
 
+const defaultContainer = () => window;
+
+/**
+ * 获取容器的滚动高度
+ */
+function getContainerScrollHeight(getContainer: AnchorProps['getContainer']) {
+  const container = getContainer();
+  const isWindow = container == window;
+  const scrollHeight = isWindow
+    ? document.documentElement.scrollTop || document.body.scrollTop
+    : (container as any).scrollTop;
+  return scrollHeight;
+}
+
 const GantAnchor = (props: GantAnchorProps) => {
   let {
     list = [],
@@ -36,6 +50,7 @@ const GantAnchor = (props: GantAnchorProps) => {
     minHeight = 400,
     className,
     style,
+    getContainer = defaultContainer,
     ...nextProps
   } = props;
   const [stateMode, setStateMode] = useState(layout);
@@ -51,14 +66,14 @@ const GantAnchor = (props: GantAnchorProps) => {
   let timer = null;
   const Data = useCallback(
     e => {
-      m2 = document.documentElement.scrollTop || document.body.scrollTop;
+      m2 = getContainerScrollHeight(getContainer);
       if (m2 == scrollHeight) {
         if (isClickScroll) {
           setIsClickScroll(false);
         }
       }
     },
-    [isClickScroll, setIsClickScroll],
+    [isClickScroll, setIsClickScroll, getContainer],
   );
 
   //   //滚动时触发
@@ -70,26 +85,33 @@ const GantAnchor = (props: GantAnchorProps) => {
       if (fixedEle && stateMode == 'horizontal') {
         clearTimeout(timer);
         timer = setTimeout(Data, 300);
-        const parentClientTop = fixedEleParent ? fixedEleParent.getBoundingClientRect().top : 0; //定位元素父级距离浏览器的高度
-        scrollHeight = document.documentElement.scrollTop || document.body.scrollTop;
         const menuboxhor = document.querySelector('.gant-submenu-menuboxhor'); //anchor的外层card
         const extraheight = menuboxhor ? menuboxhor['offsetHeight'] : 0;
+        const container = getContainer();
+        const isWindow = container == window;
+        // 容器距离浏览器顶部的距离
+        const containerScrollTop = isWindow
+          ? 0
+          : (container as Element)?.getBoundingClientRect?.()?.top;
+        // 滚动条滚动的距离
+        scrollHeight = getContainerScrollHeight(getContainer);
         if (fixedEle) {
-          if (parentClientTop <= fixedTop + extraheight) {
+          if (scrollHeight >= FIXED_HEIGHT + fixedTop + extraheight) {
             fixedEle.classList.add('gant-anchor-activeScroll');
             const active = document.querySelector('.gant-anchor-activeScroll');
-            active['style'].top = `${fixedTop + extraheight}px`;
+            active['style'].top = `${fixedTop + containerScrollTop}px`;
             active['style'].width = `${fixedEleParent['offsetWidth']}px`;
-          } else if (parentClientTop > fixedTop + extraheight) {
+          } else {
             fixedEle.classList.remove('gant-anchor-activeScroll');
           }
         }
+
         if (!isClickScroll) {
           //水平方向锚点跟随页面滚动高亮
           list.map(item => {
             if (!item.isInvalid) {
               const id = document.getElementById(item.id);
-              let common = fixedTop + extraheight + FIXED_HEIGHT;
+              let common = fixedTop + extraheight + FIXED_HEIGHT + containerScrollTop;
               if (id && id.getBoundingClientRect()) {
                 let { top, height } = id.getBoundingClientRect();
                 if (top <= common && top >= common - height) {
@@ -102,7 +124,7 @@ const GantAnchor = (props: GantAnchorProps) => {
         }
       }
     },
-    [stateMode, setId, isClickScroll, list],
+    [stateMode, setId, isClickScroll, list, getContainer],
   );
 
   //   //点击左右箭头
@@ -139,11 +161,12 @@ const GantAnchor = (props: GantAnchorProps) => {
   }, [setStateMode]);
 
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll); //监听滚动
+    const container = getContainer();
+    container.addEventListener('scroll', handleScroll); //监听滚动
     return function cleanup() {
-      window.removeEventListener('scroll', handleScroll);
+      container.removeEventListener('scroll', handleScroll);
     };
-  }, [handleScroll, setIsClickScroll]);
+  }, [handleScroll, setIsClickScroll, getContainer]);
 
   useEffect(() => {
     const silderId = document.getElementById('silderId');
@@ -182,18 +205,21 @@ const GantAnchor = (props: GantAnchorProps) => {
   const scrollToAnchor = useCallback(
     anchorName => {
       if (anchorName) {
+        const container = getContainer();
         let anchorElement = document.getElementById(anchorName);
         if (anchorElement) {
-          const scrollTop = getScroll(window, true);
-          const eleOffsetTop = getOffsetTop(anchorElement, window);
+          const scrollTop = getScroll(container, true);
+          const eleOffsetTop = getOffsetTop(anchorElement, container);
           let y = scrollTop + eleOffsetTop - FIXED_HEIGHT - fixedTop;
-          scrollTo(y);
+          scrollTo(y, {
+            getContainer,
+          });
         }
         setId(anchorName);
         setIsClickScroll(true);
       }
     },
-    [setId, setIsClickScroll, fixedTop],
+    [setId, setIsClickScroll, fixedTop, getContainer],
   );
 
   //水平方向锚点menu内容
@@ -323,6 +349,7 @@ const GantAnchor = (props: GantAnchorProps) => {
             e.preventDefault();
           }}
           {...nextProps}
+          getContainer={getContainer}
         >
           <Icon
             type="switcher"
@@ -332,7 +359,10 @@ const GantAnchor = (props: GantAnchorProps) => {
           {list.map(item => {
             const nullCss = {};
             return (
-              <div style={item.isInvalid ? { opacity: 0.5, cursor: 'not-allowed' } : nullCss}>
+              <div
+                key={item?.id}
+                style={item.isInvalid ? { opacity: 0.5, cursor: 'not-allowed' } : nullCss}
+              >
                 <div style={item.isInvalid ? { pointerEvents: 'none' } : nullCss}>
                   <Anchor.Link
                     key={item.key || item.title}
