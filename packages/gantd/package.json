@@ -1,6 +1,6 @@
 {
   "name": "gantd",
-  "version": "1.1.182",
+  "version": "1.1.183",
   "description": "GantD base on antD",
   "author": "Gant FDT",
   "license": "MIT",
@@ -118,7 +118,7 @@
     "@ag-grid-enterprise/all-modules": "24.0.0",
     "@ant-design/colors": "^3.1.0",
     "@ant-design/icons": "2.1.1",
-    "anchor-g": "^0.1.27",
+    "anchor-g": "^0.1.28",
     "antd": "3.26.5",
     "auto-reload-g": "^0.1.23",
     "classnames": "^2.2.6",
