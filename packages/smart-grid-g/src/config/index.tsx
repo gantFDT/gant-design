@@ -59,7 +59,11 @@ function ConfigModal(props: ConfigModalProps) {
     const onselectstart = (event) => {
       event.returnValue = false;
     }
-    document.addEventListener('selectstart', onselectstart)
+    if (visible) {
+      document.addEventListener('selectstart', onselectstart)
+    } else {
+      document.removeEventListener('selectstart', onselectstart)
+    }
     return () => {
       document.removeEventListener('selectstart', onselectstart)
     }
