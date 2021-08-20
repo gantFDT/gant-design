@@ -1,19 +1,18 @@
-import * as React from 'react';
+import { ConfigConsumer, ConfigConsumerProps } from 'antd/lib/config-provider';
+import InputIcon from 'antd/lib/date-picker/InputIcon';
+import { DatePickerProps } from 'antd/lib/date-picker/interface';
+import wrapPicker from 'antd/lib/date-picker/wrapPicker';
+import interopDefault from 'antd/lib/_util/interopDefault';
+import { default as classnames, default as classNames } from 'classnames';
 import * as moment from 'moment';
-import classnames from 'classnames';
-import { polyfill } from 'react-lifecycles-compat';
-import { compose, defaultProps, toClass } from 'recompose';
 import Calendar from 'rc-calendar';
 import RcDatePicker from 'rc-calendar/lib/Picker';
-import classNames from 'classnames';
-import Icon from '../icon';
-import { ConfigConsumer, ConfigConsumerProps } from 'antd/lib/config-provider';
-import interopDefault from 'antd/lib/_util/interopDefault';
-import InputIcon from 'antd/lib/date-picker/InputIcon';
-import { getCurTime } from './_utils';
-import { DatePickerProps } from 'antd/lib/date-picker/interface';
+import * as React from 'react';
+import { polyfill } from 'react-lifecycles-compat';
+import { compose, defaultProps, toClass } from 'recompose';
 import { withEdit } from '../compose';
-import wrapPicker from 'antd/lib/date-picker/wrapPicker';
+import Icon from '../icon';
+import { getCurTime } from './_utils';
 interface GantDatePickerProps extends Omit<DatePickerProps, 'format' | 'onChange'> {
   onChange?: (value: string, time: moment.Moment) => void;
   format?: string;
@@ -269,5 +268,6 @@ class GantDatePicker extends React.Component<GantDatePickerProps, WeekPickerStat
     );
   }
 }
+
 
 export default GantDatePicker;
