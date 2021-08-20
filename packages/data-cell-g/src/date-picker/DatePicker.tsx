@@ -1,14 +1,14 @@
-import React from 'react';
 import { DatePicker as AntDatePicker } from 'antd';
-import { compose, defaultProps, toClass } from 'recompose';
+import { DatePickerMode, PickerProps } from 'antd/lib/date-picker/interface';
 import classnames from 'classnames';
-import { withEdit } from '../compose';
-import { getCurTime } from './_utils';
-import { PickerProps, DatePickerMode } from 'antd/lib/date-picker/interface';
-import { WithBasicProps } from '../compose/withbasic';
 import moment from 'moment';
-import RangePicker from './RangePicker';
+import React from 'react';
+import { compose, defaultProps, toClass } from 'recompose';
+import { withEdit } from '../compose';
+import { WithBasicProps } from '../compose/withbasic';
 import GantdDatePicker from './GantdDatePicker';
+import RangePicker from './RangePicker';
+import { getCurTime } from './_utils';
 export interface GantDatePickerProps extends PickerProps, WithBasicProps {
   onChange?: (time: string) => void;
   value?: moment.Moment | string | null;
@@ -31,6 +31,7 @@ const withDatePicker = compose(
 class DatePicker extends React.Component<GantDatePickerProps> {
   static RangePicker: typeof RangePicker;
   static GantdDatePicker: typeof GantdDatePicker;
+  static WraperDatePick: any;
   onChange = (mom, timeString) => {
     const { onChange } = this.props;
     onChange(timeString);

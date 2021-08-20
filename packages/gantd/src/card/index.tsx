@@ -7,6 +7,7 @@ import { CardProps } from 'antd/lib/card'
 import React, { Component } from 'react';
 import classnames from 'classnames';
 
+
 export interface GantCardProps extends CardProps {
   showBoxShadow?: boolean;
 }
