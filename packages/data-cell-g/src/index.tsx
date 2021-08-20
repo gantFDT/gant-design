@@ -2,7 +2,7 @@
 export { default as ColorPicker } from './color-picker';
 export { default as DataEditCell } from './data-edit-cell';
 // picker
-export { default as DatePicker, WraperDatePick } from './date-picker';
+export { default as DatePicker } from './date-picker';
 export { default as EditStatus } from './edit-status';
 export { default as Icon } from './icon';
 // 数据单元
