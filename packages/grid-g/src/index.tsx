@@ -76,7 +76,6 @@ export const defaultProps = {
   /**rowkey */
   rowkey: 'key',
   width: '100%',
-  height: 400,
   sortable: true,
   treeDataChildrenName: 'children',
   /** 默认的删除行为 */
@@ -117,7 +116,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     treeDataChildrenName,
     locale: customLocale,
     serverGroupExpend,
-    groupDefaultExpanded,
+    groupDefaultExpanded = 0,
     defaultColDef,
     context: propsContext,
     components,
@@ -171,6 +170,9 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     treeDataForcedFilter,
     themeClass = 'ag-theme-balham',
     gantDateComponent,
+    autoHeight,
+    maxAutoHeight,
+    minAutoHeight = 150,
     ...orignProps
   } = props;
   const apiRef = useRef<GridApi>();
@@ -211,6 +213,24 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
     },
     [orignGetDataPath, treeData],
   );
+  //自动高度
+  const gridHeight = useMemo(() => {
+    if (height) return height;
+    if (!autoHeight && !height) return 400;
+    let resHeight: number | string = 0;
+    if (!treeData || groupDefaultExpanded === -1) {
+      resHeight = 24 * (initDataSource.length + 1);
+    } else {
+      const filterData = initDataSource.filter(itemData => {
+        const isExpaned = getDataPath(itemData).length <= groupDefaultExpanded + 1;
+        return isExpaned;
+      });
+      resHeight = 24 * (filterData.length + 1);
+    }
+    resHeight = maxAutoHeight && resHeight >= maxAutoHeight ? maxAutoHeight : resHeight;
+    resHeight = minAutoHeight && minAutoHeight >= resHeight ? minAutoHeight : resHeight;
+    return parseInt(resHeight as any) + 4;
+  }, [autoHeight, initDataSource, getDataPath, groupDefaultExpanded, height]);
 
   // filter
 
@@ -662,7 +682,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
               }}
             >
               <div
-                style={{ width, height }}
+                style={{ width, height: gridHeight }}
                 className={classnames(
                   'gant-grid',
                   `gant-grid-${getSizeClassName(size)}`,
@@ -720,7 +740,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                       enableFillHandle
                       headerHeight={24}
                       floatingFiltersHeight={20}
-                      rowHeight={size == 'small' ? 24 : 32}
                       singleClickEdit
                       defaultExportParams={exportParams}
                       context={{
@@ -744,6 +763,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                       {...selection}
                       excelStyles={[{ id: 'stringType', dataType: 'string' }, ...excelStyles]}
                       {...orignProps}
+                      rowHeight={size == 'small' ? 24 : 32}
                       getDataPath={getDataPath}
                       immutableData
                       columnDefs={localColumnsDefs}
@@ -763,7 +783,6 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
                           ColumnLabelComponent,
                         },
                         menuTabs: ['generalMenuTab', 'filterMenuTab'],
-                        lockVisible: false,
                         ...defaultColDef,
                         filterParams: {
                           buttons: ['reset'],

@@ -223,6 +223,9 @@ export interface Props<T extends any> {
   treeDataForcedFilter?: boolean;
   themeClass?: string;
   gantDateComponent?: boolean;
+  autoHeight?: boolean;
+  maxAutoHeight?: number | string;
+  minAutoHeight?: number | string;
   onContextChangeRender?: (
     context: any,
     diffKeys: string[],

@@ -382,6 +382,9 @@ const BaiscGrid = () => {
           },
         }}
         treeData
+        autoHeight
+        maxAutoHeight={1000}
+        // minAutoHeight={200}
         // treeDataForcedFilter
         // treeDataParentName="parentId"
         excludeChildrenWhenTreeDataFiltering
@@ -403,7 +406,7 @@ const BaiscGrid = () => {
           suppressQuotes: true,
           // excelStyles: [{ id: 'stringType', dataType: 'string' }],
         }}
-        groupDefaultExpanded={-1}
+        groupDefaultExpanded={1}
         selectedBoxWidth={500}
         drawerMode={drawerEditable}
         defaultDrawerWidth={800}
