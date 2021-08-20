@@ -211,7 +211,9 @@ function SmartGrid<T>(props: SmartGridProps<T>): React.ReactElement {
       [columnField.fieldName]: columnField
     }), {})
 
-    const columnDefs = managerRef.current.agGridColumnApi.getColumnState();
+    const columnDefs = managerRef.current.agGridColumnApi.getColumnState().filter(def => {
+      return def.colId !== 'defalutSelection' && def.colId !== 'g-index'
+    });
 
     columnDefs.sort((prev, next) => {
       if (
@@ -221,9 +223,6 @@ function SmartGrid<T>(props: SmartGridProps<T>): React.ReactElement {
         return -1;
       }
     })
-
-    console.log('columnDefs :>> ', columnDefs.map(row => row.colId));
-    console.log('columnDefs :>> ', columnDefs.map(row => row.pinned));
 
     activeView.panelConfig.columnFields = columnDefs.map(columnDef => Object.assign({}, columnFieldsMap[columnDef.colId], {
       fixed: columnDef.pinned,

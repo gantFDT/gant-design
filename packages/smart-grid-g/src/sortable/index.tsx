@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Checkbox, Row, Tooltip } from 'antd';
 import {
   SortableContainer,
@@ -33,6 +33,8 @@ function Sortable(props: SortableProps) {
   const { dataSource, onChange, height } = props;
 
   if (!dataSource || !dataSource.length) return null;
+  
+  const [showSortIdx, setShowSortIdx] = useState<boolean>(false);
 
   const [ leftSpinIdx, rightSpinIdx, selectableCount, checkedCount ] = useMemo(() => {
     return dataSource.reduce((total, dataItem, dataIdx) => {
@@ -78,6 +80,7 @@ function Sortable(props: SortableProps) {
       } else {
         targetRow.sortIndex = sortIndex;
       }
+      setShowSortIdx(true)
     } else {
       dataSource.forEach((row, rowIdx) => {
         if (rowIdx !== index) {
@@ -88,6 +91,7 @@ function Sortable(props: SortableProps) {
           row.sortIndex = 0;
         }
       })
+      setShowSortIdx(false)
     }
     onChange(dataSource);
   }, [dataSource]);
@@ -125,7 +129,7 @@ function Sortable(props: SortableProps) {
                       placement="top"
                       title={sort === 'asc' ? locale.sortAsc : locale.sortDesc}
                     >
-                      <div>{sortIndex !== undefined && sortIndex + 1}<Icon className="gant-margin-h-5" style={{ verticalAlign: 'baseline' }} type={sort === 'asc' ? 'arrow-up' : 'arrow-down'} /></div>
+                      <div>{showSortIdx && sortIndex !== undefined && sortIndex + 1}<Icon className="gant-margin-h-5" style={{ verticalAlign: 'baseline' }} type={sort === 'asc' ? 'arrow-up' : 'arrow-down'} /></div>
                     </Tooltip>
                   }
                 </span>
