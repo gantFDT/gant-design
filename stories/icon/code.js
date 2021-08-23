@@ -1,7 +1,9 @@
 export default [
 `
 import React, { useState } from 'react';
-import { Icon } from 'gantd';
+import CodeDecorator from '../_util/CodeDecorator';
+import codes from './code.js';
+
 
 
 function BasicUse() {
@@ -14,10 +16,15 @@ function BasicUse() {
 
 ReactDOM.render(<BasicUse />, mountNode)`,`
 import React, { useState } from 'react';
-import { Icon } from 'gantd';
+import CodeDecorator from '../_util/CodeDecorator';
+import codes from './code.js';
+
 
 
 function IconSelector() {
+  Icon.updateFromIconfontCN({
+    scriptUrl: '//at.alicdn.com/t/font_1252237_rw4vp28ncp.js'
+  })
   const [value, setvalue] = useState('loading')
   return (
     <Icon allowEdit value={value} onChange={setvalue} onSave={(id, value, cb) => { cb() }} />
