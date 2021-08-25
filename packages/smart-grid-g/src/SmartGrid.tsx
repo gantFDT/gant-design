@@ -228,7 +228,8 @@ function SmartGrid<T>(props: SmartGridProps<T>): React.ReactElement {
       fixed: columnDef.pinned,
       sort: columnDef.sort,
       sortIndex: columnDef.sortIndex,
-      checked: !columnDef.hide,
+      hide: columnDef.hide,
+      // checked: !columnDef.hide,
       width: columnDef.width
     }))
 

@@ -32,7 +32,7 @@ export default forwardRef(function GantDateComponent(props: any, ref: any) {
         setDate(value ? value.format() : null);
         onDateChanged();
       }}
-      format="gggg-w[周]"
+      // format="gggg-w[周]"
     />
   );
 });
