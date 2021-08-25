@@ -13,7 +13,7 @@ import Receiver from '../locale/Receiver';
 interface RecordProps {
   fieldName: string;
   title: string;
-  checked: boolean;
+  // checked: boolean;
   // clickable?: boolean;
   dynamic?: boolean;
   hide?: boolean;
@@ -44,9 +44,9 @@ function Sortable(props: SortableProps) {
       if (dataItem.fixed === 'right' && total[1] === -1) {
         total[1] = dataIdx;
       }
-      if (!dataItem.dynamic && !dataItem.hide && dataItem.display === 'block') {
+      if (!dataItem.dynamic && dataItem.display === 'block') {
         total[2]++;
-        if (dataItem.checked) {
+        if (!dataItem.hide) {
           total[3]++;
         }
       }
@@ -97,17 +97,17 @@ function Sortable(props: SortableProps) {
   }, [dataSource]);
 
   const handlerFieldVisible = useCallback((index, event) => {
-    dataSource[index].checked = event.target.checked;
+    dataSource[index].hide = !event.target.checked;
     onChange(dataSource);
   }, [dataSource]);
 
   const DragHandler = useMemo(() => SortableHandle(() => <Icon className="dragHandler" type="more" />), []);
 
   const SortableItem = SortableElement(
-    ({ dataItem: { title, checked, fixed, sort, sortIndex }, dataIdx}: any) => (
+    ({ dataItem: { title, hide, fixed, sort, sortIndex }, dataIdx}: any) => (
       <Row type="flex" align="middle" justify="space-between" className="tableRow gant-table-config-row">
         <div style={{ flexGrow: 0 }}>
-          <Checkbox checked={checked} onChange={handlerFieldVisible.bind(null, dataIdx)} />
+          <Checkbox checked={!hide} onChange={handlerFieldVisible.bind(null, dataIdx)} />
         </div>
         <Receiver>
           {(locale) => 
@@ -165,7 +165,7 @@ function Sortable(props: SortableProps) {
       <div className="sortableList">
         {
           dataSource.map((dataItem, dataIdx) => (
-            dataItem.dynamic || dataItem.display === 'none' || dataItem.hide ? null :
+            dataItem.dynamic || dataItem.display === 'none' ? null :
             <SortableItem
               key={dataItem.fieldName}
               index={dataIdx}
@@ -200,10 +200,11 @@ function Sortable(props: SortableProps) {
   const checkedAll = useMemo(() => checkedCount && checkedCount === selectableCount, [checkedCount, selectableCount]);
   const onCheckAllChange = useCallback(({target: { checked }}) => {
     dataSource.forEach(dataItem => {
-      if (dataItem.dynamic || dataItem.hide) {
-        dataItem.checked = true
+      // if (dataItem.dynamic || dataItem.hide) {
+      if (dataItem.dynamic) {
+        dataItem.hide = false
       } else if (dataItem.display !== 'none') {
-        dataItem.checked = !!checked
+        dataItem.hide = !checked
       }
     });
     onChange(dataSource);

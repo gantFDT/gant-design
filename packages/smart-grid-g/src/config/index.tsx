@@ -74,7 +74,7 @@ function ConfigModal(props: ConfigModalProps) {
   }, [])
 
   const handlerSave = useCallback(() => {
-    if (!panelConfig.columnFields.filter((record: any) => record.checked).length)
+    if (!panelConfig.columnFields.filter((record: any) => !record.hide).length)
       return notification.info({
         message: <Receiver>{(locale) => <>{locale.saveMessage}</>}</Receiver>,
       })

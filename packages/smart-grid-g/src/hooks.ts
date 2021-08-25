@@ -92,16 +92,15 @@ export const useTableConfig = (props: useTableConfigProps) => {
 
   const fakeColumns = [];
   for (const _columnField of columnFields) {
-    if(_columnField.checked) {
-      const _columnItem = columns.find(_column => _column.fieldName === _columnField.fieldName);
-      if(_columnItem) {
-        fakeColumns.push(Object.assign({}, _columnItem, {
-          width: _columnField.width || _columnItem.width ||  120,
-          fixed: _columnField.fixed || _columnItem.fixed,
-          sort: _columnField.sort || _columnItem.sort,
-          sortIndex: _columnField.sortIndex ?? _columnItem.sortIndex,
-        }))
-      }
+    const _columnItem = columns.find(_column => _column.fieldName === _columnField.fieldName);
+    if(_columnItem) {
+      fakeColumns.push(Object.assign({}, _columnItem, {
+        width: _columnField.width || _columnItem.width ||  120,
+        fixed: _columnField.fixed || _columnItem.fixed,
+        sort: _columnField.sort || _columnItem.sort,
+        sortIndex: _columnField.sortIndex ?? _columnItem.sortIndex,
+        hide: _columnField.hide ?? _columnItem.hide
+      }))
     }
   }
 

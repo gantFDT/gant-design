@@ -88,14 +88,14 @@ export const formatColumnFields = (columnFields, originColumns) => {
   for (const columnField of columnFields) {
     const _columnItem = originColumns.find(_column => _column.fieldName === columnField.fieldName);
     if(_columnItem) {
-      __filterdFields.push(Object.assign({}, _columnItem, columnField, { checked: columnField.checked !== undefined ? columnField.checked : true }))
+      __filterdFields.push(Object.assign({}, _columnItem, columnField, { hide: columnField.hide ?? false }))
     }
   }
   // 添加视图中隐藏的列
   const __hiddenFields = [];
   for (const _column of originColumns) {
     if(__filterdFields.every(__filterdField => __filterdField.fieldName !== _column.fieldName)) {
-      __hiddenFields.push(Object.assign({}, _column, { checked: _column.dynamic || _column.hide || false }))
+      __hiddenFields.push(Object.assign({}, _column, { hide: !_column.dynamic ?? true }))
     }
   }
 
@@ -138,9 +138,9 @@ export default function formatSchema<R>(schema: SchemaProp<R> | CustomColumnProp
   });
 
   // 默认的列配置数据
-  const columnConfigs: ColumnConfig[] = columns.map(C => ({
-    ...C,
-    checked: true
+  const columnConfigs: ColumnConfig[] = columns.map(_column => ({
+    ..._column,
+    hide: false
   }));
 
   // 匹配系统视图
