@@ -51,7 +51,7 @@ function UIContent(props: UIContentProps) {
 
   const sortDataSource = useMemo(() => columnFields.map(column => ({
     ...column,
-    display: !fieldName || ~column.title.indexOf(fieldName) ? 'block' : 'none'
+    display: !fieldName || ~column.title.toLocaleLowerCase().indexOf(fieldName.toLocaleLowerCase()) ? 'block' : 'none'
   })), [fieldName, columnFields])
 
   const handleSearch = debounce((val) => setFieldName(val), 500)

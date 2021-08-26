@@ -133,11 +133,11 @@ var tableColumns1 = [
     hide: true
   },
   {
-    title: '年龄',
+    title: '年龄age',
     fieldName: 'age',
   },
   {
-    title: '住址',
+    title: '住址address',
     fieldName: 'address',
     width: 200
   },
