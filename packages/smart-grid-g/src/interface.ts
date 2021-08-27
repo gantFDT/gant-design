@@ -22,7 +22,7 @@ export interface CustomColumnProps<R> extends Columns<R> {
 
 export interface ColumnConfig {
   fieldName: string;
-  checked?: boolean;
+  // checked?: boolean;
   fixed?: 'left' | 'right';
   sort?: string;
   width?: number | string;

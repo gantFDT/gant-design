@@ -59,7 +59,11 @@ function ConfigModal(props: ConfigModalProps) {
     const onselectstart = (event) => {
       event.returnValue = false;
     }
-    document.addEventListener('selectstart', onselectstart)
+    if (visible) {
+      document.addEventListener('selectstart', onselectstart)
+    } else {
+      document.removeEventListener('selectstart', onselectstart)
+    }
     return () => {
       document.removeEventListener('selectstart', onselectstart)
     }
@@ -70,7 +74,7 @@ function ConfigModal(props: ConfigModalProps) {
   }, [])
 
   const handlerSave = useCallback(() => {
-    if (!panelConfig.columnFields.filter((record: any) => record.checked).length)
+    if (!panelConfig.columnFields.filter((record: any) => !record.hide).length)
       return notification.info({
         message: <Receiver>{(locale) => <>{locale.saveMessage}</>}</Receiver>,
       })

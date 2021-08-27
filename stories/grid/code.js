@@ -5,6 +5,8 @@ import CodeDecorator from '../_util/CodeDecorator';
 import codes from './code';
 import moment from 'moment';
 
+setGridConfig({gantDateComponent:true})
+
 
 const RandomCreate = () => {
   const ip = Random.ip();
@@ -393,7 +395,7 @@ const BaiscGrid = () => {
         onReady={onReady}
         openEditSign
         showCut
-        gantDateComponent
+        
         getDataPath={data => {
           // console.log('---->', data.path);
           return data.path;
