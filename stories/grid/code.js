@@ -5,6 +5,8 @@ import CodeDecorator from '../_util/CodeDecorator';
 import codes from './code';
 import moment from 'moment';
 
+setGridConfig({gantDateComponent:true})
+
 
 const RandomCreate = () => {
   const ip = Random.ip();
@@ -378,8 +380,8 @@ const BaiscGrid = () => {
           },
         }}
         treeData
-        autoHeight
-        maxAutoHeight={1000}
+        // autoHeight
+        // maxAutoHeight={1000}
         // minAutoHeight={200}
         // treeDataForcedFilter
         // treeDataParentName="parentId"
@@ -393,7 +395,7 @@ const BaiscGrid = () => {
         onReady={onReady}
         openEditSign
         showCut
-        gantDateComponent
+        
         getDataPath={data => {
           // console.log('---->', data.path);
           return data.path;

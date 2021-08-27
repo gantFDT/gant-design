@@ -1,7 +1,7 @@
 import { DatePicker } from '@data-cell';
 import moment from 'moment';
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
-const WraperDatePick = DatePicker.WraperDatePick
+const WraperDatePick = DatePicker.WraperDatePick;
 export default forwardRef(function GantDateComponent(props: any, ref: any) {
   const { onDateChanged } = props;
   const [placeholder, setplaceholder] = useState('');
@@ -32,7 +32,6 @@ export default forwardRef(function GantDateComponent(props: any, ref: any) {
         setDate(value ? value.format() : null);
         onDateChanged();
       }}
-      // format="gggg-w[周]"
     />
   );
 });
