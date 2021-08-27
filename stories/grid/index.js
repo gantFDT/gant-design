@@ -1,6 +1,6 @@
 import { Input } from '@data-cell';
 import Grid from '@grid';
-import { filterDateComparator } from '@grid';
+import { filterDateComparator ,setGridConfig} from '@grid';
 import Header from '@header';
 import { Button, Icon, Modal } from 'antd';
 import { Random } from 'mockjs';
@@ -9,6 +9,8 @@ import React, { Fragment, useCallback, useEffect, useRef, useState } from 'react
 import CodeDecorator from '../_util/CodeDecorator';
 import codes from './code';
 import moment from 'moment';
+
+setGridConfig({gantDateComponent:true})
 /*! Split !*/
 const RandomCreate = () => {
   const ip = Random.ip();
@@ -382,8 +384,8 @@ const BaiscGrid = () => {
           },
         }}
         treeData
-        autoHeight
-        maxAutoHeight={1000}
+        // autoHeight
+        // maxAutoHeight={1000}
         // minAutoHeight={200}
         // treeDataForcedFilter
         // treeDataParentName="parentId"
@@ -397,7 +399,7 @@ const BaiscGrid = () => {
         onReady={onReady}
         openEditSign
         showCut
-        gantDateComponent
+        
         getDataPath={data => {
           // console.log('---->', data.path);
           return data.path;

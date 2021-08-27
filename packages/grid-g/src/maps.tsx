@@ -29,3 +29,11 @@ export function setFrameworkComponentsMaps(components) {
 export function getAllComponentsMaps() {
   return { componentsMaps, frameworkComponentsMaps };
 }
+let globalGridConfig = {};
+export function setGridConfig(config: any) {
+  globalGridConfig = config;
+}
+
+export function getGridConfig() {
+  return globalGridConfig;
+}

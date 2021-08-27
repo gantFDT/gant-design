@@ -34,7 +34,7 @@ import { DataActions, GridPropsPartial, GridVariableRef, RowSelection, Size } fr
 import key from './license';
 import en from './locale/en-US';
 import zh from './locale/zh-CN';
-import { getAllComponentsMaps } from './maps';
+import { getAllComponentsMaps, getGridConfig } from './maps';
 import GantPagination from './Pagination';
 import SelectedGrid from './SelectedGrid';
 import GantDateComponent from './GantDateComponent';
@@ -52,7 +52,7 @@ export { default as GantGroupCellRenderer } from './GantGroupCellRenderer';
 export { default as GantPromiseCellRender } from './GantPromiseCellRender';
 export * from './interface';
 export { default as GantDateComponent } from './GantDateComponent';
-export { setComponentsMaps, setFrameworkComponentsMaps } from './maps';
+export { setComponentsMaps, setFrameworkComponentsMaps, setGridConfig } from './maps';
 LicenseManager.setLicenseKey(key);
 const langs = {
   en: en,
@@ -93,7 +93,11 @@ export const defaultRowSelection: RowSelection = {
   rowDeselection: true,
 };
 
-const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
+const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
+  const globalConfig = useMemo(() => {
+    return getGridConfig();
+  }, []);
+  const props = { ...globalConfig, ...gridProps };
   const {
     dataSource: initDataSource,
     onReady,
@@ -359,6 +363,7 @@ const Grid = function Grid<T extends any>(props: GridPropsPartial<T>) {
   const { componentsMaps, frameworkComponentsMaps } = useMemo(() => {
     return getAllComponentsMaps();
   }, []);
+
   // 获取selected 数据
   const getAllSelectedRows = useCallback(selectedRows => {
     const dataSource = gridManager.getRowData();

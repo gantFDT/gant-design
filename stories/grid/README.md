@@ -36,9 +36,16 @@
 | multiLineVerify         | 否       | boolean                                                    | false                     | 每次数据更改验证所以更改的数据                                                                               |
 | drawerMode              | 否       | boolean                                                    | false                     | 开启窗口模式                                                                                                 |
 | defaultDrawerWidth      | 否       | `number`                                                   | 600                       | 窗口width                                                                                                    |
-| customDrawerContent      | 否       | (params)=>any                                                   | 600                       | 自定义窗口内容                                                                                             |
-| visibleDrawer      | 否       | `boolean`                                                   |                        | 外部控制窗口显示                                                                                             |
-
+| customDrawerContent     | 否       | (params)=>any                                              | 600                       | 自定义窗口内容                                                                                               |
+| visibleDrawer           | 否       | `boolean`                                                  |                           | 外部控制窗口显示                                                                                             |
+| gantDateComponent       | 否       | `boolean`                                                  | false                     | dateFilter开始周模式                                                                                         |
+|                         |
+| autoHeight              | 否       | `boolean`                                                  | false                     | grid自适应高度                                                                                               |
+|                         |
+| maxAutoHeight           | 否       | `number`                                                   | -                         | grid自适应最大高度                                                                                           |
+|                         |
+| minAutoHeight           | 否       | `number`                                                   | -                         | grid自适应最小高度                                                                                           |
+|                         |
 更多属性参考 [ag-grid](https://www.ag-grid.com/documentation-main/documentation.php)
 
 ### RowSelection
