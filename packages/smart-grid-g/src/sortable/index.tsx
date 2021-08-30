@@ -34,9 +34,7 @@ function Sortable(props: SortableProps) {
 
   if (!dataSource || !dataSource.length) return null;
   
-  const [showSortIdx, setShowSortIdx] = useState<boolean>(false);
-
-  const [ leftSpinIdx, rightSpinIdx, selectableCount, checkedCount ] = useMemo(() => {
+  const [ leftSpinIdx, rightSpinIdx, selectableCount, checkedCount, sortCount ] = useMemo(() => {
     return dataSource.reduce((total, dataItem, dataIdx) => {
       if (dataItem.fixed === 'left') {
         total[0] = dataIdx;
@@ -50,8 +48,11 @@ function Sortable(props: SortableProps) {
           total[3]++;
         }
       }
+      if (dataItem.sortIndex !== undefined) {
+        total[4]++;
+      }
       return total;
-    }, [-1, -1, 0, 0])
+    }, [-1, -1, 0, 0, 0])
   }, [dataSource])
 
   const handlerLock = useCallback((index, fixed) => {
@@ -80,7 +81,6 @@ function Sortable(props: SortableProps) {
       } else {
         targetRow.sortIndex = sortIndex;
       }
-      setShowSortIdx(true)
     } else {
       dataSource.forEach((row, rowIdx) => {
         if (rowIdx !== index) {
@@ -91,7 +91,6 @@ function Sortable(props: SortableProps) {
           row.sortIndex = 0;
         }
       })
-      setShowSortIdx(false)
     }
     onChange(dataSource);
   }, [dataSource]);
@@ -129,7 +128,7 @@ function Sortable(props: SortableProps) {
                       placement="top"
                       title={sort === 'asc' ? locale.sortAsc : locale.sortDesc}
                     >
-                      <div>{showSortIdx && sortIndex !== undefined && sortIndex + 1}<Icon className="gant-margin-h-5" style={{ verticalAlign: 'baseline' }} type={sort === 'asc' ? 'arrow-up' : 'arrow-down'} /></div>
+                      <div>{sortCount > 1 && sortIndex !== undefined && sortIndex + 1}<Icon className="gant-margin-h-5" style={{ verticalAlign: 'baseline' }} type={sort === 'asc' ? 'arrow-up' : 'arrow-down'} /></div>
                     </Tooltip>
                   }
                 </span>
