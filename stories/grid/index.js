@@ -126,6 +126,7 @@ const basicColumns = [
     //   values: [''],
     // },
     // filter: 'agTextColumnFilter',
+    initialSort: 'asc' ,sortIndex:1,
     editConfig: {
       component: props => {
         return <Input {...props} />;
@@ -152,6 +153,7 @@ const basicColumns = [
     fieldName: 'age',
     title: '年龄',
     filter: 'agNumberColumnFilter',
+    initialSort: 'asc' ,sortIndex:2,
   },
   {
     fieldName: 'date',

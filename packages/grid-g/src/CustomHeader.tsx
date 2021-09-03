@@ -1,7 +1,7 @@
 //自定义列头，主要解决label自主渲染的问题
 import { Icon } from 'antd';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { SortChangedEvent } from '@ag-grid-enterprise/all-modules';
+import { findIndex } from 'lodash';
 export default props => {
   const {
     column,
@@ -29,11 +29,18 @@ export default props => {
     showColumnMenu(refButton.current);
   };
 
-  const onSortChanged = (event: SortChangedEvent) => {
-    let stateColumns = event.columnApi.getColumnState();
-    const filterColumns = stateColumns.filter(item => item.sort);
+  useEffect(() => {
+    onSortChanged();
+  }, []);
+
+  const onSortChanged = () => {
+    let stateColumns = columnApi.getColumnState();
+    let filterColumns = stateColumns.filter(item => item.sort);
+    filterColumns = filterColumns.sort((a, b) => {
+      return a.sortIndex - b.sortIndex;
+    });
     setVisibleSortNumber(filterColumns.length > 1);
-    setSortIndex(column.sortIndex);
+    setSortIndex(findIndex(filterColumns, { colId: column.colId }));
     setSortCount(sortInfo.length);
     setAscSort(column.isSortAscending());
     setDescSort(column.isSortDescending());
