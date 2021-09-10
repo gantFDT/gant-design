@@ -17,7 +17,7 @@ import {
 } from '@ag-grid-community/core';
 import '@ag-grid-community/core/dist/styles/ag-grid.css';
 import '@ag-grid-community/core/dist/styles/ag-theme-balham.css';
-import { AgGridReact } from '@ag-grid-community/react';
+import { AgGridReact, AgGridColumn } from '@ag-grid-community/react';
 import { AllModules, LicenseManager } from '@ag-grid-enterprise/all-modules';
 import { Spin } from 'antd';
 import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
@@ -366,7 +366,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
 
   // 获取selected 数据
   const getAllSelectedRows = useCallback(selectedRows => {
-    const dataSource = gridManager.getRowData();
+    const dataSource = gridManager.agGridConfig.dataSource;
     const currentRows: string[] = [];
     const extraRows: any[] = [];
     selectedRows.map(itemRow => {
@@ -401,9 +401,19 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
     },
     [onSelect],
   );
+  const { selectedChangeRef } = selectedHooks({
+    gridVariable: gridVariableRef.current,
+    ready,
+    apiRef,
+    dataSource,
+    getRowNodeId,
+    selectedRows,
+    isSingle: rowSelection === 'single',
+  });
   const onSelectionChanged = useCallback(
     (event: SelectionChangedEvent) => {
       propsOnSelectionChanged && propsOnSelectionChanged(event);
+      // if (selectedChangeRef.current) return;
       if (gridVariableRef.current?.hasSelectedRows && rowSelection === 'multiple') {
         const rows = event.api.getSelectedRows();
         const { extraRows, currentRows } = getAllSelectedRows(
@@ -433,15 +443,6 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
     },
     [getAllSelectedRows, propsOnSelectionChanged, rowSelection],
   );
-  selectedHooks({
-    gridVariable: gridVariableRef.current,
-    ready,
-    apiRef,
-    dataSource,
-    getRowNodeId,
-    selectedRows,
-    isSingle: rowSelection === 'single',
-  });
 
   const handleRowClicked = useCallback(
     (event: RowClickedEvent) => {
@@ -767,12 +768,12 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                       tooltipMouseTrack
                       excludeChildrenWhenTreeDataFiltering
                       {...selection}
-                      excelStyles={[{ id: 'stringType', dataType: 'string' }, ...excelStyles]}
+                      excelStyles={[{ id: 'stringType', dataType: 'String' }, ...excelStyles]}
                       {...orignProps}
                       rowHeight={size == 'small' ? 24 : 32}
                       getDataPath={getDataPath}
                       immutableData
-                      columnDefs={localColumnsDefs}
+                      // columnDefs={localColumnsDefs}
                       gridOptions={{
                         ...orignProps.gridOptions,
                       }}
@@ -788,7 +789,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                         headerComponentParams: {
                           ColumnLabelComponent,
                         },
-                        menuTabs: ['generalMenuTab', 'filterMenuTab'],
+                        // menuTabs: ['generalMenuTab', 'filterMenuTab'],
                         ...defaultColDef,
                         filterParams: {
                           buttons: ['reset'],
@@ -815,7 +816,11 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                       onColumnMoved={onColumnsChange}
                       onColumnVisible={onColumnsChange}
                       onColumnResized={onColumnsChange}
-                    />
+                    >
+                      {localColumnsDefs.map((item, index) => (
+                        <AgGridColumn {...item} key={(item as any).field || index} />
+                      ))}
+                    </AgGridReact>
                   </div>
                   <GantGridFormToolPanelRenderer
                     columns={columns}

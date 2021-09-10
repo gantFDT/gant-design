@@ -1,16 +1,16 @@
 import { Input } from '@data-cell';
 import Grid from '@grid';
-import { filterDateComparator ,setGridConfig} from '@grid';
+import { filterDateComparator, setGridConfig } from '@grid';
 import Header from '@header';
 import { Button, Icon, Modal } from 'antd';
 import { Random } from 'mockjs';
 /*! Start !*/
-import React, { Fragment, useCallback, useEffect, useRef, useState } from 'react';
+import React, { Fragment, useCallback, useEffect, useRef, useState,useMemo } from 'react';
 import CodeDecorator from '../_util/CodeDecorator';
 import codes from './code';
 import moment from 'moment';
 
-setGridConfig({gantDateComponent:true})
+setGridConfig({ gantDateComponent: true });
 /*! Split !*/
 const RandomCreate = () => {
   const ip = Random.ip();
@@ -121,98 +121,67 @@ const basicColumns = [
     fieldName: 'name',
     title: '姓名',
     cellRenderer: 'gantGroupCellRenderer',
-    valueGett: params => params.data?.name,
-    // filterParams: {
-    //   values: [''],
-    // },
-    // filter: 'agTextColumnFilter',
-    initialSort: 'asc' ,sortIndex:1,
-    editConfig: {
-      component: props => {
-        return <Input {...props} />;
-      },
-      props: record => {
-        return { record };
-      },
-      editable: true,
-      signable: true,
-      rules: [
-        {
-          required: true,
-          message: '姓名不能为空',
-        },
-        {
-          min: 4,
-          type: 'string',
-          message: '姓名不能小于四个字符串',
-        },
-      ],
-    },
+    // cellRenderer:"medalCellRenderer"
   },
   {
     fieldName: 'age',
     title: '年龄',
-    filter: 'agNumberColumnFilter',
-    initialSort: 'asc' ,sortIndex:2,
+    render: value => value,
+    // cellRenderer:"medalCellRenderer"
   },
   {
     fieldName: 'date',
     title: '时间',
-    filter: 'agDateColumnFilter',
-    valueFormatter: ({ value }) => {
-      return moment(value).format('gggg-w[周]');
-    },
-    filterParams: {
-      comparator: function filterDateComparator(filterLocalDateAtMidnight, cellValue) {
-        console.log('filterDateComparator----->', filterLocalDateAtMidnight, cellValue);
-        if (!cellValue) return -1;
-        const filterTime = moment(filterLocalDateAtMidnight).valueOf();
-        const cellTime = moment(cellValue).valueOf();
-
-        if (filterTime == cellTime) {
-          return 0;
-        }
-
-        if (cellTime < filterTime) {
-          return -1;
-        }
-
-        if (cellTime > filterTime) {
-          return 1;
-        }
-        return 0;
-      },
-      // comparator: (filterLocalDateAtMidnight, cellValue) => {
-      //   const dateAsString = cellValue;
-
-      //   if (dateAsString == null) {
-      //     return 0;
-      //   }
-
-      //   // In the example application, dates are stored as dd/mm/yyyy
-      //   // We create a Date object for comparison against the filter date
-      //   const dateParts = dateAsString.split('/');
-      //   const day = Number(dateParts[2]);
-      //   const month = Number(dateParts[1]) - 1;
-      //   const year = Number(dateParts[0]);
-      //   const cellDate = new Date(year, month, day);
-
-      //   // Now that both parameters are Date objects, we can compare
-      //   if (cellDate < filterLocalDateAtMidnight) {
-      //     return -1;
-      //   } else if (cellDate > filterLocalDateAtMidnight) {
-      //     return 1;
-      //   }
-      //   return 0;
-      // },
-    },
+    render: value => value,
+    // cellRenderer:"medalCellRenderer"
   },
   {
     fieldName: 'county',
     title: '国家',
-    filter: 'agTextColumnFilter',
+    // filter: 'agTextColumnFilter',
+    render: value => value,
+    // cellRenderer:"medalCellRenderer"
+  },
+  {
+    fieldName: 'county',
+    title: '国家',
+    // filter: 'agTextColumnFilter',
+    render: value => value,
+    // cellRenderer:"medalCellRenderer"
+  },
+  {
+    fieldName: 'county',
+    title: '国家',
+    // filter: 'agTextColumnFilter',
+    render: value => value,
+    // cellRenderer:"medalCellRenderer"
+  },
+  {
+    fieldName: 'county',
+    title: '国家',
+    // filter: 'agTextColumnFilter',
+    render: value => value,
+    // cellRenderer:"medalCellRenderer"
+  },
+  {
+    fieldName: 'county',
+    title: '国家',
+    // filter: 'agTextColumnFilter',
+    render: value => value,
+    // cellRenderer:"medalCellRenderer"
   },
 ];
+
+function MedalCellRenderer(props) {
+  const { value, rowIndex, render, data, valueFormatted, context } = props;
+  const showValue = useMemo(() => {
+    return valueFormatted && !Array.isArray(value) ? valueFormatted : value;
+  }, [valueFormatted, value]);
+  // const renderContent = useMemo(() => {
+  //   return typeof render == 'function' ? render(showValue, data, rowIndex, props) : showValue;
+  // }, [showValue, data, rowIndex]);
+  return <>{showValue}</>;
+}
 const BaiscGrid = () => {
   const [editable, setEditable] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -401,7 +370,6 @@ const BaiscGrid = () => {
         onReady={onReady}
         openEditSign
         showCut
-        
         getDataPath={data => {
           // console.log('---->', data.path);
           return data.path;
@@ -418,6 +386,9 @@ const BaiscGrid = () => {
           gridManagerRef,
           onCancelEdit,
           editable,
+        }}
+        frameworkComponents={{
+          medalCellRenderer: MedalCellRenderer,
         }}
         getContextMenuItems={getContextMenuItems}
         hiddenMenuItemNames={['进入编辑', '结束编辑']}
