@@ -1,6 +1,6 @@
 export default [
 `
-import React, { Fragment, useCallback, useEffect, useRef, useState,useMemo } from 'react';
+import React, { Fragment, useCallback, useEffect, useRef, useState, useMemo } from 'react';
 import CodeDecorator from '../_util/CodeDecorator';
 import codes from './code';
 import moment from 'moment';
@@ -126,17 +126,23 @@ const basicColumns = [
     // cellRenderer:"medalCellRenderer"
   },
   {
-    fieldName: 'date',
-    title: '时间',
-    render: value => value,
-    // cellRenderer:"medalCellRenderer"
-  },
-  {
-    fieldName: 'county',
-    title: '国家',
-    // filter: 'agTextColumnFilter',
-    render: value => value,
-    // cellRenderer:"medalCellRenderer"
+    fieldName: 'group',
+    title: '分组',
+    children: [
+      {
+        fieldName: 'date',
+        title: '时间',
+        render: value => value,
+        // cellRenderer:"medalCellRenderer"
+      },
+      {
+        fieldName: 'county',
+        title: '国家',
+        // filter: 'agTextColumnFilter',
+        render: value => value,
+        // cellRenderer:"medalCellRenderer"
+      },
+    ],
   },
   {
     fieldName: 'county',

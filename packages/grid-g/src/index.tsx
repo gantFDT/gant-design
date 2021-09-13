@@ -1,5 +1,7 @@
 import {
   CellEditingStoppedEvent,
+  ColDef,
+  ColGroupDef,
   ColumnApi,
   ColumnMovedEvent,
   ColumnResizedEvent,
@@ -656,6 +658,23 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
     if (isEmpty(filterModelRef.current)) return true;
     return false;
   }, [forcedGridKey]);
+
+  const renderColumns = useCallback((columnDefs: (ColGroupDef | ColDef)[]) => {
+    return columnDefs.map((item, index) => {
+      if ((item as ColGroupDef).marryChildren)
+        return (
+          <AgGridColumn
+            {...item}
+            groupId={(item as any).field || index}
+            key={(item as any).field || index}
+          >
+            {renderColumns((item as any).children)}
+          </AgGridColumn>
+        );
+      return <AgGridColumn {...item} key={(item as any).field || index} />;
+    });
+  }, []);
+
   return (
     <LocaleReceiver>
       {(local, localeCode = 'zh-cn') => {
@@ -817,9 +836,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                       onColumnVisible={onColumnsChange}
                       onColumnResized={onColumnsChange}
                     >
-                      {localColumnsDefs.map((item, index) => (
-                        <AgGridColumn {...item} key={(item as any).field || index} />
-                      ))}
+                      {renderColumns(localColumnsDefs)}
                     </AgGridReact>
                   </div>
                   <GantGridFormToolPanelRenderer
