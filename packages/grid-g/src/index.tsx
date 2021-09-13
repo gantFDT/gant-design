@@ -788,7 +788,6 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                         headerComponentParams: {
                           ColumnLabelComponent,
                         },
-                        menuTabs: ['generalMenuTab', 'filterMenuTab'],
                         ...defaultColDef,
                         filterParams: {
                           buttons: ['reset'],

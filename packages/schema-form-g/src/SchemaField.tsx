@@ -43,6 +43,7 @@ const SchemaField = (props: SchemaField) => {
     collectInitialValue,
     hideTitle,
     frameworkComponents,
+    allowEdit,
   } = useContext(FormContext);
 
   const { LabelComponent } = frameworkComponents;
@@ -84,12 +85,13 @@ const SchemaField = (props: SchemaField) => {
     const { initialValue, pattern, ...othterProps }: any = renderFieldProps || {};
 
     return React.createElement(component, {
+      allowEdit,
       ...othterProps,
       edit: itemEdit,
       onCancel,
       onSave: onItemSave,
     });
-  }, [renderFieldProps, itemEdit, onCancel, onItemSave, componentType, customFields]);
+  }, [renderFieldProps, itemEdit, onCancel, onItemSave, componentType, customFields, allowEdit]);
 
   useEffect(() => {
     collectInitialValue(name, initialValue);
@@ -127,7 +129,12 @@ const SchemaField = (props: SchemaField) => {
                   rules: [
                     {
                       required: requiredFinally,
-                      message: <>{title}{locale.required}</>,
+                      message: (
+                        <>
+                          {title}
+                          {locale.required}
+                        </>
+                      ),
                     },
                     ...optionsRules,
                   ],
