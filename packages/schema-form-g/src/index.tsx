@@ -129,6 +129,7 @@ class SchemaForm extends React.Component<Props, { schemaCount: number }> {
       schema,
       form,
       edit,
+      allowEdit,
       uiSchema,
       titleConfig,
       onSave,
@@ -162,7 +163,8 @@ class SchemaForm extends React.Component<Props, { schemaCount: number }> {
           defalutProps,
           collectInitialValue: this.collectInitialValue.bind(this),
           hideTitle,
-          frameworkComponents
+          frameworkComponents,
+          allowEdit,
           
         }}
       >

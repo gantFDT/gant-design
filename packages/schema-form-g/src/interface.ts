@@ -1,4 +1,4 @@
-import { ReactElement, ReactHTML,ComponentProps } from 'react';
+import { ReactElement, ReactHTML, ComponentProps } from 'react';
 import { EditStatus } from '@data-cell';
 import { Gutter } from 'antd/lib/grid/row';
 import { ColProps } from 'antd/lib/grid/col';
@@ -26,10 +26,11 @@ export interface Context {
   defalutProps?: any;
   collectInitialValue: (name: string, value: any) => void;
   hideTitle?: boolean;
-  frameworkComponents?:{
-    LabelComponent:any;
-    [key:string]:any
-  }
+  frameworkComponents?: {
+    LabelComponent: any;
+    [key: string]: any;
+  };
+  allowEdit?: boolean;
 }
 export interface Schema {
   name?: string;
@@ -60,6 +61,7 @@ export interface OptionalProps {
   onSchemaChange?: (schema: Schema) => void;
   uiSchema?: UISchema;
   edit?: EditStatus | EditObject;
+  allowEdit?: boolean;
   titleConfig?: TitleSchema;
   data?: object;
   onChange?: Function;
@@ -72,10 +74,10 @@ export interface OptionalProps {
   size?: 'small' | 'defalut' | 'large';
   onSizeChange?: (size: { height: number; width: number }) => void;
   hideTitle?: boolean;
-  frameworkComponents?:{
-    LabelComponent:any;
-    [key:string]:any
-  }
+  frameworkComponents?: {
+    LabelComponent: any;
+    [key: string]: any;
+  };
 }
 
 export interface LocaleProps {
@@ -88,7 +90,7 @@ export interface Props extends OptionalProps {
   // emitDependenciesChange: (key: string, value: any) => void;
   resetDependenciesChange: (changedValue: Object) => void;
   withoutAnimation?: boolean;
-  formKey?:string;
+  formKey?: string;
 }
 export interface UISchema {
   'ui:orders'?: string[];
