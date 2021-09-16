@@ -9,41 +9,41 @@ import { Divider, Tag, Radio, Button, message, ConfigProvider, Rate } from 'antd
 import { SmartGrid, EditStatus, SwitchStatus } from '@gantd'
 const { Random } = Mock
 /*! Split !*/
-// SmartGrid.setProps({
-//   headerRight: <><Button size="small">全局按钮</Button></>,
-//   getCustomViews(gridKey) {
-//     return new Promise((resolve, reject) => {
-//       setTimeout(() => {
-//         if (gridKey === 'grid-custom-views:ConfigColumnsUse') {
-//           resolve([{"viewId":"custom-1231231-83529738","name":"123","version":"2021-07-02 14:04:3640","panelConfig":{"columnFields":[{"title":"姓名","fieldName":"name","hide":true,"checked":true,"display":"block"},{"title":"年龄","fieldName":"age","checked":true,"display":"block"},{"title":"住址","fieldName":"address","width":200,"checked":false,"display":"block"},{"title":"性别","fieldName":"sex","dynamic":true,"checked":true,"display":"block"},{"title":"身高","fieldName":"height","dynamic":true,"checked":true,"display":"block"},{"title":"标签","fieldName":"tags","checked":false,"display":"block"},{"title":"操作","fieldName":"action","checked":true,"display":"block"}]}}])
-//         } else {
-//           resolve([])
-//         }
-//       }, 200)
-//     })
-//   },
-//   // getCompanyViews(gridKey) {
-//   //   return new Promise((resolve, reject) => {
-//   //     setTimeout(() => {
-//   //       if (gridKey === 'grid-custom-views:ConfigColumnsUse') {
-//   //         resolve([])
-//   //       } else {
-//   //         resolve([{"viewId":"company-1231231-71456576","name":"共享1","version":"2021-06-29 14:13:1070","panelConfig":{"clickable":true,"footerDirection":"row","pageSize":50,"columnFields":[{"title":"姓名","fieldName":"name","hide":true,"checked":true,"display":"block"},{"title":"年龄","fieldName":"age","checked":true,"display":"block"},{"title":"住址","fieldName":"address","width":200,"checked":false,"display":"block"},{"title":"标签","fieldName":"tags","checked":false,"display":"block"},{"title":"操作","fieldName":"action","checked":false,"display":"block"},{"title":"性别","fieldName":"sex","dynamic":true,"checked":true},{"title":"身高","fieldName":"height","dynamic":true,"checked":true}]}}])
-//   //       }
-//   //     }, 200)
-//   //   })
-//   // },
-//   setCustomViews(gridKey, views) {
-//     console.log(`gridKey`, gridKey)
-//     console.log(`views`, views)
-//   },
-//   // setCompanyViews(gridKey, views) {
-//   //   console.log(`gridKey`, gridKey)
-//   //   console.log(`views`, views)
-//   // },
-//   companyViewAuth: true,
-//   userId: '1231231'
-// })
+SmartGrid.setProps({
+  // headerRight: <><Button size="small">全局按钮</Button></>,
+  // getCustomViews(gridKey) {
+  //   return new Promise((resolve, reject) => {
+  //     setTimeout(() => {
+  //       if (gridKey === 'grid-custom-views:ConfigColumnsUse') {
+  //         resolve([{"viewId":"custom-1231231-83529738","name":"123","version":"2021-07-02 14:04:3640","panelConfig":{"columnFields":[{"title":"姓名","fieldName":"name","hide":true,"checked":true,"display":"block"},{"title":"年龄","fieldName":"age","checked":true,"display":"block"},{"title":"住址","fieldName":"address","width":200,"checked":false,"display":"block"},{"title":"性别","fieldName":"sex","dynamic":true,"checked":true,"display":"block"},{"title":"身高","fieldName":"height","dynamic":true,"checked":true,"display":"block"},{"title":"标签","fieldName":"tags","checked":false,"display":"block"},{"title":"操作","fieldName":"action","checked":true,"display":"block"}]}}])
+  //       } else {
+  //         resolve([])
+  //       }
+  //     }, 200)
+  //   })
+  // },
+  // getCompanyViews(gridKey) {
+  //   return new Promise((resolve, reject) => {
+  //     setTimeout(() => {
+  //       if (gridKey === 'grid-custom-views:ConfigColumnsUse') {
+  //         resolve([])
+  //       } else {
+  //         resolve([{"viewId":"company-1231231-71456576","name":"共享1","version":"2021-06-29 14:13:1070","panelConfig":{"clickable":true,"footerDirection":"row","pageSize":50,"columnFields":[{"title":"姓名","fieldName":"name","hide":true,"checked":true,"display":"block"},{"title":"年龄","fieldName":"age","checked":true,"display":"block"},{"title":"住址","fieldName":"address","width":200,"checked":false,"display":"block"},{"title":"标签","fieldName":"tags","checked":false,"display":"block"},{"title":"操作","fieldName":"action","checked":false,"display":"block"},{"title":"性别","fieldName":"sex","dynamic":true,"checked":true},{"title":"身高","fieldName":"height","dynamic":true,"checked":true}]}}])
+  //       }
+  //     }, 200)
+  //   })
+  // },
+  // setCustomViews(gridKey, views) {
+  //   console.log(`gridKey`, gridKey)
+  //   console.log(`views`, views)
+  // },
+  // setCompanyViews(gridKey, views) {
+  //   console.log(`gridKey`, gridKey)
+  //   console.log(`views`, views)
+  // },
+  // companyViewAuth: true,
+  userId: '1231231'
+})
 
 var dataSource = Array(10).fill().map((_, Idx) => ({
   key: Idx,
@@ -199,10 +199,6 @@ function ConfigColumnsUse() {
           dynamic: true
         }
       ])
-
-      setLaskViewKey('971300163669')
-
-      setCustomViews([{"viewId":"971300163669","name":"222","version":"2021-05-08 11:27:4520","panelConfig":{"clickable":true,"footerDirection":"row","pageSize":50,"columnFields":[{"title":"姓名","fieldName":"name","checked":true},{"title":"年龄","fieldName":"age","checked":true},{"title":"住址","fieldName":"address","width":200,"checked":false},{"title":"性别","fieldName":"sex","dynamic":true,"checked":true},{"title":"身高","fieldName":"height","dynamic":true,"checked":true},{"title":"标签","fieldName":"tags","checked":false},{"title":"操作","fieldName":"action","checked":false}]}}])
     }, 250)
   }, [])
 

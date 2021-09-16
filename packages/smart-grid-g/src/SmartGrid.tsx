@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useCallback, ReactNode, useEffect, useRef } from 'react';
 import { Tooltip, Button } from 'antd';
 import moment from 'moment';
+import { cloneDeep } from 'lodash';
 import Grid from '@grid';
 import ConfigModal from './config';
 import { SmartGridType, SmartGridProps, ViewConfig } from './interface';
@@ -133,8 +134,9 @@ function SmartGrid<T>(props: SmartGridProps<T>): React.ReactElement {
       usedView = baseView;
     }
 
-    setActiveView(usedView);
-    setLastViewKey(usedView.viewId);
+    setActiveView(cloneDeep(usedView));
+    if (viewKey !== usedView.viewId)
+      setLastViewKey(usedView.viewId);
     // onViewChange && onViewChange(usedView); 接口自定义视图，customViewsProp属性冲突
   }, [systemViews, customViews, companyViews, lastViewKey, lastViewKeyProp]);
 
@@ -142,7 +144,6 @@ function SmartGrid<T>(props: SmartGridProps<T>): React.ReactElement {
   const handlerChangeView = useCallback(view => {
     if(view.viewId === lastViewKey) return;
     managerRef.current && managerRef.current.clearLocalStorageColumns()
-    setActiveView(view);
     onViewChange && onViewChange(view);
     setLastViewKey(view.viewId);
   }, [originGridKey, lastViewKey, onViewChange]);
@@ -166,7 +167,6 @@ function SmartGrid<T>(props: SmartGridProps<T>): React.ReactElement {
   const handlerSaveConfig = useCallback(config => {
     const newView = { ...config }
     newView.version = moment().format(viewVersionFormat);
-    setActiveView(newView);
     setLastViewKey(newView.viewId)
     const viewList = newView.viewId.startsWith('company') ? companyViews : customViews;
     const curViewIndex = viewList.findIndex((cV: ViewConfig) => cV.viewId === newView.viewId);
@@ -199,7 +199,6 @@ function SmartGrid<T>(props: SmartGridProps<T>): React.ReactElement {
         newView
       ]
     });
-    setActiveView(newView);
     setLastViewKey(newView.viewId);
     hideModal && hideModal();
     setConfigModalVisible(false);
@@ -229,7 +228,6 @@ function SmartGrid<T>(props: SmartGridProps<T>): React.ReactElement {
       sort: columnDef.sort,
       sortIndex: columnDef.sortIndex,
       hide: columnDef.hide,
-      // checked: !columnDef.hide,
       width: columnDef.width
     }))
 
@@ -272,8 +270,7 @@ function SmartGrid<T>(props: SmartGridProps<T>): React.ReactElement {
   }, [columns, originGridKey, setCustomViewsProp, setCompanyViewsProp])
 
   useEffect(() => {
-    const columnKeys = finalColumns.map(_column => _column.fieldName).join('');
-    setGridKey('gridKey:' + originGridKey + ':' + activeView.viewId +':' + activeView.version + ':' + columnKeys);
+    setGridKey('gridKey:' + originGridKey + ':' + activeView.viewId +':' + activeView.version);
   }, [finalColumns, originGridKey, activeView])
 
   const titleRef = useRef(null);
@@ -357,12 +354,10 @@ function SmartGrid<T>(props: SmartGridProps<T>): React.ReactElement {
           <Grid
             dataSource={dataSource}
             columns={finalColumns}
-            // suppressRowClickSelection={!panelConfig.clickable}
             height={
               gridHeight
             }
             onReady={handleReady}
-            gridKey={originGridKey ? gridKey : undefined}
             key={originGridKey ? gridKey : undefined}
             {...restProps}
           />
