@@ -768,10 +768,11 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                       excludeChildrenWhenTreeDataFiltering
                       {...selection}
                       excelStyles={[{ id: 'stringType', dataType: 'string' }, ...excelStyles]}
+                      immutableData
                       {...orignProps}
                       rowHeight={size == 'small' ? 24 : 32}
                       getDataPath={getDataPath}
-                      immutableData
+                      
                       columnDefs={localColumnsDefs}
                       gridOptions={{
                         ...orignProps.gridOptions,
