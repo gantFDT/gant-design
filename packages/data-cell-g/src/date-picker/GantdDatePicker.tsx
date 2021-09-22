@@ -260,7 +260,7 @@ class GantDatePicker extends React.Component<GantDatePickerProps, WeekPickerStat
       defaultValue,
     };
     Object.keys(restprops).map(name => {
-      if (restprops[name]) restprops[name] = getCurTime(restprops[name], props.format);
+      if (Reflect.has(restprops,name)) restprops[name] = getCurTime(restprops[name], props.format);
       else delete restprops[name];
     });
     return (

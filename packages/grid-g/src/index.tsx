@@ -794,7 +794,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                       immutableData
                       // columnDefs={localColumnsDefs}
                       gridOptions={{
-                        ...orignProps.gridOptions,
+                        ...orignProps?.gridOptions,
                       }}
                       isRowSelectable={onRowSelectable}
                       defaultColDef={{
@@ -808,7 +808,6 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                         headerComponentParams: {
                           ColumnLabelComponent,
                         },
-                        // menuTabs: ['generalMenuTab', 'filterMenuTab'],
                         ...defaultColDef,
                         filterParams: {
                           buttons: ['reset'],
