@@ -9,6 +9,7 @@ import { WithBasicProps } from '../compose/withbasic';
 import GantdDatePicker from './GantdDatePicker';
 import RangePicker from './RangePicker';
 import { getCurTime } from './_utils';
+const { WeekPicker } = AntDatePicker;
 export interface GantDatePickerProps extends PickerProps, WithBasicProps {
   onChange?: (time: string) => void;
   value?: moment.Moment | string | null;
