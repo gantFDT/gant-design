@@ -47,7 +47,7 @@ const serialNumberCol: ColDef = {
   sortable: false,
   pinned: true,
   minWidth: 55,
-  headerName: '序号',
+  headerName: '',
   suppressMenu: true,
   lockPosition: true,
   lockVisible: true,
