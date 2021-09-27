@@ -117,13 +117,41 @@ const basicColumns = [
     fieldName: 'name',
     title: '姓名',
     cellRenderer: 'gantGroupCellRenderer',
-    // cellRenderer:"medalCellRenderer"
+    valueGetter: params => params.data?.name,
+    // filterParams: {
+    //   values: [''],
+    // },
+    // filter: 'agTextColumnFilter',
+    initialSort: 'asc',
+    sortIndex: 1,
+    editConfig: {
+      component: props => {
+        return <Input {...props} />;
+      },
+      props: record => {
+        return { record };
+      },
+      editable: true,
+      signable: true,
+      rules: [
+        {
+          required: true,
+          message: '姓名不能为空',
+        },
+        {
+          min: 4,
+          type: 'string',
+          message: '姓名不能小于四个字符串',
+        },
+      ],
+    },
   },
   {
     fieldName: 'age',
     title: '年龄',
-    render: value => value,
-    // cellRenderer:"medalCellRenderer"
+    filter: 'agNumberColumnFilter',
+    initialSort: 'asc',
+    sortIndex: 2,
   },
   {
     fieldName: 'group',
@@ -372,6 +400,12 @@ const BaiscGrid = () => {
         onReady={onReady}
         openEditSign
         showCut
+        showCutChild
+        createConfig={{
+          id: 'ip',
+          path: 'path',
+          toPath: (parentPath, data) => [...parentPath, data.ip],
+        }}
         getDataPath={data => {
           // console.log('---->', data.path);
           return data.path;

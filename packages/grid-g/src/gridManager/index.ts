@@ -215,7 +215,7 @@ export default class GridManage {
       console.error(error);
     }
   }
-  paste(node, up = true) {
+  paste(node, up = true, isChild = false) {
     try {
       const { getDataPath, createConfig, treeData, getRowNodeId } = this.agGridConfig;
 
@@ -234,7 +234,7 @@ export default class GridManage {
         let parentPath = !node ? defaultParentPath : [];
         if (node) {
           const brotherPath = getDataPath(get(node, 'data', []));
-          parentPath = brotherPath.slice(0, brotherPath.length - 1);
+          parentPath = isChild ? brotherPath : brotherPath.slice(0, brotherPath.length - 1);
         }
         const { newRowData, oldRowData } = getRowsToUpdate(
           this.cutRows,

@@ -207,6 +207,7 @@ export interface Props<T extends any> {
   hideMenuItemExpand?: boolean;
   hiddenMenuItemNames?: string[];
   showCut?: ((params: GetContextMenuItemsParams) => boolean) | boolean;
+  showCutChild?: boolean;
   onRowsCut?: (rows: RowNode[]) => boolean;
   onRowsPaste?: (rows: RowNode[], targetRow?: RowNode) => boolean;
   onRowsPasteEnd?: (data: any) => void;
