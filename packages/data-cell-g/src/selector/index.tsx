@@ -475,7 +475,7 @@ const withSelector = compose(
       }
       let list = [
         <Select.Option key="none" disabled>
-          {loading ? '加载中...' : '没有查询到数据'}
+          {loading ? 'loading...' : 'no data'}
         </Select.Option>,
       ];
       if (result.length) {
@@ -504,7 +504,7 @@ const withSelector = compose(
       }
       if (useStorage) {
         const newItems = (
-          <Select.OptGroup key="result" label="搜索结果">
+          <Select.OptGroup key="result" label={<Receiver>{locale => <>{locale.list}</>}</Receiver>}>
             {list}
           </Select.OptGroup>
         );
