@@ -1,6 +1,6 @@
 {
   "name": "smart-table-g",
-  "version": "0.1.87",
+  "version": "0.1.88",
   "description": "gantd smart-table-g",
   "main": "lib/index.js",
   "scripts": {},
@@ -25,7 +25,7 @@
   "dependencies": {
     "antd": "3.26.12",
     "array-move": "^2.2.1",
-    "data-cell-g": "^0.1.67",
+    "data-cell-g": "^0.1.68",
     "header-g": "^0.1.27",
     "lodash": "^4.17.15",
     "modal-g": "^0.1.35",
