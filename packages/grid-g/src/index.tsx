@@ -14,6 +14,7 @@ import {
   RowSelectedEvent,
   SelectionChangedEvent,
   SuppressKeyboardEventParams,
+  
 } from '@ag-grid-community/core';
 import '@ag-grid-community/core/dist/styles/ag-grid.css';
 import '@ag-grid-community/core/dist/styles/ag-theme-balham.css';
@@ -179,6 +180,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
     autoHeight,
     maxAutoHeight,
     minAutoHeight = 150,
+    showCutChild,
     ...orignProps
   } = props;
   const apiRef = useRef<GridApi>();
@@ -673,6 +675,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
             hideMenuItemExpand,
             hiddenMenuItemNames,
             suppressRightClickSelected,
+            showCutChild,
           });
         };
         return (

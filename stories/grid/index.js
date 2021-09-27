@@ -1,6 +1,6 @@
 import { Input } from '@data-cell';
 import Grid from '@grid';
-import { filterDateComparator ,setGridConfig} from '@grid';
+import { filterDateComparator, setGridConfig } from '@grid';
 import Header from '@header';
 import { Button, Icon, Modal } from 'antd';
 import { Random } from 'mockjs';
@@ -10,7 +10,7 @@ import CodeDecorator from '../_util/CodeDecorator';
 import codes from './code';
 import moment from 'moment';
 
-setGridConfig({gantDateComponent:true})
+setGridConfig({ gantDateComponent: true });
 /*! Split !*/
 const RandomCreate = () => {
   const ip = Random.ip();
@@ -126,7 +126,8 @@ const basicColumns = [
     //   values: [''],
     // },
     // filter: 'agTextColumnFilter',
-    initialSort: 'asc' ,sortIndex:1,
+    initialSort: 'asc',
+    sortIndex: 1,
     editConfig: {
       component: props => {
         return <Input {...props} />;
@@ -153,7 +154,8 @@ const basicColumns = [
     fieldName: 'age',
     title: '年龄',
     filter: 'agNumberColumnFilter',
-    initialSort: 'asc' ,sortIndex:2,
+    initialSort: 'asc',
+    sortIndex: 2,
   },
   {
     fieldName: 'date',
@@ -401,7 +403,12 @@ const BaiscGrid = () => {
         onReady={onReady}
         openEditSign
         showCut
-        
+        showCutChild
+        createConfig={{
+          id: 'ip',
+          path: 'path',
+          toPath: (parentPath, data) => [...parentPath, data.ip],
+        }}
         getDataPath={data => {
           // console.log('---->', data.path);
           return data.path;

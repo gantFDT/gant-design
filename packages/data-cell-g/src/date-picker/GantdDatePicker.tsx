@@ -37,7 +37,7 @@ const withDatePicker = compose(
 );
 export class DatePicker extends React.Component<any, WeekPickerState> {
   static defaultProps = {
-    format: 'gggg-wo',
+    format: 'YYYY-MM-DD',
     allowClear: true,
   };
 
