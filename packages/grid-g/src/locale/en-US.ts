@@ -227,6 +227,7 @@ export default {
   cutRows: 'cut selected rows',
   pasteTop: 'paste on top',
   pasteBottom: 'paste on bottom',
+  pasteChild: 'paste as child',
   cancelCut: 'cancel cut',
   exportJson: 'export json',
   importJson: 'import json',

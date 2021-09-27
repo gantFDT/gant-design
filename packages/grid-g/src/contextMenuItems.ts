@@ -14,6 +14,7 @@ interface ContextMenuItemsConfig {
   hideMenuItemExpand?: boolean;
   hiddenMenuItemNames?: string[];
   suppressRightClickSelected?: boolean;
+  showCutChild?: boolean;
 }
 
 export const gantGetcontextMenuItems = function(
@@ -31,6 +32,7 @@ export const gantGetcontextMenuItems = function(
     hideMenuItemExpand,
     hiddenMenuItemNames,
     suppressRightClickSelected,
+    showCutChild,
   } = config;
   const {
     context: { globalEditable, treeData, createConfig, getRowNodeId, gridManager, showCut },
@@ -40,6 +42,7 @@ export const gantGetcontextMenuItems = function(
   const exportJson = !isEmpty(defaultJsonParams);
   const rowIndex = get(node, 'rowIndex', 0);
   let selectedRowNodes: RowNode[] = api.getSelectedNodes();
+  //右键选中⌚️
   if (node && !suppressRightClickSelected) {
     const rowNodes = api.getSelectedNodes();
     if (!downShift || rowNodes.length == 0) {
@@ -72,7 +75,7 @@ export const gantGetcontextMenuItems = function(
     gridSelectedKeys.push(getRowNodeId(get(item, 'data', {})));
     return item.data;
   }, []);
-  const hasCut = selectedRowNodes.length <= 0 || (treeData && isEmpty(createConfig));
+  const disabledCut = selectedRowNodes.length <= 0 || (treeData && isEmpty(createConfig));
   const hasPaste =
     selectedRowNodes.length > 1 ||
     (treeData && isEmpty(createConfig)) ||
@@ -172,14 +175,14 @@ export const gantGetcontextMenuItems = function(
       ]
     : defultMenu;
   const showCutBtns = typeof showCut === 'function' ? showCut(params) : showCut;
-  const editMenu = !showCutBtns
-    ? [...defultMenu]
-    : [
-        ...defultMenu,
-        'separator',
+
+  const editMenu = [...defultMenu];
+  if (showCutBtns) {
+    editMenu.push(
+      ...[
         {
           name: locale.cutRows,
-          disabled: hasCut,
+          disabled: disabledCut,
           action: params => {
             try {
               const canPut = onRowsCut ? onRowsCut(selectedRowNodes) : true;
@@ -214,6 +217,18 @@ export const gantGetcontextMenuItems = function(
             canPaste && gridManager.paste(rowNode, false);
           },
         },
-      ];
+      ],
+    );
+    if (showCutChild)
+      editMenu.push({
+        name: locale.pasteChild,
+        disabled: hasPaste,
+        action: params => {
+          const [rowNode] = selectedRowNodes;
+          const canPaste = onRowsPaste ? onRowsPaste(gridManager.cutRows, rowNode) : true;
+          canPaste && gridManager.paste(rowNode, false, true);
+        },
+      });
+  }
   return editMenu;
 };
