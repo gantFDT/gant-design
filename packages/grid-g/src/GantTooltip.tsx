@@ -1,6 +1,13 @@
 import classnames from 'classnames';
 import { get, isEmpty } from 'lodash';
-import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+  useMemo,
+} from 'react';
 import ReactDOM from 'react-dom';
 const cellPadding = 22;
 
@@ -12,27 +19,31 @@ const isEmptyObj = value => {
 
 export default forwardRef((props: any, ref) => {
   const {
-    value: _value,
+    value,
+    column,
     context,
     rowIndex,
     colDef: { tooltip, tooltipRender, field },
+    context: { requireds },
     columnApi,
+    api,
   } = props;
 
+  const required = useMemo(() => {
+    return requireds.indexOf(field) >= 0;
+  }, [requireds, field]);
+  const node = api?.getDisplayedRowAtIndex(rowIndex);
+  const data = get(node, 'data', {});
+  const params = { ...props, node, data };
   const containerRef = useRef<any>(null);
   const [showTip, setTipShow] = useState(false);
-  const { value, valueFormatted, data, required } = _value;
-  const actualColumnWidth = columnApi.getColumn(field).actualWidth;
-
+  const actualColumnWidth = get(columnApi.getColumn(field), 'actualWidth', 0);
   //获取要显示的内容内容
   let renderOverflow = value;
-  const valueFormatter = get(props,'colDef.valueFormatter')
   const render = get(props, 'colDef.cellRendererParams.render');
-  if(valueFormatter){
-    renderOverflow = valueFormatted
-  }
-  if(render){
-    renderOverflow = render(value, data, rowIndex, props)
+
+  if (render) {
+    renderOverflow = render(value, data, rowIndex, params);
   }
 
   useImperativeHandle(ref, () => {
@@ -51,11 +62,9 @@ export default forwardRef((props: any, ref) => {
       }
     }
   }, []);
-
   let errorMsg = get(data, `_rowError.${field}`, null);
   errorMsg = isEmptyObj(get(data, `${field}`, null)) && required ? null : errorMsg;
-  const ToolTipRender = tooltipRender ? tooltipRender(_value) : null;
-
+  const ToolTipRender = tooltipRender ? tooltipRender(params) : null;
   if (!showTip && !ToolTipRender && !errorMsg) {
     return (
       <>
