@@ -13,16 +13,16 @@ const isEmptyObj = value => {
 export default forwardRef((props: any, ref) => {
   const {
     value: _value,
-    column,
     context,
     rowIndex,
     colDef: { tooltip, tooltipRender, field },
+    columnApi,
   } = props;
 
   const containerRef = useRef<any>(null);
   const [showTip, setTipShow] = useState(false);
   const { value, valueFormatted, data, required } = _value;
-  const actualColumnWidth = column.actualWidth;
+  const actualColumnWidth = columnApi.getColumn(field).actualWidth;
 
   //获取要显示的内容内容
   let renderOverflow = value;
