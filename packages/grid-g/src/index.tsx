@@ -14,7 +14,6 @@ import {
   RowSelectedEvent,
   SelectionChangedEvent,
   SuppressKeyboardEventParams,
-  
 } from '@ag-grid-community/core';
 import '@ag-grid-community/core/dist/styles/ag-grid.css';
 import '@ag-grid-community/core/dist/styles/ag-theme-balham.css';
@@ -502,7 +501,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
   // 处理selection-end
   //columns
   const defaultSelection = !isEmpty(gantSelection) && showDefalutCheckbox;
-  const { columnDefs, validateFields } = useMemo(() => {
+  const { columnDefs, validateFields ,requireds} = useMemo(() => {
     return mapColumns<T>(
       columns,
       getRowNodeId,
@@ -760,6 +759,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                         groupSelectsChildren,
                         ...context,
                         treeData: currentTreeData,
+                        requireds
                       }}
                       onFilterModified={onFilterModified}
                       suppressCsvExport
@@ -775,7 +775,6 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                       {...orignProps}
                       rowHeight={size == 'small' ? 24 : 32}
                       getDataPath={getDataPath}
-                      
                       columnDefs={localColumnsDefs}
                       gridOptions={{
                         ...orignProps.gridOptions,
@@ -786,7 +785,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                         sortable,
                         filter,
                         minWidth: 30,
-                        tooltipValueGetter: (params: any) => params,
+                        tooltipValueGetter: (params: any) => params.value,
                         headerCheckboxSelectionFilteredOnly: true,
                         tooltipComponent: 'gantTooltip',
                         headerComponentParams: {

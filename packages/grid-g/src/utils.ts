@@ -200,10 +200,12 @@ export const mapColumns = <T>(
 ): {
   columnDefs: Col[];
   validateFields: Rules;
+  requireds: string[];
 } => {
   // 移除所有已添加事件
   function getColumnDefs(columns: Columns<T>[]) {
     let validateFields: Rules = {};
+    let requireds = [];
     const columnDefs = columns.map(
       (
         {
@@ -229,6 +231,7 @@ export const mapColumns = <T>(
             render,
             ...cellRendererParams,
           },
+          headerTooltip:headerName,
           cellClass: cellClass,
           cellClassRules: {
             'gant-grid-cell': () => true,
@@ -278,7 +281,7 @@ export const mapColumns = <T>(
               }
             }
             if (required) {
-              colDef.tooltipValueGetter = params => ({ ...params, required } as any);
+              requireds.push(field);
             }
             colDef.cellEditorParams = {
               props,
@@ -320,10 +323,10 @@ export const mapColumns = <T>(
         return colDef;
       },
     );
-    return { columnDefs, validateFields };
+    return { columnDefs, validateFields, requireds };
   }
 
-  let { columnDefs, validateFields } = getColumnDefs(columns);
+  let { columnDefs, validateFields, requireds } = getColumnDefs(columns);
   columnDefs = serialNumber
     ? typeof serialNumber === 'boolean'
       ? [serialNumberCol, ...columnDefs]
@@ -365,7 +368,7 @@ export const mapColumns = <T>(
         ...columnDefs,
       ]
     : columnDefs;
-  return { columnDefs, validateFields };
+  return { columnDefs, validateFields, requireds };
 };
 
 // 去除掉boolean类型
