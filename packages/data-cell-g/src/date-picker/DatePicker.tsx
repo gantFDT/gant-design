@@ -23,7 +23,7 @@ const withDatePicker = compose(
   toClass,
   defaultProps({
     style: {},
-    format: 'gggg-wo',
+    format: 'YYYY-MM-DD',
     onChange: () => {},
   }),
 );
