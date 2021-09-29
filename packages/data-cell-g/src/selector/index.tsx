@@ -474,9 +474,14 @@ const withSelector = compose(
         }
       }
       let list = [
-        <Select.Option key="none" disabled>
-          {loading ? '加载中...' : '没有查询到数据'}
-        </Select.Option>,
+        <Receiver>
+          {locale => (
+            //'加载中...' : '没有查询到数据'
+            <Select.Option key="none" disabled>
+              {loading ? locale.loading : locale.noData}
+            </Select.Option>
+          )}
+        </Receiver>
       ];
       if (result.length) {
         const hasGroup = result.some(item => item.group);
@@ -503,10 +508,15 @@ const withSelector = compose(
         }
       }
       if (useStorage) {
+        // 搜索结果
         const newItems = (
-          <Select.OptGroup key="result" label="搜索结果">
-            {list}
-          </Select.OptGroup>
+          <Receiver>
+            {locale => (
+              <Select.OptGroup key="result" label={locale.searchResults}>
+                {list}
+              </Select.OptGroup>
+            )}
+          </Receiver>
         );
 
         const selectedItems = (
