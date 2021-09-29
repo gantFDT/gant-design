@@ -1,7 +1,8 @@
-import React, { memo, useState, useCallback, useMemo, useRef, useEffect } from 'react';
+import React, { memo, useState, useCallback, useMemo, useEffect } from 'react';
 import { Pagination, Button, Tooltip, Switch } from 'antd';
 import { GantPaginationProps } from './interface';
-import { isNumber, get } from 'lodash';
+import { isNumber } from 'lodash';
+import Receiver from './locale/Receiver';
 interface Page {
   current: number;
   pageSize: number;
@@ -134,26 +135,48 @@ function PaginationTotal(props: any) {
       }
     }
   }, [tooltipTotal]);
+
   if (limit)
     return (
-      <>
-        {`第${range[0]} - ${range[1]}条，${propsTotal}+ `}
-        <Tooltip
-          title={loading ? '加载中...' : '精确数量:' + total}
-          onVisibleChange={visible => {
-            visible && onHover();
-          }}
-        >
-          <Button
-            size="small"
-            className="gantd-pagination-total-btn"
-            type="link"
-            icon="exclamation-circle"
-          ></Button>
-        </Tooltip>
-      </>
+      <Receiver>
+        {(locale) => (
+          locale.targetLang !== 'zh-CN'
+            ?
+            // 英文
+            <>{`${range[0]}-${range[1]} of ${propsTotal} items`}</>
+            :
+            // 中文
+            <>
+            {`第${range[0]} - ${range[1]}条，${propsTotal}+ `}
+            <Tooltip
+              title={loading ? '加载中...' : '精确数量:' + total}
+              onVisibleChange={visible => {
+                visible && onHover();
+              }}
+            >
+              <Button
+                size="small"
+                className="gantd-pagination-total-btn"
+                type="link"
+                icon="exclamation-circle"
+              ></Button>
+            </Tooltip>
+          </>
+        )}
+      </Receiver>
     );
-  return <>{`第${range[0]} - ${range[1]}条，共${propsTotal}条`}</>;
+
+  return (
+    <Receiver>
+      {(locale) => (
+        locale.targetLang !== 'zh-CN'
+          ?
+          <>{`${range[0]}-${range[1]} of ${propsTotal} items`}</>
+          :
+          <>{`第${range[0]} - ${range[1]}条，共${propsTotal}条`}</>
+      )}
+    </Receiver>
+  )
 }
 export const paginationShowTotal = (total, range, limit, tooltipTotal) => {
   return <PaginationTotal total={total} range={range} limit={limit} tooltipTotal={tooltipTotal} />;
