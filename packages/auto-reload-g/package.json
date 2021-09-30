@@ -1,6 +1,6 @@
 {
   "name": "auto-reload-g",
-  "version": "0.1.23",
+  "version": "0.1.24",
   "description": "auto-reload",
   "main": "lib/index.js",
   "scripts": {},
