@@ -26,7 +26,6 @@ const GetLocale = ({setLocale}) => {
     <Receiver>
       {
         (locale) => {
-          console.log('1',locale)
           setLocale(locale)
           return null
         }
