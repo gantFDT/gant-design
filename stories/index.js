@@ -33,7 +33,7 @@ const ComponentPage = (item,title,Component) => {
         <Radio.Button value="en">English</Radio.Button>
       </Radio.Group>
       <ConfigProvider localeCode={local}>
-        <Component localeCode={local}/>
+        <Component/>
       </ConfigProvider>
     </>
   );
