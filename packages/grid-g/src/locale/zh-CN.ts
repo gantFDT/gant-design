@@ -1,4 +1,6 @@
 export default {
+  //
+  targetLang: 'zh-CN',
   // for filter panel
   page: '页码',
   more: '更多',
