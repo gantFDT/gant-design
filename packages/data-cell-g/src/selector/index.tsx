@@ -474,14 +474,10 @@ const withSelector = compose(
         }
       }
       let list = [
-        <Receiver>
-          {locale => (
-            //'加载中...' : '没有查询到数据'
-            <Select.Option key="none" disabled>
-              {loading ? locale.loading : locale.noData}
-            </Select.Option>
-          )}
-        </Receiver>,
+        //'加载中...' : '没有查询到数据'
+        <Select.Option key="none" disabled>
+          <Receiver>{locale => <>{loading ? locale.loading : locale.noData}</>}</Receiver>
+        </Select.Option>,
       ];
       if (result.length) {
         const hasGroup = result.some(item => item.group);
@@ -510,7 +506,10 @@ const withSelector = compose(
       if (useStorage) {
         // 搜索结果
         const newItems = (
-          <Select.OptGroup key="result" label={<Receiver>{locale => <>{locale.searchResult}</>}</Receiver>}>
+          <Select.OptGroup
+            key="result"
+            label={<Receiver>{locale => <>{locale.searchResult}</>}</Receiver>}
+          >
             {list}
           </Select.OptGroup>
         );
