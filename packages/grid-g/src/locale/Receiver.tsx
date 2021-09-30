@@ -1,7 +1,7 @@
 import React from 'react';
 import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
-import en from '../locale/en-US';
-import zh from '../locale/zh-CN';
+import en from './en-US';
+import zh from './zh-CN';
 
 export interface LocaleInterface {
     [key: string]: any;
@@ -20,7 +20,6 @@ const langs = {
 export default (props: Props) => {
     return <LocaleReceiver>
         {(local, localeCode = 'zh-cn') => {
-            console.log('localeCode',localeCode)
             let locale = langs[localeCode] || langs['zh-cn']
             return <>{props.children(locale)}</>
         }}

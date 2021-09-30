@@ -102,7 +102,7 @@ export const formatColumnFields = (columnFields, originColumns) => {
   return [...__filterdFields, ...__hiddenFields];
 }
 
-export default function formatSchema<R>(schema: SchemaProp<R> | CustomColumnProps<R>[], originGridKey: string | undefined) {
+export default function formatSchema<R>(schema: SchemaProp<R> | CustomColumnProps<R>[], originGridKey: string | undefined, locale: any=null) {
   // 简洁模式
   if (Array.isArray(schema)) {
     schema = {
@@ -110,7 +110,7 @@ export default function formatSchema<R>(schema: SchemaProp<R> | CustomColumnProp
       systemViews: [
         {
           viewId: originGridKey ? `system-${originGridKey}` : 'system',
-          name: '全字段',
+          name: locale ? locale.fullField : '全字段',
           version: 'default',
           panelConfig: {
             columnFields: schema.map(column => pick(column, ['fieldName', 'hide', 'width', 'fixed', 'sort', 'sortIndex'])),

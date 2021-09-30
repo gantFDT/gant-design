@@ -2,5 +2,7 @@ export default {
     recentSelect: 'recent select',
     clearRecent:'clear recent',
     noRecent:'no recent',
-    list:'select list'
+    searchResult:'search result',
+    loading:'loading...',
+    noData:'No data was queried',
 }
