@@ -481,7 +481,7 @@ const withSelector = compose(
               {loading ? locale.loading : locale.noData}
             </Select.Option>
           )}
-        </Receiver>
+        </Receiver>,
       ];
       if (result.length) {
         const hasGroup = result.some(item => item.group);
@@ -510,13 +510,9 @@ const withSelector = compose(
       if (useStorage) {
         // 搜索结果
         const newItems = (
-          <Receiver>
-            {locale => (
-              <Select.OptGroup key="result" label={locale.searchResults}>
-                {list}
-              </Select.OptGroup>
-            )}
-          </Receiver>
+          <Select.OptGroup key="result" label={<Receiver>{locale => <>{locale.searchResult}</>}</Receiver>}>
+            {list}
+          </Select.OptGroup>
         );
 
         const selectedItems = (
