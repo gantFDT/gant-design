@@ -1,4 +1,5 @@
 export default {
+  targetLang: 'en-US',
   // for filter panel
   page: 'daPage',
   more: 'daMore',

@@ -21,6 +21,19 @@ export const setProps = (extraProps: Partial<SmartGridProps<any>>) => {
   Object.assign(GlobalProps, extraProps)
 }
 
+const GetLocale = ({setLocale}) => {
+  return (
+    <Receiver>
+      {
+        (locale) => {
+          setLocale(locale)
+          return null
+        }
+      }
+    </Receiver>
+  )
+}
+
 function SmartGrid<T>(props: SmartGridProps<T>): React.ReactElement {
   const {
     gridKey: originGridKey,
@@ -58,7 +71,8 @@ function SmartGrid<T>(props: SmartGridProps<T>): React.ReactElement {
     ...restProps
   } = Object.assign({}, GlobalProps, props);
 
-  const { columns, systemViews } = useMemo(() => formatSchema(schema, originGridKey), [schema]);
+  const [locale,setLocale] = useState(null)
+  const { columns, systemViews } = useMemo(() => formatSchema(schema, originGridKey,locale), [schema,locale]);
   const [baseView] = systemViews;
   const [gridKey, setGridKey] = useState(originGridKey);
   const [configModalVisible, setConfigModalVisible] = useState(false);
@@ -147,7 +161,7 @@ function SmartGrid<T>(props: SmartGridProps<T>): React.ReactElement {
     onViewChange && onViewChange(view);
     setLastViewKey(view.viewId);
   }, [originGridKey, lastViewKey, onViewChange]);
-  
+
   /** 保存自定义、共享视图 */
   const handlerSaveViews = useCallback((params) => {
     const { views, operateView, hideModal } = params;
@@ -337,6 +351,7 @@ function SmartGrid<T>(props: SmartGridProps<T>): React.ReactElement {
 
   return (
     <div className="gant-smart-table-wrapper" style={{ ...style, height }}>
+      <GetLocale setLocale={setLocale}/>
       {!hideHeader && <Header
         title={
           <div ref={titleRef}>
