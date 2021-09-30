@@ -653,6 +653,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
     },
     [selectedRows, onSelectedChanged],
   );
+
   
   const currentTreeData = useMemo(() => {
     if (!treeDataForcedFilter || !treeData) return treeData;
