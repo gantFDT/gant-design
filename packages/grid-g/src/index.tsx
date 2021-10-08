@@ -1,5 +1,7 @@
 import {
   CellEditingStoppedEvent,
+  ColDef,
+  ColGroupDef,
   ColumnApi,
   ColumnMovedEvent,
   ColumnResizedEvent,
@@ -14,11 +16,10 @@ import {
   RowSelectedEvent,
   SelectionChangedEvent,
   SuppressKeyboardEventParams,
-  
 } from '@ag-grid-community/core';
 import '@ag-grid-community/core/dist/styles/ag-grid.css';
 import '@ag-grid-community/core/dist/styles/ag-theme-balham.css';
-import { AgGridReact } from '@ag-grid-community/react';
+import { AgGridReact, AgGridColumn } from '@ag-grid-community/react';
 import { AllModules, LicenseManager } from '@ag-grid-enterprise/all-modules';
 import { Spin } from 'antd';
 import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
@@ -369,7 +370,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
 
   // 获取selected 数据
   const getAllSelectedRows = useCallback(selectedRows => {
-    const dataSource = gridManager.getRowData();
+    const dataSource = gridManager.agGridConfig.dataSource;
     const currentRows: string[] = [];
     const extraRows: any[] = [];
     selectedRows.map(itemRow => {
@@ -404,9 +405,19 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
     },
     [onSelect],
   );
+  const { selectedChangeRef } = selectedHooks({
+    gridVariable: gridVariableRef.current,
+    ready,
+    apiRef,
+    dataSource,
+    getRowNodeId,
+    selectedRows,
+    isSingle: rowSelection === 'single',
+  });
   const onSelectionChanged = useCallback(
     (event: SelectionChangedEvent) => {
       propsOnSelectionChanged && propsOnSelectionChanged(event);
+      // if (selectedChangeRef.current) return;
       if (gridVariableRef.current?.hasSelectedRows && rowSelection === 'multiple') {
         const rows = event.api.getSelectedRows();
         const { extraRows, currentRows } = getAllSelectedRows(
@@ -436,15 +447,6 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
     },
     [getAllSelectedRows, propsOnSelectionChanged, rowSelection],
   );
-  selectedHooks({
-    gridVariable: gridVariableRef.current,
-    ready,
-    apiRef,
-    dataSource,
-    getRowNodeId,
-    selectedRows,
-    isSingle: rowSelection === 'single',
-  });
 
   const handleRowClicked = useCallback(
     (event: RowClickedEvent) => {
@@ -503,7 +505,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
   // 处理selection-end
   //columns
   const defaultSelection = !isEmpty(gantSelection) && showDefalutCheckbox;
-  const { columnDefs, validateFields } = useMemo(() => {
+  const { columnDefs, validateFields ,requireds} = useMemo(() => {
     return mapColumns<T>(
       columns,
       getRowNodeId,
@@ -660,6 +662,23 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
     if (isEmpty(filterModelRef.current)) return true;
     return false;
   }, [forcedGridKey]);
+
+  const renderColumns = useCallback((columnDefs: (ColGroupDef | ColDef)[]) => {
+    return columnDefs.map((item, index) => {
+      if ((item as ColGroupDef).marryChildren)
+        return (
+          <AgGridColumn
+            {...item}
+            groupId={(item as any).field || index}
+            key={(item as any).field || index}
+          >
+            {renderColumns((item as any).children)}
+          </AgGridColumn>
+        );
+      return <AgGridColumn {...item} key={(item as any).field || index} />;
+    });
+  }, []);
+
   return (
     <LocaleReceiver>
       {(local, localeCode = 'zh-cn') => {
@@ -763,6 +782,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                         groupSelectsChildren,
                         ...context,
                         treeData: currentTreeData,
+                        requireds
                       }}
                       onFilterModified={onFilterModified}
                       suppressCsvExport
@@ -773,15 +793,15 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                       tooltipMouseTrack
                       excludeChildrenWhenTreeDataFiltering
                       {...selection}
-                      excelStyles={[{ id: 'stringType', dataType: 'string' }, ...excelStyles]}
+                      excelStyles={[{ id: 'stringType', dataType: 'String' }, ...excelStyles]}
                       immutableData
                       {...orignProps}
                       rowHeight={size == 'small' ? 24 : 32}
                       getDataPath={getDataPath}
                       
-                      columnDefs={localColumnsDefs}
+                      // columnDefs={localColumnsDefs}
                       gridOptions={{
-                        ...orignProps.gridOptions,
+                        ...orignProps?.gridOptions,
                       }}
                       isRowSelectable={onRowSelectable}
                       defaultColDef={{
@@ -789,7 +809,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                         sortable,
                         filter,
                         minWidth: 30,
-                        tooltipValueGetter: (params: any) => params,
+                        tooltipValueGetter: (params: any) => params.value,
                         headerCheckboxSelectionFilteredOnly: true,
                         tooltipComponent: 'gantTooltip',
                         headerComponentParams: {
@@ -821,7 +841,9 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                       onColumnMoved={onColumnsChange}
                       onColumnVisible={onColumnsChange}
                       onColumnResized={onColumnsChange}
-                    />
+                    >
+                      {renderColumns(localColumnsDefs)}
+                    </AgGridReact>
                   </div>
                   <GantGridFormToolPanelRenderer
                     columns={columns}

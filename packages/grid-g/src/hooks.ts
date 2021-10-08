@@ -49,14 +49,26 @@ export function selectedHooks(params: selectedHooksParams) {
     getRowNodeId,
     isSingle,
   } = params;
+  const selectedChangeRef = useRef(false);
+
   useEffect(() => {
     if (!gridVariable.hasSelectedRows || !ready || !apiRef.current) return;
+    selectedChangeRef.current = true;
     gridVariable.selectedRows = selectedRows;
     const selectedKeys = map(selectedRows, (item: any) => getRowNodeId(item));
     const gridKeys = map(apiRef.current?.getSelectedRows(), (item: any) => getRowNodeId(item));
-    if (isEqual(gridKeys, selectedKeys) || dataSource.length <= 0) return;
+    if (isEqual(gridKeys, selectedKeys) || dataSource.length <= 0) {
+      selectedChangeRef.current = false;
+      return;
+    }
     garidShowSelectedRows(selectedRows, apiRef, getRowNodeId, isSingle);
+    setTimeout(() => {
+      selectedChangeRef.current = false;
+    }, 100);
   }, [dataSource, ready, selectedRows]);
+  return {
+    selectedChangeRef
+  }
 }
 
 export function contextHooks(

@@ -9,7 +9,8 @@ import {
   RowNode,
   ValueFormatterParams,
 } from '@ag-grid-community/core';
-import { AgGridReactProps } from '@ag-grid-community/react';
+// import { AgGridReactProps } from '@ag-grid-community/react';
+import {AgGridReactProps} from '@ag-grid-community/react/lib/interfaces'
 import { PaginationProps } from 'antd/lib/pagination';
 import { RuleItem } from 'async-validator';
 import GridManager from './gridManager';

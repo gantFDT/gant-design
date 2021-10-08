@@ -6,6 +6,6 @@ export default memo(function GirdRenderColumnComponent(props: any) {
   }, [valueFormatted, value]);
   const renderContent = useMemo(() => {
     return typeof render == 'function' ? render(showValue, data, rowIndex, props) : showValue;
-  }, [showValue, data, rowIndex, props]);
+  }, [showValue, data, rowIndex]);
   return <>{renderContent}</>;
 });

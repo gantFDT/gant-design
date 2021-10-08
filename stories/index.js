@@ -32,9 +32,9 @@ const ComponentPage = (item,title,Component) => {
         <Radio.Button value="zh-cn">中文</Radio.Button>
         <Radio.Button value="en">English</Radio.Button>
       </Radio.Group>
-      <ConfigProvider localeCode={local}>
+      {/* <ConfigProvider localeCode={local}> */}
         <Component/>
-      </ConfigProvider>
+      {/* </ConfigProvider> */}
     </>
   );
 };
