@@ -505,7 +505,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
   // 处理selection-end
   //columns
   const defaultSelection = !isEmpty(gantSelection) && showDefalutCheckbox;
-  const { columnDefs, validateFields ,requireds} = useMemo(() => {
+  const { columnDefs, validateFields, requireds } = useMemo(() => {
     return mapColumns<T>(
       columns,
       getRowNodeId,
@@ -716,7 +716,9 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                   'gant-grid',
                   `gant-grid-${getSizeClassName(size)}`,
                   openEditSign && `gant-grid-edit`,
-                  (editable || (drawerMode && visibleDrawer)) && 'gant-grid-editable',
+                  (editable || (drawerMode && visibleDrawer)) &&
+                    openEditSign &&
+                    'gant-grid-editable',
                 )}
               >
                 <div
@@ -780,7 +782,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                         groupSelectsChildren,
                         ...context,
                         treeData: currentTreeData,
-                        requireds
+                        requireds,
                       }}
                       onFilterModified={onFilterModified}
                       suppressCsvExport
@@ -796,7 +798,6 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                       {...orignProps}
                       rowHeight={size == 'small' ? 24 : 32}
                       getDataPath={getDataPath}
-                      
                       // columnDefs={localColumnsDefs}
                       gridOptions={{
                         ...orignProps?.gridOptions,

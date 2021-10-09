@@ -26,6 +26,7 @@ export default props => {
   const refButton = useRef(null);
 
   const onMenuClicked = () => {
+    console.log('refButton');
     showColumnMenu(refButton.current);
   };
 
@@ -67,9 +68,12 @@ export default props => {
   let menu = null;
   if (enableMenu) {
     menu = (
-      <div ref={refButton} className="customHeaderMenuButton" onClick={() => onMenuClicked()}>
-        <Icon type="menu" />
-      </div>
+      <>
+        <div ref={refButton} />
+        <div className="customHeaderMenuButton" onClick={() => onMenuClicked()}>
+          <Icon type="menu" />
+        </div>
+      </>
     );
   }
 
@@ -91,10 +95,12 @@ export default props => {
   const sort = useMemo(() => {
     return (
       <div className="customHeaderSort" onClick={enableSorting ? handleSortChange : () => {}}>
-        {visibleSortNumber && sortIndex !== undefined && !noSort && <>{sortIndex + 1}</>}
+        {visibleSortNumber && sortIndex !== undefined && !noSort && (
+          <span style={{ verticalAlign: 'middle' }}>{sortIndex + 1}</span>
+        )}
         {/* {sortIndex} */}
-        {descSort && <Icon type="arrow-down" />}
-        {ascSort && <Icon type="arrow-up" />}
+        {descSort && <Icon type="sort-descending" />}
+        {ascSort && <Icon type="sort-ascending" />}
       </div>
     );
   }, [
@@ -110,7 +116,7 @@ export default props => {
 
   return (
     <>
-      <div className="customHeaderLabel">
+      <div className="customHeaderLabel" style={{ marginRight: 5 }}>
         {ColumnLabelComponent ? <ColumnLabelComponent title={displayName} /> : displayName}
       </div>
       {isFilterActive && (
