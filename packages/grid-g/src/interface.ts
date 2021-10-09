@@ -10,7 +10,7 @@ import {
   ValueFormatterParams,
 } from '@ag-grid-community/core';
 // import { AgGridReactProps } from '@ag-grid-community/react';
-import {AgGridReactProps} from '@ag-grid-community/react/lib/interfaces'
+import { AgGridReactProps } from '@ag-grid-community/react/lib/interfaces';
 import { PaginationProps } from 'antd/lib/pagination';
 import { RuleItem } from 'async-validator';
 import GridManager from './gridManager';
@@ -82,7 +82,24 @@ export type RowSelection = {
 type EditComponentProps = {
   // onChange: (value: any) => void
 };
-
+interface GantdRuleItem extends Omit<RuleItem, 'type'> {
+  type?:
+    | 'string'
+    | 'number'
+    | 'boolean'
+    | 'object'
+    | 'method'
+    | 'regexp'
+    | 'integer'
+    | 'float'
+    | 'array'
+    | 'enum'
+    | 'date'
+    | 'url'
+    | 'hex'
+    | 'email'
+    | 'any';
+}
 export type EditConfig<T> = {
   component: React.ComponentClass<EditComponentProps> | React.FunctionComponent<EditComponentProps>;
   /**是否开启编辑，当全局editable为true时生效 */
@@ -92,7 +109,7 @@ export type EditConfig<T> = {
   onCellChange?: (value: any, record: T, records: T[]) => void;
   refName?: string;
   valuePropName?: string;
-  rules?: RuleItem | RuleItem[];
+  rules?: GantdRuleItem | GantdRuleItem[];
   signable?: ColumnSignable;
   initValueFormatter?: (params: any) => any;
 };
