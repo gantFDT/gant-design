@@ -1,3 +1,3 @@
 export default {
-    required: 'is required',
+    required: 'Is Required',
 }

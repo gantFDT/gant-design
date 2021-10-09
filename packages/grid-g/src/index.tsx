@@ -87,6 +87,7 @@ export const defaultProps = {
   //默认开启编辑校验
   openEditSign: true,
 };
+
 export const defaultRowSelection: RowSelection = {
   type: 'multiple',
   // checkboxIndex: 0,

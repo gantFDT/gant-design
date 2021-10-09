@@ -11,7 +11,6 @@ if (
     'please use https://www.npmjs.com/package/babel-plugin-import to reduce app bundle size.',
   );
 }
-
 //其他
 //容器
 export { default as Anchor } from '@anchor';
