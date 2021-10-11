@@ -186,8 +186,8 @@ export function getAllChildrenNode(
     nextLevel = nextLevel.toString();
     groupNodes[nextLevel] = groupNodes[nextLevel] ? groupNodes[nextLevel] : [];
     list.map(itemNode => {
-      const { childrenAfterFilter = [] } = itemNode;
-      groupNodes[nextLevel].push(...childrenAfterFilter);
+      const { childrenAfterGroup = [] } = itemNode as RowNode;
+      groupNodes[nextLevel].push(...childrenAfterGroup);
       return itemNode.data;
     });
     groupNodes[nextLevel] = uniqBy(groupNodes[nextLevel], 'id');

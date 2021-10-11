@@ -68,13 +68,15 @@ export default memo(
     const renderIcon = useMemo(() => {
       if (typeof customIcon === 'function') return customIcon(data);
       if (!customIcon) return null;
-      return customIcon
+      return customIcon;
     }, []);
     const onExpend = useCallback((event: MouseEvent) => {
       stopPropagationForAgGrid(event);
-      if (node.childrenAfterFilter && node.childrenAfterFilter.length > 0) {
+      if (node.childrenAfterGroup && node.childrenAfterGroup.length > 0) {
         // setState(state => ({ ...state, expanded: true }));
-        return node.setExpanded(true);
+        if (node.childrenAfterFilter && node.childrenAfterFilter.length > 0)
+          return node.setExpanded(true);
+        return;
       }
       api.showLoadingOverlay();
       serverDataRequest(props, getDataPath(data), () => {
