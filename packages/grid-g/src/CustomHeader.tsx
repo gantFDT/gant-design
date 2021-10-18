@@ -98,8 +98,12 @@ export default props => {
           <span style={{ verticalAlign: 'middle' }}>{sortIndex + 1}</span>
         )}
         {/* {sortIndex} */}
-        {descSort && <Icon type="sort-descending" />}
-        {ascSort && <Icon type="sort-ascending" />}
+        {!noSort && (
+          <>
+            {descSort && <Icon type="sort-descending" />}
+            {ascSort && <Icon type="sort-ascending" />}
+          </>
+        )}
       </div>
     );
   }, [
