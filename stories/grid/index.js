@@ -1,4 +1,4 @@
-import { Input } from '@data-cell';
+import { Input } from 'antd';
 import Grid from '@grid';
 import { filterDateComparator, setGridConfig } from '@grid';
 import Header from '@header';
@@ -9,7 +9,14 @@ import React, { Fragment, useCallback, useEffect, useRef, useState, useMemo } fr
 import CodeDecorator from '../_util/CodeDecorator';
 import codes from './code';
 import moment from 'moment';
-
+class PartNumberFilter extends React.PureComponent{
+  componentDidMount(){
+    console.log('---->componentDidMount')
+  }
+render(){
+  return <Input  />
+}
+}
 setGridConfig({ gantDateComponent: true });
 /*! Split !*/
 const RandomCreate = () => {
@@ -155,7 +162,12 @@ const basicColumns = [
     title: '年龄',
     filter: 'agNumberColumnFilter',
     initialSort: 'asc',
+    headerComponent: 'partNumberFilter',
     sortIndex: 2,
+    render: () => {
+      console.log('--->', 1);
+      return 1111;
+    },
   },
   {
     fieldName: 'group',
@@ -225,6 +237,7 @@ const BaiscGrid = () => {
   const [selectedKeys, setselectedKeys] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
   const [columns, setColumns] = useState(basicColumns);
+  const [test, setTest] = useState('');
   const [drawerEditable, setDrawerEditable] = useState(false);
   const apiRef = useRef();
   const gridManagerRef = useRef();
@@ -320,13 +333,14 @@ const BaiscGrid = () => {
 
   return (
     <Fragment>
+      {test}
       <Header
         extra={
           <Fragment>
             <Button
               size="small"
               onClick={() => {
-                setSelectedRows([...mockData.slice(0, 10)]);
+                setTest(te => te + 1);
               }}
             >
               切换模式
@@ -382,21 +396,11 @@ const BaiscGrid = () => {
         serialNumber
         boxColumnIndex={['name', 'county', 'age']}
         rowSelection={{
-          // selectedRows,
-          onSelect: (keys, rows) => {
-            setSelectedRows(rows);
-            console.log('--->', rows);
-          },
+          selectedRows,
+          onSelect: onSelect,
         }}
         treeData
-        // autoHeight
-        // maxAutoHeight={1000}
-        // minAutoHeight={200}
-        // treeDataForcedFilter
-        // treeDataParentName="parentId"
         excludeChildrenWhenTreeDataFiltering
-        gridKey="grid-test-2"
-        // hideSelectedBox
         rowBuffer={1}
         groupSuppressAutoColumn
         editChangeCallback={onEditChangeCallback}
@@ -429,6 +433,7 @@ const BaiscGrid = () => {
         }}
         frameworkComponents={{
           medalCellRenderer: MedalCellRenderer,
+          partNumberFilter: PartNumberFilter,
         }}
         getContextMenuItems={getContextMenuItems}
         hiddenMenuItemNames={['进入编辑', '结束编辑']}
@@ -436,6 +441,9 @@ const BaiscGrid = () => {
         // defaultExportJsonParams={{
         //   title: '基本数据',
         // }}
+        context={{
+          test,
+        }}
       />
     </Fragment>
   );

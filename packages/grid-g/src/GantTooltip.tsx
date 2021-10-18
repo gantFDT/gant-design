@@ -43,7 +43,7 @@ export default forwardRef((props: any, ref) => {
   const render = get(props, 'colDef.cellRendererParams.render');
 
   if (render) {
-    renderOverflow = render(value, data, rowIndex, params);
+    renderOverflow = !isEmpty(data) && value ? render(value, data, rowIndex, params) : value;
   }
 
   useImperativeHandle(ref, () => {

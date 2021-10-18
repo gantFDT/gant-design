@@ -248,12 +248,12 @@ function SmartGrid<T>(props: SmartGridProps<T>): React.ReactElement {
     handlerSaveConfig(activeView)
   }, [activeView])
 
-  const [finalColumns] = useTableConfig({
+  const [finalColumns] = useMemo(() => useTableConfig({
     tableConfig: panelConfig,
     columns,
 
     tableKey: originGridKey,
-  });
+  }), [originGridKey,panelConfig,columns]);
 
   // 动态列修改用户自定义视图
   useEffect(() => {

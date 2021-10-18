@@ -572,15 +572,15 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
       gridManager.agGridColumnApi = params.columnApi;
       onReady && onReady(params, gridManager);
       setReady(true);
-      if (filterModelRef.current && treeDataForcedFilter) {
-        params.api.setRowData(get(gridManager, 'agGridConfig.dataSource', []));
-        params.api.setFilterModel(filterModelRef.current);
-        // params.api.ensureColumnVisible(columnIdRef?.current);
-        // const {lef} = get(columnIdRef, 'current',{});
-        gridRef.current?.eGridDiv
-          .querySelector('.ag-center-cols-viewport')
-          ?.scrollTo(columnIdRef.current, 0);
-      }
+      // if (filterModelRef.current && treeDataForcedFilter) {
+      //   params.api.setRowData(get(gridManager, 'agGridConfig.dataSource', []));
+      //   params.api.setFilterModel(filterModelRef.current);
+      //   // params.api.ensureColumnVisible(columnIdRef?.current);
+      //   // const {lef} = get(columnIdRef, 'current',{});
+      //   gridRef.current?.eGridDiv
+      //     .querySelector('.ag-center-cols-viewport')
+      //     ?.scrollTo(columnIdRef.current, 0);
+      // }
       // gridManager.dataSourceChanged(dataSource);
     },
     [onReady, gridKey, dataSource],
@@ -656,7 +656,6 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
     [selectedRows, onSelectedChanged],
   );
 
-  
   const currentTreeData = useMemo(() => {
     if (!treeDataForcedFilter || !treeData) return treeData;
     if (isEmpty(filterModelRef.current)) return true;
@@ -665,23 +664,20 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
 
   const renderColumns = useCallback((columnDefs: (ColGroupDef | ColDef)[]) => {
     return columnDefs.map((item, index) => {
+      const props: any = { key: (item as any).field || index };
       if ((item as ColGroupDef).marryChildren)
         return (
-          <AgGridColumn
-            {...item}
-            groupId={(item as any).field || index}
-            key={(item as any).field || index}
-          >
+          <AgGridColumn {...item} {...props} groupId={(item as any).field || index}>
             {renderColumns((item as any).children)}
           </AgGridColumn>
         );
-      return <AgGridColumn {...item} key={(item as any).field || index} />;
+      return <AgGridColumn {...item}  {...props}/>;
     });
   }, []);
 
   return (
-    <LocaleReceiver>
-      {(local, localeCode = 'zh-cn') => {
+    <LocaleReceiver
+      children={(local, localeCode = 'zh-cn') => {
         let lang = langs[localeCode] || langs['zh-cn'];
         const locale = { ...lang, ...customLocale };
         const contextMenuItems = function(params: GetContextMenuItemsParams) {
@@ -758,7 +754,6 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                         ...frameworkComponentsMaps,
                         ...frameworkComponents,
                       }}
-                      ref={gridRef}
                       components={{
                         ...componentsMaps,
                         ...components,
@@ -868,7 +863,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
           </Spin>
         );
       }}
-    </LocaleReceiver>
+    ></LocaleReceiver>
   );
 };
 

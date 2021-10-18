@@ -16,15 +16,6 @@ interface GantGroupCellRendererState {
   hasChildren: boolean;
 }
 
-function rowIndexChanged(params) {
-  const node = params.node;
-  node.gridApi.refreshCells({
-    columns: ['g-index'],
-    rowNodes: [node],
-    force: true,
-  });
-}
-
 export default memo(
   forwardRef(function GantGroupCellRendererCompoent(props: GantGroupCellRendererProps, ref: any) {
     const {
@@ -69,6 +60,14 @@ export default memo(
       if (typeof customIcon === 'function') return customIcon(data);
       if (!customIcon) return null;
       return customIcon;
+    }, []);
+
+    const rowIndexChanged = useCallback(params => {
+      api.refreshCells({
+        columns: ['g-index'],
+        rowNodes: [node],
+        force: true,
+      });
     }, []);
     const onExpend = useCallback((event: MouseEvent) => {
       stopPropagationForAgGrid(event);

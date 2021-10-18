@@ -26,7 +26,6 @@ export default props => {
   const refButton = useRef(null);
 
   const onMenuClicked = () => {
-    console.log('refButton');
     showColumnMenu(refButton.current);
   };
 
