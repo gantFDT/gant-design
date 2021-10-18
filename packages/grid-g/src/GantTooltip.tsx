@@ -39,7 +39,7 @@ export default forwardRef((props: any, ref) => {
   const [showTip, setTipShow] = useState(false);
   const actualColumnWidth = get(columnApi.getColumn(field), 'actualWidth', 0);
   //获取要显示的内容内容
-  let renderOverflow = value;
+  let renderOverflow = String(value);
   const render = get(props, 'colDef.cellRendererParams.render');
 
   if (render) {
