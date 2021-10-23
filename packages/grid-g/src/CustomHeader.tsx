@@ -29,18 +29,14 @@ export default props => {
     showColumnMenu(refButton.current);
   };
 
-  useEffect(() => {
-    onSortChanged();
-  }, []);
-
   const onSortChanged = () => {
     let stateColumns = columnApi.getColumnState();
-    let filterColumns = stateColumns.filter(item => item.sort);
-    filterColumns = filterColumns.sort((a, b) => {
+    let sortColumns = stateColumns.filter(item => item.sort);
+    sortColumns = sortColumns.sort((a, b) => {
       return a.sortIndex - b.sortIndex;
     });
-    setVisibleSortNumber(filterColumns.length > 1);
-    setSortIndex(findIndex(filterColumns, { colId: column.colId }));
+    setVisibleSortNumber(sortColumns.length > 1);
+    setSortIndex(findIndex(sortColumns, { colId: column.colId }));
     setSortCount(sortInfo.length);
     setAscSort(column.isSortAscending());
     setDescSort(column.isSortDescending());
@@ -48,7 +44,8 @@ export default props => {
   };
 
   const filterChanged = () => {
-    setIsFilterActive(column.isFilterActive());
+    const isActive = column.isFilterActive();
+    setIsFilterActive(isActive);
   };
 
   const onSortRequested = (order, event) => {
@@ -62,6 +59,10 @@ export default props => {
       api.removeEventListener('sortChanged', onSortChanged);
       column.removeEventListener('filterChanged', filterChanged);
     };
+  }, []);
+
+  useEffect(() => {
+    onSortChanged();
   }, []);
 
   let menu = null;
@@ -117,16 +118,23 @@ export default props => {
     visibleSortNumber,
   ]);
 
+  const filter = useMemo(() => {
+    if (isFilterActive) {
+      return (
+        <div className="customHeaderFilter">
+          <Icon type="filter" />
+        </div>
+      );
+    }
+    return null;
+  }, [isFilterActive]);
+
   return (
     <>
       <div className="customHeaderLabel" style={{ marginRight: 5 }}>
         {ColumnLabelComponent ? <ColumnLabelComponent title={displayName} /> : displayName}
       </div>
-      {isFilterActive && (
-        <div className="customHeaderFilter">
-          <Icon type="filter" />
-        </div>
-      )}
+      {filter}
       {sort}
       {menu}
     </>
