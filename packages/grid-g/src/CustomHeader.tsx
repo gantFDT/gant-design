@@ -101,8 +101,8 @@ export default props => {
         {/* {sortIndex} */}
         {!noSort && (
           <>
-            {descSort && <Icon type="sort-descending" />}
-            {ascSort && <Icon type="sort-ascending" />}
+            {ascSort && <Icon type="sort-descending" />}
+            {descSort && <Icon type="sort-ascending" />}
           </>
         )}
       </div>
