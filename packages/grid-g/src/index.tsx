@@ -671,7 +671,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
             {renderColumns((item as any).children)}
           </AgGridColumn>
         );
-      return <AgGridColumn {...item}  {...props}/>;
+      return <AgGridColumn {...item} {...props} />;
     });
   }, []);
 
@@ -869,4 +869,5 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
 
 Grid.defaultProps = defaultProps;
 Grid.LicenseManager = LicenseManager;
+
 export default Grid;
