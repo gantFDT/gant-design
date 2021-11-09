@@ -34,7 +34,7 @@ const transformData = ($code, level = 1) => Object.entries(json[$code]).map(([co
 })
 
 // 获取位置的名称列表
-const getLocationNameList = locationList => {
+export const getLocationNameList = locationList => {
   const nameList = []
   const country = json.COUNTRIES
   if (locationList && locationList.length) {
@@ -55,7 +55,7 @@ const getLocationNameList = locationList => {
 }
 
 // 获取地址的展示值
-const getValue = ({ value }) => {
+export const getValue = ({ value }) => {
   const msg = getLocationNameList(value)
   return msg.join(' / ')
 }

@@ -33,7 +33,7 @@ const GantIcon = (props: GantIconProps) => {
             }
             return <Icon {...props} type={props.type} />;
         }
-        return props.type;
+        return <></>;
     }, [props.type, RenderIcon])
     return icon
 }
