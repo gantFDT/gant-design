@@ -21,8 +21,8 @@
   "author": "GantFDT",
   "license": "MIT",
   "dependencies": {
-    "@ag-grid-community/react": "24.0.0",
-    "@ag-grid-enterprise/all-modules": "24.0.0",
+    "@ag-grid-community/react": "26.0.0",
+    "@ag-grid-enterprise/all-modules": "26.0.0",
     "antd": "^3.26.5",
     "async-validate": "^1.0.1",
     "classnames": "^2.2.6",
