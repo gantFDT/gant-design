@@ -1,6 +1,6 @@
 {
   "name": "gantd",
-  "version": "1.1.210",
+  "version": "1.1.211",
   "description": "GantD base on antD",
   "author": "Gant FDT",
   "license": "MIT",
@@ -140,7 +140,7 @@
     "react-sortable-hoc": "^1.9.1",
     "recompose": "^0.30.0",
     "schema-form-g": "^0.1.85",
-    "smart-grid-g": "^0.1.194",
+    "smart-grid-g": "^0.1.195",
     "smart-table-g": "^0.1.92",
     "submenu-g": "^0.1.25",
     "table-g": "^0.1.43",
