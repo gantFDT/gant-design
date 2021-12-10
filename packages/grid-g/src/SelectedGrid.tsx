@@ -104,7 +104,7 @@ export default memo(function SelectedGrid(props: SelectedGridProps) {
     <div className="gant-grid-selected-wrapper">
       {rowData.length > 0 ? (
         <Popover content={overSelectedContet} placement="topRight">
-          <Badge count={rowData.length}>
+          <Badge count={rowData.length} overflowCount={1000000}>
             <div className="gant-grid-selected-box">
               <Icon type="inbox" />
             </div>
