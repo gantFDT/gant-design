@@ -16,7 +16,6 @@ interface ContextMenuItemsConfig {
   suppressRightClickSelected?: boolean;
   showCutChild?: boolean;
 }
-
 export const gantGetcontextMenuItems = function(
   params: GetContextMenuItemsParams,
   config: ContextMenuItemsConfig,
