@@ -72,6 +72,7 @@ const defaultprop = {
   onDropdownVisibleChange: _ => _,
   blurOnSelect: false,
   wrap: false,
+  historyLength:3, //最多显示多少条最近选择
 };
 
 type NArray<T> = T | T[];
@@ -127,6 +128,7 @@ type SelectorInnerProps<T, R> = ProtoExtends<
     storageToReal: <T>(v: T) => T;
     isMultiple: boolean;
     wrapperRef?: any;
+    historyLength?:number;
   }
 >;
 
@@ -334,6 +336,7 @@ const withSelector = compose(
       valueProp,
       setStorageList,
       useStorage,
+      historyLength
     }) => (data, update) => {
       if (!useStorage) return; // 不启用缓存
       let copyList = cloneDeep(storageList);
@@ -347,11 +350,11 @@ const withSelector = compose(
           if (!existed) {
             // 新增最近被选择的数据
             if (valueProp && isPlainObject(item)) {
-              copyList.push({ ...item, [valueProp]: id });
+              copyList.unshift({ ...item, [valueProp]: id });
             } else {
-              copyList.push(id);
+              copyList.unshift(id);
             }
-            copyList.slice(-5); // 保留最近5条
+            copyList = copyList.slice(0,historyLength); // 保留最近?条
           }
         }
         if (isUpdate) {
