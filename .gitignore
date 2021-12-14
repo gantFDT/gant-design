@@ -13,6 +13,5 @@ lib
 link
 package-lock.json
 .idea/
-.vscode
 yarn.lock
 *.bak
