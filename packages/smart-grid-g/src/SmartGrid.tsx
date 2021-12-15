@@ -323,7 +323,8 @@ function SmartGrid<T>(props: SmartGridProps<T>): React.ReactElement {
             </Tooltip>
           </>
         }
-        getPopupContainer={() => titleRef.current || document.body}
+        // getPopupContainer={() => titleRef.current || document.body}
+        getPopupContainer={() => document.body}
       />}
     </Receiver>
   ), [activeView, customViews, companyViews, systemViews, titleRef, title, userId]);
