@@ -20,7 +20,6 @@ const langs = {
 export default (props: Props) => {
     return <LocaleReceiver>
         {(local, localeCode = 'zh-cn') => {
-            console.log('localeCode',localeCode)
             let locale = langs[localeCode] || langs['zh-cn']
             return <>{props.children(locale)}</>
         }}
