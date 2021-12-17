@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback, ReactNode, useEffect, useRef } from 'react';
 import { Tooltip, Button } from 'antd';
 import moment from 'moment';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, debounce } from 'lodash';
 import Grid from '@grid';
 import ConfigModal from './config';
 import { SmartGridType, SmartGridProps, ViewConfig } from './interface';
@@ -218,7 +218,7 @@ function SmartGrid<T>(props: SmartGridProps<T>): React.ReactElement {
     setConfigModalVisible(false);
   }, [customViews, companyViews, userId]);
 
-  const handleSync = useCallback(() => {
+  const handleSync = useCallback(debounce(() => {
     const columnFieldsMap = activeView.panelConfig.columnFields.reduce((memo, columnField) => ({
       ...memo,
       [columnField.fieldName]: columnField
@@ -246,7 +246,7 @@ function SmartGrid<T>(props: SmartGridProps<T>): React.ReactElement {
     }))
 
     handlerSaveConfig(activeView)
-  }, [activeView])
+  }, 250), [activeView])
 
   const [finalColumns] = useMemo(() => useTableConfig({
     tableConfig: panelConfig,
@@ -323,7 +323,8 @@ function SmartGrid<T>(props: SmartGridProps<T>): React.ReactElement {
             </Tooltip>
           </>
         }
-        getPopupContainer={() => titleRef.current || document.body}
+        // getPopupContainer={() => titleRef.current || document.body}
+        getPopupContainer={() => document.body}
       />}
     </Receiver>
   ), [activeView, customViews, companyViews, systemViews, titleRef, title, userId]);

@@ -1,0 +1,80 @@
+{
+  // 有关 tasks.json 格式的文档，请参见
+  // https://go.microsoft.com/Fwlink/?LinkId=733558
+  "version": "2.0.0",
+  "options": {
+    "cwd": "${workspaceFolder}"
+  },
+  "tasks": [
+    //F4
+    {
+      "type": "shell",
+      "command": "git pull",
+      "label": "F4",
+      "problemMatcher": []
+    },
+    //F5
+    {
+      "type": "shell",
+      "command": "git add .",
+      "label": "F5",
+      "problemMatcher": []
+    },
+    //F6
+    {
+      "type": "shell",
+      "command": "git push",
+      "label": "F6",
+      "problemMatcher": []
+    },
+    //F8
+    {
+      "type": "shell",
+      "command": "npm start",
+      "label": "F8",
+      "problemMatcher": []
+    },
+    //F9
+    {
+      "type": "shell",
+      "command": "npm run build",
+      "label": "F9",
+      "problemMatcher": []
+    },
+    //F10
+    {
+      "type": "shell",
+      "command": "npm run pub",
+      "label": "F10",
+      "problemMatcher": []
+    },
+    //F11
+    {
+      "type": "shell",
+      "command": "git merge feature-0-dev",
+      "label": "F11",
+      "problemMatcher": []
+    },
+    //F12
+    {
+      "type": "shell",
+      "command": "",
+      "label": "F12",
+      "problemMatcher": []
+    },
+    //shift+F11 
+    {
+      "type": "shell",
+      "command": "cnpm i",
+      "label": "shift+F11",
+      "problemMatcher": []
+    },
+    //shift+F12 
+    {
+      "type": "shell",
+      "command": "rm -rf node_modules",
+      "label": "shift+F12",
+      "problemMatcher": []
+    },
+  ]
+}

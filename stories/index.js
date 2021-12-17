@@ -9,7 +9,7 @@ const ComponentPage = (item,title,Component) => {
   const handleSizeChange = e => {
     setLocal(e.target.value);
   };
-	console.log('local',local)
+
   return (
     <>
       {!item.home && (
@@ -28,10 +28,10 @@ const ComponentPage = (item,title,Component) => {
           {item.package && <Tag style={{ marginLeft: '10px' }}>npm i {item.package} -S</Tag>}
         </div>
       )}
-      <Radio.Group value={local} onChange={handleSizeChange} size="small">
+      {/* <Radio.Group value={local} onChange={handleSizeChange} size="small">
         <Radio.Button value="zh-cn">中文</Radio.Button>
         <Radio.Button value="en">English</Radio.Button>
-      </Radio.Group>
+      </Radio.Group> */}
       {/* <ConfigProvider localeCode={local}> */}
         <Component/>
       {/* </ConfigProvider> */}
