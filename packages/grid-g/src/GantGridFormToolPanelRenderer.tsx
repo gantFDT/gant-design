@@ -15,7 +15,7 @@ interface GantGridRowFormRendererProps {
   visible?: boolean;
   closeDrawer: () => void;
   onCellEditChange?: (record: any, fieldName: string, newValue: any, oldValue: any) => any;
-  onCellEditingChange?: (record: any, fieldName: string, newValue: any, oldValue: any) => any;
+  onCellEditingChange?: (record: any, fieldName: string, newValue: any, oldValue: any,params?:any) => any;
   customDrawerContent?: (params: any) => any;
 }
 

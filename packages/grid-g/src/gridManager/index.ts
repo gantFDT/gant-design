@@ -109,7 +109,8 @@ export default class GridManage {
   async validate(data?: any[]) {
     const { getRowNodeId } = this.agGridConfig;
     const { add, modify } = this.diff;
-    let source = isEmpty(data) ? [...add, ...modify] : data;
+    let initsource = isEmpty(data) ? [...add, ...modify] : data;
+    let source=cloneDeep(initsource);
     const fields: any = {};
     const validateFields: Rules = cloneDeep(this.validateFields);
     source = source.map((item, index) => {
@@ -135,7 +136,7 @@ export default class GridManage {
     let schema = new Schema(descriptor);
     try {
       await schema.validate({ source });
-      this.errorSign({}, source);
+      this.errorSign({}, initsource);
       return null;
     } catch (err) {
       const { errors } = err;
@@ -161,7 +162,7 @@ export default class GridManage {
         }
       });
       if (isEmpty(validateErros)) return;
-      this.errorSign(validateErros, source);
+      this.errorSign(validateErros, initsource);
       return validateErros;
     }
   }

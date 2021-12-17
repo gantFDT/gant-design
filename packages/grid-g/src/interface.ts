@@ -216,7 +216,7 @@ export interface Props<T extends any> {
   isCompute?: boolean;
   multiLineVerify: boolean;
   onCellEditChange?: (record: any, fieldName: string, newValue: any, oldValue: any) => any;
-  onCellEditingChange?: (record: any, fieldName: string, newValue: any, oldValue: any) => any;
+  onCellEditingChange?: (record: any, fieldName: string, newValue: any, oldValue: any,params:any) => any;
   onCellChanged?: (record: any, fieldName: string, newValue: any, oldValue: any) => void;
   openEditSign?: boolean;
   createConfig?: CreateConfig;

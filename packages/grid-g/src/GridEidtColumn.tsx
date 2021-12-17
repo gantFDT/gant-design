@@ -52,11 +52,14 @@ export default WrapperComponent =>
       return fieldProps;
     }, [fieldProps, node.data, props]);
     const handleCellEditingChange = useCallback(
-      async (chageVal, editData) => {
+      async (chageVal, editData, ...ags) => {
         gridManager.loading = true;
         let res = editData;
         if (onCellEditingChange) {
-          res = await onCellEditingChange(editData, field, chageVal, value);
+          res = await onCellEditingChange(editData, field, chageVal, value, {
+            context: props.context,
+            extra: ags,
+          });
           res = Array.isArray(res) ? res : [res];
           const resIndex = findIndex(res, function(item) {
             return getRowNodeId(item) === getRowNodeId(data);
@@ -80,17 +83,17 @@ export default WrapperComponent =>
         typeof onCellChanged == 'function' && onCellChanged(editData, field, chageVal, value);
         gridManager.loading = false;
       },
-      [onCellEditingChange, onCellChanged],
+      [onCellEditingChange, onCellChanged, props.context],
     );
     const onChange = useCallback(
-      async (val: any) => {
+      async (val: any, ...ags) => {
         let chageVal = val;
         let { data } = node;
         data = cloneDeep(data);
-        if (typeof changeFormatter === 'function') chageVal = changeFormatter(val, data);
+        if (typeof changeFormatter === 'function') chageVal = changeFormatter(val, data, ...ags);
         const editData = set(data, field, chageVal);
         setNewValue(chageVal);
-        handleCellEditingChange(chageVal, editData);
+        handleCellEditingChange(chageVal, editData, ...ags);
       },
       [changeFormatter, field, node, handleCellEditingChange],
     );
@@ -100,12 +103,14 @@ export default WrapperComponent =>
         set(editData, `${field}`, newValue);
         if (onCellEditChange) {
           gridManager.loading = true;
-          const res = await onCellEditChange(editData, field, newValue, value);
+          const res = await onCellEditChange(editData, field, newValue, value, {
+            context: props.context,
+          });
           await gridManager.modify(res, [data]);
           typeof onCellChanged == 'function' && onCellChanged(editData, field, newValue, value);
         }
       },
-      [node, field, data, onCellEditChange],
+      [node, field, data, onCellEditChange, props.context],
     );
     const onBlur = useCallback(
       (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {

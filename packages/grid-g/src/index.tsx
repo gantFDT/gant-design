@@ -355,7 +355,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
     });
   }, []);
   useEffect(() => {
-    gridManager.dataSourceChanged(dataSource);
+    if (ready) gridManager.dataSourceChanged(dataSource);
   }, [dataSource, ready]);
   const serverDataCallback = useCallback((groupKeys, successCallback) => {
     return rows => {
@@ -671,7 +671,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
             {renderColumns((item as any).children)}
           </AgGridColumn>
         );
-      return <AgGridColumn {...item}  {...props}/>;
+      return <AgGridColumn {...item} {...props} />;
     });
   }, []);
 
@@ -811,6 +811,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                         headerComponentParams: {
                           ColumnLabelComponent,
                         },
+                        cellClass: 'stringType',
                         ...defaultColDef,
                         filterParams: {
                           buttons: ['reset'],

@@ -217,7 +217,7 @@ export const mapColumns = <T>(
           fixed,
           headerClass,
           cellClassRules,
-          cellClass = 'stringType',
+          cellClass,
           cellRendererParams,
           ...item
         },

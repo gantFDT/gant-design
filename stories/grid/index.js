@@ -9,25 +9,12 @@ import React, { Fragment, useCallback, useEffect, useRef, useState, useMemo } fr
 import CodeDecorator from '../_util/CodeDecorator';
 import codes from './code';
 import moment from 'moment';
-class PartNumberFilter extends React.PureComponent{
-  componentDidMount(){
-    console.log('---->componentDidMount')
-  }
-render(){
-  return <Input  />
-}
-}
 setGridConfig({ gantDateComponent: true });
 /*! Split !*/
 const RandomCreate = () => {
   const ip = Random.ip();
   return {
     ip: ip,
-    name: Random.name(),
-    age: Random.natural(2, 40),
-    county: Random.county(true),
-    date: Random.date('yyyy-MM-dd'),
-    path: ['1', ip],
   };
 };
 // function Test() {
@@ -44,83 +31,8 @@ const testTreeDataSource = [
   {
     ip: '1',
     name: '',
-    age: Random.natural(2, 40),
-    county: Random.county(true),
-    date: Random.date('yyyy-MM-dd'),
-    path: ['1'],
+    test: {},
   },
-  {
-    ip: '1-1',
-    name: Random.name(),
-    age: Random.natural(2, 40),
-    county: Random.county(true),
-    date: Random.date('yyyy-MM-dd'),
-    path: ['1', '1-1'],
-    parentId: '1',
-  },
-  {
-    ip: '1-2',
-    name: Random.name(),
-    age: Random.natural(2, 40),
-    county: Random.county(true),
-    date: Random.date('yyyy-MM-dd'),
-    path: ['1', '1-2'],
-    parentId: '1',
-  },
-  {
-    ip: '2',
-    name: Random.name(),
-    age: Random.natural(2, 40),
-    county: Random.county(true),
-    date: Random.date('yyyy-MM-dd'),
-    path: ['2'],
-  },
-  {
-    ip: '2-1',
-    name: Random.name(),
-    age: Random.natural(2, 40),
-    county: Random.county(true),
-    date: Random.date('yyyy-MM-dd'),
-    path: ['2', '2-1'],
-    parentId: '2',
-  },
-  {
-    ip: '2-1-1',
-    name: Random.name(),
-    age: Random.natural(2, 40),
-    county: Random.county(true),
-    date: Random.date('yyyy-MM-dd'),
-    path: ['2', '2-1', '2-1-1'],
-    parentId: '2-1',
-  },
-  {
-    ip: '2-1-2',
-    name: Random.name(),
-    age: Random.natural(2, 40),
-    county: Random.county(true),
-    date: Random.date('yyyy-MM-dd'),
-    path: ['2', '2-1', '2-1-2'],
-    parentId: '2-1',
-  },
-  {
-    ip: '2-2',
-    name: Random.name(),
-    age: Random.natural(2, 40),
-    county: Random.county(true),
-    date: Random.date('yyyy-MM-dd'),
-    path: ['2', '2-2'],
-    parentId: '2',
-  },
-  {
-    ip: '2-3',
-    name: Random.name(),
-    age: Random.natural(2, 40),
-    county: Random.county(true),
-    date: Random.date('yyyy-MM-dd'),
-    path: ['2', '2-3'],
-    parentId: '2',
-  },
-  ...mockData,
 ];
 
 const basicColumns = [
@@ -137,7 +49,7 @@ const basicColumns = [
     sortIndex: 1,
     editConfig: {
       component: props => {
-        return <Input {...props} />;
+        return <Input {...props} onChange={e => props.onChange(e.target.value, 'test')} />;
       },
       props: record => {
         return { record };
@@ -158,63 +70,22 @@ const basicColumns = [
     },
   },
   {
-    fieldName: 'age',
-    title: '年龄',
-    filter: 'agNumberColumnFilter',
-    initialSort: 'asc',
-    headerComponent: 'partNumberFilter',
-    sortIndex: 2,
-    render: () => {
-      console.log('--->', 1);
-      return 1111;
+    fieldName: 'test.name',
+    title: '姓名2',
+    sortIndex: 1,
+    editConfig: {
+      component: props => {
+        return <Input {...props} onChange={e => props.onChange(e.target.value, 'test')} />;
+      },
+      editable: true,
+      signable: true,
+      rules: [
+        {
+          required: true,
+          message: '姓名不能为空',
+        },
+      ],
     },
-  },
-  {
-    fieldName: 'group',
-    title: '分组',
-    children: [
-      {
-        fieldName: 'date',
-        title: '时间',
-        render: value => value,
-        // cellRenderer:"medalCellRenderer"
-      },
-      {
-        fieldName: 'county',
-        title: '国家',
-        // filter: 'agTextColumnFilter',
-        render: value => value,
-        // cellRenderer:"medalCellRenderer"
-      },
-    ],
-  },
-  {
-    fieldName: 'county',
-    title: '国家',
-    // filter: 'agTextColumnFilter',
-    render: value => value,
-    // cellRenderer:"medalCellRenderer"
-  },
-  {
-    fieldName: 'county',
-    title: '国家',
-    // filter: 'agTextColumnFilter',
-    render: value => value,
-    // cellRenderer:"medalCellRenderer"
-  },
-  {
-    fieldName: 'county',
-    title: '国家',
-    // filter: 'agTextColumnFilter',
-    render: value => value,
-    // cellRenderer:"medalCellRenderer"
-  },
-  {
-    fieldName: 'county',
-    title: '国家',
-    // filter: 'agTextColumnFilter',
-    render: value => value,
-    // cellRenderer:"medalCellRenderer"
   },
 ];
 
@@ -331,6 +202,11 @@ const BaiscGrid = () => {
     ];
   }, []);
 
+  const onCellEditingChange = useCallback((record, fieldName, newValue, oldValue, params) => {
+    console.log('---->', record, fieldName, newValue, oldValue, params);
+    return record;
+  }, []);
+
   return (
     <Fragment>
       {test}
@@ -399,7 +275,8 @@ const BaiscGrid = () => {
           selectedRows,
           onSelect: onSelect,
         }}
-        treeData
+        // treeData
+        onCellEditingChange={onCellEditingChange}
         excludeChildrenWhenTreeDataFiltering
         rowBuffer={1}
         groupSuppressAutoColumn
@@ -433,7 +310,6 @@ const BaiscGrid = () => {
         }}
         frameworkComponents={{
           medalCellRenderer: MedalCellRenderer,
-          partNumberFilter: PartNumberFilter,
         }}
         getContextMenuItems={getContextMenuItems}
         hiddenMenuItemNames={['进入编辑', '结束编辑']}
