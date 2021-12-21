@@ -192,7 +192,8 @@ export default function View(props: ViewProps) {
         placement="bottomLeft"
         trigger="click"
         transitionName={withoutAnimation ? "" : undefined}
-        overlayStyle={{ zIndex: config ? 11 : 1008 }}
+        // overlayStyle={{ zIndex: config ? 11 : 1008 }}
+        overlayStyle={{ zIndex: 99999 }}
         onVisibleChange={setShowPop}
         getPopupContainer={getPopupContainer}
       >
