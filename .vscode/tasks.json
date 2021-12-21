@@ -23,7 +23,7 @@
     //F6
     {
       "type": "shell",
-      "command": "git pull",
+      "command": "git push",
       "label": "F6",
       "problemMatcher": []
     },
@@ -51,7 +51,7 @@
     //F11
     {
       "type": "shell",
-      "command": "",
+      "command": "git merge feature-0-dev",
       "label": "F11",
       "problemMatcher": []
     },

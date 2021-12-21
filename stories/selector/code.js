@@ -25,7 +25,24 @@ const Demo1 = () => {
     {
       label: 'PHP',
       value: 'php',
-      disabled: true,
+      // disabled: true,
+    },
+    {
+      label: 'Python',
+      value: 'Python',
+    },
+    {
+      label: 'Go',
+      value: 'Go',
+    },
+    {
+      label: 'C++',
+      value: 'c++',
+    },
+    {
+      label: 'html',
+      value: 'html',
+      // disabled: true,
     },
   ], []);
   const [value2, setValue2] = useState('c')

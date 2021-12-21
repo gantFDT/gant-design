@@ -183,9 +183,9 @@ export class DatePicker extends React.Component<any, WeekPickerState> {
         prefixCls={prefixCls}
         format={format}
         locale={locale.lang}
-        showDateInput={false}
-        showToday={false}
-        disabledDate={disabledDate}
+        // showDateInput={false}
+        // showToday={false}
+        // disabledDate={disabledDate}
         renderFooter={this.renderFooter}
         defaultValue={defaultPickerValue}
         className="gant-calendar"

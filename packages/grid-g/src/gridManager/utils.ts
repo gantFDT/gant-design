@@ -78,7 +78,9 @@ export const isEqualObj = (obj, obj2) => {
     return isEqual(obj, obj2);
   }
   if (isNull(obj) && isNull(obj2)) return true;
-  if (isNull(obj) || isNull(obj2)) return false;
+  if (isNull(obj) || isNull(obj2)) {
+    return false;
+  }
   const newObj = { ...obj, ...obj2 };
   for (let i in newObj) {
     let value1 = get(obj, i),
@@ -97,7 +99,9 @@ export const isEqualObj = (obj, obj2) => {
         _EqualObj = isEqual(value2, value1);
       }
     }
-    if (!_EqualObj) return _EqualObj;
+    if (!_EqualObj) {
+      return _EqualObj;
+    }
   }
   return true;
 };

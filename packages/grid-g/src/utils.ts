@@ -7,6 +7,7 @@ import EditorCol from './GridEidtColumn';
 import { isEqualObj } from './gridManager/utils';
 import { ColumnEdiatble, Columns, DataActions, GantPaginationProps, Size } from './interface';
 
+
 type Col = ColGroupDef | ColDef;
 
 function itemisgroup(item, children): item is ColGroupDef {
@@ -217,7 +218,7 @@ export const mapColumns = <T>(
           fixed,
           headerClass,
           cellClassRules,
-          cellClass = 'stringType',
+          cellClass,
           cellRendererParams,
           ...item
         },

@@ -9,7 +9,7 @@ const ComponentPage = (item,title,Component) => {
   const handleSizeChange = e => {
     setLocal(e.target.value);
   };
-	console.log('local',local)
+
   return (
     <>
       {!item.home && (
