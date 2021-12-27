@@ -86,6 +86,8 @@ export const defaultProps = {
   isCompute: false,
   //默认开启编辑校验
   openEditSign: true,
+  //默认使用gant自定义列头
+  gantCustomHeader:true
 };
 
 export const defaultRowSelection: RowSelection = {
@@ -182,6 +184,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
     maxAutoHeight,
     minAutoHeight = 150,
     showCutChild,
+    gantCustomHeader,
     ...orignProps
   } = props;
   const apiRef = useRef<GridApi>();
@@ -749,7 +752,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                     )}
                     <AgGridReact
                       frameworkComponents={{
-                        agColumnHeader: CustomHeader,
+                        agColumnHeader: gantCustomHeader ? CustomHeader : null,
                         agDateInput: gantDateComponent ? GantDateComponent : null,
                         ...frameworkComponentsMaps,
                         ...frameworkComponents,
