@@ -795,6 +795,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                       {...selection}
                       excelStyles={[{ id: 'stringType', dataType: 'String' }, ...excelStyles]}
                       immutableData
+                      enableCellTextSelection
                       {...orignProps}
                       rowHeight={size == 'small' ? 24 : 32}
                       getDataPath={getDataPath}
@@ -823,7 +824,6 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                       }}
                       onRowDoubleClicked={handleRowDoubleClicked}
                       groupSelectsChildren={treeData ? false : groupSelectsChildren}
-                      enableCellTextSelection
                       ensureDomOrder
                       groupDefaultExpanded={groupDefaultExpanded}
                       localeText={locale}
