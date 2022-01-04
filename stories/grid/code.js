@@ -4,6 +4,8 @@ import React, { Fragment, useCallback, useEffect, useRef, useState, useMemo } fr
 import CodeDecorator from '../_util/CodeDecorator';
 import codes from './code';
 import moment from 'moment';
+import CopyDemo from './demo/copy'
+
 setGridConfig({ gantDateComponent: true });
 
 

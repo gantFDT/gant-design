@@ -72,7 +72,7 @@ const defaultprop = {
   onDropdownVisibleChange: _ => _,
   blurOnSelect: false,
   wrap: false,
-  historyLength:3, //最多显示多少条最近选择
+  historyLength: 3, //最多显示多少条最近选择
 };
 
 type NArray<T> = T | T[];
@@ -128,7 +128,7 @@ type SelectorInnerProps<T, R> = ProtoExtends<
     storageToReal: <T>(v: T) => T;
     isMultiple: boolean;
     wrapperRef?: any;
-    historyLength?:number;
+    historyLength?: number;
   }
 >;
 
@@ -336,7 +336,7 @@ const withSelector = compose(
       valueProp,
       setStorageList,
       useStorage,
-      historyLength
+      historyLength,
     }) => (data, update) => {
       if (!useStorage) return; // 不启用缓存
       let copyList = cloneDeep(storageList);
@@ -354,7 +354,7 @@ const withSelector = compose(
             } else {
               copyList.unshift(id);
             }
-            copyList = copyList.slice(0,historyLength); // 保留最近?条
+            copyList = copyList.slice(0, historyLength); // 保留最近?条
           }
         }
         if (isUpdate) {
@@ -506,7 +506,8 @@ const withSelector = compose(
           }, [] as React.ReactElement[]);
         }
       }
-      if (useStorage) {
+
+      if (useStorage && !filter) {
         // 搜索结果
         const newItems = (
           <Select.OptGroup
@@ -620,6 +621,7 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
     setFilter(value);
     getData();
     onSearch(value);
+    // this.props.renderList=[]
   }, 300);
 
   getItem = (realKey: string) => {
