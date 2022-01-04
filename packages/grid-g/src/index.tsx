@@ -588,6 +588,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
     },
     [onReady, gridKey, dataSource],
   );
+
   const onSuppressKeyboardEvent = useCallback((params: SuppressKeyboardEventParams) => {
     const { event, colDef, data, api } = params;
     if (event.key === 'Shift') {
@@ -600,6 +601,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
     }
     return false;
   }, []);
+
   const onRowSelectable = useCallback((rowNode: RowNode) => {
     const notRemove = get(rowNode, 'data._rowType') !== DataActions.removeTag;
     if (isRowSelectable) {
@@ -835,7 +837,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                       }}
                       getContextMenuItems={contextMenuItems as any}
                       modules={[...AllModules]}
-                      suppressKeyboardEvent={onSuppressKeyboardEvent}
+                      // suppressKeyboardEvent={onSuppressKeyboardEvent}
                       onCellEditingStopped={onCellEditingStopped}
                       onRowDataUpdated={onRowDataUpdated}
                       onColumnMoved={onColumnsChange}

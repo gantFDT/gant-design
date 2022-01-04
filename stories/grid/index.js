@@ -9,6 +9,8 @@ import React, { Fragment, useCallback, useEffect, useRef, useState, useMemo } fr
 import CodeDecorator from '../_util/CodeDecorator';
 import codes from './code';
 import moment from 'moment';
+import CopyDemo from './demo/copy'
+
 setGridConfig({ gantDateComponent: true });
 /*! Split !*/
 const RandomCreate = () => {
@@ -491,16 +493,21 @@ const config = {
     </div>
   ),
   children: [
-    {
-      title: '基础Grid',
-      describe: '基础Grid',
-      cmp: BaiscGrid,
-    },
+    // {
+    //   title: '基础Grid',
+    //   describe: '基础Grid',
+    //   cmp: BaiscGrid,
+    // },
     // {
     //   title: '树形Grid',
     //   describe: 'tree',
     //   cmp: TreeGrid,
     // },
+    {
+      title:'拷贝单元格',
+      describe: '可以拖拽一个区域进行复制',
+      cmp:CopyDemo
+    }
   ],
 };
 
