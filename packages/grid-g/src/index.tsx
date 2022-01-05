@@ -87,7 +87,7 @@ export const defaultProps = {
   //默认开启编辑校验
   openEditSign: true,
   //默认使用gant自定义列头
-  gantCustomHeader:true
+  gantCustomHeader: true,
 };
 
 export const defaultRowSelection: RowSelection = {
@@ -595,10 +595,10 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
       shiftRef.current = true;
       return false;
     }
-    if (event.keyCode == 67 && (event.ctrlKey || event.composed)) {
-      api.copySelectedRangeToClipboard(false);
-      return true;
-    }
+    // if (event.keyCode == 67 && (event.ctrlKey || event.composed)) {
+    //   api.copySelectedRangeToClipboard(false);
+    //   return true;
+    // }
     return false;
   }, []);
 
@@ -837,7 +837,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                       }}
                       getContextMenuItems={contextMenuItems as any}
                       modules={[...AllModules]}
-                      // suppressKeyboardEvent={onSuppressKeyboardEvent}
+                      suppressKeyboardEvent={onSuppressKeyboardEvent}
                       onCellEditingStopped={onCellEditingStopped}
                       onRowDataUpdated={onRowDataUpdated}
                       onColumnMoved={onColumnsChange}
