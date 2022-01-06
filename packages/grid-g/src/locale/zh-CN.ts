@@ -2,6 +2,7 @@ export default {
   //
   targetLang: 'zh-CN',
   // for filter panel
+  jumpTo: '跳至',
   page: '页码',
   more: '更多',
   to: '到',

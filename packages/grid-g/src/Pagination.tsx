@@ -1,7 +1,7 @@
 import React, { memo, useState, useCallback, useMemo, useEffect } from 'react';
-import { Pagination, Button, Tooltip, Switch } from 'antd';
+import { Pagination, Button, Tooltip, Switch, InputNumber } from 'antd';
 import { GantPaginationProps } from './interface';
-import { isNumber } from 'lodash';
+import { isNumber, pick, omit } from 'lodash';
 import Receiver from './locale/Receiver';
 interface Page {
   current: number;
@@ -12,6 +12,7 @@ export default memo(function GantPagination(props: GantPaginationProps) {
   const {
     addonAfter,
     addonBefore,
+    numberGoToMode,
     onRefresh,
     countLimit,
     mode = 'default',
@@ -25,15 +26,18 @@ export default memo(function GantPagination(props: GantPaginationProps) {
     defaultCurrent,
     ...resetProps
   } = props;
+
   const [innerMode, setInnerMode] = useState<'limit' | 'default'>('limit');
   const [pageInfo, setPageInfo] = useState<Page>({
     current: defaultCurrent,
     pageSize: defaultPageSize,
     beginIndex: 0,
   });
+
   const disableLimit = useMemo(() => {
     return total != countLimit;
   }, [total, countLimit]);
+
   useEffect(() => {
     const pageSize = PropPageSize ? PropPageSize : defaultPageSize;
     let current = propCurrent ? propCurrent : defaultCurrent;
@@ -42,12 +46,14 @@ export default memo(function GantPagination(props: GantPaginationProps) {
     setPageInfo({ pageSize, current, beginIndex: _beginIndex });
     return () => {};
   }, [propCurrent, PropPageSize, beginIndex]);
+
   const limit = useMemo(() => {
     return mode === 'limit' && innerMode === 'limit' && !disableLimit;
   }, [mode, innerMode, disableLimit]);
 
   const onPageChange = useCallback(
     (page, pageSize) => {
+      console.log('page, pageSize: ', page, pageSize);
       const beginIndex = (page - 1) * pageSize;
       setPageInfo({ beginIndex, pageSize, current: page });
       if (onChange) {
@@ -58,6 +64,7 @@ export default memo(function GantPagination(props: GantPaginationProps) {
     },
     [onChange, limit, countLimit],
   );
+
   const showTotal = useCallback(
     (total: number, range: number[]) => {
       return (
@@ -66,6 +73,7 @@ export default memo(function GantPagination(props: GantPaginationProps) {
     },
     [limit, tooltipTotal],
   );
+
   const paginationProps = useMemo(() => {
     const { beginIndex, ..._pageInfo } = pageInfo;
     return {
@@ -96,7 +104,23 @@ export default memo(function GantPagination(props: GantPaginationProps) {
         style={{ display: 'flex', flex: 1, alignItems: 'center', height: 30, overflow: 'hidden' }}
       >
         {addonBefore && <div>{addonBefore}</div>}
-        <Pagination className="gant-grid-pagination" {...paginationProps} />
+        <Pagination
+          className="gant-grid-pagination"
+          {...omit(paginationProps, numberGoToMode ? ['showQuickJumper', 'quickGo'] : [])}
+        />
+        {numberGoToMode && (
+          <NumberGoTo
+            {...pick(paginationProps, [
+              'quickGo',
+              'disabled',
+              'showQuickJumper',
+              'pageSize',
+              'total',
+              'goButton',
+            ])}
+            onPageChange={onPageChange}
+          />
+        )}
         {onRefresh && (
           <Button
             icon="reload"
@@ -139,45 +163,124 @@ function PaginationTotal(props: any) {
   if (limit)
     return (
       <Receiver>
-        {(locale) => (
-          locale.targetLang !== 'zh-CN'
-            ?
+        {locale =>
+          locale.targetLang !== 'zh-CN' ? (
             // 英文
             <>{`${range[0]}-${range[1]} of ${propsTotal} items`}</>
-            :
+          ) : (
             // 中文
             <>
-            {`第${range[0]} - ${range[1]}条，${propsTotal}+ `}
-            <Tooltip
-              title={loading ? '加载中...' : '精确数量:' + total}
-              onVisibleChange={visible => {
-                visible && onHover();
-              }}
-            >
-              <Button
-                size="small"
-                className="gantd-pagination-total-btn"
-                type="link"
-                icon="exclamation-circle"
-              ></Button>
-            </Tooltip>
-          </>
-        )}
+              {`第${range[0]} - ${range[1]}条，${propsTotal}+ `}
+              <Tooltip
+                title={loading ? '加载中...' : '精确数量:' + total}
+                onVisibleChange={visible => {
+                  visible && onHover();
+                }}
+              >
+                <Button
+                  size="small"
+                  className="gantd-pagination-total-btn"
+                  type="link"
+                  icon="exclamation-circle"
+                ></Button>
+              </Tooltip>
+            </>
+          )
+        }
       </Receiver>
     );
 
   return (
     <Receiver>
-      {(locale) => (
-        locale.targetLang !== 'zh-CN'
-          ?
+      {locale =>
+        locale.targetLang !== 'zh-CN' ? (
           <>{`${range[0]}-${range[1]} of ${propsTotal} items`}</>
-          :
+        ) : (
           <>{`第${range[0]} - ${range[1]}条，共${propsTotal}条`}</>
-      )}
+        )
+      }
     </Receiver>
-  )
+  );
 }
+
+const NumberGoTo = (props: any) => {
+  const { quickGo, disabled, showQuickJumper, goButton, pageSize, total, onPageChange } = props;
+
+  if (!showQuickJumper || total <= pageSize) {
+    return <></>;
+  }
+
+  const [value, setValue] = useState<number>(undefined);
+
+  let gotoButton = null;
+  const max = Math.round(total / pageSize);
+  const parser = (val: string) => val && val.replace(/\D+|^0/g, '');
+
+  const onChange = (v: number) => setValue(v);
+
+  const validValue = (val: number) => (val > max ? max : val);
+
+  const handleBlur = () => {
+    if (goButton || !value || !onPageChange) {
+      return;
+    }
+    onPageChange(validValue(value), pageSize);
+  };
+
+  const go = (e: any) => {
+    if (!value || !onPageChange) {
+      return;
+    }
+    if (e.keyCode === 13 || e.type === 'click') {
+      onPageChange(validValue(value), pageSize);
+    }
+  };
+
+  return (
+    <Receiver>
+      {locale => {
+        if (quickGo && goButton) {
+          gotoButton =
+            typeof goButton === 'boolean' ? (
+              <button
+                type="button"
+                onClick={go}
+                onKeyUp={go}
+                disabled={disabled}
+                className={`gant-quick-jumper-button`}
+              >
+                {locale.jump_to_confirm}
+              </button>
+            ) : (
+              <span onClick={go} onKeyUp={go}>
+                {goButton}
+              </span>
+            );
+        }
+        return (
+          <div className="gantd-pagination-number-goto">
+            {locale.jumpTo}
+            <InputNumber
+              size="small"
+              min={1}
+              max={max}
+              disabled={disabled}
+              value={value}
+              parser={parser}
+              onBlur={handleBlur}
+              onKeyUp={go}
+              onChange={onChange}
+              aria-label={locale.page}
+            />
+            {locale.targetLang === 'zh-CN' && locale.page}
+            {gotoButton}
+          </div>
+        );
+      }}
+    </Receiver>
+  );
+};
+
 export const paginationShowTotal = (total, range, limit, tooltipTotal) => {
   return <PaginationTotal total={total} range={range} limit={limit} tooltipTotal={tooltipTotal} />;
 };

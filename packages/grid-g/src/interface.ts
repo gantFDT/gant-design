@@ -179,6 +179,7 @@ export type GantPaginationProps = Omit<
       addonAfter?: string | React.ReactNode;
       addonBefore?: string | React.ReactNode;
       countLimit?: number;
+      numberGoToMode?: boolean;
       onRefresh?: () => void;
       mode?: 'default' | 'limit';
       tooltipTotal?: () => number | number;

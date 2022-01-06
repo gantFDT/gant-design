@@ -66,6 +66,7 @@
 | 属性       | 是否必传 | 类型   | 默认值 | 说明         |
 | ---------- | -------- | ------ | ------ | ------------ |
 | beginIndex | 否       | number | 0      | 开始分页位置 |
+| numberGoToMode | 否       | boolean | false      | 是否启动数字输入框的goto模式 |
 
 其他属性参考 [antd-Pagination](https://3x.ant.design/components/pagination-cn/#API?target=_blank)
 
