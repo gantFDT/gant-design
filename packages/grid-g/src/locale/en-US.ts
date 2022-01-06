@@ -1,6 +1,7 @@
 export default {
   targetLang: 'en-US',
   // for filter panel
+  jumpTo: 'Go to',
   page: 'Page',
   more: 'More',
   to: 'To',
