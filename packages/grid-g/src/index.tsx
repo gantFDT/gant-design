@@ -86,6 +86,8 @@ export const defaultProps = {
   isCompute: false,
   //默认开启编辑校验
   openEditSign: true,
+  //默认使用gant自定义列头
+  gantCustomHeader: true,
 };
 
 export const defaultRowSelection: RowSelection = {
@@ -182,6 +184,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
     maxAutoHeight,
     minAutoHeight = 150,
     showCutChild,
+    gantCustomHeader,
     ...orignProps
   } = props;
   const apiRef = useRef<GridApi>();
@@ -585,18 +588,20 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
     },
     [onReady, gridKey, dataSource],
   );
+
   const onSuppressKeyboardEvent = useCallback((params: SuppressKeyboardEventParams) => {
     const { event, colDef, data, api } = params;
     if (event.key === 'Shift') {
       shiftRef.current = true;
       return false;
     }
-    if (event.keyCode == 67 && (event.ctrlKey || event.composed)) {
-      api.copySelectedRangeToClipboard(false);
-      return true;
-    }
+    // if (event.keyCode == 67 && (event.ctrlKey || event.composed)) {
+    //   api.copySelectedRangeToClipboard(false);
+    //   return true;
+    // }
     return false;
   }, []);
+
   const onRowSelectable = useCallback((rowNode: RowNode) => {
     const notRemove = get(rowNode, 'data._rowType') !== DataActions.removeTag;
     if (isRowSelectable) {
@@ -749,7 +754,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                     )}
                     <AgGridReact
                       frameworkComponents={{
-                        agColumnHeader: CustomHeader,
+                        agColumnHeader: gantCustomHeader ? CustomHeader : null,
                         agDateInput: gantDateComponent ? GantDateComponent : null,
                         ...frameworkComponentsMaps,
                         ...frameworkComponents,
@@ -792,6 +797,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                       {...selection}
                       excelStyles={[{ id: 'stringType', dataType: 'String' }, ...excelStyles]}
                       immutableData
+                      enableCellTextSelection
                       {...orignProps}
                       rowHeight={size == 'small' ? 24 : 32}
                       getDataPath={getDataPath}
@@ -820,7 +826,6 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                       }}
                       onRowDoubleClicked={handleRowDoubleClicked}
                       groupSelectsChildren={treeData ? false : groupSelectsChildren}
-                      enableCellTextSelection
                       ensureDomOrder
                       groupDefaultExpanded={groupDefaultExpanded}
                       localeText={locale}
