@@ -7,7 +7,6 @@ import EditorCol from './GridEidtColumn';
 import { isEqualObj } from './gridManager/utils';
 import { ColumnEdiatble, Columns, DataActions, GantPaginationProps, Size } from './interface';
 
-
 type Col = ColGroupDef | ColDef;
 
 function itemisgroup(item, children): item is ColGroupDef {
@@ -74,9 +73,9 @@ const serialNumberCol: ColDef = {
     const {
       defaultPageSize = 20,
       pageSize = defaultPageSize,
-      current = 1,
+      beginIndex = 0,
     }: any = computedPagination;
-    const serial = rowIndex + 1 + Math.floor(pageSize * (current - 1));
+    const serial = rowIndex + 1 + beginIndex;
     return serial;
   },
 };
@@ -232,7 +231,7 @@ export const mapColumns = <T>(
             render,
             ...cellRendererParams,
           },
-          headerTooltip:headerName,
+          headerTooltip: headerName,
           cellClass: cellClass,
           cellClassRules: {
             'gant-grid-cell': () => true,
