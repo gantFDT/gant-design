@@ -246,6 +246,7 @@ export interface Props<T extends any> {
   autoHeight?: boolean;
   maxAutoHeight?: number | string;
   minAutoHeight?: number | string;
+  numberGoToMode?: boolean;
   onContextChangeRender?: (
     context: any,
     diffKeys: string[],

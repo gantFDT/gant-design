@@ -1,8 +1,9 @@
-import React, { memo, useState, useCallback, useMemo, useEffect } from 'react';
+import React, { memo, useState, useCallback, useRef, useMemo, useEffect } from 'react';
 import { Pagination, Button, Tooltip, Switch, InputNumber } from 'antd';
 import { GantPaginationProps } from './interface';
 import { isNumber, pick, omit } from 'lodash';
 import Receiver from './locale/Receiver';
+import { usePrev } from './hooks';
 interface Page {
   current: number;
   pageSize: number;
@@ -211,27 +212,32 @@ const NumberGoTo = (props: any) => {
   }
 
   const [value, setValue] = useState<number>(undefined);
+  const prevValue = usePrev(value);
 
   let gotoButton = null;
+  const inputRef = useRef<any>({});
   const max = Math.round(total / pageSize);
+
   const parser = (val: string) => val && val.replace(/\D+|^0/g, '');
-
   const onChange = (v: number) => setValue(v);
-
   const validValue = (val: number) => (val > max ? max : val);
+  const failed = !value || !onPageChange || prevValue === value;
 
   const handleBlur = () => {
-    if (goButton || !value || !onPageChange) {
+    if (goButton || failed) {
       return;
     }
     onPageChange(validValue(value), pageSize);
   };
 
   const go = (e: any) => {
-    if (!value || !onPageChange) {
-      return;
-    }
+    if (failed) return;
     if (e.keyCode === 13 || e.type === 'click') {
+      // 当用回车触发回调且输入值大于最大页码时，直接触发失焦事件让输入值更改为max值
+      if (e.keyCode === 13 && value > max) {
+        inputRef.current?.inputNumberRef.blur();
+        return;
+      }
       onPageChange(validValue(value), pageSize);
     }
   };
@@ -261,6 +267,7 @@ const NumberGoTo = (props: any) => {
           <div className="gantd-pagination-number-goto">
             {locale.jumpTo}
             <InputNumber
+              ref={inputRef}
               size="small"
               min={1}
               max={max}

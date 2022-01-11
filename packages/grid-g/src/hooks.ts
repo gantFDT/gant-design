@@ -108,3 +108,12 @@ export function contextHooks(
     });
   }, [context]);
 }
+
+
+export function usePrev<T>(value: T) {
+  const ref = useRef(value);
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
+}
