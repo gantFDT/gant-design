@@ -46,6 +46,8 @@
 |                         |
 | minAutoHeight           | 否       | `number`                                                   | -                         | grid自适应最小高度                                                                                           |
 |                         |
+| numberGoToMode | 否       | boolean | false      | 是否启动数字输入框的goto模式 |
+
 更多属性参考 [ag-grid](https://www.ag-grid.com/documentation-main/documentation.php)
 
 ### RowSelection

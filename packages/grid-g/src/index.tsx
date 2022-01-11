@@ -24,7 +24,7 @@ import { AllModules, LicenseManager } from '@ag-grid-enterprise/all-modules';
 import { Spin } from 'antd';
 import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
 import classnames from 'classnames';
-import { findIndex, get, isEmpty, isEqual, isObject } from 'lodash';
+import { findIndex, get, isEmpty, isEqual, isObject, merge } from 'lodash';
 import React, { createContext, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { gantGetcontextMenuItems } from './contextMenuItems';
 import CustomHeader from './CustomHeader';
@@ -102,7 +102,8 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
   const globalConfig = useMemo(() => {
     return getGridConfig();
   }, []);
-  const props = { ...globalConfig, ...gridProps };
+  // 深层合并
+  const props = merge(globalConfig, gridProps);
   const {
     dataSource: initDataSource,
     onReady,
@@ -185,6 +186,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
     minAutoHeight = 150,
     showCutChild,
     gantCustomHeader,
+    numberGoToMode = false,
     ...orignProps
   } = props;
   const apiRef = useRef<GridApi>();
@@ -863,7 +865,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                     customDrawerContent={customDrawerContent}
                   />
                 </div>
-                {computedPagination && <GantPagination {...computedPagination} />}
+                {computedPagination && <GantPagination numberGoToMode={numberGoToMode} {...computedPagination} />}
               </div>
             </GridContext.Provider>
           </Spin>
