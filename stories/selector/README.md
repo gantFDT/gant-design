@@ -17,6 +17,7 @@
 |readOnly|只读模式|boolean|false|
 |blurOnSelect|是否在选中一个项的时候失焦|boolean|true|
 |hideSelected|隐藏选中的项|boolean|false|
+|customNotDataContent|值为空时下拉框展示的自定义信息|string|''|
 
 ### dataSource API
 
