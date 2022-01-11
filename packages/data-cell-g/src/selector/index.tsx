@@ -73,6 +73,7 @@ const defaultprop = {
   blurOnSelect: false,
   wrap: false,
   historyLength: 3, //最多显示多少条最近选择
+  customNotDataContent:'' //值为空时下拉框展示的自定义信息 
 };
 
 type NArray<T> = T | T[];
@@ -437,6 +438,7 @@ const withSelector = compose(
       labelProp,
       getLabel,
       isFilter,
+      customNotDataContent
     }) => {
       let result = dataList;
       if (!query && filter && isFilter) {
@@ -479,7 +481,7 @@ const withSelector = compose(
       let list = [
         //'加载中...' : '没有查询到数据'
         <Select.Option key="none" disabled>
-          <Receiver>{locale => <>{loading ? locale.loading : locale.noData}</>}</Receiver>
+          <Receiver>{locale => <>{loading ? locale.loading : customNotDataContent||locale.noData}</>}</Receiver>
         </Select.Option>,
       ];
       if (result.length) {
