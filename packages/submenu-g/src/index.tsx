@@ -90,7 +90,7 @@ export default class Submenu extends React.Component<any, Partial<SubmenuIF>> {
     const fixedEleParent: any = this.warpRef.querySelector(`.${this.prefixCls}-menubox`);
     if (fixedEleParent) {
       //上下文菜单切换方向时menu宽度
-      fixedEle.style.width = `${fixedEleParent.offsetWidth - (mode == 'inline' ? 1 : 0)}px`;
+      // fixedEle.style.width = `${fixedEleParent.offsetWidth - (mode == 'inline' ? 1 : 0)}px`;
     }
   };
 
@@ -221,7 +221,7 @@ export default class Submenu extends React.Component<any, Partial<SubmenuIF>> {
     return (
       <div
         className={`${prefixCls}-menubox ${prefixCls}-menuboxhor`}
-        style={{ width: '100%', height: 30, ...style }}
+        style={{ width: '100%', ...style }}
       >
         <div className={`${prefixCls}-wrap`} style={{ width: 'calc(100% - 1px)' }}>
           <div ref={setMenuBoxRef} className={`${prefixCls}-menuinternal`}>
