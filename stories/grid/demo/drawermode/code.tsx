@@ -1,3 +1,4 @@
+export default `
 import Grid from '@grid';
 import Header from '@header';
 import { Random } from 'mockjs';
@@ -20,7 +21,6 @@ const columns = [
     title: '姓名',
     editConfig: {
       component: props => {
-        console.log('props', props);
         return <Input {...props} onChange={e => props.onChange(e.target.value)} />;
       },
       props: record => {
@@ -59,12 +59,13 @@ const CopyDemo = () => {
         editable={editable}
         dataSource={dataSource}
         columns={columns}
-        enableCellTextSelection={false}
-        //支持区域选中
-        enableRangeSelection
+        drawerMode
+        defaultDrawerWidth={200}
       />
     </>
   );
 };
 
 export default CopyDemo;
+
+`;

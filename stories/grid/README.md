@@ -46,7 +46,7 @@
 |                         |
 | minAutoHeight           | 否       | `number`                                                   | -                         | grid自适应最小高度                                                                                           |
 |                         |
-| numberGoToMode | 否       | boolean | false      | 是否启动数字输入框的goto模式 |
+| numberGoToMode          | 否       | boolean                                                    | false                     | 是否启动数字输入框的goto模式                                                                                 |
 
 更多属性参考 [ag-grid](https://www.ag-grid.com/documentation-main/documentation.php)
 
@@ -65,10 +65,10 @@
 
 ### Pagination
 
-| 属性       | 是否必传 | 类型   | 默认值 | 说明         |
-| ---------- | -------- | ------ | ------ | ------------ |
-| beginIndex | 否       | number | 0      | 开始分页位置 |
-| numberGoToMode | 否       | boolean | false      | 是否启动数字输入框的goto模式 |
+| 属性           | 是否必传 | 类型    | 默认值 | 说明                         |
+| -------------- | -------- | ------- | ------ | ---------------------------- |
+| beginIndex     | 否       | number  | 0      | 开始分页位置                 |
+| numberGoToMode | 否       | boolean | false  | 是否启动数字输入框的goto模式 |
 
 其他属性参考 [antd-Pagination](https://3x.ant.design/components/pagination-cn/#API?target=_blank)
 

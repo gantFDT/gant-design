@@ -1,13 +1,11 @@
-export default [
-`
+export default `
+import { Input } from 'antd';
+import Grid from '@grid';
+import { setGridConfig } from '@grid';
+import Header from '@header';
+import { Button, Icon, Modal } from 'antd';
+import { Random } from 'mockjs';
 import React, { Fragment, useCallback, useEffect, useRef, useState, useMemo } from 'react';
-import CodeDecorator from '../_util/CodeDecorator';
-import codes from './code';
-import moment from 'moment';
-import CopyDemo from './demo/copy'
-
-setGridConfig({ gantDateComponent: true });
-
 
 const RandomCreate = () => {
   const ip = Random.ip();
@@ -15,11 +13,7 @@ const RandomCreate = () => {
     ip: ip,
   };
 };
-// function Test() {
-//   const context = useContext(GridContext);
-//   console.log('=====>', context);
-//   return <div>1111</div>;
-// }
+
 let mockData = Array(100)
   .fill('')
   .map(() => RandomCreate());
@@ -32,6 +26,17 @@ const testTreeDataSource = [
     test: {},
   },
 ];
+
+function MedalCellRenderer(props) {
+  const { value, rowIndex, render, data, valueFormatted, context } = props;
+  const showValue = useMemo(() => {
+    return valueFormatted && !Array.isArray(value) ? valueFormatted : value;
+  }, [valueFormatted, value]);
+  // const renderContent = useMemo(() => {
+  //   return typeof render == 'function' ? render(showValue, data, rowIndex, props) : showValue;
+  // }, [showValue, data, rowIndex]);
+  return <>{showValue}</>;
+}
 
 const basicColumns = [
   {
@@ -87,16 +92,6 @@ const basicColumns = [
   },
 ];
 
-function MedalCellRenderer(props) {
-  const { value, rowIndex, render, data, valueFormatted, context } = props;
-  const showValue = useMemo(() => {
-    return valueFormatted && !Array.isArray(value) ? valueFormatted : value;
-  }, [valueFormatted, value]);
-  // const renderContent = useMemo(() => {
-  //   return typeof render == 'function' ? render(showValue, data, rowIndex, props) : showValue;
-  // }, [showValue, data, rowIndex]);
-  return <>{showValue}</>;
-}
 const BaiscGrid = () => {
   const [editable, setEditable] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -105,15 +100,15 @@ const BaiscGrid = () => {
   const [gridChange, setGridChange] = useState(false);
   const [selectedKeys, setselectedKeys] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
-  const [columns, setColumns] = useState(basicColumns);
+  const [columns, setColumns] = useState<any>(basicColumns);
   const [test, setTest] = useState('');
   const [drawerEditable, setDrawerEditable] = useState(false);
-  const apiRef = useRef();
-  const gridManagerRef = useRef();
+  const apiRef = useRef<any>();
+  const gridManagerRef = useRef<any>();
   const onReady = useCallback((params, manager) => {
     apiRef.current = params.api;
     gridManagerRef.current = manager;
-  });
+  }, []);
   const onEditChangeCallback = useCallback(isChange => {
     setGridChange(isChange);
   }, []);
@@ -124,7 +119,7 @@ const BaiscGrid = () => {
     (beginIndex, pageSize, page, countLimit) => {
       if (page === current) return;
       setCurrent(page);
-      queryData(beginIndex);
+      // queryData(beginIndex);
     },
     [current],
   );
@@ -201,7 +196,6 @@ const BaiscGrid = () => {
   }, []);
 
   const onCellEditingChange = useCallback((record, fieldName, newValue, oldValue, params) => {
-    console.log('---->', record, fieldName, newValue, oldValue, params);
     return record;
   }, []);
 
@@ -245,7 +239,6 @@ const BaiscGrid = () => {
                   size="small"
                   onClick={() => {
                     const [key] = selectedKeys;
-                    console.log(apiRef.current.getRowNode(key));
                   }}
                 ></Button>
                 <Button size="small" icon="plus" onClick={onCreate} />
@@ -289,14 +282,10 @@ const BaiscGrid = () => {
           path: 'path',
           toPath: (parentPath, data) => [...parentPath, data.ip],
         }}
-        getDataPath={data => {
-          // console.log('---->', data.path);
-          return data.path;
-        }}
-        gridOptions={{
-          suppressQuotes: true,
-          // excelStyles: [{ id: 'stringType', dataType: 'string' }],
-        }}
+        // gridOptions={{
+        //   suppressQuotes: true,
+        //   // excelStyles: [{ id: 'stringType', dataType: 'string' }],
+        // }}
         groupDefaultExpanded={1}
         selectedBoxWidth={500}
         drawerMode={drawerEditable}
@@ -315,12 +304,11 @@ const BaiscGrid = () => {
         // defaultExportJsonParams={{
         //   title: '基本数据',
         // }}
-        context={{
-          test,
-        }}
       />
     </Fragment>
   );
 };
 
-ReactDOM.render(<RandomCreate />, mountNode)`,]
+export default BaiscGrid;
+
+`
