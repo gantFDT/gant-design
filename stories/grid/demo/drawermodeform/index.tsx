@@ -160,7 +160,7 @@ const CopyDemo = () => {
 
   return (
     <>
-      <Header title="侧边栏详情" type="line" />
+      <Header title="侧边栏表单详情" type="line" />
       <Grid
         rowkey="id"
         dataSource={dataSource}
