@@ -1,6 +1,5 @@
 export default `
 
-
 import Grid from '@grid';
 import Header from '@header';
 import React from 'react';
@@ -85,5 +84,6 @@ const CopyDemo = () => {
 };
 
 export default CopyDemo;
+
 
 `;

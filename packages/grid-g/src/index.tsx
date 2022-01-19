@@ -848,23 +848,27 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                       {renderColumns(localColumnsDefs)}
                     </AgGridReact>
                   </div>
-                  <GantGridFormToolPanelRenderer
-                    columns={columns}
-                    clickedEvent={clickedEvent}
-                    drawerMode={drawerMode}
-                    context={context}
-                    gridManager={gridManager}
-                    visible={visibleDrawer}
-                    closeDrawer={() =>
-                      typeof propVisibleDrawer !== 'boolean' && setVisibleDrawer(false)
-                    }
-                    onCellEditChange={onCellEditChange}
-                    onCellEditingChange={onCellEditingChange}
-                    defaultDrawerWidth={defaultDrawerWidth}
-                    customDrawerContent={customDrawerContent}
-                  />
+                  {drawerMode && (
+                    <GantGridFormToolPanelRenderer
+                      columns={columns}
+                      clickedEvent={clickedEvent}
+                      drawerMode={drawerMode}
+                      context={context}
+                      gridManager={gridManager}
+                      visible={visibleDrawer}
+                      closeDrawer={() =>
+                        typeof propVisibleDrawer !== 'boolean' && setVisibleDrawer(false)
+                      }
+                      onCellEditChange={onCellEditChange}
+                      onCellEditingChange={onCellEditingChange}
+                      defaultDrawerWidth={defaultDrawerWidth}
+                      customDrawerContent={customDrawerContent}
+                    />
+                  )}
                 </div>
-                {computedPagination && <GantPagination numberGoToMode={numberGoToMode} {...computedPagination} />}
+                {computedPagination && (
+                  <GantPagination numberGoToMode={numberGoToMode} {...computedPagination} />
+                )}
               </div>
             </GridContext.Provider>
           </Spin>

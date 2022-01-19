@@ -7,5 +7,8 @@ export { default as TreeGridCode } from './treegrid/code';
 export { default as CopyRange } from './copyrange';
 export { default as CopyRangeCode } from './copyrange/code';
 
-export { default as DrawerMode } from './drawermode';
-export { default as DrawerModeCode } from './drawermode/code';
+export { default as DrawerModeFrom } from './drawermodeform';
+export { default as DrawerModeFromCode } from './drawermodeform/code';
+
+export { default as DrawerModeGrid } from './drawermodegrid';
+export { default as DrawerModeGridCode } from './drawermodegrid/code';

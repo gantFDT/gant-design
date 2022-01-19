@@ -15,7 +15,13 @@ interface GantGridRowFormRendererProps {
   visible?: boolean;
   closeDrawer: () => void;
   onCellEditChange?: (record: any, fieldName: string, newValue: any, oldValue: any) => any;
-  onCellEditingChange?: (record: any, fieldName: string, newValue: any, oldValue: any,params?:any) => any;
+  onCellEditingChange?: (
+    record: any,
+    fieldName: string,
+    newValue: any,
+    oldValue: any,
+    params?: any,
+  ) => any;
   customDrawerContent?: (params: any) => any;
 }
 
@@ -163,7 +169,7 @@ export default function GantGridRowFormRenderer(props: GantGridRowFormRendererPr
               onChange={onChange}
               customFields={customFields}
               data={formData}
-              key={get(clickedEvent,'rowIndex',-1)}
+              key={get(clickedEvent, 'rowIndex', -1)}
               ref={formRef}
               editable={ediable}
             />

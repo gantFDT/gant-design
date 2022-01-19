@@ -147,6 +147,7 @@ const BaiscGrid = () => {
   const onRemove = useCallback(() => {
     gridManagerRef.current.remove(selectedKeys);
   }, [selectedKeys]);
+  
   const onSave = useCallback(async () => {
     const { onDataAsyncEnd, validate, getPureData, diff } = gridManagerRef.current;
     onDataAsyncEnd(async () => {
