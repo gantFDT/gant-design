@@ -36,21 +36,21 @@ const config = {
     </div>
   ),
   children: [
-    // {
-    //   title: '基础Grid',
-    //   describe: '基础Grid',
-    //   cmp: BaseGrid,
-    // },
-    // {
-    //   title: '树形Grid',
-    //   describe: 'tree',
-    //   cmp: TreeGrid,
-    // },
-    // {
-    //   title: '拷贝单元格',
-    //   describe: '可以拖拽一个区域进行复制',
-    //   cmp: CopyRange,
-    // },
+    {
+      title: '基础Grid',
+      describe: '基础Grid',
+      cmp: BaseGrid,
+    },
+    {
+      title: '树形Grid',
+      describe: 'tree',
+      cmp: TreeGrid,
+    },
+    {
+      title: '拷贝单元格',
+      describe: '可以拖拽一个区域进行复制',
+      cmp: CopyRange,
+    },
     {
       title: '侧边栏表单详情',
       describe:
