@@ -1,6 +1,9 @@
 export { default as BaseGrid } from './basegrid';
 export { default as BaseGridCode } from './basegrid/code';
 
+export { default as BaseEditGrid } from './baseeditgrid';
+export { default as BaseEditGridCode } from './baseeditgrid/code';
+
 export { default as TreeGrid } from './treegrid';
 export { default as TreeGridCode } from './treegrid/code';
 
