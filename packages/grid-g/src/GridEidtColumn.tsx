@@ -167,6 +167,7 @@ export default WrapperComponent =>
           onChange={onChange}
           size={size}
           onBlur={onBlur}
+          node={node}
         />
       </div>
     );

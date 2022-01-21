@@ -35,9 +35,10 @@ import { generateUuid } from '@util';
 import { flattenTreeData } from '../utils';
 import { modifyDecorator, hisDecorator } from './decorator';
 import { AgGridConfig, OperationAction, Diff, BatchUpdateDataSourceParams } from './interface';
-import { DataActions } from '../interface';
+import { DataActions,RowKey } from '../interface';
 @bindAll()
 export default class GridManage {
+  public rowkey: RowKey<any> | string;
   public agGridApi: GridApi;
   public agGridColumnApi: ColumnApi;
   columnsDefs: any[];
