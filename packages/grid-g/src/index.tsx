@@ -230,11 +230,15 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
   const gridHeight = useMemo(() => {
     if (height) return height;
     if (!autoHeight && !height) return 400;
+    let data = initDataSource;
+    if (!data) {
+      data = [];
+    }
     let resHeight: number | string = 0;
     if (!treeData || groupDefaultExpanded === -1) {
-      resHeight = 24 * (initDataSource.length + 1);
+      resHeight = 24 * (data.length + 1);
     } else {
-      const filterData = initDataSource.filter(itemData => {
+      const filterData = data.filter(itemData => {
         const isExpaned = getDataPath(itemData).length <= groupDefaultExpanded + 1;
         return isExpaned;
       });
@@ -275,7 +279,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
   // context
   const context = useMemo(() => {
     return {
-      globalEditable: editable && !drawerMode,
+      globalEditable: editable,
       serverDataRequest,
       isServerSideGroup,
       size,
@@ -574,6 +578,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
       columnsRef.current = params.columnApi;
       gridManager.agGridApi = params.api;
       gridManager.agGridColumnApi = params.columnApi;
+      gridManager.rowkey = rowkey
       onReady && onReady(params, gridManager);
       setReady(true);
       // if (filterModelRef.current && treeDataForcedFilter) {
@@ -720,9 +725,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                   'gant-grid',
                   `gant-grid-${getSizeClassName(size)}`,
                   openEditSign && `gant-grid-edit`,
-                  (editable || (drawerMode && visibleDrawer)) &&
-                    openEditSign &&
-                    'gant-grid-editable',
+                  editable && openEditSign && 'gant-grid-editable',
                 )}
               >
                 <div

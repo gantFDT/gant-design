@@ -104,11 +104,9 @@ const getFormSchema = columns => {
       props,
     });
   };
-
   columns.forEach(column => {
     setPropertyType(column);
   });
-
   return schema;
 };
 

@@ -6,23 +6,71 @@ import Faker from 'faker';
 import moment from 'moment';
 import { Button } from 'antd';
 import { get, set, isArray } from 'lodash';
+import CombEditComponent from './CombEditComponent';
+import { Input, Selector } from '@gantd';
+// import {Input} from 'antd';
+import GridDetail from './GridDetail';
 
 const columns: any = [
   {
-    title: '零件信息',
+    title: '基本信息',
     fieldName: 'part',
     children: [
       {
-        title: '零件名',
-        fieldName: 'partName',
+        title: '姓名',
+        fieldName: 'name',
         filter: 'agMultiColumnFilter',
         width: 150,
+        editConfig: {
+          component: Input,
+          editable: true,
+          props:{
+            someThing:1
+          }
+        },
+        valueGetter: function(params: any) {
+          const { data } = params;
+          return data['name'] + '-valueGetter';
+        },
       },
       {
-        title: '零件号',
-        fieldName: 'partNum',
+        title: '性别',
+        fieldName: 'gender',
         filter: 'agTextColumnFilter',
         width: 120,
+        editConfig: {
+          component: (params: any) => <Selector {...params} />,
+          props: {
+            dataSource: [
+              { label: '男', value: '男' },
+              { label: '女', value: '女' },
+            ],
+          },
+          editable: function(record, params) {
+            return true;
+          },
+        },
+      },
+      {
+        title: '号码',
+        fieldName: 'tel',
+        filter: 'agTextColumnFilter',
+        width: 120,
+        valueFormatter: function(params) {
+          const { value } = params;
+          return value + '-valueFormatter';
+        },
+      },
+      {
+        title: '头像',
+        fieldName: 'avatar',
+        render: (text: string, record: any, rowIndex: number) => {
+          return (
+            <>
+              <img src={text} style={{ width: 20, height: 20 }} />
+            </>
+          );
+        },
       },
       {
         title: '中文名',
@@ -66,10 +114,12 @@ const columns: any = [
   },
 ];
 
-const dataSource = new Array(100).fill({}).map(() => ({
+const dataSource = new Array(100).fill({}).map((item, index) => ({
   id: Faker.datatype.uuid(),
-  partName: Faker.name.firstName(),
-  partNum: Faker.phone.phoneNumber(),
+  name: Faker.name.firstName(),
+  tel: Faker.phone.phoneNumber(),
+  gender: index % 2 === 0 ? '男' : '女',
+  avatar: Faker.image.image(20, 20),
   usage: Faker.datatype.number(),
   createDate: moment(Faker.datatype.datetime()).format('YYYY-MM-DD'),
   updateDate: moment(Faker.datatype.datetime()).format('YYYY-MM-DD'),
@@ -80,93 +130,37 @@ const dataSource = new Array(100).fill({}).map(() => ({
   de: Faker.name.lastName(),
 }));
 
-//通过column转formSchema
-const getFormSchema = columns => {
-  const schema = {
-    type: 'object',
-    propertyType: {},
-  };
-  const setPropertyType = currentColumn => {
-    if (!currentColumn || !get(currentColumn, 'fieldName')) {
-      return;
-    }
-    if (isArray(currentColumn.children)) {
-      currentColumn.children.forEach((c: any) => {
-        setPropertyType(c);
-      });
-      return;
-    }
-    const { fieldName, title, props, componentType } = currentColumn;
-    set(schema, `propertyType.${fieldName}`, {
-      title,
-      type: 'string',
-      componentType,
-      props,
-    });
-  };
-
-  columns.forEach(column => {
-    setPropertyType(column);
-  });
-
-  return schema;
-};
-
 const CopyDemo = () => {
-  const [data, setData] = useState(0);
+  const [editable, setEditable] = useState(false);
   const [visibleDrawer, setVisibleDrawer] = useState(false);
-
-  const formRef = useRef(null);
 
   const onRowDoubleClicked = () => {
     setVisibleDrawer(true);
   };
 
-  const formSchema = useMemo(() => {
-    return getFormSchema(columns);
-  }, []);
-
-  const customDrawerContent = useCallback(
-    (params: any) => {
-      const {
-        clickedEvent: { data },
-      } = params;
-      return (
-        <>
-          <Header
-            title="详情"
-            type="line"
-            bottomLine
-            extra={
-              <>
-                <Button icon="close" size="small" onClick={() => setVisibleDrawer(false)} />
-              </>
-            }
-            style={{ paddingLeft: 10 }}
-          />
-          <div style={{ height: 'calc(100% - 30px)', overflowY: 'auto' }}>
-            <Grid
-              rowkey="id"
-              dataSource={dataSource}
-              columns={columns}
-            />
-          </div>
-        </>
-      );
-    },
-    [formSchema],
-  );
-
   return (
     <>
-      <Header title="侧边栏表格详情" type="line" />
+      <Header
+        title="侧边栏表格详情"
+        type="line"
+        extra={
+          <>
+            {editable && <Button icon="poweroff" size="small" onClick={() => setEditable(false)} />}
+            {!editable && <Button icon="edit" size="small" onClick={() => setEditable(true)} />}
+          </>
+        }
+      />
       <Grid
         rowkey="id"
         dataSource={dataSource}
         columns={columns}
+        editable={editable}
+        height={400}
         drawerMode
-        defaultDrawerWidth={200}
-        customDrawerContent={customDrawerContent}
+        defaultDrawerWidth={400}
+        customDrawerContent={(params: any) => (
+          <GridDetail setVisibleDrawer={setVisibleDrawer} editable={editable} {...params} />
+        )}
         visibleDrawer={visibleDrawer}
         onRowDoubleClicked={onRowDoubleClicked}
       />
