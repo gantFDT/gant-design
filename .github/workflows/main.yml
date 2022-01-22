@@ -27,7 +27,7 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: install
-        run: npm run init
+        run: npm install
 
       # Runs a set of commands using the runners shell
       - name: build:doc
