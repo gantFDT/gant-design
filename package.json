@@ -24,6 +24,7 @@
     "start:win": "start-storybook -p 60000 -s public",
     "dev": "gulp watch:code & start-storybook -p 60000 -s public",
     "build-storybook": "build-storybook -o docs",
+    "build:doc": "build-storybook -o docs",
     "compile": "gulp",
     "compile:lib": "gulp lib",
     "build": "gulp && webpack -s public",
