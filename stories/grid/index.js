@@ -67,11 +67,11 @@ const config = {
         '双击行打开侧边栏表单详情, 如果要实现可编辑，通过editConfig转formItem要考虑的点太多',
       cmp: DrawerModeFrom,
     },
-    {
-      title: '侧边栏表格详情',
-      describe: '双击行打开侧边栏表格详情',
-      cmp: DrawerModeGrid,
-    },
+    // {
+    //   title: '侧边栏表格详情',
+    //   describe: '双击行打开侧边栏表格详情',
+    //   cmp: DrawerModeGrid,
+    // },
   ],
 };
 

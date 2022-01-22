@@ -458,7 +458,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
 
   const handleRowClicked = useCallback(
     (event: RowClickedEvent) => {
-      if (drawerMode) {
+      if (drawerMode && visibleDrawer) {
         if (typeof propVisibleDrawer !== 'boolean') setVisibleDrawer(true);
         setClickedEvent(event);
       }
@@ -470,11 +470,17 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
   const handleRowDoubleClicked = useCallback(
     (event: RowDoubleClickedEvent) => {
       if (onRowDoubleClicked) onRowDoubleClicked(event);
-      if (!doubleClickedExpanded) return;
-      const { node } = event;
-      if (node.childrenAfterGroup.length > 0) node.setExpanded(!node.expanded);
+      const doubleClickedOpenDrawer = true
+      if(drawerMode && doubleClickedOpenDrawer){
+        if (typeof propVisibleDrawer !== 'boolean') setVisibleDrawer(true);
+        setClickedEvent(event);
+      }
+      if (doubleClickedExpanded){
+        const { node } = event;
+        if (node.childrenAfterGroup.length > 0) node.setExpanded(!node.expanded);
+      };
     },
-    [onRowDoubleClicked, doubleClickedExpanded],
+    [onRowDoubleClicked, drawerMode, doubleClickedExpanded],
   );
 
   const onRowSelected = useCallback(
@@ -851,12 +857,10 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                       {renderColumns(localColumnsDefs)}
                     </AgGridReact>
                   </div>
-                  {drawerMode && (
+                  {drawerMode && visibleDrawer && (
                     <GantGridFormToolPanelRenderer
                       columns={columns}
                       clickedEvent={clickedEvent}
-                      drawerMode={drawerMode}
-                      context={context}
                       gridManager={gridManager}
                       visible={visibleDrawer}
                       closeDrawer={() =>
@@ -866,6 +870,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                       onCellEditingChange={onCellEditingChange}
                       defaultDrawerWidth={defaultDrawerWidth}
                       customDrawerContent={customDrawerContent}
+                      editable={editable}
                     />
                   )}
                 </div>
