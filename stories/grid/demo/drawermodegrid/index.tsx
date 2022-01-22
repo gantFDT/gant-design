@@ -4,12 +4,20 @@ import Header from '@header';
 import React, { useState, useRef, useMemo, useCallback } from 'react';
 import Faker from 'faker';
 import moment from 'moment';
-import { Button } from 'antd';
+import { Button, Modal } from 'antd';
 import { get, set, isArray } from 'lodash';
 import CombEditComponent from './CombEditComponent';
 import { Input, Selector } from '@gantd';
 // import {Input} from 'antd';
-import GridDetail from './GridDetail';
+import GridDetailSide from './GridDetail';
+import {
+  GridApi,
+  GridReadyEvent,
+  GridManager,
+  ValueGetterParams,
+  ValueFormatterParams,
+  Columns,
+} from '@grid';
 
 const columns: any = [
   {
@@ -24,12 +32,11 @@ const columns: any = [
         editConfig: {
           component: Input,
           editable: true,
-          props:{
-            someThing:1
-          }
+          signable: true,
         },
         valueGetter: function(params: any) {
           const { data } = params;
+          if(!data['name']){return ''}
           return data['name'] + '-valueGetter';
         },
       },
@@ -49,6 +56,7 @@ const columns: any = [
           editable: function(record, params) {
             return true;
           },
+          signable: true,
         },
       },
       {
@@ -58,6 +66,7 @@ const columns: any = [
         width: 120,
         valueFormatter: function(params) {
           const { value } = params;
+          if(!value){return ''}
           return value + '-valueFormatter';
         },
       },
@@ -132,11 +141,69 @@ const dataSource = new Array(100).fill({}).map((item, index) => ({
 
 const CopyDemo = () => {
   const [editable, setEditable] = useState(false);
-  const [visibleDrawer, setVisibleDrawer] = useState(false);
+  const [gridChange, setGridChange] = useState(false);
+  const [selectedKeys, setselectedKeys] = useState([]);
+  const [selectedRows, setSelectedRows] = useState([]);
 
-  const onRowDoubleClicked = () => {
-    setVisibleDrawer(true);
-  };
+  const apiRef = useRef<GridApi>();
+  const gridManagerRef = useRef<GridManager>();
+
+  const onReady = useCallback((params: GridReadyEvent, manager: GridManager) => {
+    apiRef.current = params.api;
+    gridManagerRef.current = manager;
+  }, []);
+
+  //监听grid内部数据是否变化
+  const onEditChangeCallback = useCallback(isChange => {
+    setGridChange(isChange);
+  }, []);
+
+  //选择
+  const onSelect = useCallback((keys, rows) => {
+    setselectedKeys(keys);
+    setSelectedRows(rows);
+  }, []);
+
+  // 取消编辑
+  const onCancelEdit = useCallback(() => {
+    if (gridChange)
+      return Modal.confirm({
+        title: '提示',
+        content: 'grid修改内容未保存,是否结束编辑？',
+        onOk: () => {
+          gridManagerRef.current.cancel();
+          setEditable(false);
+        },
+      });
+    setEditable(false);
+  }, [gridChange]);
+
+  //新建数据
+  const onCreate = useCallback(selectedKeys => {
+    const createData = {
+      id: Faker.datatype.uuid(),
+    };
+    gridManagerRef.current.create(createData, selectedKeys.length > 0 ? selectedKeys : true);
+  }, []);
+
+  //标记删除数据
+  const onTagRemove = useCallback(selectedKeys => {
+    gridManagerRef.current.tagRemove(selectedKeys);
+  }, []);
+
+  //保存
+  const onSave = useCallback(async () => {
+    const { onDataAsyncEnd, validate, getPureData, diff } = gridManagerRef.current;
+    onDataAsyncEnd(async () => {
+      const errors = await validate();
+      if (errors) return;
+      gridManagerRef.current.save(() => {
+        const dataSource = getPureData();
+        setEditable(false);
+        return dataSource;
+      });
+    });
+  }, []);
 
   return (
     <>
@@ -145,24 +212,40 @@ const CopyDemo = () => {
         type="line"
         extra={
           <>
-            {editable && <Button icon="poweroff" size="small" onClick={() => setEditable(false)} />}
-            {!editable && <Button icon="edit" size="small" onClick={() => setEditable(true)} />}
+            {editable && <Button icon="poweroff" type="danger" size="small" onClick={() => onCancelEdit()} />}
+            {editable && <Button icon="plus"  size="small" onClick={() => onCreate(selectedKeys)} />}
+            {editable && (
+              <Button icon="minus" size="small" onClick={() => onTagRemove(selectedKeys)} />
+            )}
+            {editable && (
+              <Button icon="undo" size="small" onClick={() => gridManagerRef.current.undo()} />
+            )}
+            {editable && <Button icon="save" size="small" type="primary" onClick={() => onSave()} />}
+            {!editable && <Button icon="edit" size="small" type="primary" onClick={() => setEditable(true)} />}
           </>
         }
       />
       <Grid
         rowkey="id"
+        onReady={onReady}
         dataSource={dataSource}
         columns={columns}
         editable={editable}
         height={400}
+        rowSelection={{
+          selectedRows,
+          onSelect: onSelect,
+        }}
+        serialNumber
+        openEditSign
+        editChangeCallback={onEditChangeCallback}
+        
+        //侧边栏详情
         drawerMode
         defaultDrawerWidth={400}
         customDrawerContent={(params: any) => (
-          <GridDetail setVisibleDrawer={setVisibleDrawer} editable={editable} {...params} />
+          <GridDetailSide {...params} />
         )}
-        visibleDrawer={visibleDrawer}
-        onRowDoubleClicked={onRowDoubleClicked}
       />
     </>
   );

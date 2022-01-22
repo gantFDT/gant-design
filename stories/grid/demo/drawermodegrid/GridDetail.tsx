@@ -16,11 +16,11 @@ const GridDetail = (params: any) => {
   const {
     columns: fatherColumns,
     clickedEvent,
-    setVisibleDrawer,
     editable,
     onCellEditChange,
     onCellEditingChange,
     gridManager: fatherGridManager,
+    closeDrawer
   } = params;
 
   const {
@@ -29,6 +29,8 @@ const GridDetail = (params: any) => {
     node: fatherNode,
     rowIndex: fatherRowIndex,
   } = clickedEvent;
+
+  const [tag, setTag] = useState<string>('');
 
   const gridRef = useRef<any>(null);
   const gridManagerRef = useRef<any>(null);
@@ -132,10 +134,7 @@ const GridDetail = (params: any) => {
 
     if (_rowType === 'modify') {
       const diffFields = getDiffProps(_rowData, targetData);
-      console.log('diffFields', diffFields);
-
       const modifyData = [];
-
       for (let arr of Object.entries(diffFields)) {
         const [key, value] = arr;
         modifyData.push({
@@ -144,24 +143,26 @@ const GridDetail = (params: any) => {
           label: get(fields, `${key}.title`),
         });
       }
-      console.log('modifyData', modifyData);
-      setTimeout(()=>{
+      setTimeout(() => {
         gridManagerRef.current.modify(modifyData);
-      },20)
-      
+      }, 20);
     }
-
+    if (_rowType === 'add') {
+      setDataSource(getTransData(fatherColumns, targetData));
+    }
+    setTag(_rowType);
   }, [fatherData, fatherColumns, fields]);
 
-  console.log('dataSource',dataSource)
 
   return (
     <>
       <div style={barStyle}>
         <div>
-          <Icon type="profile" /> {'行详情'}
+          <Icon type="profile" /> {'行详情'}{' '}
+          {tag === 'add' && <Icon type="plus" style={{ color: 'green' }} />}
+          {tag === 'remove_tag' && <Icon type="minus" style={{ color: 'red' }} />}
         </div>
-        <Icon type="close" onClick={() => setVisibleDrawer(false)} />
+        <Icon type="close" onClick={() => closeDrawer()} />
       </div>
 
       <Grid
