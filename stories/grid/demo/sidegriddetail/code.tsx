@@ -1,23 +1,12 @@
-import Grid from '@grid';
-import SchemaForm from '@schema-form';
+export default `
+import { Input, Selector } from '@gantd';
+import Grid, { GridApi, GridManager, GridReadyEvent } from '@grid';
 import Header from '@header';
-import React, { useState, useRef, useMemo, useCallback } from 'react';
+import { Button, Modal } from 'antd';
 import Faker from 'faker';
 import moment from 'moment';
-import { Button, Modal } from 'antd';
-import { get, set, isArray } from 'lodash';
-import CombEditComponent from './CombEditComponent';
-import { Input, Selector } from '@gantd';
-// import {Input} from 'antd';
-import GridDetailSide from './GridDetail';
-import {
-  GridApi,
-  GridReadyEvent,
-  GridManager,
-  ValueGetterParams,
-  ValueFormatterParams,
-  Columns,
-} from '@grid';
+import React, { useCallback, useRef, useState } from 'react';
+import { SideGridDetail } from '@grid';
 
 const columns: any = [
   {
@@ -33,10 +22,28 @@ const columns: any = [
           component: Input,
           editable: true,
           signable: true,
+          rules: [
+            {
+              required: true,
+              whitespace: true,
+              message: '名称必填',
+            },
+            {
+              validator: (rules: any, value: any, cb: any, data: any) => {
+                if (value === '123') {
+                  cb();
+                  return;
+                }
+                cb('name错误');
+              },
+            },
+          ],
         },
         valueGetter: function(params: any) {
           const { data } = params;
-          if(!data['name']){return ''}
+          if (!data['name']) {
+            return '';
+          }
           return data['name'] + '-valueGetter';
         },
       },
@@ -57,6 +64,17 @@ const columns: any = [
             return true;
           },
           signable: true,
+          rules: [
+            {
+              required: true,
+              whitespace: true,
+              message: '性别必填',
+            },
+            {
+              pattern: /男/,
+              message: '性别错误',
+            },
+          ],
         },
       },
       {
@@ -66,7 +84,9 @@ const columns: any = [
         width: 120,
         valueFormatter: function(params) {
           const { value } = params;
-          if(!value){return ''}
+          if (!value) {
+            return '';
+          }
           return value + '-valueFormatter';
         },
       },
@@ -139,7 +159,7 @@ const dataSource = new Array(100).fill({}).map((item, index) => ({
   de: Faker.name.lastName(),
 }));
 
-const CopyDemo = () => {
+const SideGridDetailDemo = () => {
   const [editable, setEditable] = useState(false);
   const [gridChange, setGridChange] = useState(false);
   const [selectedKeys, setselectedKeys] = useState([]);
@@ -205,6 +225,18 @@ const CopyDemo = () => {
     });
   }, []);
 
+  //单元格值改变
+  const onCellEditingChange = (
+    record: any,
+    fieldName: string,
+    newValue: any,
+    oldValue: any,
+    params: any,
+  ) => {
+    console.log({ record, fieldName, newValue, oldValue, params });
+    return record;
+  };
+
   return (
     <>
       <Header
@@ -212,16 +244,25 @@ const CopyDemo = () => {
         type="line"
         extra={
           <>
-            {editable && <Button icon="poweroff" type="danger" size="small" onClick={() => onCancelEdit()} />}
-            {editable && <Button icon="plus"  size="small" onClick={() => onCreate(selectedKeys)} />}
+            {editable && (
+              <Button icon="poweroff" type="danger" size="small" onClick={() => onCancelEdit()} />
+            )}
+            {editable && <Button icon="plus" size="small" onClick={() => onCreate(selectedKeys)} />}
             {editable && (
               <Button icon="minus" size="small" onClick={() => onTagRemove(selectedKeys)} />
             )}
             {editable && (
               <Button icon="undo" size="small" onClick={() => gridManagerRef.current.undo()} />
             )}
-            {editable && <Button icon="save" size="small" type="primary" onClick={() => onSave()} />}
-            {!editable && <Button icon="edit" size="small" type="primary" onClick={() => setEditable(true)} />}
+            {editable && (
+              <Button icon="redo" size="small" onClick={() => gridManagerRef.current.redo()} />
+            )}
+            {editable && (
+              <Button icon="save" size="small" type="primary" onClick={() => onSave()} />
+            )}
+            {!editable && (
+              <Button icon="edit" size="small" type="primary" onClick={() => setEditable(true)} />
+            )}
           </>
         }
       />
@@ -239,16 +280,16 @@ const CopyDemo = () => {
         serialNumber
         openEditSign
         editChangeCallback={onEditChangeCallback}
-        
-        //侧边栏详情
+        onCellEditingChange={onCellEditingChange}
+        //侧边栏详情所需属性如下
         drawerMode
-        defaultDrawerWidth={400}
-        customDrawerContent={(params: any) => (
-          <GridDetailSide {...params} />
-        )}
+        defaultDrawerWidth={300}
+        customDrawerContent={(params: any) => <SideGridDetail {...params} />}
       />
     </>
   );
 };
 
-export default CopyDemo;
+export default SideGridDetailDemo;
+
+`;

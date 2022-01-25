@@ -35,7 +35,7 @@ import { generateUuid } from '@util';
 import { flattenTreeData } from '../utils';
 import { modifyDecorator, hisDecorator } from './decorator';
 import { AgGridConfig, OperationAction, Diff, BatchUpdateDataSourceParams } from './interface';
-import { DataActions,RowKey } from '../interface';
+import { DataActions, RowKey } from '../interface';
 @bindAll()
 export default class GridManage {
   public rowkey: RowKey<any> | string;
@@ -49,6 +49,11 @@ export default class GridManage {
   private dataAsyncFun: any = null;
   private dataAsyncStack: any[] = [];
   public cutRows: any[];
+  public afterTagRemove: Function;
+  public afterSave: Function;
+  public afterUndo: Function;
+  public afterRedo: Function;
+  public afterCancel: Function;
   setingLoading: boolean = false;
   clearloding: boolean;
   get loading() {
@@ -111,7 +116,7 @@ export default class GridManage {
     const { getRowNodeId } = this.agGridConfig;
     const { add, modify } = this.diff;
     let initsource = isEmpty(data) ? [...add, ...modify] : data;
-    let source=cloneDeep(initsource);
+    let source = cloneDeep(initsource);
     const fields: any = {};
     const validateFields: Rules = cloneDeep(this.validateFields);
     source = source.map((item, index) => {
@@ -500,6 +505,8 @@ export default class GridManage {
       records: hisRecords,
       recordsIndex: removeIndexs,
     });
+    this.afterTagRemove &&
+      this.afterTagRemove({ removeRecords: remove, removeKeys: targetKeys, removeNodes });
   }
 
   private toggleUndoRedo(hisStack: OperationAction, undo: boolean = true) {
@@ -569,6 +576,7 @@ export default class GridManage {
     if (isEmpty(hisStack)) return;
     const newhisStack = this.toggleUndoRedo(hisStack, true);
     this.redoStack.push(newhisStack);
+    this.afterUndo && this.afterUndo(hisStack);
   }
   @hisDecorator()
   redo() {
@@ -576,16 +584,19 @@ export default class GridManage {
     if (isEmpty(hisStack)) return;
     const newhisStack = this.toggleUndoRedo(hisStack, false);
     this.historyStack.push(newhisStack);
+    this.afterRedo && this.afterRedo(hisStack);
   }
 
   cancel() {
     this.agGridApi.setRowData(this.agGridConfig.dataSource);
     this.reset(this.agGridConfig);
+    this.afterCancel && this.afterCancel(this.agGridConfig.dataSource);
   }
   async save(cb?) {
     let cansave = null;
     if (cb) {
       cansave = await cb();
+      this.afterSave && this.afterSave({ diff: this.diff });
       if (!cansave) return;
     }
     const data = Array.isArray(cansave) ? cansave : this.getPureData();
@@ -687,6 +698,7 @@ export default class GridManage {
       }
       dataSource.push(data);
     } as any);
+    console.log('batchUpdateDataSource');
     return dataSource;
   }
   // LocalStorage columns

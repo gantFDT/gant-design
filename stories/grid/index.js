@@ -8,19 +8,17 @@ import {
   BaseEditGridCode,
   CopyRange,
   CopyRangeCode,
-  DrawerModeFrom,
-  DrawerModeFromCode,
+  SideFormDetail,
+  SideFormDetailCode,
   TreeGrid,
   TreeGridCode,
-  DrawerModeGrid,
-  DrawerModeGridCode,
+  SideGridDetail,
+  SideGridDetailCode,
 } from './demo';
 
 setGridConfig({ gantDateComponent: true });
 
 const config = {
-  //代码字符串，通过顺序映射到children
-  codes: [BaseGridCode, TreeGridCode, CopyRangeCode, DrawerModeFromCode, DrawerModeGridCode],
   useage: (
     <div>
       <div>依赖于ag-grid的高性能表格</div>
@@ -64,14 +62,16 @@ const config = {
     {
       title: '侧边栏表单详情',
       describe:
-        '双击行打开侧边栏表单详情, 如果要实现可编辑，通过editConfig转formItem要考虑的点太多',
-      cmp: DrawerModeFrom,
+        '双击行打开侧边栏表单详情',
+      cmp: SideFormDetail,
+      code: SideFormDetailCode,
     },
-    // {
-    //   title: '侧边栏表格详情',
-    //   describe: '双击行打开侧边栏表格详情',
-    //   cmp: DrawerModeGrid,
-    // },
+    {
+      title: '侧边栏表格详情',
+      describe: '双击行打开侧边栏表格详情,可进行编辑、以及各种状态的联动',
+      cmp: SideGridDetail,
+      code: SideGridDetailCode,
+    },
   ],
 };
 

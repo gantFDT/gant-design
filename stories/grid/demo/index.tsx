@@ -10,8 +10,8 @@ export { default as TreeGridCode } from './treegrid/code';
 export { default as CopyRange } from './copyrange';
 export { default as CopyRangeCode } from './copyrange/code';
 
-export { default as DrawerModeFrom } from './drawermodeform';
-export { default as DrawerModeFromCode } from './drawermodeform/code';
+export { default as SideFormDetail } from './sideformdetail';
+export { default as SideFormDetailCode } from './sideformdetail/code';
 
-export { default as DrawerModeGrid } from './drawermodegrid';
-export { default as DrawerModeGridCode } from './drawermodegrid/code';
+export { default as SideGridDetail } from './sidegriddetail';
+export { default as SideGridDetailCode } from './sidegriddetail/code';

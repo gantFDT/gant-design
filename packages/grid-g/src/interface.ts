@@ -109,7 +109,7 @@ export type EditConfig<T> = {
   onCellChange?: (value: any, record: T, records: T[]) => void;
   refName?: string;
   valuePropName?: string;
-  rules?: GantdRuleItem | GantdRuleItem[];
+  rules?: GantdRuleItem | GantdRuleItem[] | any;
   signable?: ColumnSignable;
   initValueFormatter?: (params: any) => any;
 };

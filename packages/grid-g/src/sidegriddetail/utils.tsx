@@ -67,8 +67,8 @@ export const getColDef = (columnDefs, fieldName) => {
   return res;
 };
 
-//获取值的渲染
-export const getValueRender = (params: any) => {
+//获取值的valueGetter
+export const getValueGetter = (params: any) => {
   const { fieldName, columnField, clickedEvent, cellValue } = params;
   const { valueGetter, valueFormatter, render } = columnField;
   const { columnApi, data: _data, api, context, node, rowIndex } = clickedEvent;
@@ -97,6 +97,25 @@ export const getValueRender = (params: any) => {
       node,
     });
   }
+  return res;
+};
+
+//获取值的渲染
+export const getValueRender = (params: any) => {
+  const { fieldName, columnField, clickedEvent, cellValue } = params;
+  const { valueGetter, valueFormatter, render } = columnField;
+  const { columnApi, data: _data, api, context, node, rowIndex } = clickedEvent;
+  const {
+    columnModel: { displayedColumnsAndGroupsMap },
+  } = columnApi;
+  const colDef = columnField;
+  const column = displayedColumnsAndGroupsMap[fieldName];
+  const data = { ..._data, [fieldName]: cellValue };
+  const getValue = field => {
+    return data[field];
+  };
+  const value = cellValue;
+  let res = value;
   if (valueFormatter) {
     res = valueFormatter({
       api,
@@ -143,4 +162,14 @@ export const getDiffProps = (srcObj: Object, targetObj: Object) => {
     }
   }
   return res;
+};
+
+//获取原数据
+export const getOriginData = data => {
+  const { _rowData, _rowType, _rowError, ...targetData } = data;
+  let originData = _rowData;
+  if (!originData) {
+    originData = targetData;
+  }
+  return originData;
 };

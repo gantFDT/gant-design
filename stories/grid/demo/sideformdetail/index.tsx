@@ -110,7 +110,7 @@ const getFormSchema = columns => {
   return schema;
 };
 
-const CopyDemo = () => {
+const SideFormDetail = () => {
   const [data, setData] = useState(0);
   const [visibleDrawer, setVisibleDrawer] = useState(false);
 
@@ -173,4 +173,4 @@ const CopyDemo = () => {
   );
 };
 
-export default CopyDemo;
+export default SideFormDetail;

@@ -63,7 +63,7 @@ const serialNumberCol: ColDef = {
     },
     'gant-cell-disable-sign': params => true,
   },
-  valueFormatter: (params: any) => {
+  valueGetter: (params: any) => {
     const {
       node: { rowIndex, data, rowPinned },
       context,

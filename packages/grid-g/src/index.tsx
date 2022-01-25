@@ -51,10 +51,13 @@ import {
   usePagination,
 } from './utils';
 export { default as GantGroupCellRenderer } from './GantGroupCellRenderer';
-export { default as GantPromiseCellRender } from './GantPromiseCellRender';
+export { default as c } from './GantPromiseCellRender';
 export * from './interface';
 export { default as GantDateComponent } from './GantDateComponent';
 export { setComponentsMaps, setFrameworkComponentsMaps, setGridConfig } from './maps';
+//右侧边栏grid行转列详情组件，支持编辑和各种状态联动
+export {default as SideGridDetail} from './sidegriddetail'
+
 LicenseManager.setLicenseKey(key);
 const langs = {
   en: en,
@@ -205,11 +208,15 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
   });
   const [innerSelectedRows, setInnerSelectedRows] = useState([]);
   const [ready, setReady] = useState(false);
+
   //自定义列头文字
   const { ColumnLabelComponent } = frameworkComponents;
+
+  //实例化manager
   const gridManager = useMemo(() => {
     return new GridManager();
   }, []);
+
   /**默认基本方法 */
   const getRowNodeId = useCallback(data => {
     if (typeof rowkey === 'string') {
@@ -226,6 +233,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
     },
     [orignGetDataPath, treeData],
   );
+
   //自动高度
   const gridHeight = useMemo(() => {
     if (height) return height;
@@ -249,8 +257,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
     return parseInt(resHeight as any) + 4;
   }, [autoHeight, initDataSource, getDataPath, groupDefaultExpanded, height]);
 
-  // filter
-
+  //侧边栏显示隐藏
   useEffect(() => {
     if (typeof propVisibleDrawer === 'boolean') {
       setVisibleDrawer(propVisibleDrawer);
@@ -263,6 +270,8 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
       return flattenTreeData(initDataSource, getRowNodeId, treeDataChildrenName);
     return initDataSource;
   }, [initDataSource, treeData, treeDataChildrenName]);
+
+  //
   const serverDataRequest = useCallback(
     (params, groupKeys, successCallback) => {
       if (serverGroupExpend) {
@@ -272,7 +281,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
     },
     [serverGroupExpend],
   );
-  /**fix: 解决保存时候标记状态无法清楚的问题 */
+
   // 分页事件
   const computedPagination: any = useMemo(() => usePagination(pagination), [pagination]);
 
@@ -323,6 +332,8 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
     dataSource,
     context,
   });
+
+  //强制树形过滤，已废弃，使用原生 excludeChildrenWhenTreeDataFiltering
   const gridForcedProps = useMemo(() => {
     if (!treeDataForcedFilter && forcedGridKey) return {};
     return {
@@ -338,6 +349,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
     if (rowSel) return { ...defaultRowSelection, ...rowSel };
     return {};
   }, [rowSel]);
+
   const {
     onSelect,
     selectedRows,
@@ -362,9 +374,11 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
       multiLineVerify,
     });
   }, []);
+
   useEffect(() => {
     if (ready) gridManager.dataSourceChanged(dataSource);
   }, [dataSource, ready]);
+
   const serverDataCallback = useCallback((groupKeys, successCallback) => {
     return rows => {
       successCallback(rows, rows.length);
@@ -397,6 +411,8 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
     });
     return { extraRows, currentRows };
   }, []);
+
+  //已选择盒子选择行
   const onBoxSelectionChanged = useCallback(
     (keys, rows) => {
       if (!gridVariableRef.current.hasSelectedRows) {
@@ -413,6 +429,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
     },
     [onSelect],
   );
+
   const { selectedChangeRef } = selectedHooks({
     gridVariable: gridVariableRef.current,
     ready,
@@ -422,6 +439,8 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
     selectedRows,
     isSingle: rowSelection === 'single',
   });
+
+  //选择行改变
   const onSelectionChanged = useCallback(
     (event: SelectionChangedEvent) => {
       propsOnSelectionChanged && propsOnSelectionChanged(event);
@@ -456,6 +475,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
     [getAllSelectedRows, propsOnSelectionChanged, rowSelection],
   );
 
+  //单击行
   const handleRowClicked = useCallback(
     (event: RowClickedEvent) => {
       if (drawerMode && visibleDrawer) {
@@ -464,25 +484,27 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
       }
       onRowClicked && onRowClicked(event);
     },
-    [onRowClicked, drawerMode, propVisibleDrawer],
+    [onRowClicked, drawerMode, visibleDrawer, propVisibleDrawer],
   );
 
+  //双击行
   const handleRowDoubleClicked = useCallback(
     (event: RowDoubleClickedEvent) => {
       if (onRowDoubleClicked) onRowDoubleClicked(event);
-      const doubleClickedOpenDrawer = true
-      if(drawerMode && doubleClickedOpenDrawer){
+      const doubleClickedOpenDrawer = true;
+      if (drawerMode && doubleClickedOpenDrawer) {
         if (typeof propVisibleDrawer !== 'boolean') setVisibleDrawer(true);
         setClickedEvent(event);
       }
-      if (doubleClickedExpanded){
+      if (doubleClickedExpanded) {
         const { node } = event;
         if (node.childrenAfterGroup.length > 0) node.setExpanded(!node.expanded);
-      };
+      }
     },
     [onRowDoubleClicked, drawerMode, doubleClickedExpanded],
   );
 
+  //行被选择
   const onRowSelected = useCallback(
     (event: RowSelectedEvent) => {
       if (selectedChanged.current) return;
@@ -512,13 +534,16 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
     [propsOnRowSelected],
   );
 
+  //已选择行
   const boxSelectedRows = useMemo(() => {
     if (gridVariableRef.current.hasSelectedRows) return selectedRows;
     return innerSelectedRows;
   }, [innerSelectedRows, selectedRows]);
+
   // 处理selection-end
   //columns
   const defaultSelection = !isEmpty(gantSelection) && showDefalutCheckbox;
+  
   const { columnDefs, validateFields, requireds } = useMemo(() => {
     return mapColumns<T>(
       columns,
@@ -530,10 +555,12 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
       groupSelectsChildren,
     );
   }, [columns]);
+
   // 选中栏grid  columns;
   const selectedColumns = useMemo(() => {
     return selectedMapColumns(columns, boxColumnIndex);
   }, [columns, boxColumnIndex]);
+
   /// 导出 columns
   const getExportColmns = useCallback(columns => {
     const arr: string[] = [];
@@ -548,13 +575,17 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
     });
     return arr;
   }, []);
+
+  //导出列
   const exportColumns = useMemo(() => {
     return getExportColmns(columnDefs);
   }, [columnDefs]);
+
   // 配置验证规则
   useEffect(() => {
     gridManager.validateFields = validateFields;
   }, [validateFields]);
+
   // 监听columns变换
   const onColumnsChange = useCallback(
     (event: ColumnMovedEvent | ColumnResizedEvent | ColumnVisibleEvent) => {
@@ -573,6 +604,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
     },
     [onColumnMoved, onColumnResized, onColumnVisible],
   );
+
   const localColumnsDefs = useMemo(() => {
     return gridManager.getLocalStorageColumns(columnDefs, gridKey);
   }, [columnDefs, gridKey]);
@@ -584,7 +616,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
       columnsRef.current = params.columnApi;
       gridManager.agGridApi = params.api;
       gridManager.agGridColumnApi = params.columnApi;
-      gridManager.rowkey = rowkey
+      gridManager.rowkey = rowkey;
       onReady && onReady(params, gridManager);
       setReady(true);
       // if (filterModelRef.current && treeDataForcedFilter) {
@@ -601,6 +633,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
     [onReady, gridKey, dataSource],
   );
 
+  //阻止键盘事件
   const onSuppressKeyboardEvent = useCallback((params: SuppressKeyboardEventParams) => {
     const { event, colDef, data, api } = params;
     if (event.key === 'Shift') {
@@ -614,6 +647,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
     return false;
   }, []);
 
+  //行是否可选
   const onRowSelectable = useCallback((rowNode: RowNode) => {
     const notRemove = get(rowNode, 'data._rowType') !== DataActions.removeTag;
     if (isRowSelectable) {
@@ -625,6 +659,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
   // 监听context变换并更新
   contextHooks(context, apiRef, onContextChangeRender);
 
+  //导出设置
   const exportParams = useMemo(() => {
     return {
       columnKeys: exportColumns,
@@ -633,16 +668,21 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
       ...defaultExportParams,
     };
   }, [defaultExportParams, exportColumns]);
+
+  //是否隐藏selectedBox
   const hideBox = useMemo(() => {
     return hideSelectedBox || rowSelection !== 'multiple' || hideSelcetedBox;
   }, [hideSelectedBox, rowSelection, hideSelcetedBox]);
+
   //编辑结束
-  const onCellEditingStopped = useCallback((params: CellEditingStoppedEvent) => {
+  const onCellEditingStopped = useCallback((event: CellEditingStoppedEvent) => {
+    setClickedEvent(event)
     const tipDoms = document.querySelectorAll('.gant-cell-tooltip.ag-tooltip-custom');
     tipDoms.forEach(itemDom => {
       itemDom.remove();
     });
   }, []);
+
   // 监听数据变化
   const onRowDataUpdated = useCallback(
     (event: RowDataUpdatedEvent) => {
@@ -890,3 +930,4 @@ Grid.defaultProps = defaultProps;
 Grid.LicenseManager = LicenseManager;
 
 export default Grid;
+
