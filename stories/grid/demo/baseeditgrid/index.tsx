@@ -16,7 +16,7 @@ const RandomCreate = () => {
   const ip = Random.ip();
   return {
     ip: ip,
-    name: Random.first(),
+    user: { name: Random.first() },
     date: Random.date('yyyy-MM-dd'),
     cn: Random.cname(),
     nationality: Random.pick(['China', 'foreign']),
@@ -30,7 +30,7 @@ mockData = [...mockData];
 
 const columns: Columns[] = [
   {
-    fieldName: 'name',
+    fieldName: 'user.name',
     title: '英文名称',
     cellRenderer: 'gantGroupCellRender',
     editConfig: {
@@ -168,6 +168,11 @@ const BaiscEditGrid = () => {
     gridManagerRef.current.create(createData, selectedKeys.length > 0 ? selectedKeys : true);
   }, []);
 
+  //修改数据
+  const onModify = useCallback(selectedKeys => {
+    gridManagerRef.current.modify({ip:selectedKeys[0], user: { name: '修改之后的名称' } });
+  }, []);
+
   //标记删除数据
   const onTagRemove = useCallback(selectedKeys => {
     gridManagerRef.current.tagRemove(selectedKeys);
@@ -258,6 +263,9 @@ const BaiscEditGrid = () => {
                 </Button>
                 <Button size="small" icon="plus" onClick={() => onCreate(selectedKeys)}>
                   创建
+                </Button>
+                <Button size="small" icon="font-colors" onClick={() => onModify(selectedKeys)}>
+                  修改
                 </Button>
                 <Button size="small" icon="minus" onClick={() => onTagRemove(selectedKeys)}>
                   标记删除

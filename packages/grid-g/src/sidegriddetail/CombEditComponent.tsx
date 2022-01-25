@@ -1,5 +1,5 @@
 import React from 'react';
-
+import {get} from 'lodash'
 //聚合的编辑组件
 const CombEditComponent = (props: any) => {
   const { type, node, fields } = props;
@@ -7,7 +7,7 @@ const CombEditComponent = (props: any) => {
     data: { fieldName },
   } = node;
   //获取单元格的component、props
-  const { editConfig = {} } = fields[fieldName];
+  const { editConfig = {} } = get(fields,fieldName);
   const { component, props: editProps } = editConfig;
 
   //获取最终的props

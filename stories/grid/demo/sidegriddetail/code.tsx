@@ -79,7 +79,7 @@ const columns: any = [
       },
       {
         title: '号码',
-        fieldName: 'tel',
+        fieldName: 'tel.number',
         filter: 'agTextColumnFilter',
         width: 120,
         valueFormatter: function(params) {
@@ -88,6 +88,11 @@ const columns: any = [
             return '';
           }
           return value + '-valueFormatter';
+        },
+        editConfig: {
+          component: Input,
+          editable: true,
+          signable: true,
         },
       },
       {
@@ -146,7 +151,7 @@ const columns: any = [
 const dataSource = new Array(100).fill({}).map((item, index) => ({
   id: Faker.datatype.uuid(),
   name: Faker.name.firstName(),
-  tel: Faker.phone.phoneNumber(),
+  tel: { number: Faker.phone.phoneNumber() },
   gender: index % 2 === 0 ? '男' : '女',
   avatar: Faker.image.image(20, 20),
   usage: Faker.datatype.number(),
@@ -291,5 +296,6 @@ const SideGridDetailDemo = () => {
 };
 
 export default SideGridDetailDemo;
+
 
 `;

@@ -1,4 +1,4 @@
-import { get, set, isArray } from 'lodash';
+import { get, set, isArray, cloneDeep } from 'lodash';
 
 //通过grid行转列, 即数据
 export const getTransData = (columns, data) => {
@@ -17,7 +17,7 @@ export const getTransData = (columns, data) => {
     res.push({
       fieldName,
       label: title,
-      value: data[fieldName],
+      value: get(data, fieldName),
     });
   };
   columns.forEach(column => {
@@ -40,7 +40,9 @@ export const transColumnsToObj = columns => {
       return;
     }
     const { fieldName } = currentColumn;
+
     set(res, `${fieldName}`, currentColumn);
+    res[fieldName] = currentColumn;
   };
   columns.forEach(column => {
     setPropertyType(column);
@@ -70,18 +72,21 @@ export const getColDef = (columnDefs, fieldName) => {
 //获取值的valueGetter
 export const getValueGetter = (params: any) => {
   const { fieldName, columnField, clickedEvent, cellValue } = params;
+
   const { valueGetter, valueFormatter, render } = columnField;
   const { columnApi, data: _data, api, context, node, rowIndex } = clickedEvent;
   const {
     columnModel: { displayedColumnsAndGroupsMap },
   } = columnApi;
   const colDef = columnField;
-  const column = displayedColumnsAndGroupsMap[fieldName];
-  const data = { ..._data, [fieldName]: cellValue };
+  const column = get(displayedColumnsAndGroupsMap, fieldName);
+
+  const temp = cloneDeep(_data);
+  const data = set(temp, fieldName, cellValue);
+
   const getValue = field => {
-    return data[field];
+    return get(data, field);
   };
-  // const value = getValue(fieldName);
   const value = cellValue;
 
   let res = value;
@@ -109,10 +114,11 @@ export const getValueRender = (params: any) => {
     columnModel: { displayedColumnsAndGroupsMap },
   } = columnApi;
   const colDef = columnField;
-  const column = displayedColumnsAndGroupsMap[fieldName];
-  const data = { ..._data, [fieldName]: cellValue };
+  const column = get(displayedColumnsAndGroupsMap, fieldName);
+  const temp = cloneDeep(_data);
+  const data = set(temp, fieldName, cellValue);
   const getValue = field => {
-    return data[field];
+    return get(data, field);
   };
   const value = cellValue;
   let res = value;
@@ -150,17 +156,32 @@ export const getEditable = params => {
   return false;
 };
 
-//计算对象的diff属性
-export const getDiffProps = (srcObj: Object, targetObj: Object) => {
-  if (!srcObj || !targetObj) {
-    return null;
-  }
+//计算对象的diff属性,若差异为对象，则key用.连接符
+export const getDiffProps = (srcObj, targetObj) => {
   let res = {};
-  for (let key in srcObj) {
-    if (srcObj[key] !== targetObj[key]) {
-      res[key] = targetObj[key];
+  const getDiff = (srcChild, targetChild, path = '') => {
+    if (!srcChild || !targetChild) {
+      return null;
     }
-  }
+    for (let key in srcChild) {
+      const srcItem = srcChild[key];
+      const targetItem = targetChild[key];
+      if (srcItem !== targetItem) {
+        let p = path;
+        if (!p) {
+          p = key;
+        } else {
+          p = p + '.' + key;
+        }
+        if (typeof srcItem === 'object') {
+          getDiff(srcItem, targetItem, p);
+        } else {
+          res[p] = targetItem;
+        }
+      }
+    }
+  };
+  getDiff(srcObj, targetObj);
   return res;
 };
 

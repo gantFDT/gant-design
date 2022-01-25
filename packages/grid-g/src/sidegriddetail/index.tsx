@@ -18,6 +18,7 @@ import {
   getValueRender,
   transColumnsToObj
 } from './utils';
+import {set,cloneDeep} from 'lodash'
 
 //自定义header高度
 const headerHeight = 25;
@@ -87,9 +88,11 @@ const GridDetail = (props: GridDetailProps) => {
       const fatherRow = fatherApi.getRowNode(getRowNodeId(fatherData));
       const newFatherDataAll = get(fatherRow, 'data');
       const { _rowData, _rowError, _rowType, ...newFatherData } = newFatherDataAll;
-      const fatherNewData = { ...newFatherData, [fieldName]: newValue };
-      fatherGridManager.modify(fatherNewData);
-
+      const temp = cloneDeep(newFatherData)
+      const fatherNewData = set(temp, fieldName, newValue );
+      setTimeout(()=>{
+        fatherGridManager.modify(fatherNewData);
+      },200)
       //父级onCellEditingChange
       const record = fatherNewData;
       onCellEditingChange &&
@@ -131,8 +134,8 @@ const GridDetail = (props: GridDetailProps) => {
         valueGetter: function(params: any) {
           const { data } = params;
           const { fieldName } = data;
-          const columnField = fields[fieldName];
-          const value = data.value;
+          const columnField = get(fields,fieldName);
+          const value = get(data,'value');
           const valueGetter = getValueGetter({
             columnField,
             fieldName,
@@ -144,7 +147,7 @@ const GridDetail = (props: GridDetailProps) => {
         //兼容父层的valueFormatter和render
         render: (value: string, record: any) => {
           const { fieldName } = record;
-          const columnField = fields[fieldName];
+          const columnField = get(fields,fieldName);
           const valueRender = getValueRender({
             columnField,
             fieldName,
@@ -160,7 +163,7 @@ const GridDetail = (props: GridDetailProps) => {
           },
           editable: function(record, params) {
             const { fieldName } = record;
-            const columnField = fields[fieldName];
+            const columnField = get(fields,fieldName);
             const res = getEditable({ columnField, clickedEvent });
             return res;
           },
@@ -213,6 +216,7 @@ const GridDetail = (props: GridDetailProps) => {
     //行数据转列数据
     const originDataSource = getTransData(fatherColumns, originData);
     const targetDataSource = getTransData(fatherColumns, targetData);
+    
     //设置源数据
     setDataSource(originDataSource);
 
