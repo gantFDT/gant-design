@@ -42,22 +42,26 @@ const config = {
       title: '基础展示Grid',
       describe: '基础展示Grid',
       cmp: BaseGrid,
+      code: BaseGridCode,
     },
     {
       title: 'Grid编辑功能',
       describe:
         '校验规则参考：https://3x.ant.design/components/form-cn/#%E6%A0%A1%E9%AA%8C%E8%A7%84%E5%88%99；valueGetter与editConfig.initValueFormatter配合方式参考‘国籍’',
       cmp: BaseEditGrid,
+      code: BaseEditGridCode,
     },
     {
       title: '树形Grid',
       describe: 'tree',
       cmp: TreeGrid,
+      code: TreeGridCode,
     },
     {
       title: '拷贝单元格',
       describe: '可以拖拽一个区域进行复制',
       cmp: CopyRange,
+      code: CopyRangeCode,
     },
     {
       title: '侧边栏表单详情',
