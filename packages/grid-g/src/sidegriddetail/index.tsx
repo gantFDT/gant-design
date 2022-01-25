@@ -1,8 +1,13 @@
+import {
+  RowClickedEvent
+} from '@ag-grid-community/core';
 import Grid from '@grid';
 import { Icon } from 'antd';
 import AsyncValidator from 'async-validator';
 import { find, get } from 'lodash';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import GridManager from '../gridManager';
+import type { Columns } from '../interface';
 import CombEditComponent from './CombEditComponent';
 import {
   getDiffProps,
@@ -11,11 +16,24 @@ import {
   getTransData,
   getValueGetter,
   getValueRender,
-  transColumnsToObj,
+  transColumnsToObj
 } from './utils';
 
+//自定义header高度
+const headerHeight = 25;
+interface GridDetailProps {
+  columns: Columns[], //父级column定义
+  clickedEvent: RowClickedEvent | any,  //grid默认click聚合入参
+  editable:boolean, //父级gird编辑状态
+  onCellEditChange:(record: any, fieldName: string, newValue: any, oldValue: any) => any,  //单元格编辑联动回调
+  onCellEditingChange:(record: any, fieldName: string, newValue: any, oldValue: any,params:any) => any, //单元格编辑联动回调
+  gridManager: GridManager|any, //父级girdManager
+  closeDrawer:()=>void,  //侧边栏关闭方法
+  height:number|string,  //父级grid高度
+}
+
 //右侧边栏grid行转列详情，支持编辑和各种状态联动
-const GridDetail = (params: any) => {
+const GridDetail = (props: GridDetailProps) => {
   const {
     columns: fatherColumns,
     clickedEvent: _clickedEvent,
@@ -24,7 +42,8 @@ const GridDetail = (params: any) => {
     onCellEditingChange,
     gridManager: fatherGridManager,
     closeDrawer,
-  } = params;
+    height,
+  } = props;
 
   const [clickedEvent, setClickedEvent] = useState(_clickedEvent);
 
@@ -335,7 +354,7 @@ const GridDetail = (params: any) => {
         rowkey="fieldName"
         dataSource={dataSource}
         columns={realColumns}
-        height={400 - 30}
+        height={Number(height) - headerHeight - 1}
         enableCellTextSelection={false}
         enableRangeSelection
         onReady={onReady}
@@ -358,7 +377,7 @@ export default GridDetail;
 
 const barStyle = {
   padding: '0 10px',
-  height: 25,
+  height: headerHeight,
   display: 'flex',
   fontSize: 12,
   fontWeight: '600',
