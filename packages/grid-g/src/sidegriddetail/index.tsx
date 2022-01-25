@@ -4,7 +4,6 @@ import AsyncValidator from 'async-validator';
 import { find, get } from 'lodash';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import CombEditComponent from './CombEditComponent';
-import './index.css';
 import {
   getDiffProps,
   getEditable,
