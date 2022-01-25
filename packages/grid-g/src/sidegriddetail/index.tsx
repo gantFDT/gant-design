@@ -358,7 +358,7 @@ const GridDetail = (props: GridDetailProps) => {
         rowkey="fieldName"
         dataSource={dataSource}
         columns={realColumns}
-        height={Number(height) - headerHeight - 1}
+        height={`calc(${height} - ${headerHeight}px - 1px`}
         enableCellTextSelection={false}
         enableRangeSelection
         onReady={onReady}
