@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import GridManager from './gridManager';
 
 interface GantGridRowFormRendererProps {
+  height: number| string; //高度
   columns?: any[]; //表格列定义
   clickedEvent?: RowClickedEvent; //表格行点击参数
   defaultDrawerWidth?: number; //默认侧边栏宽度
@@ -23,6 +24,7 @@ interface GantGridRowFormRendererProps {
 
 export default function GantGridRowFormRenderer(props: GantGridRowFormRendererProps) {
   const {
+    height,
     columns,
     clickedEvent,
     defaultDrawerWidth = 600,
@@ -83,6 +85,7 @@ export default function GantGridRowFormRenderer(props: GantGridRowFormRendererPr
     editable,
     closeDrawer,
     visible,
+    height
   });
 
   return (

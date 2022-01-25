@@ -899,6 +899,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                   </div>
                   {drawerMode && visibleDrawer && (
                     <GantGridFormToolPanelRenderer
+                      height={gridHeight}
                       columns={columns}
                       clickedEvent={clickedEvent}
                       gridManager={gridManager}
