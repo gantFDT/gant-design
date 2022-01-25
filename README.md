@@ -5,7 +5,7 @@
 GantD是面向B端管理型软件、专注于数据密集型业务场景、基于Antd聚合型React组件库
 在Antd的基础上做了不同程度的针对性的强化，亦可以视作为Antd的补充，可以和Antd同时使用
 
-官网:http://gant.design
+官网:http://www.gant.design
 
 文档: http://docs.gant.design/
 
@@ -25,6 +25,21 @@ GantD是面向B端管理型软件、专注于数据密集型业务场景、基�
 ```bash
 npm install gantd --save
 yarn add gantd --save
+```
+
+## 按需加载
+使用 babel-plugin-import
+```js
+// .babelrc or babel-loader option
+{
+  "plugins": [
+    ["import", {
+      "libraryName": "gantd",
+      "libraryDirectory": "lib",
+      "style": "css"
+    }]
+  ]
+}
 ```
 ## 示例 
 
