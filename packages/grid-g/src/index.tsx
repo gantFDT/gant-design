@@ -56,7 +56,16 @@ export * from './interface';
 export { default as GantDateComponent } from './GantDateComponent';
 export { setComponentsMaps, setFrameworkComponentsMaps, setGridConfig } from './maps';
 //右侧边栏grid行转列详情组件，支持编辑和各种状态联动
-export {default as SideGridDetail} from './sidegriddetail'
+export { default as SideGridDetail } from './sidegriddetail';
+
+//表格默认高度
+const DEFAULT_HEIGHT = 400;
+//分页条高度
+const PAGINATION_HEIGHT = 30;
+//size为small时的行高
+const ROW_HEIGHT_SMALL = 24;
+//size为normal时的行高
+const ROW_HEIGHT_NORMAL = 32;
 
 LicenseManager.setLicenseKey(key);
 const langs = {
@@ -196,7 +205,6 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
   const selectedChanged = useRef<boolean>(false);
   const columnsRef = useRef<ColumnApi>();
   const selectedLoadingRef = useRef<boolean>(false);
-  const gridRef = useRef<any>();
   const [visibleDrawer, setVisibleDrawer] = useState(false);
   const [clickedEvent, setClickedEvent] = useState<RowClickedEvent>();
 
@@ -234,28 +242,61 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
     [orignGetDataPath, treeData],
   );
 
+  // 分页事件
+  const computedPagination: any = useMemo(() => usePagination(pagination), [pagination]);
+
   //自动高度
   const gridHeight = useMemo(() => {
     if (height) return height;
-    if (!autoHeight && !height) return 400;
+    if (!autoHeight && !height) return DEFAULT_HEIGHT;
+    const rowHeight = size === 'small' ? ROW_HEIGHT_SMALL : ROW_HEIGHT_NORMAL;
     let data = initDataSource;
     if (!data) {
       data = [];
     }
     let resHeight: number | string = 0;
     if (!treeData || groupDefaultExpanded === -1) {
-      resHeight = 24 * (data.length + 1);
+      resHeight = rowHeight * (data.length + 1);
     } else {
       const filterData = data.filter(itemData => {
         const isExpaned = getDataPath(itemData).length <= groupDefaultExpanded + 1;
         return isExpaned;
       });
-      resHeight = 24 * (filterData.length + 1);
+      resHeight = rowHeight * (filterData.length + 1);
     }
     resHeight = maxAutoHeight && resHeight >= maxAutoHeight ? maxAutoHeight : resHeight;
     resHeight = minAutoHeight && minAutoHeight >= resHeight ? minAutoHeight : resHeight;
-    return parseInt(resHeight as any) + 4;
-  }, [autoHeight, initDataSource, getDataPath, groupDefaultExpanded, height]);
+    //各边框高度
+    const bordersHeight = 3;
+    //横向滚动条高度
+    const horizontalScrollBarHeight = 15;
+    resHeight = parseInt(resHeight as any) + horizontalScrollBarHeight + bordersHeight;
+    //分页条高度
+    if (computedPagination) {
+      resHeight = resHeight + PAGINATION_HEIGHT;
+    }
+    return resHeight;
+  }, [
+    size,
+    autoHeight,
+    initDataSource,
+    getDataPath,
+    groupDefaultExpanded,
+    height,
+    computedPagination,
+  ]);
+
+  //侧边栏高度
+  const sideDrawerHeight = useMemo(() => {
+    let resHeight = gridHeight;
+    if (computedPagination) {
+      resHeight =
+        typeof gridHeight === 'string'
+          ? `calc(${gridHeight} - ${PAGINATION_HEIGHT}px -1px`
+          : Number(gridHeight) - PAGINATION_HEIGHT -1;
+    }
+    return resHeight;
+  }, [gridHeight]);
 
   //侧边栏显示隐藏
   useEffect(() => {
@@ -281,9 +322,6 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
     },
     [serverGroupExpend],
   );
-
-  // 分页事件
-  const computedPagination: any = useMemo(() => usePagination(pagination), [pagination]);
 
   // context
   const context = useMemo(() => {
@@ -543,7 +581,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
   // 处理selection-end
   //columns
   const defaultSelection = !isEmpty(gantSelection) && showDefalutCheckbox;
-  
+
   const { columnDefs, validateFields, requireds } = useMemo(() => {
     return mapColumns<T>(
       columns,
@@ -676,7 +714,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
 
   //编辑结束
   const onCellEditingStopped = useCallback((event: CellEditingStoppedEvent) => {
-    setClickedEvent(event)
+    setClickedEvent(event);
     const tipDoms = document.querySelectorAll('.gant-cell-tooltip.ag-tooltip-custom');
     tipDoms.forEach(itemDom => {
       itemDom.remove();
@@ -772,13 +810,14 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                   `gant-grid-${getSizeClassName(size)}`,
                   openEditSign && `gant-grid-edit`,
                   editable && openEditSign && 'gant-grid-editable',
+                  autoHeight && `gant-grid-auto-height`,
                 )}
               >
                 <div
                   style={{
                     display: 'flex',
                     width,
-                    height: computedPagination ? 'calc(100% - 30px)' : '100%',
+                    height: computedPagination ? `calc(100% - ${PAGINATION_HEIGHT}px)` : '100%',
                   }}
                 >
                   <div
@@ -848,8 +887,9 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                       excelStyles={[{ id: 'stringType', dataType: 'String' }, ...excelStyles]}
                       immutableData
                       enableCellTextSelection
+                      suppressClipboardPaste
                       {...orignProps}
-                      rowHeight={size == 'small' ? 24 : 32}
+                      rowHeight={size == 'small' ? ROW_HEIGHT_SMALL : ROW_HEIGHT_NORMAL}
                       getDataPath={getDataPath}
                       // columnDefs={localColumnsDefs}
                       gridOptions={{
@@ -899,7 +939,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                   </div>
                   {drawerMode && visibleDrawer && (
                     <GantGridFormToolPanelRenderer
-                      height={gridHeight}
+                      height={sideDrawerHeight}
                       columns={columns}
                       clickedEvent={clickedEvent}
                       gridManager={gridManager}
@@ -931,4 +971,3 @@ Grid.defaultProps = defaultProps;
 Grid.LicenseManager = LicenseManager;
 
 export default Grid;
-
