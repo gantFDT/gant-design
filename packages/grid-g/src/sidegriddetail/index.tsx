@@ -43,7 +43,7 @@ const GridDetail = (props: GridDetailProps) => {
     onCellEditingChange,
     gridManager: fatherGridManager,
     closeDrawer,
-    height:_height,
+    height:_height
   } = props;
 
   const [clickedEvent, setClickedEvent] = useState(_clickedEvent);
@@ -65,7 +65,6 @@ const GridDetail = (props: GridDetailProps) => {
   //序号
   const serialValue = fatherApi.getValue('g-index', fatherNode);
 
-        
   const height = typeof _height === 'string' ? `calc(${_height} - ${headerHeight}px - 1px` : Number(_height) - headerHeight
 
   const onReady = useCallback((params, manager) => {

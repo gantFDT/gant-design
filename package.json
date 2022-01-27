@@ -20,9 +20,9 @@
     "registry": "https://npm.pkg.github.com/"
   },
   "scripts": {
-    "start": "gulp watch:code & start-storybook -p 60000 -s public",
-    "start:win": "start-storybook -p 60000 -s public",
-    "dev": "gulp watch:code & start-storybook -p 60000 -s public",
+    "start": "gulp watch:code & start-storybook -p 8888 -s public",
+    "start:win": "start-storybook -p 8888 -s public",
+    "dev": "gulp watch:code & start-storybook -p 8888 -s public",
     "build-storybook": "build-storybook -o docs",
     "build:doc": "build-storybook -o docs",
     "postbuild:doc": "node ./scripts/postbuilddoc.js",

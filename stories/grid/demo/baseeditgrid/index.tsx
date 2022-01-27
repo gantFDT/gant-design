@@ -320,6 +320,9 @@ const BaiscEditGrid = () => {
           onTagRemove,
         }}
         getContextMenuItems={getContextMenuItems}
+        enableCellTextSelection={false}
+        //支持区域选中
+        enableRangeSelection
       />
     </>
   );
