@@ -27,7 +27,7 @@ export default function GantGridRowFormRenderer(props: GantGridRowFormRendererPr
     height,
     columns,
     clickedEvent,
-    defaultDrawerWidth = 600,
+    defaultDrawerWidth = 300,
     gridManager,
     visible,
     closeDrawer,
