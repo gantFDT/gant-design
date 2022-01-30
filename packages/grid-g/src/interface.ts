@@ -139,7 +139,7 @@ export interface Columns<T extends {} = {}> extends ColDef {
   /**当前列是否支持排序 */
   sortable?: boolean;
   /**当前列的过滤形式 */
-  filter?: Filter;
+  filter?: Filter | string;
   /**是否隐藏 */
   hide?: boolean;
   /**编辑时配置 */

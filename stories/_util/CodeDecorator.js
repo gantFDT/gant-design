@@ -1,5 +1,5 @@
 import 'antd/dist/antd.css'
-import React, { useState, useMemo, useCallback, useEffect } from 'react'
+import React, { useState, useMemo, useCallback, useEffect,Suspense } from 'react'
 import { Card, Collapse, Icon, Tooltip, Row, Col } from 'antd'
 import Anchor from '@packages/anchor-g/src'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
@@ -13,6 +13,7 @@ import { CodeDecoratorStyles } from "./CodeDecoratorStyles.js"
 import classnames from 'classnames'
 import Prism from 'prismjs'
 import styles from './CodeDecoratorStyles.css'
+import Loading from './loading'
 const Panel = Collapse.Panel
 
 const headerStyle = {
@@ -193,9 +194,9 @@ export default ({ config }) => {
             let id = `demo_${key}`
             anchors.push({ id: id, title })
             let thisCode = code ? code : codes[key]
-            if (React.isValidElement(Comp)) {
-                thisCode = reactElementToJSXString(Comp)
-            }
+            // if (React.isValidElement(Comp)) {
+            //     thisCode = reactElementToJSXString(Comp)
+            // }
             return <CodeBox
                 id={id}
                 key={key}
@@ -206,7 +207,9 @@ export default ({ config }) => {
                 isCollapsed={!codeExpends.includes(id)}
                 handleCollapse={handleCollapse}
             >
-                {React.isValidElement(Comp) ? Comp : <Comp />}
+                <Suspense fallback={<Loading />}>
+                    {React.isValidElement(Comp) ? Comp : <Comp />}
+                </Suspense>
             </CodeBox>
         })
     }, [codes, children, currentAnchor, codeExpends, handleCollapse])
