@@ -1,7 +1,6 @@
-export default `
-
+export default ` 
 import React, { useState } from 'react';
-import { Grid } from '@gantd';
+import { Grid } from 'gantd';
 import DetailCellRenderer from './DetailCellRender';
 
 const columns = [
@@ -62,6 +61,5 @@ export default () => {
     </>
   );
 };
-
-
-`;
+ 
+ `

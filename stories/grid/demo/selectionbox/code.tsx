@@ -1,8 +1,8 @@
-export default `
-
+export default ` 
 import React, { useState, useLayoutEffect, useCallback } from 'react';
 import { Random, mock } from 'mockjs';
-import { Grid } from '@gantd';
+import { Grid, Header } from 'gantd';
+import { Radio } from 'antd';
 
 const columns = [
   {
@@ -46,32 +46,56 @@ export default () => {
   const [dataSource, setdataSource] = useState([]);
   const [selectedKeys, setSelectedKeys] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
+  const [boxColumnIndex, setBoxColumnIndex] = useState<undefined | string[]>();
 
   const onSelect = useCallback((keys, rows) => {
     setSelectedKeys(keys);
     setSelectedRows(rows);
   }, []);
 
+  const onRadioChange = e => {
+    const value = e.target.value;
+    if (value === 'custom') {
+      setBoxColumnIndex(['name', 'email', 'age']);
+      return;
+    }
+    setBoxColumnIndex(undefined);
+  };
+
   useLayoutEffect(() => {
     setdataSource(data);
   }, []);
 
   return (
-    <Grid
-      height={300}
-      columns={columns}
-      rowkey="id"
-      dataSource={dataSource}
-      serialNumber
-      rowSelection={{
-        type: 'multiple',
-        selectedKeys,
-        selectedRows,
-        onSelect,
-      }}
-    />
+    <>
+      <Header
+        extra={
+          <>
+            <Radio.Group defaultValue="default" buttonStyle="solid" onChange={onRadioChange} size="small">
+              <Radio.Button value="custom">自定义boxColumn列</Radio.Button>
+              <Radio.Button value="default">默认boxColumn列</Radio.Button>
+            </Radio.Group>
+          </>
+        }
+        title="基础展示Grid"
+        type="line"
+      />
+      <Grid
+        height={300}
+        columns={columns}
+        rowkey="id"
+        dataSource={dataSource}
+        serialNumber
+        boxColumnIndex={boxColumnIndex}
+        rowSelection={{
+          type: 'multiple',
+          selectedKeys,
+          selectedRows,
+          onSelect,
+        }}
+      />
+    </>
   );
 };
-
-
-`;
+ 
+ `

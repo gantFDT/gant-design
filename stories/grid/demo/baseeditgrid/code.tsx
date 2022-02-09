@@ -1,4 +1,4 @@
-export default `
+export default ` 
 import Grid, {
   GridApi,
   GridReadyEvent,
@@ -6,9 +6,8 @@ import Grid, {
   ValueGetterParams,
   ValueFormatterParams,
   Columns,
-} from '@grid';
-import Header from '@header';
-import { Input, DatePicker, Selector } from '@data-cell';
+} from 'gantd/lib/grid';
+import { Input, DatePicker, Selector, Header } from 'gantd';
 import { Button, Modal } from 'antd';
 import { Random } from 'mockjs';
 import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -171,7 +170,7 @@ const BaiscEditGrid = () => {
 
   //修改数据
   const onModify = useCallback(selectedKeys => {
-    gridManagerRef.current.modify({ip:selectedKeys[0], user: { name: '修改之后的名称' } });
+    gridManagerRef.current.modify({ ip: selectedKeys[0], user: { name: '修改之后的名称' } });
   }, []);
 
   //标记删除数据
@@ -275,10 +274,10 @@ const BaiscEditGrid = () => {
                   删除
                 </Button>
                 <Button size="small" icon="undo" onClick={() => gridManagerRef.current.undo()}>
-                  撤回
+                  撤销
                 </Button>
                 <Button size="small" icon="redo" onClick={() => gridManagerRef.current.redo()}>
-                  重做
+                  恢复
                 </Button>
                 <Button size="small" icon="save" onClick={onSave}>
                   保存
@@ -287,7 +286,7 @@ const BaiscEditGrid = () => {
             )}
           </>
         }
-        title="基本Grid"
+        title="单元格编辑"
         type="line"
       />
       <Grid
@@ -321,12 +320,14 @@ const BaiscEditGrid = () => {
           onTagRemove,
         }}
         getContextMenuItems={getContextMenuItems}
+        enableCellTextSelection={false}
+        //支持区域选中
+        enableRangeSelection
       />
     </>
   );
 };
 
 export default BaiscEditGrid;
-
-  
-`;
+ 
+ `

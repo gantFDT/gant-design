@@ -1,5 +1,4 @@
-import Grid from '@grid';
-import SchemaForm from '@schema-form';
+import { SchemaForm, Grid } from '@gantd';
 import Header from '@header';
 import React, { useState, useRef, useMemo, useCallback } from 'react';
 import Faker from 'faker';

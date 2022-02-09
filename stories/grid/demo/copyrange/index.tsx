@@ -1,5 +1,4 @@
-import Grid from '@grid';
-import Header from '@header';
+import {Header,Grid} from '@gantd';
 import React from 'react';
 import Faker from 'faker';
 import moment from 'moment';

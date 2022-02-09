@@ -1,12 +1,11 @@
-export default `
-import { Input, Selector } from '@gantd';
-import Grid, { GridApi, GridManager, GridReadyEvent } from '@grid';
-import Header from '@header';
+export default ` 
+import { Input, Selector } from 'gantd';
+import Grid, { GridApi, GridManager, GridReadyEvent, SideGridDetail } from 'gantd/lib/grid';
+import {Header} from 'gantd';
 import { Button, Modal } from 'antd';
 import Faker from 'faker';
 import moment from 'moment';
 import React, { useCallback, useRef, useState } from 'react';
-import { SideGridDetail } from '@grid';
 
 const columns: any = [
   {
@@ -296,6 +295,5 @@ const SideGridDetailDemo = () => {
 };
 
 export default SideGridDetailDemo;
-
-
-`;
+ 
+ `

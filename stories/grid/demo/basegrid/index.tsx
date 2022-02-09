@@ -1,8 +1,8 @@
-import Grid, { GridManager, GridReadyEvent, GridApi } from '@grid';
+import Grid, { GridApi, GridManager, GridReadyEvent } from '@grid';
 import Header from '@header';
-import { Button, Input, Modal } from 'antd';
+import { Button, Radio } from 'antd';
 import { Random } from 'mockjs';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 const RandomCreate = () => {
   const ip = Random.ip();
@@ -43,7 +43,7 @@ const BaiscGrid = () => {
   const [dataSource, setDataSource] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
   const [rowSelectionType, setRowSelectionType] = useState<'single' | 'multiple'>('multiple');
-  const [boxColumnIndex, setBoxColumnIndex] = useState<undefined | string[]>();
+
   const apiRef = useRef<GridApi>();
   const gridManagerRef = useRef<GridManager>();
   const onReady = useCallback((params: GridReadyEvent, manager: GridManager) => {
@@ -69,6 +69,12 @@ const BaiscGrid = () => {
     setSelectedRows(rows);
   }, []);
 
+  const onRadioChange = e => {
+    const value = e.target.value;
+    setRowSelectionType(value);
+    setSelectedRows([]);
+  };
+
   useEffect(() => {
     queryData(0, 20);
   }, []);
@@ -78,40 +84,18 @@ const BaiscGrid = () => {
       <Header
         extra={
           <>
-            {rowSelectionType === 'single' ? (
-              <Button
-                size="small"
-                onClick={() => {
-                  setRowSelectionType('multiple');
-                  setSelectedRows([]);
-                }}
-              >
-                多选
-              </Button>
-            ) : (
-              <Button
-                size="small"
-                onClick={() => {
-                  setRowSelectionType('single');
-                  setSelectedRows([]);
-                }}
-              >
-                单选
-              </Button>
-            )}
-            {rowSelectionType === 'multiple' && (
-              <>
-                <Button size="small" onClick={() => setBoxColumnIndex(['name', 'cn', 'date'])}>
-                  自定义boxColumn列
-                </Button>
-                <Button size="small" onClick={() => setBoxColumnIndex(undefined)}>
-                  默认boxColumn列
-                </Button>
-              </>
-            )}
+            <Radio.Group
+              defaultValue="single"
+              buttonStyle="solid"
+              onChange={onRadioChange}
+              size="small"
+            >
+              <Radio.Button value="multiple">多选</Radio.Button>
+              <Radio.Button value="single">单选</Radio.Button>
+            </Radio.Group>
           </>
         }
-        title="基础展示Grid"
+        title="基础展示"
         type="line"
       />
       <Grid
@@ -120,7 +104,6 @@ const BaiscGrid = () => {
         columns={basicColumns}
         dataSource={dataSource}
         serialNumber
-        boxColumnIndex={boxColumnIndex}
         rowSelection={{
           selectedRows,
           onSelect: onSelect,

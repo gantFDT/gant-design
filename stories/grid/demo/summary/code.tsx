@@ -1,7 +1,7 @@
-export default `
+export default ` 
 import React, { useState, useLayoutEffect } from 'react';
 import { Random, mock } from 'mockjs';
-import { Grid } from '@gantd';
+import { Grid } from 'gantd';
 
 const columns = [
   {
@@ -62,6 +62,5 @@ export default () => {
     />
   );
 };
-
-
-`;
+ 
+ `

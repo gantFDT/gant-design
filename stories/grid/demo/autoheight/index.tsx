@@ -1,5 +1,4 @@
-import Grid from '@grid';
-import Header from '@header';
+import { Grid, Header } from '@gantd';
 import { InputNumber } from 'antd';
 import Faker from 'faker';
 import React, { useEffect, useState } from 'react';

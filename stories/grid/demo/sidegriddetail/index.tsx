@@ -1,11 +1,10 @@
 import { Input, Selector } from '@gantd';
-import Grid, { GridApi, GridManager, GridReadyEvent } from '@grid';
+import Grid, { GridApi, GridManager, GridReadyEvent, SideGridDetail } from '@grid';
 import Header from '@header';
 import { Button, Modal } from 'antd';
 import Faker from 'faker';
 import moment from 'moment';
 import React, { useCallback, useRef, useState } from 'react';
-import { SideGridDetail } from '@grid';
 
 const columns: any = [
   {
