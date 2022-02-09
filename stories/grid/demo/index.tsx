@@ -3,20 +3,20 @@ import { createElement, lazy } from 'react';
 export default [
   {
     title: '基础展示',
-    describe: '基础展示Grid',
+    describe: '单击行快捷选中,多选时需点击勾选框',
     cmp: createElement(lazy(() => import('./basegrid'))),
     code: require('./basegrid/code').default,
   },
   {
-    title: '编辑功能',
+    title: '单元格编辑',
     describe:
       '校验规则参考：https://3x.ant.design/components/form-cn/#%E6%A0%A1%E9%AA%8C%E8%A7%84%E5%88%99；valueGetter与editConfig.initValueFormatter配合方式参考‘国籍’',
     cmp: createElement(lazy(() => import('./baseeditgrid'))),
     code: require('./baseeditgrid/code').default,
   },
   {
-    title: '树形',
-    describe: 'tree',
+    title: '树形单元格编辑',
+    describe: '快捷新增根节点，子节点，兄弟节点',
     cmp: createElement(lazy(() => import('./treegrid'))),
     code: require('./treegrid/code').default,
   },

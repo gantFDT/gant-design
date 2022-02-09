@@ -1,7 +1,5 @@
-export default `
-
-import Grid from '@grid';
-import Header from '@header';
+export default ` 
+import {Header,Grid} from 'gantd';
 import React from 'react';
 import Faker from 'faker';
 import moment from 'moment';
@@ -84,6 +82,5 @@ const CopyDemo = () => {
 };
 
 export default CopyDemo;
-
-
-`;
+ 
+ `

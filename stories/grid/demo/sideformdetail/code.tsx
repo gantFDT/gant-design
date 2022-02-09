@@ -1,8 +1,6 @@
-export default `
-
-import Grid from '@grid';
-import SchemaForm from '@schema-form';
-import Header from '@header';
+export default ` 
+import { SchemaForm, Grid } from 'gantd';
+import {Header} from 'gantd';
 import React, { useState, useRef, useMemo, useCallback } from 'react';
 import Faker from 'faker';
 import moment from 'moment';
@@ -99,7 +97,7 @@ const getFormSchema = columns => {
       return;
     }
     const { fieldName, title, props, componentType } = currentColumn;
-    set(schema, "propertyType."+fieldName, {
+    set(schema, \`propertyType.\${fieldName}\`, {
       title,
       type: 'string',
       componentType,
@@ -176,6 +174,5 @@ const SideFormDetail = () => {
 };
 
 export default SideFormDetail;
-
-
-`;
+ 
+ `

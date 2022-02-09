@@ -1,6 +1,5 @@
-export default `
-import Grid from '@grid';
-import Header from '@header';
+export default ` 
+import { Grid, Header } from 'gantd';
 import { InputNumber } from 'antd';
 import Faker from 'faker';
 import React, { useEffect, useState } from 'react';
@@ -76,6 +75,5 @@ const AutoHeight = () => {
 };
 
 export default AutoHeight;
-
-
-`
+ 
+ `

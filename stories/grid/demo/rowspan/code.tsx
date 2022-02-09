@@ -1,9 +1,7 @@
-export default `
-
-
+export default ` 
 import React from 'react';
 import { Tag } from 'antd';
-import { Grid } from '@gantd';
+import { Grid } from 'gantd';
 
 export default () => {
   const columns = [
@@ -95,5 +93,5 @@ export default () => {
     </>
   );
 };
-
-`;
+ 
+ `
