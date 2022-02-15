@@ -111,12 +111,10 @@ export const defaultRowSelection: RowSelection = {
 };
 
 const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
-  const globalConfig = useMemo(() => {
+  const globalConfig: any = useMemo(() => {
     return getGridConfig();
   }, []);
-  const props = useMemo(() => {
-    return merge(cloneDeep(globalConfig), gridProps);
-  }, [gridProps]);
+  const props = { ...globalConfig, ...gridProps };
   const {
     dataSource: initDataSource,
     onReady,
@@ -705,6 +703,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
       columnKeys: exportColumns,
       allColumns: false,
       columnGroups: true,
+      ...globalConfig.defaultExportParams,
       ...defaultExportParams,
     };
   }, [defaultExportParams, exportColumns]);
@@ -910,6 +909,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                           ColumnLabelComponent,
                         },
                         cellClass: 'stringType',
+                        ...globalConfig.defaultColDef,
                         ...defaultColDef,
                         filterParams: {
                           buttons: ['reset'],
