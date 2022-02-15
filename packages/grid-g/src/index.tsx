@@ -24,7 +24,7 @@ import { AllModules, LicenseManager } from '@ag-grid-enterprise/all-modules';
 import { Spin } from 'antd';
 import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
 import classnames from 'classnames';
-import { findIndex, get, isEmpty, isEqual, isObject, merge } from 'lodash';
+import { findIndex, get, isEmpty, isEqual, isObject, merge, cloneDeep } from 'lodash';
 import React, { createContext, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { gantGetcontextMenuItems } from './contextMenuItems';
 import CustomHeader from './CustomHeader';
@@ -115,7 +115,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
     return getGridConfig();
   }, []);
   const props = useMemo(() => {
-    return merge(globalConfig, gridProps);
+    return merge(cloneDeep(globalConfig), gridProps);
   }, [gridProps]);
   const {
     dataSource: initDataSource,
