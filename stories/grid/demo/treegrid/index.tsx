@@ -203,7 +203,7 @@ const TreeGrid = () => {
   }, []);
 
   return (
-    <Fragment>
+    <>
       <Header
         extra={
           <>
@@ -288,7 +288,7 @@ const TreeGrid = () => {
         groupSuppressAutoColumn //关闭默认分组
         // groupSelectsChildren //选择子集
       />
-    </Fragment>
+    </>
   );
 };
 
