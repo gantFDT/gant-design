@@ -22,7 +22,6 @@ const columns: any = [
           required: true,
           message: '零件名不能为空',
         },
-        ,
       ],
     },
   },
@@ -39,8 +38,7 @@ const columns: any = [
         {
           required: true,
           message: '零件号不能为空',
-        },
-        ,
+        }
       ],
     },
   },

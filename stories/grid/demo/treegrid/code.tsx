@@ -23,7 +23,6 @@ const columns: any = [
           required: true,
           message: '零件名不能为空',
         },
-        ,
       ],
     },
   },
@@ -40,8 +39,7 @@ const columns: any = [
         {
           required: true,
           message: '零件号不能为空',
-        },
-        ,
+        }
       ],
     },
   },
@@ -204,7 +202,7 @@ const TreeGrid = () => {
   }, []);
 
   return (
-    <Fragment>
+    <>
       <Header
         extra={
           <>
@@ -289,7 +287,7 @@ const TreeGrid = () => {
         groupSuppressAutoColumn //关闭默认分组
         // groupSelectsChildren //选择子集
       />
-    </Fragment>
+    </>
   );
 };
 
