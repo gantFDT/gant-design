@@ -20,6 +20,7 @@ const isEmptyObj = value => {
 export default forwardRef((props: any, ref) => {
   const {
     value,
+    valueFormatted,
     column,
     context,
     rowIndex,
@@ -40,7 +41,12 @@ export default forwardRef((props: any, ref) => {
   const actualColumnWidth = get(columnApi.getColumn(field), 'actualWidth', 0);
   //获取要显示的内容内容
   let renderOverflow = String(value);
+
   const render = get(props, 'colDef.cellRendererParams.render');
+
+  if (valueFormatted) {
+    renderOverflow = valueFormatted;
+  }
 
   if (render) {
     renderOverflow = !isEmpty(data) && value ? render(value, data, rowIndex, params) : value;
@@ -62,9 +68,12 @@ export default forwardRef((props: any, ref) => {
       }
     }
   }, []);
+  
   let errorMsg = get(data, `_rowError.${field}`, null);
   errorMsg = isEmptyObj(get(data, `${field}`, null)) && required ? null : errorMsg;
+
   const ToolTipRender = tooltipRender ? tooltipRender(params) : null;
+
   if (!showTip && !ToolTipRender && !errorMsg) {
     return (
       <>
