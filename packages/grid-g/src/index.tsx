@@ -24,7 +24,7 @@ import { AllModules, LicenseManager } from '@ag-grid-enterprise/all-modules';
 import { Spin } from 'antd';
 import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
 import classnames from 'classnames';
-import { findIndex, get, isEmpty, isEqual, isObject } from 'lodash';
+import { findIndex, get, isEmpty, isEqual, isObject, merge } from 'lodash';
 import React, { createContext, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { gantGetcontextMenuItems } from './contextMenuItems';
 import CustomHeader from './CustomHeader';
@@ -114,7 +114,9 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
   const globalConfig = useMemo(() => {
     return getGridConfig();
   }, []);
-  const props = { ...globalConfig, ...gridProps };
+  const props = useMemo(() => {
+    return merge(globalConfig, gridProps);
+  }, [gridProps]);
   const {
     dataSource: initDataSource,
     onReady,
@@ -293,7 +295,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
       resHeight =
         typeof gridHeight === 'string'
           ? `calc(${gridHeight} - ${PAGINATION_HEIGHT}px -1px`
-          : Number(gridHeight) - PAGINATION_HEIGHT -1;
+          : Number(gridHeight) - PAGINATION_HEIGHT - 1;
     }
     return resHeight;
   }, [gridHeight]);
