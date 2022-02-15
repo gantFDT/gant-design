@@ -3,6 +3,7 @@ import GantGroupCellRenderer from './GantGroupCellRenderer';
 import GantPinnedRowRenderer from './GantPinnedRowRenderer';
 import GantTooltip from './GantTooltip';
 import RenderCol from './GirdRenderColumn';
+import { merge } from 'lodash';
 let componentsMaps = {};
 let frameworkComponentsMaps = {
   gantGroupCellRenderer: GantGroupCellRenderer,
@@ -31,7 +32,7 @@ export function getAllComponentsMaps() {
 }
 let globalGridConfig = {};
 export function setGridConfig(config: any) {
-  globalGridConfig = config;
+  merge(globalGridConfig, config);
 }
 
 export function getGridConfig() {
