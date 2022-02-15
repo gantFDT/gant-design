@@ -40,9 +40,8 @@ const columns: Columns[] = [
         {
           required: true,
           message: '姓名不能为空',
-        },
-        ,
-      ],
+        }
+      ]
     },
   },
   {

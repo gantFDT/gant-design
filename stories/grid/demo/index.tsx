@@ -81,4 +81,10 @@ export default [
     cmp: createElement(lazy(() => import('./summary'))),
     code: require('./summary/code').default,
   },
+  {
+    title: '单元格悬浮提示',
+    describe: '单元格宽度若不够时，可悬浮显示',
+    cmp: createElement(lazy(() => import('./overflowtooltip'))),
+    code: require('./overflowtooltip/code').default,
+  },
 ];
