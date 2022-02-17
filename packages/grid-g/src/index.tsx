@@ -323,6 +323,25 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
     [serverGroupExpend],
   );
 
+  // 处理selection
+  const gantSelection: RowSelection = useMemo(() => {
+    if (rowSel === true) {
+      return defaultRowSelection;
+    }
+    if (rowSel) return { ...defaultRowSelection, ...rowSel };
+    return {};
+  }, [rowSel]);
+
+  const {
+    onSelect,
+    selectedRows,
+    showDefalutCheckbox,
+    type: rowSelection,
+    onSelectedChanged,
+    defaultSelectionCol,
+    ...selection
+  } = gantSelection;
+
   // context
   const context = useMemo(() => {
     return {
@@ -341,6 +360,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
       onCellEditChange,
       onCellEditingChange,
       onCellChanged,
+      rowSelection,
       ...propsContext,
     };
   }, [
@@ -354,6 +374,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
     onCellEditingChange,
     onCellChanged,
     getDataPath,
+    rowSelection,
   ]);
 
   const {
@@ -378,25 +399,6 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
       key: forcedGridKey,
     };
   }, [forcedGridKey]);
-
-  // 处理selection
-  const gantSelection: RowSelection = useMemo(() => {
-    if (rowSel === true) {
-      return defaultRowSelection;
-    }
-    if (rowSel) return { ...defaultRowSelection, ...rowSel };
-    return {};
-  }, [rowSel]);
-
-  const {
-    onSelect,
-    selectedRows,
-    showDefalutCheckbox,
-    type: rowSelection,
-    onSelectedChanged,
-    defaultSelectionCol,
-    ...selection
-  } = gantSelection;
 
   // 初始注册配置信息；
   useEffect(() => {

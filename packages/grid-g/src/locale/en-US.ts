@@ -233,4 +233,5 @@ export default {
   cancelCut: 'cancel cut',
   exportJson: 'export json',
   importJson: 'import json',
+  exportSelected:'export selected'
 };
