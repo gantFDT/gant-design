@@ -234,4 +234,5 @@ export default {
   cancelCut: '取消剪切',
   exportJson: '导出json',
   importJson: '导入json',
+  exportSelected: '导出选中',
 };
