@@ -128,7 +128,6 @@
   }
   // .ag-selection-checkbox,
   .ag-ltr {
-    
     .ag-group-expanded,
     .ag-group-contracted {
       margin-right: 4px !important;
@@ -238,6 +237,15 @@
       background-repeat: no-repeat;
     }
   }
+
+  //居中
+  .ag-theme-balham .ag-ltr .ag-header-select-all {
+    margin-right: initial;
+  }
+
+  .ag-theme-balham .ag-ltr .ag-selection-checkbox {
+    margin-right: initial;
+  }
 }
 
 //不显示斑马线
@@ -310,28 +318,20 @@
 }
 //侧边栏表格详情
 .grid-side-detail-panel .ag-root-wrapper {
-  border: none!important;
+  border: none !important;
 }
 
 //合并单元格
-.gant-cell-span{
-  background:var(--component-background);
+.gant-cell-span {
+  background: var(--component-background);
 }
 
 //gird 默认的选择列内容居中
-.gant-grid-default-checkbox{
+.gant-grid-default-checkbox {
   display: flex;
   justify-content: center;
   padding: 0 !important;
-  &>.ag-react-container{
-    display: none!important;
+  & > .ag-react-container {
+    display: none !important;
   }
-}
-
-.ag-theme-balham .ag-ltr .ag-header-select-all{
-  margin-right: initial;
-}
-
-.ag-theme-balham .ag-ltr .ag-selection-checkbox{
-  margin-right: initial;
 }
