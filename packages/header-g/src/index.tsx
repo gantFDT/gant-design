@@ -16,9 +16,27 @@ interface HeaderIF {
   color?: string;
   style?: object;
   className?: string;
+  size?: 'small' | 'large' | 'default';
   [props: string]: any;
 }
 
+export const titleSize = {
+  small: 12,
+  default: 14,
+  large: 16,
+};
+
+export const lineWidthSize = {
+  small: 3,
+  default: 4,
+  large: 5,
+};
+
+export const lineHeightSize = {
+  small: 15,
+  default: 17,
+  large: 19,
+};
 
 const Header = (props: HeaderIF) => {
   let {
@@ -33,6 +51,7 @@ const Header = (props: HeaderIF) => {
     color = 'var(--text-color)',
     style = {},
     className,
+    size = 'small',
     ...restProps
   } = props;
   const [tools, setTools] = useState([]);
@@ -40,6 +59,7 @@ const Header = (props: HeaderIF) => {
   //打平extra
   const [allWidth, setAllWidth] = useState(0);
   const leftRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (_.isEmpty(extra)) {
       return;
@@ -64,13 +84,14 @@ const Header = (props: HeaderIF) => {
     });
     if (_.isEqual(tools, toolsArr) || _.isEqual(extra, innerExtra)) return;
     setInnerExtra(extra);
-
     setTools(toolsArr);
   }, [extra, tools, innerExtra]);
+
   const getPrefixCls = cls => 'gant-' + cls;
   const width = '100%';
   const prefixCls = 'gant-blockheader';
   const clsString = classnames(prefixCls, className);
+  
   const toolWidth = useMemo(() => {
     if (leftRef.current) {
       return isNaN(allWidth - leftRef.current.clientWidth)
@@ -78,7 +99,8 @@ const Header = (props: HeaderIF) => {
         : allWidth - leftRef.current.clientWidth;
     }
     return 0;
-  }, [allWidth, leftRef.current]);
+  }, [allWidth, leftRef.current,size]);
+
   return (
     <div
       className={clsString}
@@ -100,14 +122,21 @@ const Header = (props: HeaderIF) => {
             </div>
           )}
           {type == 'line' && title && (
-            <div className={prefixCls + '-line'} style={{ background: color }}></div>
+            <div
+              className={prefixCls + '-line'}
+              style={{
+                background: color,
+                width: lineWidthSize[size],
+                height: lineHeightSize[size],
+              }}
+            ></div>
           )}
           {type == 'num' && (
             <div className={prefixCls + '-num'} style={{ background: color }}>
               {num}
             </div>
           )}
-          <div className={prefixCls + '-title'} style={{ color: color }}>
+          <div className={prefixCls + '-title'} style={{ color: color, fontSize: titleSize[size] }}>
             {title}
           </div>
         </div>

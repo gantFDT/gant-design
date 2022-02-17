@@ -38,6 +38,7 @@ function ExtraUse() {
         <div style={{ width: `${value}%` }}>
             <Header
                 title="工具栏"
+                size="default"
                 extra={<>
                     <Tooltip title='新增'>
                         <Button icon="plus" type="primary" />
