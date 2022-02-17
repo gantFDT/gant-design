@@ -192,6 +192,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
     showCutChild,
     gantCustomHeader,
     numberGoToMode = false,
+    domLayout,
     ...orignProps
   } = props;
   const apiRef = useRef<GridApi>();
@@ -237,10 +238,13 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
   );
 
   // 分页事件
-  const computedPagination: any = useMemo(() => usePagination(pagination), [pagination]);
+  const computedPagination: any = useMemo(() => usePagination(pagination,size), [pagination,size]);
 
   //自动高度
   const gridHeight = useMemo(() => {
+    if(domLayout ==='autoHeight'){
+      return 'auto'
+    }
     if (height) return height;
     if (!autoHeight && !height) return DEFAULT_HEIGHT;
     const rowHeight = get(sizeDefinitions, `rowHeight.${size}`);
@@ -587,9 +591,9 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
       defaultSelectionCol,
       rowSelection,
       serialNumber,
-      size
+      size,
     );
-  }, [columns,size]);
+  }, [columns, size]);
 
   // 选中栏grid  columns;
   const selectedColumns = useMemo(() => {
@@ -768,6 +772,16 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
     });
   }, []);
 
+  //表格高度策略
+  const girdWrapHeight = useMemo(() => {
+    if(domLayout ==='autoHeight'){
+      return 'auto'
+    }
+    return computedPagination
+      ? `calc(100% - ${get(sizeDefinitions, `paginationHeight.${size}`)}px)`
+      : '100%';
+  }, [domLayout, computedPagination, sizeDefinitions, size]);
+
   return (
     <LocaleReceiver
       children={(local, localeCode = 'zh-cn') => {
@@ -815,7 +829,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                   style={{
                     display: 'flex',
                     width,
-                    height: computedPagination ? `calc(100% - ${get(sizeDefinitions, `paginationHeight.${size}`)}px)` : '100%',
+                    height: girdWrapHeight
                   }}
                 >
                   <div
@@ -886,6 +900,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                       immutableData
                       enableCellTextSelection
                       suppressClipboardPaste
+                      domLayout={domLayout}
                       {...orignProps}
                       rowHeight={get(sizeDefinitions, `rowHeight.${size}`)}
                       getDataPath={getDataPath}
@@ -955,7 +970,11 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                   )}
                 </div>
                 {computedPagination && (
-                  <GantPagination numberGoToMode={numberGoToMode} {...computedPagination} />
+                  <GantPagination
+                    numberGoToMode={numberGoToMode}
+                    size={size}
+                    {...computedPagination}
+                  />
                 )}
               </div>
             </GridContext.Provider>
