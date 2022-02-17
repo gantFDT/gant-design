@@ -9,6 +9,13 @@ interface Page {
   pageSize: number;
   beginIndex: number;
 }
+
+const heightSize={
+  small:30,
+  default:40,
+  large:50
+}
+
 export default memo(function GantPagination(props: GantPaginationProps) {
   const {
     addonAfter,
@@ -25,6 +32,7 @@ export default memo(function GantPagination(props: GantPaginationProps) {
     beginIndex,
     defaultPageSize,
     defaultCurrent,
+    size,
     ...resetProps
   } = props;
 
@@ -54,7 +62,6 @@ export default memo(function GantPagination(props: GantPaginationProps) {
 
   const onPageChange = useCallback(
     (page, pageSize) => {
-      console.log('page, pageSize: ', page, pageSize);
       const beginIndex = (page - 1) * pageSize;
       setPageInfo({ beginIndex, pageSize, current: page });
       if (onChange) {
@@ -78,6 +85,7 @@ export default memo(function GantPagination(props: GantPaginationProps) {
   const paginationProps = useMemo(() => {
     const { beginIndex, ..._pageInfo } = pageInfo;
     return {
+      size,
       ...resetProps,
       ..._pageInfo,
       onChange: onPageChange,
@@ -85,7 +93,7 @@ export default memo(function GantPagination(props: GantPaginationProps) {
       showTotal,
       total: limit ? countLimit : total,
     };
-  }, [onPageChange, resetProps, pageInfo, total, countLimit, limit, showTotal]);
+  }, [onPageChange,size, resetProps, pageInfo, total, countLimit, limit, showTotal]);
 
   const onSwitchChange = useCallback(
     value => {
@@ -102,7 +110,7 @@ export default memo(function GantPagination(props: GantPaginationProps) {
   return (
     <div className="gantd-grid-footer">
       <div
-        style={{ display: 'flex', flex: 1, alignItems: 'center', height: 30, overflow: 'hidden' }}
+        style={{ display: 'flex', flex: 1, alignItems: 'center', height: heightSize[size], overflow: 'hidden' }}
       >
         {addonBefore && <div>{addonBefore}</div>}
         <Pagination

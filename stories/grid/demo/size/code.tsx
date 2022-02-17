@@ -8,7 +8,7 @@ import Grid, {
   Columns,
 } from 'gantd/lib/grid';
 import { Input, DatePicker, Selector, Header } from 'gantd';
-import { Button, Modal,Radio } from 'antd';
+import { Button, Modal, Radio } from 'antd';
 import { Random } from 'mockjs';
 import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -48,6 +48,8 @@ const columns: Columns[] = [
   {
     fieldName: 'cn',
     title: '中文名称',
+    autoHeight: true,
+    wrapText: true,
     editConfig: {
       component: Input,
       editable: true,
@@ -109,12 +111,12 @@ const columns: Columns[] = [
 const BaiscEditGrid = () => {
   const [editable, setEditable] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [pageInfo, setPageInfo] = useState({ beginIndex: 0, pageSize: 20 });
+  const [pageInfo, setPageInfo] = useState({ beginIndex: 0, pageSize: 10 });
   const [dataSource, setDataSource] = useState([]);
   const [gridChange, setGridChange] = useState(false);
   const [selectedKeys, setselectedKeys] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
-  const [size,setSize] = useState<any>('large')
+  const [size, setSize] = useState<any>('large');
   const apiRef = useRef<GridApi>();
   const gridManagerRef = useRef<GridManager>();
 
@@ -257,18 +259,13 @@ const BaiscEditGrid = () => {
       <Header
         extra={
           <>
-            <Radio.Group
-              value={size}
-              buttonStyle="solid"
-              onChange={onRadioChange}
-              size={size}
-            >
+            <Radio.Group value={size} buttonStyle="solid" onChange={onRadioChange} size={size}>
               <Radio.Button value="small">small</Radio.Button>
               <Radio.Button value="default">default</Radio.Button>
               <Radio.Button value="large">large</Radio.Button>
             </Radio.Group>
             {!editable ? (
-              <Button size={size} icon="edit" onClick={onEnterEdit} >
+              <Button size={size} icon="edit" onClick={onEnterEdit}>
                 进入编辑
               </Button>
             ) : (
@@ -304,7 +301,7 @@ const BaiscEditGrid = () => {
         title="风格大小"
         type="line"
         size={size}
-        style={{marginBottom:10}}
+        style={{ marginBottom: 10 }}
       />
       <Grid
         key={size}
@@ -342,6 +339,7 @@ const BaiscEditGrid = () => {
         //支持区域选中
         enableRangeSelection
         size={size}
+        domLayout={'autoHeight'}
       />
     </>
   );
