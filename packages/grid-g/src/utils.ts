@@ -9,6 +9,40 @@ import { ColumnEdiatble, Columns, DataActions, GantPaginationProps, Size } from 
 
 type Col = ColGroupDef | ColDef;
 
+//大小
+export const sizeNumber = {
+  small: 24,
+  default: 32,
+  large: 40,
+};
+export const smallSize = 24;
+export const defaultSize = 32;
+export const largeSize = 40;
+
+//大小配置
+export const sizeDefinitions = {
+  rowHeight: {
+    small: sizeNumber.small,
+    default: sizeNumber.default,
+    large: sizeNumber.large,
+  },
+  headerHeight: {
+    small: sizeNumber.small,
+    default: sizeNumber.default,
+    large: sizeNumber.large,
+  },
+  floatingFiltersHeight: {
+    small: sizeNumber.small,
+    default: sizeNumber.default,
+    large: sizeNumber.large,
+  },
+  paginationHeight: {
+    small: sizeNumber.small,
+    default: sizeNumber.default,
+    large: sizeNumber.large,
+  },
+};
+
 function itemisgroup(item, children): item is ColGroupDef {
   return !!children;
 }
@@ -37,9 +71,10 @@ const defaultCheckboxColSelectionCol: ColDef = {
   lockVisible: true,
   filter: false,
   cellStyle: {
-    padding: '0px 3px',
+    display: 'flex',
+    justifyContent: 'center',
   },
-  headerClass: 'gant-padding-h-3',
+  headerClass: 'gant-grid-default-checkbox',
 };
 
 const serialNumberCol: ColDef = {
@@ -196,7 +231,7 @@ export const mapColumns = <T>(
   defaultSelectionCol: ColDef,
   rowSelection,
   serialNumber,
-  groupSelectsChildren: boolean,
+  size: Size,
 ): {
   columnDefs: Col[];
   validateFields: Rules;
@@ -343,6 +378,7 @@ export const mapColumns = <T>(
     ? [
         {
           ...defaultCheckboxColSelectionCol,
+          width: sizeNumber[size],
           headerCheckboxSelection: rowSelection === 'multiple',
           ...defaultSelectionCol,
           cellClassRules: {
@@ -446,14 +482,14 @@ export function usePagination(pagitation: GantPaginationProps): any {
   }
   return false;
 }
-export function getSizeClassName(size: Size) {
-  switch (size) {
-    case 'small':
-      return 'sm';
-    default:
-      return '';
-  }
-}
+// export function getSizeClassName(size: Size) {
+//   switch (size) {
+//     case 'small':
+//       return 'sm';
+//     default:
+//       return '';
+//   }
+// }
 export const AG_GRID_STOP_PROPAGATION = '__ag_Grid_Stop_Propagation';
 export function stopPropagationForAgGrid(event) {
   event[AG_GRID_STOP_PROPAGATION] = true;

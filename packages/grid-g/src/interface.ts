@@ -17,11 +17,8 @@ import GridManager from './gridManager';
 import { defaultProps } from './index';
 export * from '@ag-grid-community/core';
 export { default as GridManager } from './gridManager';
-// 编辑框大小
-export enum Size {
-  small = 'small',
-  default = 'default',
-}
+// 大小
+export type Size = 'small' | 'large' | 'default' 
 
 // 过滤器
 export enum Filter {
@@ -194,6 +191,7 @@ export interface DefaultJsonParams {
 }
 // Grid Api
 export interface Props<T extends any> {
+  size:Size;
   columns?: Columns<T>[];
   boxColumnIndex?: number | string[] | string;
   dataSource?: T[];

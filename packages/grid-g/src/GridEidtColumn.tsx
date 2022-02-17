@@ -47,10 +47,12 @@ export default WrapperComponent =>
     const [newValue, setNewValue] = useState(value);
     const divRef = useRef<HTMLDivElement>(null);
     const inputRef: any = useRef();
+    
     const compoentProps = useMemo(() => {
       if (typeof fieldProps === 'function') return fieldProps(node.data, props);
       return fieldProps;
     }, [fieldProps, node.data, props]);
+
     const handleCellEditingChange = useCallback(
       async (chageVal, editData, ...ags) => {
         gridManager.loading = true;
@@ -85,6 +87,7 @@ export default WrapperComponent =>
       },
       [onCellEditingChange, onCellChanged, props.context],
     );
+
     const onChange = useCallback(
       async (val: any, ...ags) => {
         let chageVal = val;
@@ -97,6 +100,7 @@ export default WrapperComponent =>
       },
       [changeFormatter, field, node, handleCellEditingChange],
     );
+
     const handleCellEditChange = useCallback(
       async newValue => {
         const editData = cloneDeep(get(node, `data`));
@@ -112,6 +116,7 @@ export default WrapperComponent =>
       },
       [node, field, data, onCellEditChange, props.context],
     );
+
     const onBlur = useCallback(
       (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         api.stopEditing();
@@ -136,26 +141,31 @@ export default WrapperComponent =>
       },
       [value, newValue, field, handleCellEditChange],
     );
+
     useEffect(() => {
       setTimeout(() => {
         inputRef.current && inputRef.current.focus();
       }, 10);
     }, []);
+
     const wrapperClick = useCallback((event: MouseEvent) => {
       stopPropagationForAgGrid(event);
     }, []);
+
     useEffect(() => {
       divRef.current?.addEventListener('click', wrapperClick);
       return () => {
         divRef.current?.removeEventListener('click', wrapperClick);
       };
     }, []);
+
     const wrapperProps = useMemo(() => {
       return {
         [refName]: inputRef,
         [valuePropName]: newValue,
       };
     }, [valuePropName, refName, newValue]);
+
     return (
       <div className={classnames('gant-grid-cell-editing')} ref={divRef}>
         <WrapperComponent

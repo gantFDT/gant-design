@@ -34,7 +34,15 @@ export const gantGetcontextMenuItems = function(
     showCutChild,
   } = config;
   const {
-    context: { globalEditable, treeData, createConfig, getRowNodeId, gridManager, showCut },
+    context: {
+      globalEditable,
+      treeData,
+      createConfig,
+      getRowNodeId,
+      gridManager,
+      showCut,
+      rowSelection,
+    },
     node,
     api,
   } = params;
@@ -99,11 +107,22 @@ export const gantGetcontextMenuItems = function(
   defultMenu =
     defultMenu.length > 0
       ? items.length > 0
-        ? [...defultMenu, 'separator', ...items]
+        ? [...defultMenu, ...items]
         : defultMenu
       : [...items];
   if (!hideMenuItemExport) {
-    defultMenu = defultMenu.length > 0 ? [...defultMenu, 'separator', 'export'] : ['export'];
+    defultMenu = defultMenu.length > 0 ? [...defultMenu, 'export'] : ['export'];
+    if (suppressRightClickSelected) {
+      defultMenu.push({
+        name: locale.exportSelected,
+        icon: '<span class="ag-icon ag-icon-save" unselectable="on" role="presentation"></span>',
+        action: () => {
+          api.exportDataAsExcel({
+            onlySelected: true,
+          });
+        },
+      });
+    }
   }
 
   defultMenu = exportJson

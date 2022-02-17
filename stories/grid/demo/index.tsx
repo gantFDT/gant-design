@@ -87,4 +87,10 @@ export default [
     cmp: createElement(lazy(() => import('./overflowtooltip'))),
     code: require('./overflowtooltip/code').default,
   },
+  // {
+  //   title: '风格大小',
+  //   describe: `size支持3种，'small' | 'medium' | 'large'`,
+  //   cmp: createElement(lazy(() => import('./size'))),
+  //   code: require('./size/code').default,
+  // },
 ];

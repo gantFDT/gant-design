@@ -44,11 +44,11 @@ import './style';
 import {
   checkParentGroupSelectedStatus,
   flattenTreeData,
-  getSizeClassName,
   groupNodeSelectedToggle,
   mapColumns,
   selectedMapColumns,
   usePagination,
+  sizeDefinitions,
 } from './utils';
 export { default as GantGroupCellRenderer } from './GantGroupCellRenderer';
 export { default as c } from './GantPromiseCellRender';
@@ -60,12 +60,6 @@ export { default as SideGridDetail } from './sidegriddetail';
 
 //表格默认高度
 const DEFAULT_HEIGHT = 400;
-//分页条高度
-const PAGINATION_HEIGHT = 30;
-//size为small时的行高
-const ROW_HEIGHT_SMALL = 24;
-//size为normal时的行高
-const ROW_HEIGHT_NORMAL = 32;
 
 LicenseManager.setLicenseKey(key);
 const langs = {
@@ -86,8 +80,8 @@ export const defaultProps = {
   // lockPosition: false,
   /**直接在列头下面显示过滤器 */
   floatingFilter: false,
-  /**编辑状态下的尺寸 */
-  size: Size.small,
+  /**风格大小 */
+  size: 'small',
   /**rowkey */
   rowkey: 'key',
   width: '100%',
@@ -249,7 +243,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
   const gridHeight = useMemo(() => {
     if (height) return height;
     if (!autoHeight && !height) return DEFAULT_HEIGHT;
-    const rowHeight = size === 'small' ? ROW_HEIGHT_SMALL : ROW_HEIGHT_NORMAL;
+    const rowHeight = get(sizeDefinitions, `rowHeight.${size}`);
     let data = initDataSource;
     if (!data) {
       data = [];
@@ -273,7 +267,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
     resHeight = parseInt(resHeight as any) + horizontalScrollBarHeight + bordersHeight;
     //分页条高度
     if (computedPagination) {
-      resHeight = resHeight + PAGINATION_HEIGHT;
+      resHeight = resHeight + get(sizeDefinitions, `paginationHeight.${size}`);
     }
     return resHeight;
   }, [
@@ -289,11 +283,12 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
   //侧边栏高度
   const sideDrawerHeight = useMemo(() => {
     let resHeight = gridHeight;
+    const paginationHeight = get(sizeDefinitions, `paginationHeight.${size}`);
     if (computedPagination) {
       resHeight =
         typeof gridHeight === 'string'
-          ? `calc(${gridHeight} - ${PAGINATION_HEIGHT}px -1px`
-          : Number(gridHeight) - PAGINATION_HEIGHT - 1;
+          ? `calc(${gridHeight} - ${paginationHeight}px -1px`
+          : Number(gridHeight) - paginationHeight - 1;
     }
     return resHeight;
   }, [gridHeight]);
@@ -323,6 +318,25 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
     [serverGroupExpend],
   );
 
+  // 处理selection
+  const gantSelection: RowSelection = useMemo(() => {
+    if (rowSel === true) {
+      return defaultRowSelection;
+    }
+    if (rowSel) return { ...defaultRowSelection, ...rowSel };
+    return {};
+  }, [rowSel]);
+
+  const {
+    onSelect,
+    selectedRows,
+    showDefalutCheckbox,
+    type: rowSelection,
+    onSelectedChanged,
+    defaultSelectionCol,
+    ...selection
+  } = gantSelection;
+
   // context
   const context = useMemo(() => {
     return {
@@ -341,6 +355,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
       onCellEditChange,
       onCellEditingChange,
       onCellChanged,
+      rowSelection,
       ...propsContext,
     };
   }, [
@@ -354,6 +369,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
     onCellEditingChange,
     onCellChanged,
     getDataPath,
+    rowSelection,
   ]);
 
   const {
@@ -378,25 +394,6 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
       key: forcedGridKey,
     };
   }, [forcedGridKey]);
-
-  // 处理selection
-  const gantSelection: RowSelection = useMemo(() => {
-    if (rowSel === true) {
-      return defaultRowSelection;
-    }
-    if (rowSel) return { ...defaultRowSelection, ...rowSel };
-    return {};
-  }, [rowSel]);
-
-  const {
-    onSelect,
-    selectedRows,
-    showDefalutCheckbox,
-    type: rowSelection,
-    onSelectedChanged,
-    defaultSelectionCol,
-    ...selection
-  } = gantSelection;
 
   // 初始注册配置信息；
   useEffect(() => {
@@ -590,9 +587,9 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
       defaultSelectionCol,
       rowSelection,
       serialNumber,
-      groupSelectsChildren,
+      size
     );
-  }, [columns]);
+  }, [columns,size]);
 
   // 选中栏grid  columns;
   const selectedColumns = useMemo(() => {
@@ -808,7 +805,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                 style={{ width, height: gridHeight }}
                 className={classnames(
                   'gant-grid',
-                  `gant-grid-${getSizeClassName(size)}`,
+                  `gant-grid-${size}`,
                   openEditSign && `gant-grid-edit`,
                   editable && openEditSign && 'gant-grid-editable',
                   autoHeight && `gant-grid-auto-height`,
@@ -818,7 +815,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                   style={{
                     display: 'flex',
                     width,
-                    height: computedPagination ? `calc(100% - ${PAGINATION_HEIGHT}px)` : '100%',
+                    height: computedPagination ? `calc(100% - ${get(sizeDefinitions, `paginationHeight.${size}`)}px)` : '100%',
                   }}
                 >
                   <div
@@ -861,8 +858,8 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                       onGridReady={onGridReady}
                       undoRedoCellEditing
                       enableFillHandle
-                      headerHeight={24}
-                      floatingFiltersHeight={20}
+                      headerHeight={get(sizeDefinitions, `headerHeight.${size}`)}
+                      floatingFiltersHeight={get(sizeDefinitions, `floatingFiltersHeight.${size}`)}
                       singleClickEdit
                       defaultExportParams={exportParams}
                       context={{
@@ -890,7 +887,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                       enableCellTextSelection
                       suppressClipboardPaste
                       {...orignProps}
-                      rowHeight={size == 'small' ? ROW_HEIGHT_SMALL : ROW_HEIGHT_NORMAL}
+                      rowHeight={get(sizeDefinitions, `rowHeight.${size}`)}
                       getDataPath={getDataPath}
                       // columnDefs={localColumnsDefs}
                       gridOptions={{

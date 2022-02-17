@@ -115,6 +115,7 @@ const BaiscGrid = () => {
           total: mockData.length,
           onChange: onPageChange,
         }}
+        suppressRightClickSelected
         rowBuffer={20}
         onReady={onReady}
       />
