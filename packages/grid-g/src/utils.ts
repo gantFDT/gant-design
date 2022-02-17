@@ -15,9 +15,6 @@ export const sizeNumber = {
   default: 32,
   large: 40,
 };
-export const smallSize = 24;
-export const defaultSize = 32;
-export const largeSize = 40;
 
 //大小配置
 export const sizeDefinitions = {

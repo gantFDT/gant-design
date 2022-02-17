@@ -303,6 +303,7 @@ const BaiscEditGrid = () => {
         title="风格大小"
         type="line"
         size={size}
+        style={{marginBottom:10}}
       />
       <Grid
         key={size}
