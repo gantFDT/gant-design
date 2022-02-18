@@ -191,7 +191,6 @@ export interface DefaultJsonParams {
 }
 // Grid Api
 export interface Props<T extends any> {
-  size: Size;
   columns?: Columns<T>[];
   boxColumnIndex?: number | string[] | string;
   dataSource?: T[];
@@ -213,7 +212,7 @@ export interface Props<T extends any> {
   serverGroupExpend?: (param: IServerSideGetRowsParams, cd: (row: any[]) => void) => void;
   serialNumber?: boolean | ColDef;
   isCompute?: boolean;
-  multiLineVerify: boolean;
+  multiLineVerify?: boolean;
   onCellEditChange?: (record: any, fieldName: string, newValue: any, oldValue: any) => any;
   onCellEditingChange?: (
     record: any,
@@ -261,19 +260,16 @@ export interface Props<T extends any> {
       }
     | null
     | false; // 可删除
+  size?: Size; //大小
   border?: boolean; //是否显示边框
-  zebra?:boolean; //是否显示斑马线
-  autoRowHeight?:boolean; //是否自动行高
-  controlCellWordWrap?:boolean;//单元格自动识别换行符换行
+  zebra?: boolean; //是否显示斑马线
+  autoRowHeight?: boolean; //是否自动行高
+  controlCellWordWrap?: boolean; //单元格自动识别换行符换行
 }
 
 export type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>;
 
-// export type GridProps<T> = CustomProps<T>
-
 export type GridProps<T> = ProtoExtends<AgGridReactProps, CustomProps<T>>;
-
-export type GridPropsPartial<T> = PartRequired<GridProps<T>, 'rowkey'>;
 
 export type GridVariableRef = {
   hasSelectedRows?: boolean;

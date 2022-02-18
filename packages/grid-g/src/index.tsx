@@ -32,7 +32,7 @@ import { filterHooks } from './gantFilter';
 import GantGridFormToolPanelRenderer from './GantGridFormToolPanelRenderer';
 import GridManager from './gridManager';
 import { contextHooks, selectedHooks } from './hooks';
-import { DataActions, GridPropsPartial, GridVariableRef, RowSelection, Size } from './interface';
+import { DataActions, GridProps, GridVariableRef, RowSelection, Size } from './interface';
 import key from './license';
 import en from './locale/en-US';
 import zh from './locale/zh-CN';
@@ -102,7 +102,7 @@ export const defaultRowSelection: RowSelection = {
   rowDeselection: true,
 };
 
-const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
+const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
   const globalConfig: any = useMemo(() => {
     return getGridConfig();
   }, []);
