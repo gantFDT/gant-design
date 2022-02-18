@@ -1,5 +1,5 @@
 import React from 'react';
-import { GridPropsPartial, Columns } from '@grid';
+import { GridProps, Columns } from '@grid';
 
 export enum Fields {
   Input = 'Input',
@@ -52,7 +52,7 @@ export interface ViewListProps {
   customViews: ViewConfig[];
 }
 
-export type GantGridProps<T> = Omit<Partial<GridPropsPartial<T>>, 'columns'>;
+export type GantGridProps<T> = Omit<Partial<GridProps<T>>, 'columns'>;
 
 export interface SmartGridProps<T> extends GantGridProps<T> {
   schema: SchemaProp<T> | CustomColumnProps<T>[];
