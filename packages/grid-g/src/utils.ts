@@ -18,6 +18,11 @@ export const sizeNumber = {
 
 //大小配置
 export const sizeDefinitions = {
+  fontSize: {
+    small: 12,
+    default: 13,
+    large: 14,
+  },
   rowHeight: {
     small: sizeNumber.small,
     default: sizeNumber.default,
@@ -461,7 +466,7 @@ export function isPagitation(p: GantPaginationProps): p is GantPaginationProps {
   return typeof p === 'object';
 }
 
-export function usePagination(pagitation: GantPaginationProps,size:string): any {
+export function usePagination(pagitation: GantPaginationProps, size: string): any {
   if (isPagitation(pagitation)) {
     const defaultPagetation: GantPaginationProps = {
       size,
@@ -471,6 +476,7 @@ export function usePagination(pagitation: GantPaginationProps,size:string): any 
       showSizeChanger: true,
       showQuickJumper: true,
       countLimit: 50000,
+      showLessItems:true
     };
     return {
       ...defaultPagetation,

@@ -20,22 +20,61 @@ interface HeaderIF {
   [props: string]: any;
 }
 
-export const titleSize = {
-  small: 12,
-  default: 14,
-  large: 16,
-};
-
-export const lineWidthSize = {
-  small: 3,
-  default: 4,
-  large: 5,
-};
-
-export const lineHeightSize = {
-  small: 15,
-  default: 17,
-  large: 19,
+//大小配置
+export const sizeDefinitions = {
+  //组件高度
+  height: {
+    small: 30,
+    default: 40,
+    large: 50,
+  },
+  //标题高度
+  title: {
+    small: 12,
+    default: 15,
+    large: 18,
+  },
+  //短线宽度
+  lineWidth: {
+    small: 3,
+    default: 4,
+    large: 5,
+  },
+  //短线高度
+  lineHeight: {
+    small: 15,
+    default: 20,
+    large: 25,
+  },
+  //图标大小
+  icon: {
+    small: 18,
+    default: 22,
+    large: 24,
+  },
+  //number框
+  num: {
+    minWidth:{
+      small: 16,
+      default: 22,
+      large: 24,
+    },
+    fontSize: {
+      small: 12,
+      default: 15,
+      large: 18,
+    },
+    lineHeight: {
+      small: 16,
+      default: 22,
+      large: 24,
+    },
+    height: {
+      small: 16,
+      default: 22,
+      large: 24,
+    },
+  },
 };
 
 const Header = (props: HeaderIF) => {
@@ -91,7 +130,7 @@ const Header = (props: HeaderIF) => {
   const width = '100%';
   const prefixCls = 'gant-blockheader';
   const clsString = classnames(prefixCls, className);
-  
+
   const toolWidth = useMemo(() => {
     if (leftRef.current) {
       return isNaN(allWidth - leftRef.current.clientWidth)
@@ -99,7 +138,7 @@ const Header = (props: HeaderIF) => {
         : allWidth - leftRef.current.clientWidth;
     }
     return 0;
-  }, [allWidth, leftRef.current,size]);
+  }, [allWidth, leftRef.current, size]);
 
   return (
     <div
@@ -113,10 +152,17 @@ const Header = (props: HeaderIF) => {
         </ReactResizeDetector>
       )}
       <div className={prefixCls + '-container'}>
-        <div className={prefixCls + '-wrapper'} ref={leftRef}>
+        <div
+          className={prefixCls + '-wrapper'}
+          style={{ height: sizeDefinitions.height[size] }}
+          ref={leftRef}
+        >
           <div className={prefixCls + '-beforeExtra'}>{beforeExtra}</div>
           {type == 'icon' && (
-            <div className={prefixCls + '-icon'} style={{ color: color }}>
+            <div
+              className={prefixCls + '-icon'}
+              style={{ color: color, fontSize: sizeDefinitions.icon[size] }}
+            >
               {typeof icon === 'string' && <Icon type={icon} />}
               {typeof icon === 'object' && { icon }}
             </div>
@@ -126,17 +172,29 @@ const Header = (props: HeaderIF) => {
               className={prefixCls + '-line'}
               style={{
                 background: color,
-                width: lineWidthSize[size],
-                height: lineHeightSize[size],
+                width: sizeDefinitions.lineWidth[size],
+                height: sizeDefinitions.lineHeight[size],
               }}
             ></div>
           )}
           {type == 'num' && (
-            <div className={prefixCls + '-num'} style={{ background: color }}>
+            <div
+              className={prefixCls + '-num'}
+              style={{
+                background: color,
+                fontSize: sizeDefinitions.num.fontSize[size],
+                lineHeight: sizeDefinitions.num.lineHeight[size]+'px',
+                height: sizeDefinitions.num.height[size],
+                minWidth:sizeDefinitions.num.minWidth[size],
+              }}
+            >
               {num}
             </div>
           )}
-          <div className={prefixCls + '-title'} style={{ color: color, fontSize: titleSize[size] }}>
+          <div
+            className={prefixCls + '-title'}
+            style={{ color: color, fontSize: sizeDefinitions.title[size] }}
+          >
             {title}
           </div>
         </div>

@@ -1,115 +1,9 @@
-.gant-cell-tooltip {
-  position: absolute;
-  pointer-events: none;
-  transition: opacity 1s;
-  // min-width: 40px;
-  width: fit-content;
-  height: 40px;
-}
-
-.gant-cell-tooltip.ag-tooltip-hiding {
-  opacity: 0;
-}
-
-.gant-cell-tooltip-content {
-  font-size: 12px;
-  padding: 0px 5px;
-  line-height: 18px;
-
-  height: auto;
-  min-width: 200px;
-  max-width: 300px;
-  // max-width:100px;
-  width: auto !important;
-  // background-color: rgba(175,175, 175, 0.65);
-  background-color: #fff;
-  // border-radius: 3px;
-  // white-space: word-wrap;
-  border: 1px rgba(128, 128, 128, 0.5) solid;
-  // text-align: center;
-  white-space: pre-line;
-  word-break: break-all;
-  &.gant-cell-tooltip-error {
-    border: 1px #f5222d solid;
-  }
-  .gant-cell-tooltip-errorMsg {
-    color: #f5222d;
-  }
-}
-
-.gantd-grid-footer {
-  // height: 30px;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  .gantd-pagination-number-goto .ant-input-number {
-    margin: 0 8px;
-  }
-  .gantd-pagination-total-btn {
-    font-size: 12px;
-    border: none !important;
-  }
-  :global {
-    .ant-pagination-total-text {
-      vertical-align: top;
-      line-height: 24px !important;
-    }
-  }
-}
-
-.gant-selected-agrid-title {
-  line-height: 24px;
-  font-size: 12px;
-
-  > p {
-    float: left;
-  }
-
-  > div {
-    float: right;
-  }
-
-  button {
-    font-size: 12px;
-  }
-
-  height: 32px;
-  line-height: 32px;
-  overflow: hidden;
-}
-
 .gant-grid {
   .gant-ag-wrapper {
     flex: 1;
     position: relative;
   }
-
-  .gant-grid-selected-wrapper {
-    position: absolute;
-    bottom: 18px;
-    right: 18px;
-    z-index: 1000;
-  }
-
-  .gant-grid-selected-box {
-    width: 24px;
-    height: 24px;
-    line-height: 24px;
-    background: rgba(128, 128, 128, 0.1);
-    cursor: pointer;
-    font-size: 16px;
-    text-align: center;
-    border-radius: 3px;
-    transition: all 0.3s;
-
-    &:hover {
-      background: var(--component-background);
-      transition: all 0.3s;
-      box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
-    }
-  }
-
+  //剪切
   .gant-grid-row-cut {
     background-color: transparent !important;
     opacity: 0.6;
@@ -126,7 +20,6 @@
       opacity: 0.5;
     }
   }
-  // .ag-selection-checkbox,
   .ag-ltr {
     .ag-group-expanded,
     .ag-group-contracted {
@@ -214,14 +107,7 @@
     }
   }
 
-  .gant-grid-pagination.mini {
-    padding: 3px 5px;
-
-    .ant-pagination-options {
-      line-height: 24px;
-    }
-  }
-
+  //行选择
   .gant-grid-row-isdeleted {
     &:after {
       content: '';
@@ -238,7 +124,7 @@
     }
   }
 
-  //居中
+  //选择列居中
   .ag-theme-balham .ag-ltr .ag-header-select-all {
     margin-right: initial;
   }
@@ -246,25 +132,41 @@
   .ag-theme-balham .ag-ltr .ag-selection-checkbox {
     margin-right: initial;
   }
-}
 
-//不显示斑马线
-.no-zebra div .ag-row-odd {
-  background-color: var(--component-background);
-}
+  //不显示斑马线
+  .no-zebra div .ag-row-odd {
+    background-color: var(--component-background);
+  }
 
-.ag-theme-balham .ag-row-hover {
-  background-color: var(--ag-row-hover-color, #ecf0f1) !important;
-}
+  .ag-theme-balham .ag-row-hover {
+    background-color: var(--ag-row-hover-color, #ecf0f1) !important;
+  }
 
-.ag-theme-balham .ag-row-selected {
-  background-color: var(--ag-selected-row-background-color, #b7e4ff) !important;
-}
+  .ag-theme-balham .ag-row-selected {
+    background-color: var(--ag-selected-row-background-color, #b7e4ff) !important;
+  }
 
-// treeData groupSelectsChildren 模式
+  //侧边栏表格详情
+  .grid-side-detail-panel .ag-root-wrapper {
+    border: none !important;
+  }
 
-.gant-grid {
+  //合并单元格
+  .gant-cell-span {
+    background: var(--component-background);
+  }
+
+  //gird 默认的选择列内容居中
+  .gant-grid-default-checkbox {
+    display: flex;
+    justify-content: center;
+    padding: 0 !important;
+    & > .ag-react-container {
+      display: none !important;
+    }
+  }
   .ag-theme-balham {
+    // treeData groupSelectsChildren 模式
     .gant-grid-cell-checkbox-indeterminate {
       .ag-checked {
         &::after {
@@ -315,23 +217,30 @@
       }
     }
   }
-}
-//侧边栏表格详情
-.grid-side-detail-panel .ag-root-wrapper {
-  border: none !important;
-}
-
-//合并单元格
-.gant-cell-span {
-  background: var(--component-background);
+  &-noborder {
+    .ag-root-wrapper {
+      border: none;
+    }
+  }
 }
 
-//gird 默认的选择列内容居中
-.gant-grid-default-checkbox {
-  display: flex;
-  justify-content: center;
-  padding: 0 !important;
-  & > .ag-react-container {
-    display: none !important;
+//自动换行
+.grid-auto-row {
+  .ag-cell {
+    height: 100%!important;
+  }
+  .ag-pinned-left-cols-container {
+    .ag-cell {
+      height: 100%!important;
+    }
+  }
+  .align-center {
+    height: 100%!important;
+  }
+}
+//换行符控制换行
+.grid-control-break-line {
+  .ag-cell-value {
+    white-space: pre !important;
   }
 }

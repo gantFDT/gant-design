@@ -192,7 +192,11 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
     showCutChild,
     gantCustomHeader,
     numberGoToMode = false,
-    domLayout,
+    domLayout: _domLayout,
+    border=true,
+    zebra = true,
+    autoRowHeight = false,
+    controlCellWordWrap = false,
     ...orignProps
   } = props;
   const apiRef = useRef<GridApi>();
@@ -202,6 +206,11 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
   const selectedLoadingRef = useRef<boolean>(false);
   const [visibleDrawer, setVisibleDrawer] = useState(false);
   const [clickedEvent, setClickedEvent] = useState<RowClickedEvent>();
+
+  let domLayout = _domLayout;
+  if (autoHeight) {
+    domLayout = 'autoHeight';
+  }
 
   const gridVariableRef = useRef<GridVariableRef>({
     hasSelectedRows:
@@ -238,12 +247,15 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
   );
 
   // 分页事件
-  const computedPagination: any = useMemo(() => usePagination(pagination,size), [pagination,size]);
+  const computedPagination: any = useMemo(() => usePagination(pagination, size), [
+    pagination,
+    size,
+  ]);
 
   //自动高度
   const gridHeight = useMemo(() => {
-    if(domLayout ==='autoHeight'){
-      return 'auto'
+    if (domLayout === 'autoHeight') {
+      return 'auto';
     }
     if (height) return height;
     if (!autoHeight && !height) return DEFAULT_HEIGHT;
@@ -774,8 +786,8 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
 
   //表格高度策略
   const girdWrapHeight = useMemo(() => {
-    if(domLayout ==='autoHeight'){
-      return 'auto'
+    if (domLayout === 'autoHeight') {
+      return 'auto';
     }
     return computedPagination
       ? `calc(100% - ${get(sizeDefinitions, `paginationHeight.${size}`)}px)`
@@ -823,22 +835,31 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                   openEditSign && `gant-grid-edit`,
                   editable && openEditSign && 'gant-grid-editable',
                   autoHeight && `gant-grid-auto-height`,
+                  !border && `gant-grid-noborder`,
+                  autoRowHeight && `grid-auto-row`,
+                  controlCellWordWrap && `grid-control-break-line`
                 )}
               >
                 <div
                   style={{
                     display: 'flex',
                     width,
-                    height: girdWrapHeight
+                    height: girdWrapHeight,
                   }}
                 >
                   <div
-                    className={classnames(themeClass, 'gant-ag-wrapper', editable && 'no-zebra')}
+                    className={classnames(
+                      themeClass,
+                      'gant-ag-wrapper',
+                      editable && 'no-zebra',
+                      !zebra && 'no-zebra',
+                    )}
                     data-refid={gridKey}
                     style={{
                       width: '100%',
                       height: '100%',
                       flex: 1,
+                      fontSize: sizeDefinitions.fontSize[size],
                     }}
                     {...gridForcedProps}
                   >

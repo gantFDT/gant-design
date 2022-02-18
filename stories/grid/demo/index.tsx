@@ -39,13 +39,6 @@ export default [
     code: require('./sidegriddetail/code').default,
   },
   {
-    title: '自适应高度',
-    describe:
-      '表格自适应高度, 建议同时设置最大最小高度，为了兼容横向滚动条，所以预留了横向滚动条的高度，内部的高度其实是根据行数计算得来，顾不支持自动行高',
-    cmp: createElement(lazy(() => import('./autoheight'))),
-    code: require('./autoheight/code').default,
-  },
-  {
     title: '悬浮过滤器',
     describe: '',
     cmp: createElement(lazy(() => import('./floatingfilter'))),
@@ -92,5 +85,11 @@ export default [
     describe: `size支持3种，'small' | 'default' | 'large'`,
     cmp: createElement(lazy(() => import('./size'))),
     code: require('./size/code').default,
+  },
+  {
+    title: '自适应表格高度和行高',
+    describe: `行高根据内容撑大`,
+    cmp: createElement(lazy(() => import('./autorowheight'))),
+    code: require('./autorowheight/code').default,
   },
 ];
