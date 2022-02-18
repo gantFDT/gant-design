@@ -1,0 +1,46 @@
+
+.gant-grid-selected-wrapper {
+  position: absolute;
+  bottom: 18px;
+  right: 18px;
+  z-index: 1000;
+}
+
+.gant-grid-selected-box {
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  background: rgba(128, 128, 128, 0.1);
+  cursor: pointer;
+  font-size: 16px;
+  text-align: center;
+  border-radius: 3px;
+  transition: all 0.3s;
+
+  &:hover {
+    background: var(--component-background);
+    transition: all 0.3s;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.gant-selected-agrid-title {
+  line-height: 24px;
+  font-size: 12px;
+
+  > p {
+    float: left;
+  }
+
+  > div {
+    float: right;
+  }
+
+  button {
+    font-size: 12px;
+  }
+
+  height: 32px;
+  line-height: 32px;
+  overflow: hidden;
+}

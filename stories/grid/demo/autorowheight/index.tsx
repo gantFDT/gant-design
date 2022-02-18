@@ -7,7 +7,7 @@ import Grid, {
   Columns,
 } from '@grid';
 import { Input, DatePicker, Selector, Header } from '@gantd';
-import { Button, Modal, Radio } from 'antd';
+import { Button, Modal, Radio, Avatar } from 'antd';
 import { Random } from 'mockjs';
 import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -18,6 +18,7 @@ const RandomCreate = () => {
     user: { name: Random.first() },
     date: Random.date('yyyy-MM-dd'),
     cn: Random.cname(),
+    color: Random.pick(['orange', 'blue', 'green','red']),
     nationality: Random.pick(['China', 'foreign']),
   };
 };
@@ -31,8 +32,27 @@ const columns: Columns[] = [
   {
     fieldName: 'user.name',
     title: '英文名称',
-    cellRenderer: 'gantGroupCellRender',
-    flex:1,
+    flex: 1,
+    render: (text: any, record: any) => {
+      return (
+        <>
+          <div>
+            <span style={{ margin: 10, display: 'flex' }}>
+              <Avatar
+                style={{ backgroundColor: record.color, verticalAlign: 'middle',fontSize:24 }}
+                size="large"
+              >
+                {text[0]}
+              </Avatar>
+              <div style={{ marginLeft: 10 }}>
+                <div style={{ fontSize: 16, fontWeight: 'bold' }}>{text}</div>
+                <div style={{ color:'gray' }}>{record.ip}</div>
+              </div>
+            </span>
+          </div>
+        </>
+      );
+    },
     editConfig: {
       component: Input,
       editable: true,
@@ -48,10 +68,9 @@ const columns: Columns[] = [
   {
     fieldName: 'cn',
     title: '中文名称',
-    flex:1,
-    renderer:()=>{
-
-    },
+    flex: 1,
+    autoHeight: true,
+    wrapText: true,
     editConfig: {
       component: Input,
       editable: true,
@@ -66,7 +85,7 @@ const columns: Columns[] = [
   {
     fieldName: 'date',
     title: '出生日期',
-    flex:1,
+    flex: 1,
     editConfig: {
       component: DatePicker,
       editable: true,
@@ -262,11 +281,6 @@ const BaiscEditGrid = () => {
       <Header
         extra={
           <>
-            <Radio.Group value={size} buttonStyle="solid" onChange={onRadioChange} size={size}>
-              <Radio.Button value="small">small</Radio.Button>
-              <Radio.Button value="default">default</Radio.Button>
-              <Radio.Button value="large">large</Radio.Button>
-            </Radio.Group>
             {!editable ? (
               <Button size={size} icon="edit" onClick={onEnterEdit}>
                 进入编辑
@@ -301,7 +315,7 @@ const BaiscEditGrid = () => {
             )}
           </>
         }
-        title="风格大小"
+        title="自适应表格高度和行高"
         type="line"
         size={size}
       />
@@ -345,6 +359,9 @@ const BaiscEditGrid = () => {
         border={false}
         zebra={false}
         hideSelcetedBox
+        autoRowHeight
+        defaultColDef={{ autoHeight: true, wrapText: true }}
+        // controlCellWordWrap //如果需要通过数据换行符控制则开启
       />
     </>
   );

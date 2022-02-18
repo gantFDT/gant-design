@@ -18,7 +18,7 @@ import { defaultProps } from './index';
 export * from '@ag-grid-community/core';
 export { default as GridManager } from './gridManager';
 // 大小
-export type Size = 'small' | 'large' | 'default' 
+export type Size = 'small' | 'large' | 'default';
 
 // 过滤器
 export enum Filter {
@@ -191,7 +191,7 @@ export interface DefaultJsonParams {
 }
 // Grid Api
 export interface Props<T extends any> {
-  size:Size;
+  size: Size;
   columns?: Columns<T>[];
   boxColumnIndex?: number | string[] | string;
   dataSource?: T[];
@@ -215,7 +215,13 @@ export interface Props<T extends any> {
   isCompute?: boolean;
   multiLineVerify: boolean;
   onCellEditChange?: (record: any, fieldName: string, newValue: any, oldValue: any) => any;
-  onCellEditingChange?: (record: any, fieldName: string, newValue: any, oldValue: any,params:any) => any;
+  onCellEditingChange?: (
+    record: any,
+    fieldName: string,
+    newValue: any,
+    oldValue: any,
+    params: any,
+  ) => any;
   onCellChanged?: (record: any, fieldName: string, newValue: any, oldValue: any) => void;
   openEditSign?: boolean;
   createConfig?: CreateConfig;
@@ -255,6 +261,10 @@ export interface Props<T extends any> {
       }
     | null
     | false; // 可删除
+  border?: boolean; //是否显示边框
+  zebra?:boolean; //是否显示斑马线
+  autoRowHeight?:boolean; //是否自动行高
+  controlCellWordWrap?:boolean;//单元格自动识别换行符换行
 }
 
 export type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>;

@@ -33,6 +33,7 @@ const columns: Columns[] = [
     fieldName: 'user.name',
     title: '英文名称',
     cellRenderer: 'gantGroupCellRender',
+    flex:1,
     editConfig: {
       component: Input,
       editable: true,
@@ -48,8 +49,10 @@ const columns: Columns[] = [
   {
     fieldName: 'cn',
     title: '中文名称',
-    autoHeight: true,
-    wrapText: true,
+    flex:1,
+    renderer:()=>{
+
+    },
     editConfig: {
       component: Input,
       editable: true,
@@ -64,6 +67,7 @@ const columns: Columns[] = [
   {
     fieldName: 'date',
     title: '出生日期',
+    flex:1,
     editConfig: {
       component: DatePicker,
       editable: true,
@@ -116,7 +120,7 @@ const BaiscEditGrid = () => {
   const [gridChange, setGridChange] = useState(false);
   const [selectedKeys, setselectedKeys] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
-  const [size, setSize] = useState<any>('large');
+  const [size, setSize] = useState<any>('default');
   const apiRef = useRef<GridApi>();
   const gridManagerRef = useRef<GridManager>();
 
@@ -251,7 +255,7 @@ const BaiscEditGrid = () => {
   };
 
   useEffect(() => {
-    queryData(0, 20);
+    queryData(0, 10);
   }, []);
 
   return (
@@ -301,7 +305,6 @@ const BaiscEditGrid = () => {
         title="风格大小"
         type="line"
         size={size}
-        style={{ marginBottom: 10 }}
       />
       <Grid
         key={size}
@@ -310,7 +313,6 @@ const BaiscEditGrid = () => {
         columns={columns}
         editable={editable}
         dataSource={dataSource}
-        serialNumber
         rowSelection={{
           selectedRows,
           onSelect: onSelect,
@@ -338,8 +340,12 @@ const BaiscEditGrid = () => {
         enableCellTextSelection={false}
         //支持区域选中
         enableRangeSelection
+        //宽松风格
         size={size}
-        domLayout={'autoHeight'}
+        autoHeight
+        border={false}
+        zebra={false}
+        hideSelcetedBox
       />
     </>
   );
