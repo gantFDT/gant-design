@@ -80,8 +80,6 @@ export const defaultProps = {
   // lockPosition: false,
   /**直接在列头下面显示过滤器 */
   floatingFilter: false,
-  /**风格大小 */
-  size: 'small',
   /**rowkey */
   rowkey: 'key',
   width: '100%',
@@ -108,14 +106,13 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
   const globalConfig: any = useMemo(() => {
     return getGridConfig();
   }, []);
-  const props = { ...globalConfig, ...gridProps };
+  const props = { ...defaultProps, ...globalConfig, ...gridProps };
   const {
     dataSource: initDataSource,
     onReady,
     columns,
     editable,
     rowSelection: rowSel,
-    size,
     rowkey,
     gridKey,
     resizable,
@@ -193,7 +190,8 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
     gantCustomHeader,
     numberGoToMode = false,
     domLayout: _domLayout,
-    border=true,
+    size = 'small',
+    border = true,
     zebra = true,
     autoRowHeight = false,
     controlCellWordWrap = false,
@@ -837,7 +835,7 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
                   autoHeight && `gant-grid-auto-height`,
                   !border && `gant-grid-noborder`,
                   autoRowHeight && `grid-auto-row`,
-                  controlCellWordWrap && `grid-control-break-line`
+                  controlCellWordWrap && `grid-control-break-line`,
                 )}
               >
                 <div
@@ -1006,7 +1004,6 @@ const Grid = function Grid<T extends any>(gridProps: GridPropsPartial<T>) {
   );
 };
 
-Grid.defaultProps = defaultProps;
 Grid.LicenseManager = LicenseManager;
 
 export default Grid;
