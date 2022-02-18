@@ -39,9 +39,9 @@ export const sizeDefinitions = {
     large: sizeNumber.large,
   },
   paginationHeight: {
-    small: sizeNumber.small,
-    default: sizeNumber.default,
-    large: sizeNumber.large,
+    small: 30,
+    default: 40,
+    large: 50,
   },
 };
 
@@ -476,7 +476,7 @@ export function usePagination(pagitation: GantPaginationProps, size: string): an
       showSizeChanger: true,
       showQuickJumper: true,
       countLimit: 50000,
-      showLessItems:true
+      showLessItems: true,
     };
     return {
       ...defaultPagetation,
