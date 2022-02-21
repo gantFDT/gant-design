@@ -5,6 +5,12 @@ import code from './code.js';
 import React, { useState, useMemo } from 'react';
 import { message, Icon, Button, Tooltip, Slider,Radio } from 'antd';
 import { Header } from '@gantd';
+
+import {setGlobalConfig} from '@header'
+
+setGlobalConfig({
+  size:'default'
+})
 /*! Split !*/
 function BasicUse() {
   return (
