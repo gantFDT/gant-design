@@ -4,10 +4,11 @@ import ModalContext from './Context';
 import { ContextContentProps, ModalProps } from './interface';
 import ResizableModal from './ResizableModal';
 import ResizableProvider from './ResizableProvider';
+import { Modal } from 'antd';
+import { getGlobalConfig } from './utils';
 
 const uuid = 'modal-g-uuid';
 const providerPropKeys = ['initalState', 'maxZIndex', 'minWidth', 'minHeight'];
-
 
 const ContextContent: React.FC<ContextContentProps> = ({
   id,
@@ -34,39 +35,83 @@ const ContextContent: React.FC<ContextContentProps> = ({
   return <>{children}</>;
 };
 
-class Modal extends React.Component<ModalProps, {}> {
-  static ResizableModal: typeof ResizableModal;
-  static ResizableProvider: typeof ResizableProvider;
-  static ModalContext: typeof ModalContext;
+const ModalComponent = (modelProps: ModalProps) => {
+  const globalConfig = getGlobalConfig();
+  const props = { ...globalConfig, ...modelProps };
+  const {
+    id = uuid,
+    throttle = 0,
+    children,
+    maxZIndex = 999,
+    isModalDialog = true,
+    onSizeChange,
+    type = 'resize',
+    ...restProps
+  } = props;
+  const { itemState = {}, width: restWidth } = restProps;
+  const { width: itemWidth, height: itemHeight } = itemState;
 
-  static defaultProps = {
-    id: uuid,
-    throttle: 0,
-    maxZIndex: 999,
-    isModalDialog: true,
-  };
-
-  render() {
-    const { id, throttle, children, onSizeChange, ...restProps } = this.props;
-
-    return (
-      <ResizableProvider {...pick(restProps, providerPropKeys)}>
-        <ResizableModal id={id} {...omit(restProps, providerPropKeys)}>
-          <ContextContent
-            id={id}
-            children={children}
-            throttleTime={throttle}
-            onSizeChange={onSizeChange}
-          />
-        </ResizableModal>
-      </ResizableProvider>
-    );
+  //兼容type为autoHeight的情况中的指定高度
+  //宽度
+  let modelWidth: number | string;
+  if (typeof itemWidth === 'number') {
+    modelWidth = itemWidth;
   }
-}
+  if (typeof itemWidth === 'string' && itemWidth.indexOf('%')) {
+    modelWidth = (window.innerWidth * parseInt(itemWidth)) / 100;
+  }
+  if (restWidth) {
+    modelWidth = restWidth;
+  }
 
-Modal.ResizableModal = ResizableModal;
-Modal.ResizableProvider = ResizableProvider;
-Modal.ModalContext = ModalContext;
+  //高度
+  let modelHeight: number;
+  if (typeof itemHeight === 'number') {
+    modelHeight = itemHeight;
+  }
+  if (typeof itemHeight === 'string' && itemHeight.indexOf('%')) {
+    modelHeight = (window.innerHeight * parseInt(itemHeight)) / 100;
+  }
 
-export default Modal;
+  return (
+    <>
+      {type === 'resize' ? (
+        <ResizableProvider maxZIndex={maxZIndex} {...pick(restProps, providerPropKeys)}>
+          <ResizableModal
+            id={id}
+            isModalDialog={isModalDialog}
+            {...omit(restProps, providerPropKeys)}
+          >
+            <ContextContent
+              id={id}
+              children={children}
+              throttleTime={throttle}
+              onSizeChange={onSizeChange}
+            />
+          </ResizableModal>
+        </ResizableProvider>
+      ) : (
+        <Modal width={modelWidth} {...restProps}>
+          <div
+            style={
+              itemHeight &&
+              modelHeight && {
+                height: modelHeight - 55,
+              }
+            }
+          >
+            {children}
+          </div>
+        </Modal>
+      )}
+    </>
+  );
+};
+
+ModalComponent.ResizableModal = ResizableModal;
+ModalComponent.ResizableProvider = ResizableProvider;
+ModalComponent.ModalContext = ModalContext;
+
+export default ModalComponent;
 export { ResizableModal, ResizableProvider, ModalContext };
+export { setGlobalConfig } from './utils';

@@ -25,7 +25,15 @@ import { Spin } from 'antd';
 import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
 import classnames from 'classnames';
 import { findIndex, get, isEmpty, isEqual, isObject, merge, cloneDeep } from 'lodash';
-import React, { createContext, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useLayoutEffect,
+} from 'react';
 import { gantGetcontextMenuItems } from './contextMenuItems';
 import CustomHeader from './CustomHeader';
 import { filterHooks } from './gantFilter';
@@ -199,6 +207,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
   } = props;
   const apiRef = useRef<GridApi>();
   const shiftRef = useRef<boolean>(false);
+  const wrapperRef = useRef<any>();
   const selectedChanged = useRef<boolean>(false);
   const columnsRef = useRef<ColumnApi>();
   const selectedLoadingRef = useRef<boolean>(false);
@@ -257,41 +266,42 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     }
     if (height) return height;
     if (!autoHeight && !height) return DEFAULT_HEIGHT;
-    const rowHeight = get(sizeDefinitions, `rowHeight.${size}`);
-    let data = initDataSource;
-    if (!data) {
-      data = [];
-    }
-    let resHeight: number | string = 0;
-    if (!treeData || groupDefaultExpanded === -1) {
-      resHeight = rowHeight * (data.length + 1);
-    } else {
-      const filterData = data.filter(itemData => {
-        const isExpaned = getDataPath(itemData).length <= groupDefaultExpanded + 1;
-        return isExpaned;
-      });
-      resHeight = rowHeight * (filterData.length + 1);
-    }
-    resHeight = maxAutoHeight && resHeight >= maxAutoHeight ? maxAutoHeight : resHeight;
-    resHeight = minAutoHeight && minAutoHeight >= resHeight ? minAutoHeight : resHeight;
-    //各边框高度
-    const bordersHeight = 3;
-    //横向滚动条高度
-    const horizontalScrollBarHeight = 15;
-    resHeight = parseInt(resHeight as any) + horizontalScrollBarHeight + bordersHeight;
-    //分页条高度
-    if (computedPagination) {
-      resHeight = resHeight + get(sizeDefinitions, `paginationHeight.${size}`);
-    }
-    return resHeight;
+    // const rowHeight = get(sizeDefinitions, `rowHeight.${size}`);
+    // let data = initDataSource;
+    // if (!data) {
+    //   data = [];
+    // }
+    // let resHeight: number | string = 0;
+    // if (!treeData || groupDefaultExpanded === -1) {
+    //   resHeight = rowHeight * (data.length + 1);
+    // } else {
+    //   const filterData = data.filter(itemData => {
+    //     const isExpaned = getDataPath(itemData).length <= groupDefaultExpanded + 1;
+    //     return isExpaned;
+    //   });
+    //   resHeight = rowHeight * (filterData.length + 1);
+    // }
+    // resHeight = maxAutoHeight && resHeight >= maxAutoHeight ? maxAutoHeight : resHeight;
+    // resHeight = minAutoHeight && minAutoHeight >= resHeight ? minAutoHeight : resHeight;
+    // //各边框高度
+    // const bordersHeight = 3;
+    // //横向滚动条高度
+    // const horizontalScrollBarHeight = 15;
+    // resHeight = parseInt(resHeight as any) + horizontalScrollBarHeight + bordersHeight;
+    // //分页条高度
+    // if (computedPagination) {
+    //   resHeight = resHeight + get(sizeDefinitions, `paginationHeight.${size}`);
+    // }
+    // return resHeight;
   }, [
-    size,
+    domLayout,
+    // size,
     autoHeight,
-    initDataSource,
-    getDataPath,
-    groupDefaultExpanded,
+    // initDataSource,
+    // getDataPath,
+    // groupDefaultExpanded,
     height,
-    computedPagination,
+    // computedPagination,
   ]);
 
   //侧边栏高度
@@ -792,6 +802,18 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
       : '100%';
   }, [domLayout, computedPagination, sizeDefinitions, size]);
 
+  //自动高度时最大高度
+  useLayoutEffect(() => {
+    if (!autoHeight || !maxAutoHeight) {
+      return;
+    }
+    const autoHeightDiv = wrapperRef.current.querySelector('.ag-layout-auto-height');
+    if (autoHeightDiv) {
+      autoHeightDiv.style.maxHeight = maxAutoHeight + 'px';
+      autoHeightDiv.style.overflowY = 'auto';
+    }
+  }, [autoHeight, maxAutoHeight]);
+
   return (
     <LocaleReceiver
       children={(local, localeCode = 'zh-cn') => {
@@ -859,6 +881,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                       flex: 1,
                       fontSize: sizeDefinitions.fontSize[size],
                     }}
+                    ref={wrapperRef}
                     {...gridForcedProps}
                   >
                     {!hideBox && (

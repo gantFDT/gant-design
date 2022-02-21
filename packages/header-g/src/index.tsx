@@ -5,7 +5,7 @@ import ReactResizeDetector from 'react-resize-detector';
 import ResizeDetector from './ResizeDetector';
 import ExtraContent from './ExtraContent';
 import _ from 'lodash';
-
+import { getGlobalConfig } from './utils';
 interface HeaderIF {
   type?: 'line' | 'num' | 'icon';
   bottomLine?: boolean;
@@ -16,6 +16,8 @@ interface HeaderIF {
   color?: string;
   style?: object;
   className?: string;
+  num?: number;
+  prefixCls?: string;
   size?: 'small' | 'large' | 'default';
   [props: string]: any;
 }
@@ -54,7 +56,7 @@ export const sizeDefinitions = {
   },
   //number框
   num: {
-    minWidth:{
+    minWidth: {
       small: 16,
       default: 22,
       large: 24,
@@ -77,7 +79,9 @@ export const sizeDefinitions = {
   },
 };
 
-const Header = (props: HeaderIF) => {
+const Header = (headerProps: HeaderIF) => {
+  const globalConfig = getGlobalConfig();
+  const props = { ...globalConfig, ...headerProps };
   let {
     prefixCls: customizePrefixCls,
     type = '',
@@ -183,9 +187,9 @@ const Header = (props: HeaderIF) => {
               style={{
                 background: color,
                 fontSize: sizeDefinitions.num.fontSize[size],
-                lineHeight: sizeDefinitions.num.lineHeight[size]+'px',
+                lineHeight: sizeDefinitions.num.lineHeight[size] + 'px',
                 height: sizeDefinitions.num.height[size],
-                minWidth:sizeDefinitions.num.minWidth[size],
+                minWidth: sizeDefinitions.num.minWidth[size],
               }}
             >
               {num}
@@ -208,4 +212,5 @@ const Header = (props: HeaderIF) => {
   );
 };
 
+export {setGlobalConfig} from './utils'
 export default Header;

@@ -30,43 +30,44 @@
   }
 
   html {
-    .ant-modal-header {
-      padding: 4px !important;
-    }
+    .@{component}-resizableModalWrapper{
+      .ant-modal-header {
+        padding: 4px !important;
+      }
 
-    .ant-modal-close-x {
-      width: 30px;
-      height: 30px;
-      line-height: 30px;
-    }
-
-    .ant-modal-body {
-      padding: 10px;
-    }
-
-    .ant-modal-title {
-      font-size: 14px;
-      font-weight: bold;
-    }
-
-    .ant-modal-confirm-body {
-      padding-bottom: 30px;
-    }
-
-    .ant-modal-confirm {
-      .ant-modal-confirm-btns {
-        margin-top: 0px;
+      .ant-modal-close-x {
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
       }
 
       .ant-modal-body {
-        padding: 10px !important;
+        padding: 10px;
+      }
+
+      .ant-modal-title {
+        font-size: 14px;
+        font-weight: bold;
+      }
+
+      .ant-modal-confirm-body {
+        padding-bottom: 30px;
+      }
+
+      .ant-modal-confirm {
+        .ant-modal-confirm-btns {
+          margin-top: 0px;
+        }
+
+        .ant-modal-body {
+          padding: 10px !important;
+        }
+      }
+      .ant-modal-footer{
+        padding:3px;
       }
     }
-    .ant-modal-footer{
-      padding:3px;
-    }
   }
-
   .diagonalPositionMixin(@direction){
     top: if((@direction=leftTop) or (@direction=rightTop), -@diagonalOffset, none);
     right: if((@direction=rightTop) or (@direction=rightBottom), -@diagonalOffset, none);
