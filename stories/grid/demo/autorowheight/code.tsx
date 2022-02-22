@@ -357,7 +357,6 @@ const BaiscEditGrid = () => {
         //宽松风格
         size={size}
         autoHeight
-        maxAutoHeight={1500} //一般情况不需要设置，按需设置
         border={false}
         zebra={false}
         hideSelcetedBox

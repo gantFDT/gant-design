@@ -343,6 +343,7 @@ const BaiscEditGrid = () => {
         //宽松风格
         size={size}
         autoHeight
+        maxAutoHeight={1000}
         border={false}
         zebra={false}
         hideSelcetedBox

@@ -201,6 +201,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     size = 'small',
     border = true,
     zebra = true,
+    rowHeight: _rowHeight,
     autoRowHeight = false,
     controlCellWordWrap = false,
     ...orignProps
@@ -215,7 +216,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
   const [clickedEvent, setClickedEvent] = useState<RowClickedEvent>();
 
   let domLayout = _domLayout;
-  if (autoHeight) {
+  if (autoHeight && autoRowHeight) {
     domLayout = 'autoHeight';
   }
 
@@ -230,6 +231,9 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
 
   //自定义列头文字
   const { ColumnLabelComponent } = frameworkComponents;
+
+  //行高
+  const rowHeight = _rowHeight || get(sizeDefinitions, `rowHeight.${size}`);
 
   //实例化manager
   const gridManager = useMemo(() => {
@@ -259,50 +263,64 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     size,
   ]);
 
-  //自动高度
+  //表格外层容器高度，高度策略有两种，一种是兼容虚拟滚动计算出来的假的自动高度，一种是完全自动高度，稍微有点复杂
   const gridHeight = useMemo(() => {
-    if (domLayout === 'autoHeight') {
+    //如果指定高度，那么就是指定高度
+    if (height) return height;
+    //如果没指定高度，也没指定自动高度，那么给予默认高度
+    if (!autoHeight && !height) return DEFAULT_HEIGHT;
+    //如果是开启自动高度并且开启自动行高，则使用domLayout:'autoHeight'
+    if (autoHeight && autoRowHeight) {
       return 'auto';
     }
-    if (height) return height;
-    if (!autoHeight && !height) return DEFAULT_HEIGHT;
-    // const rowHeight = get(sizeDefinitions, `rowHeight.${size}`);
-    // let data = initDataSource;
-    // if (!data) {
-    //   data = [];
-    // }
-    // let resHeight: number | string = 0;
-    // if (!treeData || groupDefaultExpanded === -1) {
-    //   resHeight = rowHeight * (data.length + 1);
-    // } else {
-    //   const filterData = data.filter(itemData => {
-    //     const isExpaned = getDataPath(itemData).length <= groupDefaultExpanded + 1;
-    //     return isExpaned;
-    //   });
-    //   resHeight = rowHeight * (filterData.length + 1);
-    // }
-    // resHeight = maxAutoHeight && resHeight >= maxAutoHeight ? maxAutoHeight : resHeight;
-    // resHeight = minAutoHeight && minAutoHeight >= resHeight ? minAutoHeight : resHeight;
-    // //各边框高度
-    // const bordersHeight = 3;
-    // //横向滚动条高度
-    // const horizontalScrollBarHeight = 15;
-    // resHeight = parseInt(resHeight as any) + horizontalScrollBarHeight + bordersHeight;
-    // //分页条高度
-    // if (computedPagination) {
-    //   resHeight = resHeight + get(sizeDefinitions, `paginationHeight.${size}`);
-    // }
-    // return resHeight;
+    //如果是开启自动高度并且没有自动行高，那么使用乘法计算高度
+    let data = initDataSource;
+    if (!data) {
+      data = [];
+    }
+    let resHeight: number | string = 0;
+    if (!treeData || groupDefaultExpanded === -1) {
+      resHeight = rowHeight * (data.length + 1);
+    } else {
+      const filterData = data.filter(itemData => {
+        const isExpaned = getDataPath(itemData).length <= groupDefaultExpanded + 1;
+        return isExpaned;
+      });
+      resHeight = rowHeight * (filterData.length + 1);
+    }
+    resHeight = maxAutoHeight && resHeight >= maxAutoHeight ? maxAutoHeight : resHeight;
+    resHeight = minAutoHeight && minAutoHeight >= resHeight ? minAutoHeight : resHeight;
+    //各边框高度
+    const bordersHeight = 3;
+    //横向滚动条高度
+    const horizontalScrollBarHeight = 15;
+    resHeight = parseInt(resHeight as any) + horizontalScrollBarHeight + bordersHeight;
+    //分页条高度
+    if (computedPagination) {
+      resHeight = resHeight + get(sizeDefinitions, `paginationHeight.${size}`);
+    }
+    return resHeight;
   }, [
-    domLayout,
-    // size,
+    size,
     autoHeight,
-    // initDataSource,
-    // getDataPath,
-    // groupDefaultExpanded,
+    initDataSource,
+    getDataPath,
+    groupDefaultExpanded,
     height,
-    // computedPagination,
+    rowHeight,
+    autoRowHeight,
+    computedPagination,
   ]);
+
+  //表格内层容器高度策略
+  const girdWrapHeight = useMemo(() => {
+    if (autoHeight && autoRowHeight) {
+      return 'auto';
+    }
+    return computedPagination
+      ? `calc(100% - ${get(sizeDefinitions, `paginationHeight.${size}`)}px)`
+      : '100%';
+  }, [autoHeight, autoRowHeight, computedPagination, sizeDefinitions, size]);
 
   //侧边栏高度
   const sideDrawerHeight = useMemo(() => {
@@ -792,19 +810,9 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     });
   }, []);
 
-  //表格高度策略
-  const girdWrapHeight = useMemo(() => {
-    if (domLayout === 'autoHeight') {
-      return 'auto';
-    }
-    return computedPagination
-      ? `calc(100% - ${get(sizeDefinitions, `paginationHeight.${size}`)}px)`
-      : '100%';
-  }, [domLayout, computedPagination, sizeDefinitions, size]);
-
-  //自动高度时最大高度
+  //autoRowHeight模式时自动高度的滚动条
   useLayoutEffect(() => {
-    if (!autoHeight || !maxAutoHeight) {
+    if (!autoHeight || !maxAutoHeight || !autoRowHeight) {
       return;
     }
     const autoHeightDiv = wrapperRef.current.querySelector('.ag-layout-auto-height');
@@ -854,7 +862,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                   `gant-grid-${size}`,
                   openEditSign && `gant-grid-edit`,
                   editable && openEditSign && 'gant-grid-editable',
-                  autoHeight && `gant-grid-auto-height`,
+                  autoHeight && autoRowHeight&& `gant-grid-auto-height`,
                   !border && `gant-grid-noborder`,
                   autoRowHeight && `grid-auto-row`,
                   controlCellWordWrap && `grid-control-break-line`,
@@ -943,8 +951,8 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                       enableCellTextSelection
                       suppressClipboardPaste
                       domLayout={domLayout}
-                      {...orignProps}
                       rowHeight={get(sizeDefinitions, `rowHeight.${size}`)}
+                      {...orignProps}
                       getDataPath={getDataPath}
                       // columnDefs={localColumnsDefs}
                       gridOptions={{
