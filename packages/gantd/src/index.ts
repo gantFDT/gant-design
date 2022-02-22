@@ -36,7 +36,7 @@ export { default as SmartGrid } from '@smart-grid';
 export { default as SmartTable } from '@smart-table';
 export { default as Submenu } from '@submenu';
 //列表
-// export { default as Table } from '@table';
+export { default as Table } from '@table';
 //内部使用
 export { default as Button } from './button';
 export { default as Card } from './card';

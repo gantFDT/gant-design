@@ -294,3 +294,4 @@ export function getSchemaRenderCount(schema: Schema): number {
 		return count + (subSchema.hide ? 0 : 1)
 	}, index)
 }
+

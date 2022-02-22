@@ -25,7 +25,7 @@ class SchemaForm extends React.Component<Props, { schemaCount: number }> {
     customFields: [],
     uiSchema: {},
     backgroundColor: 'transparent',
-    frameworkComponents:{}
+    frameworkComponents: {},
   };
 
   /**收集所有子级节点的初始数据 */
@@ -142,7 +142,7 @@ class SchemaForm extends React.Component<Props, { schemaCount: number }> {
       size,
       hideTitle,
       formKey,
-      frameworkComponents
+      frameworkComponents,
     } = this.props;
     if (isEmpty(schema)) {
       return null;
@@ -164,7 +164,6 @@ class SchemaForm extends React.Component<Props, { schemaCount: number }> {
           hideTitle,
           frameworkComponents,
           allowEdit,
-          
         }}
       >
         <ReactResizeDetector handleWidth handleHeight onResize={this.onResize}>
@@ -221,3 +220,5 @@ export default compose(
   }),
   renameProp('onRef', 'ref'),
 )(SchemaForm);
+
+export { setGlobalConfig } from './maps';

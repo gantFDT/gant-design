@@ -96,7 +96,7 @@ const ModalComponent = (modelProps: ModalProps) => {
             style={
               itemHeight &&
               modelHeight && {
-                height: modelHeight - 55,
+                height: modelHeight - 0,
               }
             }
           >
