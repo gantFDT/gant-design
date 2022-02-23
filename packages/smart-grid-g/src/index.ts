@@ -4,4 +4,5 @@ export { default as TableConfig } from './config/UIContent';
 
 SmartGrid.setProps = setProps;
 SmartGrid.setFields = setFields;
+export { setGlobalConfig } from './utils';
 export default SmartGrid;

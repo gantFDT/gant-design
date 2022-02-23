@@ -12,6 +12,7 @@ import withKeyevent from '@keyevent';
 import Header from '@header';
 import { generateUuid, deepCopy4JSON, JSONisEqual } from '@util';
 import Receiver from './locale/Receiver';
+import { getGlobalConfig } from './utils';
 
 const viewVersionFormat: string = 'YYYY-MM-DD HH:mm:SSSS';
 
@@ -32,7 +33,9 @@ const GetLocale = ({ setLocale }) => {
   );
 };
 
-function SmartGrid<T>(props: SmartGridProps<T>): React.ReactElement {
+function SmartGrid<T>(smartGridProps: SmartGridProps<T>): React.ReactElement {
+  const globalConfig = getGlobalConfig();
+  const props = { ...globalConfig, ...smartGridProps };
   const {
     gridKey: originGridKey,
     title,
@@ -67,6 +70,7 @@ function SmartGrid<T>(props: SmartGridProps<T>): React.ReactElement {
     hideHeader = false,
     onReady,
     rowkey,
+    headerHeight = 30,
     ...restProps
   } = Object.assign({}, GlobalProps, props);
 
@@ -397,8 +401,10 @@ function SmartGrid<T>(props: SmartGridProps<T>): React.ReactElement {
   const gridHeight = useMemo(() => {
     if (!height) return;
     if (hideHeader) return height;
-    return typeof height !== 'number' ? `calc(${height} - 30px)` : height - 30;
-  }, [height, hideHeader]);
+    return typeof height !== 'number'
+      ? `calc(${height} - ${headerHeight}px)`
+      : height - headerHeight;
+  }, [height, hideHeader, headerHeight]);
 
   return (
     <div className="gant-smart-table-wrapper" style={{ ...style, height }}>
@@ -452,5 +458,6 @@ function SmartGrid<T>(props: SmartGridProps<T>): React.ReactElement {
 }
 
 const SmartGridFn: SmartGridType = SmartGrid;
+
 
 export default SmartGridFn;
