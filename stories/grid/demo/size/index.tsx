@@ -339,6 +339,8 @@ const BaiscEditGrid = () => {
         enableCellTextSelection={false}
         //支持区域选中
         enableRangeSelection
+        //约束直接跳转最大页码模式
+        numberGoToMode
         //宽松风格
         size={size}
         autoHeight
