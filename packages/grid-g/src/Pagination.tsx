@@ -10,11 +10,11 @@ interface Page {
   beginIndex: number;
 }
 
-const heightSize={
-  small:30,
-  default:40,
-  large:50
-}
+const heightSize = {
+  small: 30,
+  default: 40,
+  large: 50,
+};
 
 export default memo(function GantPagination(props: GantPaginationProps) {
   const {
@@ -76,7 +76,13 @@ export default memo(function GantPagination(props: GantPaginationProps) {
   const showTotal = useCallback(
     (total: number, range: number[]) => {
       return (
-        <PaginationTotal total={total} range={range} limit={limit} tooltipTotal={tooltipTotal} />
+        <PaginationTotal
+          total={total}
+          range={range}
+          limit={limit}
+          tooltipTotal={tooltipTotal}
+          size={size}
+        />
       );
     },
     [limit, tooltipTotal],
@@ -93,7 +99,7 @@ export default memo(function GantPagination(props: GantPaginationProps) {
       showTotal,
       total: limit ? countLimit : total,
     };
-  }, [onPageChange,size, resetProps, pageInfo, total, countLimit, limit, showTotal]);
+  }, [onPageChange, size, resetProps, pageInfo, total, countLimit, limit, showTotal]);
 
   const onSwitchChange = useCallback(
     value => {
@@ -110,7 +116,13 @@ export default memo(function GantPagination(props: GantPaginationProps) {
   return (
     <div className="gantd-grid-footer">
       <div
-        style={{ display: 'flex', flex: 1, alignItems: 'center', height: heightSize[size], overflow: 'hidden' }}
+        style={{
+          display: 'flex',
+          flex: 1,
+          alignItems: 'center',
+          height: heightSize[size],
+          overflow: 'hidden',
+        }}
       >
         {addonBefore && <div>{addonBefore}</div>}
         <Pagination
@@ -126,6 +138,7 @@ export default memo(function GantPagination(props: GantPaginationProps) {
               'pageSize',
               'total',
               'goButton',
+              'size',
             ])}
             onPageChange={onPageChange}
           />
@@ -133,7 +146,7 @@ export default memo(function GantPagination(props: GantPaginationProps) {
         {onRefresh && (
           <Button
             icon="reload"
-            size="small"
+            size={size as any}
             onClick={() => {
               if (onRefresh) return onRefresh();
               console.warn('Function refresh is null');
@@ -152,8 +165,9 @@ export default memo(function GantPagination(props: GantPaginationProps) {
     </div>
   );
 });
+
 function PaginationTotal(props: any) {
-  const { total: propsTotal, range, limit, tooltipTotal } = props;
+  const { total: propsTotal, range, limit, tooltipTotal, size } = props;
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState(0);
   const onHover = useCallback(async () => {
@@ -213,7 +227,16 @@ function PaginationTotal(props: any) {
 }
 
 const NumberGoTo = (props: any) => {
-  const { quickGo, disabled, showQuickJumper, goButton, pageSize, total, onPageChange } = props;
+  const {
+    quickGo,
+    disabled,
+    showQuickJumper,
+    goButton,
+    pageSize,
+    total,
+    onPageChange,
+    size,
+  } = props;
 
   if (!showQuickJumper || total <= pageSize) {
     return <></>;
@@ -276,7 +299,7 @@ const NumberGoTo = (props: any) => {
             {locale.jumpTo}
             <InputNumber
               ref={inputRef}
-              size="small"
+              size={size}
               min={1}
               max={max}
               disabled={disabled}

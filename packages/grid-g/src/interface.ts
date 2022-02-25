@@ -236,20 +236,35 @@ export interface Props<T extends any> {
   hideSelcetedBox?: boolean; //可删除
   selectedBoxHeight?: number;
   selectedBoxWidth?: number;
+  //
   editChangeCallback?: (isChanged: boolean) => void; //可删除
+  //侧边栏模式
   drawerMode?: boolean;
+  //侧边栏初始宽度
   defaultDrawerWidth?: number;
+  //自定义侧边栏内容
   customDrawerContent?: (params: any) => any;
+  //侧边栏显隐
   visibleDrawer?: boolean;
+  //双击行展开树节点
   doubleClickedExpanded?: boolean;
+  //关闭右键选中行
   suppressRightClickSelected?: boolean;
+  //废弃,原用于过滤树形子集数据
   treeDataForcedFilter?: boolean;
+  //主题
   themeClass?: string;
+  //时间控件使用gantd的
   gantDateComponent?: boolean;
+  //是否开启自动高度
   autoHeight?: boolean;
+  //当自动高度开启时的最大高度
   maxAutoHeight?: number | string;
+  //当自动高度开启时的最小高度
   minAutoHeight?: number | string;
+  //分页控件直接跳转至某一页模式，可约束最大页码
   numberGoToMode?: boolean;
+  //当Context改变时的回调，可指定重新渲染的列和行
   onContextChangeRender?: (
     context: any,
     diffKeys: string[],
@@ -260,11 +275,16 @@ export interface Props<T extends any> {
       }
     | null
     | false; // 可删除
-  size?: Size; //大小
-  border?: boolean; //是否显示边框
-  zebra?: boolean; //是否显示斑马线
-  autoRowHeight?: boolean; //是否自动行高
-  controlCellWordWrap?: boolean; //单元格自动识别换行符换行
+  //大小
+  size?: Size;
+  //是否显示边框
+  border?: boolean;
+  //是否显示斑马线
+  zebra?: boolean;
+  //是否自动行高
+  autoRowHeight?: boolean;
+  //单元格自动识别换行符换行
+  controlCellWordWrap?: boolean;
 }
 
 export type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>;
