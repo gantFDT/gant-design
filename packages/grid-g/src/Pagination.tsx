@@ -32,9 +32,12 @@ export default memo(function GantPagination(props: GantPaginationProps) {
     beginIndex,
     defaultPageSize,
     defaultCurrent,
-    size,
+    size: _size,
     ...resetProps
   } = props;
+
+  //如果传入的是large, 就转为default , 因为antd原生分页条没有large
+  const size = _size === 'large' ? 'default' : _size;
 
   const [innerMode, setInnerMode] = useState<'limit' | 'default'>('limit');
   const [pageInfo, setPageInfo] = useState<Page>({
