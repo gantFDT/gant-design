@@ -160,6 +160,7 @@ export class DatePicker extends React.Component<any, WeekPickerState> {
       id,
       suffixIcon,
       defaultPickerValue,
+      ...restProps
     } = this.props;
 
     const prefixCls = getPrefixCls('calendar', customizePrefixCls);
@@ -185,7 +186,7 @@ export class DatePicker extends React.Component<any, WeekPickerState> {
         locale={locale.lang}
         // showDateInput={false}
         // showToday={false}
-        // disabledDate={disabledDate}
+        disabledDate={disabledDate}
         renderFooter={this.renderFooter}
         defaultValue={defaultPickerValue}
         className="gant-calendar"
@@ -260,7 +261,7 @@ class GantDatePicker extends React.Component<GantDatePickerProps, WeekPickerStat
       defaultValue,
     };
     Object.keys(restprops).map(name => {
-      if (Reflect.has(restprops,name)) restprops[name] = getCurTime(restprops[name], props.format);
+      if (Reflect.has(restprops, name)) restprops[name] = getCurTime(restprops[name], props.format);
       else delete restprops[name];
     });
     return (
@@ -268,6 +269,5 @@ class GantDatePicker extends React.Component<GantDatePickerProps, WeekPickerStat
     );
   }
 }
-
 
 export default GantDatePicker;
