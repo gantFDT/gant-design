@@ -14,6 +14,6 @@ const Button = (buttonProps: GantButtonProps) => {
   const props = { ...globalConfig, ...buttonProps };
   return <AntButton {...props}></AntButton>;
 };
-
+Button.Group = AntButton.Group
 export {setGlobalConfig} from './utils'
 export default Button;
