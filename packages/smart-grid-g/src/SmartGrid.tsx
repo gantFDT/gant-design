@@ -69,7 +69,7 @@ function SmartGrid<T>(smartGridProps: SmartGridProps<T>): React.ReactElement {
     style,
     hideHeader = false,
     onReady,
-    rowkey,
+    rowkey='key',
     headerHeight = 30,
     ...restProps
   } = Object.assign({}, GlobalProps, props);

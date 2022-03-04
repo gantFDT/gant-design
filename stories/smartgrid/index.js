@@ -1,13 +1,13 @@
-import _ from 'lodash'
-import '@packages/smart-grid-g/src/style'
-import CodeDecorator from '../_util/CodeDecorator'
-import code from './code.js'
-import Mock from 'mockjs'
+import _ from 'lodash';
+import '@packages/smart-grid-g/src/style';
+import CodeDecorator from '../_util/CodeDecorator';
+import code from './code.js';
+import Mock from 'mockjs';
 /*! Start !*/
-import React, { useState, useCallback, useEffect, useMemo } from 'react'
-import { Divider, Tag, Radio, Button, message, ConfigProvider, Rate } from 'antd'
-import { SmartGrid, EditStatus, SwitchStatus } from '@gantd'
-const { Random } = Mock
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
+import { Divider, Tag, Radio, Button, message, ConfigProvider, Rate } from 'antd';
+import { SmartGrid, EditStatus, SwitchStatus } from '@gantd';
+const { Random } = Mock;
 /*! Split !*/
 SmartGrid.setProps({
   // headerRight: <><Button size="small">全局按钮</Button></>,
@@ -42,16 +42,18 @@ SmartGrid.setProps({
   //   console.log(`views`, views)
   // },
   // companyViewAuth: true,
-  userId: '1231231'
-})
+  userId: '1231231',
+});
 
-var dataSource = Array(10).fill().map((_, Idx) => ({
-  key: Idx,
-  name: Random.cname(),
-  age: Random.natural(20, 70),
-  address: Random.county(true),
-  tags: [[ '宅', '程序猿', '高富帅', '矮矬穷', '教师' ][Random.natural(0, 4)]]
-}))
+var dataSource = Array(10)
+  .fill()
+  .map((_, Idx) => ({
+    key: Idx,
+    name: Random.cname(),
+    age: Random.natural(20, 70),
+    address: Random.county(true),
+    tags: [['宅', '程序猿', '高富帅', '矮矬穷', '教师'][Random.natural(0, 4)]],
+  }));
 
 var tableColumns = [
   {
@@ -97,7 +99,7 @@ var tableColumns = [
       </span>
     ),
   },
-]
+];
 function BasicUse() {
   return (
     <div style={{ margin: 10 }}>
@@ -108,25 +110,27 @@ function BasicUse() {
         withoutAnimation
       />
     </div>
-  )
+  );
 }
 /*! Split !*/
-var dataSource1 = Array(10).fill().map((_, Idx) => ({
-  key: Idx,
-  name: Random.cname(),
-  age: Random.natural(10, 80),
-  height: Random.natural(160, 190) + 'cm',
-  sex: [ '♂', '♀' ][Random.natural(0, 1)],
-  address: Random.county(true),
-  tags: [[ '宅', '程序猿', '高富帅', '矮矬穷', '教师' ][Random.natural(0, 4)]]
-}))
+var dataSource1 = Array(10)
+  .fill()
+  .map((_, Idx) => ({
+    key: Idx,
+    name: Random.cname(),
+    age: Random.natural(10, 80),
+    height: Random.natural(160, 190) + 'cm',
+    sex: ['♂', '♀'][Random.natural(0, 1)],
+    address: Random.county(true),
+    tags: [['宅', '程序猿', '高富帅', '矮矬穷', '教师'][Random.natural(0, 4)]],
+  }));
 
 var tableColumns1 = [
   {
     title: '姓名',
     fieldName: 'name',
     render: text => <a>{text}</a>,
-    hide: true
+    hide: true,
   },
   {
     title: '年龄age',
@@ -135,7 +139,7 @@ var tableColumns1 = [
   {
     title: '住址address',
     fieldName: 'address',
-    width: 200
+    width: 200,
   },
   {
     title: '标签',
@@ -167,23 +171,26 @@ var tableColumns1 = [
       </span>
     ),
   },
-]
+];
 function ConfigColumnsUse() {
-  const [dynamicColumns, setDynamicColumns] = useState([])
-  const [editing, setEditing] = useState(false)
+  const [dynamicColumns, setDynamicColumns] = useState([]);
+  const [editing, setEditing] = useState(false);
 
-  const [customViews, setCustomViews] = useState([])
-  const [laskViewKey, setLaskViewKey] = useState('')
+  const [customViews, setCustomViews] = useState([]);
+  const [laskViewKey, setLaskViewKey] = useState('');
 
-  const finalSchema = useMemo(() => [
-    ...tableColumns1.slice(0, 3),
-    // ...Array.from({length: 90}, (_, idx) => ({
-    //   title: '字段' + idx,
-    //   fieldName: 'field' + idx,
-    // })),
-    ...dynamicColumns,
-    ...tableColumns1.slice(3)
-  ],[tableColumns1, dynamicColumns])
+  const finalSchema = useMemo(
+    () => [
+      ...tableColumns1.slice(0, 3),
+      // ...Array.from({length: 90}, (_, idx) => ({
+      //   title: '字段' + idx,
+      //   fieldName: 'field' + idx,
+      // })),
+      ...dynamicColumns,
+      ...tableColumns1.slice(3),
+    ],
+    [tableColumns1, dynamicColumns],
+  );
 
   useEffect(() => {
     setTimeout(() => {
@@ -191,58 +198,68 @@ function ConfigColumnsUse() {
         {
           title: '性别',
           fieldName: 'sex',
-          dynamic: true
+          dynamic: true,
         },
         {
           title: '身高',
           fieldName: 'height',
-          dynamic: true
-        }
-      ])
-    }, 250)
-  }, [])
+          dynamic: true,
+        },
+      ]);
+    }, 250);
+  }, []);
 
-  const handlerToggleColumn = useCallback((type) => {
+  const handlerToggleColumn = useCallback(type => {
     setDynamicColumns(
-      type === 'height' ? [
-        {
-          title: '身高',
-          fieldName: 'height',
-          dynamic: true
-        }
-      ]:
-      type === 'all' ? [
-        {
-          title: '性别',
-          fieldName: 'sex',
-          dynamic: true
-        },
-        {
-          title: '身高',
-          fieldName: 'height',
-          dynamic: true
-        }
-      ]: [
-        {
-          title: '性别',
-          fieldName: 'sex',
-          dynamic: true
-        }
-      ])
-  },[])
+      type === 'height'
+        ? [
+            {
+              title: '身高',
+              fieldName: 'height',
+              dynamic: true,
+            },
+          ]
+        : type === 'all'
+        ? [
+            {
+              title: '性别',
+              fieldName: 'sex',
+              dynamic: true,
+            },
+            {
+              title: '身高',
+              fieldName: 'height',
+              dynamic: true,
+            },
+          ]
+        : [
+            {
+              title: '性别',
+              fieldName: 'sex',
+              dynamic: true,
+            },
+          ],
+    );
+  }, []);
 
   return (
     <div style={{ margin: 10 }}>
-      <Button style={{ margin: 10 }} onClick={handlerToggleColumn.bind(null, 'height')}>只添加身高列</Button>
-      <Button style={{ margin: 10 }} onClick={handlerToggleColumn.bind(null, 'sex')}>只添加性别列</Button>
-      <Button style={{ margin: 10 }} onClick={handlerToggleColumn.bind(null, 'all')}>添加身高/性别列</Button>
+      <Button style={{ margin: 10 }} onClick={handlerToggleColumn.bind(null, 'height')}>
+        只添加身高列
+      </Button>
+      <Button style={{ margin: 10 }} onClick={handlerToggleColumn.bind(null, 'sex')}>
+        只添加性别列
+      </Button>
+      <Button style={{ margin: 10 }} onClick={handlerToggleColumn.bind(null, 'all')}>
+        添加身高/性别列
+      </Button>
       <span>{finalSchema.map(schema => schema.title).join(' , ')}</span>
       <SmartGrid
+        rowKey="id"
         gridKey="ConfigColumnsUse"
         schema={finalSchema}
         dataSource={dataSource1}
         editable={editing}
-
         // customViews={customViews}
         // lastViewKey={laskViewKey}
         // onCustomViewsChange={(views) => {setCustomViews(views)}}
@@ -251,26 +268,33 @@ function ConfigColumnsUse() {
         headerRight={
           <>
             <Button
-              icon={editing ? "roolback" : "edit"}
+              icon={editing ? 'roolback' : 'edit'}
               size="small"
-              onClick={() => { if (!editing) { message.info('请单击单元格进行编辑') }; setEditing(!editing) }}
+              onClick={() => {
+                if (!editing) {
+                  message.info('请单击单元格进行编辑');
+                }
+                setEditing(!editing);
+              }}
             >
-              {editing ? "结束" : "进入"}编辑
+              {editing ? '结束' : '进入'}编辑
             </Button>
           </>
         }
       />
     </div>
-  )
+  );
 }
 /*! Split !*/
-var dataSource = Array(10).fill().map((_, Idx) => ({
-  key: Idx,
-  name: Random.cname(),
-  age: Random.natural(20, 70),
-  address: Random.county(true),
-  tags: [[ '宅', '程序猿', '高富帅', '矮矬穷', '教师' ][Random.natural(0, 4)]]
-}))
+var dataSource = Array(10)
+  .fill()
+  .map((_, Idx) => ({
+    key: Idx,
+    name: Random.cname(),
+    age: Random.natural(20, 70),
+    address: Random.county(true),
+    tags: [['宅', '程序猿', '高富帅', '矮矬穷', '教师'][Random.natural(0, 4)]],
+  }));
 
 var tableColumns = [
   {
@@ -316,57 +340,60 @@ var tableColumns = [
       </span>
     ),
   },
-]
+];
 function ConfigDisplayUse() {
   const tableSchema = {
     supportColumnFields: tableColumns,
     systemViews: [
       {
         viewId: 'systemView1',
-        name: "系统视图1",
+        name: '系统视图1',
         version: '2020-02-10 09:45:37',
         panelConfig: {
           clickable: false,
           footerDirection: 'row-reverse',
-          columnFields: tableColumns.map(column => ({ fieldName: column.fieldName }))
-        }
-      }
-    ]
-  }
-  const [rowKeys, setRowKeys] = useState([])
-  const [page, setPage] = useState(1)
-  const [pageSize, setPageSize] = useState(5)
+          columnFields: tableColumns.map(column => ({ fieldName: column.fieldName })),
+        },
+      },
+    ],
+  };
+  const [rowKeys, setRowKeys] = useState([]);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
   return (
     <div style={{ margin: 10 }}>
       <SmartGrid
         tableKey="ConfigDisplayUse"
         schema={tableSchema}
         dataSource={dataSource}
-        rowSelection={
-          {
-            selectedRowKeys: rowKeys,
-            onChange: (selectedRowKeys, selectedRows) => {
-              setRowKeys(selectedRowKeys)
-            }
-          }
-        }
+        rowSelection={{
+          selectedRowKeys: rowKeys,
+          onChange: (selectedRowKeys, selectedRows) => {
+            setRowKeys(selectedRowKeys);
+          },
+        }}
         pageIndex={page}
         pageSize={pageSize}
-        onPageChange={(page,pageSize)=>{setPage(page);setPageSize(pageSize)}}
+        onPageChange={(page, pageSize) => {
+          setPage(page);
+          setPageSize(pageSize);
+        }}
         totalCount={10}
         pageSizeOptions={['5', '10', '15', '20']}
       />
     </div>
-  )
+  );
 }
 /*! Split !*/
-var dataSource = Array(10).fill().map((_, Idx) => ({
-  key: Idx,
-  name: Random.cname(),
-  age: Random.natural(20, 70),
-  address: Random.county(true),
-  tags: [[ '宅', '程序猿', '高富帅', '矮矬穷', '教师' ][Random.natural(0, 4)]]
-}))
+var dataSource = Array(10)
+  .fill()
+  .map((_, Idx) => ({
+    key: Idx,
+    name: Random.cname(),
+    age: Random.natural(20, 70),
+    address: Random.county(true),
+    tags: [['宅', '程序猿', '高富帅', '矮矬穷', '教师'][Random.natural(0, 4)]],
+  }));
 
 var tableColumns = [
   {
@@ -412,20 +439,20 @@ var tableColumns = [
       </span>
     ),
   },
-]
+];
 const tableSchema = {
   supportColumnFields: tableColumns,
   systemViews: [
     {
       viewId: 'systemView-MultiViewUse-1',
-      name: "隐藏年龄",
+      name: '隐藏年龄',
       version: '2020-02-10 09:45:37',
       panelConfig: {
         columnFields: [
           {
             fieldName: 'tags',
             fixed: 'left',
-            width: 300
+            width: 300,
           },
           {
             fieldName: 'name',
@@ -436,12 +463,12 @@ const tableSchema = {
           {
             fieldName: 'action',
           },
-        ]
-      }
+        ],
+      },
     },
     {
       viewId: 'systemView-MultiViewUse-2',
-      name: "禁止操作",
+      name: '禁止操作',
       version: '2020-02-10 09:45:37',
       panelConfig: {
         columnFields: [
@@ -456,32 +483,30 @@ const tableSchema = {
           },
           {
             fieldName: 'tags',
-            width: 300
+            width: 300,
           },
-        ]
-      }
-    }
-  ]
-}
+        ],
+      },
+    },
+  ],
+};
 function MultiViewUse() {
   return (
     <div style={{ margin: 10 }}>
-      <SmartGrid
-        gridKey="MultiViewUse"
-        schema={tableSchema}
-        dataSource={dataSource}
-      />
+      <SmartGrid gridKey="MultiViewUse" schema={tableSchema} dataSource={dataSource} />
     </div>
-  )
+  );
 }
 /*! Split !*/
-var dataSource = Array(10).fill().map((_, Idx) => ({
-  key: Idx,
-  name: Random.cname(),
-  age: Random.natural(20, 70),
-  address: Random.county(true),
-  tags: [[ '宅', '程序猿', '高富帅', '矮矬穷', '教师' ][Random.natural(0, 4)]]
-}))
+var dataSource = Array(10)
+  .fill()
+  .map((_, Idx) => ({
+    key: Idx,
+    name: Random.cname(),
+    age: Random.natural(20, 70),
+    address: Random.county(true),
+    tags: [['宅', '程序猿', '高富帅', '矮矬穷', '教师'][Random.natural(0, 4)]],
+  }));
 
 var tableColumns = [
   {
@@ -527,65 +552,72 @@ var tableColumns = [
       </span>
     ),
   },
-]
+];
 
 function InitViewUse() {
-  const tableSchema = useMemo(() => ({
-    supportColumnFields: tableColumns,
-    systemViews: [
-      {
-        viewId: 'systemView1',
-        name: "隐藏年龄",
-        version: '2020-02-10 09:45:37',
-        panelConfig: {
-          columnFields: [
-            {
-              fieldName: 'tags',
-              fixed: 'left',
-              width: 300
-            },
-            {
-              fieldName: 'name',
-            },
-            {
-              fieldName: 'address',
-            },
-            {
-              fieldName: 'action',
-            },
-          ]
-        }
-      },
-      {
-        viewId: 'systemView2',
-        name: "禁止操作",
-        version: '2020-02-10 09:45:37',
-        panelConfig: {
-          columnFields: [
-            {
-              fieldName: 'name',
-            },
-            {
-              fieldName: 'address',
-            },
-            {
-              fieldName: 'age',
-            },
-            {
-              fieldName: 'tags',
-              width: 300
-            },
-          ]
-        }
-      }
-    ]
-  }),[tableColumns])
-  const [lastView, setLastView] = useState(localStorage.getItem('MultiViewUse:view') ? JSON.parse(localStorage.getItem('MultiViewUse:view')) : null)
-  const handlerViewChange = useCallback((view) => {
-    setLastView(view)
+  const tableSchema = useMemo(
+    () => ({
+      supportColumnFields: tableColumns,
+      systemViews: [
+        {
+          viewId: 'systemView1',
+          name: '隐藏年龄',
+          version: '2020-02-10 09:45:37',
+          panelConfig: {
+            columnFields: [
+              {
+                fieldName: 'tags',
+                fixed: 'left',
+                width: 300,
+              },
+              {
+                fieldName: 'name',
+              },
+              {
+                fieldName: 'address',
+              },
+              {
+                fieldName: 'action',
+              },
+            ],
+          },
+        },
+        {
+          viewId: 'systemView2',
+          name: '禁止操作',
+          version: '2020-02-10 09:45:37',
+          panelConfig: {
+            columnFields: [
+              {
+                fieldName: 'name',
+              },
+              {
+                fieldName: 'address',
+              },
+              {
+                fieldName: 'age',
+              },
+              {
+                fieldName: 'tags',
+                width: 300,
+              },
+            ],
+          },
+        },
+      ],
+    }),
+    [tableColumns],
+  );
+  const [lastView, setLastView] = useState(
+    localStorage.getItem('MultiViewUse:view')
+      ? JSON.parse(localStorage.getItem('MultiViewUse:view'))
+      : null,
+  );
+  const handlerViewChange = useCallback(view => {
+    setLastView(view);
     localStorage.setItem('MultiViewUse:view', JSON.stringify(view));
-  },[])
-  
+  }, []);
+
   return (
     <div style={{ margin: 10 }}>
       <SmartGrid
@@ -596,20 +628,22 @@ function InitViewUse() {
         dataSource={dataSource}
       />
     </div>
-  )
+  );
 }
 /*! Split !*/
 // import zhCN from 'antd/es/locale/zh_CN' // 按模块导入
 // import enUS from 'antd/es/locale/en_US' // 按模块导入
-var zhCN = { locale: "zh-cn" };
-var enUS = { locale: "en" };
-var dataSource = Array(10).fill().map((_, Idx) => ({
-  key: Idx,
-  name: Random.cname(),
-  age: Random.natural(20, 70),
-  address: Random.county(true),
-  tags: [[ '宅', '程序猿', '高富帅', '矮矬穷', '教师' ][Random.natural(0, 4)]]
-}))
+var zhCN = { locale: 'zh-cn' };
+var enUS = { locale: 'en' };
+var dataSource = Array(10)
+  .fill()
+  .map((_, Idx) => ({
+    key: Idx,
+    name: Random.cname(),
+    age: Random.natural(20, 70),
+    address: Random.county(true),
+    tags: [['宅', '程序猿', '高富帅', '矮矬穷', '教师'][Random.natural(0, 4)]],
+  }));
 
 var tableColumns = [
   {
@@ -655,12 +689,12 @@ var tableColumns = [
       </span>
     ),
   },
-]
+];
 function LocalUse() {
-  const [i18n, setI18n] = useState(zhCN)
+  const [i18n, setI18n] = useState(zhCN);
   return (
     <div style={{ margin: 10 }}>
-      <Radio.Group size='small' onChange={(e) => setI18n(e.target.value)} value={i18n}>
+      <Radio.Group size="small" onChange={e => setI18n(e.target.value)} value={i18n}>
         <Radio.Button value={enUS}>英文</Radio.Button>
         <Radio.Button value={zhCN}>中文</Radio.Button>
       </Radio.Group>
@@ -669,41 +703,42 @@ function LocalUse() {
           tableKey="BasicUse"
           schema={tableColumns}
           dataSource={dataSource}
-          onReload={() => { }}
+          onReload={() => {}}
         />
       </ConfigProvider>
     </div>
-  )
+  );
 }
 /*! Split !*/
-SmartGrid.setFields({ // 拓展componentType字段类型
-  'Rate': Rate
-})
+SmartGrid.setFields({
+  // 拓展componentType字段类型
+  Rate: Rate,
+});
 var editTableColumns = [
   {
     fieldName: 'name',
     title: '姓名',
-    componentType: 'Input'
+    componentType: 'Input',
   },
   {
     fieldName: 'age',
     title: '年龄',
-    componentType: 'InputNumber'
+    componentType: 'InputNumber',
   },
   {
     fieldName: 'cellPhone',
     title: '手机号',
-    componentType: 'InputCellPhone'
+    componentType: 'InputCellPhone',
   },
   {
     fieldName: 'domain',
     title: '个人主页',
-    componentType: 'InputUrl'
+    componentType: 'InputUrl',
   },
   {
     fieldName: 'email',
     title: '邮箱',
-    componentType: 'InputEmail'
+    componentType: 'InputEmail',
   },
   {
     fieldName: 'bio',
@@ -713,128 +748,128 @@ var editTableColumns = [
       localeList: [
         { locale: 'zh-CN', label: '中文' },
         { locale: 'en-US', label: '英文' },
-      ]
-    }
+      ],
+    },
   },
   {
     fieldName: 'price',
     title: '挂号费',
-    componentType: 'InputMoney'
+    componentType: 'InputMoney',
   },
   {
     fieldName: 'address',
     title: '地址',
-    componentType: 'LocationSelector'
+    componentType: 'LocationSelector',
   },
   {
     fieldName: 'birth',
     title: '生日',
-    componentType: 'DatePicker'
-  },{
+    componentType: 'DatePicker',
+  },
+  {
     fieldName: 'star',
     title: '星级',
-    componentType: 'Rate'
-  }
-]
+    componentType: 'Rate',
+  },
+];
 var editTableSchema = {
   supportColumnFields: editTableColumns,
   systemViews: [
     {
       viewId: 'systemView',
-      name: "系统视图",
+      name: '系统视图',
       version: '2020-02-20 02:20:02',
       panelConfig: {
         columnFields: [
           {
             fieldName: 'name',
-            width: 80
+            width: 80,
           },
           {
             fieldName: 'age',
-            width: 70
+            width: 70,
           },
           {
             fieldName: 'cellPhone',
-            width: 230
+            width: 230,
           },
           {
             fieldName: 'domain',
-            width: 200
+            width: 200,
           },
           {
             fieldName: 'email',
-            width: 170
+            width: 170,
           },
           {
             fieldName: 'bio',
-            width: 375
+            width: 375,
           },
           {
             fieldName: 'price',
-            width: 150
+            width: 150,
           },
           {
             fieldName: 'address',
-            width: 195
+            width: 195,
           },
           {
             fieldName: 'birth',
-            width: 160
+            width: 160,
           },
           {
             fieldName: 'star',
-            width: 160
-          }
-        ]
+            width: 160,
+          },
+        ],
+      },
+    },
+  ],
+};
+var editTableData = Array(15)
+  .fill()
+  .map((_, idx) => ({
+    id: 'id-' + idx,
+    name: Random.cname(),
+    age: Random.natural(20, 70),
+    domain: Random.url(),
+    email: Random.email(),
+    birth: Random.datetime('yyyy-MM-dd'),
+    cellPhone: { value: Random.string('number', 11) },
+    bio: [{ value: Random.cparagraph(1, 3) }],
+    price: { value: Random.float(9, 50, 2, 2) },
+    address: ['CHN', '510000', '510100'],
+    star: Random.natural(0, 5),
+  }));
+function EditInlineUse() {
+  const [stateData, setStateData] = useState(editTableData);
+  const [editing, setEditing] = useState(false);
+  const getDifference = useCallback((current, old) => {
+    const result = [];
+    for (let i = 0, len = current.length; i < len; i++) {
+      const { children = [], ...currentItem } = current[i];
+      const { children: oldChildren = [], ...oldItem } = old[i];
+      if (!_.isEqual(currentItem, oldItem)) {
+        result.push(currentItem);
+      }
+      if (children.length && oldChildren.length && !_.isEqual(children, oldChildren)) {
+        const diff = getDifference(children, oldChildren);
+        result.push.apply(result, diff);
       }
     }
-  ]
-}
-var editTableData = Array(15).fill().map((_, idx) => ({
-  id: 'id-' + idx,
-  name: Random.cname(),
-  age: Random.natural(20, 70),
-  domain: Random.url(),
-  email: Random.email(),
-  birth: Random.datetime('yyyy-MM-dd'),
-  cellPhone: { value: Random.string('number', 11) },
-  bio: [{ value: Random.cparagraph(1, 3) }],
-  price: { value: Random.float(9, 50, 2, 2) },
-  address: ["CHN", "510000", "510100"],
-  star: Random.natural(0, 5),
-}))
-function EditInlineUse() {
-  const [stateData, setStateData] = useState(editTableData)
-  const [editing, setEditing] = useState(false);
-  const getDifference = useCallback(
-    (current, old) => {
-      const result = []
-      for (let i = 0, len = current.length; i < len; i++) {
-        const { children = [], ...currentItem } = current[i]
-        const { children: oldChildren = [], ...oldItem } = old[i]
-        if (!_.isEqual(currentItem, oldItem)) {
-          result.push(currentItem)
-        }
-        if (children.length && oldChildren.length && !_.isEqual(children, oldChildren)) {
-          const diff = getDifference(children, oldChildren)
-          result.push.apply(result, diff)
-        }
-      }
-      return result
-    },
-    [],
-  )
+    return result;
+  }, []);
   const onSave = useCallback(
-    (newStateData) => {
-      const diff = getDifference(newStateData, stateData)
-      setStateData(newStateData)
+    newStateData => {
+      const diff = getDifference(newStateData, stateData);
+      setStateData(newStateData);
       // console.log('差异数据：', diff)
     },
     [stateData],
-  )
+  );
   const handleSave = useCallback(() => {
-    setEditing(false)
-  }, [])
+    setEditing(false);
+  }, []);
 
   return (
     <div style={{ margin: 10 }}>
@@ -851,26 +886,28 @@ function EditInlineUse() {
         headerRight={
           <>
             <Button
-              icon={editing ? "roolback" : "edit"}
+              icon={editing ? 'roolback' : 'edit'}
               size="small"
-              onClick={() => { if (!editing) { message.info('请单击单元格进行编辑') }; setEditing(!editing) }}
+              onClick={() => {
+                if (!editing) {
+                  message.info('请单击单元格进行编辑');
+                }
+                setEditing(!editing);
+              }}
             >
-              {editing ? "结束" : "进入"}编辑
+              {editing ? '结束' : '进入'}编辑
             </Button>
-            {editing && <Button
-              icon="save"
-              size="small"
-              type="primary"
-              onClick={handleSave}
-            >
-              保存
-            </Button>}
+            {editing && (
+              <Button icon="save" size="small" type="primary" onClick={handleSave}>
+                保存
+              </Button>
+            )}
           </>
         }
         height={'calc(300px - 30px)'}
       />
     </div>
-  )
+  );
 }
 /*! End !*/
 
@@ -894,8 +931,9 @@ const config = {
     // },
     {
       title: '动态配置列属性用法',
-      describe: '配置列属性，包括显示与否、列的排序、固定、对齐方式等。<br/>此处预设隐藏 <b>年龄</b> 字段, 并将 <b>标签</b> 列放置第一列。',
-      cmp: ConfigColumnsUse
+      describe:
+        '配置列属性，包括显示与否、列的排序、固定、对齐方式等。<br/>此处预设隐藏 <b>年龄</b> 字段, 并将 <b>标签</b> 列放置第一列。',
+      cmp: ConfigColumnsUse,
     },
     // {
     //   title: '动态配置表格样式属性用法',
@@ -922,7 +960,7 @@ const config = {
     //   describe: '可进行编辑状态的切换，一键进入编辑模式',
     //   cmp: EditInlineUse
     // }
-  ]
+  ],
 };
 
-export default () => <CodeDecorator config={config} />
+export default () => <CodeDecorator config={config} />;
