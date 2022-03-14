@@ -386,7 +386,7 @@ const barStyle = {
   height: headerHeight,
   display: 'flex',
   fontSize: 12,
-  fontWeight: '600',
+  fontWeight: 600,
   color:
     'var(--ag-header-foreground-color, var(--ag-secondary-foreground-color, rgba(0, 0, 0, 0.54)))',
   justifyContent: 'space-between',

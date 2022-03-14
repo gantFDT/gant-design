@@ -130,7 +130,8 @@ var tableColumns1 = [
     title: '姓名',
     fieldName: 'name',
     render: text => <a>{text}</a>,
-    hide: true,
+    // hide: true,
+    fixed: 'left'
   },
   {
     title: '年龄age',
