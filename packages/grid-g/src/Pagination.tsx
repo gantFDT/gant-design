@@ -33,6 +33,7 @@ export default memo(function GantPagination(props: GantPaginationProps) {
     defaultPageSize,
     defaultCurrent,
     size: _size,
+    align,
     ...resetProps
   } = props;
 
@@ -125,6 +126,7 @@ export default memo(function GantPagination(props: GantPaginationProps) {
           alignItems: 'center',
           height: heightSize[size],
           overflow: 'hidden',
+          justifyContent: align === 'left' ? 'start' : 'end',
         }}
       >
         {addonBefore && <div>{addonBefore}</div>}
