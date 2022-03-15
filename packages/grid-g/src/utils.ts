@@ -477,6 +477,7 @@ export function usePagination(pagitation: GantPaginationProps, size: string): an
       showQuickJumper: true,
       countLimit: 50000,
       showLessItems: true,
+      align: 'left',
     };
     return {
       ...defaultPagetation,

@@ -180,6 +180,7 @@ export type GantPaginationProps = Omit<
       onRefresh?: () => void;
       mode?: 'default' | 'limit';
       tooltipTotal?: () => number | number;
+      align?: 'left' | 'right';
     }
   >,
   'onShowSizeChange'

@@ -18,7 +18,7 @@ const RandomCreate = () => {
     user: { name: Random.first() },
     date: Random.date('yyyy-MM-dd'),
     cn: Random.cname(),
-    color: Random.pick(['orange', 'blue', 'green','red']),
+    color: Random.pick(['orange', 'blue', 'green', 'red']),
     nationality: Random.pick(['China', 'foreign']),
   };
 };
@@ -39,14 +39,14 @@ const columns: Columns[] = [
           <div>
             <span style={{ margin: 10, display: 'flex' }}>
               <Avatar
-                style={{ backgroundColor: record.color, verticalAlign: 'middle',fontSize:24 }}
+                style={{ backgroundColor: record.color, verticalAlign: 'middle', fontSize: 24 }}
                 size="large"
               >
                 {text[0]}
               </Avatar>
               <div style={{ marginLeft: 10 }}>
                 <div style={{ fontSize: 16, fontWeight: 'bold' }}>{text}</div>
-                <div style={{ color:'gray' }}>{record.ip}</div>
+                <div style={{ color: 'gray' }}>{record.ip}</div>
               </div>
             </span>
           </div>
@@ -335,6 +335,7 @@ const BaiscEditGrid = () => {
           beginIndex: pageInfo.beginIndex,
           pageSize: pageInfo.pageSize,
           onChange: onPageChange,
+          align: 'right',
         }}
         onCellEditingChange={onCellEditingChange}
         rowBuffer={20}
