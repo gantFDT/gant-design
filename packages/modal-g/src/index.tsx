@@ -1,5 +1,5 @@
 import { omit, pick, throttle } from 'lodash';
-import React, { useCallback, useContext, useEffect } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 import ModalContext from './Context';
 import { ContextContentProps, ModalProps } from './interface';
 import ResizableModal from './ResizableModal';
@@ -73,6 +73,15 @@ const ModalComponent = (modelProps: ModalProps) => {
     modelHeight = (window.innerHeight * parseInt(itemHeight)) / 100;
   }
 
+  const contentHeight = useMemo(() => {
+    if (type === 'autoHeight') {
+      return 'auto';
+    }
+    if (itemHeight && modelHeight) {
+      return modelHeight - 0;
+    }
+  }, [type, itemHeight, modelHeight]);
+
   return (
     <>
       {type === 'resize' ? (
@@ -93,12 +102,9 @@ const ModalComponent = (modelProps: ModalProps) => {
       ) : (
         <Modal width={modelWidth} {...restProps}>
           <div
-            style={
-              itemHeight &&
-              modelHeight && {
-                height: modelHeight - 0,
-              }
-            }
+            style={{
+              height: contentHeight,
+            }}
           >
             {children}
           </div>
