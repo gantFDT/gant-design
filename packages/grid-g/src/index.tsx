@@ -197,11 +197,13 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     showCutChild,
     gantCustomHeader,
     numberGoToMode = false,
-    domLayout: _domLayout,
+    domLayout: _domLayout = 'normal',
     size = 'small',
     border = true,
     zebra = true,
     rowHeight: _rowHeight,
+    getRowHeight,
+    headerHeight,
     autoRowHeight = false,
     controlCellWordWrap = false,
     ...orignProps
@@ -216,7 +218,8 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
   const [clickedEvent, setClickedEvent] = useState<RowClickedEvent>();
 
   let domLayout = _domLayout;
-  if (autoHeight && autoRowHeight) {
+  //如果是开启启动表格高度，并且是指定了行高策略, 那么就使用真实的自动高度模式
+  if (autoHeight && (autoRowHeight || _rowHeight || getRowHeight)) {
     domLayout = 'autoHeight';
   }
 
@@ -269,8 +272,8 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     if (height) return height;
     //如果没指定高度，也没指定自动高度，那么给予默认高度
     if (!autoHeight && !height) return DEFAULT_HEIGHT;
-    //如果是开启自动高度并且开启自动行高，则使用domLayout:'autoHeight'
-    if (autoHeight && autoRowHeight) {
+    //如果是开启自动高度并且指定了行高策略，则使用domLayout:'autoHeight'
+    if (autoHeight && (autoRowHeight || _rowHeight || getRowHeight)) {
       return 'auto';
     }
     //如果是开启自动高度并且没有自动行高，那么使用乘法计算高度
@@ -859,10 +862,10 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                 style={{ width, height: gridHeight }}
                 className={classnames(
                   'gant-grid',
-                  `gant-grid-${size}`,
+                  !rowHeight && !getRowHeight && `gant-grid-${size}`,
                   openEditSign && `gant-grid-edit`,
                   editable && openEditSign && 'gant-grid-editable',
-                  autoHeight && autoRowHeight&& `gant-grid-auto-height`,
+                  autoHeight && autoRowHeight && `gant-grid-auto-height`,
                   !border && `gant-grid-noborder`,
                   autoRowHeight && `grid-auto-row`,
                   controlCellWordWrap && `grid-control-break-line`,
@@ -922,7 +925,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                       onGridReady={onGridReady}
                       undoRedoCellEditing
                       enableFillHandle
-                      headerHeight={get(sizeDefinitions, `headerHeight.${size}`)}
+                      headerHeight={headerHeight || get(sizeDefinitions, `headerHeight.${size}`)}
                       floatingFiltersHeight={get(sizeDefinitions, `floatingFiltersHeight.${size}`)}
                       singleClickEdit
                       defaultExportParams={exportParams}
@@ -951,7 +954,8 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                       enableCellTextSelection
                       suppressClipboardPaste
                       domLayout={domLayout}
-                      rowHeight={get(sizeDefinitions, `rowHeight.${size}`)}
+                      rowHeight={rowHeight || get(sizeDefinitions, `rowHeight.${size}`)}
+                      getRowHeight={getRowHeight}
                       {...orignProps}
                       getDataPath={getDataPath}
                       // columnDefs={localColumnsDefs}
