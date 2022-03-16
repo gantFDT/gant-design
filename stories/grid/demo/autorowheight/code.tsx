@@ -70,8 +70,6 @@ const columns: Columns[] = [
     fieldName: 'cn',
     title: '中文名称',
     flex: 1,
-    autoHeight: true,
-    wrapText: true,
     editConfig: {
       component: Input,
       editable: true,

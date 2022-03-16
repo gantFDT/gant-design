@@ -1,3 +1,4 @@
+export default ` 
 import Grid, {
   GridApi,
   GridReadyEvent,
@@ -5,8 +6,8 @@ import Grid, {
   ValueGetterParams,
   ValueFormatterParams,
   Columns,
-} from '@grid';
-import { Input, DatePicker, Selector, Header } from '@gantd';
+} from 'gantd/lib/grid';
+import { Input, DatePicker, Selector, Header } from 'gantd';
 import { Button, Modal, Radio, Avatar } from 'antd';
 import { Random } from 'mockjs';
 import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -313,7 +314,7 @@ const BaiscEditGrid = () => {
             )}
           </>
         }
-        title="自适应表格高度和行高"
+        title="自定义行高"
         type="line"
         size={size}
       />
@@ -355,15 +356,15 @@ const BaiscEditGrid = () => {
         //宽松风格
         size={size}
         autoHeight
+        rowHeight={100}
         border={false}
         zebra={false}
         hideSelcetedBox
-        autoRowHeight
-        defaultColDef={{ autoHeight: true, wrapText: true }}
-        // controlCellWordWrap //如果需要通过数据换行符控制则开启
       />
     </>
   );
 };
 
 export default BaiscEditGrid;
+ 
+ `

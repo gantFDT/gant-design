@@ -17,6 +17,7 @@ import GridManager from './gridManager';
 import { defaultProps } from './index';
 export * from '@ag-grid-community/core';
 export { default as GridManager } from './gridManager';
+import { ICellRendererParams } from '@ag-grid-community/core';
 // 大小
 export type Size = 'small' | 'large' | 'default';
 
@@ -127,7 +128,7 @@ export interface Columns<T extends {} = {}> extends ColDef {
   /**索引的字段名 */
   fieldName: string;
   /**单元格渲染函数 */
-  render?: (text: string, record: any, rowIndex: number, params: any) => React.ReactNode;
+  render?: (text: string, record: any, rowIndex: number, params: ICellRendererParams) => React.ReactNode;
   /**子节点 */
   children?: Columns<T>[];
   /**当前列宽度,如果没有，将以defaultColumnWidth显示 */
