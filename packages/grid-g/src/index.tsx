@@ -862,7 +862,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                 style={{ width, height: gridHeight }}
                 className={classnames(
                   'gant-grid',
-                  !rowHeight && !getRowHeight && `gant-grid-${size}`,
+                  !_rowHeight && !getRowHeight && `gant-grid-${size}`,
                   openEditSign && `gant-grid-edit`,
                   editable && openEditSign && 'gant-grid-editable',
                   autoHeight && autoRowHeight && `gant-grid-auto-height`,
