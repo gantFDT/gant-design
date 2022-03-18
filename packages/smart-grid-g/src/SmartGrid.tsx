@@ -71,11 +71,12 @@ function SmartGrid<T>(smartGridProps: SmartGridProps<T>): React.ReactElement {
     onReady,
     rowkey='key',
     headerHeight = 30,
+    smartGridViewName,
     ...restProps
   } = Object.assign({}, GlobalProps, props);
 
   const [locale, setLocale] = useState(null);
-  const { columns, systemViews } = useMemo(() => formatSchema(schema, originGridKey, locale), [
+  const { columns, systemViews } = useMemo(() => formatSchema(schema, originGridKey, locale, smartGridViewName), [
     schema,
     locale,
   ]);
