@@ -86,6 +86,7 @@ export interface SmartGridProps<T> extends GantGridProps<T> {
   hideHeader?: boolean;
   height?: number | string;
   style?: object;
+  smartGridViewName?: string
 }
 
 /** 兼容旧写法 */
