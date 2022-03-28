@@ -49,7 +49,7 @@ const Demo1 = () => {
     ],
     [],
   );
-  const [value2, setValue2] = useState('c');
+  const [value2, setValue2] = useState(['c']);
   const [edit2, setedit2] = useState(EditStatus.CANCEL);
 
   return (
@@ -95,6 +95,7 @@ const Demo1 = () => {
         style={{ margin: '5px 0' }}
         value={value2}
         // defaultValue={'ssss'}
+        multiple
         onChange={setValue2}
         onSave={(id, value, cb) => cb()}
       />
