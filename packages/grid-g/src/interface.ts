@@ -193,29 +193,51 @@ export interface DefaultJsonParams {
 }
 // Grid Api
 export interface Props<T extends any> {
+  //列定义
   columns?: Columns<T>[];
+  //selectedBox 显示列
   boxColumnIndex?: number | string[] | string;
+  //数据
   dataSource?: T[];
+  //实例化后的回调
   onReady?: OnReady;
+  //行选择
   rowSelection?: RowSelection | true;
+  //行唯一标识
   rowkey: RowKey<T> | string;
+  //表格本地存储状态的唯一标识
   gridKey?: string;
+  //是否编辑状态
   editable?: boolean;
+  //宽度
   width?: string | number;
+  //高度
   height?: string | number;
+  //是否树形展示
   treeData?: boolean;
+  //分页
   pagination?: GantPaginationProps;
+  //是否加载状态
   loading?: boolean;
+  //样式类
   className?: string;
   isServerSideGroup?: (data: any) => boolean;
+  //树形数据子项名称，树形数据打平计算的 children 数据字段名
   treeDataChildrenName?: string;
+  //国际化数据
   locale?: object;
+  //导出JSON的配置
   defaultJsonParams?: DefaultJsonParams;
   serverGroupExpend?: (param: IServerSideGetRowsParams, cd: (row: any[]) => void) => void;
+  //显示序号
   serialNumber?: boolean | ColDef;
+  //数据是否已经组装为children嵌套模式
   isCompute?: boolean;
+  //开启多行数据验证
   multiLineVerify?: boolean;
+  //当单元格数据编辑改变失去焦点后
   onCellEditChange?: (record: any, fieldName: string, newValue: any, oldValue: any) => any;
+  //当单元格数据编辑改变时
   onCellEditingChange?: (
     record: any,
     fieldName: string,
@@ -223,23 +245,36 @@ export interface Props<T extends any> {
     oldValue: any,
     params: any,
   ) => any;
+  //当单元格数据改变失去焦点后，并且数据已同步至grid后
   onCellChanged?: (record: any, fieldName: string, newValue: any, oldValue: any) => void;
+  //开启编辑标识
   openEditSign?: boolean;
-  createConfig?: CreateConfig;
-  hideMenuItemExport?: boolean;
-  hideMenuItemExpand?: boolean;
-  hiddenMenuItemNames?: string[];
-  showCut?: ((params: GetContextMenuItemsParams) => boolean) | boolean;
-  showCutChild?: boolean;
-  onRowsCut?: (rows: RowNode[]) => boolean;
-  onRowsPaste?: (rows: RowNode[], targetRow?: RowNode) => boolean;
-  onRowsPasteEnd?: (data: any) => void;
-  hideSelectedBox?: boolean;
-  hideSelcetedBox?: boolean; //可删除
-  selectedBoxHeight?: number;
-  selectedBoxWidth?: number;
   //
-  editChangeCallback?: (isChanged: boolean) => void; //可删除
+  createConfig?: CreateConfig;
+  //隐藏右键菜单里的导出按钮
+  hideMenuItemExport?: boolean;
+  //隐藏右键菜单的收缩展开按钮
+  hideMenuItemExpand?: boolean;
+  //隐藏的右键菜单名称
+  hiddenMenuItemNames?: string[];
+  //右键菜单显示剪切粘贴按钮
+  showCut?: ((params: GetContextMenuItemsParams) => boolean) | boolean;
+  //右键菜单显示粘贴子项按钮
+  showCutChild?: boolean;
+  //复制行的回调
+  onRowsCut?: (rows: RowNode[]) => boolean;
+  //粘贴行的回调
+  onRowsPaste?: (rows: RowNode[], targetRow?: RowNode) => boolean;
+  //粘贴完成时的回调
+  onRowsPasteEnd?: (data: any) => void;
+  //隐藏已选择盒子
+  hideSelectedBox?: boolean;
+  //已选择盒子的高度
+  selectedBoxHeight?: number;
+  //已选择盒子的宽度
+  selectedBoxWidth?: number;
+  //编辑改变回调
+  editChangeCallback?: (isChanged: boolean) => void; 
   //侧边栏模式
   drawerMode?: boolean;
   //侧边栏初始宽度
@@ -264,7 +299,7 @@ export interface Props<T extends any> {
   maxAutoHeight?: number | string;
   //当自动高度开启时的最小高度
   minAutoHeight?: number | string;
-  //分页控件直接跳转至某一页模式，可约束最大页码
+  //分页控件直接跳转至某一页模式，可约束最大页码，废弃，以移动至pagation定义
   numberGoToMode?: boolean;
   //当Context改变时的回调，可指定重新渲染的列和行
   onContextChangeRender?: (

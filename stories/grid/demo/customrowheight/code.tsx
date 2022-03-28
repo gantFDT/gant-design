@@ -359,7 +359,7 @@ const BaiscEditGrid = () => {
         rowHeight={100}
         border={false}
         zebra={false}
-        hideSelcetedBox
+        hideSelectedBox
       />
     </>
   );

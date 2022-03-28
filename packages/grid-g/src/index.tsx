@@ -162,7 +162,6 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     isRowSelectable,
     boxColumnIndex,
     hideSelectedBox,
-    hideSelcetedBox,
     suppressKeyboardEvent,
     onSelectionChanged: propsOnSelectionChanged,
     onRowSelected: propsOnRowSelected,
@@ -226,7 +225,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
   const gridVariableRef = useRef<GridVariableRef>({
     hasSelectedRows:
       typeof rowSel !== 'boolean' && isObject(rowSel) && Reflect.has(rowSel, 'selectedRows'),
-    hideSelectedBox: hideSelcetedBox || hideSelectedBox,
+    hideSelectedBox: hideSelectedBox,
     selectedRows: [],
   });
   const [innerSelectedRows, setInnerSelectedRows] = useState([]);
@@ -752,8 +751,8 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
 
   //是否隐藏selectedBox
   const hideBox = useMemo(() => {
-    return hideSelectedBox || rowSelection !== 'multiple' || hideSelcetedBox;
-  }, [hideSelectedBox, rowSelection, hideSelcetedBox]);
+    return hideSelectedBox || rowSelection !== 'multiple';
+  }, [hideSelectedBox, rowSelection]);
 
   //编辑结束
   const onCellEditingStopped = useCallback((event: CellEditingStoppedEvent) => {
