@@ -357,7 +357,7 @@ const BaiscEditGrid = () => {
         autoHeight
         border={false}
         zebra={false}
-        hideSelcetedBox
+        hideSelectedBox
         autoRowHeight
         defaultColDef={{ autoHeight: true, wrapText: true }}
         // controlCellWordWrap //如果需要通过数据换行符控制则开启

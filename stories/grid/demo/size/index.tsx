@@ -347,7 +347,7 @@ const BaiscEditGrid = () => {
         maxAutoHeight={1000}
         border={false}
         zebra={false}
-        hideSelcetedBox
+        hideSelectedBox
       />
     </>
   );
