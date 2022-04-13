@@ -111,10 +111,13 @@ export const defaultRowSelection: RowSelection = {
 };
 
 const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
+
   const globalConfig: any = useMemo(() => {
     return getGridConfig();
   }, []);
+
   const props = { ...defaultProps, ...globalConfig, ...gridProps };
+  
   const {
     dataSource: initDataSource,
     onReady,
