@@ -330,10 +330,37 @@ export const mapColumns = <T>(
             };
             colDef.cellEditorFramework = EditorCol(component);
             colDef.editable = ColEditableFn(editConfig.editable);
-            colDef.headerClass = classnames(
-              headerClass,
-              required ? 'gant-header-cell-required' : 'gant-header-cell-edit',
-            );
+
+            switch (typeof headerClass) {
+              case 'string':
+                colDef.headerClass = classnames(
+                  headerClass,
+                  required ? 'gant-header-cell-required' : 'gant-header-cell-edit',
+                );
+                break;
+              case 'object':
+                if (Array.isArray(headerClass)) {
+                  colDef.headerClass = [
+                    ...headerClass,
+                    required ? 'gant-header-cell-required' : 'gant-header-cell-edit',
+                  ];
+                }
+                break;
+              case 'function':
+                colDef.headerClass = (params: any) => {
+                  const _class = headerClass(params);
+                  if (typeof _class === 'string')
+                    return classnames(
+                      _class,
+                      required ? 'gant-header-cell-required' : 'gant-header-cell-edit',
+                    );
+                  return [
+                    ..._class,
+                    required ? 'gant-header-cell-required' : 'gant-header-cell-edit',
+                  ];
+                };
+            }
+
             if (typeof signable === 'boolean' || typeof signable === 'function')
               colDef.cellClassRules = {
                 'gant-cell-validate-sign': params => {
