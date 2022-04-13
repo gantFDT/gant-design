@@ -210,6 +210,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     controlCellWordWrap = false,
     ...orignProps
   } = props;
+  
   const apiRef = useRef<GridApi>();
   const shiftRef = useRef<boolean>(false);
   const wrapperRef = useRef<any>();
