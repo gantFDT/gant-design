@@ -359,6 +359,10 @@ export const mapColumns = <T>(
                     required ? 'gant-header-cell-required' : 'gant-header-cell-edit',
                   ];
                 };
+              default:
+                colDef.headerClass = classnames(
+                  required ? 'gant-header-cell-required' : 'gant-header-cell-edit',
+                );
             }
 
             if (typeof signable === 'boolean' || typeof signable === 'function')
