@@ -282,7 +282,7 @@ manager.validate(data)
 
 ### 注意事项：
 
-1.rowkey 必须设置，否则会影响很多功能，如果 rowkey 对应字段不能为 number！！！
+1.rowkey 必须设置，否则会影响很多功能，rowkey 对应字段不能为 number！！！
 
 2.树形 treeData 开启后，grid 会自动生成一列，设置该列属性请使用 autoGroupColumnDef 设置;
 
