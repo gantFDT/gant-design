@@ -3,7 +3,7 @@ import { Col, Form } from 'antd';
 import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
 import classnames from 'classnames';
 import { findIndex, get } from 'lodash';
-import React, { useCallback, useContext, useEffect, useMemo } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, forwardRef } from 'react';
 import { FormContext } from './index';
 import { Schema } from './interface';
 import en from './locale/en-US';
@@ -20,7 +20,7 @@ interface SchemaField extends Schema {
   edit: any;
   uiData: any;
 }
-const SchemaField = (props: SchemaField) => {
+const SchemaField = (props: SchemaField, ref: any) => {
   const {
     options,
     title,
@@ -102,48 +102,36 @@ const SchemaField = (props: SchemaField) => {
   const requiredFinally = typeof required === 'boolean' ? required : isRequired;
   return (
     <Col {...colLayout}>
-      <LocaleReceiver>
-        {(local, localeCode = 'zh-cn') => {
-          let locale = langs[localeCode] || langs['zh-cn'];
-          return (
-            <Form.Item
-              label={
-                // hideTitle ? <>{title}</> : title
-                LabelComponent ? <LabelComponent title={title} /> : title
-              }
-              className={classnames(
-                className,
-                getFieldItemSizeClass(renderFieldProps.size),
-                requiredFinally ? 'field-required' : '',
-              )}
-              style={style}
-              wrapperCol={wrapperColayout}
-              labelAlign={labelAlign}
-              labelCol={labelColLayout}
-              extra={extra}
-            >
-              {name &&
-                getFieldDecorator(name, {
-                  ...options,
-                  initialValue,
-                  rules: [
-                    {
-                      required: requiredFinally,
-                      message: (
-                        <>
-                          {title}
-                          {locale.required}
-                        </>
-                      ),
-                    },
-                    ...optionsRules,
-                  ],
-                })(fieldComponent)}
-            </Form.Item>
-          );
-        }}
-      </LocaleReceiver>
+      <Form.Item
+        label={
+          // hideTitle ? <>{title}</> : title
+          LabelComponent ? <LabelComponent title={title} /> : title
+        }
+        // ref={ref}
+        className={classnames(
+          className,
+          getFieldItemSizeClass(renderFieldProps.size),
+          requiredFinally ? 'field-required' : '',
+        )}
+        style={style}
+        wrapperCol={wrapperColayout}
+        labelAlign={labelAlign}
+        labelCol={labelColLayout}
+        extra={extra}
+      >
+        {name &&
+          getFieldDecorator(name, {
+            ...options,
+            initialValue,
+            rules: [
+              {
+                required: requiredFinally,
+              },
+              ...optionsRules,
+            ],
+          })(fieldComponent)}
+      </Form.Item>
     </Col>
   );
 };
-export default SchemaField;
+export default forwardRef(SchemaField);

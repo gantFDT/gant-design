@@ -501,9 +501,9 @@ export function usePagination(pagitation: GantPaginationProps, size: string): an
   if (isPagitation(pagitation)) {
     const defaultPagetation: GantPaginationProps = {
       size,
-      defaultPageSize: 20,
+      defaultPageSize: 50,
       defaultCurrent: 1,
-      pageSizeOptions: ['20', '50', '100', '150', '200', '500'],
+      pageSizeOptions: ['50', '200', '500', '1000', '30000', '5000', '10000'],
       showSizeChanger: true,
       showQuickJumper: true,
       countLimit: 50000,

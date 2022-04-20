@@ -111,13 +111,12 @@ export const defaultRowSelection: RowSelection = {
 };
 
 const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
-
   const globalConfig: any = useMemo(() => {
     return getGridConfig();
   }, []);
 
   const props = { ...defaultProps, ...globalConfig, ...gridProps };
-  
+
   const {
     dataSource: initDataSource,
     onReady,
@@ -210,7 +209,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     controlCellWordWrap = false,
     ...orignProps
   } = props;
-  
+
   const apiRef = useRef<GridApi>();
   const shiftRef = useRef<boolean>(false);
   const wrapperRef = useRef<any>();
@@ -264,10 +263,10 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
   );
 
   // 分页事件
-  const computedPagination: any = useMemo(() => usePagination(pagination, size), [
-    pagination,
-    size,
-  ]);
+  const computedPagination: any = useMemo(
+    () => usePagination({ ...pagination, ...globalConfig.pagination }, size),
+    [pagination, size],
+  );
 
   //表格外层容器高度，高度策略有两种，一种是兼容虚拟滚动计算出来的假的自动高度，一种是完全自动高度，稍微有点复杂
   const gridHeight = useMemo(() => {
