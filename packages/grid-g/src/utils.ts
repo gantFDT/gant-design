@@ -503,7 +503,7 @@ export function usePagination(pagitation: GantPaginationProps, size: string): an
       size,
       defaultPageSize: 50,
       defaultCurrent: 1,
-      pageSizeOptions: ['50', '200', '500', '1000', '30000', '5000', '10000'],
+      pageSizeOptions: ['50', '200', '500', '1000', '3000', '5000', '10000'],
       showSizeChanger: true,
       showQuickJumper: true,
       countLimit: 50000,
