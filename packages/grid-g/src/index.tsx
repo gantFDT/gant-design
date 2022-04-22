@@ -264,7 +264,11 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
 
   // 分页事件
   const computedPagination: any = useMemo(
-    () => usePagination({ ...pagination, ...globalConfig.pagination }, size),
+    () =>
+      usePagination(
+        isEmpty(pagination) ? false : { ...pagination, ...globalConfig.pagination },
+        size,
+      ),
     [pagination, size],
   );
 
