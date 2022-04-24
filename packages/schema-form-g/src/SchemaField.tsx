@@ -102,35 +102,48 @@ const SchemaField = (props: SchemaField, ref: any) => {
   const requiredFinally = typeof required === 'boolean' ? required : isRequired;
   return (
     <Col {...colLayout}>
-      <Form.Item
-        label={
-          // hideTitle ? <>{title}</> : title
-          LabelComponent ? <LabelComponent title={title} /> : title
-        }
-        // ref={ref}
-        className={classnames(
-          className,
-          getFieldItemSizeClass(renderFieldProps.size),
-          requiredFinally ? 'field-required' : '',
-        )}
-        style={style}
-        wrapperCol={wrapperColayout}
-        labelAlign={labelAlign}
-        labelCol={labelColLayout}
-        extra={extra}
-      >
-        {name &&
-          getFieldDecorator(name, {
-            ...options,
-            initialValue,
-            rules: [
-              {
-                required: requiredFinally,
-              },
-              ...optionsRules,
-            ],
-          })(fieldComponent)}
-      </Form.Item>
+      <LocaleReceiver>
+        {(local, localeCode = 'zh-cn') => {
+          let locale = langs[localeCode] || langs['zh-cn'];
+          return (
+            <Form.Item
+              label={
+                // hideTitle ? <>{title}</> : title
+                LabelComponent ? <LabelComponent title={title} /> : title
+              }
+              // ref={ref}
+              className={classnames(
+                className,
+                getFieldItemSizeClass(renderFieldProps.size),
+                requiredFinally ? 'field-required' : '',
+              )}
+              style={style}
+              wrapperCol={wrapperColayout}
+              labelAlign={labelAlign}
+              labelCol={labelColLayout}
+              extra={extra}
+            >
+              {name &&
+                getFieldDecorator(name, {
+                  ...options,
+                  initialValue,
+                  rules: [
+                    {
+                      required: requiredFinally,
+                      message: (
+                        <>
+                          {title}
+                          {locale.required}
+                        </>
+                      ),
+                    },
+                    ...optionsRules,
+                  ],
+                })(fieldComponent)}
+            </Form.Item>
+          );
+        }}
+      </LocaleReceiver>
     </Col>
   );
 };
