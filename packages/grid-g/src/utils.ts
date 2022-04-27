@@ -497,7 +497,11 @@ export function isPagitation(p: GantPaginationProps): p is GantPaginationProps {
   return typeof p === 'object';
 }
 
-export function usePagination(pagitation: GantPaginationProps, size: string): any {
+export function usePagination(
+  pagitation: GantPaginationProps,
+  size: string,
+  defapagitation: GantPaginationProps,
+): any {
   if (isPagitation(pagitation)) {
     const defaultPagetation: GantPaginationProps = {
       size,
@@ -509,6 +513,7 @@ export function usePagination(pagitation: GantPaginationProps, size: string): an
       countLimit: 50000,
       showLessItems: true,
       align: 'left',
+      ...defapagitation,
     };
     return {
       ...defaultPagetation,

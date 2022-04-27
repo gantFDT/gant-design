@@ -24,7 +24,7 @@ import { AllModules, LicenseManager } from '@ag-grid-enterprise/all-modules';
 import { Spin } from 'antd';
 import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
 import classnames from 'classnames';
-import { findIndex, get, isEmpty, isEqual, isObject, merge, cloneDeep } from 'lodash';
+import { findIndex, get, isEmpty, isEqual, isObject, merge, cloneDeep,omit } from 'lodash';
 import React, {
   createContext,
   useCallback,
@@ -115,7 +115,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     return getGridConfig();
   }, []);
 
-  const props = { ...defaultProps, ...globalConfig, ...gridProps };
+  const props = { ...defaultProps, ...omit(globalConfig, ['pagination']), ...gridProps };
 
   const {
     dataSource: initDataSource,
@@ -264,11 +264,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
 
   // 分页事件
   const computedPagination: any = useMemo(
-    () =>
-      usePagination(
-        isEmpty(pagination) ? false : { ...pagination, ...globalConfig.pagination },
-        size,
-      ),
+    () => usePagination(isEmpty(pagination) ? false : { ...pagination }, size, globalConfig.pagination),
     [pagination, size],
   );
 
