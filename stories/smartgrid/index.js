@@ -118,7 +118,9 @@ var dataSource1 = Array(10)
   .map((_, Idx) => ({
     key: Idx,
     name: Random.cname(),
-    age: Random.natural(10, 80),
+    ext: {
+      age: Random.natural(10, 80),
+    },
     height: Random.natural(160, 190) + 'cm',
     sex: ['♂', '♀'][Random.natural(0, 1)],
     address: Random.county(true),
@@ -134,13 +136,19 @@ var tableColumns1 = [
     fixed: 'left'
   },
   {
-    title: '年龄age',
-    fieldName: 'age',
-  },
-  {
-    title: '住址address',
-    fieldName: 'address',
-    width: 200,
+    title: '分组',
+    fieldName: 'group1',
+    children: [
+      {
+        title: '年龄age',
+        fieldName: 'ext.age',
+      },
+      {
+        title: '住址address',
+        fieldName: 'address',
+        width: 200,
+      },
+    ]
   },
   {
     title: '标签',

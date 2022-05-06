@@ -248,13 +248,20 @@ function SmartGrid<T>(smartGridProps: SmartGridProps<T>): React.ReactElement {
 
   const handleSync = useCallback(
     debounce(() => {
-      const columnFieldsMap = activeView.panelConfig.columnFields.reduce(
-        (memo, columnField) => ({
-          ...memo,
-          [columnField.fieldName]: columnField,
-        }),
-        {},
-      );
+      const columnFieldsMap = {};
+      const mapFieldsToObj = (fields, parentId?: string) => {
+        fields.forEach(field => {
+          if (field.children) {
+            mapFieldsToObj(field.children, field.fieldName)
+            delete field.children
+            columnFieldsMap[field.fieldName] = field
+          } else {
+            field.parentColId = parentId;
+            columnFieldsMap[field.fieldName] = field
+          }
+        });
+      }
+      mapFieldsToObj(activeView.panelConfig.columnFields)
 
       const columnDefs = managerRef.current.agGridColumnApi.getColumnState().filter(def => {
         return def.colId !== 'defalutSelection' && def.colId !== 'g-index';
@@ -269,15 +276,29 @@ function SmartGrid<T>(smartGridProps: SmartGridProps<T>): React.ReactElement {
         }
       });
 
-      activeView.panelConfig.columnFields = columnDefs.map(columnDef =>
-        Object.assign({}, columnFieldsMap[columnDef.colId], {
-          fixed: columnDef.pinned,
-          sort: columnDef.sort,
-          sortIndex: columnDef.sortIndex,
-          hide: columnDef.hide,
-          width: columnDef.width,
-        }),
-      );
+      const columnFields = [];
+      columnDefs.forEach(colDef => {
+        const parentColId = columnFieldsMap[colDef.colId].parentColId;
+        const cf = Object.assign({}, columnFieldsMap[colDef.colId], {
+          fixed: colDef.pinned,
+          sort: colDef.sort,
+          sortIndex: colDef.sortIndex,
+          hide: colDef.hide,
+          width: colDef.width,
+        })
+        if (parentColId) {
+          const groupField = columnFields.find(field => field.fieldName === parentColId);
+          if (groupField) {
+            groupField.children.push(cf)
+          } else {
+            columnFieldsMap[parentColId].children = [cf]
+            columnFields.push(columnFieldsMap[parentColId])
+          }
+        } else {
+          columnFields.push(cf)
+        }
+      });
+      activeView.panelConfig.columnFields = columnFields;
 
       handlerSaveConfig(activeView);
     }, 250),
