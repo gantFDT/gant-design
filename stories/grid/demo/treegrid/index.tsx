@@ -80,6 +80,14 @@ const dataSource = [
     en: 'body',
   },
   {
+    id: '1-2',
+    path: ['1', '1-2'],
+    partName: '机体22',
+    partNum: 'P0000022',
+    zh: '机体',
+    en: 'body',
+  },
+  {
     id: '2',
     path: ['2'],
     partName: '变速器',
@@ -104,6 +112,7 @@ const TreeGrid = () => {
 
   //选择
   const onSelect = useCallback((keys, rows) => {
+    console.log('--->',keys)
     setSelectedKeys(keys);
     setSelectedRows(rows);
   }, []);
@@ -284,6 +293,8 @@ const TreeGrid = () => {
         treeData //开启树形模式
         getDataPath={data => data.path} //树形分组依据
         groupSuppressAutoColumn //关闭默认分组
+        groupSelectsChildren
+        suppressGroupSelectParent
         // groupSelectsChildren //选择子集
       />
     </>

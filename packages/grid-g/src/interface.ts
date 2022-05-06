@@ -128,7 +128,12 @@ export interface Columns<T extends {} = {}> extends ColDef {
   /**索引的字段名 */
   fieldName: string;
   /**单元格渲染函数 */
-  render?: (text: string, record: any, rowIndex: number, params: ICellRendererParams) => React.ReactNode;
+  render?: (
+    text: string,
+    record: any,
+    rowIndex: number,
+    params: ICellRendererParams,
+  ) => React.ReactNode;
   /**子节点 */
   children?: Columns<T>[];
   /**当前列宽度,如果没有，将以defaultColumnWidth显示 */
@@ -274,7 +279,7 @@ export interface Props<T extends any> {
   //已选择盒子的宽度
   selectedBoxWidth?: number;
   //编辑改变回调
-  editChangeCallback?: (isChanged: boolean) => void; 
+  editChangeCallback?: (isChanged: boolean) => void;
   //侧边栏模式
   drawerMode?: boolean;
   //侧边栏初始宽度
@@ -301,6 +306,8 @@ export interface Props<T extends any> {
   minAutoHeight?: number | string;
   //分页控件直接跳转至某一页模式，可约束最大页码，废弃，以移动至pagation定义
   numberGoToMode?: boolean;
+  //当Context改变时的回调，可指定重新渲染的列和行
+  suppressGroupSelectParent?: boolean;
   //当Context改变时的回调，可指定重新渲染的列和行
   onContextChangeRender?: (
     context: any,

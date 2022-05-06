@@ -24,7 +24,7 @@ import { AllModules, LicenseManager } from '@ag-grid-enterprise/all-modules';
 import { Spin } from 'antd';
 import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
 import classnames from 'classnames';
-import { findIndex, get, isEmpty, isEqual, isObject, merge, cloneDeep,omit } from 'lodash';
+import { findIndex, get, isEmpty, isEqual, isObject, merge, cloneDeep, omit } from 'lodash';
 import React, {
   createContext,
   useCallback,
@@ -207,6 +207,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     headerHeight,
     autoRowHeight = false,
     controlCellWordWrap = false,
+    suppressGroupSelectParent,
     ...orignProps
   } = props;
 
@@ -264,7 +265,8 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
 
   // 分页事件
   const computedPagination: any = useMemo(
-    () => usePagination(isEmpty(pagination) ? false : { ...pagination }, size, globalConfig.pagination),
+    () =>
+      usePagination(isEmpty(pagination) ? false : { ...pagination }, size, globalConfig.pagination),
     [pagination, size],
   );
 
@@ -603,7 +605,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
       const { node } = event;
       const nodeSelected = node.isSelected();
       groupNodeSelectedToggle(node, nodeSelected);
-      checkParentGroupSelectedStatus(node, nodeSelected, event.api);
+      if (!suppressGroupSelectParent) checkParentGroupSelectedStatus(node, nodeSelected, event.api);
       setTimeout(() => {
         selectedLoadingRef.current = false;
         event.api.refreshCells({
@@ -613,7 +615,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
         });
       }, 200);
     },
-    [propsOnRowSelected],
+    [propsOnRowSelected, suppressGroupSelectParent],
   );
 
   //已选择行
