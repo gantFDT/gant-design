@@ -278,7 +278,7 @@ function SmartGrid<T>(smartGridProps: SmartGridProps<T>): React.ReactElement {
 
       const columnFields = [];
       columnDefs.forEach(colDef => {
-        const parentColId = columnFieldsMap[colDef.colId].parentColId;
+        const parentColId = columnFieldsMap[colDef.colId]?.parentColId;
         const cf = Object.assign({}, columnFieldsMap[colDef.colId], {
           fixed: colDef.pinned,
           sort: colDef.sort,
