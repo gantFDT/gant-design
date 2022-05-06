@@ -3,7 +3,7 @@ import React from 'react';
 import CodeDecorator from '../_util/CodeDecorator';
 import children from './demo';
 
-setGridConfig({ gantDateComponent: true });
+setGridConfig({ gantDateComponent: true, pagination: { pageSizeOptions: ['50', '100', '200'] } });
 
 const config = {
   useage: (

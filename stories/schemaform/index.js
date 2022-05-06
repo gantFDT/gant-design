@@ -760,48 +760,48 @@ const config = {
       describe: '通过配置schema与uiSchema生成表单',
       cmp: BasicUse,
     },
-    {
-      title: '编辑状态切换',
-      describe: '通过控制edit属性进行读写',
-      cmp: EditStatusUse,
-    },
-    {
-      title: '自定义UI配置',
-      describe: '可对表单的布局、栅格、padding与背景色进行设置',
-      cmp: CustomOptions,
-    },
-    {
-      title: '响应式布局',
-      describe:
-        '支持antd所参照的Bootstrap响应式设计，预设六个响应尺寸：xs sm md lg xl  xxl，通过配置uiSchema中的col实现',
-      cmp: GridLayout,
-    },
-    {
-      title: '高级搜索',
-      describe:
-        '三列栅格式的表单排列方式，常用于数据表格的高级搜索。有部分定制的样式代码，由于输入标签长度不确定，需要根据具体情况自行调整uiSchema。',
-      cmp: SearchUse,
-    },
-    {
-      title: '数据双向绑定',
-      describe: '通过onChange回调事件可进行数据绑定',
-      cmp: BindData,
-    },
-    {
-      title: '前置依赖',
-      describe: '支持字段响应前置依赖字段onChange',
-      cmp: DependenceData,
-    },
-    {
-      title: '扩展自定义字段',
-      describe: '扩展符合业务需求的特定字段组件',
-      cmp: CustomCmp,
-    },
-    {
-      title: '表格嵌套',
-      describe: 'schema结构支持层级嵌套',
-      cmp: NestUse,
-    },
+    // {
+    //   title: '编辑状态切换',
+    //   describe: '通过控制edit属性进行读写',
+    //   cmp: EditStatusUse,
+    // },
+    // {
+    //   title: '自定义UI配置',
+    //   describe: '可对表单的布局、栅格、padding与背景色进行设置',
+    //   cmp: CustomOptions,
+    // },
+    // {
+    //   title: '响应式布局',
+    //   describe:
+    //     '支持antd所参照的Bootstrap响应式设计，预设六个响应尺寸：xs sm md lg xl  xxl，通过配置uiSchema中的col实现',
+    //   cmp: GridLayout,
+    // },
+    // {
+    //   title: '高级搜索',
+    //   describe:
+    //     '三列栅格式的表单排列方式，常用于数据表格的高级搜索。有部分定制的样式代码，由于输入标签长度不确定，需要根据具体情况自行调整uiSchema。',
+    //   cmp: SearchUse,
+    // },
+    // {
+    //   title: '数据双向绑定',
+    //   describe: '通过onChange回调事件可进行数据绑定',
+    //   cmp: BindData,
+    // },
+    // {
+    //   title: '前置依赖',
+    //   describe: '支持字段响应前置依赖字段onChange',
+    //   cmp: DependenceData,
+    // },
+    // {
+    //   title: '扩展自定义字段',
+    //   describe: '扩展符合业务需求的特定字段组件',
+    //   cmp: CustomCmp,
+    // },
+    // {
+    //   title: '表格嵌套',
+    //   describe: 'schema结构支持层级嵌套',
+    //   cmp: NestUse,
+    // },
   ],
 };
 

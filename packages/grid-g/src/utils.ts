@@ -359,6 +359,10 @@ export const mapColumns = <T>(
                     required ? 'gant-header-cell-required' : 'gant-header-cell-edit',
                   ];
                 };
+              default:
+                colDef.headerClass = classnames(
+                  required ? 'gant-header-cell-required' : 'gant-header-cell-edit',
+                );
             }
 
             if (typeof signable === 'boolean' || typeof signable === 'function')
@@ -493,18 +497,23 @@ export function isPagitation(p: GantPaginationProps): p is GantPaginationProps {
   return typeof p === 'object';
 }
 
-export function usePagination(pagitation: GantPaginationProps, size: string): any {
+export function usePagination(
+  pagitation: GantPaginationProps,
+  size: string,
+  defapagitation: GantPaginationProps,
+): any {
   if (isPagitation(pagitation)) {
     const defaultPagetation: GantPaginationProps = {
       size,
-      defaultPageSize: 20,
+      defaultPageSize: 50,
       defaultCurrent: 1,
-      pageSizeOptions: ['20', '50', '100', '150', '200', '500'],
+      pageSizeOptions: ['50', '200', '500', '1000', '3000', '5000', '10000'],
       showSizeChanger: true,
       showQuickJumper: true,
       countLimit: 50000,
       showLessItems: true,
       align: 'left',
+      ...defapagitation,
     };
     return {
       ...defaultPagetation,

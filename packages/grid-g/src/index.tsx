@@ -24,7 +24,7 @@ import { AllModules, LicenseManager } from '@ag-grid-enterprise/all-modules';
 import { Spin } from 'antd';
 import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
 import classnames from 'classnames';
-import { findIndex, get, isEmpty, isEqual, isObject, merge, cloneDeep } from 'lodash';
+import { findIndex, get, isEmpty, isEqual, isObject, merge, cloneDeep, omit } from 'lodash';
 import React, {
   createContext,
   useCallback,
@@ -111,13 +111,12 @@ export const defaultRowSelection: RowSelection = {
 };
 
 const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
-
   const globalConfig: any = useMemo(() => {
     return getGridConfig();
   }, []);
 
-  const props = { ...defaultProps, ...globalConfig, ...gridProps };
-  
+  const props = { ...defaultProps, ...omit(globalConfig, ['pagination']), ...gridProps };
+
   const {
     dataSource: initDataSource,
     onReady,
@@ -208,9 +207,10 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     headerHeight,
     autoRowHeight = false,
     controlCellWordWrap = false,
+    suppressGroupSelectParent,
     ...orignProps
   } = props;
-  
+
   const apiRef = useRef<GridApi>();
   const shiftRef = useRef<boolean>(false);
   const wrapperRef = useRef<any>();
@@ -264,10 +264,11 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
   );
 
   // 分页事件
-  const computedPagination: any = useMemo(() => usePagination(pagination, size), [
-    pagination,
-    size,
-  ]);
+  const computedPagination: any = useMemo(
+    () =>
+      usePagination(isEmpty(pagination) ? false : { ...pagination }, size, globalConfig.pagination),
+    [pagination, size],
+  );
 
   //表格外层容器高度，高度策略有两种，一种是兼容虚拟滚动计算出来的假的自动高度，一种是完全自动高度，稍微有点复杂
   const gridHeight = useMemo(() => {
@@ -604,7 +605,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
       const { node } = event;
       const nodeSelected = node.isSelected();
       groupNodeSelectedToggle(node, nodeSelected);
-      checkParentGroupSelectedStatus(node, nodeSelected, event.api);
+      if (!suppressGroupSelectParent) checkParentGroupSelectedStatus(node, nodeSelected, event.api);
       setTimeout(() => {
         selectedLoadingRef.current = false;
         event.api.refreshCells({
@@ -614,7 +615,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
         });
       }, 200);
     },
-    [propsOnRowSelected],
+    [propsOnRowSelected, suppressGroupSelectParent],
   );
 
   //已选择行
