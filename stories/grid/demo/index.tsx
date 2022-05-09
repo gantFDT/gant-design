@@ -21,6 +21,12 @@ export default [
     code: require('./treegrid/code').default,
   },
   {
+    title: '树形拖拽维护',
+    describe: '可以拖拽节点位置,移动到目标节点子集或平级',
+    cmp: createElement(lazy(() => import('./sort'))),
+    code: require('./sort/code').default,
+  },
+  {
     title: '拷贝单元格',
     describe: '可以拖拽一个区域进行复制',
     cmp: createElement(lazy(() => import('./copyrange'))),
