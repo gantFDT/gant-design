@@ -135,6 +135,7 @@
 | valuePropName   | 否       | string                                        | "value"      | 设置 value 字段 key 名 （Switch: checked）                                                                  |
 **rules 如何验证**
 
+
 ```js
 // 用法一
 const columns=[{
