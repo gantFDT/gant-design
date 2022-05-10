@@ -129,7 +129,7 @@
 | component       | 是       | Compoent                                      | -            | 数据单元组件                                                                                                |
 | editable        | 是       | boolean 或(data)=>boolean                     | false        | 单元格是否能编辑                                                                                            |
 | props           | 否       | ((record: T, rowIndex: number) => any) \| any | -            | 传递数据单元组件属性                                                                                        |
-| changeFormatter | 否       | (val,recrod)=>val                             | -            | 单元格 onChange 时调用 必须要返回一个数作为该单元的值                                                       |
+| changeFormatter | 否       | (val,recrod)=>val                             | -            | 单元格 onChange 时调用 必须要返回一个值作为该单元的值                                                       |
 | rules           | 否       | Rules                                         | -            | 验证机制请参考   [https://ant.design/components/form-cn/#Rule](https://ant.design/components/form-cn/#Rule) |
 | refName         | 否       | string                                        | "warpperRef" | 设置 ref 字段 key 名 (Antd ref)                                                                             |
 | valuePropName   | 否       | string                                        | "value"      | 设置 value 字段 key 名 （Switch: checked）                                                                  |
