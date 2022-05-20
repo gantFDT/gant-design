@@ -105,6 +105,36 @@ export const getValueGetter = (params: any) => {
   return res;
 };
 
+export const getInitValueFormatter = (params: any) => {
+  const { fieldName, columnField, clickedEvent, cellValue } = params;
+
+  const initValueFormatter = get(columnField, 'editConfig.initValueFormatter');
+  const { columnApi, data: _data, api, context, node, rowIndex } = clickedEvent;
+  const {
+    columnModel: { displayedColumnsAndGroupsMap },
+  } = columnApi;
+  const colDef = columnField;
+  const column = get(displayedColumnsAndGroupsMap, fieldName);
+
+  const temp = cloneDeep(_data);
+  const data = set(temp, fieldName, cellValue);
+  const value = cellValue;
+
+  let res = value;
+  if (initValueFormatter) {
+    res = initValueFormatter({
+      api,
+      colDef,
+      column,
+      columnApi,
+      context,
+      data,
+      node,
+    });
+  }
+  return res;
+};
+
 //获取值的渲染
 export const getValueRender = (params: any) => {
   const { fieldName, columnField, clickedEvent, cellValue } = params;

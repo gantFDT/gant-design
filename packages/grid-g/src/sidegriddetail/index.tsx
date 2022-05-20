@@ -1,10 +1,11 @@
 import {
-  RowClickedEvent
+  RowClickedEvent,RowDataChangedEvent
 } from '@ag-grid-community/core';
 import Grid from '@grid';
 import { Icon } from 'antd';
 import AsyncValidator from 'async-validator';
-import { find, get } from 'lodash';
+import { find, get,findIndex
+ } from 'lodash';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import GridManager from '../gridManager';
 import type { Columns } from '../interface';
@@ -12,6 +13,7 @@ import CombEditComponent from './CombEditComponent';
 import {
   getDiffProps,
   getEditable,
+  getInitValueFormatter,
   getOriginData,
   getTransData,
   getValueGetter,
@@ -24,29 +26,31 @@ import {set,cloneDeep} from 'lodash'
 const headerHeight = 25;
 interface GridDetailProps {
   columns: Columns[], //父级column定义
-  clickedEvent: RowClickedEvent | any,  //grid默认click聚合入参
+  clickedEvent: RowClickedEvent,  //grid默认click聚合入参
   editable:boolean, //父级gird编辑状态
   onCellEditChange:(record: any, fieldName: string, newValue: any, oldValue: any) => any,  //单元格编辑联动回调
   onCellEditingChange:(record: any, fieldName: string, newValue: any, oldValue: any,params:any) => any, //单元格编辑联动回调
   gridManager: GridManager|any, //父级girdManager
   closeDrawer:()=>void,  //侧边栏关闭方法
   height:number|string,  //父级grid高度
+  context:any,
+  rowIndex:number
 }
 
 //右侧边栏grid行转列详情，支持编辑和各种状态联动
 const GridDetail = (props: GridDetailProps) => {
   const {
     columns: fatherColumns,
-    clickedEvent: _clickedEvent,
+    clickedEvent: clickedEvent,
     editable,
     onCellEditChange,
     onCellEditingChange,
     gridManager: fatherGridManager,
     closeDrawer,
-    height:_height
+    height:_height,
+    context,
+    rowIndex
   } = props;
-
-  const [clickedEvent, setClickedEvent] = useState(_clickedEvent);
 
   const {
     data: fatherData,
@@ -57,13 +61,33 @@ const GridDetail = (props: GridDetailProps) => {
 
   const { rowkey } = fatherGridManager;
   const [dataSource, setDataSource] = useState([]);
-  const [key, setKey] = useState(1);
 
   const gridRef = useRef<any>(null);
   const gridManagerRef = useRef<any>(null);
 
   //序号
   const serialValue = fatherApi.getValue('g-index', fatherNode);
+
+  useEffect(()=>{
+    const data=getTransData(fatherColumns,fatherData);
+    setDataSource(data);
+  },[rowIndex])
+
+  const onDataChange=useCallback((event)=>{
+    const {newData}=event;
+    const data=getTransData(fatherColumns,newData)
+    if(get(newData,'_rowType')==='remove_tag') return gridManagerRef.current.tagRemove(data.map(item=>get(item,'fieldName')))
+    gridManagerRef.current.modify(data);
+  },[fatherColumns])
+
+  useEffect(()=>{
+    fatherNode.addEventListener('dataChanged',onDataChange)
+    fatherApi.addEventListener('dataChange',(data)=>console.log(data))
+    return ()=>{
+      fatherNode.removeEventListener('dataChanged',onDataChange)
+    }
+  },[onDataChange])
+
 
   const height = typeof _height === 'string' ? `calc(${_height} - ${headerHeight}px - 1px` : Number(_height) - headerHeight
 
@@ -77,7 +101,6 @@ const GridDetail = (props: GridDetailProps) => {
     (newData: any, field: string, newValue: any, oldValue: any) => {
       const {
         data: fatherData,
-        api: { context },
       } = clickedEvent;
       const { fieldName } = newData;
       const getRowNodeId = data => {
@@ -92,16 +115,20 @@ const GridDetail = (props: GridDetailProps) => {
       const { _rowData, _rowError, _rowType, ...newFatherData } = newFatherDataAll;
       const temp = cloneDeep(newFatherData)
       const fatherNewData = set(temp, fieldName, newValue );
-      setTimeout(()=>{
-        fatherGridManager.modify(fatherNewData);
-      },200)
       //父级onCellEditingChange
       const record = fatherNewData;
-      onCellEditingChange &&
-        onCellEditingChange(record, fieldName, newValue, oldValue, { context: context });
+      let  changeData=onCellEditingChange ?
+        onCellEditingChange(record, fieldName, newValue, oldValue, { context: context }):fatherNewData;
+        changeData=Array.isArray(changeData)?changeData:[changeData]
+        const changIndex=findIndex(changeData,(itemData:any)=>getRowNodeId(fatherData)===getRowNodeId(itemData))
+        changeData=changeData[changIndex];
+        newData=getTransData(fatherColumns,changeData);
+      //  setTimeout(()=>{
+      //   fatherGridManager.modify(changeData)
+      //  },300)
       return newData;
     },
-    [rowkey, fatherGridManager, clickedEvent],
+    [fatherColumns,context],
   );
 
   //列转对象
@@ -170,6 +197,26 @@ const GridDetail = (props: GridDetailProps) => {
             return res;
           },
           signable: true,
+          // initValueFormatter:function(params: any) {
+          //   console.log('initValueFormatter')
+          //   const { data } = params;
+          //   const { fieldName } = data;
+          //   const columnField = get(fields,fieldName);
+          //   const value = get(data,'value');
+          //   const valueGetter = getValueGetter({
+          //     columnField,
+          //     fieldName,
+          //     clickedEvent,
+          //     cellValue: value,
+          //   });
+          //   const initValueFormatter = getInitValueFormatter({
+          //     columnField,
+          //     fieldName,
+          //     clickedEvent,
+          //     cellValue: valueGetter,
+          //   });
+          //   return initValueFormatter;
+          // },
           rules: {
             //统一校验
             asyncValidator: async (rules: any, value: any, cb: any, data: any) => {
@@ -202,148 +249,9 @@ const GridDetail = (props: GridDetailProps) => {
         },
       },
     ];
-  }, [fatherColumns, clickedEvent, fields]);
+  }, [fatherColumns, fields]);
 
-  //监听clickedEvent
-  useEffect(() => {
-    setClickedEvent(_clickedEvent);
-  }, [_clickedEvent]);
 
-  //回显数据
-  useEffect(() => {
-    const { data: fatherData } = clickedEvent;
-    const { _rowData, _rowType, _rowError, ...targetData } = fatherData;
-    //获取原数据
-    let originData = getOriginData(fatherData);
-    //行数据转列数据
-    const originDataSource = getTransData(fatherColumns, originData);
-    const targetDataSource = getTransData(fatherColumns, targetData);
-    
-    //设置源数据
-    setDataSource(originDataSource);
-
-    //类型为修改
-    if (_rowType === 'modify') {
-      const diffFields = getDiffProps(_rowData, targetData);
-      const modifyData = [];
-      for (let arr of Object.entries(diffFields)) {
-        const [key, value] = arr;
-        modifyData.push({
-          fieldName: key,
-          value,
-          label: get(fields, `${key}.title`),
-          _rowError,
-        });
-      }
-      //如果有校验不通过
-      if (_rowError) {
-        for (let item of Object.entries(_rowError)) {
-          const [fieldName, value] = item;
-          originDataSource.forEach(item => {
-            if (item['fieldName'] === fieldName) {
-              item._rowError = { value };
-            }
-          });
-          setDataSource(originDataSource);
-        }
-      }
-      setTimeout(() => {
-        gridManagerRef.current.modify(modifyData);
-      }, 20);
-    }
-    //类型为新增
-    if (_rowType === 'add') {
-      setDataSource(targetDataSource);
-    }
-    //类型为标记删除
-    if (_rowType === 'remove_tag') {
-      setDataSource(targetDataSource);
-      setTimeout(() => {
-        gridManagerRef.current.tagRemove(Object.keys(fields));
-      }, 20);
-    }
-  }, [clickedEvent, fatherColumns, fields]);
-
-  //标记删除
-  useEffect(() => {
-    fatherGridManager.afterTagRemove = function({ removeRecords, removeKeys, removeNodes }) {
-      const { data: fatherData } = clickedEvent;
-      const hasTagRemove = find(removeNodes, o => get(o, `data.${rowkey}`) === fatherData[rowkey]);
-      if (hasTagRemove) {
-        const newEvent = {
-          ...clickedEvent,
-          data: { ...hasTagRemove.data, _rowType: 'remove_tag' },
-        };
-        setClickedEvent(newEvent);
-      }
-    };
-  }, [fatherGridManager, rowkey, clickedEvent]);
-
-  //保存
-  useEffect(() => {
-    fatherGridManager.afterSave = function({ diff }) {
-      const { data: fatherData } = clickedEvent;
-      const { remove } = diff;
-      const hasTagRemove = find(remove, o => get(o, `${rowkey}`) === fatherData[rowkey]);
-      if (hasTagRemove) {
-        setDataSource([]);
-        // clickedEvent.api.refreshCells({ force: true,columns:['g-index'] });
-      }
-      gridManagerRef.current.save();
-    };
-  }, [clickedEvent, fatherGridManager, rowkey]);
-
-  //undo
-  useEffect(() => {
-    fatherGridManager.afterUndo = function(hisStack) {
-      const { data: fatherData } = clickedEvent;
-      const {
-        type,
-        records: [record],
-      } = hisStack;
-      if (record[rowkey] !== fatherData[rowkey]) {
-        return;
-      }
-      if (type === 'modify' || type === 'remove_tag') {
-        setClickedEvent({
-          ...clickedEvent,
-          data: record,
-        });
-      }
-    };
-  }, [rowkey, clickedEvent]);
-
-  //redo
-  useEffect(() => {
-    fatherGridManager.afterRedo = function(hisStack) {
-      const { data: fatherData } = clickedEvent;
-      const {
-        type,
-        records: [record],
-      } = hisStack;
-      if (record[rowkey] !== fatherData[rowkey]) {
-        return;
-      }
-      if (type === 'modify' || type === 'remove_tag') {
-        setClickedEvent({
-          ...clickedEvent,
-          data: record,
-        });
-      }
-    };
-  }, [rowkey, clickedEvent]);
-
-  //cancel
-  useEffect(() => {
-    fatherGridManager.afterCancel = function(dataSource) {
-      const { data: fatherData } = clickedEvent;
-      let originData = getOriginData(fatherData);
-      setClickedEvent({
-        ...clickedEvent,
-        data: originData,
-      });
-    };
-  }, [clickedEvent]);
 
   return (
     <>
@@ -354,9 +262,7 @@ const GridDetail = (props: GridDetailProps) => {
         </div>
         <Icon type="close" onClick={() => closeDrawer()} />
       </div>
-
       <Grid
-        key={key}
         rowkey="fieldName"
         dataSource={dataSource}
         columns={realColumns}

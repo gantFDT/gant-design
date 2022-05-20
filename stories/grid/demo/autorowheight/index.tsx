@@ -25,7 +25,10 @@ const RandomCreate = () => {
 
 let mockData = Array(100)
   .fill('')
-  .map(() => RandomCreate());
+  .map((item, index) => ({
+    ...RandomCreate(),
+    path: index % 2 == 0 ? [index] : [index < 10 ? 0 : index - 1, index],
+  }));
 mockData = [...mockData];
 
 const columns: Columns[] = [
@@ -33,6 +36,7 @@ const columns: Columns[] = [
     fieldName: 'user.name',
     title: '英文名称',
     flex: 1,
+    cellRenderer: 'gantGroupCellRenderer', //树形展示
     render: (text: any, record: any) => {
       return (
         <>
@@ -359,7 +363,10 @@ const BaiscEditGrid = () => {
         zebra={false}
         hideSelectedBox
         autoRowHeight
+        treeData
+        getDataPath={data => data.path}
         defaultColDef={{ autoHeight: true, wrapText: true }}
+        // groupSuppressAutoColumn
         // controlCellWordWrap //如果需要通过数据换行符控制则开启
       />
     </>

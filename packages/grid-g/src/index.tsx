@@ -217,8 +217,10 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
   const selectedChanged = useRef<boolean>(false);
   const columnsRef = useRef<ColumnApi>();
   const selectedLoadingRef = useRef<boolean>(false);
+  const clickedEventRef = useRef<RowClickedEvent>();
   const [visibleDrawer, setVisibleDrawer] = useState(false);
-  const [clickedEvent, setClickedEvent] = useState<RowClickedEvent>();
+  // const [clickedEvent, setClickedEvent] = useState<RowClickedEvent>();
+  const [clickRowIndex, setClickRowIndex] = useState(-1);
 
   let domLayout = _domLayout;
   //如果是开启启动表格高度，并且是指定了行高策略, 那么就使用真实的自动高度模式
@@ -564,7 +566,8 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     (event: RowClickedEvent) => {
       if (drawerMode && visibleDrawer) {
         if (typeof propVisibleDrawer !== 'boolean') setVisibleDrawer(true);
-        setClickedEvent(event);
+        clickedEventRef.current = event;
+        setClickRowIndex(get(event, 'rowIndex'));
       }
       onRowClicked && onRowClicked(event);
     },
@@ -578,7 +581,9 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
       const doubleClickedOpenDrawer = true;
       if (drawerMode && doubleClickedOpenDrawer) {
         if (typeof propVisibleDrawer !== 'boolean') setVisibleDrawer(true);
-        setClickedEvent(event);
+        clickedEventRef.current = event;
+        console.log('--->',event)
+        setClickRowIndex(get(event, 'rowIndex'));
       }
       if (doubleClickedExpanded) {
         const { node } = event;
@@ -761,7 +766,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
 
   //编辑结束
   const onCellEditingStopped = useCallback((event: CellEditingStoppedEvent) => {
-    setClickedEvent(event);
+    clickedEventRef.current = event;
     const tipDoms = document.querySelectorAll('.gant-cell-tooltip.ag-tooltip-custom');
     tipDoms.forEach(itemDom => {
       itemDom.remove();
@@ -1013,7 +1018,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                     <GantGridFormToolPanelRenderer
                       height={sideDrawerHeight}
                       columns={columns}
-                      clickedEvent={clickedEvent}
+                      clickedEvent={clickedEventRef.current}
                       gridManager={gridManager}
                       visible={visibleDrawer}
                       closeDrawer={() =>
@@ -1024,6 +1029,18 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                       defaultDrawerWidth={defaultDrawerWidth}
                       customDrawerContent={customDrawerContent}
                       editable={editable}
+                      clickRowIndex={clickRowIndex}
+                      context={{
+                        serverDataRequest,
+                        isServerSideGroup,
+                        size,
+                        getDataPath: getDataPath,
+                        computedPagination,
+                        groupSelectsChildren,
+                        ...context,
+                        treeData: currentTreeData,
+                        requireds,
+                      }}
                     />
                   )}
                 </div>
