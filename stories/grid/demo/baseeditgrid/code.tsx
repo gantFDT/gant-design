@@ -10,6 +10,7 @@ import Grid, {
 import { Input, DatePicker, Selector, Header } from 'gantd';
 import { Button, Modal } from 'antd';
 import { Random } from 'mockjs';
+import { cloneDeep, get } from 'lodash';
 import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 const RandomCreate = () => {
@@ -41,8 +42,8 @@ const columns: Columns[] = [
         {
           required: true,
           message: '姓名不能为空',
-        }
-      ]
+        },
+      ],
     },
   },
   {
@@ -245,6 +246,27 @@ const BaiscEditGrid = () => {
   useEffect(() => {
     queryData(0, 20);
   }, []);
+  const processCellFromClipboard = useCallback(params => {
+    const { column, node } = params;
+    
+    console.log('processCellFromClipboard----->', params, cloneDeep(params.node.data));
+
+    return get(node,\`data.\${get(column,'colId')}\`);
+  }, []);
+
+  const processCellForClipboard = useCallback(params => {
+    // console.log('processCellFromClipboard----->', params);
+    return params.value;
+  }, []);
+
+  const processDataFromClipboard = params => {
+    console.log('processDataFromClipboard----->', params);
+    return [[]];
+  };
+
+  const onCellChanged = (params: any) => {
+    console.log('onCellChanged---->', params);
+  };
 
   return (
     <>
@@ -295,6 +317,8 @@ const BaiscEditGrid = () => {
         editable={editable}
         dataSource={dataSource}
         serialNumber
+        processCellFromClipboard={processCellFromClipboard}
+        processCellForClipboard={processCellForClipboard}
         rowSelection={{
           selectedRows,
           onSelect: onSelect,
@@ -320,6 +344,8 @@ const BaiscEditGrid = () => {
         }}
         getContextMenuItems={getContextMenuItems}
         enableCellTextSelection={false}
+        // processDataFromClipboard={processDataFromClipboard}
+        onCellChanged={onCellChanged}
         //支持区域选中
         enableRangeSelection
       />

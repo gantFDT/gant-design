@@ -95,6 +95,7 @@ export default memo(function SelectedGrid(props: SelectedGridProps) {
               suppressMenu: true,
               resizable: true,
             }}
+            suppressExcelExport
           />
         </div>
       </div>

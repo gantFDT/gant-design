@@ -722,19 +722,19 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     [onReady, gridKey, dataSource],
   );
 
-  //阻止键盘事件
-  const onSuppressKeyboardEvent = useCallback((params: SuppressKeyboardEventParams) => {
-    const { event, colDef, data, api } = params;
-    if (event.key === 'Shift') {
-      shiftRef.current = true;
-      return false;
-    }
-    // if (event.keyCode == 67 && (event.ctrlKey || event.composed)) {
-    //   api.copySelectedRangeToClipboard(false);
-    //   return true;
-    // }
-    return false;
-  }, []);
+  // //阻止键盘事件
+  // const onSuppressKeyboardEvent = useCallback((params: SuppressKeyboardEventParams) => {
+  //   const { event, colDef, data, api } = params;
+  //   if (event.key === 'Shift') {
+  //     shiftRef.current = true;
+  //     return false;
+  //   }
+  //   // if (event.keyCode == 67 && (event.ctrlKey || event.composed)) {
+  //   //   api.copySelectedRangeToClipboard(false);
+  //   //   return true;
+  //   // }
+  //   return false;
+  // }, []);
 
   //行是否可选
   const onRowSelectable = useCallback((rowNode: RowNode) => {
@@ -961,7 +961,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                       excelStyles={[{ id: 'stringType', dataType: 'String' }, ...excelStyles]}
                       immutableData
                       enableCellTextSelection
-                      suppressClipboardPaste
+                      // suppressClipboardPaste
                       domLayout={domLayout}
                       rowHeight={rowHeight || get(sizeDefinitions, `rowHeight.${size}`)}
                       getRowHeight={getRowHeight}
@@ -1004,7 +1004,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                       }}
                       getContextMenuItems={contextMenuItems as any}
                       modules={[...AllModules]}
-                      suppressKeyboardEvent={onSuppressKeyboardEvent}
+                      // suppressKeyboardEvent={onSuppressKeyboardEvent}
                       onCellEditingStopped={onCellEditingStopped}
                       onRowDataUpdated={onRowDataUpdated}
                       onColumnMoved={onColumnsChange}

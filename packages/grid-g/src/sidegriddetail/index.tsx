@@ -98,7 +98,7 @@ const GridDetail = (props: GridDetailProps) => {
 
   //值改变
   const _onCellEditingChange = useCallback(
-    (newData: any, field: string, newValue: any, oldValue: any) => {
+    async (newData: any, field: string, newValue: any, oldValue: any) => {
       const {
         data: fatherData,
       } = clickedEvent;
@@ -118,14 +118,14 @@ const GridDetail = (props: GridDetailProps) => {
       //父级onCellEditingChange
       const record = fatherNewData;
       let  changeData=onCellEditingChange ?
-        onCellEditingChange(record, fieldName, newValue, oldValue, { context: context }):fatherNewData;
+       await  onCellEditingChange(record, fieldName, newValue, oldValue, { context: context }):fatherNewData;
         changeData=Array.isArray(changeData)?changeData:[changeData]
         const changIndex=findIndex(changeData,(itemData:any)=>getRowNodeId(fatherData)===getRowNodeId(itemData))
         changeData=changeData[changIndex];
         newData=getTransData(fatherColumns,changeData);
-      //  setTimeout(()=>{
-      //   fatherGridManager.modify(changeData)
-      //  },300)
+       setTimeout(()=>{
+        fatherGridManager.modify(changeData)
+       },300)
       return newData;
     },
     [fatherColumns,context],
