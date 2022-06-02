@@ -92,10 +92,10 @@ export default [
     cmp: createElement(lazy(() => import('./autorowheight'))),
     code: require('./autorowheight/code').default,
   },
-  {
-    title: '自定义行高',
-    describe: `每行行高固定一个高度100`,
-    cmp: createElement(lazy(() => import('./customrowheight'))),
-    code: require('./customrowheight/code').default,
-  },
+  // {
+  //   title: '自定义行高',
+  //   describe: `每行行高固定一个高度100`,
+  //   cmp: createElement(lazy(() => import('./customrowheight'))),
+  //   code: require('./customrowheight/code').default,
+  // },
 ];
