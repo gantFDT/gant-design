@@ -1,10 +1,11 @@
 import '@data-cell/selector/style';
 import CodeDecorator from '../_util/CodeDecorator';
 import codeList from './code';
+import { Random } from 'mockjs';
 /*! Start !*/
 import React, { useState, useMemo, useCallback } from 'react';
 import { Button } from 'antd';
-import { Selector, EditStatus, SwitchStatus } from '@data-cell';
+import { Selector, EditStatus, SwitchStatus, VSelector } from '@data-cell';
 /*! Split !*/
 const Demo1 = () => {
   const dataSource = useMemo(() => ['Jhon', 'Dan', 'Tom'], []);
@@ -102,6 +103,35 @@ const Demo1 = () => {
     </>
   );
 };
+/*! Split !*/
+const VDemo = () => {
+  const dataSource = useMemo(
+    () =>
+      Array(10000)
+        .fill()
+        .map(() => ({
+          label: Random.cname(),
+          value: Random.guid(),
+        })),
+    [],
+  );
+  const [value, setValue] = useState(1);
+
+  return (
+    <VSelector
+      selectorId="tasks"
+      edit={EditStatus.EDIT}
+      dataSource={dataSource}
+      value={value}
+      onChange={v => {
+        console.log(v);
+        setValue(v);
+      }}
+      onSave={(id, value, cb) => cb()}
+    />
+  );
+};
+
 /*! Split !*/
 const Demo2 = () => {
   const dataSource = useMemo(
@@ -394,41 +424,47 @@ const config = {
       describe: '通过dataSource传递选项数组',
       cmp: Demo1,
     },
-    // {
-    //   title: '数据分组',
-    //   describe: '在dataSource中设置group实现数据分组',
-    //   cmp: Demo2
-    // },
-    // {
-    //   title: '自定义value、label',
-    //   describe: 'valueProp、labelProp可以修改datasource中作为value、label的字段。往往在获取远程数据的时候需要调整',
-    //   cmp: Demo3
-    // },
-    // {
-    //   title: '远程数据源',
-    //   describe: '使用query方法查询数据',
-    //   cmp: Demo4
-    // },
-    // {
-    //   title: '不显示最近选择',
-    //   describe: "设置useStorage为false之后，将不会展示最近选择选项，也不会记录到storage里面",
-    //   cmp: Demo5
-    // },
-    // {
-    //   title: '多选',
-    //   describe: "设置multiple属性、或者mode=multiple",
-    //   cmp: Demo6
-    // },
-    // {
-    //   title: '通过外部指定选项的lable显示',
-    //   describe: "设置optionLabel",
-    //   cmp: Demo7
-    // },
-    // {
-    //   title: '过滤选中项',
-    //   describe: "设置hideSelected为true",
-    //   cmp: Demo8
-    // },
+    {
+      title: '虚拟滚动',
+      describe: '虚拟滚动',
+      cmp: VDemo,
+    },
+    {
+      title: '数据分组',
+      describe: '在dataSource中设置group实现数据分组',
+      cmp: Demo2,
+    },
+    {
+      title: '自定义value、label',
+      describe:
+        'valueProp、labelProp可以修改datasource中作为value、label的字段。往往在获取远程数据的时候需要调整',
+      cmp: Demo3,
+    },
+    {
+      title: '远程数据源',
+      describe: '使用query方法查询数据',
+      cmp: Demo4,
+    },
+    {
+      title: '不显示最近选择',
+      describe: '设置useStorage为false之后，将不会展示最近选择选项，也不会记录到storage里面',
+      cmp: Demo5,
+    },
+    {
+      title: '多选',
+      describe: '设置multiple属性、或者mode=multiple',
+      cmp: Demo6,
+    },
+    {
+      title: '通过外部指定选项的lable显示',
+      describe: '设置optionLabel',
+      cmp: Demo7,
+    },
+    {
+      title: '过滤选中项',
+      describe: '设置hideSelected为true',
+      cmp: Demo8,
+    },
   ],
 };
 
