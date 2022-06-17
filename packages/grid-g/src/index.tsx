@@ -582,7 +582,6 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
       if (drawerMode && doubleClickedOpenDrawer) {
         if (typeof propVisibleDrawer !== 'boolean') setVisibleDrawer(true);
         clickedEventRef.current = event;
-        console.log('--->',event)
         setClickRowIndex(get(event, 'rowIndex'));
       }
       if (doubleClickedExpanded) {
@@ -708,15 +707,15 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
       gridManager.rowkey = rowkey;
       onReady && onReady(params, gridManager);
       setReady(true);
-      // if (filterModelRef.current && treeDataForcedFilter) {
-      //   params.api.setRowData(get(gridManager, 'agGridConfig.dataSource', []));
-      //   params.api.setFilterModel(filterModelRef.current);
-      //   // params.api.ensureColumnVisible(columnIdRef?.current);
-      //   // const {lef} = get(columnIdRef, 'current',{});
-      //   gridRef.current?.eGridDiv
-      //     .querySelector('.ag-center-cols-viewport')
-      //     ?.scrollTo(columnIdRef.current, 0);
-      // }
+      if (filterModelRef.current && treeDataForcedFilter) {
+        params.api.setRowData(get(gridManager, 'agGridConfig.dataSource', []));
+        params.api.setFilterModel(filterModelRef.current);
+        // params.api.ensureColumnVisible(columnIdRef?.current);
+        // const {lef} = get(columnIdRef, 'current',{});
+        // gridRef.current?.eGridDiv
+        //   .querySelector('.ag-center-cols-viewport')
+        //   ?.scrollTo(columnIdRef.current, 0);
+      }
       // gridManager.dataSourceChanged(dataSource);
     },
     [onReady, gridKey, dataSource],
