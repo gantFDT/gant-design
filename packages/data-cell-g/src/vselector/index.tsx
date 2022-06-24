@@ -666,7 +666,8 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
     const {
       rcSelect: { getInputDOMNode, getInputElement },
     } = this.props.selectRef as any;
-    const input = getInputDOMNode() || getInputElement();
+    const getInput = getInputDOMNode || getInputElement;
+    const input = getInput?.();
     if (input) {
       if (readOnly && isMultiple) {
         const isReadOnly = input.getAttribute('readOnly');
