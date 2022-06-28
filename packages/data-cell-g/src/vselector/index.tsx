@@ -661,12 +661,12 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
   };
 
   onFocus = () => {
-    if (!this.props.selectRef) return;
-    const { readOnly, isMultiple, setFilter } = this.props;
-    const {
-      rcSelect: { getInputDOMNode, getInputElement },
-    } = this.props.selectRef as any;
-    const input = getInputDOMNode() || getInputElement();
+    const { readOnly, isMultiple, selectRef = {}, setFilter } = this.props;
+    const { rcSelect } = selectRef as any;
+    if(!rcSelect) return;
+    const { getInputDOMNode, getInputElement } = rcSelect;
+    const getInput = getInputDOMNode || getInputElement;
+    const input = getInput?.();
     if (input) {
       if (readOnly && isMultiple) {
         const isReadOnly = input.getAttribute('readOnly');

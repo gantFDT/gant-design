@@ -1,6 +1,6 @@
 {
   "name": "smart-grid-g",
-  "version": "0.1.267",
+  "version": "0.1.269",
   "description": "gantd smart-grid-g",
   "main": "lib/index.js",
   "scripts": {},
@@ -26,8 +26,8 @@
   "dependencies": {
     "antd": "^3.26.12",
     "array-move": "^2.2.1",
-    "data-cell-g": "^0.1.89",
-    "grid-g": "^0.0.229",
+    "data-cell-g": "^0.1.91",
+    "grid-g": "^0.0.230",
     "header-g": "^0.1.31",
     "lodash": "^4.17.15",
     "modal-g": "^0.1.40",
