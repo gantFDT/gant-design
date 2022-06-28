@@ -19,8 +19,9 @@ export function getModifyData(records, getRowItemData, oldRecords, getRowNodeId)
     newRecords: any[] = [];
   records.map((item, index) => {
     const oldIndex = findIndex(oldRecords, oldItem => getRowNodeId(oldItem) === getRowNodeId(item));
-    var { data } = getRowItemData(item, get(oldRecords, `[${oldIndex}]`, undefined));
-    if (isEqualObj(data, item)) return;
+    const rowNode = getRowItemData(item, get(oldRecords, `[${oldIndex}]`, undefined));
+    if (!rowNode || isEqualObj(rowNode.data, item)) return;
+    const { data } = rowNode;
     let { _rowData, _rowType = null, ...oldData } = data;
     let { _rowData: nextRowData, _rowType: nextRowType, ...newData } = item;
     if (nextRowType === DataActions.remove || nextRowType === DataActions.removeTag)

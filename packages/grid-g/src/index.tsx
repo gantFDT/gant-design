@@ -208,6 +208,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     autoRowHeight = false,
     controlCellWordWrap = false,
     suppressGroupSelectParent,
+    onColumnsChange: propsOnColumnsChange,
     ...orignProps
   } = props;
 
@@ -643,6 +644,10 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
       size,
     );
   }, [columns, size]);
+
+  useEffect(() => {
+    propsOnColumnsChange && propsOnColumnsChange(columnDefs);
+  }, [columnDefs]);
 
   // 选中栏grid  columns;
   const selectedColumns = useMemo(() => {

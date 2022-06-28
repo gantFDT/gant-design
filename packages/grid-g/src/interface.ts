@@ -252,6 +252,7 @@ export interface Props<T extends any> {
   ) => any;
   //当单元格数据改变失去焦点后，并且数据已同步至grid后
   onCellChanged?: (record: any, fieldName: string, newValue: any, oldValue: any) => void;
+
   //开启编辑标识
   openEditSign?: boolean;
   //
@@ -329,6 +330,8 @@ export interface Props<T extends any> {
   autoRowHeight?: boolean;
   //单元格自动识别换行符换行
   controlCellWordWrap?: boolean;
+  //监听外部cloumns
+  onColumnsChange?: (columns: ColDef[]) => void;
 }
 
 export type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>;
