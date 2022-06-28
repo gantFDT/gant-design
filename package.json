@@ -136,6 +136,7 @@
     "@ant-design/icons": "2.1.1",
     "@types/react": "^16.9.52",
     "antd": "^3.22.0",
+    "antd-virtual-select": "^1.1.2",
     "array-move": "^2.2.1",
     "async-validate": "^1.0.1",
     "async-validator": "^3.2.4",

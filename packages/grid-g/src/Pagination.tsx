@@ -252,7 +252,7 @@ const NumberGoTo = (props: any) => {
 
   let gotoButton = null;
   const inputRef = useRef<any>({});
-  const max = Math.round(total / pageSize);
+  const max = Math.ceil(total / pageSize);
 
   const parser = (val: string) => val && val.replace(/\D+|^0/g, '');
   const onChange = (v: number) => setValue(v);

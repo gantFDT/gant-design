@@ -8,7 +8,7 @@ if (
 ) {
   console.warn(
     'You are using a whole package of gantd, ' +
-    'please use https://www.npmjs.com/package/babel-plugin-import to reduce app bundle size.',
+      'please use https://www.npmjs.com/package/babel-plugin-import to reduce app bundle size.',
   );
 }
 //其他
@@ -17,12 +17,23 @@ export { default as Anchor } from '@anchor';
 export { default as AutoReload } from '@auto-reload';
 // 数据单元
 export {
-  ColorPicker, DatePicker, EditStatus, Icon, Input,
-  InputCellPhone, InputEmail,
+  ColorPicker,
+  DatePicker,
+  EditStatus,
+  Icon,
+  Input,
+  InputCellPhone,
+  InputEmail,
   InputLanguage,
   InputMoney,
-  InputNumber, InputTelePhone,
-  InputUrl, LocationSelector, Selector, SwitchStatus, withEdit
+  InputNumber,
+  InputTelePhone,
+  InputUrl,
+  LocationSelector,
+  Selector,
+  SwitchStatus,
+  withEdit,
+  VSelector,
 } from '@data-cell';
 
 //grid
@@ -48,10 +59,3 @@ export { default as TaskBoard } from './task-board';
 export { default as Toolbar } from './toolbar';
 //废弃
 export { default as VisibleMenu } from './visible-menu';
-
-
-
-
-
-
-

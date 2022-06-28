@@ -26,7 +26,10 @@ const RandomCreate = () => {
 
 let mockData = Array(100)
   .fill('')
-  .map(() => RandomCreate());
+  .map((item, index) => ({
+    ...RandomCreate(),
+    path: index % 2 == 0 ? [index] : [index < 10 ? 0 : index - 1, index],
+  }));
 mockData = [...mockData];
 
 const columns: Columns[] = [
@@ -34,26 +37,8 @@ const columns: Columns[] = [
     fieldName: 'user.name',
     title: '英文名称',
     flex: 1,
-    render: (text: any, record: any) => {
-      return (
-        <>
-          <div>
-            <span style={{ margin: 10, display: 'flex' }}>
-              <Avatar
-                style={{ backgroundColor: record.color, verticalAlign: 'middle', fontSize: 24 }}
-                size="large"
-              >
-                {text[0]}
-              </Avatar>
-              <div style={{ marginLeft: 10 }}>
-                <div style={{ fontSize: 16, fontWeight: 'bold' }}>{text}</div>
-                <div style={{ color: 'gray' }}>{record.ip}</div>
-              </div>
-            </span>
-          </div>
-        </>
-      );
-    },
+    cellRenderer: 'gantGroupCellRenderer', //树形展示
+
     editConfig: {
       component: Input,
       editable: true,
@@ -79,6 +64,26 @@ const columns: Columns[] = [
         type: 'string',
         message: '中文名不能大于四个字符',
       },
+    },
+    render: (text: any, record: any) => {
+      return (
+        <>
+          <div>
+            <span style={{ margin: 10, display: 'flex' }}>
+              <Avatar
+                style={{ backgroundColor: record.color, verticalAlign: 'middle', fontSize: 24 }}
+                size="large"
+              >
+                {text[0]}
+              </Avatar>
+              <div style={{ marginLeft: 10 }}>
+                <div style={{ fontSize: 16, fontWeight: 'bold' }}>{text}</div>
+                <div style={{ color: 'gray' }}>{record.ip}</div>
+              </div>
+            </span>
+          </div>
+        </>
+      );
     },
   },
   {
@@ -360,7 +365,10 @@ const BaiscEditGrid = () => {
         zebra={false}
         hideSelectedBox
         autoRowHeight
+        treeData
+        getDataPath={data => data.path}
         defaultColDef={{ autoHeight: true, wrapText: true }}
+        // groupSuppressAutoColumn
         // controlCellWordWrap //如果需要通过数据换行符控制则开启
       />
     </>

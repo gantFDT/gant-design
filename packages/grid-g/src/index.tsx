@@ -208,6 +208,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     autoRowHeight = false,
     controlCellWordWrap = false,
     suppressGroupSelectParent,
+    onColumnsChange: propsOnColumnsChange,
     ...orignProps
   } = props;
 
@@ -217,8 +218,10 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
   const selectedChanged = useRef<boolean>(false);
   const columnsRef = useRef<ColumnApi>();
   const selectedLoadingRef = useRef<boolean>(false);
+  const clickedEventRef = useRef<RowClickedEvent>();
   const [visibleDrawer, setVisibleDrawer] = useState(false);
-  const [clickedEvent, setClickedEvent] = useState<RowClickedEvent>();
+  // const [clickedEvent, setClickedEvent] = useState<RowClickedEvent>();
+  const [clickRowIndex, setClickRowIndex] = useState(-1);
 
   let domLayout = _domLayout;
   //如果是开启启动表格高度，并且是指定了行高策略, 那么就使用真实的自动高度模式
@@ -564,7 +567,8 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     (event: RowClickedEvent) => {
       if (drawerMode && visibleDrawer) {
         if (typeof propVisibleDrawer !== 'boolean') setVisibleDrawer(true);
-        setClickedEvent(event);
+        clickedEventRef.current = event;
+        setClickRowIndex(get(event, 'rowIndex'));
       }
       onRowClicked && onRowClicked(event);
     },
@@ -578,7 +582,8 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
       const doubleClickedOpenDrawer = true;
       if (drawerMode && doubleClickedOpenDrawer) {
         if (typeof propVisibleDrawer !== 'boolean') setVisibleDrawer(true);
-        setClickedEvent(event);
+        clickedEventRef.current = event;
+        setClickRowIndex(get(event, 'rowIndex'));
       }
       if (doubleClickedExpanded) {
         const { node } = event;
@@ -639,6 +644,10 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
       size,
     );
   }, [columns, size]);
+
+  useEffect(() => {
+    propsOnColumnsChange && propsOnColumnsChange(columnDefs);
+  }, [columnDefs]);
 
   // 选中栏grid  columns;
   const selectedColumns = useMemo(() => {
@@ -703,33 +712,33 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
       gridManager.rowkey = rowkey;
       onReady && onReady(params, gridManager);
       setReady(true);
-      // if (filterModelRef.current && treeDataForcedFilter) {
-      //   params.api.setRowData(get(gridManager, 'agGridConfig.dataSource', []));
-      //   params.api.setFilterModel(filterModelRef.current);
-      //   // params.api.ensureColumnVisible(columnIdRef?.current);
-      //   // const {lef} = get(columnIdRef, 'current',{});
-      //   gridRef.current?.eGridDiv
-      //     .querySelector('.ag-center-cols-viewport')
-      //     ?.scrollTo(columnIdRef.current, 0);
-      // }
+      if (filterModelRef.current && treeDataForcedFilter) {
+        params.api.setRowData(get(gridManager, 'agGridConfig.dataSource', []));
+        params.api.setFilterModel(filterModelRef.current);
+        // params.api.ensureColumnVisible(columnIdRef?.current);
+        // const {lef} = get(columnIdRef, 'current',{});
+        // gridRef.current?.eGridDiv
+        //   .querySelector('.ag-center-cols-viewport')
+        //   ?.scrollTo(columnIdRef.current, 0);
+      }
       // gridManager.dataSourceChanged(dataSource);
     },
     [onReady, gridKey, dataSource],
   );
 
-  //阻止键盘事件
-  const onSuppressKeyboardEvent = useCallback((params: SuppressKeyboardEventParams) => {
-    const { event, colDef, data, api } = params;
-    if (event.key === 'Shift') {
-      shiftRef.current = true;
-      return false;
-    }
-    // if (event.keyCode == 67 && (event.ctrlKey || event.composed)) {
-    //   api.copySelectedRangeToClipboard(false);
-    //   return true;
-    // }
-    return false;
-  }, []);
+  // //阻止键盘事件
+  // const onSuppressKeyboardEvent = useCallback((params: SuppressKeyboardEventParams) => {
+  //   const { event, colDef, data, api } = params;
+  //   if (event.key === 'Shift') {
+  //     shiftRef.current = true;
+  //     return false;
+  //   }
+  //   // if (event.keyCode == 67 && (event.ctrlKey || event.composed)) {
+  //   //   api.copySelectedRangeToClipboard(false);
+  //   //   return true;
+  //   // }
+  //   return false;
+  // }, []);
 
   //行是否可选
   const onRowSelectable = useCallback((rowNode: RowNode) => {
@@ -761,7 +770,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
 
   //编辑结束
   const onCellEditingStopped = useCallback((event: CellEditingStoppedEvent) => {
-    setClickedEvent(event);
+    clickedEventRef.current = event;
     const tipDoms = document.querySelectorAll('.gant-cell-tooltip.ag-tooltip-custom');
     tipDoms.forEach(itemDom => {
       itemDom.remove();
@@ -956,7 +965,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                       excelStyles={[{ id: 'stringType', dataType: 'String' }, ...excelStyles]}
                       immutableData
                       enableCellTextSelection
-                      suppressClipboardPaste
+                      // suppressClipboardPaste
                       domLayout={domLayout}
                       rowHeight={rowHeight || get(sizeDefinitions, `rowHeight.${size}`)}
                       getRowHeight={getRowHeight}
@@ -999,7 +1008,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                       }}
                       getContextMenuItems={contextMenuItems as any}
                       modules={[...AllModules]}
-                      suppressKeyboardEvent={onSuppressKeyboardEvent}
+                      // suppressKeyboardEvent={onSuppressKeyboardEvent}
                       onCellEditingStopped={onCellEditingStopped}
                       onRowDataUpdated={onRowDataUpdated}
                       onColumnMoved={onColumnsChange}
@@ -1013,7 +1022,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                     <GantGridFormToolPanelRenderer
                       height={sideDrawerHeight}
                       columns={columns}
-                      clickedEvent={clickedEvent}
+                      clickedEvent={clickedEventRef.current}
                       gridManager={gridManager}
                       visible={visibleDrawer}
                       closeDrawer={() =>
@@ -1024,6 +1033,18 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                       defaultDrawerWidth={defaultDrawerWidth}
                       customDrawerContent={customDrawerContent}
                       editable={editable}
+                      clickRowIndex={clickRowIndex}
+                      context={{
+                        serverDataRequest,
+                        isServerSideGroup,
+                        size,
+                        getDataPath: getDataPath,
+                        computedPagination,
+                        groupSelectsChildren,
+                        ...context,
+                        treeData: currentTreeData,
+                        requireds,
+                      }}
                     />
                   )}
                 </div>

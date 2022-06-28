@@ -18,6 +18,7 @@ export { default as InputTelePhone } from './input-tele-phone';
 export { default as InputUrl } from './input-url';
 export { default as LocationSelector } from './location-selector';
 // selector
+export { default as VSelector } from './vselector';
 export { default as Selector } from './selector';
 export { default as SwitchStatus } from './switch-status';
 export { default as TreeSelector } from './tree-selector';

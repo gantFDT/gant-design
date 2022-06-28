@@ -30,6 +30,9 @@ export default memo(
       rowIndex,
       customIcon,
     } = props;
+
+    const [rowHeight, setRowHeight] = useState(node.rowHeight);
+
     const getTreeDataInfo = useCallback(
       (node: RowNode) => {
         const { expanded: nodeExpanded, childrenAfterFilter = [], data } = node;
@@ -98,6 +101,12 @@ export default memo(
     function childrenCountChangedCallback(params) {
       setState({ ...getTreeDataInfo(params.node) });
     }
+
+    const onRowHeightChange = useCallback(({ node }: any) => {
+      console.log('onRowHeightChange--->', node.rowHeight, node);
+      setRowHeight(node.rowHeight);
+    }, []);
+
     const getLeveLine = useCallback(() => {
       const { level, lastChild } = node;
       const arr = new Array(level).fill(undefined);
@@ -107,6 +116,7 @@ export default memo(
         return lastLine ? (
           <span
             key={index + 'folder-icon'}
+            style={{ height: rowHeight }}
             className={classnames('gant-level-line', {
               ['gant-folder-line']: hasChildren,
               ['gant-file-line']: !hasChildren && !lastChild,
@@ -116,11 +126,12 @@ export default memo(
         ) : (
           <span
             key={index + 'folder-icon'}
+            style={{ height: rowHeight }}
             className={classnames('gant-level-line', 'gant-folder-line')}
           ></span>
         );
       });
-    }, [node, hasChildren, showFolder]);
+    }, [node, hasChildren, showFolder, rowHeight]);
     function dataChange(params) {
       if (isEqualObj(data, node.data)) return;
       const newState = getTreeDataInfo(node);
@@ -137,6 +148,7 @@ export default memo(
       node.addEventListener(RowNode.EVENT_EXPANDED_CHANGED, expandedChangedCallback);
       node.addEventListener(RowNode.EVENT_ALL_CHILDREN_COUNT_CHANGED, childrenCountChangedCallback);
       node.addEventListener(RowNode.EVENT_ROW_INDEX_CHANGED, rowIndexChanged);
+      node.addEventListener(RowNode.EVENT_HEIGHT_CHANGED, onRowHeightChange);
       // node.addEventListener(RowNode.EVENT_DATA_CHANGED, dataChange);
       return () => {
         if (eContracted.current) {
@@ -151,6 +163,7 @@ export default memo(
           childrenCountChangedCallback,
         );
         node.removeEventListener(RowNode.EVENT_ROW_INDEX_CHANGED, rowIndexChanged);
+        node.removeEventListener(RowNode.EVENT_HEIGHT_CHANGED, onRowHeightChange);
         // node.addEventListener(RowNode.EVENT_DATA_CHANGED, dataChange);
       };
     }, []);

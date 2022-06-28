@@ -237,6 +237,7 @@ const SideGridDetailDemo = () => {
     params: any,
   ) => {
     console.log({ record, fieldName, newValue, oldValue, params });
+    
     return record;
   };
 
