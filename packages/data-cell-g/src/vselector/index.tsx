@@ -701,6 +701,7 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
       children,
       ...props
     } = this.props;
+    
     if (readOnly) {
       props.open = false;
       props.showSearch = false;
