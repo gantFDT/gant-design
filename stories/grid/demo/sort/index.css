@@ -1,0 +1,12 @@
+.dragbottom {
+  border-bottom: 1px solid #1890ff !important;
+}
+.dragmiddle {
+  background: #1890ff !important;
+}
+.dragtop {
+  border-top: 1px solid #1890ff !important;
+}
+.italic {
+  font-style: italic;
+}
