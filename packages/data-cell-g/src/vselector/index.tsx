@@ -480,15 +480,21 @@ const withSelector = compose(
           console.error(e);
         }
       }
-      let list = [
-        //'加载中...' : '没有查询到数据'
-        <Select.Option key="none" disabled>
-          <Receiver>
-            {locale => <>{loading ? locale.loading : customNotDataContent || locale.noData}</>}
-          </Receiver>
-        </Select.Option>,
-      ];
+      let list = [];
       list = transformDataToList(result);
+      list =
+        list.length > 0
+          ? list
+          : [
+              //'加载中...' : '没有查询到数据'
+              <Select.Option key="none" disabled>
+                <Receiver>
+                  {locale => (
+                    <>{loading ? locale.loading : customNotDataContent || locale.noData}</>
+                  )}
+                </Receiver>
+              </Select.Option>,
+            ];
       return {
         renderList: list,
       };
@@ -707,6 +713,7 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
         showArrow
         loading={loading}
         // dropdownMatchSelectWidth={false}
+
         {...props}
         onFocus={onFocus}
         ref={setSelectRef}
