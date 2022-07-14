@@ -1,6 +1,6 @@
 import React from 'react'
 import { WrappedFormUtils } from 'antd/es/form/Form'
-import { get, isEqual, isPlainObject, intersection, set, cloneDeep, isEmpty } from 'lodash'
+import { get, isEqual, isPlainObject, intersection, last, cloneDeep, isEmpty } from 'lodash'
 import moment from 'moment'
 import { getKey } from './utils'
 import { compose, renameProp, withPropsOnChange, withStateHandlers, withState, withProps } from 'recompose'
@@ -115,8 +115,15 @@ const deepMergeSchema = (schemaState: Schema, changes: Change[]): Schema => {
     const schemaTree = cloneDeep(schemaState)
     changes.reduce((schema, change) => {
         const { key, schema: subSchema } = change
-        const keyPath = key.join('.').replace(/([^\.]+)/g, "propertyType.$1")
-        set(schema, keyPath, subSchema)
+        // 依赖项带"."问题
+        let target = schema.propertyType
+        for (const keyPath of key) {
+            if (last(key) === keyPath) {
+                Reflect.set(target, keyPath, subSchema)
+            } else {
+                target = get(target, `${keyPath}.propertyType`)
+            }
+        }
         return schema
     }, schemaTree)
     return schemaTree
