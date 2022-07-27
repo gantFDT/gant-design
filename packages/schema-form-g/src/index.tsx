@@ -108,7 +108,8 @@ class SchemaForm extends React.Component<Props, { schemaCount: number }> {
     } = this.props;
     setFieldsValue(data);
   };
-  collectInitialValue = (name, initialValue) => {
+  @bind()
+  collectInitialValue (name, initialValue)  {
     const { schemaCount } = this.state;
     this.initialValueMap.set(name, initialValue);
     if (this.initialValueMap.size === schemaCount) {
@@ -160,7 +161,7 @@ class SchemaForm extends React.Component<Props, { schemaCount: number }> {
           // emitDependenciesChange,
           prefixCls,
           defalutProps,
-          collectInitialValue: this.collectInitialValue.bind(this),
+          collectInitialValue: this.collectInitialValue,
           hideTitle,
           frameworkComponents,
           allowEdit,

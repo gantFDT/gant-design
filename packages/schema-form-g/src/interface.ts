@@ -24,7 +24,7 @@ export interface Context {
   // emitDependenciesChange: (key: string, value: any) => void;
   prefixCls?: string;
   defalutProps?: any;
-  collectInitialValue: (name: string, value: any) => void;
+  collectInitialValue?: (name: string, value: any) => void;
   hideTitle?: boolean;
   frameworkComponents?: {
     LabelComponent: any;

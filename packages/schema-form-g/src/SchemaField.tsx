@@ -3,7 +3,7 @@ import { Col, Form } from 'antd';
 import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
 import classnames from 'classnames';
 import { findIndex, get } from 'lodash';
-import React, { useCallback, useContext, useEffect, useMemo, forwardRef } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, forwardRef, memo } from 'react';
 import { FormContext } from './index';
 import { Schema } from './interface';
 import en from './locale/en-US';
@@ -40,7 +40,7 @@ const SchemaField = (props: SchemaField, ref: any) => {
     customFields,
     // emitDependenciesChange,
     defalutProps,
-    collectInitialValue,
+    // collectInitialValue,
     hideTitle,
     frameworkComponents,
     allowEdit,
@@ -94,7 +94,7 @@ const SchemaField = (props: SchemaField, ref: any) => {
   }, [renderFieldProps, itemEdit, onCancel, onItemSave, componentType, customFields, allowEdit]);
 
   useEffect(() => {
-    collectInitialValue(name, initialValue);
+    // collectInitialValue(name, initialValue);
     // if (![null, undefined].includes(initialValue)) {
     //   emitDependenciesChange(name as string, initialValue);
     // }
@@ -147,4 +147,4 @@ const SchemaField = (props: SchemaField, ref: any) => {
     </Col>
   );
 };
-export default forwardRef(SchemaField);
+export default memo(forwardRef(SchemaField));

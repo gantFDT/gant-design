@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from 'react'
+import React, {useCallback, useContext, useMemo, useState} from 'react'
 import Header from '@header'
 import { EditStatus } from '@data-cell'
 import { Form, Row } from 'antd'
@@ -90,9 +90,15 @@ export default function SchemaForm(props: SchemaFormProps) {
 		</div>
 	}, [schema, edit, titleConfig, uiSchema])
 
-	return <Form className={`${prefixCls}-schemaForm`} hideRequiredMark>
-		{renderContent()}
-	</Form>
+  const content = useMemo(() => {
+    return renderContent();
+  }, [renderContent]);
+
+  return (
+    <Form className={`${prefixCls}-schemaForm`} hideRequiredMark>
+      {content}
+    </Form>
+  );
 }
 
 
