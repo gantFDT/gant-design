@@ -55,6 +55,11 @@ function Sortable(props: SortableProps) {
     }, [-1, -1, 0, 0, 0])
   }, [dataSource])
 
+  const handlerSortLock = useCallback((index, fixed: 'top' | 'bottom') => {
+    dataSource[index].fixed = fixed==='top' ? 'left' : 'right';
+    onChange(arrayMove(dataSource, index, fixed === 'top' ? 0 : -1));
+  }, [dataSource, leftSpinIdx, rightSpinIdx]);
+
   const handlerLock = useCallback((index, fixed) => {
     dataSource[index].fixed = fixed;
     onChange(arrayMove(dataSource, index, fixed === 'left' ? (leftSpinIdx + 1) : (rightSpinIdx === -1 ? -1 : (rightSpinIdx - 1))));
@@ -142,6 +147,12 @@ function Sortable(props: SortableProps) {
                     </Tooltip>
                   ) : (
                     <>
+                      <Tooltip style={{ flex: 0 }} placement="top" title={locale.setFixedBottomColumn}>
+                        <div><Icon type="vertical-align-bottom" onClick={() => handlerSortLock(dataIdx, 'bottom')} className="disabledIcon" /></div>
+                      </Tooltip>
+                      <Tooltip style={{ flex: 0 }} placement="top" title={locale.setFixedTopColumn}>
+                        <div><Icon type="vertical-align-top" onClick={() => handlerSortLock(dataIdx, 'top')} className="disabledIcon" /></div>
+                      </Tooltip>
                       <Tooltip style={{ flex: 0 }} placement="top" title={locale.setFixedRightColumn}>
                         <div><Icon style={{transform: 'rotateY(180deg)'}} type="pushpin" onClick={() => handlerLock(dataIdx, 'right')} className="disabledIcon" /></div>
                       </Tooltip>

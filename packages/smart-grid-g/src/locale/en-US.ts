@@ -52,4 +52,6 @@ export default {
     sortDesc: 'Desc',
     sync: 'Sync View',
     fullField: 'Full Field',
+    setFixedTopColumn: 'Put on the top',
+    setFixedBottomColumn: 'Put on the bottom',
 }

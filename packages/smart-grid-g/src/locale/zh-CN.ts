@@ -52,4 +52,6 @@ export default {
     sortDesc: '倒序',
     sync: '同步视图',
     fullField: '全字段',
+    setFixedTopColumn: '置顶',
+    setFixedBottomColumn: '置底',
 }
