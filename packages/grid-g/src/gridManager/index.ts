@@ -693,7 +693,7 @@ export default class GridManage {
         assignKeys.map(item => {
           mergeData[item] = data[item];
         });
-        const updateItem = { ...update[updateIndex], ...mergeData };
+        const updateItem = { ...data, ...update[updateIndex], ...mergeData };
         return dataSource.push(updateItem);
       }
       dataSource.push(data);
