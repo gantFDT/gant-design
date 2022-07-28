@@ -24,7 +24,7 @@ import { AllModules, LicenseManager } from '@ag-grid-enterprise/all-modules';
 import { Spin } from 'antd';
 import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
 import classnames from 'classnames';
-import { findIndex, get, isEmpty, isEqual, isObject, merge, cloneDeep, omit } from 'lodash';
+import _, { findIndex, get, isEmpty, isEqual, isObject, merge, cloneDeep, omit } from 'lodash';
 import React, {
   createContext,
   useCallback,
@@ -57,6 +57,8 @@ import {
   selectedMapColumns,
   usePagination,
   sizeDefinitions,
+  isExportHiddenFields,
+  getColumnInfo,
 } from './utils';
 export { default as GantGroupCellRenderer } from './GantGroupCellRenderer';
 export { default as c } from './GantPromiseCellRender';
@@ -100,6 +102,8 @@ export const defaultProps = {
   openEditSign: true,
   //默认使用gant自定义列头
   gantCustomHeader: true,
+  /** 是否导出隐藏字段 */
+  exportHiddenFields: false,
 };
 
 export const defaultRowSelection: RowSelection = {
@@ -208,6 +212,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     autoRowHeight = false,
     controlCellWordWrap = false,
     suppressGroupSelectParent,
+    exportHiddenFields,
     onColumnsChange: propsOnColumnsChange,
     ...orignProps
   } = props;
@@ -237,6 +242,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
   });
   const [innerSelectedRows, setInnerSelectedRows] = useState([]);
   const [ready, setReady] = useState(false);
+  const [has, setHas] = useState(false)
 
   //自定义列头文字
   const { ColumnLabelComponent } = frameworkComponents;
@@ -658,21 +664,25 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
   const getExportColmns = useCallback(columns => {
     const arr: string[] = [];
     columns.map((item: any) => {
-      if (item.field !== 'defalutSelection' && item.field !== 'g-index') {
-        item.field && arr.push(item.field);
-        if (Array.isArray(item.children)) {
-          const childrenArray = getExportColmns(item.children);
-          arr.push(...childrenArray);
+      const {fieldName, children} = getColumnInfo(item)
+      if (fieldName !== 'defalutSelection' && fieldName !== 'g-index') {
+        if (isExportHiddenFields(item, exportHiddenFields)) {
+          fieldName && arr.push(fieldName);
+          if (Array.isArray(children)) {
+            const childrenArray = getExportColmns(children);
+            arr.push(...childrenArray);
+          }
         }
       }
     });
     return arr;
-  }, []);
+  }, [exportHiddenFields]);
 
   //导出列
   const exportColumns = useMemo(() => {
-    return getExportColmns(columnDefs);
-  }, [columnDefs]);
+    let data = _.get(columnsRef, 'current.columnModel.displayedTreeCentre')
+    return getExportColmns((data && !exportHiddenFields) ? data : columnDefs);
+  }, [columnDefs,has,exportHiddenFields]);
 
   // 配置验证规则
   useEffect(() => {
@@ -684,18 +694,20 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     (event: ColumnMovedEvent | ColumnResizedEvent | ColumnVisibleEvent) => {
       switch (event.type) {
         case 'columnVisible':
+          setHas(!has)
           onColumnVisible && onColumnVisible(event as any);
           break;
         case 'columnResized':
           onColumnResized && onColumnResized(event as any);
           break;
         case 'columnMoved':
+          setHas(!has)
           onColumnMoved && onColumnMoved(event as any);
           break;
       }
       gridManager.setLocalStorageColumnsState();
     },
-    [onColumnMoved, onColumnResized, onColumnVisible],
+    [onColumnMoved, onColumnResized, onColumnVisible, has],
   );
 
   const localColumnsDefs = useMemo(() => {

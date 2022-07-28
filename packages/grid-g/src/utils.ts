@@ -571,3 +571,32 @@ export function checkParentGroupSelectedStatus(node: RowNode, selected: boolean,
   parent.setSelected(false);
   checkParentGroupSelectedStatus(parent, selected, api);
 }
+
+/**
+ * 判断是否导出隐藏字段
+ * @param col 当前列
+ * @param exportHiddenFields 隐藏字段导出状态
+ */
+export function isExportHiddenFields(col: ColDef, exportHiddenFields: boolean) {
+  if (!exportHiddenFields) {
+    let hide = col.hide || false
+    return hide !== true
+  }
+  return exportHiddenFields
+
+}
+
+/**
+ * 获取 column 信息
+ * @param column
+ */
+export function getColumnInfo(column){
+  let fieldName = column.field
+  const children = column.children
+  if (column.hasOwnProperty('groupId')) {
+    fieldName = column.groupId
+  } else if (column.hasOwnProperty('colId')) {
+    fieldName = column.colId
+  }
+  return {fieldName, children}
+}

@@ -103,7 +103,6 @@ export default memo(
     }
 
     const onRowHeightChange = useCallback(({ node }: any) => {
-      console.log('onRowHeightChange--->', node.rowHeight, node);
       setRowHeight(node.rowHeight);
     }, []);
 

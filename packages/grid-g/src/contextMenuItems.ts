@@ -11,6 +11,7 @@ interface ContextMenuItemsConfig {
   getDefalutContextMenuItems?: () => any[];
   defaultJsonParams?: DefaultJsonParams;
   hideMenuItemExport?: boolean;
+  exportHiddenFields?: boolean;
   hideMenuItemExpand?: boolean;
   hiddenMenuItemNames?: string[];
   suppressRightClickSelected?: boolean;
