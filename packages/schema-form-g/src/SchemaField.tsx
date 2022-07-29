@@ -40,7 +40,7 @@ const SchemaField = (props: SchemaField, ref: any) => {
     customFields,
     // emitDependenciesChange,
     defalutProps,
-    // collectInitialValue,
+    collectInitialValue,
     hideTitle,
     frameworkComponents,
     allowEdit,
@@ -94,7 +94,7 @@ const SchemaField = (props: SchemaField, ref: any) => {
   }, [renderFieldProps, itemEdit, onCancel, onItemSave, componentType, customFields, allowEdit]);
 
   useEffect(() => {
-    // collectInitialValue(name, initialValue);
+    collectInitialValue(name, initialValue);
     // if (![null, undefined].includes(initialValue)) {
     //   emitDependenciesChange(name as string, initialValue);
     // }
