@@ -17,6 +17,7 @@ import {
   groupBy,
   assignInWith,
   isEqual,
+  merge,
 } from 'lodash';
 import {
   getModifyData,
@@ -668,7 +669,11 @@ export default class GridManage {
     return data;
   }
   //批量更新数据 返回更新后的gird数据
-  batchUpdateDataSource(params: BatchUpdateDataSourceParams, keys: string | string[] = []) {
+  batchUpdateDataSource(
+    params: BatchUpdateDataSourceParams,
+    keys: string | string[] = [],
+    isMerge = false,
+  ) {
     const { getRowNodeId } = this.agGridConfig;
     const dataSource: any = [];
     const { add, modify, remove } = params;
@@ -693,12 +698,13 @@ export default class GridManage {
         assignKeys.map(item => {
           mergeData[item] = data[item];
         });
-        const updateItem = { ...data, ...update[updateIndex], ...mergeData };
+        const updateItem = isMerge
+          ? merge(data, update[updateIndex], mergeData)
+          : { ...update[updateIndex], ...mergeData };
         return dataSource.push(updateItem);
       }
       dataSource.push(data);
     } as any);
-    console.log('batchUpdateDataSource');
     return dataSource;
   }
   // LocalStorage columns
