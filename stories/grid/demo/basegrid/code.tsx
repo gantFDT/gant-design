@@ -12,6 +12,7 @@ const RandomCreate = () => {
     name: Random.first(),
     date: Random.date('yyyy-MM-dd'),
     cn: Random.cname(),
+    address: Random.cname(),
   };
 };
 
@@ -27,20 +28,27 @@ const basicColumns = [
     width: 100,
   },
   {
-    fieldName: 'cn',
-    title: '中文名称',
-    width: 100,
-  },
-  {
-    fieldName: 'date',
-    title: '出生日期',
-    width: 100,
+    fieldName: 'text',
+    title: '分组',
+    children: [
+      {
+        fieldName: 'cn',
+        title: '中文名称',
+        width: 100,
+      },
+      {
+        fieldName: 'date',
+        title: '出生日期',
+        width: 100,
+      },
+    ],
   },
 ];
 
 const BaiscGrid = () => {
   const [loading, setLoading] = useState(false);
   const [pageInfo, setPageInfo] = useState({ beginIndex: 0, pageSize: 20 });
+  const [columns, setColumns] = useState(basicColumns);
   const [dataSource, setDataSource] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
   const [rowSelectionType, setRowSelectionType] = useState<'single' | 'multiple'>('multiple');
@@ -76,6 +84,24 @@ const BaiscGrid = () => {
     setSelectedRows([]);
   };
 
+  const onRadioChange2 = e => {
+    const value = e.target.value;
+    if (value === 'default') return setColumns(basicColumns);
+    setColumns([
+      ...basicColumns,
+      {
+        fieldName: 'ip',
+        title: 'ip',
+        width: 100,
+      },
+      {
+        fieldName: 'address',
+        title: '地址',
+        width: 100,
+      },
+    ]);
+  };
+
   useEffect(() => {
     queryData(0, 20);
   }, []);
@@ -94,6 +120,15 @@ const BaiscGrid = () => {
               <Radio.Button value="multiple">多选</Radio.Button>
               <Radio.Button value="single">单选</Radio.Button>
             </Radio.Group>
+            <Radio.Group
+              defaultValue="default"
+              buttonStyle="solid"
+              onChange={onRadioChange2}
+              size="small"
+            >
+              <Radio.Button value="default">默认列</Radio.Button>
+              <Radio.Button value="dynamic">动态列</Radio.Button>
+            </Radio.Group>
           </>
         }
         title="基础展示"
@@ -102,7 +137,7 @@ const BaiscGrid = () => {
       <Grid
         rowkey="ip"
         loading={loading}
-        columns={basicColumns}
+        columns={columns}
         dataSource={dataSource}
         serialNumber
         rowSelection={{

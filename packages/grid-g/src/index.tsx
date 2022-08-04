@@ -16,6 +16,7 @@ import {
   RowSelectedEvent,
   SelectionChangedEvent,
   SuppressKeyboardEventParams,
+  ColumnEverythingChangedEvent,
 } from '@ag-grid-community/core';
 import '@ag-grid-community/core/dist/styles/ag-grid.css';
 import '@ag-grid-community/core/dist/styles/ag-theme-balham.css';
@@ -225,6 +226,8 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
   const selectedLoadingRef = useRef<boolean>(false);
   const clickedEventRef = useRef<RowClickedEvent>();
   const [visibleDrawer, setVisibleDrawer] = useState(false);
+
+  const [exportColumns, setExportColumns] = useState<string[]>([]);
   // const [clickedEvent, setClickedEvent] = useState<RowClickedEvent>();
   const [clickRowIndex, setClickRowIndex] = useState(-1);
 
@@ -242,7 +245,6 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
   });
   const [innerSelectedRows, setInnerSelectedRows] = useState([]);
   const [ready, setReady] = useState(false);
-  const [has, setHas] = useState(false)
 
   //自定义列头文字
   const { ColumnLabelComponent } = frameworkComponents;
@@ -660,30 +662,6 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     return selectedMapColumns(columns, boxColumnIndex);
   }, [columns, boxColumnIndex]);
 
-  /// 导出 columns
-  const getExportColmns = useCallback(columns => {
-    const arr: string[] = [];
-    columns.map((item: any) => {
-      const {fieldName, children} = getColumnInfo(item)
-      if (fieldName !== 'defalutSelection' && fieldName !== 'g-index') {
-        if (isExportHiddenFields(item, exportHiddenFields)) {
-          fieldName && arr.push(fieldName);
-          if (Array.isArray(children)) {
-            const childrenArray = getExportColmns(children);
-            arr.push(...childrenArray);
-          }
-        }
-      }
-    });
-    return arr;
-  }, [exportHiddenFields]);
-
-  //导出列
-  const exportColumns = useMemo(() => {
-    let data = _.get(columnsRef, 'current.columnModel.displayedTreeCentre')
-    return getExportColmns((data && !exportHiddenFields) ? data : columnDefs);
-  }, [columnDefs,has,exportHiddenFields]);
-
   // 配置验证规则
   useEffect(() => {
     gridManager.validateFields = validateFields;
@@ -694,22 +672,39 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     (event: ColumnMovedEvent | ColumnResizedEvent | ColumnVisibleEvent) => {
       switch (event.type) {
         case 'columnVisible':
-          setHas(!has)
           onColumnVisible && onColumnVisible(event as any);
           break;
         case 'columnResized':
           onColumnResized && onColumnResized(event as any);
           break;
         case 'columnMoved':
-          setHas(!has)
           onColumnMoved && onColumnMoved(event as any);
           break;
       }
       gridManager.setLocalStorageColumnsState();
     },
-    [onColumnMoved, onColumnResized, onColumnVisible, has],
+    [onColumnMoved, onColumnResized, onColumnVisible],
   );
+  // 监听onColumnEverythingChanged
+  const onColumnEverythingChanged = useCallback(
+    (event: ColumnEverythingChangedEvent) => {
+      const columnState = event.columnApi.getColumnState();
 
+      const arr: string[] = [];
+      columnState.map(item => {
+        const field = get(item, 'field');
+        const hide = get(item, 'hide');
+        if (
+          (field !== 'defalutSelection' && field !== 'g-index') ||
+          (!hide && !exportHiddenFields)
+        ) {
+          field && arr.push(field);
+        }
+      });
+      setExportColumns(arr);
+    },
+    [exportHiddenFields],
+  );
   const localColumnsDefs = useMemo(() => {
     return gridManager.getLocalStorageColumns(columnDefs, gridKey);
   }, [columnDefs, gridKey]);
@@ -1026,6 +1021,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                       onColumnMoved={onColumnsChange}
                       onColumnVisible={onColumnsChange}
                       onColumnResized={onColumnsChange}
+                      onColumnEverythingChanged={onColumnEverythingChanged}
                     >
                       {renderColumns(localColumnsDefs)}
                     </AgGridReact>
