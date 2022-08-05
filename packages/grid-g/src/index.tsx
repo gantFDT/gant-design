@@ -689,16 +689,13 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
   const onColumnEverythingChanged = useCallback(
     (event: ColumnEverythingChangedEvent) => {
       const columnState = event.columnApi.getColumnState();
-
       const arr: string[] = [];
       columnState.map(item => {
-        const field = get(item, 'field');
+        const field = get(item, 'colId');
         const hide = get(item, 'hide');
-        if (
-          (field !== 'defalutSelection' && field !== 'g-index') ||
-          (!hide && !exportHiddenFields)
-        ) {
-          field && arr.push(field);
+        if (field !== 'defalutSelection' && field !== 'g-index') {
+          if (!exportHiddenFields && hide) return;
+          arr.push(field);
         }
       });
       setExportColumns(arr);
