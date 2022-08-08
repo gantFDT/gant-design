@@ -16,6 +16,8 @@ interface ContextMenuItemsConfig {
   hiddenMenuItemNames?: string[];
   suppressRightClickSelected?: boolean;
   showCutChild?: boolean;
+  showMenuItemClearFilter?: boolean;  //是否显示右键中的【清空过滤】按钮
+  onMenuItemClearFilter?: () => void; // 右键中【清空过滤】按钮的点击回调
 }
 export const gantGetcontextMenuItems = function(
   params: GetContextMenuItemsParams,
@@ -33,6 +35,8 @@ export const gantGetcontextMenuItems = function(
     hiddenMenuItemNames,
     suppressRightClickSelected,
     showCutChild,
+    showMenuItemClearFilter,
+    onMenuItemClearFilter,
   } = config;
   const {
     context: {
@@ -105,6 +109,18 @@ export const gantGetcontextMenuItems = function(
   if (treeData && !hideMenuItemExpand) {
     defultMenu = ['expandAll', 'contractAll'];
   }
+
+  // 清空过滤 按钮
+  if(showMenuItemClearFilter){
+    defultMenu.unshift({
+      name: locale.clearFilter,
+      action: () => {
+        api.setFilterModel({})
+        onMenuItemClearFilter?.()
+      },
+    })
+  }
+
   defultMenu =
     defultMenu.length > 0
       ? items.length > 0
