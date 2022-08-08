@@ -263,6 +263,10 @@ export interface Props<T extends any> {
   hideMenuItemExpand?: boolean;
   //隐藏的右键菜单名称
   hiddenMenuItemNames?: string[];
+  //是否显示右键中的【清空过滤】按钮，默认为 false
+  showMenuItemClearFilter?: boolean;
+  //右键中【清空过滤】按钮的点击回调
+  onMenuItemClearFilter?: () => void;
   //右键菜单显示剪切粘贴按钮
   showCut?: ((params: GetContextMenuItemsParams) => boolean) | boolean;
   //右键菜单显示粘贴子项按钮

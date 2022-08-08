@@ -187,6 +187,8 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     hideMenuItemExport,
     hideMenuItemExpand,
     hiddenMenuItemNames,
+    showMenuItemClearFilter = false,
+    onMenuItemClearFilter,
     excelStyles = [],
     suppressRightClickSelected,
     treeDataForcedFilter,
@@ -856,6 +858,8 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
             hiddenMenuItemNames,
             suppressRightClickSelected,
             showCutChild,
+            showMenuItemClearFilter,
+            onMenuItemClearFilter,
           });
         };
         return (
