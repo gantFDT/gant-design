@@ -12,19 +12,11 @@ import {
   InputLanguage,
   InputMoney,
 } from '@data-cell';
-import { isEmpty, pick, merge, get } from 'lodash';
+import { isEmpty, pick, merge, get, omit } from 'lodash';
 import { SchemaProp, PanelConfig, CustomColumnProps, ColumnConfig, Fields } from './interface';
 import { getType } from '@util';
 
-
-const DEFAULT_VIEW: PanelConfig = {
-  // clickable: true,
-  // footerDirection: 'row',
-  // pageSize: 50,
-  columnFields: [],
-};
-
-let ComponentsMap = {
+const ComponentsMap = {
   [Fields.Input]: Input,
   [Fields.InputNumber]: InputNumber,
   [Fields.InputUrl]: InputUrl,
@@ -79,7 +71,7 @@ function formatColumn<R>(schema: CustomColumnProps<R>) {
 }
 
 export const setFields = (cmpMap) => {
-  ComponentsMap = { ...ComponentsMap, ...cmpMap }
+  Object.assign(ComponentsMap, cmpMap)
 }
 
 export const formatColumnFields = (columnFields, originColumns) => {
@@ -88,14 +80,21 @@ export const formatColumnFields = (columnFields, originColumns) => {
   for (const columnField of columnFields) {
     const _columnItem = originColumns.find(_column => _column.fieldName === columnField.fieldName);
     if(_columnItem) {
-      __filterdFields.push(Object.assign({}, _columnItem, columnField, { hide: columnField.hide ?? false }))
+      __filterdFields.push(Object.assign({},
+        omit(_columnItem, ['hide', 'width', 'fixed', 'sort', 'sortIndex']), // 防止出现配置视图被覆盖的情况
+        columnField,
+        { hide: columnField.hide ?? false }
+      ))
     }
   }
   // 添加视图中隐藏的列
   const __hiddenFields = [];
   for (const _column of originColumns) {
     if(__filterdFields.every(__filterdField => __filterdField.fieldName !== _column.fieldName)) {
-      __hiddenFields.push(Object.assign({}, _column, { hide: !_column.dynamic ?? true }))
+      __hiddenFields.push(Object.assign({},
+        _column,
+        { hide: !_column.dynamic ?? true }
+      ))
     }
   }
 
@@ -124,17 +123,13 @@ export default function formatSchema<R>(schema: SchemaProp<R> | CustomColumnProp
   const { supportColumnFields: columnFields, systemViews } = schema;
 
   // 转换组件类型后的列数据
-  let columns: CustomColumnProps<R>[] = [];
-  let columnMaps: { [fieldName: string]: CustomColumnProps<R> } = {};
+  const columns: CustomColumnProps<R>[] = [];
   columnFields.forEach(column => {
     if (!column.fieldName || !column.title) {
-      throw new Error(
-        'SmartTable的schema格式错误，参照：https://gant.yuque.com/fdt/gantreact/hyeday',
-      );
+      throw new Error('SmartGrid的schema格式错误!');
     }
-    const columnData = formatColumn(column);
+    const columnData = formatColumn(column); // 映射componentType
     columns.push(columnData);
-    columnMaps[column.fieldName] = columnData;
   });
 
   // 默认的列配置数据
@@ -145,11 +140,9 @@ export default function formatSchema<R>(schema: SchemaProp<R> | CustomColumnProp
 
   // 匹配系统视图
   systemViews.forEach(view => {
-    view.panelConfig = {
-      ...DEFAULT_VIEW,
-      ...view.panelConfig,
-      columnFields: formatColumnFields(view.panelConfig.columnFields, columns),
-    };
+    Object.assign(view.panelConfig, {
+      columnFields: formatColumnFields(view.panelConfig.columnFields, columns)
+    })
   });
 
   return {
