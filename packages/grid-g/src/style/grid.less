@@ -154,6 +154,9 @@
   //合并单元格
   .gant-cell-span {
     background: var(--component-background);
+    > .ag-cell-wrapper{
+      height: 100%;
+    }
   }
 
   //gird 默认的选择列内容居中
@@ -161,7 +164,7 @@
     display: flex;
     justify-content: center;
     padding: 0 !important;
-    & > .ag-react-container {
+    & > .ag-react-container,.ag-header-cell-comp-wrapper {
       display: none !important;
     }
   }
@@ -187,7 +190,8 @@
     .ag-header-cell {
       padding-left: 3px;
       padding-right: 3px;
-      .ag-react-container {
+      .ag-react-container,
+      .ag-header-cell-comp-wrapper {
         width: 100%;
         display: flex;
         overflow: hidden;

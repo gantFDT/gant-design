@@ -7,7 +7,7 @@ import React, {
   useMemo,
   useEffect,
 } from 'react';
-import { RowNode } from '@ag-grid-community/core';
+import { RowNode } from 'ag-grid-community';
 import classnames from 'classnames';
 import { EditStatus } from '@data-cell';
 import { set, cloneDeep, get, isEmpty, debounce, findIndex } from 'lodash';

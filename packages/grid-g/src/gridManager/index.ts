@@ -5,7 +5,7 @@ import {
   ColDef,
   ColGroupDef,
   ColumnApi,
-} from '@ag-grid-community/core';
+} from 'ag-grid-community';
 import Schema, { Rules } from 'async-validator';
 import {
   get,
@@ -352,7 +352,7 @@ export default class GridManage {
     let addRecords = Array.isArray(records) ? records : [records];
     if (addRecords.length <= 0) return;
     let rowData = this.getRowData();
-    this.agGridApi.setSortModel([]);
+    this.agGridColumnApi.applyColumnState({});
     if ((typeof targetId !== 'number' && !targetId) || typeof targetId === 'boolean') {
       const isFirst: boolean = typeof targetId === 'boolean' && targetId;
       addRecords = addRecords.map(item => ({ ...item, _rowType: DataActions.add }));

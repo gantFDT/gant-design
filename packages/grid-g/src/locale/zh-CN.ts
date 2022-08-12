@@ -22,6 +22,8 @@ export default {
   filterOoo: '过滤',
   equals: '等于',
   notEqual: '不等于',
+  blank: '空白',
+  notBlank: '非空白',
 
   // for the date filter
   dateFormatOoo: '日期格式化',

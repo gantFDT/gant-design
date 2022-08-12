@@ -1,12 +1,12 @@
 import React, { useState, useEffect, memo, useMemo, useCallback, useRef } from 'react';
-import { AgGridReact } from '@ag-grid-community/react';
+import { AgGridReact } from 'ag-grid-react';
 import {
   ColDef,
   SelectionChangedEvent,
   GridApi,
   GridReadyEvent,
   RowClickedEvent,
-} from '@ag-grid-community/core';
+} from 'ag-grid-community';
 import { Badge, Icon, Popover, Button } from 'antd';
 import { findIndex, get, isEqual } from 'lodash';
 interface SelectedGridProps {

@@ -32,7 +32,7 @@ const columns: Columns[] = [
   {
     fieldName: 'user.name',
     title: '英文名称',
-    cellRenderer: 'gantGroupCellRender',
+    cellRenderer: 'gantGroupCellRenderer',
     editConfig: {
       component: Input,
       editable: true,
@@ -67,6 +67,7 @@ const columns: Columns[] = [
       editable: true,
       signable: true,
     },
+    filter:'agDateColumnFilter',
   },
   {
     fieldName: 'nationality',

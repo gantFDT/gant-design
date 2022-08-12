@@ -32,7 +32,7 @@ const columns: Columns[] = [
   {
     fieldName: 'user.name',
     title: '英文名称',
-    cellRenderer: 'gantGroupCellRender',
+    cellRenderer: 'gantGroupCellRenderer',
     flex:1,
     editConfig: {
       component: Input,

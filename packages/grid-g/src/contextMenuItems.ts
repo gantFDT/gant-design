@@ -1,4 +1,4 @@
-import { GetContextMenuItemsParams, RowNode } from '@ag-grid-community/core';
+import { GetContextMenuItemsParams, RowNode } from 'ag-grid-community';
 import { DefaultJsonParams } from './interface';
 import { get, max, min, isEmpty, remove } from 'lodash';
 import FileSaver from 'file-saver';

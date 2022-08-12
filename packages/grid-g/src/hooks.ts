@@ -9,7 +9,7 @@ import {
   ValueGetterParams,
   ValueFormatterParams,
   RowNode,
-} from '@ag-grid-enterprise/all-modules';
+} from 'ag-grid-community';
 interface selectedHooksParams {
   dataSource?: any[];
   selectedRows?: any[];

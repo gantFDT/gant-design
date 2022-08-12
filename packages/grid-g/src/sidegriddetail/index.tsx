@@ -1,6 +1,6 @@
 import {
   RowClickedEvent,RowDataChangedEvent
-} from '@ag-grid-community/core';
+} from 'ag-grid-community';
 import Grid from '@grid';
 import { Icon } from 'antd';
 import AsyncValidator from 'async-validator';

@@ -1,6 +1,6 @@
 import React, { useMemo, memo, useState, useCallback, useRef, useEffect, forwardRef } from 'react';
 import classnames from 'classnames';
-import { ICellRendererParams, RowNode } from '@ag-grid-community/core';
+import { ICellRendererParams, RowNode } from 'ag-grid-community';
 import { Icon } from 'antd';
 import { stopPropagationForAgGrid } from './utils';
 import { isEqualObj } from './gridManager/utils';

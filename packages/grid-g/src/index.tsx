@@ -17,11 +17,12 @@ import {
   SelectionChangedEvent,
   SuppressKeyboardEventParams,
   ColumnEverythingChangedEvent,
-} from '@ag-grid-community/core';
-import '@ag-grid-community/core/dist/styles/ag-grid.css';
-import '@ag-grid-community/core/dist/styles/ag-theme-balham.css';
-import { AgGridReact, AgGridColumn } from '@ag-grid-community/react';
-import { AllModules, LicenseManager } from '@ag-grid-enterprise/all-modules';
+} from 'ag-grid-community';
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-balham.css';
+import { AgGridReact, AgGridColumn } from 'ag-grid-react';
+import {  LicenseManager } from 'ag-grid-enterprise';
+import 'ag-grid-enterprise'
 import { Spin } from 'antd';
 import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
 import classnames from 'classnames';
@@ -700,7 +701,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
           arr.push(field);
         }
       });
-      setExportColumns(arr);
+      setExportColumns(pre => isEqual(pre,arr) ? pre : arr);
     },
     [exportHiddenFields],
   );
@@ -1015,7 +1016,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                         ...rowClassRules,
                       }}
                       getContextMenuItems={contextMenuItems as any}
-                      modules={[...AllModules]}
+                      // modules={[...AllModules]}
                       // suppressKeyboardEvent={onSuppressKeyboardEvent}
                       onCellEditingStopped={onCellEditingStopped}
                       onRowDataUpdated={onRowDataUpdated}

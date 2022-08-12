@@ -13,7 +13,7 @@ import {
 } from 'lodash';
 import { DataActions, CreateConfig } from '../interface';
 import { generateUuid } from '@util';
-import { RowNode, GridApi, ColGroupDef, ColDef } from '@ag-grid-community/core';
+import { RowNode, GridApi, ColGroupDef, ColDef } from 'ag-grid-community';
 export function getModifyData(records, getRowItemData, oldRecords, getRowNodeId) {
   const hisRecords: any[] = [],
     newRecords: any[] = [];

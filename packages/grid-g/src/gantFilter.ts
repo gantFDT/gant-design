@@ -10,7 +10,7 @@ import {
   ValueFormatterParams,
   RowNode,
   FilterModifiedEvent,
-} from '@ag-grid-enterprise/all-modules';
+} from 'ag-grid-community';
 import moment from 'moment';
 interface filterHooksParams {
   treeData?: boolean;

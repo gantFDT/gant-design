@@ -1,4 +1,4 @@
-import { ColDef, ColGroupDef, GridApi, IsColumnFunc, RowNode } from '@ag-grid-community/core';
+import { ColDef, ColGroupDef, GridApi, IsColumnFunc, RowNode } from 'ag-grid-community';
 import { Schema } from '@schema-form';
 import { RuleItem, Rules } from 'async-validator';
 import classnames from 'classnames';

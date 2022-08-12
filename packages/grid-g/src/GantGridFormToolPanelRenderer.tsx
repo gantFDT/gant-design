@@ -1,4 +1,4 @@
-import { RowClickedEvent } from '@ag-grid-enterprise/all-modules';
+import { RowClickedEvent } from 'ag-grid-community';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import GridManager from './gridManager';
 

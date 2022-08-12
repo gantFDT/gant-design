@@ -8,16 +8,16 @@ import {
   ITooltipParams,
   RowNode,
   ValueFormatterParams,
-} from '@ag-grid-community/core';
-import { AgGridReactProps } from '@ag-grid-community/react';
-// import { AgGridReactProps } from '@ag-grid-community/react/lib/agGridReact';
+} from 'ag-grid-community';
+import { AgGridReactProps } from 'ag-grid-react';
+// import { AgGridReactProps } from 'ag-grid-react/lib/agGridReact';
 import { PaginationProps } from 'antd/lib/pagination';
 import { RuleItem } from 'async-validator';
 import GridManager from './gridManager';
 import { defaultProps } from './index';
-export * from '@ag-grid-community/core';
+export * from 'ag-grid-community';
 export { default as GridManager } from './gridManager';
-import { ICellRendererParams } from '@ag-grid-community/core';
+import { ICellRendererParams } from 'ag-grid-community';
 // 大小
 export type Size = 'small' | 'large' | 'default';
 
