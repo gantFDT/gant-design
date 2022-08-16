@@ -39,7 +39,7 @@ import CustomHeader from './CustomHeader';
 import { filterHooks } from './gantFilter';
 import GantGridFormToolPanelRenderer from './GantGridFormToolPanelRenderer';
 import GridManager from './gridManager';
-import { contextHooks, selectedHooks } from './hooks';
+import { contextHooks, selectedHooks, useGridPaste } from './hooks';
 import { DataActions, GridProps, GridVariableRef, RowSelection, Size } from './interface';
 import key from './license';
 import en from './locale/en-US';
@@ -100,6 +100,10 @@ export const defaultProps = {
   openEditSign: true,
   //默认使用gant自定义列头
   gantCustomHeader: true,
+  // 默认关闭粘贴联动Manager
+  suppressManagerPaste: true,
+  // 默认开启粘贴时创建数据
+  suppressCreateWhenPaste: false
 };
 
 export const defaultRowSelection: RowSelection = {
@@ -210,6 +214,8 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     autoRowHeight = false,
     controlCellWordWrap = false,
     suppressGroupSelectParent,
+    suppressManagerPaste,
+    suppressCreateWhenPaste,
     onColumnsChange: propsOnColumnsChange,
     ...orignProps
   } = props;
@@ -840,6 +846,9 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     }
   }, [autoHeight, maxAutoHeight]);
 
+  // 粘贴处理
+  const gridPasteProps = useGridPaste({ gridManager, columns, suppressManagerPaste, suppressCreateWhenPaste, context });
+
   return (
     <LocaleReceiver
       children={(local, localeCode = 'zh-cn') => {
@@ -973,6 +982,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                       domLayout={domLayout}
                       rowHeight={rowHeight || get(sizeDefinitions, `rowHeight.${size}`)}
                       getRowHeight={getRowHeight}
+                      {...gridPasteProps}
                       {...orignProps}
                       getDataPath={getDataPath}
                       // columnDefs={localColumnsDefs}
