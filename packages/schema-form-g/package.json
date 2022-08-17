@@ -1,6 +1,6 @@
 {
     "name": "schema-form-g",
-    "version": "0.1.117",
+    "version": "0.1.118",
     "description": "gantd schemaform",
     "main": "lib/index.js",
     "scripts": {},
@@ -24,7 +24,7 @@
         "antd": "^3.22.0",
         "classnames": "^2.2.6",
         "data-cell-g": "^0.1.94",
-        "header-g": "^0.1.31",
+        "header-g": "^0.1.32",
         "lodash": "^4.17.11",
         "lodash-decorators": "^6.0.1",
         "moment": "^2.24.0",
