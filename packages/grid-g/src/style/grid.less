@@ -3,6 +3,10 @@
     flex: 1;
     position: relative;
   }
+  .ag-cell:not(.ag-cell-auto-height) {
+    display: flex;
+    align-items: center;
+  }
   //剪切
   .gant-grid-row-cut {
     background-color: transparent !important;
@@ -53,58 +57,9 @@
     z-index: 2;
   }
 
-  .ag-cell.ag-cell-inline-editing,
-  .ag-cell {
-    // height: 31px;
-    // border: none !important;
-    // line-height: 32px;
-
-    .ag-cell-wrapper > *:not(.ag-cell-value):not(.ag-group-value) {
-      // height: 31px;
-    }
-
-    perspective: 1000;
-    backface-visibility: hidden;
-    transform: translateZ(0);
-  }
-
-  &-small {
-    .ag-theme-balham {
-      .ag-cell.ag-cell-inline-editing,
-      .ag-cell {
-        height: 23px;
-        line-height: 24px;
-        .ag-cell-wrapper > *:not(.ag-cell-value):not(.ag-group-value) {
-          height: 24px;
-        }
-      }
-    }
-  }
-
-  &-default {
-    .ag-theme-balham {
-      .ag-cell.ag-cell-inline-editing,
-      .ag-cell {
-        height: 31px;
-        line-height: 32px;
-        .ag-cell-wrapper > *:not(.ag-cell-value):not(.ag-group-value) {
-          height: 32px;
-        }
-      }
-    }
-  }
-
-  &-large {
-    .ag-theme-balham {
-      .ag-cell.ag-cell-inline-editing,
-      .ag-cell {
-        height: 39px;
-        line-height: 40px;
-        .ag-cell-wrapper > *:not(.ag-cell-value):not(.ag-group-value) {
-          height: 40px;
-        }
-      }
-    }
+  .ag-cell.ag-cell-inline-editing {
+    height: 100%;
+    width: 100%;
   }
 
   //行选择
@@ -154,7 +109,7 @@
   //合并单元格
   .gant-cell-span {
     background: var(--component-background);
-    > .ag-cell-wrapper{
+    > .ag-cell-wrapper {
       height: 100%;
     }
   }
@@ -164,7 +119,8 @@
     display: flex;
     justify-content: center;
     padding: 0 !important;
-    & > .ag-react-container,.ag-header-cell-comp-wrapper {
+    & > .ag-react-container,
+    .ag-header-cell-comp-wrapper {
       display: none !important;
     }
   }
@@ -223,25 +179,11 @@
   }
   &-noborder {
     .ag-root-wrapper {
-      border: none!important;
+      border: none !important;
     }
   }
 }
 
-//自动换行
-.grid-auto-row {
-  .ag-cell {
-    height: 100%!important;
-  }
-  .ag-pinned-left-cols-container {
-    .ag-cell {
-      height: 100%!important;
-    }
-  }
-  .align-center {
-    height: 100%!important;
-  }
-}
 //换行符控制换行
 .grid-control-break-line {
   .ag-cell-value {

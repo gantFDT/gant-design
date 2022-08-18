@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import GridManager from './gridManager';
 
 interface GantGridRowFormRendererProps {
-  height: number | string; //高度
+  // height: number | string; //高度
   columns?: any[]; //表格列定义
   clickedEvent?: RowClickedEvent; //表格行点击参数
   defaultDrawerWidth?: number; //默认侧边栏宽度
@@ -26,7 +26,7 @@ interface GantGridRowFormRendererProps {
 
 export default function GantGridRowFormRenderer(props: GantGridRowFormRendererProps) {
   const {
-    height,
+    // height,
     columns,
     clickedEvent,
     defaultDrawerWidth = 300,
@@ -38,7 +38,7 @@ export default function GantGridRowFormRenderer(props: GantGridRowFormRendererPr
     customDrawerContent,
     editable,
     context,
-    clickRowIndex
+    clickRowIndex,
   } = props;
 
   const [formWidth, setFormWidth] = useState(defaultDrawerWidth);
@@ -76,7 +76,7 @@ export default function GantGridRowFormRenderer(props: GantGridRowFormRendererPr
     };
   }, [onMouseUp]);
 
-  if (!visible||!clickedEvent) return null;
+  if (!visible || !clickedEvent) return null;
 
   //自定义组件
   const customDrawerContentComponent = customDrawerContent({
@@ -90,13 +90,13 @@ export default function GantGridRowFormRenderer(props: GantGridRowFormRendererPr
     closeDrawer,
     visible,
     context,
-    height,
+    // height,
   });
 
   return (
     <div className="gant-grid-form-wrapper" style={{ width }}>
       <div className="gant-grid-form-cursor" onMouseDown={onMouseDown}></div>
-      <div key={clickRowIndex} >{customDrawerContent && customDrawerContentComponent}</div>
+      <div key={clickRowIndex}>{customDrawerContent && customDrawerContentComponent}</div>
     </div>
   );
 }

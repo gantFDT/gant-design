@@ -54,6 +54,8 @@ const columns: Columns[] = [
     fieldName: 'cn',
     title: '中文名称',
     flex: 1,
+    autoHeight: true,
+    wrapText: true,
     editConfig: {
       component: Input,
       editable: true,
@@ -359,14 +361,13 @@ const BaiscEditGrid = () => {
         enableRangeSelection
         //宽松风格
         size={size}
-        autoHeight
         border={false}
         zebra={false}
         hideSelectedBox
-        autoRowHeight
         treeData
+        autoHeight
         getDataPath={data => data.path}
-        defaultColDef={{ autoHeight: true, wrapText: true }}
+        // defaultColDef={{ autoHeight: true, wrapText: true }}
         // groupSuppressAutoColumn
         // controlCellWordWrap //如果需要通过数据换行符控制则开启
       />

@@ -21,8 +21,8 @@ import {
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import { AgGridReact, AgGridColumn } from 'ag-grid-react';
-import {  LicenseManager } from 'ag-grid-enterprise';
-import 'ag-grid-enterprise'
+import { LicenseManager } from 'ag-grid-enterprise';
+import 'ag-grid-enterprise';
 import { Spin } from 'antd';
 import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
 import classnames from 'classnames';
@@ -213,7 +213,6 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     rowHeight: _rowHeight,
     getRowHeight,
     headerHeight,
-    autoRowHeight = false,
     controlCellWordWrap = false,
     suppressGroupSelectParent,
     exportHiddenFields,
@@ -236,9 +235,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
 
   let domLayout = _domLayout;
   //如果是开启启动表格高度，并且是指定了行高策略, 那么就使用真实的自动高度模式
-  if (autoHeight && (autoRowHeight || _rowHeight || getRowHeight)) {
-    domLayout = 'autoHeight';
-  }
+  domLayout = autoHeight ? 'autoHeight' : domLayout;
 
   const gridVariableRef = useRef<GridVariableRef>({
     hasSelectedRows:
@@ -253,7 +250,9 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
   const { ColumnLabelComponent } = frameworkComponents;
 
   //行高
-  const rowHeight = _rowHeight || get(sizeDefinitions, `rowHeight.${size}`);
+  let rowHeight = _rowHeight || get(sizeDefinitions, `rowHeight.${size}`);
+
+  rowHeight = autoHeight ? undefined : rowHeight;
 
   //实例化manager
   const gridManager = useMemo(() => {
@@ -286,75 +285,24 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
 
   //表格外层容器高度，高度策略有两种，一种是兼容虚拟滚动计算出来的假的自动高度，一种是完全自动高度，稍微有点复杂
   const gridHeight = useMemo(() => {
-    //如果指定高度，那么就是指定高度
-    if (height) return height;
     //如果没指定高度，也没指定自动高度，那么给予默认高度
     if (!autoHeight && !height) return DEFAULT_HEIGHT;
     //如果是开启自动高度并且指定了行高策略，则使用domLayout:'autoHeight'
-    if (autoHeight && (autoRowHeight || _rowHeight || getRowHeight)) {
-      return 'auto';
+    if (autoHeight) {
+      return '100%';
     }
-    //如果是开启自动高度并且没有自动行高，那么使用乘法计算高度
-    let data = initDataSource;
-    if (!data) {
-      data = [];
-    }
-    let resHeight: number | string = 0;
-    if (!treeData || groupDefaultExpanded === -1) {
-      resHeight = rowHeight * (data.length + 1);
-    } else {
-      const filterData = data.filter(itemData => {
-        const isExpaned = getDataPath(itemData).length <= groupDefaultExpanded + 1;
-        return isExpaned;
-      });
-      resHeight = rowHeight * (filterData.length + 1);
-    }
-    resHeight = maxAutoHeight && resHeight >= maxAutoHeight ? maxAutoHeight : resHeight;
-    resHeight = minAutoHeight && minAutoHeight >= resHeight ? minAutoHeight : resHeight;
-    //各边框高度
-    const bordersHeight = 3;
-    //横向滚动条高度
-    const horizontalScrollBarHeight = 15;
-    resHeight = parseInt(resHeight as any) + horizontalScrollBarHeight + bordersHeight;
-    //分页条高度
-    if (computedPagination) {
-      resHeight = resHeight + get(sizeDefinitions, `paginationHeight.${size}`);
-    }
-    return resHeight;
-  }, [
-    size,
-    autoHeight,
-    initDataSource,
-    getDataPath,
-    groupDefaultExpanded,
-    height,
-    rowHeight,
-    autoRowHeight,
-    computedPagination,
-  ]);
+    return height;
+  }, [autoHeight, height]);
 
   //表格内层容器高度策略
   const girdWrapHeight = useMemo(() => {
-    if (autoHeight && autoRowHeight) {
-      return 'auto';
+    if (autoHeight) {
+      return '100%';
     }
     return computedPagination
       ? `calc(100% - ${get(sizeDefinitions, `paginationHeight.${size}`)}px)`
       : '100%';
-  }, [autoHeight, autoRowHeight, computedPagination, sizeDefinitions, size]);
-
-  //侧边栏高度
-  const sideDrawerHeight = useMemo(() => {
-    let resHeight = gridHeight;
-    const paginationHeight = get(sizeDefinitions, `paginationHeight.${size}`);
-    if (computedPagination) {
-      resHeight =
-        typeof gridHeight === 'string'
-          ? `calc(${gridHeight} - ${paginationHeight}px -1px`
-          : Number(gridHeight) - paginationHeight - 1;
-    }
-    return resHeight;
-  }, [gridHeight]);
+  }, [autoHeight, computedPagination, sizeDefinitions, size]);
 
   //侧边栏显示隐藏
   useEffect(() => {
@@ -701,7 +649,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
           arr.push(field);
         }
       });
-      setExportColumns(pre => isEqual(pre,arr) ? pre : arr);
+      setExportColumns(pre => (isEqual(pre, arr) ? pre : arr));
     },
     [exportHiddenFields],
   );
@@ -833,18 +781,6 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     });
   }, []);
 
-  //autoRowHeight模式时自动高度的滚动条
-  useLayoutEffect(() => {
-    if (!autoHeight || !maxAutoHeight || !autoRowHeight) {
-      return;
-    }
-    const autoHeightDiv = wrapperRef.current.querySelector('.ag-layout-auto-height');
-    if (autoHeightDiv) {
-      autoHeightDiv.style.maxHeight = maxAutoHeight + 'px';
-      autoHeightDiv.style.overflowY = 'auto';
-    }
-  }, [autoHeight, maxAutoHeight]);
-
   return (
     <LocaleReceiver
       children={(local, localeCode = 'zh-cn') => {
@@ -884,12 +820,9 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                 style={{ width, height: gridHeight }}
                 className={classnames(
                   'gant-grid',
-                  !_rowHeight && !getRowHeight && `gant-grid-${size}`,
                   openEditSign && `gant-grid-edit`,
                   editable && openEditSign && 'gant-grid-editable',
-                  autoHeight && autoRowHeight && `gant-grid-auto-height`,
                   !border && `gant-grid-noborder`,
-                  autoRowHeight && `grid-auto-row`,
                   controlCellWordWrap && `grid-control-break-line`,
                 )}
               >
@@ -911,7 +844,6 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                     style={{
                       width: '100%',
                       height: '100%',
-                      flex: 1,
                       fontSize: sizeDefinitions.fontSize[size],
                     }}
                     ref={wrapperRef}
@@ -972,15 +904,12 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                       excludeChildrenWhenTreeDataFiltering
                       {...selection}
                       excelStyles={[{ id: 'stringType', dataType: 'String' }, ...excelStyles]}
-                      immutableData
                       enableCellTextSelection
-                      // suppressClipboardPaste
                       domLayout={domLayout}
                       rowHeight={rowHeight || get(sizeDefinitions, `rowHeight.${size}`)}
                       getRowHeight={getRowHeight}
                       {...orignProps}
                       getDataPath={getDataPath}
-                      // columnDefs={localColumnsDefs}
                       gridOptions={{
                         ...orignProps?.gridOptions,
                       }}
@@ -1016,21 +945,19 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                         ...rowClassRules,
                       }}
                       getContextMenuItems={contextMenuItems as any}
-                      // modules={[...AllModules]}
-                      // suppressKeyboardEvent={onSuppressKeyboardEvent}
                       onCellEditingStopped={onCellEditingStopped}
                       onRowDataUpdated={onRowDataUpdated}
                       onColumnMoved={onColumnsChange}
                       onColumnVisible={onColumnsChange}
                       onColumnResized={onColumnsChange}
                       onColumnEverythingChanged={onColumnEverythingChanged}
+                      
                     >
                       {renderColumns(localColumnsDefs)}
                     </AgGridReact>
                   </div>
                   {drawerMode && visibleDrawer && (
                     <GantGridFormToolPanelRenderer
-                      height={sideDrawerHeight}
                       columns={columns}
                       clickedEvent={clickedEventRef.current}
                       gridManager={gridManager}
