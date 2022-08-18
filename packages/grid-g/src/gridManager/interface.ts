@@ -22,8 +22,9 @@ export interface AgGridConfig {
   isCompute?: boolean;
   treeDataChildrenName?: string;
   editChangeCallback?: (boolean) => void;
-  gridKey?:string
-  multiLineVerify?:boolean
+  gridKey?: string;
+  multiLineVerify?: boolean;
+  cloneDataSource?: boolean;
 }
 export interface BatchUpdateDataSourceParams {
   add: any[];

@@ -323,25 +323,19 @@ const BaiscEditGrid = () => {
           selectedRows,
           onSelect: onSelect,
         }}
+        cloneDataSource
         pagination={{
           total: mockData.length,
           beginIndex: pageInfo.beginIndex,
           pageSize: pageInfo.pageSize,
           onChange: onPageChange,
         }}
-        onCellEditingChange={onCellEditingChange}
+        // onCellEditingChange={onCellEditingChange}
         rowBuffer={20}
         groupSuppressAutoColumn //禁止自动分组列
         editChangeCallback={onEditChangeCallback}
         onReady={onReady}
         openEditSign
-        context={{
-          onCancelEdit,
-          onEnterEdit,
-          onCreate,
-          onRemove,
-          onTagRemove,
-        }}
         getContextMenuItems={getContextMenuItems}
         enableCellTextSelection={false}
         // processDataFromClipboard={processDataFromClipboard}

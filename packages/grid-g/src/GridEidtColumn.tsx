@@ -36,6 +36,7 @@ export default WrapperComponent =>
         onCellEditingChange,
         getRowNodeId,
         onCellChanged,
+        cloneDataSource,
       },
       refName = 'wrapperRef',
       valuePropName = 'value',
@@ -47,7 +48,7 @@ export default WrapperComponent =>
     const [newValue, setNewValue] = useState(value);
     const divRef = useRef<HTMLDivElement>(null);
     const inputRef: any = useRef();
-    
+
     const compoentProps = useMemo(() => {
       if (typeof fieldProps === 'function') return fieldProps(node.data, props);
       return fieldProps;
@@ -77,12 +78,10 @@ export default WrapperComponent =>
               })
             : callValue;
           if (!isEqualObj(editChangeValue, chageVal)) setNewValue(editChangeValue);
+          if (isEmpty(res)) return console.warn('celleditingChange must be callbak result');
+          await gridManager.modify(res);
+          typeof onCellChanged == 'function' && onCellChanged(editData, field, chageVal, value);
         }
-
-        if (isEmpty(res)) return console.warn('celleditingChange must be callbak result');
-        await gridManager.modify(res);
-
-        typeof onCellChanged == 'function' && onCellChanged(editData, field, chageVal, value);
         gridManager.loading = false;
       },
       [onCellEditingChange, onCellChanged, props.context],
@@ -103,16 +102,18 @@ export default WrapperComponent =>
 
     const handleCellEditChange = useCallback(
       async newValue => {
-        const editData = cloneDeep(get(node, `data`));
+        let editData = cloneDeep(get(node, `data`));
+        const oldData = cloneDeep(data);
         set(editData, `${field}`, newValue);
+        gridManager.loading = true;
         if (onCellEditChange) {
-          gridManager.loading = true;
-          const res = await onCellEditChange(editData, field, newValue, value, {
+          editData = await onCellEditChange(editData, field, newValue, value, {
             context: props.context,
           });
-          await gridManager.modify(res, [data]);
-          typeof onCellChanged == 'function' && onCellChanged(editData, field, newValue, value);
         }
+        await gridManager.modify(editData, [oldData]);
+        typeof onCellChanged == 'function' && onCellChanged(editData, field, newValue, value);
+        gridManager.loading = false;
       },
       [node, field, data, onCellEditChange, props.context],
     );
@@ -135,7 +136,7 @@ export default WrapperComponent =>
             const nodeValue = get(node, `data.${field}`);
             if (isEqualObj(value, newValue)) return nodeValue;
             handleCellEditChange(newValue);
-            return nodeValue;
+            return cloneDataSource ? newValue : nodeValue;
           },
         };
       },

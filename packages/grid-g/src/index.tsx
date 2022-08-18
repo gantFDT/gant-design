@@ -217,6 +217,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     suppressGroupSelectParent,
     exportHiddenFields,
     onColumnsChange: propsOnColumnsChange,
+    cloneDataSource,
     ...orignProps
   } = props;
 
@@ -367,6 +368,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
       onCellEditingChange,
       onCellChanged,
       rowSelection,
+      cloneDataSource,
       ...propsContext,
     };
   }, [
@@ -418,6 +420,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
       editChangeCallback,
       onRowsPasteEnd,
       multiLineVerify,
+      cloneDataSource,
     });
   }, []);
 
@@ -670,15 +673,9 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
       if (filterModelRef.current && treeDataForcedFilter) {
         params.api.setRowData(get(gridManager, 'agGridConfig.dataSource', []));
         params.api.setFilterModel(filterModelRef.current);
-        // params.api.ensureColumnVisible(columnIdRef?.current);
-        // const {lef} = get(columnIdRef, 'current',{});
-        // gridRef.current?.eGridDiv
-        //   .querySelector('.ag-center-cols-viewport')
-        //   ?.scrollTo(columnIdRef.current, 0);
       }
-      // gridManager.dataSourceChanged(dataSource);
     },
-    [onReady, gridKey, dataSource],
+    [onReady, gridKey],
   );
 
   // //阻止键盘事件
@@ -877,7 +874,6 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                       rowSelection={rowSelection}
                       getRowNodeId={getRowNodeId}
                       onGridReady={onGridReady}
-                      undoRedoCellEditing
                       enableFillHandle
                       headerHeight={headerHeight || get(sizeDefinitions, `headerHeight.${size}`)}
                       floatingFiltersHeight={get(sizeDefinitions, `floatingFiltersHeight.${size}`)}

@@ -338,6 +338,8 @@ export interface Props<T extends any> {
   controlCellWordWrap?: boolean;
   //监听外部cloumns
   onColumnsChange?: (columns: ColDef[]) => void;
+  //froceMode
+  cloneDataSource?: boolean;
 }
 
 export type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>;
