@@ -1,6 +1,6 @@
 {
   "name": "gantd",
-  "version": "1.1.299",
+  "version": "1.2.0",
   "description": "GantD base on antD",
   "author": "Gant FDT",
   "license": "MIT",
@@ -114,10 +114,10 @@
     "webpackbar": "^3.2.0"
   },
   "dependencies": {
-    "ag-grid-react": "28.1.0",
-    "ag-grid-enterprise": "28.1.0",
     "@ant-design/colors": "^3.1.0",
     "@ant-design/icons": "2.1.1",
+    "ag-grid-enterprise": "28.1.0",
+    "ag-grid-react": "28.1.0",
     "anchor-g": "^0.1.30",
     "antd": "3.26.5",
     "antd-virtual-select": "^1.1.2",
@@ -126,7 +126,7 @@
     "create-react-context": "^0.2.3",
     "data-cell-g": "^0.1.94",
     "file-saver": "^2.0.2",
-    "grid-g": "^0.0.238",
+    "grid-g": "^0.1.0",
     "header-g": "^0.1.31",
     "lodash": "^4.17.11",
     "modal-g": "^0.1.40",
@@ -141,7 +141,7 @@
     "react-sortable-hoc": "^1.9.1",
     "recompose": "^0.30.0",
     "schema-form-g": "^0.1.117",
-    "smart-grid-g": "^0.1.279",
+    "smart-grid-g": "^0.2.0",
     "smart-table-g": "^0.1.119",
     "submenu-g": "^0.1.26",
     "table-g": "^0.1.46",

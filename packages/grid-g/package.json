@@ -1,6 +1,6 @@
 {
   "name": "grid-g",
-  "version": "0.0.238",
+  "version": "0.1.0",
   "description": "gantd table",
   "main": "lib/index.tsx",
   "types": "lib/index.d.ts",
@@ -21,8 +21,8 @@
   "author": "GantFDT",
   "license": "MIT",
   "dependencies": {
-    "ag-grid-react": "28.1.0",
     "ag-grid-enterprise": "28.1.0",
+    "ag-grid-react": "28.1.0",
     "antd": "^3.26.5",
     "async-validate": "^1.0.1",
     "classnames": "^2.2.6",
