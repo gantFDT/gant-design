@@ -73,6 +73,7 @@ export { default as SideGridDetail } from './sidegriddetail';
 //表格默认高度
 const DEFAULT_HEIGHT = 400;
 
+
 LicenseManager.setLicenseKey(key);
 const langs = {
   en: en,
