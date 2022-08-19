@@ -760,6 +760,28 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     [selectedRows, onSelectedChanged],
   );
 
+  const _defaultColDef=useMemo(()=>{
+    return {
+      resizable,
+      sortable,
+      filter,
+      minWidth: 30,
+      tooltipValueGetter: (params: any) => params.value,
+      headerCheckboxSelectionFilteredOnly: true,
+      tooltipComponent: 'gantTooltip',
+      headerComponentParams: {
+        ColumnLabelComponent,
+      },
+      cellClass: 'stringType',
+      ...globalConfig.defaultColDef,
+      ...defaultColDef,
+      filterParams: {
+        buttons: ['reset'],
+        ...get(defaultColDef, 'filterParams', {}),
+      },
+    }
+  },[])
+
   const currentTreeData = useMemo(() => {
     if (!treeDataForcedFilter || !treeData) return treeData;
     if (isEmpty(filterModelRef.current)) return true;
@@ -911,25 +933,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                         ...orignProps?.gridOptions,
                       }}
                       isRowSelectable={onRowSelectable}
-                      defaultColDef={{
-                        resizable,
-                        sortable,
-                        filter,
-                        minWidth: 30,
-                        tooltipValueGetter: (params: any) => params.value,
-                        headerCheckboxSelectionFilteredOnly: true,
-                        tooltipComponent: 'gantTooltip',
-                        headerComponentParams: {
-                          ColumnLabelComponent,
-                        },
-                        cellClass: 'stringType',
-                        ...globalConfig.defaultColDef,
-                        ...defaultColDef,
-                        filterParams: {
-                          buttons: ['reset'],
-                          ...get(defaultColDef, 'filterParams', {}),
-                        },
-                      }}
+                      defaultColDef={_defaultColDef}
                       onRowDoubleClicked={handleRowDoubleClicked}
                       groupSelectsChildren={treeData ? false : groupSelectsChildren}
                       ensureDomOrder
