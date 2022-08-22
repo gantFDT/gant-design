@@ -73,7 +73,6 @@ export { default as SideGridDetail } from './sidegriddetail';
 //表格默认高度
 const DEFAULT_HEIGHT = 400;
 
-
 LicenseManager.setLicenseKey(key);
 const langs = {
   en: en,
@@ -107,6 +106,9 @@ export const defaultProps = {
   gantCustomHeader: true,
   /** 是否导出隐藏字段 */
   exportHiddenFields: false,
+  suppressManagerPaste: true,
+  // 默认开启粘贴时创建数据
+  suppressCreateWhenPaste: false,
 };
 
 export const defaultRowSelection: RowSelection = {
@@ -760,7 +762,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     [selectedRows, onSelectedChanged],
   );
 
-  const _defaultColDef=useMemo(()=>{
+  const _defaultColDef = useMemo(() => {
     return {
       resizable,
       sortable,
@@ -779,14 +781,23 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
         buttons: ['reset'],
         ...get(defaultColDef, 'filterParams', {}),
       },
-    }
-  },[])
+    };
+  }, []);
 
   const currentTreeData = useMemo(() => {
     if (!treeDataForcedFilter || !treeData) return treeData;
     if (isEmpty(filterModelRef.current)) return true;
     return false;
   }, [forcedGridKey]);
+
+  // 粘贴处理
+  const gridPasteProps = useGridPaste({
+    gridManager,
+    columns,
+    suppressManagerPaste,
+    suppressCreateWhenPaste,
+    context,
+  });
 
   const renderColumns = useCallback((columnDefs: (ColGroupDef | ColDef)[]) => {
     return columnDefs.map((item, index) => {
@@ -952,7 +963,6 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                       onColumnVisible={onColumnsChange}
                       onColumnResized={onColumnsChange}
                       onColumnEverythingChanged={onColumnEverythingChanged}
-                      
                     >
                       {renderColumns(localColumnsDefs)}
                     </AgGridReact>
