@@ -339,6 +339,8 @@ const BaiscEditGrid = () => {
         getContextMenuItems={getContextMenuItems}
         enableCellTextSelection={false}
         // processDataFromClipboard={processDataFromClipboard}
+        suppressManagerPaste={false}
+        suppressCreateWhenPaste
         onCellChanged={onCellChanged}
         //支持区域选中
         enableRangeSelection

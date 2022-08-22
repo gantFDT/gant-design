@@ -41,7 +41,7 @@ import CustomHeader from './CustomHeader';
 import { filterHooks } from './gantFilter';
 import GantGridFormToolPanelRenderer from './GantGridFormToolPanelRenderer';
 import GridManager from './gridManager';
-import { contextHooks, selectedHooks } from './hooks';
+import { contextHooks, selectedHooks,useGridPaste } from './hooks';
 import { DataActions, GridProps, GridVariableRef, RowSelection, Size } from './interface';
 import key from './license';
 import en from './locale/en-US';
@@ -221,6 +221,8 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     exportHiddenFields,
     onColumnsChange: propsOnColumnsChange,
     cloneDataSource,
+    suppressManagerPaste,
+    suppressCreateWhenPaste,
     ...orignProps
   } = props;
 
@@ -956,6 +958,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                         'gant-grid-row-cut': params => get(params, 'data._rowCut'),
                         ...rowClassRules,
                       }}
+                      {...gridPasteProps}
                       getContextMenuItems={contextMenuItems as any}
                       onCellEditingStopped={onCellEditingStopped}
                       onRowDataUpdated={onRowDataUpdated}

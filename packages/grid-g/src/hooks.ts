@@ -1,6 +1,7 @@
-import { useRef, useEffect, useCallback } from 'react';
-import { GridVariableRef } from './interface';
-import { isEqual, uniq, map, get } from 'lodash';
+import { useRef, useEffect, useCallback, useMemo } from 'react';
+import { GridVariableRef, GridManager } from './interface';
+import { isEqual, uniq, map, get, set, cloneDeep } from 'lodash';
+import { generateUuid } from '@util';
 import {
   ColDef,
   ColumnApi,
@@ -116,4 +117,121 @@ export function usePrev<T>(value: T) {
     ref.current = value;
   });
   return ref.current;
+}
+
+// Grid 复制粘贴 联动 Manager
+export interface UseGridPasteProps {
+  suppressManagerPaste: boolean; // 是否关闭粘贴功能
+  columns?: any[]; // 粘贴可编辑校验必填
+  suppressCreateWhenPaste?: boolean; // 是否不允许新增数据
+  gridManager: GridManager;
+  context: any;
+}
+export function useGridPaste(props: UseGridPasteProps) {
+  const { columns, gridManager, suppressCreateWhenPaste, suppressManagerPaste, context } = props;
+  if (suppressManagerPaste) return {}
+  const pastePosRef = useRef<any>({})
+
+  // 粘贴可编辑校验
+  const colEditableMap = useMemo(() => {
+    const result = {};
+    if (!columns) return result;
+    columns.forEach((colDef: any) => {
+      if (colDef.children) {
+        colDef.children.forEach((col: any) => {
+          result[col.fieldName] = col.editConfig?.editable;
+        })
+      } else {
+        result[colDef.fieldName] = colDef.editConfig?.editable;
+      }
+    });
+    return result;
+  }, [columns])
+  
+  const onRangeSelectionChanged = useCallback((params) => {
+    if (params.finished) {
+      const cellRanges = gridManager.agGridApi.getCellRanges();
+      if (cellRanges) {
+        const startColId = get(cellRanges, '0.columns.0.colId');
+        const startRowIndex = get(cellRanges, '0.startRow.rowIndex');
+
+        pastePosRef.current = {
+          rowIdx: startRowIndex,
+          colId: startColId
+        }
+      }
+    }
+  }, [])
+
+  const processDataFromClipboard = useCallback((params) => {
+    const pastePos = pastePosRef.current;
+    if (pastePos.rowIdx !== undefined) {
+      const modifiedRows: any[] = [];
+      const addedRows: any[] = [];
+      let colIdx: number;
+      const colIds: string[] = [];
+      const colDefs: any[] = [];
+      gridManager.agGridApi.getColumnDefs().forEach((colDef: any) => {
+        if (colDef.children) {
+          colDefs.push(...colDef.children)
+        } else {
+          colDefs.push(colDef)
+        }
+      });
+      colDefs.forEach((colDef: any, idx) => {
+        if (colDef.colId === pastePos.colId) {
+          colIdx = idx;
+        }
+        if (idx >= colIdx && idx < colIdx + params.data[0].length) {
+          colIds.push(colDef.colId as string)
+        }
+      })
+      const dataList = gridManager.getPureData();
+      params.data.forEach((vals: string[], idx: number) => {
+        // excel 粘贴总会多一行问题
+        if (vals.length === 1 && vals[0] === '') {
+          return;
+        }
+        let newRow: any = cloneDeep(dataList[pastePos.rowIdx + idx]);
+        const genColIdForEachFn = (row) => (colId, idx) => {
+          try {
+            const editable = typeof colEditableMap[colId] === 'function'
+              ? colEditableMap[colId](row, {
+                  context,
+                  node: gridManager.agGridApi.getRowNode(row[gridManager.rowkey as string || 'id']),
+                  data: row
+                })
+              : colEditableMap[colId];
+            if (editable) {
+              set(row, colId, vals[idx]);
+            }
+          } catch (error) {
+            console.warn('Editable兼容性错误，', colEditableMap[colId])
+          }
+        }
+        if (newRow) {
+          colIds.forEach(genColIdForEachFn(newRow))
+          modifiedRows.push(newRow);
+        } else {
+          newRow = {
+            [gridManager.rowkey as string || 'id']: 'N_' + generateUuid()
+          }
+          colIds.forEach(genColIdForEachFn(newRow))
+          addedRows.push(newRow)
+        }
+      })
+      gridManager.modify(modifiedRows);
+      if (!suppressCreateWhenPaste) {
+        gridManager.create(addedRows);
+      }
+    }
+    return null;
+  }, [])
+
+  return {
+    singleClickEdit: false, // 双击编辑，适配粘贴
+    suppressClipboardPaste: false,
+    onRangeSelectionChanged,
+    processDataFromClipboard
+  }
 }

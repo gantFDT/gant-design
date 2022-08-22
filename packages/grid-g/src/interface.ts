@@ -340,9 +340,9 @@ export interface Props<T extends any> {
   onColumnsChange?: (columns: ColDef[]) => void;
   //froceMode
   cloneDataSource?: boolean;
-  suppressManagerPaste: boolean;
+  suppressManagerPaste?: boolean;
    // 默认开启粘贴时创建数据
-  suppressCreateWhenPaste: boolean;
+  suppressCreateWhenPaste?: boolean;
 }
 
 export type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>;
