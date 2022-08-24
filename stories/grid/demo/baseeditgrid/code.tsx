@@ -20,7 +20,7 @@ const RandomCreate = () => {
     user: { name: Random.first() },
     date: Random.date('yyyy-MM-dd'),
     cn: Random.cname(),
-    nationality: Random.pick(['China', 'foreign']),
+    nationality: Random.pick(['China', 'foreign', 'test']),
   };
 };
 
@@ -68,31 +68,26 @@ const columns: Columns[] = [
       editable: true,
       signable: true,
     },
-    filter:'agDateColumnFilter',
+    filter: 'agDateColumnFilter',
   },
   {
     fieldName: 'nationality',
     title: '国籍',
     valueGetter: (params: ValueGetterParams) => {
       let value = params.data.nationality;
-      switch (value) {
-        case 'China':
-          return '中国';
-        case 'foreign':
-          return '外籍';
-        default:
-          return '';
-      }
+      console.log('------>',value)
+      return value
     },
     editConfig: {
       component: Selector,
       editable: true,
       signable: true,
       initValueFormatter: (params: ValueFormatterParams) => {
-        let value = params.data.nationality;
-        return value;
+        let value = get(params.data, 'nationality', '');
+        return value.split(',');
       },
       props: {
+        mode: 'multiple',
         dataSource: [
           {
             label: '中国',
@@ -241,6 +236,7 @@ const BaiscEditGrid = () => {
   }, []);
 
   const onCellEditingChange = useCallback((record, fieldName, newValue, oldValue, params) => {
+    if (fieldName === 'nationality') record['nationality'] = newValue.join(',');
     return record;
   }, []);
 
@@ -249,10 +245,10 @@ const BaiscEditGrid = () => {
   }, []);
   const processCellFromClipboard = useCallback(params => {
     const { column, node } = params;
-    
+
     console.log('processCellFromClipboard----->', params, cloneDeep(params.node.data));
 
-    return get(node,\`data.\${get(column,'colId')}\`);
+    return get(node, \`data.\${get(column, 'colId')}\`);
   }, []);
 
   const processCellForClipboard = useCallback(params => {
@@ -331,7 +327,7 @@ const BaiscEditGrid = () => {
           pageSize: pageInfo.pageSize,
           onChange: onPageChange,
         }}
-        // onCellEditingChange={onCellEditingChange}
+        onCellEditingChange={onCellEditingChange}
         rowBuffer={20}
         groupSuppressAutoColumn //禁止自动分组列
         editChangeCallback={onEditChangeCallback}

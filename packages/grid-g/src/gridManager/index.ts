@@ -315,6 +315,7 @@ export default class GridManage {
       oldRecords,
       this.agGridConfig.getRowNodeId,
     );
+    debugger
     if (newRecords.length <= 0) return;
     const updateRowData = [];
     newRecords.map(data => {

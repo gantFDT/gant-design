@@ -133,14 +133,22 @@ export default WrapperComponent =>
             return false;
           },
           getValue: () => {
-            const nodeValue = get(node, `data.${field}`);
+            let nodeValue = get(node, `data.${field}`);
+            const value = initValueFormatter
+              ? initValueFormatter({
+                  ...props,
+                  node: node,
+                  data: node.data,
+                  value: nodeValue,
+                })
+              : nodeValue;
             if (isEqualObj(value, newValue)) return nodeValue;
             handleCellEditChange(newValue);
             return cloneDataSource ? newValue : nodeValue;
           },
         };
       },
-      [value, newValue, field, handleCellEditChange],
+      [newValue],
     );
 
     useEffect(() => {
