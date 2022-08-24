@@ -344,49 +344,47 @@ export default class GridManage {
 
   // 创建;
   @hisDecorator()
-  public create(
-    records: any,
-    targetId?: boolean | string | string[] | number | number[],
-    isSub: boolean = true,
-  ) {
+  public create(records: any, targetId?: boolean | string | number, isSub: boolean = true) {
     const { getRowNodeId } = this.agGridConfig;
     let addRecords = Array.isArray(records) ? records : [records];
     if (addRecords.length <= 0) return;
     let rowData = this.getRowData();
+    addRecords = addRecords.map(item => ({ ...item, _rowType: DataActions.add }));
     this.agGridColumnApi.applyColumnState({});
     if ((typeof targetId !== 'number' && !targetId) || typeof targetId === 'boolean') {
       const isFirst: boolean = typeof targetId === 'boolean' && targetId;
-      addRecords = addRecords.map(item => ({ ...item, _rowType: DataActions.add }));
-      this.agGridApi.setRowData(
-        isFirst ? [...addRecords, ...rowData] : [...rowData, ...addRecords],
+      this.batchUpdateGrid(
+        {
+          add: addRecords,
+          addIndex: isFirst ? 0 : undefined,
+        },
+        () => {
+          this.validate(addRecords);
+          this.historyStack.push({
+            type: DataActions.add,
+            records: addRecords,
+          });
+        },
       );
-      this.validate(addRecords);
-      this.historyStack.push({
-        type: DataActions.add,
-        records: addRecords,
-      });
       return;
     }
-    let targetArray = Array.isArray(targetId) ? targetId : [targetId];
     addRecords = addRecords;
-    let hisRecords: any[] = [];
-    const newRecords: any[] = [];
-    targetArray.map((itemId, index) => {
-      let targetIndex = findIndex(rowData, data => getRowNodeId(data) == itemId);
-      targetIndex = isSub ? targetIndex + 1 : targetIndex;
-      let addTarget = get(addRecords, `[${index}]`, addRecords);
-      addTarget = Array.isArray(addTarget) ? addTarget : addRecords;
-      addTarget = addTarget.map(item => ({ ...item, _rowType: DataActions.add }));
-      rowData = [...rowData.slice(0, targetIndex), ...addTarget, ...rowData.slice(targetIndex)];
-      newRecords.push(...addTarget);
-      hisRecords = [...hisRecords, ...addTarget];
-    });
-    this.agGridApi.setRowData([...rowData]);
-    this.validate(newRecords);
-    this.historyStack.push({
-      type: DataActions.add,
-      records: hisRecords,
-    });
+    let targetIndex = findIndex(rowData, data => getRowNodeId(data) == targetId);
+    targetIndex = typeof targetIndex == 'number' && targetIndex < 0 ? targetId : targetIndex;
+    if (Array.isArray(targetId)) targetIndex = 0;
+    this.batchUpdateGrid(
+      {
+        add: addRecords,
+        addIndex: targetIndex,
+      },
+      () => {
+        this.validate(addRecords);
+        this.historyStack.push({
+          type: DataActions.add,
+          records: addRecords,
+        });
+      },
+    );
   }
   private quickCreateNode(
     isChild: boolean = false,

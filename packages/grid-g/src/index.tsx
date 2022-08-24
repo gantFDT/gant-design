@@ -26,7 +26,17 @@ import 'ag-grid-enterprise';
 import { Spin } from 'antd';
 import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
 import classnames from 'classnames';
-import _, { findIndex, get, isEmpty, isEqual, isObject, merge, cloneDeep, omit } from 'lodash';
+import _, {
+  findIndex,
+  get,
+  isEmpty,
+  isEqual,
+  isObject,
+  merge,
+  cloneDeep,
+  omit,
+  debounce,
+} from 'lodash';
 import React, {
   createContext,
   useCallback,
@@ -41,7 +51,7 @@ import CustomHeader from './CustomHeader';
 import { filterHooks } from './gantFilter';
 import GantGridFormToolPanelRenderer from './GantGridFormToolPanelRenderer';
 import GridManager from './gridManager';
-import { contextHooks, selectedHooks,useGridPaste } from './hooks';
+import { contextHooks, selectedHooks, useGridPaste } from './hooks';
 import { DataActions, GridProps, GridVariableRef, RowSelection, Size } from './interface';
 import key from './license';
 import en from './locale/en-US';
@@ -445,10 +455,15 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
   }, []);
 
   // 获取selected 数据
-  const getAllSelectedRows = useCallback(selectedRows => {
-    const dataSource = gridManager.agGridConfig.dataSource;
+  const getAllSelectedRows = useCallback((selectedRows: any[], hideBox) => {
     const currentRows: string[] = [];
     const extraRows: any[] = [];
+    if (hideBox)
+      return {
+        extraRows,
+        currentRows: selectedRows,
+      };
+    const dataSource = gridManager.agGridConfig.dataSource;
     selectedRows.map(itemRow => {
       const index = findIndex(dataSource, function(itemData) {
         return getRowNodeId(itemData) === getRowNodeId(itemRow);
@@ -484,7 +499,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     [onSelect],
   );
 
-  const { selectedChangeRef } = selectedHooks({
+  const { selectedChangeRef, updateSelection } = selectedHooks({
     gridVariable: gridVariableRef.current,
     ready,
     apiRef,
@@ -494,6 +509,10 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     isSingle: rowSelection === 'single',
   });
 
+  //是否隐藏selectedBox
+  const hideBox = useMemo(() => {
+    return hideSelectedBox || rowSelection !== 'multiple';
+  }, [hideSelectedBox, rowSelection]);
   //选择行改变
   const onSelectionChanged = useCallback(
     (event: SelectionChangedEvent) => {
@@ -503,6 +522,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
         const rows = event.api.getSelectedRows();
         const { extraRows, currentRows } = getAllSelectedRows(
           get(gridVariableRef.current, 'selectedRows', []),
+          hideBox,
         );
         if (isEqual(currentRows, rows)) return;
         const selectedRows = [...extraRows, ...rows];
@@ -526,7 +546,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
       gridVariableRef.current.selectedRows = rows;
       setInnerSelectedRows(rows);
     },
-    [getAllSelectedRows, propsOnSelectionChanged, rowSelection],
+    [getAllSelectedRows, propsOnSelectionChanged, rowSelection, hideBox],
   );
 
   //单击行
@@ -720,11 +740,6 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     };
   }, [defaultExportParams, exportColumns]);
 
-  //是否隐藏selectedBox
-  const hideBox = useMemo(() => {
-    return hideSelectedBox || rowSelection !== 'multiple';
-  }, [hideSelectedBox, rowSelection]);
-
   //编辑结束
   const onCellEditingStopped = useCallback((event: CellEditingStoppedEvent) => {
     clickedEventRef.current = event;
@@ -736,32 +751,24 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
 
   // 监听数据变化
   const onRowDataUpdated = useCallback(
-    (event: RowDataUpdatedEvent) => {
+    debounce((event: RowDataUpdatedEvent) => {
       const { api } = event;
       propOnRowDataUpdated && propOnRowDataUpdated(event);
-      if (isEmpty(selectedRows) || typeof onSelectedChanged !== 'function') return;
-      const gridSelectedRows = api.getSelectedRows();
-      let changed = false;
-      const newSelectedRows = selectedRows.map(item => {
-        const gridIndex = findIndex(
-          gridSelectedRows,
-          gridItem => getRowNodeId(gridItem) === getRowNodeId(item),
+      let rows = apiRef.current.getSelectedRows();
+      if (gridVariableRef.current?.hasSelectedRows && !hideBox && isEmpty(rows)) {
+        rows = gridVariableRef.current?.selectedRows.filter(item => {
+          const rowNode = apiRef.current?.getRowNode(getRowNodeId(item));
+          return !rowNode;
+        });
+      }
+      if (isEqual(rows, gridVariableRef.current?.selectedRows)) return;
+      onSelect &&
+        onSelect(
+          rows.map(item => getRowNodeId(item)),
+          rows,
         );
-        if (gridIndex >= 0) {
-          const newSelectedItem = gridSelectedRows[gridIndex];
-          const diff = !isEqual(newSelectedItem, item);
-          changed = diff ? diff : changed;
-          return diff ? newSelectedItem : item;
-        }
-        return item;
-      });
-      if (changed)
-        onSelectedChanged(
-          newSelectedRows.map(item => getRowNodeId(item)),
-          newSelectedRows,
-        );
-    },
-    [selectedRows, onSelectedChanged],
+    }, 300),
+    [selectedRows, onSelect, hideBox],
   );
 
   const _defaultColDef = useMemo(() => {
