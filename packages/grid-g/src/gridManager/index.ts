@@ -315,7 +315,7 @@ export default class GridManage {
       oldRecords,
       this.agGridConfig.getRowNodeId,
     );
-    debugger
+    debugger;
     if (newRecords.length <= 0) return;
     const updateRowData = [];
     newRecords.map(data => {
@@ -674,6 +674,7 @@ export default class GridManage {
     params: BatchUpdateDataSourceParams,
     keys: string | string[] = [],
     isMerge = false,
+    notMergeKeys: string | string[] = [],
   ) {
     const { getRowNodeId } = this.agGridConfig;
     const dataSource: any = [];
@@ -682,6 +683,7 @@ export default class GridManage {
     const removeKeys = remove.map(item => getRowNodeId(item));
     const removeNodes = getAllChildrenNode(removeKeys, this.agGridApi, false);
     const assignKeys = typeof keys === 'string' ? [keys] : keys;
+    const notAssignKeys = Array.isArray(notMergeKeys) ? notMergeKeys : [notMergeKeys];
     this.agGridApi.forEachNode(function(node, index) {
       const removeIndex = findIndex(
         removeNodes,
@@ -698,6 +700,9 @@ export default class GridManage {
         const mergeData = {};
         assignKeys.map(item => {
           mergeData[item] = data[item];
+        });
+        notAssignKeys.map(key => {
+          mergeData[key] = get(update, `${[updateIndex]}.${key}`);
         });
         const updateItem = isMerge
           ? merge(data, update[updateIndex], mergeData)
