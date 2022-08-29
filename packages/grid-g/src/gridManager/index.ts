@@ -701,7 +701,7 @@ export default class GridManage {
           mergeData[item] = data[item];
         });
         notAssignKeys.map(key => {
-          mergeData[key] = get(update, `${[updateIndex]}.${key}`);
+          mergeData[key] = get(update, `[${updateIndex}].${key}`);
         });
         const updateItem = isMerge
           ? merge(data, update[updateIndex], mergeData)
