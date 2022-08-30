@@ -704,7 +704,7 @@ export default class GridManage {
           mergeData[key] = get(update, `[${updateIndex}].${key}`);
         });
         const updateItem = isMerge
-          ? merge(data, update[updateIndex], mergeData)
+          ? { ...data, ...update[updateIndex], ...mergeData }
           : { ...update[updateIndex], ...mergeData };
         return dataSource.push(updateItem);
       }
