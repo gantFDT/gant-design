@@ -749,26 +749,10 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
   }, []);
 
   // 监听数据变化
-  const onRowDataUpdated = useCallback(
-    debounce((event: RowDataUpdatedEvent) => {
-      const { api } = event;
-      propOnRowDataUpdated && propOnRowDataUpdated(event);
-      let rows = apiRef.current.getSelectedRows();
-      if (gridVariableRef.current?.hasSelectedRows && !hideBox && isEmpty(rows)) {
-        rows = gridVariableRef.current?.selectedRows.filter(item => {
-          const rowNode = apiRef.current?.getRowNode(getRowNodeId(item));
-          return !rowNode;
-        });
-      }
-      if (isEqual(rows, gridVariableRef.current?.selectedRows)) return;
-      onSelect &&
-        onSelect(
-          rows.map(item => getRowNodeId(item)),
-          rows,
-        );
-    }, 300),
-    [selectedRows, onSelect, hideBox],
-  );
+  const onRowDataUpdated = useCallback((event: RowDataUpdatedEvent) => {
+    const { api } = event;
+    propOnRowDataUpdated && propOnRowDataUpdated(event);
+  }, []);
 
   const _defaultColDef = useMemo(() => {
     return {
