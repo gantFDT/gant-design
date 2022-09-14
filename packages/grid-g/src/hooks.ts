@@ -64,7 +64,7 @@ export function selectedHooks(params: selectedHooksParams) {
     garidShowSelectedRows(selectedRows, apiRef, getRowNodeId, isSingle);
     setTimeout(() => {
       selectedChangeRef.current = false;
-    }, 100);
+    }, 300);
   }, []);
 
   useEffect(() => {

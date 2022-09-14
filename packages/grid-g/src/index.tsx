@@ -239,7 +239,6 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
   const apiRef = useRef<GridApi>();
   const shiftRef = useRef<boolean>(false);
   const wrapperRef = useRef<any>();
-  const selectedChanged = useRef<boolean>(false);
   const columnsRef = useRef<ColumnApi>();
   const selectedLoadingRef = useRef<boolean>(false);
   const clickedEventRef = useRef<RowClickedEvent>();
@@ -517,7 +516,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
   const onSelectionChanged = useCallback(
     (event: SelectionChangedEvent) => {
       propsOnSelectionChanged && propsOnSelectionChanged(event);
-      // if (selectedChangeRef.current) return;
+      if (selectedChangeRef.current) return;
       if (gridVariableRef.current?.hasSelectedRows && rowSelection === 'multiple') {
         const rows = event.api.getSelectedRows();
         const { extraRows, currentRows } = getAllSelectedRows(
@@ -583,7 +582,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
   //行被选择
   const onRowSelected = useCallback(
     (event: RowSelectedEvent) => {
-      if (selectedChanged.current) return;
+      if (selectedChangeRef.current) return;
       propsOnRowSelected && propsOnRowSelected(event);
       if (!groupSelectsChildren || !treeData) return;
       const gridSelectedRows = event.api.getSelectedRows();
