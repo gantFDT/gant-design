@@ -108,7 +108,7 @@ export const defaultProps = {
   // 默认关闭粘贴联动Manager
   suppressManagerPaste: true,
   // 默认开启粘贴时创建数据
-  suppressCreateWhenPaste: false
+  suppressCreateWhenPaste: false,
 };
 
 export const defaultRowSelection: RowSelection = {
@@ -838,6 +838,10 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     });
   }, []);
 
+  const renderColumnsContent = useMemo(() => {
+    return renderColumns(localColumnsDefs);
+  }, [localColumnsDefs]);
+
   //autoRowHeight模式时自动高度的滚动条
   useLayoutEffect(() => {
     if (!autoHeight || !maxAutoHeight || !autoRowHeight) {
@@ -851,7 +855,13 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
   }, [autoHeight, maxAutoHeight]);
 
   // 粘贴处理
-  const gridPasteProps = useGridPaste({ gridManager, columns, suppressManagerPaste, suppressCreateWhenPaste, context });
+  const gridPasteProps = useGridPaste({
+    gridManager,
+    columns,
+    suppressManagerPaste,
+    suppressCreateWhenPaste,
+    context,
+  });
 
   return (
     <LocaleReceiver
@@ -1034,7 +1044,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                       onColumnResized={onColumnsChange}
                       onColumnEverythingChanged={onColumnEverythingChanged}
                     >
-                      {renderColumns(localColumnsDefs)}
+                      {renderColumnsContent}
                     </AgGridReact>
                   </div>
                   {drawerMode && visibleDrawer && (
