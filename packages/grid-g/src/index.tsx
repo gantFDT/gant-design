@@ -791,18 +791,25 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     context,
   });
 
-  const renderColumns = useCallback((columnDefs: (ColGroupDef | ColDef)[]) => {
-    return columnDefs.map((item, index) => {
-      const props: any = { key: (item as any).field || index };
-      if ((item as ColGroupDef).marryChildren)
-        return (
-          <AgGridColumn {...item} {...props} groupId={(item as any).field || index}>
-            {renderColumns((item as any).children)}
-          </AgGridColumn>
-        );
-      return <AgGridColumn {...item} {...props} />;
-    });
-  }, []);
+  const renderColumns = useCallback(
+    (columnDefs: (ColGroupDef | ColDef)[]) => {
+      return columnDefs.map((item, index) => {
+        const props: any = { key: (item as any).field || index };
+        if ((item as ColGroupDef).marryChildren)
+          return (
+            <AgGridColumn {...item} {...props} groupId={(item as any).field || index}>
+              {renderColumns((item as any).children)}
+            </AgGridColumn>
+          );
+        return <AgGridColumn {...item} {...props} />;
+      });
+    },
+    [localColumnsDefs],
+  );
+
+  const renderColumnsContent = useMemo(() => {
+    return renderColumns(localColumnsDefs);
+  }, [localColumnsDefs]);
 
   return (
     <LocaleReceiver
@@ -957,7 +964,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                       onColumnResized={onColumnsChange}
                       onColumnEverythingChanged={onColumnEverythingChanged}
                     >
-                      {renderColumns(localColumnsDefs)}
+                      {renderColumnsContent}
                     </AgGridReact>
                   </div>
                   {drawerMode && visibleDrawer && (
