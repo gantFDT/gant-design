@@ -31,6 +31,7 @@ const basicColumns = [
   {
     fieldName: 'text',
     title: '分组',
+    hide:true,
     children: [
       {
         fieldName: 'cn',

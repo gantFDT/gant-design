@@ -1,8 +1,8 @@
-import { ColDef, ColGroupDef, GridApi, IsColumnFunc, RowNode } from 'ag-grid-community';
+import { ColDef, ColGroupDef, GridApi, IsColumnFunc, RowNode, _ } from 'ag-grid-community';
 import { Schema } from '@schema-form';
 import { RuleItem, Rules } from 'async-validator';
 import classnames from 'classnames';
-import { findIndex, get, isEmpty, set } from 'lodash';
+import { findIndex, get, isEmpty, set, has } from 'lodash';
 import EditorCol from './GridEidtColumn';
 import { isEqualObj } from './gridManager/utils';
 import { ColumnEdiatble, Columns, DataActions, GantPaginationProps, Size } from './interface';
@@ -240,7 +240,7 @@ export const mapColumns = <T>(
   requireds: string[];
 } => {
   // 移除所有已添加事件
-  function getColumnDefs(columns: Columns<T>[]) {
+  function getColumnDefs(columns: Columns<T>[], hide?: boolean) {
     let validateFields: Rules = {};
     let requireds = [];
     const columnDefs = columns.map(
@@ -296,6 +296,7 @@ export const mapColumns = <T>(
           cellRenderer: render ? 'gantRenderCol' : undefined,
           headerClass,
           ...item,
+          hide: has(item, 'hide') ? item.hide : hide,
         } as Col;
 
         if (!itemisgroup(colDef, children)) {
@@ -382,7 +383,7 @@ export const mapColumns = <T>(
           if (fixed) colDef.pinned = fixed;
         } else if (itemisgroup(colDef, children)) {
           if (children && children.length) {
-            const groupChildren = getColumnDefs(children);
+            const groupChildren = getColumnDefs(children, get(item, 'hide', hide));
             colDef.children = groupChildren.columnDefs;
             colDef.marryChildren = true;
             validateFields = { ...validateFields, ...groupChildren.validateFields };
@@ -579,24 +580,23 @@ export function checkParentGroupSelectedStatus(node: RowNode, selected: boolean,
  */
 export function isExportHiddenFields(col: ColDef, exportHiddenFields: boolean) {
   if (!exportHiddenFields) {
-    let hide = col.hide || false
-    return hide !== true
+    let hide = col.hide || false;
+    return hide !== true;
   }
-  return exportHiddenFields
-
+  return exportHiddenFields;
 }
 
 /**
  * 获取 column 信息
  * @param column
  */
-export function getColumnInfo(column){
-  let fieldName = column.field
-  const children = column.children
+export function getColumnInfo(column) {
+  let fieldName = column.field;
+  const children = column.children;
   if (column.hasOwnProperty('groupId')) {
-    fieldName = column.groupId
+    fieldName = column.groupId;
   } else if (column.hasOwnProperty('colId')) {
-    fieldName = column.colId
+    fieldName = column.colId;
   }
-  return {fieldName, children}
+  return { fieldName, children };
 }
