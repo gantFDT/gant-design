@@ -75,7 +75,6 @@ const columns: Columns[] = [
     title: '国籍',
     valueGetter: (params: ValueGetterParams) => {
       let value = params.data.nationality;
-      console.log('------>',value)
       return value
     },
     editConfig: {

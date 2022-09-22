@@ -25,6 +25,7 @@ const basicColumns = [
     fieldName: 'name',
     title: '英文姓名',
     width: 100,
+    filter: 'agNumberColumnFilter',
   },
   {
     fieldName: 'text',
@@ -87,7 +88,7 @@ const BaiscGrid = () => {
     const value = e.target.value;
     if (value === 'default') return setColumns(basicColumns);
     setColumns([
-      ...basicColumns,
+      ...(basicColumns as any),
       {
         fieldName: 'ip',
         title: 'ip',
@@ -128,6 +129,15 @@ const BaiscGrid = () => {
               <Radio.Button value="default">默认列</Radio.Button>
               <Radio.Button value="dynamic">动态列</Radio.Button>
             </Radio.Group>
+            <Button
+              onClick={() =>
+                apiRef.current.setFilterModel({
+                  name: { filterType: 'text', type: 'startsWith', filter: 'a' },
+                })
+              }
+            >
+              filter
+            </Button>
           </>
         }
         title="基础展示"

@@ -369,13 +369,14 @@ export default class GridManage {
       return;
     }
     addRecords = addRecords;
+ 
     let targetIndex = findIndex(rowData, data => getRowNodeId(data) == targetId);
     targetIndex = typeof targetIndex == 'number' && targetIndex < 0 ? targetId : targetIndex;
     if (Array.isArray(targetId)) targetIndex = 0;
     this.batchUpdateGrid(
       {
         add: addRecords,
-        addIndex: targetIndex,
+        addIndex: isSub ? targetIndex + 1 : targetIndex,
       },
       () => {
         this.validate(addRecords);

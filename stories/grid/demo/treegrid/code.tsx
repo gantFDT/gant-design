@@ -2,7 +2,7 @@ export default `
 import { Grid, Header, Input } from 'gantd';
 import { Button, Icon, Tooltip, Dropdown, Menu } from 'antd';
 import React, { Fragment, useCallback, useRef, useState } from 'react';
-import { isEmpty, find, has, isArray } from 'lodash';
+import { isEmpty, find, has, isArray, get } from 'lodash';
 import Faker from 'faker';
 import { notification } from 'antd';
 import moment from 'moment';
@@ -39,7 +39,7 @@ const columns: any = [
         {
           required: true,
           message: '零件号不能为空',
-        }
+        },
       ],
     },
   },
@@ -96,6 +96,54 @@ const dataSource = [
     zh: '变速器',
     en: 'transmission',
   },
+  {
+    id: '2-3',
+    path: ['2','2-3'],
+    partName: '变速器3',
+    partNum: 'P000002',
+    zh: '变速器',
+    en: 'transmission',
+  },
+  {
+    id: '2-1',
+    path: ['2','2-1'],
+    partName: '变速器1',
+    partNum: 'P000002',
+    zh: '变速器',
+    en: 'transmission',
+  },
+  {
+    id: '2-2',
+    path: ['2','2-2'],
+    partName: '变速器2',
+    partNum: 'P000002',
+    zh: '变速器',
+    en: 'transmission',
+  },
+  {
+    id: '3',
+    path: ['3'],
+    partName: '发动机',
+    partNum: 'S000002',
+    zh: '发动机',
+    en: 'transmission',
+  },
+  {
+    id: '3-1',
+    path: ['3','3-1'],
+    partName: '发动机-1',
+    partNum: 'S000002',
+    zh: '发动机',
+    en: 'transmission',
+  },
+  {
+    id: '3-2',
+    path: ['3','3-2'],
+    partName: '发动机-2',
+    partNum: 'S000002',
+    zh: '发动机',
+    en: 'transmission',
+  },
 ];
 
 const TreeGrid = () => {
@@ -113,7 +161,7 @@ const TreeGrid = () => {
 
   //选择
   const onSelect = useCallback((keys, rows) => {
-    console.log('--->',keys)
+    console.log('--->', keys);
     setSelectedKeys(keys);
     setSelectedRows(rows);
   }, []);
@@ -167,17 +215,16 @@ const TreeGrid = () => {
       return;
     }
     const node: any = gridApiRef.current.getRowNode(selectedRows[0].id).parent;
-    if (!has(node, 'data')) {
-      addRootNode();
-      return;
+    let path: any = [];
+    if (has(node, 'data')) {
+      path = get(node, 'data.path', []);
     }
-    const { path } = node.data;
     const id = Faker.datatype.uuid();
     const newData = {
       id,
       path: [...path, id],
     };
-    gridManagerRef.current.create(newData);
+    gridManagerRef.current.create(newData, selectedRows[0].id);
   }, []);
 
   //保存
@@ -294,8 +341,9 @@ const TreeGrid = () => {
         treeData //开启树形模式
         getDataPath={data => data.path} //树形分组依据
         groupSuppressAutoColumn //关闭默认分组
-        groupSelectsChildren
+        // groupSelectsChildren
         suppressGroupSelectParent
+        groupDefaultExpanded={-1}
         // groupSelectsChildren //选择子集
       />
     </>
