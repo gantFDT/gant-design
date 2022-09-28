@@ -223,6 +223,7 @@ const TreeGrid = () => {
     const newData = {
       id,
       path: [...path, id],
+      partName:gridManagerRef.current.getRowData().length
     };
     gridManagerRef.current.create(newData, selectedRows[0].id);
   }, []);

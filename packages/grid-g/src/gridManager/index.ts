@@ -102,11 +102,9 @@ export default class GridManage {
     let rowNode = this.agGridApi.getRowNode(nodeId);
     return isEmpty(oldData) ? rowNode : { ...rowNode, data: { ...oldData } };
   };
-  private batchUpdateGrid(
-    transaction: RowDataTransaction,
-    callback?: (transaction: RowDataTransaction) => void,
-  ) {
-    this.agGridApi.applyTransactionAsync(transaction, callback);
+  private batchUpdateGrid(transaction: RowDataTransaction, callback?: () => void) {
+    this.agGridApi.applyTransaction(transaction);
+    callback && callback();
   }
   appendChild(keys, add) {
     const { isCompute, treeDataChildrenName, getRowNodeId } = this.agGridConfig;
@@ -323,8 +321,8 @@ export default class GridManage {
       if (node && node.data && data) return updateRowData.push(data);
     });
     await new Promise(resolve => {
-      this.batchUpdateGrid({ update: updateRowData }, (params: any) => {
-        resolve(params);
+      this.batchUpdateGrid({ update: updateRowData }, () => {
+        resolve('');
       });
     });
 
@@ -369,9 +367,12 @@ export default class GridManage {
       return;
     }
     addRecords = addRecords;
- 
-    let targetIndex = findIndex(rowData, data => getRowNodeId(data) == targetId);
-    targetIndex = typeof targetIndex == 'number' && targetIndex < 0 ? targetId : targetIndex;
+
+    let targetIndex =
+      typeof targetId == 'number'
+        ? targetId
+        : get(this.agGridApi.getRowNode(targetId), 'rowIndex', 0);
+    targetIndex = targetIndex < 0 ? 0 : targetIndex;
     if (Array.isArray(targetId)) targetIndex = 0;
     this.batchUpdateGrid(
       {
