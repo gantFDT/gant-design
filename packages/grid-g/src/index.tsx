@@ -787,8 +787,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     gridManager,
     columns,
     suppressManagerPaste,
-    suppressCreateWhenPaste,
-    context,
+    suppressCreateWhenPaste
   });
 
   const renderColumns = useCallback(

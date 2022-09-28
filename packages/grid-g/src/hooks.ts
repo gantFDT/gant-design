@@ -129,10 +129,9 @@ export interface UseGridPasteProps {
   columns?: any[]; // 粘贴可编辑校验必填
   suppressCreateWhenPaste?: boolean; // 是否不允许新增数据
   gridManager: GridManager;
-  context: any;
 }
 export function useGridPaste(props: UseGridPasteProps) {
-  const { columns, gridManager, suppressCreateWhenPaste, suppressManagerPaste, context } = props;
+  const { columns, gridManager, suppressCreateWhenPaste, suppressManagerPaste } = props;
   if (suppressManagerPaste) return {};
   const pastePosRef = useRef<any>({});
 
@@ -167,7 +166,17 @@ export function useGridPaste(props: UseGridPasteProps) {
     }
   }, []);
 
+  const processCellForClipboard = useCallback((params) => {
+    if (params.node.rowPinned === 'top') {
+      return '__delete';
+    }
+    return params.value;
+  }, [])
+
   const processDataFromClipboard = useCallback(params => {
+    // 固定顶部行总是被复制问题
+    params.data = params.data.filter(row => row[0] !== '__delete');
+
     const pastePos = pastePosRef.current;
     if (pastePos.rowIdx !== undefined) {
       const modifiedRows: any[] = [];
@@ -202,7 +211,7 @@ export function useGridPaste(props: UseGridPasteProps) {
             const editable =
               typeof colEditableMap[colId] === 'function'
                 ? colEditableMap[colId](row, {
-                    context,
+                    context: params.context,
                     node: gridManager.agGridApi.getRowNode(
                       row[(gridManager.rowkey as string) || 'id'],
                     ),
@@ -240,5 +249,6 @@ export function useGridPaste(props: UseGridPasteProps) {
     suppressClipboardPaste: false,
     onRangeSelectionChanged,
     processDataFromClipboard,
+    processCellForClipboard
   };
 }
