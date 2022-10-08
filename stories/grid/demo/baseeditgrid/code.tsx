@@ -34,6 +34,7 @@ const columns: Columns[] = [
     fieldName: 'user.name',
     title: '英文名称',
     cellRenderer: 'gantGroupCellRenderer',
+    filter: 'agTextColumnFilter',
     editConfig: {
       component: Input,
       editable: true,
@@ -75,14 +76,15 @@ const columns: Columns[] = [
     title: '国籍',
     valueGetter: (params: ValueGetterParams) => {
       let value = params.data.nationality;
-      return value
+      return value;
     },
     editConfig: {
       component: Selector,
       editable: true,
       signable: true,
       initValueFormatter: (params: ValueFormatterParams) => {
-        let value = get(params.data, 'nationality', '');
+        const value = get(params.data, 'nationality', '');
+        if (typeof value === 'object') return value;
         return value.split(',');
       },
       props: {
@@ -154,12 +156,15 @@ const BaiscEditGrid = () => {
           setEditable(false);
         },
       });
+    gridManagerRef.current.cancel();
     setEditable(false);
   }, [gridChange]);
 
   //新建数据
   const onCreate = useCallback(selectedKeys => {
     const createData = RandomCreate();
+    createData.user = { name: '' };
+    createData.nationality = '';
     gridManagerRef.current.create(createData, selectedKeys.length > 0 ? selectedKeys : true);
   }, []);
 
@@ -313,33 +318,22 @@ const BaiscEditGrid = () => {
         editable={editable}
         dataSource={dataSource}
         serialNumber
-        processCellFromClipboard={processCellFromClipboard}
-        processCellForClipboard={processCellForClipboard}
         rowSelection={{
           selectedRows,
           onSelect: onSelect,
         }}
-        cloneDataSource
         pagination={{
           total: mockData.length,
           beginIndex: pageInfo.beginIndex,
           pageSize: pageInfo.pageSize,
           onChange: onPageChange,
         }}
-        onCellEditingChange={onCellEditingChange}
+        // onCellEditingChange={onCellEditingChange}
         rowBuffer={20}
-        groupSuppressAutoColumn //禁止自动分组列
         editChangeCallback={onEditChangeCallback}
         onReady={onReady}
         openEditSign
         getContextMenuItems={getContextMenuItems}
-        enableCellTextSelection={false}
-        // processDataFromClipboard={processDataFromClipboard}
-        suppressManagerPaste={false}
-        suppressCreateWhenPaste
-        onCellChanged={onCellChanged}
-        //支持区域选中
-        enableRangeSelection
       />
     </>
   );

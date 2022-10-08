@@ -339,7 +339,6 @@ export interface Props<T extends any> {
   //监听外部cloumns
   onColumnsChange?: (columns: ColDef[]) => void;
   //froceMode
-  cloneDataSource?: boolean;
   suppressManagerPaste?: boolean;
    // 默认开启粘贴时创建数据
   suppressCreateWhenPaste?: boolean;

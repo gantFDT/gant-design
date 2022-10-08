@@ -282,15 +282,14 @@ export default class GridManage {
     this.agGridApi.forEachNode(node => {
       if (node.data) gridDataSource.push(node.data);
     });
-    const cloneDataSource = this.agGridConfig.cloneDataSource;
     if (isEqual(dataSource, gridDataSource) || isEqual(dataSource, this.agGridConfig.dataSource))
-      return this.agGridApi.setRowData(cloneDataSource ? cloneDeep(dataSource) : dataSource);
+      return this.agGridApi.setRowData(dataSource);
     this.reset({
       dataSource: dataSource,
     });
     this.agGridApi.setRowData([]);
 
-    this.agGridApi.setRowData(cloneDataSource ? cloneDeep(dataSource) : dataSource);
+    this.agGridApi.setRowData(dataSource);
   }
   getRowData() {
     var rowData = [];
@@ -590,8 +589,8 @@ export default class GridManage {
   }
 
   cancel() {
-    const { dataSource, cloneDataSource } = this.agGridConfig;
-    this.agGridApi.setRowData(cloneDataSource ? cloneDeep(dataSource) : dataSource);
+    const { dataSource } = this.agGridConfig;
+    this.agGridApi.setRowData(dataSource);
     this.reset(this.agGridConfig);
     this.afterCancel && this.afterCancel(this.agGridConfig.dataSource);
   }

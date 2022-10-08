@@ -230,7 +230,6 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     suppressGroupSelectParent,
     exportHiddenFields,
     onColumnsChange: propsOnColumnsChange,
-    cloneDataSource,
     suppressManagerPaste,
     suppressCreateWhenPaste,
     ...orignProps
@@ -382,7 +381,6 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
       onCellEditingChange,
       onCellChanged,
       rowSelection,
-      cloneDataSource,
       ...propsContext,
     };
   }, [
@@ -434,7 +432,6 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
       editChangeCallback,
       onRowsPasteEnd,
       multiLineVerify,
-      cloneDataSource,
     });
   }, []);
 

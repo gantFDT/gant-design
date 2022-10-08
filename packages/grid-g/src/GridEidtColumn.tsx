@@ -36,7 +36,6 @@ export default WrapperComponent =>
         onCellEditingChange,
         getRowNodeId,
         onCellChanged,
-        cloneDataSource,
       },
       refName = 'wrapperRef',
       valuePropName = 'value',
@@ -111,7 +110,7 @@ export default WrapperComponent =>
             context: props.context,
           });
         }
-        await gridManager.modify(editData, [oldData]);
+        await gridManager.modify(editData);
         typeof onCellChanged == 'function' && onCellChanged(editData, field, newValue, value);
         gridManager.loading = false;
       },
@@ -144,8 +143,9 @@ export default WrapperComponent =>
               : nodeValue;
             if (isEqualObj(value, newValue)) return nodeValue;
             handleCellEditChange(newValue);
-            return cloneDataSource ? newValue : nodeValue;
+            return newValue;
           },
+          // isCancelAfterEnd:()=>false
         };
       },
       [newValue],
