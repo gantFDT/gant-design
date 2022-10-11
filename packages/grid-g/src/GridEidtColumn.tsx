@@ -110,7 +110,7 @@ export default WrapperComponent =>
             context: props.context,
           });
         }
-        await gridManager.modify(editData);
+        await gridManager.modify(editData, [oldData]);
         typeof onCellChanged == 'function' && onCellChanged(editData, field, newValue, value);
         gridManager.loading = false;
       },
@@ -131,6 +131,9 @@ export default WrapperComponent =>
           refresh() {
             return false;
           },
+          isCancelBeforeStart() {
+            return false;
+          },
           getValue: () => {
             let nodeValue = get(node, `data.${field}`);
             const value = initValueFormatter
@@ -142,8 +145,10 @@ export default WrapperComponent =>
                 })
               : nodeValue;
             if (isEqualObj(value, newValue)) return nodeValue;
-            handleCellEditChange(newValue);
-            return newValue;
+            setTimeout(() => {
+              handleCellEditChange(newValue);
+            }, 1);
+            return nodeValue;
           },
           // isCancelAfterEnd:()=>false
         };
