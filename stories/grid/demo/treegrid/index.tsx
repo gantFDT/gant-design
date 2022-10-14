@@ -293,7 +293,7 @@ const TreeGrid = () => {
                     size="small"
                     icon="minus"
                     disabled={isEmpty(selectedRows)}
-                    onClick={() => gridManagerRef.current.tagRemove(selectedKeys)}
+                    onClick={() => gridManagerRef.current.remove(selectedKeys)}
                   ></Button>
                 </Tooltip>
                 <Tooltip title={'撤销'}>

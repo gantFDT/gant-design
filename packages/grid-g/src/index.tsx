@@ -281,6 +281,10 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     return rowkey(data);
   }, []);
 
+  const getRowId = useCallback(function(params) {
+    return getRowNodeId(params.data);
+  }, []);
+
   const getDataPath = useCallback(
     data => {
       if (!treeData) return [];
@@ -784,7 +788,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     gridManager,
     columns,
     suppressManagerPaste,
-    suppressCreateWhenPaste
+    suppressCreateWhenPaste,
   });
 
   const renderColumns = useCallback(
@@ -901,7 +905,8 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                       onSelectionChanged={onSelectionChanged}
                       onRowSelected={onRowSelected}
                       rowSelection={rowSelection}
-                      getRowNodeId={getRowNodeId}
+                      // getRowNodeId={getRowNodeId}
+                      getRowId={getRowId}
                       onGridReady={onGridReady}
                       enableFillHandle
                       headerHeight={headerHeight || get(sizeDefinitions, `headerHeight.${size}`)}
