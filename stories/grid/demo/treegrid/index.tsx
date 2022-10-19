@@ -38,7 +38,7 @@ const columns: any = [
         {
           required: true,
           message: '零件号不能为空',
-        }
+        },
       ],
     },
   },
@@ -80,6 +80,14 @@ const dataSource = [
     en: 'body',
   },
   {
+    id: '1-1-1',
+    path: ['1', '1-1', '1-1-1'],
+    partName: '机体',
+    partNum: 'P0000011',
+    zh: '机体',
+    en: 'body',
+  },
+  {
     id: '1-2',
     path: ['1', '1-2'],
     partName: '机体22',
@@ -95,11 +103,60 @@ const dataSource = [
     zh: '变速器',
     en: 'transmission',
   },
+  {
+    id: '2-1',
+    path: ['2', '2-1'],
+    partName: '变速器1',
+    partNum: 'P000002',
+    zh: '变速器1',
+    en: 'transmission',
+  },
+  {
+    id: '2-2',
+    path: ['2', '2-2'],
+    partName: '变速器1',
+    partNum: 'P000002',
+    zh: '变速器1',
+    en: 'transmission',
+  },
+  {
+    id: '2-2-1',
+    path: ['2', '2-2', '2-2-1'],
+    partName: '变速器-1',
+    partNum: 'P000002',
+    zh: '变速器1',
+    en: 'transmission',
+  },
+  {
+    id: '2-2-2',
+    path: ['2', '2-2', '2-2-2'],
+    partName: '变速器-2',
+    partNum: 'P000002',
+    zh: '变速器1',
+    en: 'transmission',
+  },
 ];
 
 const TreeGrid = () => {
   const [selectedKeys, setSelectedKeys] = useState<any>([1, 2]);
-  const [selectedRows, setSelectedRows] = useState<any>();
+  const [selectedRows, setSelectedRows] = useState<any>([
+    {
+      id: '2-2-1',
+      path: ['2', '2-1'],
+      partName: '变速器1',
+      partNum: 'P000002',
+      zh: '变速器1',
+      en: 'transmission',
+    },
+    {
+      id: '1-1-1',
+      path: ['1', '1-1'],
+      partName: '机体',
+      partNum: 'P0000011',
+      zh: '机体',
+      en: 'body',
+    },
+  ]);
 
   const [editable, setEditable] = useState(false);
   const gridApiRef = useRef(null);
@@ -108,11 +165,13 @@ const TreeGrid = () => {
   const onReady = useCallback((params, manager) => {
     gridApiRef.current = params.api;
     gridManagerRef.current = manager;
+    console.log(params.api.getRowNode('1-1'));
+    // params.api?.getRowNode('1-1').setSelected(true);
+    // params.api?.getRowNode('2-1').setSelected(true);
   }, []);
 
   //选择
   const onSelect = useCallback((keys, rows) => {
-    console.log('--->',keys)
     setSelectedKeys(keys);
     setSelectedRows(rows);
   }, []);
@@ -294,7 +353,7 @@ const TreeGrid = () => {
         getDataPath={data => data.path} //树形分组依据
         groupSuppressAutoColumn //关闭默认分组
         groupSelectsChildren
-        suppressGroupSelectParent
+        // suppressGroupSelectParent
         // groupSelectsChildren //选择子集
       />
     </>

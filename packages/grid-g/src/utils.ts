@@ -546,9 +546,9 @@ export function groupNodeSelectedToggle(node: RowNode, selected: boolean) {
 export function checkParentGroupSelectedStatus(node: RowNode, selected: boolean, api: GridApi) {
   const { parent } = node;
   if (parent.level < 0) return;
+  checkParentGroupSelectedStatus(parent, selected, api);
   if (selected) {
     parent.setSelected(selected);
-    checkParentGroupSelectedStatus(parent, selected, api);
     api.refreshCells({
       columns: ['defalutSelection'],
       rowNodes: [parent],
@@ -569,7 +569,6 @@ export function checkParentGroupSelectedStatus(node: RowNode, selected: boolean,
     }
   }
   parent.setSelected(false);
-  checkParentGroupSelectedStatus(parent, selected, api);
 }
 
 /**
@@ -579,24 +578,23 @@ export function checkParentGroupSelectedStatus(node: RowNode, selected: boolean,
  */
 export function isExportHiddenFields(col: ColDef, exportHiddenFields: boolean) {
   if (!exportHiddenFields) {
-    let hide = col.hide || false
-    return hide !== true
+    let hide = col.hide || false;
+    return hide !== true;
   }
-  return exportHiddenFields
-
+  return exportHiddenFields;
 }
 
 /**
  * 获取 column 信息
  * @param column
  */
-export function getColumnInfo(column){
-  let fieldName = column.field
-  const children = column.children
+export function getColumnInfo(column) {
+  let fieldName = column.field;
+  const children = column.children;
   if (column.hasOwnProperty('groupId')) {
-    fieldName = column.groupId
+    fieldName = column.groupId;
   } else if (column.hasOwnProperty('colId')) {
-    fieldName = column.colId
+    fieldName = column.colId;
   }
-  return {fieldName, children}
+  return { fieldName, children };
 }

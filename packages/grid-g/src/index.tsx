@@ -241,9 +241,13 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
   const wrapperRef = useRef<any>();
   const selectedChanged = useRef<boolean>(false);
   const columnsRef = useRef<ColumnApi>();
-  const selectedLoadingRef = useRef<boolean>(false);
+
   const clickedEventRef = useRef<RowClickedEvent>();
   const [visibleDrawer, setVisibleDrawer] = useState(false);
+  // 解决沟通后递归处理账号的问题。
+  const rowSelectedRef = useRef<any>(null);
+  const selectedLoadingRef = useRef<boolean>(false);
+  const rowSelectedNodeRef = useRef<RowNode[]>([]);
 
   const [exportColumns, setExportColumns] = useState<string[]>([]);
   // const [clickedEvent, setClickedEvent] = useState<RowClickedEvent>();
@@ -621,31 +625,42 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
 
   //行被选择
   const onRowSelected = useCallback(
-    debounce((event: RowSelectedEvent) => {
+    (event: RowSelectedEvent) => {
       if (selectedChanged.current) return;
       propsOnRowSelected && propsOnRowSelected(event);
       if (!groupSelectsChildren || !treeData) return;
-      const gridSelectedRows = event.api.getSelectedRows();
-      if (
-        gridSelectedRows.length === 0 ||
-        gridManager.getRowData().length === gridSelectedRows.length
-      )
-        return;
       if (selectedLoadingRef.current) return;
-      selectedLoadingRef.current = true;
       const { node } = event;
-      const nodeSelected = node.isSelected();
-      groupNodeSelectedToggle(node, nodeSelected);
-      if (!suppressGroupSelectParent) checkParentGroupSelectedStatus(node, nodeSelected, event.api);
-      setTimeout(() => {
-        selectedLoadingRef.current = false;
-        event.api.refreshCells({
-          columns: ['defalutSelection'],
-          rowNodes: [node],
-          force: true,
+      if (rowSelectedRef.current) clearTimeout(rowSelectedRef.current);
+      rowSelectedNodeRef.current.push(node);
+      rowSelectedRef.current = setTimeout(() => {
+        const gridSelectedRows = event.api.getSelectedRows();
+        if (
+          gridSelectedRows.length === 0 ||
+          gridManager.getRowData().length === gridSelectedRows.length
+        ) {
+          rowSelectedNodeRef.current = [];
+          return;
+        }
+        selectedLoadingRef.current = true;
+        rowSelectedNodeRef.current?.map(itemNode => {
+          const nodeSelected = itemNode.isSelected();
+          groupNodeSelectedToggle(itemNode, nodeSelected);
+          if (!suppressGroupSelectParent)
+            checkParentGroupSelectedStatus(itemNode, nodeSelected, event.api);
         });
+        setTimeout(() => {
+          selectedLoadingRef.current = false;
+          event.api.refreshCells({
+            columns: ['defalutSelection'],
+            rowNodes: rowSelectedNodeRef.current,
+            force: true,
+          });
+        }, 100);
+        rowSelectedRef.current = null;
+        rowSelectedNodeRef.current = [];
       }, 100);
-    }, 100),
+    },
     [propsOnRowSelected, suppressGroupSelectParent],
   );
 
