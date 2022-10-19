@@ -25,7 +25,17 @@ import { AllModules, LicenseManager } from '@ag-grid-enterprise/all-modules';
 import { Spin } from 'antd';
 import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
 import classnames from 'classnames';
-import _, { findIndex, get, isEmpty, isEqual, isObject, merge, cloneDeep, omit } from 'lodash';
+import _, {
+  findIndex,
+  get,
+  isEmpty,
+  isEqual,
+  isObject,
+  merge,
+  cloneDeep,
+  omit,
+  debounce,
+} from 'lodash';
 import React, {
   createContext,
   useCallback,
@@ -611,7 +621,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
 
   //行被选择
   const onRowSelected = useCallback(
-    (event: RowSelectedEvent) => {
+    debounce((event: RowSelectedEvent) => {
       if (selectedChanged.current) return;
       propsOnRowSelected && propsOnRowSelected(event);
       if (!groupSelectsChildren || !treeData) return;
@@ -634,8 +644,8 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
           rowNodes: [node],
           force: true,
         });
-      }, 200);
-    },
+      }, 100);
+    }, 100),
     [propsOnRowSelected, suppressGroupSelectParent],
   );
 
