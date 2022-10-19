@@ -647,7 +647,9 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
           const nodeSelected = itemNode.isSelected();
           groupNodeSelectedToggle(itemNode, nodeSelected);
           if (!suppressGroupSelectParent)
-            checkParentGroupSelectedStatus(itemNode, nodeSelected, event.api);
+            setTimeout(() => {
+              checkParentGroupSelectedStatus(itemNode, nodeSelected, event.api);
+            }, 100);
         });
         setTimeout(() => {
           selectedLoadingRef.current = false;
@@ -656,10 +658,10 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
             rowNodes: rowSelectedNodeRef.current,
             force: true,
           });
-        }, 100);
+        }, 200);
         rowSelectedRef.current = null;
         rowSelectedNodeRef.current = [];
-      }, 100);
+      }, 200);
     },
     [propsOnRowSelected, suppressGroupSelectParent],
   );
@@ -1068,6 +1070,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                       onColumnVisible={onColumnsChange}
                       onColumnResized={onColumnsChange}
                       onColumnEverythingChanged={onColumnEverythingChanged}
+                      rowMultiSelectWithClick
                     >
                       {renderColumnsContent}
                     </AgGridReact>

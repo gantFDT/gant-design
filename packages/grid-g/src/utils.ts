@@ -546,9 +546,10 @@ export function groupNodeSelectedToggle(node: RowNode, selected: boolean) {
 export function checkParentGroupSelectedStatus(node: RowNode, selected: boolean, api: GridApi) {
   const { parent } = node;
   if (parent.level < 0) return;
-  checkParentGroupSelectedStatus(parent, selected, api);
+  debugger
   if (selected) {
     parent.setSelected(selected);
+    checkParentGroupSelectedStatus(parent, selected, api);
     api.refreshCells({
       columns: ['defalutSelection'],
       rowNodes: [parent],
@@ -559,7 +560,7 @@ export function checkParentGroupSelectedStatus(node: RowNode, selected: boolean,
   const { childrenAfterFilter = [] } = parent;
   for (let itemNode of childrenAfterFilter) {
     if (itemNode.isSelected()) {
-      parent.setSelected(true);
+      // parent.setSelected(true);
       api.refreshCells({
         columns: ['defalutSelection'],
         rowNodes: [parent],
@@ -569,6 +570,7 @@ export function checkParentGroupSelectedStatus(node: RowNode, selected: boolean,
     }
   }
   parent.setSelected(false);
+  checkParentGroupSelectedStatus(parent, selected, api);
 }
 
 /**
