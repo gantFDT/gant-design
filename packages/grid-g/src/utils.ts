@@ -85,6 +85,7 @@ const serialNumberCol: ColDef = {
   pinned: true,
   minWidth: 55,
   headerName: '',
+  resizable: false,
   suppressMenu: true,
   lockPosition: true,
   lockVisible: true,

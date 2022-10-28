@@ -30,7 +30,6 @@ const basicColumns = [
   {
     fieldName: 'text',
     title: '分组',
-    hide:true,
     children: [
       {
         fieldName: 'cn',
@@ -155,6 +154,7 @@ const BaiscGrid = () => {
           onSelect: onSelect,
           type: rowSelectionType,
         }}
+        gantThemeClass='gant-grid-theme'
         pagination={{
           beginIndex: pageInfo.beginIndex,
           pageSize: pageInfo.pageSize,

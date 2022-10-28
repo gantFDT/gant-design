@@ -854,7 +854,6 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                   gantThemeClass,
                   openEditSign && `gant-grid-edit`,
                   editable && openEditSign && 'gant-grid-editable',
-                  !border && `gant-grid-noborder`,
                   controlCellWordWrap && `grid-control-break-line`,
                 )}
               >
