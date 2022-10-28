@@ -212,6 +212,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     suppressRightClickSelected,
     treeDataForcedFilter,
     themeClass = 'ag-theme-balham',
+    gantThemeClass,
     gantDateComponent,
     autoHeight,
     maxAutoHeight,
@@ -850,6 +851,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                 style={{ width, height: gridHeight }}
                 className={classnames(
                   'gant-grid',
+                  gantThemeClass,
                   openEditSign && `gant-grid-edit`,
                   editable && openEditSign && 'gant-grid-editable',
                   !border && `gant-grid-noborder`,
@@ -864,12 +866,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                   }}
                 >
                   <div
-                    className={classnames(
-                      themeClass,
-                      'gant-ag-wrapper',
-                      editable && 'no-zebra',
-                      !zebra && 'no-zebra',
-                    )}
+                    className={classnames(themeClass, 'gant-ag-wrapper')}
                     data-refid={gridKey}
                     style={{
                       width: '100%',

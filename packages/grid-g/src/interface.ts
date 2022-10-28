@@ -303,6 +303,7 @@ export interface Props<T extends any> {
   treeDataForcedFilter?: boolean;
   //主题
   themeClass?: string;
+  gantThemeClass?: string;
   //时间控件使用gantd的
   gantDateComponent?: boolean;
   //是否开启自动高度

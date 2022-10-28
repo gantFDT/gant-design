@@ -10,7 +10,7 @@
         content: '';
         width: 98%;
         bottom: 0px;
-        border-bottom: 1px dashed #ff4d4f;
+        border-bottom: 1px dashed var(--error-color);
         position: absolute;
         left: 1%;
       }
@@ -19,7 +19,7 @@
       .customHeaderLabel::before {
         content: '*';
         margin-right: 2px;
-        color: #ff4d4f;
+        color: var(--error-color);
       }
     }
     .gant-header-cell-edit {
@@ -38,11 +38,10 @@
     left: 2px;
     top: -1px;
   }
-  color: #52c41a;
+  color: var(--success-color);
 }
 .gant-grid-cell-editing {
   margin-top: -1px;
-  width: 100%;
   > .gant-input-wrapper {
     display: block;
   }
@@ -57,15 +56,12 @@
 .gant-grid-editable > div > div > div > .ag-root-wrapper > .ag-root-wrapper-body > .ag-root {
   .gant-grid-cell {
     &-edit {
-      // &::before {
-      //   border-color: #1890ff transparent transparent #1890ff;
-      // }
       background-image: linear-gradient(
         to top left,
         transparent 0%,
         transparent 49.9%,
-        blue 50%,
-        blue 100%
+        var(--cell-edit-color) 50%,
+        var(--cell-edit-color) 100%
       );
       background-size: 6px 6px;
       background-repeat: no-repeat;
@@ -75,8 +71,8 @@
         to top left,
         transparent 0%,
         transparent 49.9%,
-        red 50%,
-        red 100%
+        var(--cell-modify-color) 50%,
+        var(--cell-modify-color) 100%
       );
       background-size: 6px 6px;
       background-repeat: no-repeat;
@@ -94,8 +90,8 @@
         to top left,
         transparent 0%,
         transparent 49.9%,
-        orange 50%,
-        orange 100%
+        var(--cell-delete-color) 50%,
+        var(--cell-delete-color) 100%
       );
       background-size: 6px 6px;
       background-repeat: no-repeat;
@@ -118,7 +114,7 @@
     &.gant-folder-line {
       &::before {
         position: absolute;
-        border-left: 1px dotted #a39f9f;
+        border-left: 1px dotted var(--group-file-color);
         content: '';
         height: 100%;
         left: 8px;
@@ -131,7 +127,7 @@
       // left: 11px;
       &::before {
         position: absolute;
-        border-left: 1px dotted #a39f9f;
+        border-left: 1px dotted var(--group-file-color);
         content: '';
         height: 50%;
         left: 8px;
@@ -139,7 +135,7 @@
       }
       &::after {
         position: absolute;
-        border-top: 1px dotted #a39f9f;
+        border-top: 1px dotted var(--group-file-color);
         content: '';
         top: 50%;
         width: 9px;
@@ -149,14 +145,14 @@
     &.gant-file-line {
       &::before {
         position: absolute;
-        border-left: 1px dotted #a39f9f;
+        border-left: 1px dotted var(--group-file-color);
         content: '';
         height: 100%;
         left: 8px;
       }
       &::after {
         position: absolute;
-        border-top: 1px dotted #a39f9f;
+        border-top: 1px dotted var(--group-file-color);
         content: '';
         top: 50%;
         width: 9px;
@@ -166,7 +162,7 @@
   }
 
   .gant-treedata-icon {
-    color: #a39f9f;
+    color: var(--group-file-color);
     margin-right: 4px;
     &.gant-treedata-first-file {
       padding-left: 0px;
@@ -176,7 +172,7 @@
       position: relative;
       &::before {
         position: absolute;
-        border-top: 1px dotted #a39f9f;
+        border-top: 1px dotted var(--group-file-color);
         content: '';
         top: 50%;
         width: 12px;
