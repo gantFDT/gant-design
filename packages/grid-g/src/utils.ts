@@ -546,7 +546,6 @@ export function groupNodeSelectedToggle(node: RowNode, selected: boolean) {
 export function checkParentGroupSelectedStatus(node: RowNode, selected: boolean, api: GridApi) {
   const { parent } = node;
   if (parent.level < 0) return;
-  debugger
   if (selected) {
     parent.setSelected(selected);
     checkParentGroupSelectedStatus(parent, selected, api);

@@ -153,6 +153,7 @@ const BaiscGrid = () => {
         suppressRightClickSelected
         rowBuffer={20}
         onReady={onReady}
+        size="default"
       />
     </>
   );

@@ -212,6 +212,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     suppressRightClickSelected,
     treeDataForcedFilter,
     themeClass = 'ag-theme-balham',
+    gantThemeClass,
     gantDateComponent,
     autoHeight,
     maxAutoHeight,
@@ -358,7 +359,9 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
       return 'auto';
     }
     return computedPagination
-      ? `calc(100% - ${get(sizeDefinitions, `paginationHeight.${size}`)}px)`
+      ? `calc(100% - ${get(sizeDefinitions, `paginationHeight.${size}`)}px - ${
+          gantThemeClass === 'gant-grid-theme' ? 'var(--space)' : '0px'
+        } - 1px)`
       : '100%';
   }, [autoHeight, autoRowHeight, computedPagination, sizeDefinitions, size]);
 
@@ -889,7 +892,6 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     suppressCreateWhenPaste,
     context,
   });
-
   return (
     <LocaleReceiver
       children={(local, localeCode = 'zh-cn') => {
@@ -929,11 +931,11 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                 style={{ width, height: gridHeight }}
                 className={classnames(
                   'gant-grid',
+                  gantThemeClass,
                   !_rowHeight && !getRowHeight && `gant-grid-${size}`,
                   openEditSign && `gant-grid-edit`,
                   editable && openEditSign && 'gant-grid-editable',
                   autoHeight && autoRowHeight && `gant-grid-auto-height`,
-                  !border && `gant-grid-noborder`,
                   autoRowHeight && `grid-auto-row`,
                   controlCellWordWrap && `grid-control-break-line`,
                 )}
@@ -946,12 +948,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                   }}
                 >
                   <div
-                    className={classnames(
-                      themeClass,
-                      'gant-ag-wrapper',
-                      editable && 'no-zebra',
-                      !zebra && 'no-zebra',
-                    )}
+                    className={classnames(themeClass, 'gant-ag-wrapper')}
                     data-refid={gridKey}
                     style={{
                       width: '100%',
