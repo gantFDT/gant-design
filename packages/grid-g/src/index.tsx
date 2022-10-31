@@ -319,7 +319,9 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
       return '100%';
     }
     return computedPagination
-      ? `calc(100% - ${get(sizeDefinitions, `paginationHeight.${size}`)}px)`
+      ? `calc(100% - ${get(sizeDefinitions, `paginationHeight.${size}`)}px - ${
+          gantThemeClass === 'gant-grid-theme' ? 'var(--space)' : '0px'
+        })`
       : '100%';
   }, [autoHeight, computedPagination, sizeDefinitions, size]);
 
