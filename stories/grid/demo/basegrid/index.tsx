@@ -154,7 +154,7 @@ const BaiscGrid = () => {
           onSelect: onSelect,
           type: rowSelectionType,
         }}
-        gantThemeClass='gant-grid-theme'
+        gantThemeClass="gant-grid-theme"
         pagination={{
           beginIndex: pageInfo.beginIndex,
           pageSize: pageInfo.pageSize,
@@ -164,6 +164,7 @@ const BaiscGrid = () => {
         suppressRightClickSelected
         rowBuffer={20}
         onReady={onReady}
+        size="default"
       />
     </>
   );
