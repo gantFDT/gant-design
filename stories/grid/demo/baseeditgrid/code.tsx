@@ -334,6 +334,8 @@ const BaiscEditGrid = () => {
         onReady={onReady}
         openEditSign
         getContextMenuItems={getContextMenuItems}
+        size="default"
+        gantThemeClass='gant-grid-theme'
       />
     </>
   );

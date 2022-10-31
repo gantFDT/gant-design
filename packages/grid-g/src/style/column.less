@@ -30,6 +30,10 @@
       }
     }
   }
+  .ag-cell-inline-editing {
+    padding: 0px !important;
+    border: none !important;
+  }
 }
 .gant-grid-cell-serial-add {
   &::before {
@@ -41,7 +45,9 @@
   color: var(--success-color);
 }
 .gant-grid-cell-editing {
-  margin-top: -1px;
+  position: absolute;
+  top: 0px;
+  width: 100%;
   > .gant-input-wrapper {
     display: block;
   }
