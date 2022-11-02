@@ -538,7 +538,11 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
         );
       }
       const rows = event.api.getSelectedRows();
-      if (isEqual(gridVariableRef.current?.selectedRows, rows)) return;
+      if (
+        gridVariableRef.current?.hasSelectedRows &&
+        isEqual(gridVariableRef.current?.selectedRows, rows)
+      )
+        return;
       onSelect &&
         onSelect(
           rows.map(item => getRowNodeId(item)),
