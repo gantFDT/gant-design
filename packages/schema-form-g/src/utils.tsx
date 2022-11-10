@@ -71,7 +71,7 @@ const uiArray = [
 		alias: "padding",
 		belong: "form",
 		name: "ui:padding",
-		defaultValue: 10,
+		defaultValue: 0,
 	},
 	{
 		alias: "backgroundColor",
