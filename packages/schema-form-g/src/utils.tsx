@@ -75,6 +75,7 @@ const uiArray = [
 	},
 	{
 		alias: "backgroundColor",
+		
 		belong: "form",
 		name: "ui:backgroundColor",
 		defaultValue: undefined,
