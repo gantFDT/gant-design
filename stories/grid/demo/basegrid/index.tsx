@@ -155,12 +155,12 @@ const BaiscGrid = () => {
           type: rowSelectionType,
         }}
         gantThemeClass="gant-grid-theme"
-        pagination={{
-          beginIndex: pageInfo.beginIndex,
-          pageSize: pageInfo.pageSize,
-          total: mockData.length,
-          onChange: onPageChange,
-        }}
+        // pagination={{
+        //   beginIndex: pageInfo.beginIndex,
+        //   pageSize: pageInfo.pageSize,
+        //   total: mockData.length,
+        //   onChange: onPageChange,
+        // }}
         suppressRightClickSelected
         rowBuffer={20}
         onReady={onReady}

@@ -320,7 +320,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     }
     return computedPagination
       ? `calc(100% - ${get(sizeDefinitions, `paginationHeight.${size}`)}px - ${
-          gantThemeClass === 'gant-grid-theme' ? 'var(--space) - 2px' : '0px'
+          gantThemeClass === 'gant-grid-theme' ? 'var(--space,10px) - 2px' : '0px'
         })`
       : '100%';
   }, [autoHeight, computedPagination, sizeDefinitions, size]);

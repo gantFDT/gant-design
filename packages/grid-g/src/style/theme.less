@@ -1,15 +1,12 @@
-:root {
-  --grid-header-bg-color: #f1f1f1;
-  --grid-row-zebra-bg-color: rgb(246, 246, 246);
-  --grid-header-color: #333;
-  --grid-cell-color: #333;
-  --border-radius: 0px;
-  --space: 10px;
-  --header-cell-space: 3px;
-  --ag-border-color: #bdc3c7;
-}
 .gant-grid {
   &.gant-grid-theme {
+    .ag-theme-balham .ag-header {
+      background-color: var(--ag-header-background-color, #f1f1f1);
+    }
+    .ag-row-hover:not(&.ag-row-selected),
+    .ag-theme-balham .ag-row-hover:not(.ag-full-width-row)::before {
+      background-color: #f6f6f6 !important;
+    }
     .ag-root-wrapper {
       border: none;
     }
@@ -24,10 +21,12 @@
     }
     .ag-header-cell,
     .ag-header-group-cell {
-      color: var(--grid-header-color);
+      color: var(--grid-header-color, #333);
+      font-size: 12px;
     }
     .ag-cell {
-      color: var(--grid-cell-color);
+      color: var(--grid-cell-color, #666);
+      font-size: 12px;
     }
     .ag-header-cell,
     .ag-header-group-cell {
@@ -45,7 +44,11 @@
       }
     }
     .ag-header-group-cell-with-group {
-      border-bottom: 1px solid var(--ag-border-color);
+      border-bottom: 1px solid var(--ag-border-color, #bdc3c7);
+      text-align: center;
+      .ag-header-group-cell-label {
+        flex: 1;
+      }
     }
     .ag-header-row:not(:first-child) .ag-header-cell,
     .ag-header-row:not(:first-child) .ag-header-group-cell.ag-header-group-cell-with-group {
@@ -57,13 +60,6 @@
     .ag-row-odd {
       background-color: transparent;
     }
-    .ag-row.ag-row-last {
-      // border-bottom: none;
-    }
-    .ag-cell.ag-cell-last-left-pinned:not(.ag-cell-range-right):not(.ag-cell-range-single-cell) {
-      // border-right: none;
-      // box-shadow: ;
-    }
     .ant-pagination-item,
     .ant-pagination-options-quick-jumper input,
     .ant-pagination-prev .ant-pagination-item-link,
@@ -72,8 +68,8 @@
       border-radius: var(--border-radius);
     }
     .gantd-grid-footer {
-      padding-top: var(--space);
-      border-top: 1px solid var(--ag-border-color);
+      padding-top: var(--space, 10px);
+      border-top: 1px solid var(--ag-border-color, #bdc3c7);
     }
   }
 }

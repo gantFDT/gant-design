@@ -10,7 +10,7 @@
         content: '';
         width: 98%;
         bottom: 0px;
-        border-bottom: 1px dashed var(--error-color);
+        border-bottom: 1px dashed var(--error-color,#ff4d4f);
         position: absolute;
         left: 1%;
       }
@@ -19,7 +19,7 @@
       .customHeaderLabel::before {
         content: '*';
         margin-right: 2px;
-        color: var(--error-color);
+        color: var(--error-color,#ff4d4f);
       }
     }
     .gant-header-cell-edit {
@@ -66,8 +66,8 @@
         to top left,
         transparent 0%,
         transparent 49.9%,
-        var(--cell-edit-color) 50%,
-        var(--cell-edit-color) 100%
+        var(--cell-edit-color,blue) 50%,
+        var(--cell-edit-color,blue) 100%
       );
       background-size: 6px 6px;
       background-repeat: no-repeat;
@@ -77,8 +77,8 @@
         to top left,
         transparent 0%,
         transparent 49.9%,
-        var(--cell-modify-color) 50%,
-        var(--cell-modify-color) 100%
+        var(--cell-modify-color,red) 50%,
+        var(--cell-modify-color,red) 100%
       );
       background-size: 6px 6px;
       background-repeat: no-repeat;
@@ -96,8 +96,8 @@
         to top left,
         transparent 0%,
         transparent 49.9%,
-        var(--cell-delete-color) 50%,
-        var(--cell-delete-color) 100%
+        var(--cell-delete-color,orange) 50%,
+        var(--cell-delete-color,orange) 100%
       );
       background-size: 6px 6px;
       background-repeat: no-repeat;
@@ -120,7 +120,7 @@
     &.gant-folder-line {
       &::before {
         position: absolute;
-        border-left: 1px dotted var(--group-file-color);
+        border-left: 1px dotted var(--group-file-color,#a39f9f);
         content: '';
         height: 100%;
         left: 8px;
@@ -133,7 +133,7 @@
       // left: 11px;
       &::before {
         position: absolute;
-        border-left: 1px dotted var(--group-file-color);
+        border-left: 1px dotted var(--group-file-color,#a39f9f);
         content: '';
         height: 50%;
         left: 8px;
@@ -141,7 +141,7 @@
       }
       &::after {
         position: absolute;
-        border-top: 1px dotted var(--group-file-color);
+        border-top: 1px dotted var(--group-file-color,#a39f9f);
         content: '';
         top: 50%;
         width: 9px;
@@ -151,14 +151,14 @@
     &.gant-file-line {
       &::before {
         position: absolute;
-        border-left: 1px dotted var(--group-file-color);
+        border-left: 1px dotted var(--group-file-color,#a39f9f);
         content: '';
         height: 100%;
         left: 8px;
       }
       &::after {
         position: absolute;
-        border-top: 1px dotted var(--group-file-color);
+        border-top: 1px dotted var(--group-file-color,#a39f9f);
         content: '';
         top: 50%;
         width: 9px;
@@ -168,7 +168,7 @@
   }
 
   .gant-treedata-icon {
-    color: var(--group-file-color);
+    color: var(--group-file-color,#a39f9f);
     margin-right: 4px;
     &.gant-treedata-first-file {
       padding-left: 0px;
@@ -178,7 +178,7 @@
       position: relative;
       &::before {
         position: absolute;
-        border-top: 1px dotted var(--group-file-color);
+        border-top: 1px dotted var(--group-file-color,#a39f9f);
         content: '';
         top: 50%;
         width: 12px;
