@@ -20,7 +20,7 @@ export const sizeNumber = {
 export const sizeDefinitions = {
   fontSize: {
     small: 12,
-    default: 13,
+    default: 12,
     large: 14,
   },
   rowHeight: {
