@@ -233,6 +233,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     onColumnsChange: propsOnColumnsChange,
     suppressManagerPaste,
     suppressCreateWhenPaste,
+    suppressExcelExport,
     ...orignProps
   } = props;
 
@@ -919,6 +920,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                         serverDataRequest,
                         isServerSideGroup,
                         size,
+                        suppressExcelExport,
                         getDataPath: getDataPath,
                         computedPagination,
                         groupSelectsChildren,

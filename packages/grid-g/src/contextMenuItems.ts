@@ -16,7 +16,7 @@ interface ContextMenuItemsConfig {
   hiddenMenuItemNames?: string[];
   suppressRightClickSelected?: boolean;
   showCutChild?: boolean;
-  showMenuItemClearFilter?: boolean;  //是否显示右键中的【清空过滤】按钮
+  showMenuItemClearFilter?: boolean; //是否显示右键中的【清空过滤】按钮
   onMenuItemClearFilter?: () => void; // 右键中【清空过滤】按钮的点击回调
 }
 export const gantGetcontextMenuItems = function(
@@ -46,7 +46,7 @@ export const gantGetcontextMenuItems = function(
       getRowNodeId,
       gridManager,
       showCut,
-      rowSelection,
+      suppressExcelExport,
     },
     node,
     api,
@@ -111,14 +111,14 @@ export const gantGetcontextMenuItems = function(
   }
 
   // 清空过滤 按钮
-  if(showMenuItemClearFilter){
+  if (showMenuItemClearFilter) {
     defultMenu.unshift({
       name: locale.clearFilter,
       action: () => {
-        api.setFilterModel({})
-        onMenuItemClearFilter?.()
+        api.setFilterModel({});
+        onMenuItemClearFilter?.();
       },
-    })
+    });
   }
 
   defultMenu =
@@ -127,8 +127,15 @@ export const gantGetcontextMenuItems = function(
         ? [...defultMenu, ...items]
         : defultMenu
       : [...items];
-  if (!hideMenuItemExport) {
-    defultMenu = defultMenu.length > 0 ? [...defultMenu, 'export'] : ['export'];
+  if (!hideMenuItemExport && !suppressExcelExport) {
+    const exportItem = {
+      name: locale.export,
+      icon: '<span class="ag-icon ag-icon-save" unselectable="on" role="presentation"></span>',
+      action: () => {
+        api.exportDataAsExcel();
+      },
+    };
+    defultMenu = defultMenu.length > 0 ? [...defultMenu, exportItem] : [exportItem];
     if (suppressRightClickSelected) {
       defultMenu.push({
         name: locale.exportSelected,
