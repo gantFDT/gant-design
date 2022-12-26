@@ -19,7 +19,7 @@ interface HeaderIF {
   num?: number;
   prefixCls?: string;
   size?: 'small' | 'large' | 'default';
-  [props: string]: any;
+  suppressMap?: boolean;
 }
 
 //大小配置
@@ -95,6 +95,7 @@ const Header = (headerProps: HeaderIF) => {
     style = {},
     className,
     size = 'small',
+    suppressMap = true,
     ...restProps
   } = props;
   const [tools, setTools] = useState([]);
@@ -104,8 +105,8 @@ const Header = (headerProps: HeaderIF) => {
   const leftRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (_.isEmpty(extra)) {
-      return;
+    if (_.isEmpty(extra) || suppressMap) {
+      return () => {};
     }
     let toolsCollection = React.Children.toArray(extra);
     let toolsArr = [];
@@ -204,7 +205,10 @@ const Header = (headerProps: HeaderIF) => {
         </div>
         <div className={getPrefixCls('overflow-tool-outer')}>
           <div className={getPrefixCls('overflow-tool-inner')}>
-            {extra && <ExtraContent tools={tools} prefixCls={prefixCls} width={toolWidth} />}
+            {extra && !suppressMap && (
+              <ExtraContent tools={tools} prefixCls={prefixCls} width={toolWidth} />
+            )}
+            {extra}
           </div>
         </div>
       </div>
@@ -212,5 +216,5 @@ const Header = (headerProps: HeaderIF) => {
   );
 };
 
-export {setGlobalConfig} from './utils'
+export { setGlobalConfig } from './utils';
 export default Header;
