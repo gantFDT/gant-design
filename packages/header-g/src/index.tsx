@@ -208,7 +208,8 @@ const Header = (headerProps: HeaderIF) => {
             {extra && !suppressMap && (
               <ExtraContent tools={tools} prefixCls={prefixCls} width={toolWidth} />
             )}
-            {extra}
+            {suppressMap&&<div className={`${prefixCls}-extra-tools`}>{extra}</div>}
+            
           </div>
         </div>
       </div>
