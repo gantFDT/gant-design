@@ -1,6 +1,6 @@
 {
     "name": "schema-form-g",
-    "version": "0.1.121",
+    "version": "0.1.120",
     "description": "gantd schemaform",
     "main": "lib/index.js",
     "scripts": {},

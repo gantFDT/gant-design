@@ -28,6 +28,7 @@ class SchemaForm extends React.Component<Props, { schemaCount: number }> {
     frameworkComponents: {},
   };
 
+  
   /**收集所有子级节点的初始数据 */
   initialValueMap = new Map();
   constructor(props) {
