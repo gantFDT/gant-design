@@ -23,6 +23,7 @@ export const sizeDefinitions = {
     default: 12,
     large: 14,
   },
+  
   rowHeight: {
     small: sizeNumber.small,
     default: sizeNumber.default,
