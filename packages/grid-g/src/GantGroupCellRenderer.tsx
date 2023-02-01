@@ -130,7 +130,7 @@ export default memo(
           ></span>
         );
       });
-    }, [node, hasChildren, showFolder, rowHeight]);
+    }, [node, node.lastChild, hasChildren, showFolder, rowHeight]);
     function dataChange(params) {
       if (isEqualObj(data, node.data)) return;
       const newState = getTreeDataInfo(node);
