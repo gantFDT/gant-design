@@ -282,8 +282,8 @@ export default class GridManage {
     this.agGridApi.forEachNode(node => {
       if (node.data) gridDataSource.push(node.data);
     });
-    if (isEqual(dataSource, gridDataSource) || isEqual(dataSource, this.agGridConfig.dataSource))
-      return this.agGridApi.setRowData(dataSource);
+    // if (isEqual(dataSource, gridDataSource) || isEqual(dataSource, this.agGridConfig.dataSource))
+    //   return this.agGridApi.setRowData(dataSource);
     this.reset({
       dataSource: dataSource,
     });
