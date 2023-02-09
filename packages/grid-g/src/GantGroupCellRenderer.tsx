@@ -148,7 +148,7 @@ export default memo(
       node.addEventListener(RowNode.EVENT_ALL_CHILDREN_COUNT_CHANGED, childrenCountChangedCallback);
       node.addEventListener(RowNode.EVENT_ROW_INDEX_CHANGED, rowIndexChanged);
       node.addEventListener(RowNode.EVENT_HEIGHT_CHANGED, onRowHeightChange);
-      // node.addEventListener(RowNode.EVENT_DATA_CHANGED, dataChange);
+      node.addEventListener(RowNode.EVENT_LAST_CHILD_CHANGED, childrenCountChangedCallback); 
       return () => {
         if (eContracted.current) {
           eContracted.current.removeEventListener('click', onExpend);
