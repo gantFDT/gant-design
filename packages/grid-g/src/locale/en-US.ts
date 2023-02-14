@@ -81,10 +81,10 @@ export default {
   expandAll: 'Open-em-up',
   collapseAll: 'Close-em-up',
   toolPanel: 'Tool Panel',
-  export: 'Exporto',
-  csvExport: 'CSV Exportp',
-  excelExport: 'Excel Exporto (.xlsx)',
-  excelXmlExport: 'Excel Exporto (.xml)',
+  export: 'Export',
+  csvExport: 'CSV Export',
+  excelExport: 'Excel Export (.xlsx)',
+  excelXmlExport: 'Excel Export (.xml)',
 
   // enterprise menu (charts)
   pivotChartAndPivotMode: 'Pivot Chart & Pivot Mode',
