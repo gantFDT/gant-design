@@ -1,7 +1,6 @@
 import React from 'react';
 import { WrappedFormUtils } from 'antd/es/form/Form';
-import { get, isEqual, isPlainObject, intersection, last, cloneDeep, isEmpty } from 'lodash';
-import moment from 'moment';
+import { get, isEqual, isPlainObject, intersection, last, cloneDeep, isEmpty, hasIn } from 'lodash';
 import { getKey } from './utils';
 import {
   compose,
@@ -33,28 +32,23 @@ export type Inner = Props & {
 
 const objectToPath = (obj: object, schema): Array<string> => {
   const paths: Array<string> = [];
-
-  const inner = (obj: object, parentKey = ''): void => {
-    Object.keys(obj).forEach(k => {
+  const inner = (schema, parentKey = ''): void => {
+    Object.keys(schema.propertyType).forEach(k => {
       const combineKey = parentKey ? parentKey + '.' + k : k;
-
-      const value = obj[k];
+      if (!hasIn(obj, combineKey)) return;
+      const value = get(obj, combineKey);
       if (
         value &&
         isPlainObject(value) &&
-        get(
-          schema,
-          `propertyType.${combineKey.split('.').join('.propertyType.')}.type` === 'object',
-        ) &&
-        !moment.isMoment(value)
+        get(schema, `propertyType.${k}.type`) === 'object'
       ) {
-        inner(value, combineKey);
+        inner(get(schema, `propertyType.${k}`), combineKey);
       } else {
         paths.push(combineKey);
       }
     });
   };
-  inner(obj);
+  inner(schema);
   return paths;
 };
 
@@ -84,7 +78,6 @@ export const findDependencies = (
     const changedSchema = [];
     const { dependencies = [], onDependenciesChange, type, ...restSchema } = subSchema;
     if (type !== Types.object) {
-      const changeKeys = Object.keys(changedValueObject);
       if (
         get(dependencies, 'length') &&
         get(intersection(dependencies, changeKeys), 'length') &&
