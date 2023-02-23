@@ -690,17 +690,20 @@ export default class GridManage {
         item => getRowNodeId(get(node, 'data')) === getRowNodeId(get(item, 'data')),
       );
       if (removeIndex >= 0) return;
+      const addIndex = findIndex(add, item => item.dataNumber === index);
       const updateIndex = findIndex(update, item => item.dataNumber === index);
       const { _rowType, _rowData, _rowCut, _rowError, treeDataPath, ...data } = get(
         node,
         'data',
         {},
       );
-      if (updateIndex >= 0) {
+      if (updateIndex >= 0 || addIndex > -1) {
         const mergeData = {};
         assignKeys.map(item => {
           mergeData[item] = data[item];
         });
+        if (addIndex > -1 && updateIndex < 0)
+          return dataSource.push({ ...add[addIndex], ...mergeData });
         notAssignKeys.map(key => {
           mergeData[key] = get(update, `[${updateIndex}].${key}`);
         });

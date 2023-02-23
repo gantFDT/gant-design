@@ -82,6 +82,7 @@ export default function SchemaForm(props: SchemaFormProps) {
 		const pathNameArray = pathName ? pathName.split('.') : []
 		const id = pathNameArray[pathNameArray.length - 1]
 		const containerColor = getBackgroundColor(backgroundColor, pathNameArray.length)
+	
 		return <div className={classnames(`${prefixCls}-schemaCard`, filedEdit === EditStatus.EDIT && `${prefixCls}-showRequiredMark`, className)}
 			key={pathName}
 			style={{ backgroundColor: containerColor, padding: padding, ...style, }}>
