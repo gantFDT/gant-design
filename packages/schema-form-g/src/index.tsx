@@ -110,6 +110,7 @@ class SchemaForm extends React.Component<Props, { schemaCount: number }> {
     } = this.props;
     setFieldsValue(data);
   };
+  
   @bind()
   collectInitialValue (name, initialValue)  {
     const { schemaCount } = this.state;

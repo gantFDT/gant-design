@@ -668,6 +668,7 @@ export default class GridManage {
       }
     } as any);
     return data;
+    
   }
   //批量更新数据 返回更新后的gird数据
   batchUpdateDataSource(
