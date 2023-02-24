@@ -136,6 +136,9 @@ export default WrapperComponent =>
           },
           getValue: () => {
             let nodeValue = get(node, `data.${field}`);
+            nodeValue = valueGetter
+              ? valueGetter({ ...props, node: node, data: node.data })
+              : nodeValue;
             const value = initValueFormatter
               ? initValueFormatter({
                   ...props,

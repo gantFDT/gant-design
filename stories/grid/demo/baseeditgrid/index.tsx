@@ -34,6 +34,9 @@ const columns: Columns[] = [
     title: '英文名称',
     cellRenderer: 'gantGroupCellRenderer',
     filter: 'agTextColumnFilter',
+    valueGetter: params => {
+      return params.data.user.name;
+    },
     editConfig: {
       component: Input,
       editable: true,
@@ -334,7 +337,7 @@ const BaiscEditGrid = () => {
         openEditSign
         getContextMenuItems={getContextMenuItems}
         size="default"
-        gantThemeClass='gant-grid-theme'
+        gantThemeClass="gant-grid-theme"
       />
     </>
   );
