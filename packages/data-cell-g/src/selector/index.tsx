@@ -61,7 +61,7 @@ const defaultprop = {
   readOnly: false,
   useStorage: true,
   useCache: true, // 是否开启选择器的缓存功能
-  optionLabel: null, // 用于接收外部传递的选项的label，一般应用于选择的项不再列表中
+  optionLabel: undefined, // 用于接收外部传递的选项的label，一般应用于选择的项不再列表中
   isFilter: true, // 过滤模式
   hideSelected: false,
   onSearch: _ => _,
@@ -201,7 +201,7 @@ const withSelector = compose(
       getLabel,
       optionLabel,
       useStorage,
-    }) => (value, index = 0) => {
+    }) => (value, index) => {
       let list = concat(dataList, storageList);
       // 启用缓存的情况下执行判断
       // fix: 解决当storageId恰好是value的前缀的情况
