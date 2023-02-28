@@ -1,16 +1,7 @@
 import { useRef, useEffect, useCallback, useMemo } from 'react';
 import { GridVariableRef, GridManager } from './interface';
-import { isEqual, uniq, map, get, set, cloneDeep } from 'lodash';
+import { isEqual, uniq, map, get, set, cloneDeep, last, first } from 'lodash';
 import { generateUuid } from '@util';
-import {
-  ColDef,
-  ColumnApi,
-  GridApi,
-  Column,
-  ValueGetterParams,
-  ValueFormatterParams,
-  RowNode,
-} from 'ag-grid-community';
 interface selectedHooksParams {
   dataSource?: any[];
   selectedRows?: any[];
@@ -139,15 +130,18 @@ export function useGridPaste(props: UseGridPasteProps) {
   const colEditableMap = useMemo(() => {
     const result = {};
     if (!columns) return result;
-    columns.forEach((colDef: any) => {
+    const inner = (colDef: any) => {
       if (colDef.children) {
-        colDef.children.forEach((col: any) => {
-          result[col.fieldName] = col.editConfig?.editable;
-        });
+        colDef.children.forEach(inner);
       } else {
-        result[colDef.fieldName] = colDef.editConfig?.editable;
+        if (colDef.editConfig?.suppressManagerPaste) {
+          result[colDef.fieldName] = false;
+        } else {
+          result[colDef.fieldName] = colDef.editConfig?.editable;
+        }
       }
-    });
+    }
+    columns.forEach(inner);
     return result;
   }, [columns]);
 
@@ -157,10 +151,14 @@ export function useGridPaste(props: UseGridPasteProps) {
       if (cellRanges) {
         const startColId = get(cellRanges, '0.columns.0.colId');
         const startRowIndex = get(cellRanges, '0.startRow.rowIndex');
+        const endRowIndex = get(cellRanges, '0.endRow.rowIndex');
+        const xLen = get(cellRanges, '0.columns.length');
 
         pastePosRef.current = {
           rowIdx: startRowIndex,
           colId: startColId,
+          yLen: Math.abs(endRowIndex - startRowIndex) + 1,
+          xLen
         };
       }
     }
@@ -175,7 +173,11 @@ export function useGridPaste(props: UseGridPasteProps) {
 
   const processDataFromClipboard = useCallback(params => {
     // 固定顶部行总是被复制问题
-    params.data = params.data.filter(row => row[0] !== '__delete');
+    let copyData = params.data.filter(row => first(row) !== '__delete');
+    // Excel复制来的总是多一行 [''] 数据
+    if (copyData.length > 1 && last(copyData).length === 1 && first(last(copyData)) === '') {
+      copyData = copyData.slice(0, -1);
+    }
 
     const pastePos = pastePosRef.current;
     if (pastePos.rowIdx !== undefined) {
@@ -184,6 +186,22 @@ export function useGridPaste(props: UseGridPasteProps) {
       let colIdx: number;
       const colIds: string[] = [];
       const colDefs: any[] = [];
+      
+      // 复制一个单元格数据，粘贴到多个单元格
+      if (copyData.length === 1 && first(copyData).length === 1) {
+        const copyValue = first(first(copyData));
+        copyData = [];
+        const { xLen, yLen } = pastePos;
+
+        for (let yIdx = 0; yIdx < yLen; yIdx++) {
+          const copyRow = [];
+          for (let xIdx = 0; xIdx < xLen; xIdx++) {
+            copyRow.push(copyValue);
+          }
+          copyData.push(copyRow);
+        }
+      }
+
       gridManager.agGridApi.getColumnDefs().forEach((colDef: any) => {
         if (colDef.children) {
           colDefs.push(...colDef.children);
@@ -195,16 +213,13 @@ export function useGridPaste(props: UseGridPasteProps) {
         if (colDef.colId === pastePos.colId) {
           colIdx = idx;
         }
-        if (idx >= colIdx && idx < colIdx + params.data[0].length) {
+        if (idx >= colIdx && idx < colIdx + first(copyData).length) {
           colIds.push(colDef.colId as string);
         }
       });
       const dataList = gridManager.getPureData();
-      params.data.forEach((vals: string[], idx: number) => {
-        // excel 粘贴总会多一行问题
-        if (vals.length === 1 && vals[0] === '') {
-          return;
-        }
+      // 复制多个单元格数据
+      copyData.forEach((vals: string[], idx: number) => {
         let newRow: any = cloneDeep(dataList[pastePos.rowIdx + idx]);
         const genColIdForEachFn = row => (colId, idx) => {
           try {
@@ -246,7 +261,10 @@ export function useGridPaste(props: UseGridPasteProps) {
 
   return {
     singleClickEdit: false, // 双击编辑，适配粘贴
-    suppressClipboardPaste: false,
+    suppressClipboardPaste: false, // 启用粘贴板
+    enableRangeSelection: true, // 开启区域选中
+    enableCellTextSelection: false, // 禁用文本选择
+
     onRangeSelectionChanged,
     processDataFromClipboard,
     processCellForClipboard
