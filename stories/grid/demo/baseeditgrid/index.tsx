@@ -66,6 +66,7 @@ const columns: Columns[] = [
       component: DatePicker,
       editable: true,
       signable: true,
+      suppressManagerPaste: true
     },
   },
   {
@@ -316,8 +317,8 @@ const BaiscEditGrid = () => {
         editable={editable}
         dataSource={dataSource}
         serialNumber
-        processCellFromClipboard={processCellFromClipboard}
-        processCellForClipboard={processCellForClipboard}
+        // processCellFromClipboard={processCellFromClipboard}
+        // processCellForClipboard={processCellForClipboard}
         rowSelection={{
           selectedRows,
           onSelect: onSelect,
@@ -342,11 +343,12 @@ const BaiscEditGrid = () => {
           onTagRemove,
         }}
         getContextMenuItems={getContextMenuItems}
-        enableCellTextSelection={false}
+        // enableCellTextSelection={false}
         // processDataFromClipboard={processDataFromClipboard}
-        onCellChanged={onCellChanged}
+        // onCellChanged={onCellChanged}
         //支持区域选中
-        enableRangeSelection
+        // enableRangeSelection
+        suppressManagerPaste={false}
       />
     </>
   );

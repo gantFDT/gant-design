@@ -847,7 +847,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
   }, [autoHeight, maxAutoHeight]);
 
   // 粘贴处理
-  const gridPasteProps = useGridPaste({ gridManager, columns, suppressManagerPaste, suppressCreateWhenPaste, context });
+  const gridPasteProps = useGridPaste({ gridManager, columns, suppressManagerPaste, suppressCreateWhenPaste });
 
   return (
     <LocaleReceiver
