@@ -1,16 +1,7 @@
 import { useRef, useEffect, useCallback, useMemo } from 'react';
 import { GridVariableRef, GridManager } from './interface';
-import { isEqual, uniq, map, get, set, cloneDeep } from 'lodash';
+import { isEqual, uniq, map, get, set, cloneDeep, last, first } from 'lodash';
 import { generateUuid } from '@util';
-import {
-  ColDef,
-  ColumnApi,
-  GridApi,
-  Column,
-  ValueGetterParams,
-  ValueFormatterParams,
-  RowNode,
-} from '@ag-grid-enterprise/all-modules';
 interface selectedHooksParams {
   dataSource?: any[];
   selectedRows?: any[];
@@ -125,45 +116,65 @@ export interface UseGridPasteProps {
   columns?: any[]; // 粘贴可编辑校验必填
   suppressCreateWhenPaste?: boolean; // 是否不允许新增数据
   gridManager: GridManager;
-  context: any;
 }
 export function useGridPaste(props: UseGridPasteProps) {
-  const { columns, gridManager, suppressCreateWhenPaste, suppressManagerPaste, context } = props;
-  if (suppressManagerPaste) return {}
-  const pastePosRef = useRef<any>({})
+  const { columns, gridManager, suppressCreateWhenPaste, suppressManagerPaste } = props;
+  if (suppressManagerPaste) return {};
+  const pastePosRef = useRef<any>({});
 
   // 粘贴可编辑校验
   const colEditableMap = useMemo(() => {
     const result = {};
     if (!columns) return result;
-    columns.forEach((colDef: any) => {
+    const inner = (colDef: any) => {
       if (colDef.children) {
-        colDef.children.forEach((col: any) => {
-          result[col.fieldName] = col.editConfig?.editable;
-        })
+        colDef.children.forEach(inner);
       } else {
-        result[colDef.fieldName] = colDef.editConfig?.editable;
+        if (colDef.editConfig?.suppressManagerPaste) {
+          result[colDef.fieldName] = false;
+        } else {
+          result[colDef.fieldName] = colDef.editConfig?.editable;
+        }
       }
-    });
+    }
+    columns.forEach(inner);
     return result;
-  }, [columns])
-  
-  const onRangeSelectionChanged = useCallback((params) => {
+  }, [columns]);
+
+  const onRangeSelectionChanged = useCallback(params => {
     if (params.finished) {
       const cellRanges = gridManager.agGridApi.getCellRanges();
       if (cellRanges) {
         const startColId = get(cellRanges, '0.columns.0.colId');
         const startRowIndex = get(cellRanges, '0.startRow.rowIndex');
+        const endRowIndex = get(cellRanges, '0.endRow.rowIndex');
+        const xLen = get(cellRanges, '0.columns.length');
 
         pastePosRef.current = {
           rowIdx: startRowIndex,
-          colId: startColId
-        }
+          colId: startColId,
+          yLen: Math.abs(endRowIndex - startRowIndex) + 1,
+          xLen
+        };
       }
     }
+  }, []);
+
+  const processCellForClipboard = useCallback((params) => {
+    if (params.node.rowPinned === 'top') {
+      return '__delete';
+    }
+    return params.value;
   }, [])
 
-  const processDataFromClipboard = useCallback((params) => {
+  const processDataFromClipboard = useCallback(params => {
+    // 固定顶部行总是被复制问题
+    let copyData = params.data.filter(row => first(row) !== '__delete');
+    // Excel复制来的总是多一行 [''] 数据
+    if (copyData.length > 1 && last(copyData).length === 1 && first(last(copyData)) === '') {
+      copyData = copyData.slice(0, -1);
+    }
+
     const pastePos = pastePosRef.current;
     if (pastePos.rowIdx !== undefined) {
       const modifiedRows: any[] = [];
@@ -171,67 +182,88 @@ export function useGridPaste(props: UseGridPasteProps) {
       let colIdx: number;
       const colIds: string[] = [];
       const colDefs: any[] = [];
+      
+      // 复制一个单元格数据，粘贴到多个单元格
+      if (copyData.length === 1 && first(copyData).length === 1) {
+        const copyValue = first(first(copyData));
+        copyData = [];
+        const { xLen, yLen } = pastePos;
+
+        for (let yIdx = 0; yIdx < yLen; yIdx++) {
+          const copyRow = [];
+          for (let xIdx = 0; xIdx < xLen; xIdx++) {
+            copyRow.push(copyValue);
+          }
+          copyData.push(copyRow);
+        }
+      }
+
       gridManager.agGridApi.getColumnDefs().forEach((colDef: any) => {
         if (colDef.children) {
-          colDefs.push(...colDef.children)
+          colDefs.push(...colDef.children);
         } else {
-          colDefs.push(colDef)
+          colDefs.push(colDef);
         }
       });
       colDefs.forEach((colDef: any, idx) => {
         if (colDef.colId === pastePos.colId) {
           colIdx = idx;
         }
-        if (idx >= colIdx && idx < colIdx + params.data[0].length) {
-          colIds.push(colDef.colId as string)
+        if (idx >= colIdx && idx < colIdx + first(copyData).length) {
+          colIds.push(colDef.colId as string);
         }
-      })
+      });
       const dataList = gridManager.getPureData();
-      params.data.forEach((vals: string[], idx: number) => {
-        // excel 粘贴总会多一行问题
-        if (vals.length === 1 && vals[0] === '') {
-          return;
-        }
+      // 复制多个单元格数据
+      copyData.forEach((vals: string[], idx: number) => {
         let newRow: any = cloneDeep(dataList[pastePos.rowIdx + idx]);
-        const genColIdForEachFn = (row) => (colId, idx) => {
+        const genColIdForEachFn = row => (colId, idx) => {
           try {
-            const editable = typeof colEditableMap[colId] === 'function'
-              ? colEditableMap[colId](row, {
-                  context,
-                  node: gridManager.agGridApi.getRowNode(row[gridManager.rowkey as string || 'id']),
-                  data: row
-                })
-              : colEditableMap[colId];
+            const editable =
+              typeof colEditableMap[colId] === 'function'
+                ? colEditableMap[colId](row, {
+                    context: params.context,
+                    node: gridManager.agGridApi.getRowNode(
+                      row[(gridManager.rowkey as string) || 'id'],
+                    ),
+                    data: row,
+                  })
+                : colEditableMap[colId];
             if (editable) {
               set(row, colId, vals[idx]);
             }
           } catch (error) {
-            console.warn('Editable兼容性错误，', colEditableMap[colId])
+            console.warn('Editable兼容性错误，', colEditableMap[colId]);
           }
-        }
+        };
         if (newRow) {
-          colIds.forEach(genColIdForEachFn(newRow))
+          colIds.forEach(genColIdForEachFn(newRow));
           modifiedRows.push(newRow);
         } else {
           newRow = {
-            [gridManager.rowkey as string || 'id']: 'N_' + generateUuid()
-          }
-          colIds.forEach(genColIdForEachFn(newRow))
-          addedRows.push(newRow)
+            [(gridManager.rowkey as string) || 'id']: 'N_' + generateUuid(),
+          };
+          colIds.forEach(genColIdForEachFn(newRow));
+          addedRows.push(newRow);
         }
-      })
+      });
       gridManager.modify(modifiedRows);
       if (!suppressCreateWhenPaste) {
         gridManager.create(addedRows);
       }
     }
     return null;
-  }, [])
+  }, []);
 
   return {
     singleClickEdit: false, // 双击编辑，适配粘贴
-    suppressClipboardPaste: false,
+    suppressClipboardPaste: false, // 启用粘贴板
+    enableRangeSelection: true, // 开启区域选中
+    enableCellTextSelection: false, // 禁用文本选择
+    suppressCopyRowsToClipboard: true, // 禁用选中单个单元格是复制整行数据
+
     onRangeSelectionChanged,
-    processDataFromClipboard
-  }
+    processDataFromClipboard,
+    processCellForClipboard
+  };
 }
