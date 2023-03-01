@@ -37,11 +37,7 @@ const objectToPath = (obj: object, schema): Array<string> => {
       const combineKey = parentKey ? parentKey + '.' + k : k;
       if (!hasIn(obj, combineKey)) return;
       const value = get(obj, combineKey);
-      if (
-        value &&
-        isPlainObject(value) &&
-        get(schema, `propertyType.${k}.type`) === 'object'
-      ) {
+      if (value && isPlainObject(value) && get(schema, `propertyType.${k}.type`) === 'object') {
         inner(get(schema, `propertyType.${k}`), combineKey);
       } else {
         paths.push(combineKey);
@@ -87,10 +83,14 @@ export const findDependencies = (
           if (changeKeys.includes(deKey)) return get(changedValueObject, deKey);
           return form.getFieldValue(deKey);
         });
-        const mergeSchema = onDependenciesChange(dependenciesValues, cloneDeep(restSchema), {
-          ...form,
-          setFieldsValue,
-        });
+        const mergeSchema = onDependenciesChange(
+          dependenciesValues,
+          cloneDeep({ ...restSchema, dependencies }),
+          {
+            ...form,
+            setFieldsValue,
+          },
+        );
         changedSchema.push(
           Promise.resolve(mergeSchema).then(newSubSchema => ({
             key: schemaKey,
