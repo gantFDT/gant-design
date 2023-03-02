@@ -28,10 +28,9 @@ class SchemaForm extends React.Component<Props, { schemaCount: number }> {
     frameworkComponents: {},
   };
 
-
   /**收集所有子级节点的初始数据 */
   initialValueMap = new Map();
-  
+
   constructor(props) {
     super(props);
     const { schema } = props;
@@ -110,15 +109,15 @@ class SchemaForm extends React.Component<Props, { schemaCount: number }> {
     } = this.props;
     setFieldsValue(data);
   };
-  
+
   @bind()
-  collectInitialValue (name, initialValue)  {
+  collectInitialValue(name, initialValue) {
     const { schemaCount } = this.state;
     this.initialValueMap.set(name, initialValue);
     if (this.initialValueMap.size === schemaCount) {
       this.resetDependencies(init => ![null, undefined].includes(init));
     }
-  };
+  }
   @bind()
   onResize(width: number, height: number) {
     const { onSizeChange } = this.props;
@@ -197,7 +196,9 @@ export default compose(
   Form.create<Inner>({
     onValuesChange: (props, changedValue, allValues) => {
       const { schema, form, mapSubSchema } = props;
-      findDependencies(changedValue, schema, mapSubSchema, form);
+      setTimeout(() => {
+        findDependencies(changedValue, schema, mapSubSchema, form);
+      }, 300);
       // props.onChange && props.onChange(changedValue, allValues)
       // 因为有findDependencies的存在, 导致了可能会存在allValues不准确的问题
       // 在这里，异步更新值的组件不会有问题，因为其他组件的值都已经更新
