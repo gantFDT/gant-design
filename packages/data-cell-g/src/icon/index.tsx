@@ -10,8 +10,7 @@ import { withEdit } from '../compose';
 import Input from '../input';
 import EditStatus from '../edit-status';
 import { WithEditInProps } from '../with-edit';
-
-const tr = a => a;
+import Receiver from './locale/Receiver';
 
 const { getOutLine, updateFromIconfontCN, Ant } = Icon;
 const outline = getOutLine();
@@ -137,66 +136,70 @@ const IconHouse: React.FC<IconHouseProps<string>> = ({
   );
 
   return (
-    <>
-      <div className={classnames('gant-icon-select', size)} onClick={toggleVisible}>
-        {currentId ? (
-          <Icon type={currentId} title={tr('点击切换')} perfix={perfix} {...props} />
-        ) : (
-          <span className={prefixCls + '-btn'}>{tr('点击选择')}</span>
-        )}
-      </div>
-      <Drawer
-        width={visible ? 500 : 0}
-        title={tr('请选择图标')}
-        destroyOnClose
-        placement="right"
-        onClose={toggleVisible}
-        visible={visible}
-        bodyStyle={bodyStyle}
-        className={drawerClassname}
-      >
-        <div className={classnames(prefixCls + '-search')}>
-          <Radio.Group value={iconType} onChange={handleTypeChange}>
-            {iconTypes.map(type => (
-              <Radio.Button key={type} value={type}>
-                {type}
-              </Radio.Button>
-            ))}
-          </Radio.Group>
-          <div style={{ flex: 1, marginLeft: 10 }}>
-            <Input
-              edit={EditStatus.EDIT}
-              value={text}
-              onChange={settext}
-              placeholder={tr('搜索')}
-              allowClear
-            />
+    <Receiver>
+      {
+        locale => <>
+          <div className={classnames('gant-icon-select', size)} onClick={toggleVisible}>
+            {currentId ? (
+              <Icon type={currentId} title={locale.clickToggle} perfix={perfix} {...props} />
+            ) : (
+              <span className={prefixCls + '-btn'}>{locale.clickSelect}</span>
+            )}
           </div>
-        </div>
-        <div className={classnames(prefixCls + '-scroll')}>
-          {iconsWithFilter.length ? null : (
-            <Empty
-              image={Empty.PRESENTED_IMAGE_SIMPLE}
-              description={tr('没有匹配图标')}
-              style={{ margin: '30px auto 0' }}
-            />
-          )}
-          <div className={classnames(prefixCls + '-content')}>
-            {iconsWithFilter.map(id => (
-              <div
-                className={prefixCls + '-content-item'}
-                title={id}
-                key={id}
-                onClick={() => onSelectIcon(id)}
-              >
-                <Icon perfix={perfix} type={id} className={prefixCls + '-content-item-iconitem'} />
-                <div style={{ width: '100%' }}>{id}</div>
+          <Drawer
+            width={visible ? 500 : 0}
+            title={locale.pleaseSelect}
+            destroyOnClose
+            placement="right"
+            onClose={toggleVisible}
+            visible={visible}
+            bodyStyle={bodyStyle}
+            className={drawerClassname}
+          >
+            <div className={classnames(prefixCls + '-search')}>
+              <Radio.Group value={iconType} onChange={handleTypeChange}>
+                {iconTypes.map(type => (
+                  <Radio.Button key={type} value={type}>
+                    {type}
+                  </Radio.Button>
+                ))}
+              </Radio.Group>
+              <div style={{ flex: 1, marginLeft: 10 }}>
+                <Input
+                  edit={EditStatus.EDIT}
+                  value={text}
+                  onChange={settext}
+                  placeholder={locale.search}
+                  allowClear
+                />
               </div>
-            ))}
-          </div>
-        </div>
-      </Drawer>
-    </>
+            </div>
+            <div className={classnames(prefixCls + '-scroll')}>
+              {iconsWithFilter.length ? null : (
+                <Empty
+                  image={Empty.PRESENTED_IMAGE_SIMPLE}
+                  description={locale.noMatch}
+                  style={{ margin: '30px auto 0' }}
+                />
+              )}
+              <div className={classnames(prefixCls + '-content')}>
+                {iconsWithFilter.map(id => (
+                  <div
+                    className={prefixCls + '-content-item'}
+                    title={id}
+                    key={id}
+                    onClick={() => onSelectIcon(id)}
+                  >
+                    <Icon perfix={perfix} type={id} className={prefixCls + '-content-item-iconitem'} />
+                    <div style={{ width: '100%' }}>{id}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Drawer>
+        </>
+      }
+    </Receiver>
   );
 };
 
