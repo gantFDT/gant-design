@@ -126,8 +126,9 @@ type SelectorInnerProps<T, R> = ProtoExtends<
     forceUpdateStorageList(): void;
     reg: RegExp;
     addonAfter: React.ReactElement;
-    renderList: React.ReactElement[];
     
+    renderList: React.ReactElement[];
+
     storageToReal: <T>(v: T) => T;
     isMultiple: boolean;
     wrapperRef?: any;
