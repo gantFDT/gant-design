@@ -23,6 +23,5 @@
     "dependencies": {
         "antd": "^3.26.5",
         "react": "^16.12.0"
-    },
-    "gitHead": "d00ff98a718b0b8f4356ac9e709a6ca07a9eea78"
+    }
 }
