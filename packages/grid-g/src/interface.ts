@@ -147,6 +147,8 @@ export interface Columns<T extends {} = {}> extends ColDef {
   filter?: Filter | string;
   /**是否隐藏 */
   hide?: boolean;
+  /**当前列是否不允许导出 */
+  suspressExport?: boolean;
   /**编辑时配置 */
   editConfig?: EditConfig<T>;
   /**固定列 */

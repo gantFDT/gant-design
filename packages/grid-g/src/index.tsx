@@ -680,8 +680,9 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
       columnState.map(item => {
         const field = get(item, 'colId');
         const hide = get(item, 'hide');
+        const suspressExport = get(item, 'suspressExport');
         if (field !== 'defalutSelection' && field !== 'g-index') {
-          if (!exportHiddenFields && hide) return;
+          if ((!exportHiddenFields && hide) || suspressExport) return;
           arr.push(field);
         }
       });
