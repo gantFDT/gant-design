@@ -263,6 +263,8 @@ export interface Props<T extends any> {
   createConfig?: CreateConfig;
   //隐藏右键菜单里的导出按钮
   hideMenuItemExport?: boolean;
+  //导出时，排除指定列
+  exportExcludeColumns?:string[];
   //是否导出隐藏字段
   exportHiddenFields?: boolean;
   //隐藏右键菜单的收缩展开按钮

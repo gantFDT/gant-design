@@ -15,7 +15,6 @@ import {
   RowNode,
   RowSelectedEvent,
   SelectionChangedEvent,
-  SuppressKeyboardEventParams,
   ColumnEverythingChangedEvent,
 } from 'ag-grid-community';
 import 'ag-grid-community/dist/styles/ag-grid.css';
@@ -32,7 +31,7 @@ import _, {
   isEmpty,
   isEqual,
   isObject,
-  merge,
+  remove,
   cloneDeep,
   omit,
   debounce,
@@ -234,6 +233,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     suppressManagerPaste,
     suppressCreateWhenPaste,
     suppressExcelExport,
+    exportExcludeColumns,
     ...orignProps
   } = props;
 
@@ -741,7 +741,10 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
   //导出设置
   const exportParams = useMemo(() => {
     return {
-      columnKeys: exportColumns,
+      columnKeys: remove(exportColumns, (name: string) => {
+        if (!exportExcludeColumns) return false;
+        return (exportExcludeColumns as string[])?.includes(name);
+      }),
       allColumns: false,
       columnGroups: true,
       ...globalConfig.defaultExportParams,
