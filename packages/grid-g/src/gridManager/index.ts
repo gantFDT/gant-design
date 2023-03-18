@@ -668,7 +668,6 @@ export default class GridManage {
       }
     } as any);
     return data;
-    
   }
   //批量更新数据 返回更新后的gird数据
   batchUpdateDataSource(
@@ -691,6 +690,11 @@ export default class GridManage {
         item => getRowNodeId(get(node, 'data')) === getRowNodeId(get(item, 'data')),
       );
       if (removeIndex >= 0) return;
+
+      const mergeData = {};
+      assignKeys.map(item => {
+        set(mergeData, item, get(data, item));
+      });
       const addIndex = findIndex(add, item => item.dataNumber === index);
       const updateIndex = findIndex(modify, item => item.dataNumber === index);
       const { _rowType, _rowData, _rowCut, _rowError, treeDataPath, ...data } = get(
@@ -699,21 +703,16 @@ export default class GridManage {
         {},
       );
       if (updateIndex >= 0 || addIndex > -1) {
-        const mergeData = {};
-        assignKeys.map(item => {
-          mergeData[item] = data[item];
-        });
         if (addIndex > -1 && updateIndex < 0)
-          return dataSource.push({ ...add[addIndex], ...mergeData });
+          return dataSource.push(merge(add[addIndex], mergeData));
         notAssignKeys.map(key => {
-          mergeData[key] = get(update, `[${updateIndex}].${key}`);
+          set(mergeData, key, get(update, `[${updateIndex}].${key}`));
         });
         const updateItem = isMerge
-          ? { ...data, ...update[updateIndex], ...mergeData }
-          : { ...update[updateIndex], ...mergeData };
+          ? merge(data, update[updateIndex], mergeData)
+          : merge(update[updateIndex], mergeData);
         return dataSource.push(updateItem);
       }
-      dataSource.push(data);
     } as any);
     return dataSource;
   }
