@@ -740,11 +740,13 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
 
   //导出设置
   const exportParams = useMemo(() => {
+    const cloneColumns = cloneDeep(exportColumns);
+    remove(cloneColumns, (name: string) => {
+      if (!exportExcludeColumns) return false;
+      return (exportExcludeColumns as string[])?.includes(name);
+    });
     return {
-      columnKeys: remove(exportColumns, (name: string) => {
-        if (!exportExcludeColumns) return false;
-        return (exportExcludeColumns as string[])?.includes(name);
-      }),
+      columnKeys: cloneColumns,
       allColumns: false,
       columnGroups: true,
       ...globalConfig.defaultExportParams,
