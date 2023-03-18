@@ -691,10 +691,6 @@ export default class GridManage {
       );
       if (removeIndex >= 0) return;
 
-      const mergeData = {};
-      assignKeys.map(item => {
-        set(mergeData, item, get(data, item));
-      });
       const addIndex = findIndex(add, item => item.dataNumber === index);
       const updateIndex = findIndex(modify, item => item.dataNumber === index);
       const { _rowType, _rowData, _rowCut, _rowError, treeDataPath, ...data } = get(
@@ -702,6 +698,10 @@ export default class GridManage {
         'data',
         {},
       );
+      const mergeData = {};
+      assignKeys.map(item => {
+        set(mergeData, item, get(data, item));
+      });
       if (updateIndex >= 0 || addIndex > -1) {
         if (addIndex > -1 && updateIndex < 0)
           return dataSource.push(merge(add[addIndex], mergeData));
