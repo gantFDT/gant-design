@@ -713,7 +713,9 @@ export default class GridManage {
           : merge(update[updateIndex], mergeData);
         return dataSource.push(updateItem);
       }
+      dataSource.push(data);
     } as any);
+
     return dataSource;
   }
   // LocalStorage columns
