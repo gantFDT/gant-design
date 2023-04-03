@@ -57,6 +57,9 @@ export default class GridManage {
   public afterCancel: Function;
   setingLoading: boolean = false;
   clearloding: boolean;
+  constructor(event: Partial<AgGridConfig>) {
+    this.agGridConfig = { ...event, ...this.agGridConfig };
+  }
   get loading() {
     return this.setingLoading;
   }
@@ -251,7 +254,11 @@ export default class GridManage {
         removeData = oldRowData;
         addData = newRowData;
       }
-
+      if (this.agGridConfig?.pasteToGridManager) {
+        this.remove(removeData.map(item => getRowNodeId(item)));
+        this.create(addData, getRowNodeId(node.data), !up);
+        return;
+      }
       this.agGridApi.applyTransactionAsync({ remove: removeData }, params => {
         const rowData = this.getRowData();
         const newDataSource = replaceRowData({
@@ -703,8 +710,7 @@ export default class GridManage {
         set(mergeData, item, get(data, item));
       });
       if (updateIndex >= 0) {
-        if (addIndex > -1)
-          return dataSource.push(merge(add[addIndex], mergeData));
+        if (addIndex > -1) return dataSource.push(merge(add[addIndex], mergeData));
         notAssignKeys.map(key => {
           set(mergeData, key, get(update, `[${updateIndex}].${key}`));
         });

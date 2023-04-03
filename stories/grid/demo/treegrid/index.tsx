@@ -97,7 +97,7 @@ const dataSource = [
   },
   {
     id: '2-3',
-    path: ['2','2-3'],
+    path: ['2', '2-3'],
     partName: '变速器3',
     partNum: 'P000002',
     zh: '变速器',
@@ -105,7 +105,7 @@ const dataSource = [
   },
   {
     id: '2-1',
-    path: ['2','2-1'],
+    path: ['2', '2-1'],
     partName: '变速器1',
     partNum: 'P000002',
     zh: '变速器',
@@ -113,7 +113,7 @@ const dataSource = [
   },
   {
     id: '2-2',
-    path: ['2','2-2'],
+    path: ['2', '2-2'],
     partName: '变速器2',
     partNum: 'P000002',
     zh: '变速器',
@@ -129,7 +129,7 @@ const dataSource = [
   },
   {
     id: '3-1',
-    path: ['3','3-1'],
+    path: ['3', '3-1'],
     partName: '发动机-1',
     partNum: 'S000002',
     zh: '发动机',
@@ -137,7 +137,7 @@ const dataSource = [
   },
   {
     id: '3-2',
-    path: ['3','3-2'],
+    path: ['3', '3-2'],
     partName: '发动机-2',
     partNum: 'S000002',
     zh: '发动机',
@@ -222,7 +222,7 @@ const TreeGrid = () => {
     const newData = {
       id,
       path: [...path, id],
-      partName:gridManagerRef.current.getRowData().length
+      partName: gridManagerRef.current.getRowData().length,
     };
     gridManagerRef.current.create(newData, selectedRows[0].id);
   }, []);
@@ -336,6 +336,13 @@ const TreeGrid = () => {
           selectedRows,
           onSelect,
         }}
+        createConfig={{
+          id: 'id',
+          path: 'path',
+          toPath: (parentPath: string[], data?: any) => [...parentPath, data.id],
+        }}
+        showCut
+        pasteToGridManager
         editable={editable}
         openEditSign
         treeData //开启树形模式

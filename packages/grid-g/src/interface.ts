@@ -264,7 +264,7 @@ export interface Props<T extends any> {
   //隐藏右键菜单里的导出按钮
   hideMenuItemExport?: boolean;
   //导出时，排除指定列
-  exportExcludeColumns?:string[];
+  exportExcludeColumns?: string[];
   //是否导出隐藏字段
   exportHiddenFields?: boolean;
   //隐藏右键菜单的收缩展开按钮
@@ -275,6 +275,7 @@ export interface Props<T extends any> {
   showMenuItemClearFilter?: boolean;
   //右键中【清空过滤】按钮的点击回调
   onMenuItemClearFilter?: () => void;
+  pasteToGridManager?: boolean;
   //右键菜单显示剪切粘贴按钮
   showCut?: ((params: GetContextMenuItemsParams) => boolean) | boolean;
   //右键菜单显示粘贴子项按钮
@@ -347,7 +348,7 @@ export interface Props<T extends any> {
   onColumnsChange?: (columns: ColDef[]) => void;
   //froceMode
   suppressManagerPaste?: boolean;
-   // 默认开启粘贴时创建数据
+  // 默认开启粘贴时创建数据
   suppressCreateWhenPaste?: boolean;
 }
 

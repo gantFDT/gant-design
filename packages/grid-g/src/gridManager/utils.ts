@@ -95,8 +95,12 @@ export const isEqualObj = (obj, obj2) => {
       _EqualObj = isEqualObj(value1, value2);
     } else {
       if (!(isEmptyObj(value1) && isEmptyObj(value2))) {
-        value2 = typeof value2 == 'number' ? value2 : value2 + '';
-        value1 = typeof value1 == 'number' ? value1 : value1 + '';
+        value2 = typeof value2 !== 'number' ? value2 : value2 + '';
+        value1 = typeof value1 !== 'number' ? value1 : value1 + '';
+        if (typeof value1 === 'boolean' || typeof value2 === 'boolean') {
+          value1 = !!value1;
+          value2 = !!value2;
+        }
         _EqualObj = isEqual(value2, value1);
       }
     }

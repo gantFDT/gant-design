@@ -175,6 +175,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     onRowsPaste,
     onRowsPasteEnd,
     showCut = false,
+    pasteToGridManager,
     onContextChangeRender,
     defaultExportParams,
     defaultJsonParams,
@@ -272,7 +273,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
 
   //实例化manager
   const gridManager = useMemo(() => {
-    return new GridManager();
+    return new GridManager({ pasteToGridManager });
   }, []);
 
   /**默认基本方法 */

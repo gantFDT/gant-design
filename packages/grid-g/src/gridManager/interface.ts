@@ -25,6 +25,7 @@ export interface AgGridConfig {
   gridKey?: string;
   multiLineVerify?: boolean;
   cloneDataSource?: boolean;
+  pasteToGridManager?: boolean;
 }
 export interface BatchUpdateDataSourceParams {
   add: any[];
