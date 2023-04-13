@@ -233,5 +233,7 @@ export default {
   cancelCut: 'cancel cut',
   exportJson: 'export json',
   importJson: 'import json',
-  exportSelected:'export selected'
+  exportSelected: 'export selected',
+  selectedData: 'selected Data',
+  clear: 'clear',
 };

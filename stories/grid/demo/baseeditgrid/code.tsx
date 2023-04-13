@@ -331,6 +331,7 @@ const BaiscEditGrid = () => {
           pageSize: pageInfo.pageSize,
           onChange: onPageChange,
         }}
+        suppressModelUpdateAfterUpdateTransaction
         // onCellEditChange={onCellEditingChange as any}
         rowBuffer={20}
         editChangeCallback={onEditChangeCallback}

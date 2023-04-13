@@ -237,4 +237,6 @@ export default {
   exportJson: '导出json',
   importJson: '导入json',
   exportSelected: '导出选中',
+  selectedData: '已选中数据',
+  clear: '清除',
 };

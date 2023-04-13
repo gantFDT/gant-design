@@ -17,6 +17,7 @@ interface SelectedGridProps {
   apiRef?: any;
   selectedBoxHeight?: number;
   selectedBoxWidth?: number;
+  locale?: any;
 }
 export default memo(function SelectedGrid(props: SelectedGridProps) {
   const {
@@ -27,6 +28,7 @@ export default memo(function SelectedGrid(props: SelectedGridProps) {
     apiRef: gridApiRef,
     selectedBoxHeight,
     selectedBoxWidth,
+    locale,
   } = props;
   const [selectedRows, setSelectedRows] = useState([]);
   const apiRef = useRef<GridApi>();
@@ -68,10 +70,10 @@ export default memo(function SelectedGrid(props: SelectedGridProps) {
     return (
       <div className="gant-grid gant-grid-sm">
         <div className="gant-selected-agrid-title">
-          <p>已选中数据：</p>
+          <p>{locale.selectedData}：</p>
           <div>
             <Button disabled={selectedRows.length <= 0} onClick={onClearSelection} size="small">
-              清除
+              {locale.clear}
             </Button>
           </div>
         </div>
@@ -95,6 +97,7 @@ export default memo(function SelectedGrid(props: SelectedGridProps) {
               suppressMenu: true,
               resizable: true,
             }}
+            localeText={locale}
             suppressContextMenu
             suppressExcelExport
             suppressCsvExport

@@ -898,6 +898,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                         rowData={boxSelectedRows}
                         selectedBoxHeight={selectedBoxHeight}
                         selectedBoxWidth={selectedBoxWidth}
+                        locale={locale}
                       />
                     )}
                     <AgGridReact
