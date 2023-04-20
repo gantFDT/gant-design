@@ -59,6 +59,7 @@ export default memo(function ExtraContent({ width = 0, height = 0, tools, prefix
 			return setStartIndex(-1)
 		}
 	}, [toolsRef.current, width, tools])
+	
 	return (
 		<div className={`${prefixCls}-extra`}>
 			<div className={`${prefixCls}-extra-tools`} ref={ref} >
