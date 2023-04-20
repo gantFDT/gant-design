@@ -27,26 +27,26 @@ export const sizeDefinitions = {
   //组件高度
   height: {
     small: 30,
-    default: 40,
-    large: 50,
+    default: 52,
+    large: 62,
   },
   //标题高度
   title: {
     small: 12,
-    default: 15,
-    large: 18,
+    default: 14,
+    large: 16,
   },
   //短线宽度
   lineWidth: {
-    small: 3,
-    default: 4,
-    large: 5,
+    small: 2,
+    default: 2,
+    large: 4,
   },
   //短线高度
   lineHeight: {
-    small: 15,
-    default: 20,
-    large: 25,
+    small: 16,
+    default: 16,
+    large: 16,
   },
   //图标大小
   icon: {
@@ -54,27 +54,32 @@ export const sizeDefinitions = {
     default: 22,
     large: 24,
   },
+  marginLeft: {
+    small: 4,
+    default: 10,
+    large: 14,
+  },
   //number框
   num: {
     minWidth: {
       small: 16,
-      default: 22,
-      large: 24,
+      default: 18,
+      large: 20,
     },
     fontSize: {
       small: 12,
-      default: 15,
-      large: 18,
+      default: 14,
+      large: 16,
     },
     lineHeight: {
       small: 16,
-      default: 22,
-      large: 24,
+      default: 18,
+      large: 20,
     },
     height: {
       small: 16,
-      default: 22,
-      large: 24,
+      default: 18,
+      large: 20,
     },
   },
 };
@@ -198,7 +203,11 @@ const Header = (headerProps: HeaderIF) => {
           )}
           <div
             className={prefixCls + '-title'}
-            style={{ color: color, fontSize: sizeDefinitions.title[size] }}
+            style={{
+              color: color,
+              fontSize: sizeDefinitions.title[size],
+              marginLeft: sizeDefinitions.marginLeft[size],
+            }}
           >
             {title}
           </div>
@@ -208,7 +217,7 @@ const Header = (headerProps: HeaderIF) => {
             {extra && !suppressMap && (
               <ExtraContent tools={tools} prefixCls={prefixCls} width={toolWidth} />
             )}
-            {suppressMap&&<div className={`${prefixCls}-extra-tools`}>{extra}</div>}
+            {suppressMap && <div className={`${prefixCls}-extra-tools`}>{extra}</div>}
           </div>
         </div>
       </div>
