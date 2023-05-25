@@ -283,7 +283,7 @@ export interface Props<T extends any> {
   //复制行的回调
   onRowsCut?: (rows: RowNode[]) => boolean;
   //粘贴行的回调
-  onRowsPaste?: (rows: RowNode[], targetRow?: RowNode) => boolean;
+  onRowsPaste?: (rows: RowNode[], targetRow?: RowNode, dir?: 'top' | 'bottom' | 'inner') => boolean;
   //粘贴完成时的回调
   onRowsPasteEnd?: (data: any) => void;
   //隐藏已选择盒子

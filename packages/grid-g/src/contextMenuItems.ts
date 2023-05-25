@@ -246,7 +246,7 @@ export const gantGetcontextMenuItems = function(
           disabled: hasPaste,
           action: params => {
             const [rowNode] = selectedRowNodes;
-            const canPaste = onRowsPaste ? onRowsPaste(gridManager.cutRows, rowNode) : true;
+            const canPaste = onRowsPaste ? onRowsPaste(gridManager.cutRows, rowNode, 'top') : true;
             canPaste && gridManager.paste(rowNode);
           },
         },
@@ -255,7 +255,7 @@ export const gantGetcontextMenuItems = function(
           disabled: hasPaste,
           action: params => {
             const [rowNode] = selectedRowNodes;
-            const canPaste = onRowsPaste ? onRowsPaste(gridManager.cutRows, rowNode) : true;
+            const canPaste = onRowsPaste ? onRowsPaste(gridManager.cutRows, rowNode, 'bottom') : true;
             canPaste && gridManager.paste(rowNode, false);
           },
         },
@@ -267,7 +267,7 @@ export const gantGetcontextMenuItems = function(
         disabled: hasPaste,
         action: params => {
           const [rowNode] = selectedRowNodes;
-          const canPaste = onRowsPaste ? onRowsPaste(gridManager.cutRows, rowNode) : true;
+          const canPaste = onRowsPaste ? onRowsPaste(gridManager.cutRows, rowNode, 'inner') : true;
           canPaste && gridManager.paste(rowNode, false, true);
         },
       });
