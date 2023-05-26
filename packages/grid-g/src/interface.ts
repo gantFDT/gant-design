@@ -113,6 +113,7 @@ export type EditConfig<T> = {
   /**是否禁用该列粘贴，Grid属性suppressManagerPaste为false时生效 */
   suppressManagerPaste?: boolean;
 };
+
 export interface CreateConfig {
   id: string; // id对应字段名称
   path: string;
