@@ -7,6 +7,7 @@ import fr from './fr-FR';
 import ja from './ja-JP';
 import ru from './ru-RU';
 
+
 //参考antd的locale文件的定义规范
 const langs = {
   'zh-cn': zh,
