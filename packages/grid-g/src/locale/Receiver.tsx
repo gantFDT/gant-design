@@ -2,26 +2,39 @@ import React from 'react';
 import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
 import en from './en-US';
 import zh from './zh-CN';
+import de from './de-DE';
+import fr from './fr-FR';
+import ja from './ja-JP';
+import ru from './ru-RU';
+
+const langs = {
+  //保留旧的映射关系
+  en: en,
+  'zh-cn': zh,
+  //标准映射关系
+  'en-US': en,
+  'zh-CN': zh,
+  'de-DE': de,
+  'fr-FR': fr,
+  'ja-jp': ja,
+  'ru-RU': ru,
+};
 
 export interface LocaleInterface {
-    [key: string]: any;
+  [key: string]: any;
 }
 
 export interface Props {
-    children: (locale: LocaleInterface) => React.ReactNode;
+  children: (locale: LocaleInterface) => React.ReactNode;
 }
-
-const langs = {
-    'en': en,
-    'zh-cn': zh
-}
-
 
 export default (props: Props) => {
-    return <LocaleReceiver>
-        {(local, localeCode = 'zh-cn') => {
-            let locale = langs[localeCode] || langs['zh-cn']
-            return <>{props.children(locale)}</>
-        }}
+  return (
+    <LocaleReceiver>
+      {(local, localeCode = 'zh-cn') => {
+        let locale = langs[localeCode] || langs['zh-cn'];
+        return <>{props.children(locale)}</>;
+      }}
     </LocaleReceiver>
-}
+  );
+};
