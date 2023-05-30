@@ -10,6 +10,9 @@ export default {
   first: 'Первая',
   previous: 'Предыдущая',
   loadingOoo: 'Загрузка...',
+  exactNumber: 'Точное число',
+  items: 'Элементы',
+  exactSearch: 'Точный поиск',
 
   selectAll: 'Выбрать все',
   searchOoo: 'Поиск...',

@@ -11,6 +11,9 @@ export default {
   first: 'First',
   previous: 'Previous',
   loadingOoo: 'Loading...',
+  exactNumber: 'exactNumber',
+  items: 'items',
+  exactSearch: 'exactSearch',
 
   // for set filter
   selectAll: 'Select All',

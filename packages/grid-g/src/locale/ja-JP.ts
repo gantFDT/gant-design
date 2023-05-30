@@ -10,6 +10,9 @@ export default {
   first: '最初',
   previous: '前へ',
   loadingOoo: '読み込み中...',
+  exactNumber: '正確な数',
+  items: 'アイテム',
+  exactSearch: '正確な検索',
 
   // for set filter
   selectAll: 'すべて選択',

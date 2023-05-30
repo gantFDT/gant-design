@@ -12,6 +12,9 @@ export default {
   first: '第一',
   previous: '前',
   loadingOoo: '加载中...',
+  exactNumber: '精确数量',
+  items: '条目',
+  exactSearch: '精确查询',
 
   // for set filter
   selectAll: '全选',

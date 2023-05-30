@@ -11,6 +11,9 @@ export default {
   first: '처음',
   previous: '이전',
   loadingOoo: '로딩 중...',
+  exactNumber: '정확한 수',
+  items: '항목',
+  exactSearch: '정확한 검색',
 
   // for set filter
   selectAll: '전체 선택',

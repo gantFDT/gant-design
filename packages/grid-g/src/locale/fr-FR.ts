@@ -11,6 +11,9 @@ export default {
   first: 'Premier',
   previous: 'Précédent',
   loadingOoo: 'Chargement en cours...',
+  exactNumber: 'Nombre exact',
+  items: 'Articles',
+  exactSearch: 'Recherche exacte',
 
   // pour définir le filtre
   selectAll: 'Tout sélectionner',

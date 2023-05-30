@@ -7,17 +7,14 @@ import fr from './fr-FR';
 import ja from './ja-JP';
 import ru from './ru-RU';
 
+//参考antd的locale文件的定义规范
 const langs = {
-  //保留旧的映射关系
-  en: en,
   'zh-cn': zh,
-  //标准映射关系
-  'en-US': en,
-  'zh-CN': zh,
-  'de-DE': de,
-  'fr-FR': fr,
-  'ja-jp': ja,
-  'ru-RU': ru,
+  en: en,
+  de: de,
+  fr: fr,
+  ja: ja,
+  ru: ru,
 };
 
 export interface LocaleInterface {
