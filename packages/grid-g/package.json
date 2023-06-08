@@ -1,6 +1,6 @@
 {
   "name": "grid-g",
-  "version": "0.1.48",
+  "version": "0.1.49",
   "description": "gantd table",
   "main": "lib/index.tsx",
   "types": "lib/index.d.ts",
