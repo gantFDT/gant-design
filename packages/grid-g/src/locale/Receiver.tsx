@@ -6,6 +6,7 @@ import de from './de-DE';
 import fr from './fr-FR';
 import ja from './ja-JP';
 import ru from './ru-RU';
+import it from './it-IT';
 
 
 //参考antd的locale文件的定义规范
@@ -16,6 +17,7 @@ const langs = {
   fr: fr,
   ja: ja,
   ru: ru,
+  it: it,
 };
 
 export interface LocaleInterface {
