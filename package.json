@@ -30,6 +30,7 @@
     "compile:lib": "gulp lib",
     "build": "gulp && webpack -s public",
     "pub": "gulp && webpack && lerna publish",
+    "publish": "lerna publish",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md",
     "gitpush": "git push origin master && git push gitee master"
   },

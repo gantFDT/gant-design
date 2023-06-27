@@ -1,20 +1,14 @@
 import { EditStatus, Input } from '@data-cell';
 import { Col, Form } from 'antd';
-import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
+import Receiver from './locale/Receiver';
 import classnames from 'classnames';
 import { findIndex, get } from 'lodash';
 import React, { useCallback, useContext, useEffect, useMemo, forwardRef, memo } from 'react';
 import { FormContext } from './index';
 import { Schema } from './interface';
-import en from './locale/en-US';
-import zh from './locale/zh-CN';
 import { getFields } from './maps';
 import { getFieldItemSizeClass } from './utils';
 
-const langs = {
-  en: en,
-  'zh-cn': zh,
-};
 interface SchemaField extends Schema {
   isRequired?: boolean;
   edit: any;
@@ -102,9 +96,10 @@ const SchemaField = (props: SchemaField, ref: any) => {
   const requiredFinally = typeof required === 'boolean' ? required : isRequired;
   return (
     <Col {...colLayout}>
-      <LocaleReceiver>
-        {(local, localeCode = 'zh-cn') => {
-          let locale = langs[localeCode] || langs['zh-cn'];
+      <Receiver>
+        {locale => {
+          //非中文语言环境下，label和required之间需要有空格
+          const separator = locale.targetLang === 'zh-CN' ? '' : ' ';
           return (
             <Form.Item
               label={
@@ -130,12 +125,7 @@ const SchemaField = (props: SchemaField, ref: any) => {
                   rules: [
                     {
                       required: requiredFinally,
-                      message: (
-                        <>
-                          {title}
-                          {locale.required}
-                        </>
-                      ),
+                      message: <>{`${title}${separator}${locale.required}`}</>,
                     },
                     ...optionsRules,
                   ],
@@ -143,7 +133,7 @@ const SchemaField = (props: SchemaField, ref: any) => {
             </Form.Item>
           );
         }}
-      </LocaleReceiver>
+      </Receiver>
     </Col>
   );
 };

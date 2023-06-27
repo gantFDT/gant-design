@@ -23,7 +23,7 @@ import { AgGridReact, AgGridColumn } from 'ag-grid-react';
 import { LicenseManager } from 'ag-grid-enterprise';
 import 'ag-grid-enterprise';
 import { Spin } from 'antd';
-import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
+import Receiver from './locale/Receiver';
 import classnames from 'classnames';
 import _, {
   findIndex,
@@ -53,8 +53,6 @@ import GridManager from './gridManager';
 import { contextHooks, selectedHooks, useGridPaste } from './hooks';
 import { DataActions, GridProps, GridVariableRef, RowSelection, Size } from './interface';
 import key from './license';
-import en from './locale/en-US';
-import zh from './locale/zh-CN';
 import { getAllComponentsMaps, getGridConfig } from './maps';
 import GantPagination from './Pagination';
 import SelectedGrid from './SelectedGrid';
@@ -83,10 +81,6 @@ export { default as SideGridDetail } from './sidegriddetail';
 const DEFAULT_HEIGHT = 400;
 
 LicenseManager.setLicenseKey(key);
-const langs = {
-  en: en,
-  'zh-cn': zh,
-};
 
 export const GridContext = createContext<any>({});
 export const defaultProps = {
@@ -829,10 +823,9 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
   }, [localColumnsDefs]);
 
   return (
-    <LocaleReceiver
-      children={(local, localeCode = 'zh-cn') => {
-        let lang = langs[localeCode] || langs['zh-cn'];
-        const locale = { ...lang, ...customLocale };
+    <Receiver
+      children={defaultLocale => {
+        const locale = { ...defaultLocale, ...customLocale };
         const contextMenuItems = function(params: GetContextMenuItemsParams) {
           return gantGetcontextMenuItems(params, {
             downShift: shiftRef.current,
@@ -1023,7 +1016,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
           </Spin>
         );
       }}
-    ></LocaleReceiver>
+    />
   );
 };
 

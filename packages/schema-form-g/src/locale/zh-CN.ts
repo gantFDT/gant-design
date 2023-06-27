@@ -1,3 +1,4 @@
 export default {
-    required: '不能为空',
-}
+  targetLang: 'zh-CN',
+  required: '不能为空',
+};

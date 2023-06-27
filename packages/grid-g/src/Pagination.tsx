@@ -162,10 +162,20 @@ export default memo(function GantPagination(props: GantPaginationProps) {
         {addonAfter && <div>{addonAfter}</div>}
       </div>
       {mode === 'limit' && (
-        <>
-          <label style={{ marginLeft: 4 }}>精确查询：</label>
-          <Switch onChange={onSwitchChange} size="small" className="grid-pagination-mode-switch" />
-        </>
+        <Receiver>
+          {locale => (
+            <>
+              <label style={{ marginLeft: 4 }}>{`${locale.exactSearch}${
+                locale.targetLang === 'zh-CN' ? '：' : ':'
+              }`}</label>
+              <Switch
+                onChange={onSwitchChange}
+                size="small"
+                className="grid-pagination-mode-switch"
+              />
+            </>
+          )}
+        </Receiver>
       )}
     </div>
   );
@@ -192,15 +202,12 @@ function PaginationTotal(props: any) {
     return (
       <Receiver>
         {locale =>
-          locale.targetLang !== 'zh-CN' ? (
-            // 英文
-            <>{`${range[0]}-${range[1]} of ${propsTotal} items`}</>
-          ) : (
+          locale.targetLang === 'zh-CN' ? (
             // 中文
             <>
               {`第${range[0]} - ${range[1]}条，${propsTotal}+ `}
               <Tooltip
-                title={loading ? '加载中...' : '精确数量:' + total}
+                title={loading ? locale.loadingOoo : `${locale.exactNumber}:` + total}
                 onVisibleChange={visible => {
                   visible && onHover();
                 }}
@@ -213,6 +220,9 @@ function PaginationTotal(props: any) {
                 ></Button>
               </Tooltip>
             </>
+          ) : (
+            // 其他语言
+            <>{`${range[0]}-${range[1]} ${locale.of} ${propsTotal} ${locale.items}`}</>
           )
         }
       </Receiver>
@@ -221,10 +231,10 @@ function PaginationTotal(props: any) {
   return (
     <Receiver>
       {locale =>
-        locale.targetLang !== 'zh-CN' ? (
-          <>{`${range[0]}-${range[1]} of ${propsTotal} items`}</>
-        ) : (
+        locale.targetLang === 'zh-CN' ? (
           <>{`第${range[0]} - ${range[1]}条，共${propsTotal}条`}</>
+        ) : (
+          <>{`${range[0]}-${range[1]} ${locale.of} ${propsTotal} ${locale.items}`}</>
         )
       }
     </Receiver>
