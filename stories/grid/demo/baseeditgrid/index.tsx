@@ -294,6 +294,13 @@ const BaiscEditGrid = () => {
                 <Button size="small" icon="minus" onClick={() => onTagRemove(selectedKeys)}>
                   标记删除
                 </Button>
+                <Button
+                  size="small"
+                  icon="delete"
+                  onClick={() => gridManagerRef.current?.redoTagRemove(selectedKeys)}
+                >
+                  取消标记删除
+                </Button>
                 <Button size="small" icon="delete" onClick={() => onRemove(selectedKeys)}>
                   删除
                 </Button>
@@ -339,6 +346,7 @@ const BaiscEditGrid = () => {
         getContextMenuItems={getContextMenuItems}
         size="default"
         gantThemeClass="gant-grid-theme"
+        removeRowSelectable
       />
     </>
   );

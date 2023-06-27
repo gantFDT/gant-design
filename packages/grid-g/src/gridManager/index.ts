@@ -18,6 +18,7 @@ import {
   assignInWith,
   isEqual,
   merge,
+  omit,
 } from 'lodash';
 import {
   getModifyData,
@@ -516,7 +517,25 @@ export default class GridManage {
     this.afterTagRemove &&
       this.afterTagRemove({ removeRecords: remove, removeKeys: targetKeys, removeNodes });
   }
+  //恢复指定删除数据;
+  @hisDecorator()
+  redoTagRemove(targetKeys: string | number | string[] | number[], deleteChildren?: boolean) {
+    if (typeof targetKeys !== 'number' && isEmpty(targetKeys)) return;
+    const { getRowNodeId } = this.agGridConfig;
+    if (!Array.isArray(targetKeys) && typeof targetKeys === 'object') return;
+    const targetArray = Array.isArray(targetKeys) ? targetKeys : [targetKeys];
+    const removeNodes = getAllChildrenNode(targetArray, this.agGridApi, deleteChildren);
 
+    const newData = removeNodes.map(itemNode => {
+      const itemData = itemNode.data;
+      return get(itemData, '_rowData', omit(itemData, '_rowType'));
+    });
+    this.batchUpdateGrid({ update: newData });
+    this.historyStack.push({
+      type: DataActions.modify,
+      records: removeNodes.map(itemNode => ({ ...itemNode.data, _rowType: DataActions.removeTag })),
+    });
+  }
   private toggleUndoRedo(hisStack: OperationAction, undo: boolean = true) {
     const { getRowNodeId } = this.agGridConfig;
     let rowData = this.getRowData();
@@ -546,6 +565,7 @@ export default class GridManage {
       });
     } else if (type === DataActions.modify) {
       const hisRecords: any[] = [];
+      console.log('records', records);
       const newRecords = records.map(item => {
         const rowNode = this.agGridApi.getRowNode(getRowNodeId(item));
         const { _nextRowData, ...data } = item;

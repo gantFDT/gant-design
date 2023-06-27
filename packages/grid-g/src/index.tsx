@@ -234,6 +234,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     suppressManagerPaste,
     suppressCreateWhenPaste,
     suppressExcelExport,
+    removeRowSelectable,
     exportExcludeColumns,
     ...orignProps
   } = props;
@@ -729,7 +730,8 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
 
   //行是否可选
   const onRowSelectable = useCallback((rowNode: RowNode) => {
-    const notRemove = get(rowNode, 'data._rowType') !== DataActions.removeTag;
+    const notRemove =
+      get(rowNode, 'data._rowType') !== DataActions.removeTag || removeRowSelectable;
     if (isRowSelectable) {
       return isRowSelectable(rowNode) && notRemove;
     }

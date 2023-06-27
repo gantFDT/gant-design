@@ -350,6 +350,8 @@ export interface Props<T extends any> {
   suppressManagerPaste?: boolean;
   // 默认开启粘贴时创建数据
   suppressCreateWhenPaste?: boolean;
+  //删除数据是否可选
+  removeRowSelectable?:boolean
 }
 
 export type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>;

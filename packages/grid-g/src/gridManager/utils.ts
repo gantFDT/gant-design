@@ -49,7 +49,7 @@ export function removeTagData(removeNodes: RowNode[], rowData: any[], getRowNode
     removeIndexs: any[] = [];
   removeNodes.map(itemNode => {
     const itemData = get(itemNode, 'data', {});
-    let recordItem = { ...itemData, _rowType: DataActions.removeTag };
+    let recordItem = { ...itemData, _rowType: DataActions.removeTag, _rowData: itemData };
     if (itemData._rowType === DataActions.removeTag || itemData._rowType === DataActions.remove)
       return console.warn('Deleted data cannot be deleted');
     let hisRecordItem = { ...itemData };

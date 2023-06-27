@@ -77,6 +77,7 @@ const defaultCheckboxColSelectionCol: ColDef = {
     display: 'flex',
     justifyContent: 'center',
   },
+  cellClass:'gant-grid-default-checkbox-cell',
   headerClass: 'gant-grid-default-checkbox',
 };
 
