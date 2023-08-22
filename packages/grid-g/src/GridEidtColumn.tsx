@@ -119,8 +119,6 @@ export default WrapperComponent =>
 
     const onBlur = useCallback(
       (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-
-        
         api.stopEditing();
       },
       [stopEditing],

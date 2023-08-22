@@ -861,7 +861,6 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                 className={classnames(
                   'gant-grid',
                   gantThemeClass,
-                  openEditSign && `gant-grid-edit`,
                   editable && openEditSign && 'gant-grid-editable',
                   controlCellWordWrap && `grid-control-break-line`,
                 )}

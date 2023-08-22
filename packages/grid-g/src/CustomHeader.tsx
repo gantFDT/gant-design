@@ -132,7 +132,11 @@ export default props => {
   return (
     <>
       <div className="customHeaderLabel" style={{ marginRight: 5 }}>
-        {ColumnLabelComponent ? <ColumnLabelComponent title={displayName} /> : displayName}
+        {ColumnLabelComponent ? (
+          <ColumnLabelComponent title={displayName} {...props} />
+        ) : (
+          displayName
+        )}
       </div>
       {filter}
       {sort}

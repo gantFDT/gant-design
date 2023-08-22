@@ -1,33 +1,26 @@
-.gant-grid-edit {
-  &.gant-grid-editable {
-    // .gant-cell-disable-sign {
-    //   background-color: rgba(128, 128, 128, 0.1)
-    // }
+&.gant-grid-editable {
+  .gant-cell-validate-sign {
+    &::before {
+      content: '';
+      width: 98%;
+      bottom: 0px;
+      border-bottom: 1px dashed var(--error-color, #ff4d4f);
+      position: absolute;
+      left: 1%;
+    }
   }
-  .ag-root {
-    .gant-cell-validate-sign {
-      &::before {
-        content: '';
-        width: 98%;
-        bottom: 0px;
-        border-bottom: 1px dashed var(--error-color,#ff4d4f);
-        position: absolute;
-        left: 1%;
-      }
+  .gant-header-cell-required {
+    .customHeaderLabel::before {
+      content: '*';
+      margin-right: 2px;
+      color: var(--error-color, #ff4d4f);
     }
-    .gant-header-cell-required {
-      .customHeaderLabel::before {
-        content: '*';
-        margin-right: 2px;
-        color: var(--error-color,#ff4d4f);
-      }
-    }
-    .gant-header-cell-edit {
-      .customHeaderLabel::before {
-        content: '*';
-        margin-right: 2px;
-        color: #1890ff;
-      }
+  }
+  .gant-header-cell-edit {
+    .customHeaderLabel::before {
+      content: '*';
+      margin-right: 2px;
+      color: #1890ff;
     }
   }
   .ag-cell-inline-editing {
@@ -35,6 +28,7 @@
     border: none !important;
   }
 }
+
 .gant-grid-cell-serial-add {
   &::before {
     content: '+';
@@ -66,8 +60,8 @@
         to top left,
         transparent 0%,
         transparent 49.9%,
-        var(--cell-edit-color,blue) 50%,
-        var(--cell-edit-color,blue) 100%
+        var(--cell-edit-color, blue) 50%,
+        var(--cell-edit-color, blue) 100%
       );
       background-size: 6px 6px;
       background-repeat: no-repeat;
@@ -77,8 +71,8 @@
         to top left,
         transparent 0%,
         transparent 49.9%,
-        var(--cell-modify-color,red) 50%,
-        var(--cell-modify-color,red) 100%
+        var(--cell-modify-color, red) 50%,
+        var(--cell-modify-color, red) 100%
       );
       background-size: 6px 6px;
       background-repeat: no-repeat;
@@ -96,8 +90,8 @@
         to top left,
         transparent 0%,
         transparent 49.9%,
-        var(--cell-delete-color,orange) 50%,
-        var(--cell-delete-color,orange) 100%
+        var(--cell-delete-color, orange) 50%,
+        var(--cell-delete-color, orange) 100%
       );
       background-size: 6px 6px;
       background-repeat: no-repeat;
@@ -120,7 +114,7 @@
     &.gant-folder-line {
       &::before {
         position: absolute;
-        border-left: 1px dotted var(--group-file-color,#a39f9f);
+        border-left: 1px dotted var(--group-file-color, #a39f9f);
         content: '';
         height: 100%;
         left: 8px;
@@ -133,7 +127,7 @@
       // left: 11px;
       &::before {
         position: absolute;
-        border-left: 1px dotted var(--group-file-color,#a39f9f);
+        border-left: 1px dotted var(--group-file-color, #a39f9f);
         content: '';
         height: 50%;
         left: 8px;
@@ -141,7 +135,7 @@
       }
       &::after {
         position: absolute;
-        border-top: 1px dotted var(--group-file-color,#a39f9f);
+        border-top: 1px dotted var(--group-file-color, #a39f9f);
         content: '';
         top: 50%;
         width: 9px;
@@ -151,14 +145,14 @@
     &.gant-file-line {
       &::before {
         position: absolute;
-        border-left: 1px dotted var(--group-file-color,#a39f9f);
+        border-left: 1px dotted var(--group-file-color, #a39f9f);
         content: '';
         height: 100%;
         left: 8px;
       }
       &::after {
         position: absolute;
-        border-top: 1px dotted var(--group-file-color,#a39f9f);
+        border-top: 1px dotted var(--group-file-color, #a39f9f);
         content: '';
         top: 50%;
         width: 9px;
@@ -168,7 +162,7 @@
   }
 
   .gant-treedata-icon {
-    color: var(--group-file-color,#a39f9f);
+    color: var(--group-file-color, #a39f9f);
     margin-right: 4px;
     &.gant-treedata-first-file {
       padding-left: 0px;
@@ -178,7 +172,7 @@
       position: relative;
       &::before {
         position: absolute;
-        border-top: 1px dotted var(--group-file-color,#a39f9f);
+        border-top: 1px dotted var(--group-file-color, #a39f9f);
         content: '';
         top: 50%;
         width: 12px;
@@ -186,17 +180,4 @@
       }
     }
   }
-  // &::before {
-  //   content: '';
-  //   display: block;
-  //   width: 0;
-  //   height: 0;
-  //   // border-width: 4px;
-  //   // border-color： transparent;
-  //   // border-style: solid;
-  //   border: 3px solid transparent;
-  //   position: absolute;
-  //   left: 0px;
-  //   top: 0px;
-  // }
 }

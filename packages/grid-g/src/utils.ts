@@ -23,7 +23,7 @@ export const sizeDefinitions = {
     default: 12,
     large: 14,
   },
-  
+
   rowHeight: {
     small: sizeNumber.small,
     default: sizeNumber.default,
@@ -77,7 +77,9 @@ const defaultCheckboxColSelectionCol: ColDef = {
     display: 'flex',
     justifyContent: 'center',
   },
-  cellClass:'gant-grid-default-checkbox-cell',
+  showDisabledCheckboxes: true,
+  suppressColumnsToolPanel: true,
+  cellClass: 'gant-grid-default-checkbox-cell',
   headerClass: 'gant-grid-default-checkbox',
 };
 
@@ -93,6 +95,7 @@ const serialNumberCol: ColDef = {
   lockVisible: true,
   field: 'g-index',
   filter: false,
+  suppressColumnsToolPanel: true,
   cellClassRules: {
     'gant-grid-cell-serial-add': params => {
       const {
@@ -305,7 +308,14 @@ export const mapColumns = <T>(
         if (!itemisgroup(colDef, children)) {
           // 当前列允许编辑
           if (ColEditable) {
-            const { props, changeFormatter, component, rules, signable, ...params } = editConfig;
+            const {
+              props,
+              changeFormatter,
+              component,
+              rules,
+              signable = true,
+              ...params
+            } = editConfig;
             let required = false;
             const validateField = field.replace(/\./g, '-');
             if (Array.isArray(rules)) {
@@ -321,6 +331,7 @@ export const mapColumns = <T>(
                 required = get(rules, 'required', false);
               }
             }
+            required = !signable ? true : required;
             if (required) {
               requireds.push(field);
             }

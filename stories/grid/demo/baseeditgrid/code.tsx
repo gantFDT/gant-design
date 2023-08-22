@@ -343,7 +343,6 @@ const BaiscEditGrid = () => {
         rowBuffer={20}
         editChangeCallback={onEditChangeCallback}
         onReady={onReady}
-        openEditSign
         getContextMenuItems={getContextMenuItems}
         size="default"
         gantThemeClass="gant-grid-theme"
