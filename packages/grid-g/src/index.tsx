@@ -274,9 +274,9 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
   /**默认基本方法 */
   const getRowNodeId = useCallback(data => {
     if (typeof rowkey === 'string') {
-      return get(data, rowkey);
+      return get(data, rowkey) + '';
     }
-    return rowkey(data);
+    return rowkey(data) + '';
   }, []);
 
   const getRowId = useCallback(function(params) {
