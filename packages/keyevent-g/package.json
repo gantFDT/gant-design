@@ -1,6 +1,6 @@
 {
   "name": "keyevent-g",
-  "version": "0.1.21",
+  "version": "0.1.20",
   "description": "gantd keyevent-g",
   "main": "lib/index.js",
   "scripts": {},
