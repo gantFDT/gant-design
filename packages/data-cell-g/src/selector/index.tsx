@@ -174,14 +174,12 @@ const withSelector = compose(
   withHandlers({
     //将最近选择的项的key转化为真实的key
     storageToReal: ({ selectorId, reg }) => value => {
-      // 最近选择
-      if (value?.startsWith(selectorId)) return value.replace(reg, '$1');
       return value;
     },
   }),
   withHandlers({
     getValue: ({ valueProp }) => data =>
-      String(valueProp && isPlainObject(data) ? data[valueProp] : data), // 获取选项的value
+      valueProp && isPlainObject(data) ? data[valueProp] : data, // 获取选项的value
     getLabel: ({ storageToReal, valueProp, labelProp }) => data => {
       if (labelProp && isPlainObject(data))
         return valueProp == labelProp ? storageToReal(data[labelProp]) : data[labelProp];
@@ -204,10 +202,6 @@ const withSelector = compose(
     }) => (value, index) => {
       let list = concat(dataList, storageList);
       // 启用缓存的情况下执行判断
-      // fix: 解决当storageId恰好是value的前缀的情况
-      if (useStorage && value?.startsWith(selectorId)) {
-        list = storageList;
-      }
       const valueItem = list.find(item => storageToReal(getValue(item)) === value);
       if (valueItem) return getLabel(valueItem);
       const optionLabelArray = Array.isArray(optionLabel) ? optionLabel : [optionLabel];
@@ -371,15 +365,7 @@ const withSelector = compose(
       setStorageList(copyList); // 更新list
       localStorage.setItem(selectorStorageId, JSON.stringify(copyList)); // 更新缓存
     },
-    cleanStorage: ({
-      selectorId,
-      selectorStorageId,
-      storageList,
-      getValue,
-      valueProp,
-      setStorageList,
-      useStorage,
-    }) => (data, update) => {
+    cleanStorage: ({ selectorStorageId, setStorageList }) => () => {
       setStorageList([]); // 更新list
       localStorage.setItem(selectorStorageId, JSON.stringify([])); // 更新缓存
     },
@@ -438,6 +424,7 @@ const withSelector = compose(
       labelProp,
       getLabel,
       isFilter,
+      getValue,
       customNotDataContent,
     }) => {
       let result = dataList;
@@ -453,31 +440,26 @@ const withSelector = compose(
         try {
           result = dataList.filter(item => {
             const label = getLabel(item);
+
             if (!label) {
               throw new Error(
                 `应用选择器的过滤功能，请确保列表数据中${labelProp}属性存在，或修改'labelProp'对应的属性名称,作为过滤的依据`,
               );
             }
             return label.toLowerCase().indexOf(filter.toLowerCase()) > -1;
-            // const LastIndex = filter.split('').reduce(
-            //   (index, char) => {
-            //     if (index === -1) return -1;
-            //     let label = getLabel(item)
-            //     if (!label) {
-            //       throw new Error(`应用选择器的过滤功能，请确保列表数据中${labelProp}属性存在，或修改'labelProp'对应的属性名称,作为过滤的依据`)
-            //     }
-            //     label = label.toUpperCase()
-            //     char = char.toUpperCase()
-            //     return label.slice(index).indexOf(char)
-            //   },
-            //   0
-            // )
-            // return ~LastIndex
           });
         } catch (e) {
           console.error(e);
         }
       }
+
+      result = result.filter(item => {
+        const hasStorage = storageList.some(itemStorage => {
+          return getValue(itemStorage) == getValue(item);
+        });
+        return !hasStorage;
+      });
+
       let list = [
         //'加载中...' : '没有查询到数据'
         <Select.Option key="none" disabled>
@@ -677,32 +659,17 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
     const {
       onSelect,
       dataList,
-      storageList,
-      selectorId,
       getValue,
-      updateStorage,
       selectRef,
       isMultiple,
       query,
       filter,
       setFilter,
       blurOnSelect,
-      storageToReal,
     } = this.props;
 
-    const key = storageToReal(select.key); // 获取真实的key值
-    const originItem = dataList.find(item => getValue(item) === key);
-
-    let isStorage = select.key?.startsWith(selectorId);
-    if (!isStorage || originItem) {
-      // 从搜索出来的数据中选择.或者在最近选择中选择了有搜索出来的数据
-      onSelect(key, originItem);
-      updateStorage([originItem], isStorage); // isStorage为true,表示当前只是更新操作.加快updateStorage的速度
-    } else {
-      const item = storageList.find(item => getValue(item) === select.key);
-      onSelect(key, item);
-    }
-
+    const originItem = dataList.find(item => getValue(item) === select.key);
+    onSelect(select.key, originItem);
     if (blurOnSelect && !isMultiple) {
       // 单选的情况下、选中失焦
       setTimeout(() => {
