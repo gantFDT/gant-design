@@ -1,6 +1,6 @@
 {
   "name": "grid-g",
-  "version": "0.1.52",
+  "version": "0.1.53",
   "description": "gantd table",
   "main": "lib/index.tsx",
   "types": "lib/index.d.ts",
@@ -34,6 +34,6 @@
     "prop-types": "^15.6.0",
     "react": "^16.12.0",
     "recompose": "^0.30.0",
-    "util-g": "^0.1.10"
+    "util-g": "^0.1.11"
   }
 }
