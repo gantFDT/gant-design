@@ -10,19 +10,11 @@
   ],
   "all": [
     "packages/gantd",
-    "packages/table-g",
     "packages/grid-g",
-    "packages/anchor-g",
-    "packages/auto-reload-g",
-    "packages/color-picker-g",
     "packages/data-cell-g",
     "packages/header-g",
     "packages/modal-g",
     "packages/schema-form-g",
-    "packages/smart-table-g",
-    "packages/smart-grid-g",
-    "packages/submenu-g",
-    "packages/keyevent-g",
-    "packages/util-g"
+    "packages/smart-grid-g"
   ]
 }
