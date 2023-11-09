@@ -6,7 +6,13 @@
     }
   },
   "packages": [
-    "packages/*"
+    "packages/gantd",
+    "packages/grid-g",
+    "packages/data-cell-g",
+    "packages/header-g",
+    "packages/modal-g",
+    "packages/schema-form-g",
+    "packages/smart-grid-g"
   ],
   "all": [
     "packages/gantd",
