@@ -1,6 +1,6 @@
 {
   "name": "header-g",
-  "version": "1.1.38",
+  "version": "1.1.39",
   "description": "gantd header-g",
   "main": "lib/index.js",
   "scripts": {},
