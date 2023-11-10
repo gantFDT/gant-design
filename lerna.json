@@ -6,31 +6,10 @@
     }
   },
   "packages": [
-    "packages/gantd",
-    "packages/grid-g",
-    "packages/anchor-g",
-    "packages/auto-reload-g",
-    "packages/color-picker-g",
-    "packages/data-cell-g",
-    "packages/header-g",
-    "packages/modal-g",
-    "packages/schema-form-g",
-    "packages/smart-grid-g",
-    "packages/submenu-g",
-    "packages/util-g"
+    "packages/gantd"
+
   ],
   "all": [
-    "packages/gantd",
-    "packages/grid-g",
-    "packages/anchor-g",
-    "packages/auto-reload-g",
-    "packages/color-picker-g",
-    "packages/data-cell-g",
-    "packages/header-g",
-    "packages/modal-g",
-    "packages/schema-form-g",
-    "packages/smart-grid-g",
-    "packages/submenu-g",
-    "packages/util-g"
+    "packages/gantd"
   ]
 }
