@@ -1,6 +1,6 @@
 {
   "name": "util-g",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "description": "Gant utilities.",
   "main": "lib/index.js",
   "scripts": {},
