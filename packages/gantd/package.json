@@ -1,6 +1,6 @@
 {
   "name": "gantd",
-  "version": "1.2.73",
+  "version": "1.2.74",
   "description": "GantD base on antD",
   "author": "Gant FDT",
   "license": "MIT",
@@ -144,7 +144,7 @@
     "schema-form-g": "^0.1.142",
     "smart-grid-g": "^0.2.64",
     "smart-table-g": "0.1.131",
-    "submenu-g": "0.1.27",
+    "submenu-g": "0.1.28",
     "table-g": "0.1.47",
     "util-g": "0.1.13"
   },
