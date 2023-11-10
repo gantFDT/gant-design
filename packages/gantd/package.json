@@ -1,6 +1,6 @@
 {
   "name": "gantd",
-  "version": "1.2.72",
+  "version": "1.2.73",
   "description": "GantD base on antD",
   "author": "Gant FDT",
   "license": "MIT",
@@ -119,7 +119,7 @@
     "ag-grid-community": "28.2.0",
     "ag-grid-enterprise": "28.2.0",
     "ag-grid-react": "28.2.0",
-    "anchor-g": "^0.1.32",
+    "anchor-g": "0.1.32",
     "antd": "3.26.5",
     "antd-virtual-select": "^1.1.2",
     "auto-reload-g": "^0.1.26",
@@ -132,7 +132,7 @@
     "lodash": "^4.17.11",
     "modal-g": "^0.1.45",
     "moment": "^2.24.0",
-    "node-util-g": "^0.1.11",
+    "node-util-g": "0.1.10",
     "numeral": "^2.0.6",
     "prop-types": "^15.6.0",
     "react": "^16.8.6",
@@ -143,10 +143,10 @@
     "recompose": "^0.30.0",
     "schema-form-g": "^0.1.142",
     "smart-grid-g": "^0.2.64",
-    "smart-table-g": "^0.1.132",
-    "submenu-g": "^0.1.28",
-    "table-g": "^0.1.48",
-    "util-g": "^0.1.13"
+    "smart-table-g": "0.1.131",
+    "submenu-g": "0.1.27",
+    "table-g": "0.1.47",
+    "util-g": "0.1.13"
   },
   "browserslist": [
     "last 2 version",
