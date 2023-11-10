@@ -12,7 +12,8 @@
     "packages/header-g",
     "packages/modal-g",
     "packages/schema-form-g",
-    "packages/smart-grid-g"
+    "packages/smart-grid-g",
+    "packages/utils-g"
   ],
   "all": [
     "packages/gantd",
@@ -21,6 +22,7 @@
     "packages/header-g",
     "packages/modal-g",
     "packages/schema-form-g",
-    "packages/smart-grid-g"
+    "packages/smart-grid-g",
+    "packages/utils-g"
   ]
 }
