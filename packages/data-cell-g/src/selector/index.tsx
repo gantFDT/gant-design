@@ -221,18 +221,8 @@ const withSelector = compose(
       }
       const isArray = Array.isArray(value);
       let cValue = isArray ? value : [value];
-      const transormedValue = cValue.map(cv => {
-        const v = String(cv);
-        const isInList = dataList.find(item => getValue(item) === v);
-        const isInStorage = storageList.find(item => getValue(item) === v);
-        // 选择的缓存中的数据，需要做一层转化
-        if (!isInList && isInStorage) {
-          return `${selectorId}-${v}`;
-        }
-        return v;
-      });
       return {
-        value: isMultiple ? transormedValue : transormedValue[0],
+        value: isMultiple ? cValue : cValue[0],
       };
     },
   ),
@@ -261,9 +251,9 @@ const withSelector = compose(
             Option,
           );
         }
-
         if (isPlainObject(item)) {
           const { disabled, title, className } = item;
+
           const { value, key, label } = transformItemInfo(item);
           let show = true,
             style;
@@ -294,6 +284,7 @@ const withSelector = compose(
             </Option>
           );
         }
+
         return (
           <Option key={item} value={item}>
             {item}
@@ -336,7 +327,7 @@ const withSelector = compose(
       if (!useStorage) return; // 不启用缓存
       let copyList = cloneDeep(storageList);
       data.map(item => {
-        const id = `${selectorId}-${getValue(item)}`;
+        const id = getValue(item);
         let isUpdate = update; // 为true表示从最近选择的项里面选择,只更新
         if (!isUpdate) {
           //
@@ -428,7 +419,8 @@ const withSelector = compose(
       customNotDataContent,
     }) => {
       let result = dataList;
-      if (!query && filter && isFilter) {
+      const toFilter = !query && filter && isFilter;
+      if (toFilter) {
         /**
          * 筛选算法
          * axbxcx ---> abc true
@@ -438,9 +430,8 @@ const withSelector = compose(
          */
 
         try {
-          result = dataList.filter(item => {
+          result = result.filter(item => {
             const label = getLabel(item);
-
             if (!label) {
               throw new Error(
                 `应用选择器的过滤功能，请确保列表数据中${labelProp}属性存在，或修改'labelProp'对应的属性名称,作为过滤的依据`,
@@ -454,6 +445,7 @@ const withSelector = compose(
       }
 
       result = result.filter(item => {
+        if (toFilter) return true;
         const hasStorage = storageList.some(itemStorage => {
           return getValue(itemStorage) == getValue(item);
         });
@@ -468,8 +460,8 @@ const withSelector = compose(
           </Receiver>
         </Select.Option>,
       ];
+      const hasGroup = result.some(item => item.group);
       if (result.length) {
-        const hasGroup = result.some(item => item.group);
         if (!hasGroup) {
           list = transformDataToList(result);
         } else {
@@ -491,7 +483,9 @@ const withSelector = compose(
 
       if (useStorage && !filter) {
         // 搜索结果
-        const newItems = (
+        const newItems = hasGroup ? (
+          list
+        ) : (
           <Select.OptGroup
             key="result"
             label={<Receiver>{locale => <>{locale.searchResult}</>}</Receiver>}
@@ -534,6 +528,7 @@ const withSelector = compose(
             )}
           </Select.OptGroup>
         );
+
         return {
           renderList: [selectedItems].concat(newItems),
         };
@@ -616,7 +611,15 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
 
   onChange = (...args) => {
     const [value] = args;
-    const { onChange, setCacheLabel, storageToReal, valuePropType } = this.props;
+    const {
+      onChange,
+      setCacheLabel,
+      storageToReal,
+      valuePropType,
+      useStorage,
+      selectorId,
+      updateStorage,
+    } = this.props;
     let keys: SelectValue = undefined;
     let labels: NArray<string> = undefined;
     let items: R[] = [];
@@ -647,8 +650,12 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
         items = [this.getItem(readKey)];
       }
     }
+
     setCacheLabel(labels);
     onChange(keys, items);
+    if (useStorage && !!selectorId) {
+      updateStorage(items, false); // isStorage为true,表示当前只是更新操作.加快updateStorage的速度
+    }
     // 清除状态下重新搜索
     if (!value) {
       this.onSearch('');
@@ -656,20 +663,9 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
   };
 
   onSelect(select, option) {
-    const {
-      onSelect,
-      dataList,
-      getValue,
-      selectRef,
-      isMultiple,
-      query,
-      filter,
-      setFilter,
-      blurOnSelect,
-    } = this.props;
+    const { onSelect, selectRef, isMultiple, query, filter, setFilter, blurOnSelect } = this.props;
 
-    const originItem = dataList.find(item => getValue(item) === select.key);
-    onSelect(select.key, originItem);
+    onSelect(select.key, option);
     if (blurOnSelect && !isMultiple) {
       // 单选的情况下、选中失焦
       setTimeout(() => {

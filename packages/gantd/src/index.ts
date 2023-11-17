@@ -44,8 +44,10 @@ export { default as Modal } from '@modal';
 //表单
 export { default as SchemaForm } from '@schema-form';
 export { default as SmartGrid } from '@smart-grid';
+export { default as SmartTable } from '@smart-table';
 export { default as Submenu } from '@submenu';
-
+//列表
+export { default as Table } from '@table';
 //内部使用
 export { default as Button } from './button';
 export { default as Card } from './card';
