@@ -38,6 +38,7 @@ import { flattenTreeData } from '../utils';
 import { modifyDecorator, hisDecorator } from './decorator';
 import { AgGridConfig, OperationAction, Diff, BatchUpdateDataSourceParams } from './interface';
 import { DataActions, RowKey } from '../interface';
+import { EventEmitter } from 'events';
 @bindAll()
 export default class GridManage {
   public rowkey: RowKey<any> | string;
@@ -58,8 +59,10 @@ export default class GridManage {
   public afterCancel: Function;
   setingLoading: boolean = false;
   clearloding: boolean;
+  private gridEvent: EventEmitter;
   constructor(event: Partial<AgGridConfig>) {
     this.agGridConfig = { ...event, ...this.agGridConfig };
+    this.gridEvent = new EventEmitter();
   }
   get loading() {
     return this.setingLoading;
@@ -96,9 +99,15 @@ export default class GridManage {
     return null;
   }
   private watchHistory() {
-    if (this.isChanged === this.changeStatus) return;
-    this.agGridConfig.editChangeCallback && this.agGridConfig.editChangeCallback(this.isChanged);
-    this.changeStatus = this.isChanged;
+    if (this.isChanged !== this.changeStatus) {
+      this.agGridConfig.editChangeCallback && this.agGridConfig.editChangeCallback(this.isChanged);
+      this.changeStatus = this.isChanged;
+    }
+
+    this.gridEvent.emit('historyChange', {
+      undo: !!this.historyStack.length,
+      redo: !!this.redoStack.length,
+    });
   }
   private getRowItemData = (itemData: any, oldData?: any) => {
     const { getRowNodeId } = this.agGridConfig;
@@ -775,4 +784,10 @@ export default class GridManage {
       this.clearloding = false;
     }, 10);
   }
+  addListener = (type: 'historyChange', func: any) => {
+    return this.gridEvent.addListener(type, func);
+  };
+  removeListener = (type: 'historyChange', func: any) => {
+    this.gridEvent.removeListener(type, func);
+  };
 }

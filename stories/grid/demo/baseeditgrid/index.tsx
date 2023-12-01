@@ -127,6 +127,13 @@ const BaiscEditGrid = () => {
     setGridChange(isChange);
   }, []);
 
+  useEffect(() => {
+    console.log('gridManagerRef.current', gridManagerRef.current);
+    gridManagerRef.current?.addListener('historyChange', params => {
+      console.log(params);
+    });
+  }, [gridManagerRef.current]);
+
   const queryData = useCallback((beginIndex: number, pageSize: number) => {
     const data = mockData.slice(beginIndex, beginIndex + pageSize);
     setDataSource(data);

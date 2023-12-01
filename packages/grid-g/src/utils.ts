@@ -89,13 +89,13 @@ const serialNumberCol: ColDef = {
   pinned: true,
   minWidth: 55,
   headerName: '',
-  resizable: false,
   suppressMenu: true,
   lockPosition: true,
   lockVisible: true,
   field: 'g-index',
   filter: false,
   suppressColumnsToolPanel: true,
+  resizable: true,
   cellClassRules: {
     'gant-grid-cell-serial-add': params => {
       const {

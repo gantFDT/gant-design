@@ -60,6 +60,8 @@ const BaiscGrid = () => {
     gridManagerRef.current = manager;
   }, []);
 
+
+
   const queryData = useCallback((beginIndex: number, pageSize) => {
     setLoading(true);
     setTimeout(() => {
