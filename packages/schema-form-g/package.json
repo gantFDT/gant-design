@@ -30,5 +30,6 @@
         "moment": "^2.24.0",
         "react": "^16.8.6",
         "recompose": "^0.30.0"
-    }
+    },
+    "gitHead": "5cd8ddc53ffe1fcf7dc41e267cb579e7dcc37b1c"
 }

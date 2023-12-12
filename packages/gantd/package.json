@@ -155,5 +155,6 @@
     "ie >= 9",
     "iOS >= 8",
     "Android >= 4"
-  ]
+  ],
+  "gitHead": "5cd8ddc53ffe1fcf7dc41e267cb579e7dcc37b1c"
 }

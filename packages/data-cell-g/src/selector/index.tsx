@@ -154,6 +154,7 @@ const withLocalStorage = compose(
       const list = JSON.parse(localStorage.getItem(selectorStorageId) || '[]');
       if (!isEqual(storageList, list)) {
         setStorageList(list);
+        
       }
     },
   }),
