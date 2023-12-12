@@ -172,6 +172,7 @@ const Demo2 = () => {
         console.log(v);
         setValue(v);
       }}
+      multiple
       onSave={(id, value, cb) => cb()}
     />
   );

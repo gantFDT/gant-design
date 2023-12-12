@@ -11,6 +11,7 @@ import {
   groupBy,
   pick,
   concat,
+  toNumber,
 } from 'lodash';
 import {
   compose,
@@ -174,7 +175,14 @@ const withSelector = compose(
   withHandlers({
     //将最近选择的项的key转化为真实的key
     storageToReal: ({ selectorId, reg }) => value => {
-      return value;
+      if (typeof value !== 'string') return value;
+      let newValue = value;
+      if (!value.startsWith(`${selectorId}_`)) return newValue;
+      newValue = newValue.replace(`${selectorId}_`, '');
+      const [valueType, _value] = newValue.split('_');
+      newValue = _value;
+      if (valueType === 'number') newValue = toNumber(newValue);
+      return newValue;
     },
   }),
   withHandlers({
@@ -236,7 +244,8 @@ const withSelector = compose(
       hideSelected,
       isMultiple,
       value: comValue,
-    }) => list =>
+      selectorId,
+    }) => (list, isStorage = false) =>
       list.map(item => {
         const transformItemInfo = item => {
           const value = getValue(item);
@@ -270,10 +279,15 @@ const withSelector = compose(
             optionLabelProp && item[optionLabelProp]
               ? { [optionLabelProp]: item[optionLabelProp] }
               : {};
+
+          const valueType = typeof value;
+
+          const optionValue = isStorage ? `${selectorId}_${valueType}_${value}` : value;
+
           return (
             <Option
-              key={key}
-              value={value}
+              key={optionValue}
+              value={optionValue}
               disabled={disabled}
               title={title}
               style={style}
@@ -444,14 +458,6 @@ const withSelector = compose(
         }
       }
 
-      result = result.filter(item => {
-        if (toFilter) return true;
-        const hasStorage = storageList.some(itemStorage => {
-          return getValue(itemStorage) == getValue(item);
-        });
-        return !hasStorage;
-      });
-
       let list = [
         //'加载中...' : '没有查询到数据'
         <Select.Option key="none" disabled>
@@ -520,7 +526,7 @@ const withSelector = compose(
             }
           >
             {storageList.length ? (
-              transformDataToList(storageList)
+              transformDataToList(storageList, true)
             ) : (
               <Select.Option key="empty" disabled>
                 <Receiver>{locale => <>{locale.noRecent}</>}</Receiver>
