@@ -144,6 +144,7 @@ const withLocalStorage = compose(
     return {
       reg: new RegExp(`^${selectorId}-(.*)$`), // 转化最近选择的valueProp
       selectorStorageId: `selector:${selectorId}`, // 存储在storage的key
+      
     };
   }),
   withState('storageList', 'setStorageList', ({ selectorStorageId }) =>
