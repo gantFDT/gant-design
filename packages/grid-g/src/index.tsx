@@ -953,7 +953,6 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                       defaultColDef={_defaultColDef}
                       onRowDoubleClicked={handleRowDoubleClicked}
                       groupSelectsChildren={treeData ? false : groupSelectsChildren}
-                      ensureDomOrder
                       groupDefaultExpanded={groupDefaultExpanded}
                       localeText={locale}
                       rowClassRules={{

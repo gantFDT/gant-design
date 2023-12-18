@@ -26,6 +26,7 @@ const basicColumns = [
     title: '英文姓名',
     width: 100,
     filter: 'agNumberColumnFilter',
+    rowDrag: true,
   },
   {
     fieldName: 'text',
@@ -59,8 +60,6 @@ const BaiscGrid = () => {
     apiRef.current = params.api;
     gridManagerRef.current = manager;
   }, []);
-
-
 
   const queryData = useCallback((beginIndex: number, pageSize) => {
     setLoading(true);
@@ -164,6 +163,8 @@ const BaiscGrid = () => {
         //   onChange: onPageChange,
         // }}
         suppressRightClickSelected
+        rowDragManaged
+        animateRows
         rowBuffer={20}
         onReady={onReady}
         size="default"
