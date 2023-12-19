@@ -1,0 +1,49 @@
+:root {
+  --primary-color: #1890ff;
+}
+.ant-select-sm {
+  font-size: 12px;
+}
+.gant-input-group-sm {
+  font-size: 12px;
+}
+.gant-input-group-sm .ant-input-sm,
+.gant-input-group-sm .ant-input-number-input,
+.gant-input-group-sm .ant-input {
+  font-size: 12px;
+}
+.gant-input-group-sm li {
+  line-height: 24px;
+}
+.gant-input-group-sm input::-webkit-input-placeholder,
+.gant-input-group-sm textarea::-webkit-input-placeholder {
+  font-size: 12px !important;
+}
+.gant-input-group-sm .ant-select {
+  font-size: 12px;
+}
+.gant-input-group-sm .ant-select-selection__placeholder {
+  font-size: 12px;
+}
+.gant-calendar-picker {
+  vertical-align: middle;
+  width: 100%;
+}
+.gant-calendar-picker:not(:last-child) .ant-calendar-picker-input {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.gant-calendar .ant-calendar-active-week {
+  background-color: transparent !important;
+}
+.gant-calendar .ant-calendar-body tr:hover {
+  background-color: transparent !important;
+}
+.gant-calendar .ant-calendar-body tr.ant-calendar-active-week {
+  font-weight: normal !important;
+  background-color: transparent !important;
+}
+.gant-calendar .ant-calendar-selected-date .ant-calendar-selected-day {
+  font-weight: bold;
+  background: #bae7ff;
+}

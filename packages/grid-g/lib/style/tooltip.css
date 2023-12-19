@@ -1,0 +1,29 @@
+.gant-cell-tooltip {
+  position: absolute;
+  pointer-events: none;
+  -webkit-transition: opacity 1s;
+  transition: opacity 1s;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  height: 40px;
+}
+.gant-cell-tooltip.ag-tooltip-hiding {
+  opacity: 0;
+}
+.gant-cell-tooltip-content {
+  font-size: 12px;
+  padding: 0px 5px;
+  line-height: 18px;
+  height: auto;
+  min-width: 200px;
+  max-width: 300px;
+  width: auto !important;
+  background-color: #fff;
+  border: 1px rgba(128, 128, 128, 0.5) solid;
+  white-space: pre-line;
+  word-break: break-all;
+}
+.gant-cell-tooltip-content .gant-cell-tooltip-errorMsg {
+  color: #f5222d;
+}

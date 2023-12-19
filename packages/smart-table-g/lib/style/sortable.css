@@ -1,0 +1,47 @@
+:root {
+  --border-color-split: #e8e8e8;
+  --border-radius-base: 4px;
+}
+.gant-table-config-row {
+  z-index: 9999;
+}
+.gant-smart-table-sortable {
+  overflow: hidden;
+}
+.gant-smart-table-sortable .sortableItem {
+  border: 1px solid var(--border-color-split);
+  border-radius: var(--border-radius-base);
+  padding: 3px 3px 3px 10px;
+  margin-bottom: 5px;
+  margin-right: 5px;
+}
+.gant-smart-table-sortable .sortableHelper {
+  z-index: 9999;
+  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+.gant-smart-table-sortable .disabledIcon {
+  cursor: pointer;
+}
+.gant-smart-table-sortable .dragHandler {
+  margin-left: 8px;
+}
+.gant-smart-table-sortable .dragHandler:hover {
+  cursor: move;
+}
+.gant-smart-table-sortable .tableHeader,
+.gant-smart-table-sortable .tableRow {
+  color: var(--text-color);
+  border: 1px solid var(--border-color-split);
+}
+.gant-smart-table-sortable .tableHeader > div,
+.gant-smart-table-sortable .tableRow > div {
+  padding: 4px 10px;
+}
+.gant-smart-table-sortable .tableHeader > div:first-child,
+.gant-smart-table-sortable .tableRow > div:first-child {
+  border-right: 1px solid var(--border-color-split);
+}
+.gant-smart-table-sortable .tableRow {
+  border-top: none;
+}

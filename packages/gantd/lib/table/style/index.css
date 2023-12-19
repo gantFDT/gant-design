@@ -1,0 +1,381 @@
+/* stylelint-disable at-rule-empty-line-before,at-rule-name-space-after,at-rule-no-unknown */
+/* stylelint-disable no-duplicate-selectors */
+/* stylelint-disable */
+/* stylelint-disable declaration-bang-space-before,no-duplicate-selectors,string-no-newline */
+.ant-table {
+  font-size: 12px;
+}
+.ant-table table {
+  border-radius: 0px !important;
+}
+.ant-table-column-title {
+  font-weight: bold;
+}
+.ant-table-expanded-row:hover {
+  background: inherit !important;
+}
+.ant-table-expand-icon-th,
+.ant-table-row-expand-icon-cell {
+  width: 30px !important;
+}
+.ant-table-tbody > tr.ant-table-row-selected td {
+  background-color: var(--primary-1) !important;
+}
+.ant-table-small {
+  border-radius: 0px !important;
+}
+.ant-pagination {
+  padding-right: 5px !important;
+  font-size: 12px !important;
+}
+.ant-table-pagination.ant-pagination {
+  margin: 8px 0 !important;
+}
+.ant-table-content .ant-table-footer {
+  background: var(--component-background);
+}
+.gant-table-header {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  background-color: #ffffff;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.overflowwrap {
+  overflow-wrap: break-word;
+}
+.layoutfixed {
+  min-width: auto;
+  width: auto;
+  table-layout: fixed;
+}
+.gant-table .ant-table.ant-table-bordered .ant-table-content .ant-table-scroll table {
+  border-right: 1px solid #e8e8e8;
+}
+.gant-table .ant-table.ant-table-empty .ant-table-content .ant-table-scroll .ant-table-body {
+  overflow: hidden !important;
+}
+.gant-table .ant-table .ant-table-content table {
+  min-width: auto;
+  width: auto;
+  table-layout: fixed;
+}
+.gant-table .ant-table .ant-table-content table tr.ant-table-row:after,
+.gant-table .ant-table .ant-table-content table tr.gant-table-header-row:after {
+  content: open-quote;
+  width: 0;
+  opacity: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  display: table-cell;
+  padding-top: var(--padding);
+  padding-bottom: var(--padding);
+  line-height: var(--lineHeight);
+}
+.gant-table .ant-table .ant-table-content table td {
+  position: relative;
+}
+.gant-table .ant-table .ant-table-content table td.gant-table-editcell-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.gant-table .ant-table .ant-table-content table td.gant-table-editcell-wrap {
+  overflow-wrap: break-word;
+}
+.gant-table .ant-table .ant-table-content table td .table-cell-editing {
+  position: absolute;
+  width: calc(100%);
+  height: calc(100%);
+  top: 0;
+  left: 0;
+}
+.gant-table .ant-table .ant-table-content table td .table-cell-editing .gant-input {
+  height: 100%;
+}
+.gant-table .ant-table .ant-table-content table td .table-cell-editing > .gant-input > .gant-input-group {
+  display: block;
+}
+.gant-table .ant-table .ant-table-content table td .table-cell-editing > .gant-input > .gant-input-group > * {
+  display: block;
+}
+.gant-table .ant-table .ant-table-content table td .table-cell-editing > .gant-input .gant-input-inner,
+.gant-table .ant-table .ant-table-content table td .table-cell-editing > .gant-input .gant-location-cascader,
+.gant-table .ant-table .ant-table-content table td .table-cell-editing > .gant-input .gant-icon-select,
+.gant-table .ant-table .ant-table-content table td .table-cell-editing > .gant-input input {
+  height: 100%;
+}
+.gant-table .ant-table .ant-table-content table td .table-cell-editing > .gant-input .ant-input-group-wrapper {
+  height: 100%;
+}
+.gant-table .ant-table .ant-table-content table td .table-cell-editing > .gant-input .gant-calendar-picker {
+  height: 100%;
+}
+.gant-table .ant-table .ant-table-content table td .table-cell-editing > .gant-input .gant-calendar-picker > div {
+  height: 100%;
+}
+.gant-table .ant-table .ant-table-content table td .table-cell-editing > .gant-input .gant-calendar-picker .ant-calendar-picker-input {
+  height: 100%;
+}
+.gant-table .ant-table .ant-table-content table td .table-cell-editing > .gant-input .ant-input-group {
+  width: 100%;
+  height: 100%;
+}
+.gant-table .ant-table .ant-table-content table td .table-cell-editing > .gant-input .ant-input-group .gant-input-number,
+.gant-table .ant-table .ant-table-content table td .table-cell-editing > .gant-input .ant-input-group .ant-input-number-input-wrap {
+  height: 100%;
+}
+.gant-table .ant-table .ant-table-content table td .table-cell-editing > .gant-input .ant-input-group .gant-selector,
+.gant-table .ant-table .ant-table-content table td .table-cell-editing > .gant-input .ant-input-group .gant-selector .ant-select-selection,
+.gant-table .ant-table .ant-table-content table td .table-cell-editing > .gant-input .ant-input-group .gant-selector .ant-select-selection,
+.gant-table .ant-table .ant-table-content table td .table-cell-editing > .gant-input .ant-input-group .ant-select-selection__rendered,
+.gant-table .ant-table .ant-table-content table td .table-cell-editing > .gant-input .ant-input-group .gant-select-email .ant-select-selection {
+  height: 100%;
+}
+.gant-table .ant-table .ant-table-content table td .table-cell-editing > .gant-input .ant-input-group .gant-selector .ant-select-selection,
+.gant-table .ant-table .ant-table-content table td .table-cell-editing > .gant-input .ant-input-group .ant-select-selection__rendered {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.gant-table .ant-table .ant-table-content table td .table-cell-editing > .gant-input .ant-input-group .ant-select-selection__rendered {
+  line-height: 100%;
+}
+.gant-table .ant-table .ant-table-content table td .table-cell-editing > .gant-input .ant-input-group .gant-select-email ul {
+  width: 100%;
+  height: 100%;
+}
+.gant-table .ant-table .ant-table-content table td .table-cell-editing > .gant-input .ant-input-group .gant-select-email ul li.ant-select-search {
+  line-height: 1;
+}
+.gant-table .ant-table .ant-table-content table td .table-cell-editing > .gant-input .ant-input-group .ant-input-affix-wrapper {
+  height: 100%;
+  margin: 0px !important;
+}
+.gant-table .ant-table .ant-table-content table td .table-cell-editing > .gant-input .ant-input-group .ant-input-affix-wrapper .ant-input {
+  height: 100%;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+.gant-table .ant-table .ant-table-content table td .table-cell-editing * {
+  -webkit-box-shadow: none !important;
+          box-shadow: none !important;
+  border-radius: 0 !important;
+}
+.gant-table .ant-table .ant-table-content table td .table-cell-editing *:hover {
+  -webkit-box-shadow: none !important;
+          box-shadow: none !important;
+}
+.gant-table .ant-table .ant-table-content table td .table-cell-editing *:active {
+  -webkit-box-shadow: none !important;
+          box-shadow: none !important;
+}
+.gant-table .ant-table .ant-table-content table .ant-table-thead th {
+  position: relative;
+}
+.gant-table .ant-table .ant-table-content table .ant-table-thead th .gantd-table-header-sort {
+  position: absolute;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  top: 0;
+  bottom: 0;
+  right: 20px;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.gant-table .ant-table .ant-table-content .ant-table-scroll .ant-table-body {
+  overflow: auto !important;
+  margin: 0;
+}
+.gant-table .ant-table .ant-table-content .ant-table-scroll .ant-table-body table .ant-table-tbody tr:hover {
+  background-color: rgba(0, 0, 0, 0.06);
+}
+.gant-table .ant-table .ant-table-content .ant-table-scroll .ant-table-body table .ant-table-tbody tr:hover .gant-table-editcell-dirt::after {
+  border-color: transparent;
+}
+.gant-table .ant-table .ant-table-content .ant-table-scroll .ant-table-body table .ant-table-tbody tr.gant-table-row-deleted > td {
+  background-image: url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxISEhUSEhIVFRUVFRUVFRUVDxUVFRUVFRUWFhUVFRUYHSggGBolHRUVITEhJSkrLi4uFx8zODMtNygtLisBCgoKDg0OFxAQGisdHR0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tNy03LS0tNy0tLTc3LS03LTctLTctLf/AABEIAOEA4QMBIgACEQEDEQH/xAAXAAEBAQEAAAAAAAAAAAAAAAAAAQIF/8QAHBABAQEBAQEAAwAAAAAAAAAAAAERAhIxIVFh/8QAGAEBAQEBAQAAAAAAAAAAAAAAAAECBwX/xAAZEQEBAQEBAQAAAAAAAAAAAAAAAREhMUH/2gAMAwEAAhEDEQA/AONRdTXhusCoaC6WppKCphqwEouIKrOLCwRkaqQVDoMFZjWpFUatTUxYiEiYukUSlMWioQIYFgEBBQG6i4IyCAHKosgCpYAhaaYC6h8UCoaAlStVnVjUQWIC8rKzzGkpV0xIois4tSKDK0sFS0tMWwEDQ1W7SCowlIApFS1BGpUlTVkMVYJQQNRcVTSIWgtSxUQSM1VoqSkphIDUqSstRTGippiIli4QigzWoIMi6KraYGoyQSrItVFIgEaqSBQNNKiENRVVFKkBUWsgQlMXBWaLUoIukBVisrIiKLKq6yzKQppYq+Bn0B1V5gICSqQEikQFAoJirEEExbElVQ1bACGkXEREaRRMRdCxWbEjbKKnxSii6sRURazY1qYogYIqkLSKgLEqAQAIUNUJSEq3EBJEa0Fp6YtXVwwaxmkqC0QBcCFEKmKQVKljUMXROYlWpUCRq1jWrQEXQwAwIIQWKpgiyiLYiBAAL6q4us6aiYtJBYolIUApaEiAmLiWrqtJU00QL0MiqrKxAxZUtT4eDYzou0xoiRUQwgihSGLqKhgsgJhgAJFxVGVwNA1dSFQWFQiouoEgprONWEQY0asZsVUIuLIlVFrNWAvkPSidaww5KMkKAIFBVIQECkOlAE1BaioqrDDREBFURqHMECsi6oiKorJirYgxSxcJytVBrETTV0RrF3ENReURBaIKorOCKkXBRNCkRWmbFSwiRGmWtKpqsyNCIRcICWEiii4gIiUxS0ioUW0GcFFXUpoYguoaWKAp0CLUqohqKlVSQlCILEphARcWwlXQJSlRDTA1RVxIVMQRbUwUi4SFBFtQoKGAIIsASrpgJ+FxIVVNNRZTA0BAoqRQwTWoCI1aVNBKpFkRdCJEFDSAilAMQXAIUUGfIoCciLKBYLiUEi4croMo1YixSqRNMFsZFgGFqoCykElEBSwDAhQXTEiypQw6AE1UIouFExIIGi9VaYGCEKRamjONQxJVCixNAsTFSgtTFJTqipqwRNIYuIIuCaC2EXU1EDyQVSJVRQVJVxASKmqGfwNonRr9IgIoBFVmoE9I1GYCwi1KgfVi8FA+n0agF8QiglRmkAUioAsOQVEoApFBKJCAooDCP//Z');
+  background-size: 100% 1px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.gant-table .ant-table .ant-table-content .ant-table-scroll .ant-table-body table .ant-table-tbody tr td.gant-table-editcell-dirt {
+  position: relative;
+}
+.gant-table .ant-table .ant-table-content .ant-table-scroll .ant-table-body table .ant-table-tbody tr td.gant-table-editcell-dirt::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 0;
+  height: 0;
+  border: 3px solid transparent;
+  border-top-color: red;
+  border-left-color: red;
+}
+.gant-table .ant-table .ant-table-content .ant-table-scroll .ant-table-body table .ant-table-tbody tr:first-child td {
+  -webkit-transition: all 0.3s, width 0s, border 0s;
+  transition: all 0.3s, width 0s, border 0s;
+}
+.gant-table .ant-table .ant-table-content .ant-table-scroll .ant-table-body table .ant-table-thead tr > th {
+  white-space: nowrap;
+}
+.gant-table .ant-table .ant-table-content .ant-table-scroll .ant-table-placeholder {
+  padding: 0 !important;
+  border: 0 !important;
+}
+.gant-table .ant-table .ant-table-content .ant-table-scroll .ant-table-footer {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 4px;
+}
+.gant-table .ant-table .ant-table-content .ant-table-scroll .ant-table-footer .ant-pagination {
+  padding: 0 !important;
+}
+.gant-table .ant-table .ant-table-content .ant-table-scroll .ant-table-footer .flex {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+.gant-table .ant-table .ant-table-content .ant-table-scroll .ant-table-footer .height {
+  line-height: 24px;
+  height: 24px;
+  max-height: 24px;
+  min-height: 24px;
+}
+.gant-table .ant-table .ant-table-content .ant-table-scroll .ant-table-footer .gant-table-footer-inner,
+.gant-table .ant-table .ant-table-content .ant-table-scroll .ant-table-footer .gant-table-footer-tail {
+  line-height: 24px;
+  height: 24px;
+  max-height: 24px;
+  min-height: 24px;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+.gant-table .ant-table .ant-table-content .ant-table-scroll .ant-table-footer .gant-table-footer-inner .ant-pagination-options,
+.gant-table .ant-table .ant-table-content .ant-table-scroll .ant-table-footer .gant-table-footer-tail .ant-pagination-options {
+  line-height: 24px;
+}
+.gant-table.gant-table-resizable .ant-table > .ant-table-content .ant-table-header > table .ant-table-thead > tr > th .ant-table-header-column,
+.gant-table.gant-table-resizable .ant-table > .ant-table-content .ant-table-body > table .ant-table-thead > tr > th .ant-table-header-column {
+  display: inline;
+}
+.gant-table.gant-table-resizable .ant-table > .ant-table-content .ant-table-header > table .ant-table-thead > tr > th .ant-table-header-column div,
+.gant-table.gant-table-resizable .ant-table > .ant-table-content .ant-table-body > table .ant-table-thead > tr > th .ant-table-header-column div {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.gant-table.gant-table-resizable .ant-table > .ant-table-content .ant-table-header > table .ant-table-thead > tr > th.react-resizable,
+.gant-table.gant-table-resizable .ant-table > .ant-table-content .ant-table-body > table .ant-table-thead > tr > th.react-resizable {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+.gant-table.gant-table-resizable .ant-table > .ant-table-content .ant-table-header > table .ant-table-thead > tr > th.react-resizable .react-resizable-handle,
+.gant-table.gant-table-resizable .ant-table > .ant-table-content .ant-table-body > table .ant-table-thead > tr > th.react-resizable .react-resizable-handle {
+  cursor: col-resize;
+  opacity: 0;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 20px;
+  height: 100%;
+  padding: 0;
+  display: inline-block;
+  background-repeat: no-repeat;
+  background-origin: content-box;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2IDYiIHN0eWxlPSJiYWNrZ3JvdW5kLWNvbG9yOiNmZmZmZmYwMCIgeD0iMHB4IiB5PSIwcHgiIHdpZHRoPSI2cHgiIGhlaWdodD0iNnB4Ij48ZyBvcGFjaXR5PSIwLjMwMiI+PHBhdGggZD0iTSA2IDYgTCAwIDYgTCAwIDQuMiBMIDQgNC4yIEwgNC4yIDQuMiBMIDQuMiAwIEwgNiAwIEwgNiA2IEwgNiA2IFoiIGZpbGw9IiMwMDAwMDAiLz48L2c+PC9zdmc+');
+  background-position: bottom right;
+}
+.gant-table.gant-table-resizable .ant-table > .ant-table-content .ant-table-header > table .ant-table-thead > tr > th.react-resizable:hover > .react-resizable-handle,
+.gant-table.gant-table-resizable .ant-table > .ant-table-content .ant-table-body > table .ant-table-thead > tr > th.react-resizable:hover > .react-resizable-handle {
+  opacity: 1;
+}
+.gant-table.gant-table-resizable .ant-table > .ant-table-content .ant-table-header > table .ant-table-thead > tr > th.react-resizable:last-child,
+.gant-table.gant-table-resizable .ant-table > .ant-table-content .ant-table-body > table .ant-table-thead > tr > th.react-resizable:last-child {
+  overflow: hidden;
+}
+.gant-table.gant-table-resizable .ant-table > .ant-table-content .ant-table-header > table .ant-table-thead > tr > th[colspan],
+.gant-table.gant-table-resizable .ant-table > .ant-table-content .ant-table-body > table .ant-table-thead > tr > th[colspan] {
+  text-align: left;
+}
+.gant-table.gant-table-zebra .ant-table > .ant-table-content table .ant-table-thead > tr {
+  background-color: rgba(0, 0, 0, 0.06);
+}
+.gant-table.gant-table-zebra .ant-table > .ant-table-content table .ant-table-tbody tr:hover {
+  background-color: rgba(0, 0, 0, 0.06);
+}
+.gant-table.gant-table-zebra .ant-table > .ant-table-content table .ant-table-tbody tr:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.006);
+}
+.gant-table.gant-table-zebra .ant-table > .ant-table-content table .ant-table-tbody tr:nth-child(even):hover {
+  background-color: rgba(0, 0, 0, 0.06);
+}
+.gant-table.gant-table-sortable .ant-table .ant-table-content table .ant-table-tbody tr {
+  -webkit-transition: all 0.3s, height 0s, -webkit-transform 0s;
+  transition: all 0.3s, height 0s, -webkit-transform 0s;
+  transition: all 0.3s, height 0s, transform 0s;
+  transition: all 0.3s, height 0s, transform 0s, -webkit-transform 0s;
+}
+.gant-table.gant-table-light .ant-table.ant-table-small,
+.gant-table.gant-table-light .ant-table-tbody tr td,
+.gant-table.gant-table-light .ant-table-thead tr th {
+  border: 0;
+}
+.gant-table.gant-table-light .ant-table .ant-table-content table {
+  border-collapse: separate;
+}
+.gant-table.gant-table-light .ant-table .ant-table-content .ant-table-thead tr > th {
+  font-weight: bold;
+}
+.gant-table.gant-table-light .ant-table .ant-table-content .ant-table-thead tr > th .ant-table-column-sorter {
+  display: none;
+}
+.gant-table.gant-table-light .ant-table .ant-table-content .ant-table-tbody tr[data-row-key] {
+  background-color: white;
+  -webkit-box-shadow: 0 2px 1px 1px rgba(0, 0, 0, 0.04);
+          box-shadow: 0 2px 1px 1px rgba(0, 0, 0, 0.04);
+  border-radius: 6px;
+}
+.gant-table.gant-table-light .ant-table .ant-table-content .ant-table-tbody tr[data-row-key] td:first-child {
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+}
+.gant-table.gant-table-light .ant-table .ant-table-content .ant-table-tbody tr[data-row-key] td:last-child {
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+.gant-table-menu {
+  margin-left: 5px;
+}

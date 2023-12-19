@@ -1,0 +1,125 @@
+.gant-grid-editable .gant-cell-validate-sign::before {
+  content: '';
+  width: 98%;
+  bottom: 0px;
+  border-bottom: 1px dashed var(--error-color, #ff4d4f);
+  position: absolute;
+  left: 1%;
+}
+.gant-grid-editable .gant-header-cell-required .customHeaderLabel::before {
+  content: '*';
+  margin-right: 2px;
+  color: var(--error-color, #ff4d4f);
+}
+.gant-grid-editable .gant-header-cell-edit .customHeaderLabel::before {
+  content: '*';
+  margin-right: 2px;
+  color: #1890ff;
+}
+.gant-grid-editable .ag-cell-inline-editing {
+  padding: 0px !important;
+  border: none !important;
+}
+.gant-grid-cell-serial-add {
+  color: var(--success-color);
+}
+.gant-grid-cell-serial-add::before {
+  content: '+';
+  position: absolute;
+  left: 2px;
+  top: -1px;
+}
+.gant-grid-cell-editing {
+  position: absolute;
+  top: 0px;
+  width: 100%;
+}
+.gant-grid-cell-editing > .gant-input-wrapper {
+  display: block;
+}
+.gant-grid-cell-editing .gant-input .gant-input-group.ant-input-group .gant-input-group-inner > * {
+  border-radius: 0px;
+}
+.gant-grid-editable > div > div > div > .ag-root-wrapper > .ag-root-wrapper-body > .ag-root .gant-grid-cell-edit {
+  background-image: -webkit-gradient(linear, right bottom, left top, from(transparent), color-stop(49.9%, transparent), color-stop(50%, var(--cell-edit-color, blue)), to(var(--cell-edit-color, blue)));
+  background-image: -webkit-linear-gradient(bottom right, transparent 0%, transparent 49.9%, var(--cell-edit-color, blue) 50%, var(--cell-edit-color, blue) 100%);
+  background-image: linear-gradient(to top left, transparent 0%, transparent 49.9%, var(--cell-edit-color, blue) 50%, var(--cell-edit-color, blue) 100%);
+  background-size: 6px 6px;
+  background-repeat: no-repeat;
+}
+.gant-grid-editable > div > div > div > .ag-root-wrapper > .ag-root-wrapper-body > .ag-root .gant-grid-cell-modify {
+  background-image: -webkit-gradient(linear, right bottom, left top, from(transparent), color-stop(49.9%, transparent), color-stop(50%, var(--cell-modify-color, red)), to(var(--cell-modify-color, red)));
+  background-image: -webkit-linear-gradient(bottom right, transparent 0%, transparent 49.9%, var(--cell-modify-color, red) 50%, var(--cell-modify-color, red) 100%);
+  background-image: linear-gradient(to top left, transparent 0%, transparent 49.9%, var(--cell-modify-color, red) 50%, var(--cell-modify-color, red) 100%);
+  background-size: 6px 6px;
+  background-repeat: no-repeat;
+}
+.gant-grid-editable > div > div > div > .ag-root-wrapper > .ag-root-wrapper-body > .ag-root .gant-grid-cell-delete {
+  background-image: -webkit-gradient(linear, right bottom, left top, from(transparent), color-stop(49.9%, transparent), color-stop(50%, var(--cell-delete-color, orange)), to(var(--cell-delete-color, orange)));
+  background-image: -webkit-linear-gradient(bottom right, transparent 0%, transparent 49.9%, var(--cell-delete-color, orange) 50%, var(--cell-delete-color, orange) 100%);
+  background-image: linear-gradient(to top left, transparent 0%, transparent 49.9%, var(--cell-delete-color, orange) 50%, var(--cell-delete-color, orange) 100%);
+  background-size: 6px 6px;
+  background-repeat: no-repeat;
+}
+.gant-grid-cell .gant-level-line {
+  width: 18px;
+  position: relative;
+}
+.gant-grid-cell .gant-level-line.gant-folder-line::before {
+  position: absolute;
+  border-left: 1px dotted var(--group-file-color, #a39f9f);
+  content: '';
+  height: 100%;
+  left: 8px;
+  display: block;
+}
+.gant-grid-cell .gant-level-line.gant-file-line-last::before {
+  position: absolute;
+  border-left: 1px dotted var(--group-file-color, #a39f9f);
+  content: '';
+  height: 50%;
+  left: 8px;
+  top: 0px;
+}
+.gant-grid-cell .gant-level-line.gant-file-line-last::after {
+  position: absolute;
+  border-top: 1px dotted var(--group-file-color, #a39f9f);
+  content: '';
+  top: 50%;
+  width: 9px;
+  left: 8px;
+}
+.gant-grid-cell .gant-level-line.gant-file-line::before {
+  position: absolute;
+  border-left: 1px dotted var(--group-file-color, #a39f9f);
+  content: '';
+  height: 100%;
+  left: 8px;
+}
+.gant-grid-cell .gant-level-line.gant-file-line::after {
+  position: absolute;
+  border-top: 1px dotted var(--group-file-color, #a39f9f);
+  content: '';
+  top: 50%;
+  width: 9px;
+  left: 8px;
+}
+.gant-grid-cell .gant-treedata-icon {
+  color: var(--group-file-color, #a39f9f);
+  margin-right: 4px;
+}
+.gant-grid-cell .gant-treedata-icon.gant-treedata-first-file {
+  padding-left: 0px;
+}
+.gant-grid-cell .gant-treedata-icon.gant-treedata-file {
+  padding-left: 20px;
+  position: relative;
+}
+.gant-grid-cell .gant-treedata-icon.gant-treedata-file::before {
+  position: absolute;
+  border-top: 1px dotted var(--group-file-color, #a39f9f);
+  content: '';
+  top: 50%;
+  width: 12px;
+  left: 0px;
+}

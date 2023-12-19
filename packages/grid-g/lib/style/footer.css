@@ -1,0 +1,32 @@
+.gantd-grid-footer {
+  overflow: hidden;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+.gantd-grid-footer .gantd-pagination-number-goto .ant-input-number {
+  margin: 0 8px;
+}
+.gantd-grid-footer .gantd-pagination-total-btn {
+  font-size: 12px;
+  border: none !important;
+}
+.gantd-grid-footer :global .ant-pagination-total-text {
+  vertical-align: top;
+  line-height: 24px !important;
+}
+.gant-grid-pagination.mini {
+  padding: 3px 5px;
+}
+.gant-grid-pagination.mini .ant-pagination-options {
+  line-height: 24px;
+}

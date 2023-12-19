@@ -8,8 +8,6 @@
 *.cache
 /build
 /.eslintcache
-dist
-lib
 link
 package-lock.json
 .idea/

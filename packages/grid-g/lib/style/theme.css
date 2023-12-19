@@ -1,0 +1,62 @@
+.gant-grid.gant-grid-theme .ag-theme-balham .ag-header {
+  background-color: var(--ag-header-background-color, #f1f1f1);
+}
+.ag-row-hover:not(.gant-grid.gant-grid-theme.ag-row-selected),
+.gant-grid.gant-grid-theme .ag-theme-balham .ag-row-hover:not(.ag-full-width-row)::before {
+  background-color: #f6f6f6 !important;
+}
+.gant-grid.gant-grid-theme .ag-root-wrapper {
+  border: none;
+}
+.gant-grid.gant-grid-theme .ag-center-cols-container {
+  min-width: 100%;
+}
+.gant-grid.gant-grid-theme .ag-pinned-left-header {
+  border-right: none;
+}
+.gant-grid.gant-grid-theme .ag-header-cell,
+.gant-grid.gant-grid-theme .ag-header-group-cell {
+  color: var(--grid-header-color, #333);
+  font-size: 12px;
+}
+.gant-grid.gant-grid-theme .ag-cell {
+  color: var(--grid-cell-color, #666);
+  font-size: 12px;
+}
+.gant-grid.gant-grid-theme .ag-header-cell::after,
+.gant-grid.gant-grid-theme .ag-header-group-cell::after {
+  height: 100%;
+  top: 0px;
+}
+.gant-grid.gant-grid-theme .ag-header-cell:hover::after,
+.gant-grid.gant-grid-theme .ag-header-group-cell:hover::after {
+  display: block;
+}
+.gant-grid.gant-grid-theme .ag-header-group-cell-with-group {
+  border-bottom: 1px solid var(--ag-border-color, #bdc3c7);
+  text-align: center;
+}
+.gant-grid.gant-grid-theme .ag-header-group-cell-with-group .ag-header-group-cell-label {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+}
+.gant-grid.gant-grid-theme .ag-header-row:not(:first-child) .ag-header-cell,
+.gant-grid.gant-grid-theme .ag-header-row:not(:first-child) .ag-header-group-cell.ag-header-group-cell-with-group {
+  border-top: none;
+}
+.gant-grid.gant-grid-theme .ag-row-odd {
+  background-color: transparent;
+}
+.gant-grid.gant-grid-theme .ant-pagination-item,
+.gant-grid.gant-grid-theme .ant-pagination-options-quick-jumper input,
+.gant-grid.gant-grid-theme .ant-pagination-prev .ant-pagination-item-link,
+.gant-grid.gant-grid-theme .ant-pagination-next .ant-pagination-item-link,
+.gant-grid.gant-grid-theme .ant-select-selection {
+  border-radius: var(--border-radius);
+}
+.gant-grid.gant-grid-theme .gantd-grid-footer {
+  padding-top: var(--space, 10px);
+  border-top: 1px solid var(--ag-border-color, #bdc3c7);
+}

@@ -1,0 +1,92 @@
+:root {
+  --border-color-split: #e8e8e8;
+  --text-color: rgba(0, 0, 0, 0.65);
+  --primary-color: #1890FF;
+  --btn-danger-bg: #ff4d4f;
+  --error-8: #a8071a;
+  --item-hover-bg: var(--component-background-5);
+  --item-hover-color: rgba(0, 0, 0, 0.65);
+  --border-radius-base: 4px;
+}
+.gant-smart-table-viewpicker-panel {
+  width: 300px;
+}
+.gant-smart-table-viewpicker-panel .gant-blockheader {
+  height: auto !important;
+  min-height: auto;
+  border-bottom: 1px solid var(--border-color-split);
+  padding: 0;
+}
+.gant-smart-table-viewpicker-panel .content {
+  max-height: 250px;
+  overflow-y: auto;
+  padding: 5px;
+  margin: 0;
+  border-bottom: 1px solid var(--border-color-split);
+}
+.gant-smart-table-viewpicker-panel .header {
+  color: var(--text-color);
+  font-size: 14px !important;
+  font-weight: bold;
+  padding-left: 5px;
+  margin: 5px 0px 5px 0px !important;
+}
+.gant-smart-table-viewpicker-panel ul {
+  -webkit-padding-start: unset;
+          padding-inline-start: unset;
+  margin-bottom: 0px !important;
+}
+.gant-smart-table-viewpicker-panel ul li {
+  padding: 3px 5px;
+  line-height: 20px;
+  font-size: 12px;
+  color: var(--text-color);
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+.gant-smart-table-viewpicker-panel ul li .leftContent {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+}
+.gant-smart-table-viewpicker-panel ul li .leftContent:hover {
+  cursor: pointer;
+}
+.gant-smart-table-viewpicker-panel ul li .tag {
+  margin-left: 5px;
+}
+.gant-smart-table-viewpicker-panel ul li .operates {
+  display: none;
+  font-size: 12px;
+  color: unset;
+}
+.gant-smart-table-viewpicker-panel ul li .operates .operate:hover {
+  color: var(--primary-color);
+  cursor: pointer;
+}
+.gant-smart-table-viewpicker-panel ul li .operates .delete {
+  margin-left: 5px;
+  color: var(--btn-danger-bg);
+}
+.gant-smart-table-viewpicker-panel ul li .operates .delete:hover {
+  color: var(--error-8);
+}
+.gant-smart-table-viewpicker-panel ul li:hover {
+  background: var(--item-hover-bg);
+  color: var(--item-hover-color);
+  border-radius: var(--border-radius-base);
+}
+.gant-smart-table-viewpicker-panel ul li:hover .operates {
+  display: block;
+}

@@ -1,0 +1,101 @@
+:root {
+  --font-size-base: 12px;
+}
+.gant-schemaform-schemaCard {
+  clear: both;
+}
+.gant-schemaform-schemaForm .ant-input-group.gant-input-group,
+.gant-schemaform-schemaForm .ant-input-group-wrapper {
+  top: 0px !important;
+  vertical-align: top;
+}
+.gant-schemaform-schemaForm .ant-input-group .ant-select,
+.gant-schemaform-schemaForm .ant-input-group .ant-cascader-picker {
+  width: 100%;
+}
+.gant-schemaform-schemaForm .ant-form-item {
+  margin-bottom: 4px;
+}
+.gant-schemaform-schemaForm .ant-form-item .ant-form-item-label {
+  color: rgba(125, 125, 125, 0.65);
+  height: 32px;
+  line-height: 32px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 0 0 0px;
+}
+.gant-schemaform-schemaForm .ant-form-item .ant-form-item-control-wrapper {
+  color: var(--text-color);
+}
+.gant-schemaform-schemaForm .ant-form-item .ant-form-item-control-wrapper .ant-form-item-control {
+  margin-bottom: 4px;
+  line-height: 32px;
+}
+.gant-schemaform-schemaForm .ant-form-item .ant-form-item-control-wrapper .ant-form-item-control .ant-form-extra {
+  padding-top: 4px;
+}
+.gant-schemaform-schemaForm .ant-form-item .ant-form-item-control-wrapper .ant-form-item-control .ant-form-explain {
+  position: absolute;
+  font-size: 14px;
+  line-height: 32px;
+  bottom: 1px;
+  right: 7px;
+  z-index: 10;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-all;
+}
+.gant-schemaform-schemaForm .gant-form-item-sm {
+  font-size: var(--font-size-base);
+}
+.gant-schemaform-schemaForm .gant-form-item-sm .ant-select-sm {
+  font-size: var(--font-size-base);
+}
+.gant-schemaform-schemaForm .gant-form-item-sm .ant-select-sm .ant-select-selection__placeholder {
+  line-height: 24px;
+}
+.gant-schemaform-schemaForm .gant-form-item-sm .ant-form-item-control-wrapper .ant-form-item-control {
+  margin-top: -1px;
+  line-height: 24px;
+}
+.gant-schemaform-schemaForm .gant-form-item-sm .ant-form-item-control-wrapper .ant-form-item-control .ant-form-explain {
+  font-size: var(--font-size-base);
+  line-height: 24px;
+}
+.gant-schemaform-schemaForm .gant-form-item-sm .ant-form-item-control-wrapper .ant-form-item-control .ant-form-extra {
+  min-height: 18px;
+  padding-top: 2px;
+  font-size: var(--font-size-base);
+}
+.gant-schemaform-schemaForm .gant-form-item-sm .ant-form-item-label {
+  font-size: var(--font-size-base);
+  line-height: 24px;
+  height: 24px;
+}
+.gant-schemaform-schemaForm .gant-form-item-sm label {
+  font-size: var(--font-size-base);
+}
+.gant-schemaform-schemaForm .ant-form-item-label label::after,
+.gant-schemaform-schemaForm .ant-col-24.ant-form-item-label label::after,
+.gant-schemaform-schemaForm .ant-col-xl-24.ant-form-item-label label::after {
+  display: inline;
+}
+.gant-schemaform-schemaForm .ant-input {
+  padding: 4px 7px !important;
+}
+.gant-schemaform-schemaForm .gant-schemaform-showRequiredMark .ant-form-item-required::before {
+  display: inline;
+}
+.gant-schemaform-right .ant-form-item-label {
+  text-align: right;
+}
+.gant-schemaform-left .ant-form-item-label {
+  text-align: left;
+}
+.gant-schemaform-schemaTable {
+  padding: 5px;
+}

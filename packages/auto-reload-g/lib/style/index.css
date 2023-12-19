@@ -1,0 +1,50 @@
+:root {
+  --btn-default-color: #000000;
+  --btn-default-border-color: rgba(0, 0, 0, 0.2);
+  --primary-color: #1890FF;
+}
+.gant-auto-reload-container {
+  padding: 0 5px !important;
+  border-color: var(--btn-default-border-color) !important;
+  -webkit-box-shadow: none !important;
+          box-shadow: none !important;
+  line-height: 22px;
+  overflow: hidden;
+}
+.gant-auto-reload-container:hover {
+  background-color: transparent !important;
+  color: var(--btn-default-color) !important;
+}
+.gant-auto-reload-toolTipContainer p {
+  margin-bottom: 0px;
+  line-height: 20px;
+}
+.gant-auto-reload-autoSwitch {
+  margin-top: -2px !important;
+}
+.gant-auto-reload-toolTipTime {
+  display: inline-block;
+  line-height: 22px;
+  height: 22px !important;
+}
+.gant-auto-reload-toolTipTime:hover {
+  color: var(--primary-color);
+}
+.gant-auto-reload-autoTimeInput {
+  border: none !important;
+  border-radius: 0px !important;
+  padding: 0px !important;
+  line-height: 22px !important;
+  height: 22px !important;
+  vertical-align: 0px;
+  width: 44px !important;
+  -webkit-box-shadow: none !important;
+          box-shadow: none !important;
+}
+.gant-auto-reload-autoTimeInput .ant-input-number-input {
+  padding: 0px;
+  padding-right: 22px;
+}
+.gant-auto-reload-autoTimeInput .ant-input-number-handler-wrap {
+  opacity: 1;
+}

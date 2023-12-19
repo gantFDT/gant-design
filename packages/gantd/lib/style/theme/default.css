@@ -1,0 +1,58 @@
+/* stylelint-disable no-duplicate-selectors */
+/* stylelint-disable */
+/* stylelint-disable declaration-bang-space-before,no-duplicate-selectors,string-no-newline */
+/* stylelint-disable at-rule-empty-line-before,at-rule-name-space-after,at-rule-no-unknown */
+:root {
+  --primary-color: #1890FF;
+  --component-background: #ffffff;
+  --text-color: rgba(0, 0, 0, 0.65);
+  --text-color-secondary: rgba(0, 0, 0, 0.45);
+  --text-color-inverse: #fff;
+  --icon-color: inherit;
+  --icon-color-hover: rgba(0, 0, 0, 0.75);
+  --heading-color: rgba(0, 0, 0, 0.85);
+  --heading-color-dark: #ffffff;
+  --text-color-dark: rgba(255, 255, 255, 0.85);
+  --text-color-secondary-dark: rgba(255, 255, 255, 0.65);
+  --text-selection-bg: #1890FF;
+  --font-size-base: 12px;
+  --font-size-lg: 14px;
+  --font-size-sm: 12px;
+  --line-height-base: 1.5;
+  --border-radius-base: 4px;
+  --border-radius-sm: 2px;
+  --item-active-bg: rgba(0, 0, 0, 0.1);
+  --item-hover-bg: rgba(0, 0, 0, 0.05);
+  --item-hover-color: rgba(0, 0, 0, 0.65);
+  --link-color: #1890ff;
+  --link-hover-color: #40a9ff;
+  --link-active-color: #096dd9;
+  --link-decoration: none;
+  --link-hover-decoration: none;
+  --border-color-base: #d9d9d9;
+  --border-color-split: #e8e8e8;
+  --border-color-inverse: #fff;
+  --border-width-base: 1px;
+  --border-style-base: solid;
+  --outline-blur-size: 0;
+  --outline-width: 2px;
+  --outline-color: #1890ff;
+  --background-color-light: #fafafa;
+  --background-color-base: #f5f5f5;
+  --disabled-color: rgba(0, 0, 0, 0.25);
+  --disabled-bg: #f5f5f5;
+  --disabled-color-dark: rgba(255, 255, 255, 0.35);
+  --shadow-color: rgba(0, 0, 0, 0.15);
+  --shadow-color-inverse: #fff;
+  --box-shadow-base: 0 2px 8px rgba(0, 0, 0, 0.15);
+  --shadow-1-up: 0 -2px 8px rgba(0, 0, 0, 0.15);
+  --shadow-1-down: 0 2px 8px rgba(0, 0, 0, 0.15);
+  --shadow-1-left: -2px 0 8px rgba(0, 0, 0, 0.15);
+  --shadow-1-right: 2px 0 8px rgba(0, 0, 0, 0.15);
+  --shadow-2: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --btn-default-color: #000000;
+  --btn-default-bg: #fff;
+  --btn-default-border-color: rgba(0, 0, 0, 0.2);
+  --btn-danger-bg: #ff4d4f;
+  --error-8: #a8071a;
+}

@@ -1,0 +1,16 @@
+import '../../color-picker/style';
+import '../../data-edit-cell/style';
+import '../../icon/style';
+import '../../input/style';
+import '../../input-cell-phone/style';
+import '../../input-tele-phone/style';
+import '../../input-email/style';
+import '../../input-language/style';
+import '../../input-money/style';
+import '../../input-number/style';
+import '../../input-url/style';
+import '../../location-selector/style';
+import '../../select/style';
+import '../../date-picker/style';
+import '../../selector/style';
+import './index.less';

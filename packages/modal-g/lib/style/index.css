@@ -1,0 +1,222 @@
+:root {
+  --modal-highlight-color: #f00;
+  --modal-body-padding: 10px;
+  --modal-footer-bg: transparent;
+  --modal-footer-reset-color: #000000;
+  --modal-footer-border-color-split: rgba(0, 0, 0, 0.45);
+  --modal-mask-bg: rgba(0, 0, 0, 0.45);
+  --modal-header-bg: #fff;
+  --modal-header-color: rgba(0, 0, 0, 0.65);
+  --modal-header-hover-color: #000000;
+  --modal-header-icon-hover-color: #fff;
+  --modal-header-danger-icon-bg: #f00;
+  --modal-header-default-icon-bg: rgba(0, 0, 0, 0.3);
+}
+html .gant-modal-resizableModalWrapper .ant-modal-header {
+  padding: 4px !important;
+}
+html .gant-modal-resizableModalWrapper .ant-modal-close-x {
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+}
+html .gant-modal-resizableModalWrapper .ant-modal-body {
+  padding: 10px;
+}
+html .gant-modal-resizableModalWrapper .ant-modal-title {
+  font-size: 14px;
+  font-weight: bold;
+}
+html .gant-modal-resizableModalWrapper .ant-modal-confirm-body {
+  padding-bottom: 30px;
+}
+html .gant-modal-resizableModalWrapper .ant-modal-confirm .ant-modal-confirm-btns {
+  margin-top: 0px;
+}
+html .gant-modal-resizableModalWrapper .ant-modal-confirm .ant-modal-body {
+  padding: 10px !important;
+}
+html .gant-modal-resizableModalWrapper .ant-modal-footer {
+  padding: 3px;
+}
+.gant-modal-resizableModalDefault {
+  pointer-events: none;
+}
+.gant-modal-resizableModalDialog {
+  pointer-events: auto;
+}
+.gant-modal-resizableModalWrapper {
+  overflow: hidden !important;
+}
+.gant-modal-resizableModalWrapper .ant-modal {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  max-width: none;
+}
+.gant-modal-resizableModalWrapper .ant-modal-content {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  overflow: hidden;
+}
+.gant-modal-resizableModalWrapper .ant-modal-content .ant-modal-close {
+  -webkit-transition: none;
+  transition: none;
+}
+.gant-modal-resizableModalWrapper .ant-modal-content .ant-modal-close-x:hover {
+  background-color: var(--modal-header-danger-icon-bg);
+}
+.gant-modal-resizableModalWrapper .ant-modal-content .ant-modal-close-x:hover i {
+  color: var(--modal-header-icon-hover-color);
+}
+.gant-modal-resizableModalWrapper .ant-modal-content .ant-modal-close-x:active {
+  background-color: var(--modal-highlight-color);
+}
+.gant-modal-resizableModalWrapper .ant-modal-content .ant-modal-close-x:active i {
+  color: var(--modal-header-icon-hover-color);
+}
+.gant-modal-resizableModalWrapper .ant-modal-body {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  overflow-y: auto;
+}
+.gant-modal-resizableModalWrapper .gant-modal-resizableModalTitle {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.gant-modal-resizableModalWrapper .gant-modal-canDrag {
+  cursor: move;
+}
+.gant-modal-resizableModalWrapper .gant-modal-resizableModalContent {
+  height: 100%;
+}
+.gant-modal-resizableModalWrapper .gant-modal-maximizeAnchor {
+  right: 30px;
+  width: 30px;
+  top: 0;
+  cursor: pointer;
+  height: 30px;
+  position: absolute;
+}
+.gant-modal-resizableModalWrapper .gant-modal-maximizeAnchor .gant-input-wrapper {
+  font-size: 16px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  color: var(--modal-header-color);
+}
+.gant-modal-resizableModalWrapper .gant-modal-maximizeAnchor:hover {
+  background-color: var(--modal-header-default-icon-bg);
+}
+.gant-modal-resizableModalWrapper .gant-modal-maximizeAnchor:hover i {
+  color: var(--modal-header-icon-hover-color);
+}
+.gant-modal-resizableModalWrapper .gant-modal-rightTop-resizeAnchor {
+  top: -12px;
+  right: -12px;
+  bottom: none;
+  left: none;
+  cursor: ne-resize;
+  z-index: 11;
+  width: 20px;
+  height: 20px;
+  position: absolute;
+}
+.gant-modal-resizableModalWrapper .gant-modal-rightBottom-resizeAnchor {
+  top: none;
+  right: -12px;
+  bottom: -12px;
+  left: none;
+  cursor: se-resize;
+  z-index: 11;
+  width: 20px;
+  height: 20px;
+  position: absolute;
+}
+.gant-modal-resizableModalWrapper .gant-modal-leftBottom-resizeAnchor {
+  top: none;
+  right: none;
+  bottom: -12px;
+  left: -12px;
+  cursor: ne-resize;
+  z-index: 11;
+  width: 20px;
+  height: 20px;
+  position: absolute;
+}
+.gant-modal-resizableModalWrapper .gant-modal-leftTop-resizeAnchor {
+  top: -12px;
+  right: none;
+  bottom: none;
+  left: -12px;
+  cursor: se-resize;
+  z-index: 11;
+  width: 20px;
+  height: 20px;
+  position: absolute;
+}
+.gant-modal-resizableModalWrapper .gant-modal-top-resizeAnchor {
+  top: -5px;
+  right: none;
+  bottom: none;
+  left: none;
+  cursor: n-resize;
+  width: calc(100% - 20px);
+  height: 10px;
+  z-index: 11;
+  position: absolute;
+}
+.gant-modal-resizableModalWrapper .gant-modal-right-resizeAnchor {
+  top: 12px;
+  right: -5px;
+  bottom: none;
+  left: none;
+  cursor: e-resize;
+  width: 10px;
+  height: calc(100% - 20px);
+  z-index: 11;
+  position: absolute;
+}
+.gant-modal-resizableModalWrapper .gant-modal-bottom-resizeAnchor {
+  top: none;
+  right: none;
+  bottom: -5px;
+  left: none;
+  cursor: s-resize;
+  width: calc(100% - 20px);
+  height: 10px;
+  z-index: 11;
+  position: absolute;
+}
+.gant-modal-resizableModalWrapper .gant-modal-left-resizeAnchor {
+  top: 12px;
+  right: none;
+  bottom: none;
+  left: -5px;
+  cursor: w-resize;
+  width: 10px;
+  height: calc(100% - 20px);
+  z-index: 11;
+  position: absolute;
+}
+.gant-modal-maximize .ant-modal-content {
+  border-radius: 0;
+}

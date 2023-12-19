@@ -1,0 +1,39 @@
+.gant-grid-form-wrapper {
+  position: relative;
+  height: calc(100%);
+  background-color: #fff;
+  border: 1px solid var(--ag-border-color, #bdc3c7);
+  border-left: none;
+  overflow: hidden;
+}
+.gant-grid-form-wrapper .gant-grid-form-cursor {
+  width: 6px;
+  height: 100%;
+  position: absolute;
+  left: -1px;
+  cursor: ew-resize;
+  z-index: 2;
+}
+.gant-grid-form {
+  height: calc(100% - 24px);
+  overflow: auto;
+}
+.gant-grid-form-header {
+  padding: 5px 5px;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  line-height: 14px;
+  font-size: 14px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  background-color: var(--ag-header-background-color, #f5f7f7);
+  border-bottom: 1px solid var(--ag-border-color, #bdc3c7);
+}

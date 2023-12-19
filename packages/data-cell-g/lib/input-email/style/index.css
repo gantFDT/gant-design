@@ -1,0 +1,45 @@
+:root {
+  --primary-color: #1890ff;
+}
+.ant-select-sm {
+  font-size: 12px;
+}
+.gant-input-group-sm {
+  font-size: 12px;
+}
+.gant-input-group-sm .ant-input-sm,
+.gant-input-group-sm .ant-input-number-input,
+.gant-input-group-sm .ant-input {
+  font-size: 12px;
+}
+.gant-input-group-sm li {
+  line-height: 24px;
+}
+.gant-input-group-sm input::-webkit-input-placeholder,
+.gant-input-group-sm textarea::-webkit-input-placeholder {
+  font-size: 12px !important;
+}
+.gant-input-group-sm .ant-select {
+  font-size: 12px;
+}
+.gant-input-group-sm .ant-select-selection__placeholder {
+  font-size: 12px;
+}
+.ant-select-sm {
+  height: 24px;
+  line-height: 24px;
+}
+.ant-select-sm .ant-select-search__field__placeholder {
+  line-height: 20px;
+}
+.gant-input .gant-input-group .gant-select-email.ant-select {
+  width: 100%;
+}
+.gant-input .gant-input-group .gant-select-email.ant-select:not(:last-child) .ant-select-selection[role='combobox'] .ant-input {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  height: 32.5px;
+}
+.gant-input .gant-input-group .gant-select-email.ant-select .ant-input {
+  float: none !important;
+}

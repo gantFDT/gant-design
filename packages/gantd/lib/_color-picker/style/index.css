@@ -1,0 +1,178 @@
+:root {
+  --component-background: #fff;
+}
+.gant-color-picker-mainwrap,
+.gant-color-picker-small-mainwrap {
+  -webkit-box-sizing: content-box;
+          box-sizing: content-box;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+      -ms-flex-wrap: wrap;
+          flex-wrap: wrap;
+  position: relative;
+  background: var(--component-background);
+  -webkit-box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 4px;
+          box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 4px;
+  border-radius: 4px;
+  padding: 3px 0 0px 83px;
+}
+.gant-color-picker-preview,
+.gant-color-picker-small-preview {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: stretch;
+  -webkit-align-items: stretch;
+      -ms-flex-align: stretch;
+          align-items: stretch;
+  text-align: center;
+  line-height: 32px;
+  color: #fff;
+  width: 80px;
+  height: 100%;
+  font-size: 13px;
+  border-radius: 4px 0 0 4px;
+}
+.gant-color-picker-preview-text,
+.gant-color-picker-small-preview-text {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  cursor: not-allowed;
+}
+.gant-color-picker-onlypreview,
+.gant-color-picker-small-onlypreview {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  color: #fff;
+  width: 80px;
+  height: 32px;
+  font-size: 13px;
+  border-radius: 4px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 4px;
+          box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 4px;
+}
+.gant-color-picker-itemwrap,
+.gant-color-picker-small-itemwrap {
+  position: relative;
+}
+.gant-color-picker-mainitem,
+.gant-color-picker-small-mainitem {
+  height: 26px;
+  width: 26px;
+  margin: 0 3px 3px 0;
+  border-radius: 3px;
+}
+.gant-color-picker-picker,
+.gant-color-picker-small-picker {
+  position: absolute;
+  left: -3px;
+  z-index: 9;
+}
+.gant-color-picker-inputlabel,
+.gant-color-picker-small-inputlabel {
+  width: 20px;
+  height: 100%;
+  position: relative;
+  z-index: 9;
+}
+.gant-color-picker-inputlabel span,
+.gant-color-picker-small-inputlabel span {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  height: 100%;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+}
+.gant-color-picker-input,
+.gant-color-picker-small-input {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  font-size: 14px;
+  border: none;
+  outline: none;
+  height: 24px;
+}
+.gant-color-picker-subpicker,
+.gant-color-picker-small-subpicker {
+  background: var(--component-background);
+}
+.gant-color-picker-chromepicker,
+.gant-color-picker-small-chromepicker {
+  background: var(--component-background);
+}
+.gant-color-picker-small-mainwrap {
+  -webkit-box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 3px;
+          box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 3px;
+  border-radius: 3px;
+  padding: 2px 0 0px 83px;
+}
+.gant-color-picker-small-preview {
+  line-height: 24px;
+  border-radius: 3px 0 0 3px;
+}
+.gant-color-picker-small-onlypreview {
+  height: 24px;
+  border-radius: 3px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 3px;
+          box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 3px;
+}
+.gant-color-picker-small-mainitem {
+  height: 18px;
+  width: 18px;
+}
+.gant-color-picker-small-picker {
+  left: -7px;
+}
+.gant-input-group .gant-color-picker-mainwrap,
+.gant-input-group .gant-color-picker-small-mainwrap {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px 0 0 4px;
+}
+.gant-input-group .gant-color-picker-preview,
+.gant-input-group .gant-color-picker-small-preview {
+  margin: -1px 0 -1px -1px;
+  height: calc(100% + 2px);
+}
+.gant-input-group .gant-color-picker-small-mainwrap {
+  border-radius: 3px 0 0 3px;
+}

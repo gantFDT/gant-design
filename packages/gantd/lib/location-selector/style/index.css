@@ -1,0 +1,38 @@
+:root {
+  --primary-color: #1890ff;
+}
+.ant-select-sm {
+  font-size: 12px;
+}
+.gant-input-group-sm {
+  font-size: 12px;
+}
+.gant-input-group-sm .ant-input-sm,
+.gant-input-group-sm .ant-input-number-input,
+.gant-input-group-sm .ant-input {
+  font-size: 12px;
+}
+.gant-input-group-sm li {
+  line-height: 24px;
+}
+.gant-input-group-sm input::-webkit-input-placeholder,
+.gant-input-group-sm textarea::-webkit-input-placeholder {
+  font-size: 12px !important;
+}
+.gant-input-group-sm .ant-select {
+  font-size: 12px;
+}
+.gant-input-group-sm .ant-select-selection__placeholder {
+  font-size: 12px;
+}
+.ant-cascader-picker-small {
+  font-size: 12px;
+}
+.gant-location-cascader {
+  vertical-align: middle;
+  width: 100%;
+}
+.gant-location-cascader:not(:last-child) .ant-cascader-input {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}

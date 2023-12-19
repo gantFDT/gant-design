@@ -1,0 +1,58 @@
+:root {
+  --primary-color: #1890ff;
+}
+.ant-select-sm {
+  font-size: 12px;
+}
+.gant-input-group-sm {
+  font-size: 12px;
+}
+.gant-input-group-sm .ant-input-sm,
+.gant-input-group-sm .ant-input-number-input,
+.gant-input-group-sm .ant-input {
+  font-size: 12px;
+}
+.gant-input-group-sm li {
+  line-height: 24px;
+}
+.gant-input-group-sm input::-webkit-input-placeholder,
+.gant-input-group-sm textarea::-webkit-input-placeholder {
+  font-size: 12px !important;
+}
+.gant-input-group-sm .ant-select {
+  font-size: 12px;
+}
+.gant-input-group-sm .ant-select-selection__placeholder {
+  font-size: 12px;
+}
+.gant-compose-readWrapper {
+  position: relative;
+  text-align: left;
+  word-break: break-all;
+}
+.gant-compose-readWrapper .gant-compose-noContent {
+  color: #ccc;
+}
+.gant-compose-readWrapper .gant-compose-editPen {
+  position: absolute;
+  top: 0;
+  right: 999em;
+  float: right;
+  cursor: pointer;
+}
+.gant-compose-readWrapper:hover .gant-compose-editPen {
+  right: 0;
+}
+.gant-input-wrapper {
+  display: inline-block;
+  width: 100%;
+  vertical-align: middle;
+}
+.gant-input .gant-compose-success {
+  color: #0b8235;
+  cursor: pointer;
+}
+.gant-input .gant-compose-error {
+  color: #f81d22;
+  cursor: pointer;
+}

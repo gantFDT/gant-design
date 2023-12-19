@@ -1,0 +1,73 @@
+:root {
+  --primary-color: #1890ff;
+}
+.ant-select-sm {
+  font-size: 12px;
+}
+.gant-input-group-sm {
+  font-size: 12px;
+}
+.gant-input-group-sm .ant-input-sm,
+.gant-input-group-sm .ant-input-number-input,
+.gant-input-group-sm .ant-input {
+  font-size: 12px;
+}
+.gant-input-group-sm li {
+  line-height: 24px;
+}
+.gant-input-group-sm input::-webkit-input-placeholder,
+.gant-input-group-sm textarea::-webkit-input-placeholder {
+  font-size: 12px !important;
+}
+.gant-input-group-sm .ant-select {
+  font-size: 12px;
+}
+.gant-input-group-sm .ant-select-selection__placeholder {
+  font-size: 12px;
+}
+.gant-input .gant-input-group.ant-input-group {
+  position: relative;
+  display: block;
+}
+.gant-input .gant-input-group.ant-input-group .gant-input-group-inner {
+  position: relative;
+  z-index: 1;
+  margin-right: 0px;
+  display: block;
+}
+.gant-input .gant-input-group.ant-input-group .gant-input-group-inner .ant-input {
+  float: none;
+}
+.gant-input .gant-input-group.ant-input-group .gant-input-group-inner > * {
+  border-radius: 3px;
+}
+.gant-input .gant-input-group.ant-input-group .gant-input-group-addon {
+  z-index: 0;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  width: 60px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  height: 100%;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-justify-content: space-around;
+      -ms-flex-pack: distribute;
+          justify-content: space-around;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.gant-input .gant-input-group.ant-input-group.gant-input-group-edit .gant-input-group-inner {
+  margin-right: 59px;
+}
+.gant-input .gant-input-group.ant-input-group.gant-input-group-edit .gant-input-group-inner > *,
+.gant-input .gant-input-group.ant-input-group.gant-input-group-edit .gant-input-group-inner .ant-input,
+.gant-input .gant-input-group.ant-input-group.gant-input-group-edit .gant-input-group-inner .ant-select-selection {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}

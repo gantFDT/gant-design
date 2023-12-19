@@ -1,0 +1,222 @@
+/* stylelint-disable no-duplicate-selectors */
+/* stylelint-disable */
+/* stylelint-disable declaration-bang-space-before,no-duplicate-selectors,string-no-newline */
+/* stylelint-disable at-rule-empty-line-before,at-rule-name-space-after,at-rule-no-unknown */
+:root {
+  --primary-color: #1890FF;
+  --component-background: #ffffff;
+  --text-color: rgba(0, 0, 0, 0.65);
+  --text-color-secondary: rgba(0, 0, 0, 0.45);
+  --text-color-inverse: #fff;
+  --icon-color: inherit;
+  --icon-color-hover: rgba(0, 0, 0, 0.75);
+  --heading-color: rgba(0, 0, 0, 0.85);
+  --heading-color-dark: #ffffff;
+  --text-color-dark: rgba(255, 255, 255, 0.85);
+  --text-color-secondary-dark: rgba(255, 255, 255, 0.65);
+  --text-selection-bg: #1890FF;
+  --font-size-base: 12px;
+  --font-size-lg: 14px;
+  --font-size-sm: 12px;
+  --line-height-base: 1.5;
+  --border-radius-base: 4px;
+  --border-radius-sm: 2px;
+  --item-active-bg: rgba(0, 0, 0, 0.1);
+  --item-hover-bg: rgba(0, 0, 0, 0.05);
+  --item-hover-color: rgba(0, 0, 0, 0.65);
+  --link-color: #1890ff;
+  --link-hover-color: #40a9ff;
+  --link-active-color: #096dd9;
+  --link-decoration: none;
+  --link-hover-decoration: none;
+  --border-color-base: #d9d9d9;
+  --border-color-split: #e8e8e8;
+  --border-color-inverse: #fff;
+  --border-width-base: 1px;
+  --border-style-base: solid;
+  --outline-blur-size: 0;
+  --outline-width: 2px;
+  --outline-color: #1890ff;
+  --background-color-light: #fafafa;
+  --background-color-base: #f5f5f5;
+  --disabled-color: rgba(0, 0, 0, 0.25);
+  --disabled-bg: #f5f5f5;
+  --disabled-color-dark: rgba(255, 255, 255, 0.35);
+  --shadow-color: rgba(0, 0, 0, 0.15);
+  --shadow-color-inverse: #fff;
+  --box-shadow-base: 0 2px 8px rgba(0, 0, 0, 0.15);
+  --shadow-1-up: 0 -2px 8px rgba(0, 0, 0, 0.15);
+  --shadow-1-down: 0 2px 8px rgba(0, 0, 0, 0.15);
+  --shadow-1-left: -2px 0 8px rgba(0, 0, 0, 0.15);
+  --shadow-1-right: 2px 0 8px rgba(0, 0, 0, 0.15);
+  --shadow-2: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --btn-default-color: #000000;
+  --btn-default-bg: #fff;
+  --btn-default-border-color: rgba(0, 0, 0, 0.2);
+  --btn-danger-bg: #ff4d4f;
+  --error-8: #a8071a;
+}
+.gant-taskboard {
+  width: 100%;
+  overflow: auto;
+}
+.gant-taskboard-drag-drop-content {
+  min-width: 100%;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  height: 100%;
+}
+.gant-taskboard .gant-taskboard-column-wrapper {
+  width: 240px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  margin: 10px 0 10px 10px;
+  border: 1px solid rgba(128, 128, 128, 0.2);
+  border-radius: 3px;
+  background-color: #f4f5f7;
+}
+.gant-taskboard .gant-taskboard-column-wrapper .gant-taskboard-column-container {
+  border-radius: 3px;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+.gant-taskboard-column-header-wrapper {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0 8px;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.2);
+}
+.gant-taskboard-column-header-title {
+  font-weight: 600;
+  padding: 8px 0;
+  font-size: 14px;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.gant-taskboard-column-header-extra {
+  float: right;
+  margin-left: auto;
+  padding: 8px 0;
+}
+.gant-taskboard-task-drop-inner {
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  min-height: 300px;
+  padding: 8px;
+}
+.gant-taskboard-task-drop-inner .gant-taskboard-quick-add {
+  height: 28px;
+  line-height: 28px;
+  border-radius: 3px;
+  background-color: #fff;
+  text-align: center;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  cursor: pointer;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+.gant-taskboard-task-drop-inner .gant-taskboard-quick-add:hover {
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  -webkit-box-shadow: 0 3px 5px 1px #e5f2ff;
+          box-shadow: 0 3px 5px 1px #e5f2ff;
+}
+.gant-taskboard-task-drop-inner .gant-taskboard-quick-add:hover i {
+  color: #1890FF;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+.gant-taskboard-task-container-wrapper {
+  margin-bottom: 8px;
+}
+.gant-taskboard-task-container {
+  position: relative;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  color: rgba(0, 0, 0, 0.7);
+  border-style: solid;
+  border-color: rgba(128, 128, 128, 0.2);
+  border-width: 1px;
+  border-radius: 3px;
+  background-color: #fff;
+}
+.gant-taskboard-task-container:hover {
+  -webkit-box-shadow: 0 3px 5px 1px #e5f2ff;
+          box-shadow: 0 3px 5px 1px #e5f2ff;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+.gant-taskboard-task-container:hover .taskHeaderIcon {
+  opacity: 1 !important;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  visibility: visible !important;
+}
+.gant-taskboard-task-container .taskHeader {
+  margin: 0;
+}
+.gant-taskboard-task-container .taskHeader p {
+  margin: 0;
+  max-width: 85%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  height: 24px;
+  line-height: 24px;
+}
+.gant-taskboard-task-container .taskHeader p span {
+  font-weight: 600;
+}
+.gant-taskboard-task-container .taskHeader .taskHeaderIcon {
+  opacity: 0;
+  visibility: hidden;
+  padding: 5px;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 1;
+}
+.gant-taskboard-task-container .ant-tag {
+  cursor: inherit;
+  margin-top: 5px;
+  margin-right: 5px;
+}
+.columnIcons {
+  font-size: 16px;
+  -webkit-transition: color 0.3s;
+  transition: color 0.3s;
+}
+.columnIcons i {
+  cursor: pointer;
+}
+.columnIcons i:hover {
+  -webkit-transition: color 0.3s;
+  transition: color 0.3s;
+  color: #1890FF;
+}
+.forbiddenHeader {
+  cursor: not-allowed;
+}

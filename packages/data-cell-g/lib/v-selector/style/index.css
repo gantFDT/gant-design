@@ -1,0 +1,90 @@
+:root {
+  --primary-color: #1890ff;
+}
+.ant-select-sm {
+  font-size: 12px;
+}
+.gant-input-group-sm {
+  font-size: 12px;
+}
+.gant-input-group-sm .ant-input-sm,
+.gant-input-group-sm .ant-input-number-input,
+.gant-input-group-sm .ant-input {
+  font-size: 12px;
+}
+.gant-input-group-sm li {
+  line-height: 24px;
+}
+.gant-input-group-sm input::-webkit-input-placeholder,
+.gant-input-group-sm textarea::-webkit-input-placeholder {
+  font-size: 12px !important;
+}
+.gant-input-group-sm .ant-select {
+  font-size: 12px;
+}
+.gant-input-group-sm .ant-select-selection__placeholder {
+  font-size: 12px;
+}
+.gant-selector.ant-select {
+  display: block;
+  width: 100% !important;
+}
+.gant-selector.ant-select:not(:last-child) .ant-select-selection {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.gant-selector-no-wrap .ant-select-selection--multiple {
+  white-space: nowrap;
+  overflow: hidden;
+  height: 32px;
+}
+.gant-selector-no-wrap .ant-select-selection--multiple:hover {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+.gant-selector-no-wrap .ant-select-selection--multiple::-webkit-scrollbar {
+  /*滚动条整体样式*/
+  width: 0px;
+  /*高宽分别对应横竖滚动条的尺寸*/
+  height: 0px;
+}
+.gant-selector-no-wrap .ant-select-selection--multiple::-webkit-scrollbar-thumb {
+  /*滚动条里面小方块*/
+  border-radius: 8px;
+  -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+  background: #fafafad2;
+}
+.gant-selector-no-wrap .ant-select-selection--multiple::-webkit-scrollbar-track {
+  /*滚动条里面轨道*/
+  background: transparent;
+}
+.gant-selector-no-wrap .ant-select-selection--multiple:hover::-webkit-scrollbar {
+  width: 10px;
+  height: 8px;
+  /**/
+}
+.gant-selector-no-wrap .ant-select-selection--multiple::after,
+.gant-selector-no-wrap .ant-select-selection--multiple .ant-select-selection__rendered::after {
+  display: none;
+}
+.gant-selector-no-wrap .ant-select-selection--multiple ul {
+  height: 27px;
+}
+.gant-selector-no-wrap .ant-select-selection--multiple li,
+.gant-selector-no-wrap .ant-select-selection--multiple li.ant-select-selection__choice,
+.gant-selector-no-wrap .ant-select-selection--multiple li.ant-select-search {
+  float: none;
+  display: inline-block;
+  vertical-align: top;
+}
+.ant-select-sm.gant-selector-no-wrap .ant-select-selection--multiple {
+  height: 24px;
+}
+.ant-select-sm.gant-selector-no-wrap .ant-select-selection--multiple:hover::-webkit-scrollbar {
+  width: 10px;
+  height: 6px;
+  /**/
+}
+.ant-select-sm.gant-selector-no-wrap .ant-select-selection--multiple ul {
+  height: 17px;
+}

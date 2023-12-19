@@ -1,0 +1,168 @@
+.gant-blockheader {
+  width: 100%;
+  min-height: 30px;
+  position: relative;
+}
+.gant-blockheader-container {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+.gant-blockheader:after {
+  content: '';
+  width: 100%;
+  display: block;
+  height: 0px;
+  clear: both;
+  visibility: hidden;
+}
+.gant-blockheader-wrapper {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-flow: row;
+      -ms-flex-flow: row;
+          flex-flow: row;
+  -webkit-flex-wrap: nowrap;
+      -ms-flex-wrap: nowrap;
+          flex-wrap: nowrap;
+}
+.gant-blockheader-menu > * {
+  margin: 0px 5px;
+}
+.gant-blockheader-title {
+  color: var(--text-color);
+  font-size: 13px;
+  line-height: 30px;
+  min-height: 30px;
+  margin-left: 3px;
+  font-weight: bold;
+  display: inline-block;
+  position: relative;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  word-break: break-all;
+  white-space: nowrap;
+}
+.gant-blockheader-line {
+  background: var(--text-color);
+  display: inline-block;
+  vertical-align: middle;
+}
+.gant-blockheader-num {
+  display: inline-block;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  background: var(--text-color);
+  color: var(--component-background);
+  text-align: center;
+  border-radius: 3px;
+}
+.gant-blockheader-beforeExtra {
+  float: left;
+}
+.gant-blockheader-beforeExtra > * {
+  margin: 5px;
+}
+.gant-overflow-tool-outer {
+  position: relative;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  -webkit-align-self: center;
+      -ms-flex-item-align: center;
+          align-self: center;
+}
+.gant-overflow-tool-outer .gant-overflow-tool-inner {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+}
+.gant-overflow-tool-outer .gant-overflow-tool-inner > * {
+  -webkit-box-flex: 0;
+  -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+          flex-grow: 0;
+  -webkit-flex-shrink: 0;
+      -ms-flex-negative: 0;
+          flex-shrink: 0;
+  margin: 0px;
+}
+.gant-overflow-tool-outer .gant-overflow-tool-inner .gant-blockheader-extra {
+  overflow: hidden;
+  width: 100%;
+  text-align: right;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+}
+.gant-overflow-tool-outer .gant-overflow-tool-inner .gant-blockheader-extra-tools {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.gant-overflow-tool-outer .gant-overflow-tool-inner .gant-blockheader-extra-tools > * {
+  margin-right: 5px;
+}
+.gant-overflow-tool-outer .gant-overflow-tool-inner .gant-blockheader-extra-tools-icon {
+  display: inline-block;
+  color: var(--text-color);
+  text-align: center;
+  line-height: 40px;
+}
+.gant-overflow-tool-outer .gant-overflow-tool-inner .gant-blockheader-extra-fixed {
+  opacity: 0;
+  position: fixed;
+  -webkit-transform: translateY(-10000px);
+      -ms-transform: translateY(-10000px);
+          transform: translateY(-10000px);
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-flow: row;
+      -ms-flex-flow: row;
+          flex-flow: row;
+  -webkit-flex-wrap: nowrap;
+      -ms-flex-wrap: nowrap;
+          flex-wrap: nowrap;
+}
+.gant-overflow-tool-outer .gant-overflow-tool-icon {
+  margin-left: 5px;
+}

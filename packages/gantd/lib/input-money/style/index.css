@@ -1,0 +1,49 @@
+.gant-input-moeny {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+}
+.gant-input-money-select {
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+  background-color: #fafafa;
+  border-right: 0px;
+}
+.gant-input-money-select .ant-select-selection {
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+  background-color: #fafafa;
+  border-right: 0px;
+}
+.gant-input-money-select .ant-select-selection:focus,
+.gant-input-money-select .ant-select-selection:active,
+.gant-input-money-select .ant-select-selection:hover {
+  border-color: #d9d9d9;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  color: var(--primary-color);
+}
+.gant-input-money-select:focus,
+.gant-input-money-select:active,
+.gant-input-money-select:hover {
+  border-color: #d9d9d9;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  color: var(--primary-color);
+}
+.gant-input-moeny-number {
+  vertical-align: top;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+}
+.gant-input-moeny-number .gant-input-group.ant-input-group .gant-input-group-inner {
+  width: 100%;
+}
+.gant-input-moeny-number .gant-input-group.ant-input-group .gant-input-group-inner .gant-input-number {
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
