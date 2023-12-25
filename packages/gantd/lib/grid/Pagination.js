@@ -209,7 +209,6 @@ var _default = /*#__PURE__*/(0, _react.memo)(function GantPagination(props) {
       flex: 1,
       alignItems: 'center',
       height: heightSize[size],
-      overflow: 'hidden',
       justifyContent: align === 'left' ? 'start' : 'end'
     }
   }, addonBefore && /*#__PURE__*/_react.default.createElement("div", null, addonBefore), /*#__PURE__*/_react.default.createElement(PaginationComponent, Object.assign({

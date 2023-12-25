@@ -130,7 +130,6 @@ export default memo(function GantPagination(props: GantPaginationProps) {
           flex: 1,
           alignItems: 'center',
           height: heightSize[size],
-          overflow: 'hidden',
           justifyContent: align === 'left' ? 'start' : 'end',
         }}
       >
