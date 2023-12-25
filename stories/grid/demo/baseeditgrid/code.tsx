@@ -8,10 +8,19 @@ import Grid, {
   Columns,
 } from 'gantd/lib/grid';
 import { Input, DatePicker, Selector, Header } from 'gantd';
-import { Button, Modal } from 'antd';
+import { Button, Modal, Select } from 'antd';
 import { Random } from 'mockjs';
 import { cloneDeep, get } from 'lodash';
 import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+
+const TestSelect = (props: any) => {
+  return (
+    <Select {...props}>
+      <Select.Option key="China">中国</Select.Option>
+      <Select.Option key="foreign">外国</Select.Option>
+    </Select>
+  );
+};
 
 const RandomCreate = () => {
   const ip = Random.ip();
@@ -82,17 +91,17 @@ const columns: Columns[] = [
       return value;
     },
     editConfig: {
-      component: Selector,
+      component: TestSelect,
       editable: true,
       signable: true,
+      // cellEditorPopup: true,
       initValueFormatter: (params: ValueFormatterParams) => {
         const value = get(params.data, 'nationality', '');
         if (typeof value === 'object') return value;
         return value.split(',');
       },
       props: {
-        mode: 'multiple',
-        dataSource: [
+        options: [
           {
             label: '中国',
             value: 'China',
@@ -277,6 +286,10 @@ const BaiscEditGrid = () => {
 
   const onCellChanged = (params: any) => {
     console.log('onCellChanged---->', params);
+  };
+
+  const PageComponent = () => {
+    return <>11111</>;
   };
 
   return (

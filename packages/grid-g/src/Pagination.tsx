@@ -34,6 +34,7 @@ export default memo(function GantPagination(props: GantPaginationProps) {
     defaultCurrent,
     size: _size,
     align,
+    Component,
     ...resetProps
   } = props;
 
@@ -117,6 +118,10 @@ export default memo(function GantPagination(props: GantPaginationProps) {
     [pageInfo, onChange, countLimit],
   );
 
+  const PaginationComponent = useMemo(() => {
+    return Component ? Component : Pagination;
+  }, []);
+
   return (
     <div className="gantd-grid-footer">
       <div
@@ -130,7 +135,7 @@ export default memo(function GantPagination(props: GantPaginationProps) {
         }}
       >
         {addonBefore && <div>{addonBefore}</div>}
-        <Pagination
+        <PaginationComponent
           className="gant-grid-pagination"
           {...omit(paginationProps, numberGoToMode ? ['showQuickJumper', 'quickGo'] : [])}
         />

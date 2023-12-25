@@ -114,7 +114,8 @@ var _default = /*#__PURE__*/(0, _react.memo)(function GantPagination(props) {
       defaultCurrent = props.defaultCurrent,
       _size = props.size,
       align = props.align,
-      resetProps = __rest(props, ["addonAfter", "addonBefore", "numberGoToMode", "onRefresh", "countLimit", "mode", "tooltipTotal", "total", "onChange", "current", "pageSize", "beginIndex", "defaultPageSize", "defaultCurrent", "size", "align"]); //如果传入的是large, 就转为default , 因为antd原生分页条没有large
+      Component = props.Component,
+      resetProps = __rest(props, ["addonAfter", "addonBefore", "numberGoToMode", "onRefresh", "countLimit", "mode", "tooltipTotal", "total", "onChange", "current", "pageSize", "beginIndex", "defaultPageSize", "defaultCurrent", "size", "align", "Component"]); //如果传入的是large, 就转为default , 因为antd原生分页条没有large
 
 
   var size = _size === 'large' ? 'default' : _size;
@@ -197,6 +198,9 @@ var _default = /*#__PURE__*/(0, _react.memo)(function GantPagination(props) {
 
     setInnerMode(_mode);
   }, [pageInfo, onChange, countLimit]);
+  var PaginationComponent = (0, _react.useMemo)(function () {
+    return Component ? Component : _pagination.default;
+  }, []);
   return /*#__PURE__*/_react.default.createElement("div", {
     className: "gantd-grid-footer"
   }, /*#__PURE__*/_react.default.createElement("div", {
@@ -208,7 +212,7 @@ var _default = /*#__PURE__*/(0, _react.memo)(function GantPagination(props) {
       overflow: 'hidden',
       justifyContent: align === 'left' ? 'start' : 'end'
     }
-  }, addonBefore && /*#__PURE__*/_react.default.createElement("div", null, addonBefore), /*#__PURE__*/_react.default.createElement(_pagination.default, Object.assign({
+  }, addonBefore && /*#__PURE__*/_react.default.createElement("div", null, addonBefore), /*#__PURE__*/_react.default.createElement(PaginationComponent, Object.assign({
     className: "gant-grid-pagination"
   }, (0, _lodash.omit)(paginationProps, numberGoToMode ? ['showQuickJumper', 'quickGo'] : []))), numberGoToMode && /*#__PURE__*/_react.default.createElement(NumberGoTo, Object.assign({}, (0, _lodash.pick)(paginationProps, ['quickGo', 'disabled', 'showQuickJumper', 'pageSize', 'total', 'goButton', 'size']), {
     onPageChange: onPageChange

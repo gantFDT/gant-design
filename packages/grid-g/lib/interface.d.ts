@@ -132,6 +132,7 @@ export declare type GantPaginationProps = Omit<ProtoExtends<PaginationProps, {
     mode?: 'default' | 'limit';
     tooltipTotal?: () => number | number;
     align?: 'left' | 'right';
+    Component?: any;
 }>, 'onShowSizeChange'>;
 export interface DefaultJsonParams {
     title?: string;
