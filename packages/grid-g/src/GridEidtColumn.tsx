@@ -39,6 +39,7 @@ export default WrapperComponent =>
       },
       refName = 'wrapperRef',
       valuePropName = 'value',
+      cellEditorPopup,
       node,
     } = props;
     const value = useMemo(() => (initValueFormatter ? initValueFormatter(props) : nodeValue), [
@@ -183,8 +184,16 @@ export default WrapperComponent =>
       };
     }, [valuePropName, refName, newValue]);
 
+    const onKeyDown: React.KeyboardEventHandler<HTMLDivElement> = useCallback(event => {
+      if (event.key === 'Enter') {
+        setTimeout(() => {
+          api.stopEditing();
+        }, 100);
+      }
+    }, []);
+
     return (
-      <div className={classnames('gant-grid-cell-editing')} ref={divRef}>
+      <div onKeyDown={onKeyDown} className={classnames('gant-grid-cell-editing')} ref={divRef}>
         <WrapperComponent
           autoFocus={true}
           wrapperRef={inputRef}

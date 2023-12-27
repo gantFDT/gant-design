@@ -94,7 +94,6 @@ const columns: Columns[] = [
       component: TestSelect,
       editable: true,
       signable: true,
-      // cellEditorPopup: true,
       initValueFormatter: (params: ValueFormatterParams) => {
         const value = get(params.data, 'nationality', '');
         if (typeof value === 'object') return value;

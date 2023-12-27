@@ -343,7 +343,12 @@ export const mapColumns = <T>(
               valueGetter: item.valueGetter,
               ...params,
             };
-            colDef.cellEditorFramework = EditorCol(component);
+            const _suppressKeyboardEvent = colDef.suppressKeyboardEvent;
+            colDef.suppressKeyboardEvent = (params: any) => {
+              if (params.event.keyCode == 13 && params.editing) return true;
+              return _suppressKeyboardEvent?.(params);
+            };
+            colDef.cellEditor = EditorCol(component);
             colDef.editable = ColEditableFn(editConfig.editable);
 
             switch (typeof headerClass) {

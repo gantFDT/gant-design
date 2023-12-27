@@ -92,6 +92,7 @@ var _default = function _default(WrapperComponent) {
         refName = _props$refName === void 0 ? 'wrapperRef' : _props$refName,
         _props$valuePropName = props.valuePropName,
         valuePropName = _props$valuePropName === void 0 ? 'value' : _props$valuePropName,
+        cellEditorPopup = props.cellEditorPopup,
         node = props.node;
     var value = (0, _react.useMemo)(function () {
       return initValueFormatter ? initValueFormatter(props) : nodeValue;
@@ -296,7 +297,15 @@ var _default = function _default(WrapperComponent) {
 
       return _ref = {}, (0, _defineProperty2.default)(_ref, refName, inputRef), (0, _defineProperty2.default)(_ref, valuePropName, newValue), _ref;
     }, [valuePropName, refName, newValue]);
+    var onKeyDown = (0, _react.useCallback)(function (event) {
+      if (event.key === 'Enter') {
+        setTimeout(function () {
+          api.stopEditing();
+        }, 100);
+      }
+    }, []);
     return /*#__PURE__*/_react.default.createElement("div", {
+      onKeyDown: onKeyDown,
       className: (0, _classnames.default)('gant-grid-cell-editing'),
       ref: divRef
     }, /*#__PURE__*/_react.default.createElement(WrapperComponent, Object.assign({

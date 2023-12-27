@@ -399,7 +399,14 @@ var mapColumns = function mapColumns(columns, getRowNodeId, defaultSelection, de
             required: required,
             valueGetter: item.valueGetter
           }, params);
-          colDef.cellEditorFramework = (0, _GridEidtColumn.default)(component);
+          var _suppressKeyboardEvent = colDef.suppressKeyboardEvent;
+
+          colDef.suppressKeyboardEvent = function (params) {
+            if (params.event.keyCode == 13 && params.editing) return true;
+            return _suppressKeyboardEvent === null || _suppressKeyboardEvent === void 0 ? void 0 : _suppressKeyboardEvent(params);
+          };
+
+          colDef.cellEditor = (0, _GridEidtColumn.default)(component);
           colDef.editable = ColEditableFn(editConfig.editable);
 
           switch ((0, _typeof2.default)(headerClass)) {
