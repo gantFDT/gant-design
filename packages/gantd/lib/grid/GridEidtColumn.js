@@ -298,6 +298,10 @@ var _default = function _default(WrapperComponent) {
       return _ref = {}, (0, _defineProperty2.default)(_ref, refName, inputRef), (0, _defineProperty2.default)(_ref, valuePropName, newValue), _ref;
     }, [valuePropName, refName, newValue]);
     var onKeyDown = (0, _react.useCallback)(function (event) {
+      var _a;
+
+      if (!((_a = divRef.current) === null || _a === void 0 ? void 0 : _a.contains(event.target))) return;
+
       if (event.key === 'Enter') {
         setTimeout(function () {
           api.stopEditing();

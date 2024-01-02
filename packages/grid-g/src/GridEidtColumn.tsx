@@ -185,6 +185,7 @@ export default WrapperComponent =>
     }, [valuePropName, refName, newValue]);
 
     const onKeyDown: React.KeyboardEventHandler<HTMLDivElement> = useCallback(event => {
+      if (!divRef.current?.contains(event.target as any)) return;
       if (event.key === 'Enter') {
         setTimeout(() => {
           api.stopEditing();
