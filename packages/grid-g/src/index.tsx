@@ -25,32 +25,14 @@ import 'ag-grid-enterprise';
 import { Spin } from 'antd';
 import Receiver from './locale/Receiver';
 import classnames from 'classnames';
-import _, {
-  findIndex,
-  get,
-  isEmpty,
-  isEqual,
-  isObject,
-  remove,
-  cloneDeep,
-  omit,
-  debounce,
-} from 'lodash';
-import React, {
-  createContext,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  useLayoutEffect,
-} from 'react';
+import _, { findIndex, get, isEmpty, isEqual, isObject, remove, cloneDeep, omit } from 'lodash';
+import React, { createContext, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { gantGetcontextMenuItems } from './contextMenuItems';
 import CustomHeader from './CustomHeader';
 import { filterHooks } from './gantFilter';
 import GantGridFormToolPanelRenderer from './GantGridFormToolPanelRenderer';
 import GridManager from './gridManager';
-import { contextHooks, selectedHooks, useGridPaste } from './hooks';
+import { contextHooks, selectedHooks, useGridPaste, useConfigColumns } from './hooks';
 import { DataActions, GridProps, GridVariableRef, RowSelection, Size } from './interface';
 import key from './license';
 import { getAllComponentsMaps, getGridConfig } from './maps';
@@ -66,8 +48,6 @@ import {
   selectedMapColumns,
   usePagination,
   sizeDefinitions,
-  isExportHiddenFields,
-  getColumnInfo,
 } from './utils';
 export { default as GantGroupCellRenderer } from './GantGroupCellRenderer';
 export { default as c } from './GantPromiseCellRender';
@@ -224,6 +204,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     controlCellWordWrap = false,
     suppressGroupSelectParent,
     exportHiddenFields,
+    //应更改名称
     onColumnsChange: propsOnColumnsChange,
     suppressManagerPaste,
     suppressCreateWhenPaste,
@@ -624,9 +605,11 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
   //columns
   const defaultSelection = !isEmpty(gantSelection) && showDefalutCheckbox;
 
+  const innerColumns = useConfigColumns(columns, propsOnColumnsChange);
+
   const { columnDefs, validateFields, requireds } = useMemo(() => {
     return mapColumns<T>(
-      columns,
+      innerColumns,
       getRowNodeId,
       defaultSelection,
       defaultSelectionCol,
@@ -634,11 +617,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
       serialNumber,
       size,
     );
-  }, [columns, size]);
-
-  useEffect(() => {
-    propsOnColumnsChange && propsOnColumnsChange(columnDefs);
-  }, [columnDefs]);
+  }, [columns, size, innerColumns]);
 
   // 选中栏grid  columns;
   const selectedColumns = useMemo(() => {
@@ -802,26 +781,6 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     suppressCreateWhenPaste,
   });
 
-  const renderColumns = useCallback(
-    (columnDefs: (ColGroupDef | ColDef)[]) => {
-      return columnDefs.map((item, index) => {
-        const props: any = { key: (item as any).field || index };
-        if ((item as ColGroupDef).marryChildren)
-          return (
-            <AgGridColumn {...item} {...props} groupId={(item as any).field || index}>
-              {renderColumns((item as any).children)}
-            </AgGridColumn>
-          );
-        return <AgGridColumn {...item} {...props} />;
-      });
-    },
-    [localColumnsDefs],
-  );
-
-  const renderColumnsContent = useMemo(() => {
-    return renderColumns(localColumnsDefs);
-  }, [localColumnsDefs]);
-
   return (
     <Receiver
       children={defaultLocale => {
@@ -969,9 +928,8 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                       onColumnVisible={onColumnsChange}
                       onColumnResized={onColumnsChange}
                       onColumnEverythingChanged={onColumnEverythingChanged}
-                    >
-                      {renderColumnsContent}
-                    </AgGridReact>
+                      columnDefs={localColumnsDefs}
+                    ></AgGridReact>
                   </div>
                   {drawerMode && visibleDrawer && (
                     <GantGridFormToolPanelRenderer

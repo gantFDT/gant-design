@@ -41,4 +41,5 @@ export declare function useGridPaste(props: UseGridPasteProps): {
     processDataFromClipboard: (params: any) => any;
     processCellForClipboard: (params: any) => any;
 };
+export declare const useConfigColumns: (columns: any[], onColumnsChange: any) => any[];
 export {};

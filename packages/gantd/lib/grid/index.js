@@ -678,18 +678,16 @@ var Grid = function Grid(gridProps) {
   //columns
 
   var defaultSelection = !(0, _lodash.isEmpty)(gantSelection) && showDefalutCheckbox;
+  var innerColumns = (0, _hooks.useConfigColumns)(columns, propsOnColumnsChange);
 
   var _useMemo2 = (0, _react.useMemo)(function () {
-    return (0, _utils.mapColumns)(columns, getRowNodeId, defaultSelection, defaultSelectionCol, rowSelection, serialNumber, size);
-  }, [columns, size]),
+    return (0, _utils.mapColumns)(innerColumns, getRowNodeId, defaultSelection, defaultSelectionCol, rowSelection, serialNumber, size);
+  }, [columns, size,innerColumns]),
       columnDefs = _useMemo2.columnDefs,
       validateFields = _useMemo2.validateFields,
-      requireds = _useMemo2.requireds;
+      requireds = _useMemo2.requireds; // 选中栏grid  columns;
 
-  (0, _react.useEffect)(function () {
-    propsOnColumnsChange && propsOnColumnsChange(columnDefs);
-  }, [columnDefs]); // 选中栏grid  columns;
-
+      console.log('columnDefs',columnDefs)
   var selectedColumns = (0, _react.useMemo)(function () {
     return (0, _utils.selectedMapColumns)(columns, boxColumnIndex);
   }, [columns, boxColumnIndex]); // 配置验证规则
@@ -839,20 +837,6 @@ var Grid = function Grid(gridProps) {
     suppressManagerPaste: suppressManagerPaste,
     suppressCreateWhenPaste: suppressCreateWhenPaste
   });
-  var renderColumns = (0, _react.useCallback)(function (columnDefs) {
-    return columnDefs.map(function (item, index) {
-      var props = {
-        key: item.field || index
-      };
-      if (item.marryChildren) return /*#__PURE__*/_react.default.createElement(_agGridReact.AgGridColumn, Object.assign({}, item, props, {
-        groupId: item.field || index
-      }), renderColumns(item.children));
-      return /*#__PURE__*/_react.default.createElement(_agGridReact.AgGridColumn, Object.assign({}, item, props));
-    });
-  }, [localColumnsDefs]);
-  var renderColumnsContent = (0, _react.useMemo)(function () {
-    return renderColumns(localColumnsDefs);
-  }, [localColumnsDefs]);
   return /*#__PURE__*/_react.default.createElement(_Receiver.default, {
     children: function children(defaultLocale) {
       var locale = Object.assign(Object.assign({}, defaultLocale), customLocale);
@@ -987,8 +971,9 @@ var Grid = function Grid(gridProps) {
         onColumnMoved: onColumnsChange,
         onColumnVisible: onColumnsChange,
         onColumnResized: onColumnsChange,
-        onColumnEverythingChanged: onColumnEverythingChanged
-      }), renderColumnsContent)), drawerMode && visibleDrawer && /*#__PURE__*/_react.default.createElement(_GantGridFormToolPanelRenderer.default, {
+        onColumnEverythingChanged: onColumnEverythingChanged,
+        columnDefs: columnDefs
+      }))), drawerMode && visibleDrawer && /*#__PURE__*/_react.default.createElement(_GantGridFormToolPanelRenderer.default, {
         columns: columns,
         clickedEvent: clickedEventRef.current,
         gridManager: gridManager,

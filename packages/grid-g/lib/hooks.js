@@ -7,6 +7,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.contextHooks = contextHooks;
 exports.selectedHooks = selectedHooks;
+exports.useConfigColumns = void 0;
 exports.useGridPaste = useGridPaste;
 exports.usePrev = usePrev;
 
@@ -289,3 +290,20 @@ function useGridPaste(props) {
     processCellForClipboard: processCellForClipboard
   };
 }
+
+var useConfigColumns = function useConfigColumns(columns, onColumnsChange) {
+  var _useState = (0, _react.useState)(columns),
+      _useState2 = (0, _slicedToArray2.default)(_useState, 2),
+      innerColumns = _useState2[0],
+      setInnerColumns = _useState2[1];
+
+  (0, _react.useEffect)(function () {
+    if (onColumnsChange) onColumnsChange({
+      columns: columns,
+      setInnerColumns: setInnerColumns
+    });else setInnerColumns(columns);
+  }, [columns]);
+  return innerColumns;
+};
+
+exports.useConfigColumns = useConfigColumns;

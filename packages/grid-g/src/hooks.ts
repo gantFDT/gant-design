@@ -1,4 +1,4 @@
-import { useRef, useEffect, useCallback, useMemo } from 'react';
+import { useRef, useEffect, useCallback, useMemo, useState } from 'react';
 import { GridVariableRef, GridManager } from './interface';
 import { isEqual, uniq, map, get, set, cloneDeep, last, first } from 'lodash';
 import { generateUuid } from '@util';
@@ -140,7 +140,7 @@ export function useGridPaste(props: UseGridPasteProps) {
           result[colDef.fieldName] = colDef.editConfig?.editable;
         }
       }
-    }
+    };
     columns.forEach(inner);
     return result;
   }, [columns]);
@@ -158,18 +158,18 @@ export function useGridPaste(props: UseGridPasteProps) {
           rowIdx: startRowIndex,
           colId: startColId,
           yLen: Math.abs(endRowIndex - startRowIndex) + 1,
-          xLen
+          xLen,
         };
       }
     }
   }, []);
 
-  const processCellForClipboard = useCallback((params) => {
+  const processCellForClipboard = useCallback(params => {
     if (params.node.rowPinned === 'top') {
       return '__delete';
     }
     return params.value;
-  }, [])
+  }, []);
 
   const processDataFromClipboard = useCallback(params => {
     // 固定顶部行总是被复制问题
@@ -186,7 +186,7 @@ export function useGridPaste(props: UseGridPasteProps) {
       let colIdx: number;
       const colIds: string[] = [];
       const colDefs: any[] = [];
-      
+
       // 复制一个单元格数据，粘贴到多个单元格
       if (copyData.length === 1 && first(copyData).length === 1) {
         const copyValue = first(first(copyData));
@@ -267,6 +267,15 @@ export function useGridPaste(props: UseGridPasteProps) {
 
     onRangeSelectionChanged,
     processDataFromClipboard,
-    processCellForClipboard
+    processCellForClipboard,
   };
 }
+
+export const useConfigColumns = (columns: any[], onColumnsChange: any) => {
+  const [innerColumns, setInnerColumns] = useState(columns);
+  useEffect(() => {
+    if (onColumnsChange) onColumnsChange({ columns, setInnerColumns:setInnerColumns });
+    else setInnerColumns(columns);
+  }, [columns]);
+  return innerColumns;
+};
