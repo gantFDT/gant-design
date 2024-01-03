@@ -682,12 +682,12 @@ var Grid = function Grid(gridProps) {
 
   var _useMemo2 = (0, _react.useMemo)(function () {
     return (0, _utils.mapColumns)(innerColumns, getRowNodeId, defaultSelection, defaultSelectionCol, rowSelection, serialNumber, size);
-  }, [columns, size,innerColumns]),
+  }, [columns, size, innerColumns]),
       columnDefs = _useMemo2.columnDefs,
       validateFields = _useMemo2.validateFields,
       requireds = _useMemo2.requireds; // 选中栏grid  columns;
 
-      console.log('columnDefs',columnDefs)
+
   var selectedColumns = (0, _react.useMemo)(function () {
     return (0, _utils.selectedMapColumns)(columns, boxColumnIndex);
   }, [columns, boxColumnIndex]); // 配置验证规则
@@ -972,7 +972,7 @@ var Grid = function Grid(gridProps) {
         onColumnVisible: onColumnsChange,
         onColumnResized: onColumnsChange,
         onColumnEverythingChanged: onColumnEverythingChanged,
-        columnDefs: columnDefs
+        columnDefs: localColumnsDefs
       }))), drawerMode && visibleDrawer && /*#__PURE__*/_react.default.createElement(_GantGridFormToolPanelRenderer.default, {
         columns: columns,
         clickedEvent: clickedEventRef.current,

@@ -682,7 +682,7 @@ var Grid = function Grid(gridProps) {
 
   var _useMemo2 = (0, _react.useMemo)(function () {
     return (0, _utils.mapColumns)(innerColumns, getRowNodeId, defaultSelection, defaultSelectionCol, rowSelection, serialNumber, size);
-  }, [columns, size]),
+  }, [columns, size, innerColumns]),
       columnDefs = _useMemo2.columnDefs,
       validateFields = _useMemo2.validateFields,
       requireds = _useMemo2.requireds; // 选中栏grid  columns;
