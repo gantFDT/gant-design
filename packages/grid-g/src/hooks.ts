@@ -272,9 +272,9 @@ export function useGridPaste(props: UseGridPasteProps) {
 }
 
 export const useConfigColumns = (columns: any[], onColumnsChange: any) => {
-  const [innerColumns, setInnerColumns] = useState(columns);
+  const [innerColumns, setInnerColumns] = useState([]);
   useEffect(() => {
-    if (onColumnsChange) onColumnsChange({ columns, setInnerColumns:setInnerColumns });
+    if (onColumnsChange) onColumnsChange({ columns, setInnerColumns: setInnerColumns });
     else setInnerColumns(columns);
   }, [columns]);
   return innerColumns;

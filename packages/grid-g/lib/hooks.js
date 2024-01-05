@@ -292,7 +292,7 @@ function useGridPaste(props) {
 }
 
 var useConfigColumns = function useConfigColumns(columns, onColumnsChange) {
-  var _useState = (0, _react.useState)(columns),
+  var _useState = (0, _react.useState)([]),
       _useState2 = (0, _slicedToArray2.default)(_useState, 2),
       innerColumns = _useState2[0],
       setInnerColumns = _useState2[1];

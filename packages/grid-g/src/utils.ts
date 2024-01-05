@@ -122,18 +122,25 @@ const serialNumberCol: ColDef = {
     return serial;
   },
 };
+
 export const selectedMapColumns = <T>(
   columns: Columns<T>[],
   index: number | string | string[] = 0,
 ) => {
-  if (columns.length <= 0) return [];
+  function getColumnItem(columnItem: any) {
+    if (isEmpty(columnItem)) return null;
+    const { fieldName: field, children } = columnItem;
+    if (isEmpty(children)) return field;
+    return getColumnItem(children?.[0]);
+  }
+  if (!columns || columns.length <= 0) return [];
   let colArray = [];
   if (typeof index !== 'number') {
     colArray = typeof index === 'string' ? [index] : index;
   } else {
     const columnItem = get(columns, `[${index}]`, columns[0]);
-    const { fieldName: field } = columnItem;
-    colArray = [field];
+    const field = getColumnItem(columnItem);
+    colArray = field ? [field] : [];
   }
   const selectedCol: any = [];
   columns.map(colItem => {
@@ -245,11 +252,12 @@ export const mapColumns = <T>(
   validateFields: Rules;
   requireds: string[];
 } => {
+  if (isEmpty(columns)) return { columnDefs: [], validateFields: {}, requireds: [] };
   // 移除所有已添加事件
   function getColumnDefs(columns: Columns<T>[], hide?: boolean) {
     let validateFields: Rules = {};
     let requireds = [];
-    const columnDefs = columns.map(
+    const columnDefs = columns?.map(
       (
         {
           title: headerName,

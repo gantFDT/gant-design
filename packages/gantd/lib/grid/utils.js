@@ -174,15 +174,24 @@ var serialNumberCol = {
 
 var selectedMapColumns = function selectedMapColumns(columns) {
   var index = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-  if (columns.length <= 0) return [];
+
+  function getColumnItem(columnItem) {
+    if ((0, _lodash.isEmpty)(columnItem)) return null;
+    var field = columnItem.fieldName,
+        children = columnItem.children;
+    if ((0, _lodash.isEmpty)(children)) return field;
+    return getColumnItem(children === null || children === void 0 ? void 0 : children[0]);
+  }
+
+  if (!columns || columns.length <= 0) return [];
   var colArray = [];
 
   if (typeof index !== 'number') {
     colArray = typeof index === 'string' ? [index] : index;
   } else {
     var columnItem = (0, _lodash.get)(columns, "[".concat(index, "]"), columns[0]);
-    var field = columnItem.fieldName;
-    colArray = [field];
+    var field = getColumnItem(columnItem);
+    colArray = field ? [field] : [];
   }
 
   var selectedCol = [];
@@ -300,11 +309,16 @@ var toFormMap = function toFormMap(columns, params) {
 exports.toFormMap = toFormMap;
 
 var mapColumns = function mapColumns(columns, getRowNodeId, defaultSelection, defaultSelectionCol, rowSelection, serialNumber, size) {
-  // 移除所有已添加事件
+  if ((0, _lodash.isEmpty)(columns)) return {
+    columnDefs: [],
+    validateFields: {},
+    requireds: []
+  }; // 移除所有已添加事件
+
   function getColumnDefs(columns, hide) {
     var validateFields = {};
     var requireds = [];
-    var columnDefs = columns.map(function (_a, index) {
+    var columnDefs = columns === null || columns === void 0 ? void 0 : columns.map(function (_a, index) {
       var headerName = _a.title,
           field = _a.fieldName,
           children = _a.children,

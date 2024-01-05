@@ -547,12 +547,6 @@ var GridManage = /*#__PURE__*/function () {
     value: function dataSourceChanged() {
       var dataSource = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
       if (!Array.isArray(dataSource) || !this.agGridApi) return;
-      var gridDataSource = [];
-      this.agGridApi.forEachNode(function (node) {
-        if (node.data) gridDataSource.push(node.data);
-      }); // if (isEqual(dataSource, gridDataSource) || isEqual(dataSource, this.agGridConfig.dataSource))
-      //   return this.agGridApi.setRowData(dataSource);
-
       this.reset({
         dataSource: dataSource
       });
