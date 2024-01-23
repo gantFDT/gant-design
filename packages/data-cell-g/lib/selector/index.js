@@ -273,7 +273,8 @@ var withSelector = (0, _recompose.compose)((0, _recompose.defaultProps)(defaultp
         hideSelected = _ref14.hideSelected,
         isMultiple = _ref14.isMultiple,
         comValue = _ref14.value,
-        selectorId = _ref14.selectorId;
+        selectorId = _ref14.selectorId,
+        customLabel = _ref14.customLabel;
     return function (list) {
       var isStorage = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
       return list.map(function (item) {
@@ -329,7 +330,7 @@ var withSelector = (0, _recompose.compose)((0, _recompose.defaultProps)(defaultp
             title: title,
             style: style,
             className: className
-          }, optionLabelPropObj), label);
+          }, optionLabelPropObj), customLabel ? customLabel(item) : label);
         }
 
         return /*#__PURE__*/_react.default.createElement(Option, {

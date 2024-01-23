@@ -99,6 +99,7 @@ type DefaultProps<R> = ProtoExtends<
     onChange?: (key: SelectValue, items: R[]) => void;
     wrap?: boolean;
     onApiRef?: (api: any) => void;
+    customLabel: (data: any) => any;
   }
 >;
 
@@ -144,7 +145,6 @@ const withLocalStorage = compose(
     return {
       reg: new RegExp(`^${selectorId}-(.*)$`), // 转化最近选择的valueProp
       selectorStorageId: `selector:${selectorId}`, // 存储在storage的key
-      
     };
   }),
   withState('storageList', 'setStorageList', ({ selectorStorageId }) =>
@@ -155,7 +155,6 @@ const withLocalStorage = compose(
       const list = JSON.parse(localStorage.getItem(selectorStorageId) || '[]');
       if (!isEqual(storageList, list)) {
         setStorageList(list);
-        
       }
     },
   }),
@@ -247,6 +246,7 @@ const withSelector = compose(
       isMultiple,
       value: comValue,
       selectorId,
+      customLabel,
     }) => (list, isStorage = false) =>
       list.map(item => {
         const transformItemInfo = item => {
@@ -296,7 +296,7 @@ const withSelector = compose(
               className={className}
               {...optionLabelPropObj}
             >
-              {label}
+              {customLabel ? customLabel(item) : label}
             </Option>
           );
         }

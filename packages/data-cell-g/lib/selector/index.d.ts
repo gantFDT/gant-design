@@ -50,6 +50,7 @@ declare type DefaultProps<R> = ProtoExtends<typeof defaultprop, {
     onChange?: (key: SelectValue, items: R[]) => void;
     wrap?: boolean;
     onApiRef?: (api: any) => void;
+    customLabel: (data: any) => any;
 }>;
 declare type BasicSelectorProps<T, R> = ProtoExtends<SelectProps<T>, DefaultProps<R>>;
 export declare type SelectorProps<T, R> = ProtoExtends<WithBasicProps, BasicSelectorProps<T, R>>;
