@@ -146,7 +146,6 @@ export interface Props<T extends any> {
     onReady?: OnReady;
     rowSelection?: RowSelection | true;
     rowkey: RowKey<T> | string;
-    gridKey?: string;
     editable?: boolean;
     width?: string | number;
     height?: string | number;
@@ -184,13 +183,8 @@ export interface Props<T extends any> {
     selectedBoxHeight?: number;
     selectedBoxWidth?: number;
     editChangeCallback?: (isChanged: boolean) => void;
-    drawerMode?: boolean;
-    defaultDrawerWidth?: number;
-    customDrawerContent?: (params: any) => any;
-    visibleDrawer?: boolean;
     doubleClickedExpanded?: boolean;
     suppressRightClickSelected?: boolean;
-    treeDataForcedFilter?: boolean;
     themeClass?: string;
     gantThemeClass?: string;
     gantDateComponent?: boolean;

@@ -1215,47 +1215,6 @@ var GridManage = /*#__PURE__*/function () {
         dataSource.push(data);
       });
       return dataSource;
-    } // LocalStorage columns
-
-  }, {
-    key: "getLocalStorageColumns",
-    value: function getLocalStorageColumns(columns, gridKey) {
-      var localColumnsJson = localStorage.getItem("gantd-grid-column-".concat(gridKey));
-      this.gridKey = gridKey;
-      this.columnsDefs = columns;
-      if (!localColumnsJson || !gridKey) return columns;
-
-      try {
-        var localColumns = JSON.parse(localColumnsJson);
-        return (0, _utils.sortAndMergeColumns)(columns, localColumns);
-      } catch (err) {
-        console.error(err);
-        return columns;
-      }
-    }
-  }, {
-    key: "setLocalStorageColumnsState",
-    value: function setLocalStorageColumnsState() {
-      if (!this.gridKey || !this.agGridColumnApi || this.clearloding) return;
-
-      try {
-        var columns = this.agGridColumnApi.getColumnState();
-        var localColumnsJson = JSON.stringify(columns);
-        localStorage.setItem("gantd-grid-column-".concat(this.gridKey), localColumnsJson);
-      } catch (error) {}
-    }
-  }, {
-    key: "clearLocalStorageColumns",
-    value: function clearLocalStorageColumns() {
-      var _this9 = this;
-
-      this.clearloding = true;
-      localStorage.removeItem("gantd-grid-column-".concat(this.gridKey));
-      this.agGridApi.setColumnDefs(this.columnsDefs);
-      this.agGridColumnApi.resetColumnState();
-      setTimeout(function () {
-        _this9.clearloding = false;
-      }, 10);
     }
   }]);
   return GridManage;

@@ -753,37 +753,7 @@ export default class GridManage {
 
     return dataSource;
   }
-  // LocalStorage columns
-  getLocalStorageColumns(columns: (ColDef | ColGroupDef)[], gridKey) {
-    const localColumnsJson = localStorage.getItem(`gantd-grid-column-${gridKey}`);
-    this.gridKey = gridKey;
-    this.columnsDefs = columns;
-    if (!localColumnsJson || !gridKey) return columns;
-    try {
-      const localColumns = JSON.parse(localColumnsJson);
-      return sortAndMergeColumns(columns, localColumns);
-    } catch (err) {
-      console.error(err);
-      return columns;
-    }
-  }
-  setLocalStorageColumnsState() {
-    if (!this.gridKey || !this.agGridColumnApi || this.clearloding) return;
-    try {
-      const columns = this.agGridColumnApi.getColumnState();
-      const localColumnsJson = JSON.stringify(columns);
-      localStorage.setItem(`gantd-grid-column-${this.gridKey}`, localColumnsJson);
-    } catch (error) {}
-  }
-  clearLocalStorageColumns() {
-    this.clearloding = true;
-    localStorage.removeItem(`gantd-grid-column-${this.gridKey}`);
-    this.agGridApi.setColumnDefs(this.columnsDefs);
-    this.agGridColumnApi.resetColumnState();
-    setTimeout(() => {
-      this.clearloding = false;
-    }, 10);
-  }
+  
   addListener = (type: 'historyChange', func: any) => {
     return this.gridEvent.addListener(type, func);
   };

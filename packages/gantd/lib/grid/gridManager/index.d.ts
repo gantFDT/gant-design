@@ -1,5 +1,5 @@
 /// <reference types="node" />
-import { GridApi, RowNode, ColDef, ColGroupDef, ColumnApi } from 'ag-grid-community';
+import { GridApi, RowNode, ColumnApi } from 'ag-grid-community';
 import { Rules } from 'async-validator';
 import { AgGridConfig, BatchUpdateDataSourceParams } from './interface';
 import { RowKey } from '../interface';
@@ -66,9 +66,6 @@ export default class GridManage {
     private changeDiff;
     getPureData(): any[];
     batchUpdateDataSource(params: BatchUpdateDataSourceParams, keys?: string | string[], isMerge?: boolean, notMergeKeys?: string | string[]): any;
-    getLocalStorageColumns(columns: (ColDef | ColGroupDef)[], gridKey: any): (ColGroupDef<any> | ColDef<any>)[];
-    setLocalStorageColumnsState(): void;
-    clearLocalStorageColumns(): void;
     addListener: (type: 'historyChange', func: any) => EventEmitter;
     removeListener: (type: 'historyChange', func: any) => void;
 }

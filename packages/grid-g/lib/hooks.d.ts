@@ -13,10 +13,6 @@ export declare function selectedHooks(params: selectedHooksParams): {
     selectedChangeRef: import("react").MutableRefObject<boolean>;
     updateSelection: (selectedRows: any, dataSource: any) => void;
 };
-export declare function contextHooks(context: any, apiRef: any, onContextChangeRender?: (context: any, diffKeys: string[]) => false | {
-    columns?: string[];
-    nodeIds?: string[];
-}): void;
 export declare function usePrev<T>(value: T): T;
 export interface UseGridPasteProps {
     suppressManagerPaste: boolean;

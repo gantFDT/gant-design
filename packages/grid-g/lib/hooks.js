@@ -5,7 +5,6 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.contextHooks = contextHooks;
 exports.selectedHooks = selectedHooks;
 exports.useGridPaste = useGridPaste;
 exports.usePrev = usePrev;
@@ -91,37 +90,6 @@ function selectedHooks(params) {
     selectedChangeRef: selectedChangeRef,
     updateSelection: updateSelection
   };
-}
-
-function contextHooks(context, apiRef, onContextChangeRender) {
-  var contextRef = (0, _react.useRef)(context);
-  (0, _react.useEffect)(function () {
-    var _a;
-
-    var cancheContext = contextRef.current;
-    var newContext = Object.assign(Object.assign({}, cancheContext), context);
-    var diffKeys = [];
-    Object.keys(newContext).map(function (key) {
-      if (!(0, _lodash.isEqual)(cancheContext[key], context[key])) diffKeys.push(key);
-    });
-    if (diffKeys.length === 0) return;
-    var params = onContextChangeRender && onContextChangeRender(context, diffKeys);
-    if (!params) return;
-    var columns = params.columns,
-        _params$nodeIds = params.nodeIds,
-        nodeIds = _params$nodeIds === void 0 ? [] : _params$nodeIds;
-    var rowNodes = null;
-    if (nodeIds && nodeIds.length > 0) rowNodes = nodeIds.map(function (id) {
-      var _a;
-
-      return (_a = apiRef.current) === null || _a === void 0 ? void 0 : _a.getRowNode(id);
-    });
-    (_a = apiRef.current) === null || _a === void 0 ? void 0 : _a.refreshCells({
-      columns: columns,
-      rowNodes: rowNodes,
-      force: true
-    });
-  }, [context]);
 }
 
 function usePrev(value) {

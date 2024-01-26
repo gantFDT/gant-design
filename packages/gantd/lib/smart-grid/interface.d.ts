@@ -52,6 +52,7 @@ export interface SmartGridProps<T> extends GantGridProps<T> {
     onViewChange?: (viewSchema: any) => void;
     emptyDescription?: string;
     prefixCls?: string;
+    gridKey?: string;
     customViews?: ViewConfig[];
     companyViews?: ViewConfig[];
     lastViewKey?: string;

@@ -94,8 +94,6 @@ var _CustomHeader = _interopRequireDefault(require("./CustomHeader"));
 
 var _gantFilter = require("./gantFilter");
 
-var _GantGridFormToolPanelRenderer = _interopRequireDefault(require("./GantGridFormToolPanelRenderer"));
-
 var _gridManager = _interopRequireDefault(require("./gridManager"));
 
 var _hooks = require("./hooks");
@@ -272,13 +270,7 @@ var Grid = function Grid(gridProps) {
       onColumnMoved = props.onColumnMoved,
       onColumnResized = props.onColumnResized,
       onColumnVisible = props.onColumnVisible,
-      onRowClicked = props.onRowClicked,
-      drawerMode = props.drawerMode,
       multiLineVerify = props.multiLineVerify,
-      defaultDrawerWidth = props.defaultDrawerWidth,
-      selectedBoxHeight = props.selectedBoxHeight,
-      _props$selectedBoxWid = props.selectedBoxWidth,
-      selectedBoxWidth = _props$selectedBoxWid === void 0 ? 240 : _props$selectedBoxWid,
       onRowDoubleClicked = props.onRowDoubleClicked,
       handleFilterModified = props.onFilterModified,
       doubleClickedExpanded = props.doubleClickedExpanded,
@@ -317,6 +309,8 @@ var Grid = function Grid(gridProps) {
       _rowHeight = props.rowHeight,
       getRowHeight = props.getRowHeight,
       headerHeight = props.headerHeight,
+      selectedBoxHeight = props.selectedBoxHeight,
+      selectedBoxWidth = props.selectedBoxWidth,
       _props$controlCellWor = props.controlCellWordWrap,
       controlCellWordWrap = _props$controlCellWor === void 0 ? false : _props$controlCellWor,
       suppressGroupSelectParent = props.suppressGroupSelectParent,
@@ -327,7 +321,7 @@ var Grid = function Grid(gridProps) {
       suppressExcelExport = props.suppressExcelExport,
       removeRowSelectable = props.removeRowSelectable,
       exportExcludeColumns = props.exportExcludeColumns,
-      orignProps = __rest(props, ["dataSource", "onReady", "columns", "editable", "rowSelection", "rowkey", "gridKey", "resizable", "filter", "sortable", "width", "height", "treeData", "pagination", "loading", "isServerSideGroup", "getServerSideGroupKey", "frameworkComponents", "treeDataChildrenName", "locale", "serverGroupExpend", "groupDefaultExpanded", "defaultColDef", "context", "components", "serialNumber", "rowClassRules", "isCompute", "getDataPath", "onCellEditChange", "onCellEditingChange", "onCellChanged", "openEditSign", "getContextMenuItems", "createConfig", "onRowsCut", "onRowsPaste", "onRowsPasteEnd", "showCut", "pasteToGridManager", "onContextChangeRender", "defaultExportParams", "defaultJsonParams", "editChangeCallback", "isRowSelectable", "boxColumnIndex", "hideSelectedBox", "suppressKeyboardEvent", "onSelectionChanged", "onRowSelected", "onRowDataUpdated", "onRowDataChanged", "groupSelectsChildren", "onColumnMoved", "onColumnResized", "onColumnVisible", "onRowClicked", "drawerMode", "multiLineVerify", "defaultDrawerWidth", "selectedBoxHeight", "selectedBoxWidth", "onRowDoubleClicked", "onFilterModified", "doubleClickedExpanded", "customDrawerContent", "visibleDrawer", "hideMenuItemExport", "hideMenuItemExpand", "hiddenMenuItemNames", "showMenuItemClearFilter", "onMenuItemClearFilter", "excelStyles", "suppressRightClickSelected", "treeDataForcedFilter", "themeClass", "gantThemeClass", "gantDateComponent", "autoHeight", "maxAutoHeight", "minAutoHeight", "showCutChild", "gantCustomHeader", "numberGoToMode", "domLayout", "size", "border", "zebra", "rowHeight", "getRowHeight", "headerHeight", "controlCellWordWrap", "suppressGroupSelectParent", "exportHiddenFields", "onColumnsChange", "suppressManagerPaste", "suppressCreateWhenPaste", "suppressExcelExport", "removeRowSelectable", "exportExcludeColumns"]);
+      orignProps = __rest(props, ["dataSource", "onReady", "columns", "editable", "rowSelection", "rowkey", "gridKey", "resizable", "filter", "sortable", "width", "height", "treeData", "pagination", "loading", "isServerSideGroup", "getServerSideGroupKey", "frameworkComponents", "treeDataChildrenName", "locale", "serverGroupExpend", "groupDefaultExpanded", "defaultColDef", "context", "components", "serialNumber", "rowClassRules", "isCompute", "getDataPath", "onCellEditChange", "onCellEditingChange", "onCellChanged", "openEditSign", "getContextMenuItems", "createConfig", "onRowsCut", "onRowsPaste", "onRowsPasteEnd", "showCut", "pasteToGridManager", "onContextChangeRender", "defaultExportParams", "defaultJsonParams", "editChangeCallback", "isRowSelectable", "boxColumnIndex", "hideSelectedBox", "suppressKeyboardEvent", "onSelectionChanged", "onRowSelected", "onRowDataUpdated", "onRowDataChanged", "groupSelectsChildren", "onColumnMoved", "onColumnResized", "onColumnVisible", "multiLineVerify", "onRowDoubleClicked", "onFilterModified", "doubleClickedExpanded", "customDrawerContent", "visibleDrawer", "hideMenuItemExport", "hideMenuItemExpand", "hiddenMenuItemNames", "showMenuItemClearFilter", "onMenuItemClearFilter", "excelStyles", "suppressRightClickSelected", "treeDataForcedFilter", "themeClass", "gantThemeClass", "gantDateComponent", "autoHeight", "maxAutoHeight", "minAutoHeight", "showCutChild", "gantCustomHeader", "numberGoToMode", "domLayout", "size", "border", "zebra", "rowHeight", "getRowHeight", "headerHeight", "selectedBoxHeight", "selectedBoxWidth", "controlCellWordWrap", "suppressGroupSelectParent", "exportHiddenFields", "onColumnsChange", "suppressManagerPaste", "suppressCreateWhenPaste", "suppressExcelExport", "removeRowSelectable", "exportExcludeColumns"]);
 
   var apiRef = (0, _react.useRef)();
   var shiftRef = (0, _react.useRef)(false);
@@ -480,7 +474,7 @@ var Grid = function Grid(gridProps) {
       onCellChanged: onCellChanged,
       rowSelection: rowSelection
     }, propsContext);
-  }, [propsContext, size, computedPagination, editable, drawerMode, showCut, onCellEditChange, onCellEditingChange, onCellChanged, getDataPath, rowSelection]);
+  }, [propsContext, size, computedPagination, editable, showCut, onCellEditChange, onCellEditingChange, onCellChanged, getDataPath, rowSelection]);
 
   var _filterHooks = (0, _gantFilter.filterHooks)({
     treeData: treeData,
@@ -494,15 +488,8 @@ var Grid = function Grid(gridProps) {
       onFilterModified = _filterHooks.onFilterModified,
       forcedGridKey = _filterHooks.forcedGridKey,
       filterModelRef = _filterHooks.filterModelRef,
-      columnIdRef = _filterHooks.columnIdRef; //强制树形过滤，已废弃，使用原生 excludeChildrenWhenTreeDataFiltering
+      columnIdRef = _filterHooks.columnIdRef; // 初始注册配置信息；
 
-
-  var gridForcedProps = (0, _react.useMemo)(function () {
-    if (!treeDataForcedFilter && forcedGridKey) return {};
-    return {
-      key: forcedGridKey
-    };
-  }, [forcedGridKey]); // 初始注册配置信息；
 
   (0, _react.useEffect)(function () {
     gridManager.reset({
@@ -621,33 +608,16 @@ var Grid = function Grid(gridProps) {
     if ((_d = gridVariableRef.current) === null || _d === void 0 ? void 0 : _d.hideSelectedBox) return;
     gridVariableRef.current.selectedRows = rows;
     setInnerSelectedRows(rows);
-  }, [getAllSelectedRows, propsOnSelectionChanged, rowSelection, hideBox]); //单击行
-
-  var handleRowClicked = (0, _react.useCallback)(function (event) {
-    if (drawerMode && visibleDrawer) {
-      if (typeof propVisibleDrawer !== 'boolean') setVisibleDrawer(true);
-      clickedEventRef.current = event;
-      setClickRowIndex((0, _lodash.get)(event, 'rowIndex'));
-    }
-
-    onRowClicked && onRowClicked(event);
-  }, [onRowClicked, drawerMode, visibleDrawer, propVisibleDrawer]); //双击行
+  }, [getAllSelectedRows, propsOnSelectionChanged, rowSelection, hideBox]); //双击行
 
   var handleRowDoubleClicked = (0, _react.useCallback)(function (event) {
     if (onRowDoubleClicked) onRowDoubleClicked(event);
-    var doubleClickedOpenDrawer = true;
-
-    if (drawerMode && doubleClickedOpenDrawer) {
-      if (typeof propVisibleDrawer !== 'boolean') setVisibleDrawer(true);
-      clickedEventRef.current = event;
-      setClickRowIndex((0, _lodash.get)(event, 'rowIndex'));
-    }
 
     if (doubleClickedExpanded) {
       var node = event.node;
       if (node.childrenAfterGroup.length > 0) node.setExpanded(!node.expanded);
     }
-  }, [onRowDoubleClicked, drawerMode, doubleClickedExpanded]); //行被选择
+  }, [onRowDoubleClicked, doubleClickedExpanded]); //行被选择
 
   var onRowSelected = (0, _react.useCallback)(function (event) {
     if (selectedChangeRef.current) return;
@@ -696,25 +666,7 @@ var Grid = function Grid(gridProps) {
 
   (0, _react.useEffect)(function () {
     gridManager.validateFields = validateFields;
-  }, [validateFields]); // 监听columns变换
-
-  var onColumnsChange = (0, _react.useCallback)(function (event) {
-    switch (event.type) {
-      case 'columnVisible':
-        onColumnVisible && onColumnVisible(event);
-        break;
-
-      case 'columnResized':
-        onColumnResized && onColumnResized(event);
-        break;
-
-      case 'columnMoved':
-        onColumnMoved && onColumnMoved(event);
-        break;
-    }
-
-    gridManager.setLocalStorageColumnsState();
-  }, [onColumnMoved, onColumnResized, onColumnVisible]); // 监听onColumnEverythingChanged
+  }, [validateFields]); // 监听onColumnEverythingChanged
 
   var onColumnEverythingChanged = (0, _react.useCallback)(function (event) {
     var columnState = event.columnApi.getColumnState();
@@ -732,10 +684,7 @@ var Grid = function Grid(gridProps) {
     setExportColumns(function (pre) {
       return (0, _lodash.isEqual)(pre, arr) ? pre : arr;
     });
-  }, [exportHiddenFields]);
-  var localColumnsDefs = (0, _react.useMemo)(function () {
-    return gridManager.getLocalStorageColumns(columnDefs, gridKey);
-  }, [columnDefs, gridKey]); // columns-end
+  }, [exportHiddenFields]); // columns-end
 
   var onGridReady = (0, _react.useCallback)(function (params) {
     apiRef.current = params.api;
@@ -750,20 +699,7 @@ var Grid = function Grid(gridProps) {
       params.api.setRowData((0, _lodash.get)(gridManager, 'agGridConfig.dataSource', []));
       params.api.setFilterModel(filterModelRef.current);
     }
-  }, [onReady, gridKey]); // //阻止键盘事件
-  // const onSuppressKeyboardEvent = useCallback((params: SuppressKeyboardEventParams) => {
-  //   const { event, colDef, data, api } = params;
-  //   if (event.key === 'Shift') {
-  //     shiftRef.current = true;
-  //     return false;
-  //   }
-  //   // if (event.keyCode == 67 && (event.ctrlKey || event.composed)) {
-  //   //   api.copySelectedRangeToClipboard(false);
-  //   //   return true;
-  //   // }
-  //   return false;
-  // }, []);
-  //行是否可选
+  }, [onReady, gridKey]); //行是否可选
 
   var onRowSelectable = (0, _react.useCallback)(function (rowNode) {
     var notRemove = (0, _lodash.get)(rowNode, 'data._rowType') !== _interface.DataActions.removeTag || removeRowSelectable;
@@ -773,9 +709,7 @@ var Grid = function Grid(gridProps) {
     }
 
     return notRemove;
-  }, []); // 监听context变换并更新
-
-  (0, _hooks.contextHooks)(context, apiRef, onContextChangeRender); //导出设置
+  }, []); //导出设置
 
   var exportParams = (0, _react.useMemo)(function () {
     var cloneColumns = (0, _lodash.cloneDeep)(exportColumns);
@@ -839,20 +773,6 @@ var Grid = function Grid(gridProps) {
     suppressManagerPaste: suppressManagerPaste,
     suppressCreateWhenPaste: suppressCreateWhenPaste
   });
-  var renderColumns = (0, _react.useCallback)(function (columnDefs) {
-    return columnDefs.map(function (item, index) {
-      var props = {
-        key: item.field || index
-      };
-      if (item.marryChildren) return /*#__PURE__*/_react.default.createElement(_agGridReact.AgGridColumn, Object.assign({}, item, props, {
-        groupId: item.field || index
-      }), renderColumns(item.children));
-      return /*#__PURE__*/_react.default.createElement(_agGridReact.AgGridColumn, Object.assign({}, item, props));
-    });
-  }, [localColumnsDefs]);
-  var renderColumnsContent = (0, _react.useMemo)(function () {
-    return renderColumns(localColumnsDefs);
-  }, [localColumnsDefs]);
   return /*#__PURE__*/_react.default.createElement(_Receiver.default, {
     children: function children(defaultLocale) {
       var locale = Object.assign(Object.assign({}, defaultLocale), customLocale);
@@ -898,7 +818,7 @@ var Grid = function Grid(gridProps) {
           width: width,
           height: girdWrapHeight
         }
-      }, /*#__PURE__*/_react.default.createElement("div", Object.assign({
+      }, /*#__PURE__*/_react.default.createElement("div", {
         className: (0, _classnames.default)(themeClass, 'gant-ag-wrapper'),
         "data-refid": gridKey,
         style: {
@@ -907,7 +827,7 @@ var Grid = function Grid(gridProps) {
           fontSize: _utils.sizeDefinitions.fontSize[size]
         },
         ref: wrapperRef
-      }, gridForcedProps), !hideBox && /*#__PURE__*/_react.default.createElement(_SelectedGrid.default, {
+      }, !hideBox && /*#__PURE__*/_react.default.createElement(_SelectedGrid.default, {
         apiRef: apiRef,
         onChange: onBoxSelectionChanged,
         getRowNodeId: getRowNodeId,
@@ -917,12 +837,10 @@ var Grid = function Grid(gridProps) {
         selectedBoxWidth: selectedBoxWidth,
         locale: locale
       }), /*#__PURE__*/_react.default.createElement(_agGridReact.AgGridReact, Object.assign({
-        frameworkComponents: Object.assign(Object.assign({
+        components: Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({}, componentsMaps), components), {
           agColumnHeader: gantCustomHeader ? _CustomHeader.default : null,
           agDateInput: gantDateComponent ? _GantDateComponent.default : null
-        }, frameworkComponentsMaps), frameworkComponents),
-        components: Object.assign(Object.assign({}, componentsMaps), components),
-        onRowClicked: handleRowClicked,
+        }), frameworkComponentsMaps), frameworkComponents),
         onSelectionChanged: onSelectionChanged,
         onRowSelected: onRowSelected,
         rowSelection: rowSelection,
@@ -933,7 +851,7 @@ var Grid = function Grid(gridProps) {
         headerHeight: headerHeight || (0, _lodash.get)(_utils.sizeDefinitions, "headerHeight.".concat(size)),
         floatingFiltersHeight: (0, _lodash.get)(_utils.sizeDefinitions, "floatingFiltersHeight.".concat(size)),
         singleClickEdit: true,
-        defaultExportParams: exportParams,
+        defaultExcelExportParams: exportParams,
         context: Object.assign(Object.assign({
           serverDataRequest: serverDataRequest,
           isServerSideGroup: isServerSideGroup,
@@ -950,7 +868,6 @@ var Grid = function Grid(gridProps) {
         suppressCsvExport: true,
         stopEditingWhenGridLosesFocus: false,
         treeData: currentTreeData,
-        suppressScrollOnNewData: true,
         tooltipShowDelay: 0,
         tooltipMouseTrack: true,
         excludeChildrenWhenTreeDataFiltering: true
@@ -966,6 +883,7 @@ var Grid = function Grid(gridProps) {
       }, orignProps, {
         getDataPath: getDataPath,
         gridOptions: Object.assign({}, orignProps === null || orignProps === void 0 ? void 0 : orignProps.gridOptions),
+        columnDefs: columnDefs,
         isRowSelectable: onRowSelectable,
         defaultColDef: _defaultColDef,
         onRowDoubleClicked: handleRowDoubleClicked,
@@ -984,36 +902,8 @@ var Grid = function Grid(gridProps) {
         getContextMenuItems: contextMenuItems,
         onCellEditingStopped: onCellEditingStopped,
         onRowDataUpdated: onRowDataUpdated,
-        onColumnMoved: onColumnsChange,
-        onColumnVisible: onColumnsChange,
-        onColumnResized: onColumnsChange,
         onColumnEverythingChanged: onColumnEverythingChanged
-      }), renderColumnsContent)), drawerMode && visibleDrawer && /*#__PURE__*/_react.default.createElement(_GantGridFormToolPanelRenderer.default, {
-        columns: columns,
-        clickedEvent: clickedEventRef.current,
-        gridManager: gridManager,
-        visible: visibleDrawer,
-        closeDrawer: function closeDrawer() {
-          return typeof propVisibleDrawer !== 'boolean' && setVisibleDrawer(false);
-        },
-        onCellEditChange: onCellEditChange,
-        onCellEditingChange: onCellEditingChange,
-        defaultDrawerWidth: defaultDrawerWidth,
-        customDrawerContent: customDrawerContent,
-        editable: editable,
-        clickRowIndex: clickRowIndex,
-        context: Object.assign(Object.assign({
-          serverDataRequest: serverDataRequest,
-          isServerSideGroup: isServerSideGroup,
-          size: size,
-          getDataPath: getDataPath,
-          computedPagination: computedPagination,
-          groupSelectsChildren: groupSelectsChildren
-        }, context), {
-          treeData: currentTreeData,
-          requireds: requireds
-        })
-      })), computedPagination && /*#__PURE__*/_react.default.createElement(_Pagination.default, Object.assign({
+      })))), computedPagination && /*#__PURE__*/_react.default.createElement(_Pagination.default, Object.assign({
         numberGoToMode: numberGoToMode,
         size: size
       }, computedPagination)))));

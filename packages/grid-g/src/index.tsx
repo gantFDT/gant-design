@@ -50,7 +50,7 @@ import CustomHeader from './CustomHeader';
 import { filterHooks } from './gantFilter';
 import GantGridFormToolPanelRenderer from './GantGridFormToolPanelRenderer';
 import GridManager from './gridManager';
-import { contextHooks, selectedHooks, useGridPaste } from './hooks';
+import { selectedHooks, useGridPaste } from './hooks';
 import { DataActions, GridProps, GridVariableRef, RowSelection, Size } from './interface';
 import key from './license';
 import { getAllComponentsMaps, getGridConfig } from './maps';
@@ -186,12 +186,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     onColumnMoved,
     onColumnResized,
     onColumnVisible,
-    onRowClicked,
-    drawerMode,
     multiLineVerify,
-    defaultDrawerWidth,
-    selectedBoxHeight,
-    selectedBoxWidth = 240,
     onRowDoubleClicked,
     onFilterModified: handleFilterModified,
     doubleClickedExpanded,
@@ -221,6 +216,8 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     rowHeight: _rowHeight,
     getRowHeight,
     headerHeight,
+    selectedBoxHeight,
+    selectedBoxWidth,
     controlCellWordWrap = false,
     suppressGroupSelectParent,
     exportHiddenFields,
@@ -392,7 +389,6 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     size,
     computedPagination,
     editable,
-    drawerMode,
     showCut,
     onCellEditChange,
     onCellEditingChange,
@@ -415,14 +411,6 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     dataSource,
     context,
   });
-
-  //强制树形过滤，已废弃，使用原生 excludeChildrenWhenTreeDataFiltering
-  const gridForcedProps = useMemo(() => {
-    if (!treeDataForcedFilter && forcedGridKey) return {};
-    return {
-      key: forcedGridKey,
-    };
-  }, [forcedGridKey]);
 
   // 初始注册配置信息；
   useEffect(() => {
@@ -553,35 +541,16 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     [getAllSelectedRows, propsOnSelectionChanged, rowSelection, hideBox],
   );
 
-  //单击行
-  const handleRowClicked = useCallback(
-    (event: RowClickedEvent) => {
-      if (drawerMode && visibleDrawer) {
-        if (typeof propVisibleDrawer !== 'boolean') setVisibleDrawer(true);
-        clickedEventRef.current = event;
-        setClickRowIndex(get(event, 'rowIndex'));
-      }
-      onRowClicked && onRowClicked(event);
-    },
-    [onRowClicked, drawerMode, visibleDrawer, propVisibleDrawer],
-  );
-
   //双击行
   const handleRowDoubleClicked = useCallback(
     (event: RowDoubleClickedEvent) => {
       if (onRowDoubleClicked) onRowDoubleClicked(event);
-      const doubleClickedOpenDrawer = true;
-      if (drawerMode && doubleClickedOpenDrawer) {
-        if (typeof propVisibleDrawer !== 'boolean') setVisibleDrawer(true);
-        clickedEventRef.current = event;
-        setClickRowIndex(get(event, 'rowIndex'));
-      }
       if (doubleClickedExpanded) {
         const { node } = event;
         if (node.childrenAfterGroup.length > 0) node.setExpanded(!node.expanded);
       }
     },
-    [onRowDoubleClicked, drawerMode, doubleClickedExpanded],
+    [onRowDoubleClicked, doubleClickedExpanded],
   );
 
   //行被选择
@@ -650,24 +619,6 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     gridManager.validateFields = validateFields;
   }, [validateFields]);
 
-  // 监听columns变换
-  const onColumnsChange = useCallback(
-    (event: ColumnMovedEvent | ColumnResizedEvent | ColumnVisibleEvent) => {
-      switch (event.type) {
-        case 'columnVisible':
-          onColumnVisible && onColumnVisible(event as any);
-          break;
-        case 'columnResized':
-          onColumnResized && onColumnResized(event as any);
-          break;
-        case 'columnMoved':
-          onColumnMoved && onColumnMoved(event as any);
-          break;
-      }
-      gridManager.setLocalStorageColumnsState();
-    },
-    [onColumnMoved, onColumnResized, onColumnVisible],
-  );
   // 监听onColumnEverythingChanged
   const onColumnEverythingChanged = useCallback(
     (event: ColumnEverythingChangedEvent) => {
@@ -686,9 +637,6 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     },
     [exportHiddenFields],
   );
-  const localColumnsDefs = useMemo(() => {
-    return gridManager.getLocalStorageColumns(columnDefs, gridKey);
-  }, [columnDefs, gridKey]);
 
   // columns-end
   const onGridReady = useCallback(
@@ -708,20 +656,6 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     [onReady, gridKey],
   );
 
-  // //阻止键盘事件
-  // const onSuppressKeyboardEvent = useCallback((params: SuppressKeyboardEventParams) => {
-  //   const { event, colDef, data, api } = params;
-  //   if (event.key === 'Shift') {
-  //     shiftRef.current = true;
-  //     return false;
-  //   }
-  //   // if (event.keyCode == 67 && (event.ctrlKey || event.composed)) {
-  //   //   api.copySelectedRangeToClipboard(false);
-  //   //   return true;
-  //   // }
-  //   return false;
-  // }, []);
-
   //行是否可选
   const onRowSelectable = useCallback((rowNode: RowNode) => {
     const notRemove =
@@ -731,9 +665,6 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     }
     return notRemove;
   }, []);
-
-  // 监听context变换并更新
-  contextHooks(context, apiRef, onContextChangeRender);
 
   //导出设置
   const exportParams = useMemo(() => {
@@ -802,26 +733,6 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     suppressCreateWhenPaste,
   });
 
-  const renderColumns = useCallback(
-    (columnDefs: (ColGroupDef | ColDef)[]) => {
-      return columnDefs.map((item, index) => {
-        const props: any = { key: (item as any).field || index };
-        if ((item as ColGroupDef).marryChildren)
-          return (
-            <AgGridColumn {...item} {...props} groupId={(item as any).field || index}>
-              {renderColumns((item as any).children)}
-            </AgGridColumn>
-          );
-        return <AgGridColumn {...item} {...props} />;
-      });
-    },
-    [localColumnsDefs],
-  );
-
-  const renderColumnsContent = useMemo(() => {
-    return renderColumns(localColumnsDefs);
-  }, [localColumnsDefs]);
-
   return (
     <Receiver
       children={defaultLocale => {
@@ -881,7 +792,6 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                       fontSize: sizeDefinitions.fontSize[size],
                     }}
                     ref={wrapperRef}
-                    {...gridForcedProps}
                   >
                     {!hideBox && (
                       <SelectedGrid
@@ -896,17 +806,14 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                       />
                     )}
                     <AgGridReact
-                      frameworkComponents={{
+                      components={{
+                        ...componentsMaps,
+                        ...components,
                         agColumnHeader: gantCustomHeader ? CustomHeader : null,
                         agDateInput: gantDateComponent ? GantDateComponent : null,
                         ...frameworkComponentsMaps,
                         ...frameworkComponents,
                       }}
-                      components={{
-                        ...componentsMaps,
-                        ...components,
-                      }}
-                      onRowClicked={handleRowClicked}
                       onSelectionChanged={onSelectionChanged}
                       onRowSelected={onRowSelected}
                       rowSelection={rowSelection}
@@ -917,7 +824,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                       headerHeight={headerHeight || get(sizeDefinitions, `headerHeight.${size}`)}
                       floatingFiltersHeight={get(sizeDefinitions, `floatingFiltersHeight.${size}`)}
                       singleClickEdit
-                      defaultExportParams={exportParams}
+                      defaultExcelExportParams={exportParams}
                       context={{
                         serverDataRequest,
                         isServerSideGroup,
@@ -934,7 +841,6 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                       suppressCsvExport
                       stopEditingWhenGridLosesFocus={false}
                       treeData={currentTreeData}
-                      suppressScrollOnNewData
                       tooltipShowDelay={0}
                       tooltipMouseTrack
                       excludeChildrenWhenTreeDataFiltering
@@ -949,6 +855,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                       gridOptions={{
                         ...orignProps?.gridOptions,
                       }}
+                      columnDefs={columnDefs}
                       isRowSelectable={onRowSelectable}
                       defaultColDef={_defaultColDef}
                       onRowDoubleClicked={handleRowDoubleClicked}
@@ -965,42 +872,9 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                       getContextMenuItems={contextMenuItems as any}
                       onCellEditingStopped={onCellEditingStopped}
                       onRowDataUpdated={onRowDataUpdated}
-                      onColumnMoved={onColumnsChange}
-                      onColumnVisible={onColumnsChange}
-                      onColumnResized={onColumnsChange}
                       onColumnEverythingChanged={onColumnEverythingChanged}
-                    >
-                      {renderColumnsContent}
-                    </AgGridReact>
+                    ></AgGridReact>
                   </div>
-                  {drawerMode && visibleDrawer && (
-                    <GantGridFormToolPanelRenderer
-                      columns={columns}
-                      clickedEvent={clickedEventRef.current}
-                      gridManager={gridManager}
-                      visible={visibleDrawer}
-                      closeDrawer={() =>
-                        typeof propVisibleDrawer !== 'boolean' && setVisibleDrawer(false)
-                      }
-                      onCellEditChange={onCellEditChange}
-                      onCellEditingChange={onCellEditingChange}
-                      defaultDrawerWidth={defaultDrawerWidth}
-                      customDrawerContent={customDrawerContent}
-                      editable={editable}
-                      clickRowIndex={clickRowIndex}
-                      context={{
-                        serverDataRequest,
-                        isServerSideGroup,
-                        size,
-                        getDataPath: getDataPath,
-                        computedPagination,
-                        groupSelectsChildren,
-                        ...context,
-                        treeData: currentTreeData,
-                        requireds,
-                      }}
-                    />
-                  )}
                 </div>
                 {computedPagination && (
                   <GantPagination

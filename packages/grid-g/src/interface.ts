@@ -216,8 +216,6 @@ export interface Props<T extends any> {
   rowSelection?: RowSelection | true;
   //行唯一标识
   rowkey: RowKey<T> | string;
-  //表格本地存储状态的唯一标识
-  gridKey?: string;
   //是否编辑状态
   editable?: boolean;
   //宽度
@@ -296,20 +294,12 @@ export interface Props<T extends any> {
   selectedBoxWidth?: number;
   //编辑改变回调
   editChangeCallback?: (isChanged: boolean) => void;
-  //侧边栏模式
-  drawerMode?: boolean;
-  //侧边栏初始宽度
-  defaultDrawerWidth?: number;
-  //自定义侧边栏内容
-  customDrawerContent?: (params: any) => any;
-  //侧边栏显隐
-  visibleDrawer?: boolean;
+
+
   //双击行展开树节点
   doubleClickedExpanded?: boolean;
   //关闭右键选中行
   suppressRightClickSelected?: boolean;
-  //废弃,原用于过滤树形子集数据
-  treeDataForcedFilter?: boolean;
   //主题
   themeClass?: string;
   gantThemeClass?: string;

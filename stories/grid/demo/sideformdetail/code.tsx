@@ -163,10 +163,6 @@ const SideFormDetail = () => {
         rowkey="id"
         dataSource={dataSource}
         columns={columns}
-        drawerMode
-        defaultDrawerWidth={200}
-        customDrawerContent={customDrawerContent}
-        visibleDrawer={visibleDrawer}
         onRowDoubleClicked={onRowDoubleClicked}
       />
     </>

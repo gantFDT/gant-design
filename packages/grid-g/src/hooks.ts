@@ -68,43 +68,6 @@ export function selectedHooks(params: selectedHooksParams) {
   };
 }
 
-export function contextHooks(
-  context: any,
-  apiRef: any,
-  onContextChangeRender?: (
-    context: any,
-    diffKeys: string[],
-  ) =>
-    | false
-    | {
-        columns?: string[];
-        nodeIds?: string[];
-      },
-) {
-  const contextRef = useRef(context);
-  useEffect(() => {
-    const cancheContext = contextRef.current;
-    const newContext = { ...cancheContext, ...context };
-    const diffKeys: string[] = [];
-    Object.keys(newContext).map(key => {
-      if (!isEqual(cancheContext[key], context[key])) diffKeys.push(key);
-    });
-    if (diffKeys.length === 0) return;
-    const params = onContextChangeRender && onContextChangeRender(context, diffKeys);
-    if (!params) return;
-    const { columns, nodeIds = [] } = params;
-    let rowNodes = null;
-    if (nodeIds && nodeIds.length > 0)
-      rowNodes = nodeIds.map(id => {
-        return apiRef.current?.getRowNode(id);
-      });
-    apiRef.current?.refreshCells({
-      columns,
-      rowNodes,
-      force: true,
-    });
-  }, [context]);
-}
 
 export function usePrev<T>(value: T) {
   const ref = useRef(value);

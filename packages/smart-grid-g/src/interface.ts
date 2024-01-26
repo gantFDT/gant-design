@@ -64,7 +64,7 @@ export interface SmartGridProps<T> extends GantGridProps<T> {
   onViewChange?: (viewSchema: any) => void;
   emptyDescription?: string;
   prefixCls?: string;
-
+  gridKey?: string;
   customViews?: ViewConfig[];
   companyViews?: ViewConfig[];
   lastViewKey?: string;
@@ -86,7 +86,7 @@ export interface SmartGridProps<T> extends GantGridProps<T> {
   hideHeader?: boolean;
   height?: number | string;
   style?: object;
-  smartGridViewName?: string
+  smartGridViewName?: string;
 }
 
 /** 兼容旧写法 */
