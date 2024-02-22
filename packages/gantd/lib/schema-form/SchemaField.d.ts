@@ -5,6 +5,6 @@ interface SchemaField extends Schema {
     edit: any;
     uiData: any;
 }
-declare const SchemaField: (props: SchemaField, ref: any) => JSX.Element;
+declare const SchemaField: (props: SchemaField, ref: any) => React.JSX.Element;
 declare const _default: React.MemoExoticComponent<React.ForwardRefExoticComponent<SchemaField & React.RefAttributes<unknown>>>;
 export default _default;

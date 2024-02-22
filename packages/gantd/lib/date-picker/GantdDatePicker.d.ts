@@ -26,14 +26,14 @@ export declare class DatePicker extends React.Component<any, WeekPickerState> {
     clearSelection: (e: React.MouseEvent<HTMLElement>) => void;
     focus(): void;
     blur(): void;
-    renderFooter: (...args: any[]) => JSX.Element;
-    weekDateRender: (current: any) => JSX.Element;
-    renderWeekPicker: ({ getPrefixCls }: ConfigConsumerProps) => JSX.Element;
-    render(): JSX.Element;
+    renderFooter: (...args: any[]) => React.JSX.Element;
+    weekDateRender: (current: any) => React.JSX.Element;
+    renderWeekPicker: ({ getPrefixCls }: ConfigConsumerProps) => React.JSX.Element;
+    render(): React.JSX.Element;
 }
 export declare const WraperDatePick: any;
 declare class GantDatePicker extends React.Component<GantDatePickerProps, WeekPickerState> {
     onChange: (mom: any, timeString: any) => void;
-    render(): JSX.Element;
+    render(): React.JSX.Element;
 }
 export default GantDatePicker;

@@ -4,6 +4,6 @@ import { InputNumberProps } from 'antd/lib/input-number';
 export interface GantInputNumberProps extends WithBasicProps, InputNumberProps {
 }
 declare class InputNumber extends React.Component<GantInputNumberProps> {
-    render(): JSX.Element;
+    render(): React.JSX.Element;
 }
 export default InputNumber;

@@ -13,4 +13,4 @@ declare const _default: React.NamedExoticComponent<Pick<import("./interface").Pr
     Component?: any;
 }>, "disabled" | "style" | "size" | "locale" | "onChange" | "prefixCls" | "className" | "role" | "addonBefore" | "addonAfter" | "itemRender" | "mode" | "align" | "total" | "defaultCurrent" | "current" | "defaultPageSize" | "pageSize" | "hideOnSinglePage" | "showSizeChanger" | "pageSizeOptions" | "showQuickJumper" | "showTotal" | "simple" | "selectPrefixCls" | "showLessItems" | "beginIndex" | "countLimit" | "numberGoToMode" | "onRefresh" | "tooltipTotal" | "Component">>;
 export default _default;
-export declare const paginationShowTotal: (total: any, range: any, limit: any, tooltipTotal: any) => JSX.Element;
+export declare const paginationShowTotal: (total: any, range: any, limit: any, tooltipTotal: any) => React.JSX.Element;

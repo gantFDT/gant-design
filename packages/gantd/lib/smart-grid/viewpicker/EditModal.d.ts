@@ -1,4 +1,4 @@
-/// <reference types="react" />
+import React from 'react';
 interface EditModalProps {
     loading: boolean;
     showModal: boolean;
@@ -10,5 +10,5 @@ interface EditModalProps {
     systemViews: any[];
     customViews: any[];
 }
-declare const _default: import("antd/lib/form/interface").ConnectedComponentClass<(props: EditModalProps) => JSX.Element, Pick<any, string | number | symbol>>;
+declare const _default: import("antd/lib/form/interface").ConnectedComponentClass<(props: EditModalProps) => React.JSX.Element, Pick<any, string | number | symbol>>;
 export default _default;

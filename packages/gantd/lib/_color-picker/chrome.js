@@ -1,25 +1,21 @@
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-
 var _react = _interopRequireDefault(require("react"));
-
 var _common = require("react-color/lib/components/common");
-
 var Chrome = function Chrome(props) {
   var _props$width = props.width,
-      width = _props$width === void 0 ? 225 : _props$width,
-      onChange = props.onChange,
-      rgb = props.rgb,
-      hsl = props.hsl,
-      hsv = props.hsv,
-      placement = props.placement,
-      prefixCls = props.prefixCls;
+    width = _props$width === void 0 ? 225 : _props$width,
+    onChange = props.onChange,
+    rgb = props.rgb,
+    hsl = props.hsl,
+    hsv = props.hsv,
+    placement = props.placement,
+    prefixCls = props.prefixCls;
   var styles = {
     picker: {
       width: width,
@@ -102,33 +98,33 @@ var Chrome = function Chrome(props) {
       left: '33px'
     }
   };
-  return /*#__PURE__*/_react.default.createElement("div", {
+  return _react.default.createElement("div", {
     style: Object.assign(Object.assign({}, styles.picker), {
       flexDirection: placement === 'top' ? 'column' : 'column-reverse'
     }),
     className: "".concat(prefixCls, "-chromepicker")
-  }, /*#__PURE__*/_react.default.createElement("div", {
+  }, _react.default.createElement("div", {
     style: placement === 'top' ? Object.assign(Object.assign({}, styles.triangleShadow), {
       borderWidth: '10px 9px 0 9px',
       borderColor: 'rgba(0,0,0,.1) transparent transparent transparent',
       bottom: '-1px',
       top: undefined
     }) : styles.triangleShadow
-  }), /*#__PURE__*/_react.default.createElement("div", {
+  }), _react.default.createElement("div", {
     style: placement === 'top' ? Object.assign(Object.assign({}, styles.triangle), {
       borderWidth: '10px 9px 0 9px',
       borderColor: '#fff transparent transparent transparent',
       bottom: '0px',
       top: undefined
     }) : styles.triangle
-  }), /*#__PURE__*/_react.default.createElement("div", {
+  }), _react.default.createElement("div", {
     style: styles.saturation
-  }, /*#__PURE__*/_react.default.createElement(_common.Saturation, {
+  }, _react.default.createElement(_common.Saturation, {
     style: styles.Saturation,
     hsl: hsl,
     hsv: hsv,
     pointer: function pointer() {
-      return /*#__PURE__*/_react.default.createElement("div", {
+      return _react.default.createElement("div", {
         style: {
           width: '12px',
           height: '12px',
@@ -139,26 +135,26 @@ var Chrome = function Chrome(props) {
       });
     },
     onChange: onChange
-  })), /*#__PURE__*/_react.default.createElement("div", {
+  })), _react.default.createElement("div", {
     style: styles.body
-  }, /*#__PURE__*/_react.default.createElement("div", {
+  }, _react.default.createElement("div", {
     style: styles.controls,
     className: "flexbox-fix"
-  }, /*#__PURE__*/_react.default.createElement("div", {
+  }, _react.default.createElement("div", {
     style: styles.color
-  }, /*#__PURE__*/_react.default.createElement("div", {
+  }, _react.default.createElement("div", {
     style: styles.swatch
-  }, /*#__PURE__*/_react.default.createElement("div", {
+  }, _react.default.createElement("div", {
     style: styles.active
-  }), /*#__PURE__*/_react.default.createElement(_common.Checkboard, null))), /*#__PURE__*/_react.default.createElement("div", {
+  }), _react.default.createElement(_common.Checkboard, null))), _react.default.createElement("div", {
     style: styles.toggles
-  }, /*#__PURE__*/_react.default.createElement("div", {
+  }, _react.default.createElement("div", {
     style: styles.hue
-  }, /*#__PURE__*/_react.default.createElement(_common.Hue, {
+  }, _react.default.createElement(_common.Hue, {
     style: styles.Hue,
     hsl: hsl,
     pointer: function pointer() {
-      return /*#__PURE__*/_react.default.createElement("div", {
+      return _react.default.createElement("div", {
         style: {
           width: '12px',
           height: '12px',
@@ -172,7 +168,4 @@ var Chrome = function Chrome(props) {
     onChange: onChange
   }))))));
 };
-
-var _default = (0, _common.ColorWrap)(Chrome);
-
-exports.default = _default;
+var _default = exports.default = (0, _common.ColorWrap)(Chrome);

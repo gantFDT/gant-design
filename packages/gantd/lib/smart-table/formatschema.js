@@ -1,49 +1,29 @@
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = formatSchema;
 exports.setFields = void 0;
-
 var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
-
 var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
-
 var _react = _interopRequireDefault(require("react"));
-
 var _input = _interopRequireDefault(require("../input"));
-
 var _inputNumber = _interopRequireDefault(require("../input-number"));
-
 var _datePicker = _interopRequireDefault(require("../date-picker"));
-
 var _selector = _interopRequireDefault(require("../selector"));
-
 var _inputUrl = _interopRequireDefault(require("../input-url"));
-
 var _locationSelector = _interopRequireDefault(require("../location-selector"));
-
 var _inputTelePhone = _interopRequireDefault(require("../input-tele-phone"));
-
 var _inputCellPhone = _interopRequireDefault(require("../input-cell-phone"));
-
 var _inputEmail = _interopRequireDefault(require("../input-email"));
-
 var _inputLanguage = _interopRequireDefault(require("../input-language"));
-
 var _inputMoney = _interopRequireDefault(require("../input-money"));
-
 var _lodash = require("lodash");
-
 var _interface = require("./interface");
-
 var _util = require("../util");
-
 var _ComponentsMap;
-
 var DEFAULT_VIEW = {
   wrap: true,
   isZebra: true,
@@ -54,13 +34,11 @@ var DEFAULT_VIEW = {
   pageSize: 50,
   columnFields: []
 };
-var ComponentsMap = (_ComponentsMap = {}, (0, _defineProperty2.default)(_ComponentsMap, _interface.Fields.Input, _input.default), (0, _defineProperty2.default)(_ComponentsMap, _interface.Fields.InputNumber, _inputNumber.default), (0, _defineProperty2.default)(_ComponentsMap, _interface.Fields.InputUrl, _inputUrl.default), (0, _defineProperty2.default)(_ComponentsMap, _interface.Fields.InputTelePhone, _inputTelePhone.default), (0, _defineProperty2.default)(_ComponentsMap, _interface.Fields.InputCellPhone, _inputCellPhone.default), (0, _defineProperty2.default)(_ComponentsMap, _interface.Fields.InputEmail, _inputEmail.default), (0, _defineProperty2.default)(_ComponentsMap, _interface.Fields.InputLanguage, _inputLanguage.default), (0, _defineProperty2.default)(_ComponentsMap, _interface.Fields.InputMoney, _inputMoney.default), (0, _defineProperty2.default)(_ComponentsMap, _interface.Fields.TextArea, _input.default.TextArea), (0, _defineProperty2.default)(_ComponentsMap, _interface.Fields.DatePicker, _datePicker.default), (0, _defineProperty2.default)(_ComponentsMap, _interface.Fields.Selector, _selector.default), (0, _defineProperty2.default)(_ComponentsMap, _interface.Fields.LocationSelector, _locationSelector.default), _ComponentsMap);
-
+var ComponentsMap = (_ComponentsMap = {}, (0, _defineProperty2.default)((0, _defineProperty2.default)((0, _defineProperty2.default)((0, _defineProperty2.default)((0, _defineProperty2.default)((0, _defineProperty2.default)((0, _defineProperty2.default)((0, _defineProperty2.default)((0, _defineProperty2.default)((0, _defineProperty2.default)(_ComponentsMap, _interface.Fields.Input, _input.default), _interface.Fields.InputNumber, _inputNumber.default), _interface.Fields.InputUrl, _inputUrl.default), _interface.Fields.InputTelePhone, _inputTelePhone.default), _interface.Fields.InputCellPhone, _inputCellPhone.default), _interface.Fields.InputEmail, _inputEmail.default), _interface.Fields.InputLanguage, _inputLanguage.default), _interface.Fields.InputMoney, _inputMoney.default), _interface.Fields.TextArea, _input.default.TextArea), _interface.Fields.DatePicker, _datePicker.default), (0, _defineProperty2.default)((0, _defineProperty2.default)(_ComponentsMap, _interface.Fields.Selector, _selector.default), _interface.Fields.LocationSelector, _locationSelector.default));
 function formatColumn(schema) {
   var fakeColumn = Object.assign({
     dataIndex: schema.fieldName
   }, schema);
-
   if (!schema.render) {
     if (schema.componentType) {
       if ((0, _util.getType)(schema.componentType) !== 'String') {
@@ -69,10 +47,9 @@ function formatColumn(schema) {
         };
       } else {
         var Cmp = ComponentsMap[schema.componentType];
-
         if (Cmp) {
           fakeColumn.render = function (value) {
-            return /*#__PURE__*/_react.default.createElement(Cmp, Object.assign(Object.assign({}, schema.props), {
+            return _react.default.createElement(Cmp, Object.assign(Object.assign({}, schema.props), {
               value: value,
               allowEdit: false,
               style: (0, _lodash.merge)((0, _lodash.get)(schema.props, 'style'), {
@@ -80,16 +57,15 @@ function formatColumn(schema) {
               })
             }));
           };
-
           fakeColumn.editConfig = {
             render: function render() {
-              return /*#__PURE__*/_react.default.createElement(Cmp, schema.props);
+              return _react.default.createElement(Cmp, schema.props);
             }
           };
         } else {
           try {
             fakeColumn.render = function (value) {
-              return /*#__PURE__*/_react.default.createElement('span', {}, JSON.stringify(value));
+              return _react.default.createElement('span', {}, JSON.stringify(value));
             };
           } catch (_a) {
             throw "\u5B57\u6BB5\uFF08".concat(schema.fieldName, "\uFF09\u7684\u503C\u89E3\u6790\u51FA\u9519\u3002");
@@ -98,22 +74,16 @@ function formatColumn(schema) {
       }
     }
   }
-
   if (fakeColumn.children && !(0, _lodash.isEmpty)(fakeColumn.children)) {
     fakeColumn.children = fakeColumn.children.map(function (childColumn) {
       return formatColumn(childColumn);
     });
   }
-
   return fakeColumn;
 }
-
-var setFields = function setFields(cmpMap) {
+var setFields = exports.setFields = function setFields(cmpMap) {
   ComponentsMap = Object.assign(Object.assign({}, ComponentsMap), cmpMap);
 };
-
-exports.setFields = setFields;
-
 function formatSchema(schema) {
   // 简洁模式
   if (Array.isArray(schema)) {
@@ -136,39 +106,35 @@ function formatSchema(schema) {
       }]
     };
   }
-
   var _schema = schema,
-      columnFields = _schema.supportColumnFields,
-      systemViews = _schema.systemViews; // 转换组件类型后的列数据
-
+    columnFields = _schema.supportColumnFields,
+    systemViews = _schema.systemViews;
+  // 转换组件类型后的列数据
   var columns = [];
   var columnMaps = {};
   columnFields.forEach(function (column) {
     if (!column.fieldName || !column.title) {
       throw new Error('SmartTable的schema格式错误，参照：https://gant.yuque.com/fdt/gantreact/hyeday');
     }
-
     if (column.width || column.align || column.fixed) {
       console.warn('SmartTable的schema在简洁模式下，不能包含UI属性，参照：https://gant.yuque.com/fdt/gantreact/hyeday');
     }
-
     var columnData = formatColumn(column);
     columns.push(columnData);
     columnMaps[column.fieldName] = columnData;
-  }); // 默认的列配置数据
-
+  });
+  // 默认的列配置数据
   var columnConfigs = columns.map(function (C) {
     return Object.assign(Object.assign({}, C), {
       checked: true,
       align: 'left',
       lock: false
     });
-  }); // 匹配系统视图
-
+  });
+  // 匹配系统视图
   systemViews.forEach(function (view) {
     var configs = (0, _lodash.cloneDeep)(columns);
     var columnConfigs = view.panelConfig.columnFields;
-
     for (var idx = 0; idx < columnConfigs.length; idx++) {
       var columnConfig = columnConfigs[idx];
       columnConfigs[idx] = Object.assign(Object.assign(Object.assign({}, columnMaps[columnConfig.fieldName]), columnConfig), {
@@ -176,9 +142,8 @@ function formatSchema(schema) {
         align: columnConfig.align || 'left',
         lock: !!columnConfig.fixed || false
       });
-    } // 隐藏列
-
-
+    }
+    // 隐藏列
     var hiddenColumns = configs.filter(function (C) {
       return columnConfigs.every(function (CC) {
         return CC.fieldName !== C.fieldName;

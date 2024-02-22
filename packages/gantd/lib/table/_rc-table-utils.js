@@ -16,23 +16,18 @@ var scrollbarMeasure = {
 
 var measureScrollbar = function measureScrollbar(_ref) {
   var _ref$direction = _ref.direction,
-      direction = _ref$direction === void 0 ? 'vertical' : _ref$direction,
-      prefixCls = _ref.prefixCls;
-
+    direction = _ref$direction === void 0 ? 'vertical' : _ref$direction,
+    prefixCls = _ref.prefixCls;
   if (typeof document === 'undefined' || typeof window === 'undefined') {
     return 0;
   }
-
   var isVertical = direction === 'vertical';
-
   if (isVertical && scrollbarVerticalSize) {
     return scrollbarVerticalSize;
   }
-
   if (!isVertical && scrollbarHorizontalSize) {
     return scrollbarHorizontalSize;
   }
-
   var scrollDiv = document.createElement('div');
   Object.keys(scrollbarMeasure).forEach(function (scrollProp) {
     scrollDiv.style[scrollProp] = scrollbarMeasure[scrollProp];
@@ -45,10 +40,8 @@ var measureScrollbar = function measureScrollbar(_ref) {
   } else {
     scrollDiv.style.overflowX = 'scroll';
   }
-
   document.body.appendChild(scrollDiv);
   var size = 0;
-
   if (isVertical) {
     size = scrollDiv.offsetWidth - scrollDiv.clientWidth;
     scrollbarVerticalSize = size;
@@ -56,10 +49,7 @@ var measureScrollbar = function measureScrollbar(_ref) {
     size = scrollDiv.offsetHeight - scrollDiv.clientHeight;
     scrollbarHorizontalSize = size;
   }
-
   document.body.removeChild(scrollDiv);
   return size;
 };
-
-var _default = measureScrollbar;
-exports.default = _default;
+var _default = exports.default = measureScrollbar;

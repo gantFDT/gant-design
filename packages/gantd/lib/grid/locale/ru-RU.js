@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-var _default = {
+var _default = exports.default = {
   targetLang: 'ru_RU',
   jumpTo: 'Перейти к',
   page: 'Страница',
@@ -207,4 +207,3 @@ var _default = {
   selectedData: 'Выбранные данные',
   clear: 'Очистить'
 };
-exports.default = _default;

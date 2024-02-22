@@ -8,6 +8,6 @@ export interface GantUrlProps extends InputProps, WithBasicProps {
  * 普通模式下与Input一样
  */
 declare class Url extends React.Component<GantUrlProps> {
-    render(): JSX.Element;
+    render(): React.JSX.Element;
 }
 export default Url;

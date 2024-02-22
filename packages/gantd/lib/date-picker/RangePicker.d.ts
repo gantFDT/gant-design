@@ -34,6 +34,6 @@ export interface GantRangePickerProps extends PickerProps, WithBasicProps {
 declare class RangePicker extends React.Component<GantRangePickerProps> {
     onChange: (mom: RangePickerValue, timeStringArr: [string, string]) => void;
     getValue: (value: any) => any[];
-    render(): JSX.Element;
+    render(): React.JSX.Element;
 }
 export default RangePicker;

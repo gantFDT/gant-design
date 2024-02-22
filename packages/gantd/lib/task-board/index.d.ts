@@ -31,7 +31,7 @@ export interface TaskBoardProps extends ContextProps {
     onDragEnd: (result: any) => void;
 }
 declare const TaskBoard: {
-    (props: TaskBoardProps): JSX.Element;
+    (props: TaskBoardProps): React.JSX.Element;
     defaultProps: {
         dataSource: any[];
         className: string;

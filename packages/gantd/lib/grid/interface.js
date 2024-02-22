@@ -1,7 +1,6 @@
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -20,9 +19,7 @@ Object.defineProperty(exports, "GridManager", {
   }
 });
 exports.Move = void 0;
-
 var _agGridCommunity = require("ag-grid-community");
-
 Object.keys(_agGridCommunity).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
@@ -34,41 +31,28 @@ Object.keys(_agGridCommunity).forEach(function (key) {
     }
   });
 });
-
 var _gridManager = _interopRequireDefault(require("./gridManager"));
-
 // 过滤器
 var Filter;
-exports.Filter = Filter;
-
 (function (Filter) {
   Filter["Number"] = "agNumberColumnFilter";
   Filter["Text"] = "agTextColumnFilter";
   Filter["Date"] = "agDateColumnFilter";
-})(Filter || (exports.Filter = Filter = {})); // 数据修改行为
-
-
+})(Filter || (exports.Filter = Filter = {}));
+// 数据修改行为
 var DataActions;
-exports.DataActions = DataActions;
-
 (function (DataActions) {
   DataActions["add"] = "add";
   DataActions["remove"] = "remove";
   DataActions["modify"] = "modify";
   DataActions["removeTag"] = "remove_tag";
 })(DataActions || (exports.DataActions = DataActions = {}));
-
 var Fixed;
-exports.Fixed = Fixed;
-
 (function (Fixed) {
   Fixed["left"] = "left";
   Fixed["right"] = "right";
 })(Fixed || (exports.Fixed = Fixed = {}));
-
 var Move;
-exports.Move = Move;
-
 (function (Move) {
   Move["up"] = "up";
   Move["down"] = "down";

@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-var _default = {
+var _default = exports.default = {
   //
   targetLang: 'zh-CN',
   // for filter panel
@@ -227,4 +227,3 @@ var _default = {
   selectedData: '已选中数据',
   clear: '清除'
 };
-exports.default = _default;

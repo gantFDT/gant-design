@@ -6,5 +6,5 @@ export interface ToolBarPropsIF {
     className?: string;
     fixed?: boolean;
 }
-declare const Toolbar: (props: ToolBarPropsIF) => JSX.Element;
+declare const Toolbar: (props: ToolBarPropsIF) => React.JSX.Element;
 export default Toolbar;

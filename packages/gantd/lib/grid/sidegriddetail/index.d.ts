@@ -1,5 +1,5 @@
-/// <reference types="react" />
 import { RowClickedEvent } from 'ag-grid-community';
+import React from 'react';
 import GridManager from '../gridManager';
 import type { Columns } from '../interface';
 interface GridDetailProps {
@@ -14,5 +14,5 @@ interface GridDetailProps {
     context: any;
     rowIndex: number;
 }
-declare const GridDetail: (props: GridDetailProps) => JSX.Element;
+declare const GridDetail: (props: GridDetailProps) => React.JSX.Element;
 export default GridDetail;

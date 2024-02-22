@@ -17,6 +17,6 @@ interface ConfigModalProps extends ModalProps {
     onCancel?: () => void;
     onViewChange?: (viewSchema: any) => void;
 }
-declare function ConfigModal(props: ConfigModalProps): JSX.Element;
+declare function ConfigModal(props: ConfigModalProps): React.JSX.Element;
 declare const _default: React.MemoExoticComponent<typeof ConfigModal>;
 export default _default;

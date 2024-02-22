@@ -12,5 +12,5 @@ interface BodyCellProps<T> {
     style: React.CSSProperties;
     [k: string]: any;
 }
-declare const BodyCell: <T extends Record = {}>({ record, dataIndex, rowIndex, editConfig, sortable, wrap, light, children, className, style, ...props }: BodyCellProps<T>) => JSX.Element;
+declare const BodyCell: <T extends Record = {}>({ record, dataIndex, rowIndex, editConfig, sortable, wrap, light, children, className, style, ...props }: BodyCellProps<T>) => React.JSX.Element;
 export default BodyCell;

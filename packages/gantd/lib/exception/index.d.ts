@@ -12,5 +12,5 @@ export interface IExceptionProps {
     redirect?: string;
     [key: string]: any;
 }
-declare const Exception: (props: IExceptionProps) => JSX.Element;
+declare const Exception: (props: IExceptionProps) => React.JSX.Element;
 export default Exception;

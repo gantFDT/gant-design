@@ -1,2 +1,2 @@
-/// <reference types="react" />
-export default function HeaderCell(props: any): JSX.Element;
+import React from 'react';
+export default function HeaderCell(props: any): React.JSX.Element;

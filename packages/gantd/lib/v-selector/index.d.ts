@@ -54,6 +54,6 @@ declare type DefaultProps<R> = ProtoExtends<typeof defaultprop, {
 declare type BasicSelectorProps<T, R> = ProtoExtends<SelectProps<T>, DefaultProps<R>>;
 export declare type SelectorProps<T, R> = ProtoExtends<WithBasicProps, BasicSelectorProps<T, R>>;
 export default class Selector<T, R> extends Component<SelectorProps<T, R>> {
-    render(): JSX.Element;
+    render(): React.JSX.Element;
 }
 export {};

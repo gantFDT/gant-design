@@ -1,9 +1,7 @@
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
-
 var _typeof = require("@babel/runtime/helpers/typeof");
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -63,43 +61,24 @@ Object.defineProperty(exports, "setGridConfig", {
     return _maps.setGridConfig;
   }
 });
-
 require("antd/es/spin/style/css");
-
 var _spin = _interopRequireDefault(require("antd/es/spin"));
-
 var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
-
 var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
-
 require("ag-grid-community/dist/styles/ag-grid.css");
-
 require("ag-grid-community/dist/styles/ag-theme-balham.css");
-
 var _agGridReact = require("ag-grid-react");
-
 var _agGridEnterprise = require("ag-grid-enterprise");
-
 var _Receiver = _interopRequireDefault(require("./locale/Receiver"));
-
 var _classnames = _interopRequireDefault(require("classnames"));
-
 var _lodash = require("lodash");
-
 var _react = _interopRequireWildcard(require("react"));
-
 var _contextMenuItems = require("./contextMenuItems");
-
 var _CustomHeader = _interopRequireDefault(require("./CustomHeader"));
-
 var _gantFilter = require("./gantFilter");
-
 var _gridManager = _interopRequireDefault(require("./gridManager"));
-
 var _hooks = require("./hooks");
-
 var _interface = require("./interface");
-
 Object.keys(_interface).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
@@ -111,279 +90,238 @@ Object.keys(_interface).forEach(function (key) {
     }
   });
 });
-
 var _license = _interopRequireDefault(require("./license"));
-
 var _maps = require("./maps");
-
 var _Pagination = _interopRequireDefault(require("./Pagination"));
-
 var _SelectedGrid = _interopRequireDefault(require("./SelectedGrid"));
-
 var _GantDateComponent = _interopRequireDefault(require("./GantDateComponent"));
-
 require("./style");
-
 var _utils = require("./utils");
-
 var _GantGroupCellRenderer = _interopRequireDefault(require("./GantGroupCellRenderer"));
-
 var _GantPromiseCellRender = _interopRequireDefault(require("./GantPromiseCellRender"));
-
 var _sidegriddetail = _interopRequireDefault(require("./sidegriddetail"));
-
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
+function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(e) { return e ? t : r; })(e); }
+function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != _typeof(e) && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && Object.prototype.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
 var __rest = void 0 && (void 0).__rest || function (s, e) {
   var t = {};
-
-  for (var p in s) {
-    if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
-  }
-
+  for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
   if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
     if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
   }
   return t;
 };
 
+//右侧边栏grid行转列详情组件，支持编辑和各种状态联动
+
 //表格默认高度
 var DEFAULT_HEIGHT = 400;
-
 _agGridEnterprise.LicenseManager.setLicenseKey(_license.default);
-
-var GridContext = /*#__PURE__*/(0, _react.createContext)({});
-exports.GridContext = GridContext;
-var defaultProps = {
+var GridContext = exports.GridContext = (0, _react.createContext)({});
+var defaultProps = exports.defaultProps = {
   /**加载状态 */
   loading: false,
   resizable: true,
-
   /**是否处于编辑状态 */
   editable: false,
-
   /**单列的过滤器 */
   filter: true,
-
   /**禁止调整列顺序 */
   // lockPosition: false,
-
   /**直接在列头下面显示过滤器 */
   floatingFilter: false,
-
   /**rowkey */
   rowkey: 'key',
   width: '100%',
   sortable: true,
   treeDataChildrenName: 'children',
-
   /** 默认的删除行为 */
-
   /**是否执行treeDataPath计算 */
   isCompute: false,
   //默认开启编辑校验
   openEditSign: true,
   //默认使用gant自定义列头
   gantCustomHeader: true,
-
   /** 是否导出隐藏字段 */
   exportHiddenFields: false,
   suppressManagerPaste: true,
   // 默认开启粘贴时创建数据
   suppressCreateWhenPaste: false
 };
-exports.defaultProps = defaultProps;
-var defaultRowSelection = {
+var defaultRowSelection = exports.defaultRowSelection = {
   type: 'multiple',
   // checkboxIndex: 0,
   showDefalutCheckbox: true,
   // rowMultiSelectWithClick: true,
   rowDeselection: true
 };
-exports.defaultRowSelection = defaultRowSelection;
-
 var Grid = function Grid(gridProps) {
   var globalConfig = (0, _react.useMemo)(function () {
     return (0, _maps.getGridConfig)();
   }, []);
   var props = Object.assign(Object.assign(Object.assign({}, defaultProps), (0, _lodash.omit)(globalConfig, ['pagination'])), gridProps);
-
   var initDataSource = props.dataSource,
-      onReady = props.onReady,
-      columns = props.columns,
-      editable = props.editable,
-      rowSel = props.rowSelection,
-      rowkey = props.rowkey,
-      gridKey = props.gridKey,
-      resizable = props.resizable,
-      filter = props.filter,
-      sortable = props.sortable,
-      width = props.width,
-      height = props.height,
-      treeData = props.treeData,
-      pagination = props.pagination,
-      loading = props.loading,
-      isServerSideGroup = props.isServerSideGroup,
-      getServerSideGroupKey = props.getServerSideGroupKey,
-      _props$frameworkCompo = props.frameworkComponents,
-      frameworkComponents = _props$frameworkCompo === void 0 ? {} : _props$frameworkCompo,
-      treeDataChildrenName = props.treeDataChildrenName,
-      customLocale = props.locale,
-      serverGroupExpend = props.serverGroupExpend,
-      _props$groupDefaultEx = props.groupDefaultExpanded,
-      groupDefaultExpanded = _props$groupDefaultEx === void 0 ? 0 : _props$groupDefaultEx,
-      defaultColDef = props.defaultColDef,
-      propsContext = props.context,
-      components = props.components,
-      serialNumber = props.serialNumber,
-      rowClassRules = props.rowClassRules,
-      isCompute = props.isCompute,
-      orignGetDataPath = props.getDataPath,
-      onCellEditChange = props.onCellEditChange,
-      onCellEditingChange = props.onCellEditingChange,
-      onCellChanged = props.onCellChanged,
-      _props$openEditSign = props.openEditSign,
-      openEditSign = _props$openEditSign === void 0 ? true : _props$openEditSign,
-      getContextMenuItems = props.getContextMenuItems,
-      createConfig = props.createConfig,
-      onRowsCut = props.onRowsCut,
-      onRowsPaste = props.onRowsPaste,
-      onRowsPasteEnd = props.onRowsPasteEnd,
-      _props$showCut = props.showCut,
-      showCut = _props$showCut === void 0 ? false : _props$showCut,
-      pasteToGridManager = props.pasteToGridManager,
-      onContextChangeRender = props.onContextChangeRender,
-      defaultExportParams = props.defaultExportParams,
-      defaultJsonParams = props.defaultJsonParams,
-      editChangeCallback = props.editChangeCallback,
-      isRowSelectable = props.isRowSelectable,
-      boxColumnIndex = props.boxColumnIndex,
-      hideSelectedBox = props.hideSelectedBox,
-      suppressKeyboardEvent = props.suppressKeyboardEvent,
-      propsOnSelectionChanged = props.onSelectionChanged,
-      propsOnRowSelected = props.onRowSelected,
-      propOnRowDataUpdated = props.onRowDataUpdated,
-      propOnRowDataChanged = props.onRowDataChanged,
-      groupSelectsChildren = props.groupSelectsChildren,
-      onColumnMoved = props.onColumnMoved,
-      onColumnResized = props.onColumnResized,
-      onColumnVisible = props.onColumnVisible,
-      multiLineVerify = props.multiLineVerify,
-      onRowDoubleClicked = props.onRowDoubleClicked,
-      handleFilterModified = props.onFilterModified,
-      doubleClickedExpanded = props.doubleClickedExpanded,
-      customDrawerContent = props.customDrawerContent,
-      propVisibleDrawer = props.visibleDrawer,
-      hideMenuItemExport = props.hideMenuItemExport,
-      hideMenuItemExpand = props.hideMenuItemExpand,
-      hiddenMenuItemNames = props.hiddenMenuItemNames,
-      _props$showMenuItemCl = props.showMenuItemClearFilter,
-      showMenuItemClearFilter = _props$showMenuItemCl === void 0 ? false : _props$showMenuItemCl,
-      onMenuItemClearFilter = props.onMenuItemClearFilter,
-      _props$excelStyles = props.excelStyles,
-      excelStyles = _props$excelStyles === void 0 ? [] : _props$excelStyles,
-      suppressRightClickSelected = props.suppressRightClickSelected,
-      treeDataForcedFilter = props.treeDataForcedFilter,
-      _props$themeClass = props.themeClass,
-      themeClass = _props$themeClass === void 0 ? 'ag-theme-balham' : _props$themeClass,
-      gantThemeClass = props.gantThemeClass,
-      gantDateComponent = props.gantDateComponent,
-      autoHeight = props.autoHeight,
-      maxAutoHeight = props.maxAutoHeight,
-      _props$minAutoHeight = props.minAutoHeight,
-      minAutoHeight = _props$minAutoHeight === void 0 ? 150 : _props$minAutoHeight,
-      showCutChild = props.showCutChild,
-      gantCustomHeader = props.gantCustomHeader,
-      _props$numberGoToMode = props.numberGoToMode,
-      numberGoToMode = _props$numberGoToMode === void 0 ? false : _props$numberGoToMode,
-      _props$domLayout = props.domLayout,
-      _domLayout = _props$domLayout === void 0 ? 'normal' : _props$domLayout,
-      _props$size = props.size,
-      size = _props$size === void 0 ? 'small' : _props$size,
-      _props$border = props.border,
-      border = _props$border === void 0 ? true : _props$border,
-      _props$zebra = props.zebra,
-      zebra = _props$zebra === void 0 ? true : _props$zebra,
-      _rowHeight = props.rowHeight,
-      getRowHeight = props.getRowHeight,
-      headerHeight = props.headerHeight,
-      selectedBoxHeight = props.selectedBoxHeight,
-      selectedBoxWidth = props.selectedBoxWidth,
-      _props$controlCellWor = props.controlCellWordWrap,
-      controlCellWordWrap = _props$controlCellWor === void 0 ? false : _props$controlCellWor,
-      suppressGroupSelectParent = props.suppressGroupSelectParent,
-      exportHiddenFields = props.exportHiddenFields,
-      propsOnColumnsChange = props.onColumnsChange,
-      suppressManagerPaste = props.suppressManagerPaste,
-      suppressCreateWhenPaste = props.suppressCreateWhenPaste,
-      suppressExcelExport = props.suppressExcelExport,
-      removeRowSelectable = props.removeRowSelectable,
-      exportExcludeColumns = props.exportExcludeColumns,
-      orignProps = __rest(props, ["dataSource", "onReady", "columns", "editable", "rowSelection", "rowkey", "gridKey", "resizable", "filter", "sortable", "width", "height", "treeData", "pagination", "loading", "isServerSideGroup", "getServerSideGroupKey", "frameworkComponents", "treeDataChildrenName", "locale", "serverGroupExpend", "groupDefaultExpanded", "defaultColDef", "context", "components", "serialNumber", "rowClassRules", "isCompute", "getDataPath", "onCellEditChange", "onCellEditingChange", "onCellChanged", "openEditSign", "getContextMenuItems", "createConfig", "onRowsCut", "onRowsPaste", "onRowsPasteEnd", "showCut", "pasteToGridManager", "onContextChangeRender", "defaultExportParams", "defaultJsonParams", "editChangeCallback", "isRowSelectable", "boxColumnIndex", "hideSelectedBox", "suppressKeyboardEvent", "onSelectionChanged", "onRowSelected", "onRowDataUpdated", "onRowDataChanged", "groupSelectsChildren", "onColumnMoved", "onColumnResized", "onColumnVisible", "multiLineVerify", "onRowDoubleClicked", "onFilterModified", "doubleClickedExpanded", "customDrawerContent", "visibleDrawer", "hideMenuItemExport", "hideMenuItemExpand", "hiddenMenuItemNames", "showMenuItemClearFilter", "onMenuItemClearFilter", "excelStyles", "suppressRightClickSelected", "treeDataForcedFilter", "themeClass", "gantThemeClass", "gantDateComponent", "autoHeight", "maxAutoHeight", "minAutoHeight", "showCutChild", "gantCustomHeader", "numberGoToMode", "domLayout", "size", "border", "zebra", "rowHeight", "getRowHeight", "headerHeight", "selectedBoxHeight", "selectedBoxWidth", "controlCellWordWrap", "suppressGroupSelectParent", "exportHiddenFields", "onColumnsChange", "suppressManagerPaste", "suppressCreateWhenPaste", "suppressExcelExport", "removeRowSelectable", "exportExcludeColumns"]);
-
+    onReady = props.onReady,
+    columns = props.columns,
+    editable = props.editable,
+    rowSel = props.rowSelection,
+    rowkey = props.rowkey,
+    gridKey = props.gridKey,
+    resizable = props.resizable,
+    filter = props.filter,
+    sortable = props.sortable,
+    width = props.width,
+    height = props.height,
+    treeData = props.treeData,
+    pagination = props.pagination,
+    loading = props.loading,
+    isServerSideGroup = props.isServerSideGroup,
+    getServerSideGroupKey = props.getServerSideGroupKey,
+    _props$frameworkCompo = props.frameworkComponents,
+    frameworkComponents = _props$frameworkCompo === void 0 ? {} : _props$frameworkCompo,
+    treeDataChildrenName = props.treeDataChildrenName,
+    customLocale = props.locale,
+    serverGroupExpend = props.serverGroupExpend,
+    _props$groupDefaultEx = props.groupDefaultExpanded,
+    groupDefaultExpanded = _props$groupDefaultEx === void 0 ? 0 : _props$groupDefaultEx,
+    defaultColDef = props.defaultColDef,
+    propsContext = props.context,
+    components = props.components,
+    serialNumber = props.serialNumber,
+    rowClassRules = props.rowClassRules,
+    isCompute = props.isCompute,
+    orignGetDataPath = props.getDataPath,
+    onCellEditChange = props.onCellEditChange,
+    onCellEditingChange = props.onCellEditingChange,
+    onCellChanged = props.onCellChanged,
+    _props$openEditSign = props.openEditSign,
+    openEditSign = _props$openEditSign === void 0 ? true : _props$openEditSign,
+    getContextMenuItems = props.getContextMenuItems,
+    createConfig = props.createConfig,
+    onRowsCut = props.onRowsCut,
+    onRowsPaste = props.onRowsPaste,
+    onRowsPasteEnd = props.onRowsPasteEnd,
+    _props$showCut = props.showCut,
+    showCut = _props$showCut === void 0 ? false : _props$showCut,
+    pasteToGridManager = props.pasteToGridManager,
+    onContextChangeRender = props.onContextChangeRender,
+    defaultExportParams = props.defaultExportParams,
+    defaultJsonParams = props.defaultJsonParams,
+    editChangeCallback = props.editChangeCallback,
+    isRowSelectable = props.isRowSelectable,
+    boxColumnIndex = props.boxColumnIndex,
+    hideSelectedBox = props.hideSelectedBox,
+    suppressKeyboardEvent = props.suppressKeyboardEvent,
+    propsOnSelectionChanged = props.onSelectionChanged,
+    propsOnRowSelected = props.onRowSelected,
+    propOnRowDataUpdated = props.onRowDataUpdated,
+    propOnRowDataChanged = props.onRowDataChanged,
+    groupSelectsChildren = props.groupSelectsChildren,
+    onColumnMoved = props.onColumnMoved,
+    onColumnResized = props.onColumnResized,
+    onColumnVisible = props.onColumnVisible,
+    multiLineVerify = props.multiLineVerify,
+    onRowDoubleClicked = props.onRowDoubleClicked,
+    handleFilterModified = props.onFilterModified,
+    doubleClickedExpanded = props.doubleClickedExpanded,
+    customDrawerContent = props.customDrawerContent,
+    propVisibleDrawer = props.visibleDrawer,
+    hideMenuItemExport = props.hideMenuItemExport,
+    hideMenuItemExpand = props.hideMenuItemExpand,
+    hiddenMenuItemNames = props.hiddenMenuItemNames,
+    _props$showMenuItemCl = props.showMenuItemClearFilter,
+    showMenuItemClearFilter = _props$showMenuItemCl === void 0 ? false : _props$showMenuItemCl,
+    onMenuItemClearFilter = props.onMenuItemClearFilter,
+    _props$excelStyles = props.excelStyles,
+    excelStyles = _props$excelStyles === void 0 ? [] : _props$excelStyles,
+    suppressRightClickSelected = props.suppressRightClickSelected,
+    treeDataForcedFilter = props.treeDataForcedFilter,
+    _props$themeClass = props.themeClass,
+    themeClass = _props$themeClass === void 0 ? 'ag-theme-balham' : _props$themeClass,
+    gantThemeClass = props.gantThemeClass,
+    gantDateComponent = props.gantDateComponent,
+    autoHeight = props.autoHeight,
+    maxAutoHeight = props.maxAutoHeight,
+    _props$minAutoHeight = props.minAutoHeight,
+    minAutoHeight = _props$minAutoHeight === void 0 ? 150 : _props$minAutoHeight,
+    showCutChild = props.showCutChild,
+    gantCustomHeader = props.gantCustomHeader,
+    _props$numberGoToMode = props.numberGoToMode,
+    numberGoToMode = _props$numberGoToMode === void 0 ? false : _props$numberGoToMode,
+    _props$domLayout = props.domLayout,
+    _domLayout = _props$domLayout === void 0 ? 'normal' : _props$domLayout,
+    _props$size = props.size,
+    size = _props$size === void 0 ? 'small' : _props$size,
+    _props$border = props.border,
+    border = _props$border === void 0 ? true : _props$border,
+    _props$zebra = props.zebra,
+    zebra = _props$zebra === void 0 ? true : _props$zebra,
+    _rowHeight = props.rowHeight,
+    getRowHeight = props.getRowHeight,
+    headerHeight = props.headerHeight,
+    selectedBoxHeight = props.selectedBoxHeight,
+    selectedBoxWidth = props.selectedBoxWidth,
+    _props$controlCellWor = props.controlCellWordWrap,
+    controlCellWordWrap = _props$controlCellWor === void 0 ? false : _props$controlCellWor,
+    suppressGroupSelectParent = props.suppressGroupSelectParent,
+    exportHiddenFields = props.exportHiddenFields,
+    propsOnColumnsChange = props.onColumnsChange,
+    suppressManagerPaste = props.suppressManagerPaste,
+    suppressCreateWhenPaste = props.suppressCreateWhenPaste,
+    suppressExcelExport = props.suppressExcelExport,
+    removeRowSelectable = props.removeRowSelectable,
+    exportExcludeColumns = props.exportExcludeColumns,
+    orignProps = __rest(props, ["dataSource", "onReady", "columns", "editable", "rowSelection", "rowkey", "gridKey", "resizable", "filter", "sortable", "width", "height", "treeData", "pagination", "loading", "isServerSideGroup", "getServerSideGroupKey", "frameworkComponents", "treeDataChildrenName", "locale", "serverGroupExpend", "groupDefaultExpanded", "defaultColDef", "context", "components", "serialNumber", "rowClassRules", "isCompute", "getDataPath", "onCellEditChange", "onCellEditingChange", "onCellChanged", "openEditSign", "getContextMenuItems", "createConfig", "onRowsCut", "onRowsPaste", "onRowsPasteEnd", "showCut", "pasteToGridManager", "onContextChangeRender", "defaultExportParams", "defaultJsonParams", "editChangeCallback", "isRowSelectable", "boxColumnIndex", "hideSelectedBox", "suppressKeyboardEvent", "onSelectionChanged", "onRowSelected", "onRowDataUpdated", "onRowDataChanged", "groupSelectsChildren", "onColumnMoved", "onColumnResized", "onColumnVisible", "multiLineVerify", "onRowDoubleClicked", "onFilterModified", "doubleClickedExpanded", "customDrawerContent", "visibleDrawer", "hideMenuItemExport", "hideMenuItemExpand", "hiddenMenuItemNames", "showMenuItemClearFilter", "onMenuItemClearFilter", "excelStyles", "suppressRightClickSelected", "treeDataForcedFilter", "themeClass", "gantThemeClass", "gantDateComponent", "autoHeight", "maxAutoHeight", "minAutoHeight", "showCutChild", "gantCustomHeader", "numberGoToMode", "domLayout", "size", "border", "zebra", "rowHeight", "getRowHeight", "headerHeight", "selectedBoxHeight", "selectedBoxWidth", "controlCellWordWrap", "suppressGroupSelectParent", "exportHiddenFields", "onColumnsChange", "suppressManagerPaste", "suppressCreateWhenPaste", "suppressExcelExport", "removeRowSelectable", "exportExcludeColumns"]);
   var apiRef = (0, _react.useRef)();
   var shiftRef = (0, _react.useRef)(false);
   var wrapperRef = (0, _react.useRef)();
   var columnsRef = (0, _react.useRef)();
   var selectedLoadingRef = (0, _react.useRef)(false);
   var clickedEventRef = (0, _react.useRef)();
-
   var _useState = (0, _react.useState)(false),
-      _useState2 = (0, _slicedToArray2.default)(_useState, 2),
-      visibleDrawer = _useState2[0],
-      setVisibleDrawer = _useState2[1];
-
+    _useState2 = (0, _slicedToArray2.default)(_useState, 2),
+    visibleDrawer = _useState2[0],
+    setVisibleDrawer = _useState2[1];
   var _useState3 = (0, _react.useState)([]),
-      _useState4 = (0, _slicedToArray2.default)(_useState3, 2),
-      exportColumns = _useState4[0],
-      setExportColumns = _useState4[1]; // const [clickedEvent, setClickedEvent] = useState<RowClickedEvent>();
-
-
+    _useState4 = (0, _slicedToArray2.default)(_useState3, 2),
+    exportColumns = _useState4[0],
+    setExportColumns = _useState4[1];
+  // const [clickedEvent, setClickedEvent] = useState<RowClickedEvent>();
   var _useState5 = (0, _react.useState)(-1),
-      _useState6 = (0, _slicedToArray2.default)(_useState5, 2),
-      clickRowIndex = _useState6[0],
-      setClickRowIndex = _useState6[1];
-
-  var domLayout = _domLayout; //如果是开启启动表格高度，并且是指定了行高策略, 那么就使用真实的自动高度模式
-
+    _useState6 = (0, _slicedToArray2.default)(_useState5, 2),
+    clickRowIndex = _useState6[0],
+    setClickRowIndex = _useState6[1];
+  var domLayout = _domLayout;
+  //如果是开启启动表格高度，并且是指定了行高策略, 那么就使用真实的自动高度模式
   domLayout = autoHeight ? 'autoHeight' : domLayout;
   var gridVariableRef = (0, _react.useRef)({
     hasSelectedRows: typeof rowSel !== 'boolean' && (0, _lodash.isObject)(rowSel) && Reflect.has(rowSel, 'selectedRows'),
     hideSelectedBox: hideSelectedBox,
     selectedRows: []
   });
-
   var _useState7 = (0, _react.useState)([]),
-      _useState8 = (0, _slicedToArray2.default)(_useState7, 2),
-      innerSelectedRows = _useState8[0],
-      setInnerSelectedRows = _useState8[1];
-
+    _useState8 = (0, _slicedToArray2.default)(_useState7, 2),
+    innerSelectedRows = _useState8[0],
+    setInnerSelectedRows = _useState8[1];
   var _useState9 = (0, _react.useState)(false),
-      _useState10 = (0, _slicedToArray2.default)(_useState9, 2),
-      ready = _useState10[0],
-      setReady = _useState10[1]; //自定义列头文字
-
-
-  var ColumnLabelComponent = frameworkComponents.ColumnLabelComponent; //行高
-
+    _useState10 = (0, _slicedToArray2.default)(_useState9, 2),
+    ready = _useState10[0],
+    setReady = _useState10[1];
+  //自定义列头文字
+  var ColumnLabelComponent = frameworkComponents.ColumnLabelComponent;
+  //行高
   var rowHeight = _rowHeight || (0, _lodash.get)(_utils.sizeDefinitions, "rowHeight.".concat(size));
-
-  rowHeight = autoHeight ? undefined : rowHeight; //实例化manager
-
+  rowHeight = autoHeight ? undefined : rowHeight;
+  //实例化manager
   var gridManager = (0, _react.useMemo)(function () {
     return new _gridManager.default({
       pasteToGridManager: pasteToGridManager
     });
   }, []);
   /**默认基本方法 */
-
   var getRowNodeId = (0, _react.useCallback)(function (data) {
     if (typeof rowkey === 'string') {
       return (0, _lodash.get)(data, rowkey) + '';
     }
-
     return rowkey(data) + '';
   }, []);
   var getRowId = (0, _react.useCallback)(function (params) {
@@ -393,68 +331,62 @@ var Grid = function Grid(gridProps) {
     if (!treeData) return [];
     var dataPath = orignGetDataPath ? orignGetDataPath(data) : isCompute ? data.treeDataPath : [];
     return dataPath;
-  }, [orignGetDataPath, treeData]); // 分页事件
-
+  }, [orignGetDataPath, treeData]);
+  // 分页事件
   var computedPagination = (0, _react.useMemo)(function () {
     return (0, _utils.usePagination)((0, _lodash.isEmpty)(pagination) ? false : Object.assign({}, pagination), size, globalConfig.pagination);
-  }, [pagination, size]); //表格外层容器高度，高度策略有两种，一种是兼容虚拟滚动计算出来的假的自动高度，一种是完全自动高度，稍微有点复杂
-
+  }, [pagination, size]);
+  //表格外层容器高度，高度策略有两种，一种是兼容虚拟滚动计算出来的假的自动高度，一种是完全自动高度，稍微有点复杂
   var gridHeight = (0, _react.useMemo)(function () {
     //如果没指定高度，也没指定自动高度，那么给予默认高度
-    if (!autoHeight && !height) return DEFAULT_HEIGHT; //如果是开启自动高度并且指定了行高策略，则使用domLayout:'autoHeight'
-
+    if (!autoHeight && !height) return DEFAULT_HEIGHT;
+    //如果是开启自动高度并且指定了行高策略，则使用domLayout:'autoHeight'
     if (autoHeight) {
       return '100%';
     }
-
     return height;
-  }, [autoHeight, height]); //表格内层容器高度策略
-
+  }, [autoHeight, height]);
+  //表格内层容器高度策略
   var girdWrapHeight = (0, _react.useMemo)(function () {
     if (autoHeight) {
       return '100%';
     }
-
     return computedPagination ? "calc(100% - ".concat((0, _lodash.get)(_utils.sizeDefinitions, "paginationHeight.".concat(size)), "px - ").concat(gantThemeClass === 'gant-grid-theme' ? 'var(--space,10px) - 2px' : '0px', ")") : '100%';
-  }, [autoHeight, computedPagination, _utils.sizeDefinitions, size]); //侧边栏显示隐藏
-
+  }, [autoHeight, computedPagination, _utils.sizeDefinitions, size]);
+  //侧边栏显示隐藏
   (0, _react.useEffect)(function () {
     if (typeof propVisibleDrawer === 'boolean') {
       setVisibleDrawer(propVisibleDrawer);
     }
-  }, [propVisibleDrawer]); // 判断数据分别处理 treeTable 和普通table
-
+  }, [propVisibleDrawer]);
+  // 判断数据分别处理 treeTable 和普通table
   var dataSource = (0, _react.useMemo)(function () {
     if (treeData && isCompute) return (0, _utils.flattenTreeData)(initDataSource, getRowNodeId, treeDataChildrenName);
     return initDataSource;
-  }, [initDataSource, treeData, treeDataChildrenName]); //
-
+  }, [initDataSource, treeData, treeDataChildrenName]);
+  //
   var serverDataRequest = (0, _react.useCallback)(function (params, groupKeys, successCallback) {
     if (serverGroupExpend) {
       return serverGroupExpend(params, serverDataCallback(groupKeys, successCallback));
     }
-
     return successCallback([], 0);
-  }, [serverGroupExpend]); // 处理selection
-
+  }, [serverGroupExpend]);
+  // 处理selection
   var gantSelection = (0, _react.useMemo)(function () {
     if (rowSel === true) {
       return defaultRowSelection;
     }
-
     if (rowSel) return Object.assign(Object.assign({}, defaultRowSelection), rowSel);
     return {};
   }, [rowSel]);
-
   var onSelect = gantSelection.onSelect,
-      selectedRows = gantSelection.selectedRows,
-      showDefalutCheckbox = gantSelection.showDefalutCheckbox,
-      rowSelection = gantSelection.type,
-      onSelectedChanged = gantSelection.onSelectedChanged,
-      defaultSelectionCol = gantSelection.defaultSelectionCol,
-      selection = __rest(gantSelection, ["onSelect", "selectedRows", "showDefalutCheckbox", "type", "onSelectedChanged", "defaultSelectionCol"]); // context
-
-
+    selectedRows = gantSelection.selectedRows,
+    showDefalutCheckbox = gantSelection.showDefalutCheckbox,
+    rowSelection = gantSelection.type,
+    onSelectedChanged = gantSelection.onSelectedChanged,
+    defaultSelectionCol = gantSelection.defaultSelectionCol,
+    selection = __rest(gantSelection, ["onSelect", "selectedRows", "showDefalutCheckbox", "type", "onSelectedChanged", "defaultSelectionCol"]);
+  // context
   var context = (0, _react.useMemo)(function () {
     return Object.assign({
       globalEditable: editable,
@@ -475,22 +407,20 @@ var Grid = function Grid(gridProps) {
       rowSelection: rowSelection
     }, propsContext);
   }, [propsContext, size, computedPagination, editable, showCut, onCellEditChange, onCellEditingChange, onCellChanged, getDataPath, rowSelection]);
-
   var _filterHooks = (0, _gantFilter.filterHooks)({
-    treeData: treeData,
-    treeDataForcedFilter: treeDataForcedFilter,
-    handleFilterModified: handleFilterModified,
-    getRowNodeId: getRowNodeId,
-    dataSource: dataSource,
-    context: context
-  }),
-      filterDataRef = _filterHooks.filterDataRef,
-      onFilterModified = _filterHooks.onFilterModified,
-      forcedGridKey = _filterHooks.forcedGridKey,
-      filterModelRef = _filterHooks.filterModelRef,
-      columnIdRef = _filterHooks.columnIdRef; // 初始注册配置信息；
-
-
+      treeData: treeData,
+      treeDataForcedFilter: treeDataForcedFilter,
+      handleFilterModified: handleFilterModified,
+      getRowNodeId: getRowNodeId,
+      dataSource: dataSource,
+      context: context
+    }),
+    filterDataRef = _filterHooks.filterDataRef,
+    onFilterModified = _filterHooks.onFilterModified,
+    forcedGridKey = _filterHooks.forcedGridKey,
+    filterModelRef = _filterHooks.filterModelRef,
+    columnIdRef = _filterHooks.columnIdRef;
+  // 初始注册配置信息；
   (0, _react.useEffect)(function () {
     gridManager.reset({
       getRowNodeId: getRowNodeId,
@@ -513,14 +443,12 @@ var Grid = function Grid(gridProps) {
       gridManager.appendChild(groupKeys, rows);
     };
   }, []);
-
   var _useMemo = (0, _react.useMemo)(function () {
-    return (0, _maps.getAllComponentsMaps)();
-  }, []),
-      componentsMaps = _useMemo.componentsMaps,
-      frameworkComponentsMaps = _useMemo.frameworkComponentsMaps; // 获取selected 数据
-
-
+      return (0, _maps.getAllComponentsMaps)();
+    }, []),
+    componentsMaps = _useMemo.componentsMaps,
+    frameworkComponentsMaps = _useMemo.frameworkComponentsMaps;
+  // 获取selected 数据
   var getAllSelectedRows = (0, _react.useCallback)(function (selectedRows, hideBox) {
     var currentRows = [];
     var extraRows = [];
@@ -541,65 +469,53 @@ var Grid = function Grid(gridProps) {
       extraRows: extraRows,
       currentRows: currentRows
     };
-  }, []); //已选择盒子选择行
-
+  }, []);
+  //已选择盒子选择行
   var onBoxSelectionChanged = (0, _react.useCallback)(function (keys, rows) {
     var _a;
-
     if (!gridVariableRef.current.hasSelectedRows) {
       var nodes = (_a = apiRef.current) === null || _a === void 0 ? void 0 : _a.getSelectedNodes();
       var _innerSelectedRows = [];
       nodes.map(function (node) {
         var nodeId = getRowNodeId((0, _lodash.get)(node, 'data'));
         if (keys.indexOf(nodeId) < 0) return node.setSelected(false);
-
         _innerSelectedRows.push((0, _lodash.get)(node, 'data'));
       });
       setInnerSelectedRows(_innerSelectedRows);
     }
-
     onSelect && onSelect(keys, rows);
   }, [onSelect]);
-
   var _selectedHooks = (0, _hooks.selectedHooks)({
-    gridVariable: gridVariableRef.current,
-    ready: ready,
-    apiRef: apiRef,
-    dataSource: dataSource,
-    getRowNodeId: getRowNodeId,
-    selectedRows: selectedRows,
-    isSingle: rowSelection === 'single'
-  }),
-      selectedChangeRef = _selectedHooks.selectedChangeRef,
-      updateSelection = _selectedHooks.updateSelection; //是否隐藏selectedBox
-
-
+      gridVariable: gridVariableRef.current,
+      ready: ready,
+      apiRef: apiRef,
+      dataSource: dataSource,
+      getRowNodeId: getRowNodeId,
+      selectedRows: selectedRows,
+      isSingle: rowSelection === 'single'
+    }),
+    selectedChangeRef = _selectedHooks.selectedChangeRef,
+    updateSelection = _selectedHooks.updateSelection;
+  //是否隐藏selectedBox
   var hideBox = (0, _react.useMemo)(function () {
     return hideSelectedBox || rowSelection !== 'multiple';
-  }, [hideSelectedBox, rowSelection]); //选择行改变
-
+  }, [hideSelectedBox, rowSelection]);
+  //选择行改变
   var onSelectionChanged = (0, _react.useCallback)(function (event) {
     var _a, _b, _c, _d;
-
     propsOnSelectionChanged && propsOnSelectionChanged(event);
     if (selectedChangeRef.current) return;
-
     if (((_a = gridVariableRef.current) === null || _a === void 0 ? void 0 : _a.hasSelectedRows) && rowSelection === 'multiple') {
       var _rows = event.api.getSelectedRows();
-
       var _getAllSelectedRows = getAllSelectedRows((0, _lodash.get)(gridVariableRef.current, 'selectedRows', []), hideBox),
-          extraRows = _getAllSelectedRows.extraRows,
-          currentRows = _getAllSelectedRows.currentRows;
-
+        extraRows = _getAllSelectedRows.extraRows,
+        currentRows = _getAllSelectedRows.currentRows;
       if ((0, _lodash.isEqual)(currentRows, _rows)) return;
-
       var _selectedRows = [].concat((0, _toConsumableArray2.default)(extraRows), (0, _toConsumableArray2.default)(_rows));
-
       return onSelect && onSelect(_selectedRows.map(function (item) {
         return getRowNodeId(item);
       }), _selectedRows);
     }
-
     var rows = event.api.getSelectedRows();
     if (((_b = gridVariableRef.current) === null || _b === void 0 ? void 0 : _b.hasSelectedRows) && (0, _lodash.isEqual)((_c = gridVariableRef.current) === null || _c === void 0 ? void 0 : _c.selectedRows, rows)) return;
     onSelect && onSelect(rows.map(function (item) {
@@ -608,17 +524,16 @@ var Grid = function Grid(gridProps) {
     if ((_d = gridVariableRef.current) === null || _d === void 0 ? void 0 : _d.hideSelectedBox) return;
     gridVariableRef.current.selectedRows = rows;
     setInnerSelectedRows(rows);
-  }, [getAllSelectedRows, propsOnSelectionChanged, rowSelection, hideBox]); //双击行
-
+  }, [getAllSelectedRows, propsOnSelectionChanged, rowSelection, hideBox]);
+  //双击行
   var handleRowDoubleClicked = (0, _react.useCallback)(function (event) {
     if (onRowDoubleClicked) onRowDoubleClicked(event);
-
     if (doubleClickedExpanded) {
       var node = event.node;
       if (node.childrenAfterGroup.length > 0) node.setExpanded(!node.expanded);
     }
-  }, [onRowDoubleClicked, doubleClickedExpanded]); //行被选择
-
+  }, [onRowDoubleClicked, doubleClickedExpanded]);
+  //行被选择
   var onRowSelected = (0, _react.useCallback)(function (event) {
     if (selectedChangeRef.current) return;
     propsOnRowSelected && propsOnRowSelected(event);
@@ -639,35 +554,33 @@ var Grid = function Grid(gridProps) {
         force: true
       });
     }, 200);
-  }, [propsOnRowSelected, suppressGroupSelectParent]); //已选择行
-
+  }, [propsOnRowSelected, suppressGroupSelectParent]);
+  //已选择行
   var boxSelectedRows = (0, _react.useMemo)(function () {
     if (gridVariableRef.current.hasSelectedRows) return selectedRows;
     return innerSelectedRows;
-  }, [innerSelectedRows, selectedRows]); // 处理selection-end
+  }, [innerSelectedRows, selectedRows]);
+  // 处理selection-end
   //columns
-
   var defaultSelection = !(0, _lodash.isEmpty)(gantSelection) && showDefalutCheckbox;
-
   var _useMemo2 = (0, _react.useMemo)(function () {
-    return (0, _utils.mapColumns)(columns, getRowNodeId, defaultSelection, defaultSelectionCol, rowSelection, serialNumber, size);
-  }, [columns, size]),
-      columnDefs = _useMemo2.columnDefs,
-      validateFields = _useMemo2.validateFields,
-      requireds = _useMemo2.requireds;
-
+      return (0, _utils.mapColumns)(columns, getRowNodeId, defaultSelection, defaultSelectionCol, rowSelection, serialNumber, size);
+    }, [columns, size]),
+    columnDefs = _useMemo2.columnDefs,
+    validateFields = _useMemo2.validateFields,
+    requireds = _useMemo2.requireds;
   (0, _react.useEffect)(function () {
     propsOnColumnsChange && propsOnColumnsChange(columnDefs);
-  }, [columnDefs]); // 选中栏grid  columns;
-
+  }, [columnDefs]);
+  // 选中栏grid  columns;
   var selectedColumns = (0, _react.useMemo)(function () {
     return (0, _utils.selectedMapColumns)(columns, boxColumnIndex);
-  }, [columns, boxColumnIndex]); // 配置验证规则
-
+  }, [columns, boxColumnIndex]);
+  // 配置验证规则
   (0, _react.useEffect)(function () {
     gridManager.validateFields = validateFields;
-  }, [validateFields]); // 监听onColumnEverythingChanged
-
+  }, [validateFields]);
+  // 监听onColumnEverythingChanged
   var onColumnEverythingChanged = (0, _react.useCallback)(function (event) {
     var columnState = event.columnApi.getColumnState();
     var arr = [];
@@ -675,7 +588,6 @@ var Grid = function Grid(gridProps) {
       var field = (0, _lodash.get)(item, 'colId');
       var hide = (0, _lodash.get)(item, 'hide');
       var suspressExport = (0, _lodash.get)(item, 'suspressExport');
-
       if (field !== 'defalutSelection' && field !== 'g-index') {
         if (!exportHiddenFields && hide || suspressExport) return;
         arr.push(field);
@@ -684,8 +596,8 @@ var Grid = function Grid(gridProps) {
     setExportColumns(function (pre) {
       return (0, _lodash.isEqual)(pre, arr) ? pre : arr;
     });
-  }, [exportHiddenFields]); // columns-end
-
+  }, [exportHiddenFields]);
+  // columns-end
   var onGridReady = (0, _react.useCallback)(function (params) {
     apiRef.current = params.api;
     columnsRef.current = params.columnApi;
@@ -694,28 +606,24 @@ var Grid = function Grid(gridProps) {
     gridManager.rowkey = rowkey;
     onReady && onReady(params, gridManager);
     setReady(true);
-
     if (filterModelRef.current && treeDataForcedFilter) {
       params.api.setRowData((0, _lodash.get)(gridManager, 'agGridConfig.dataSource', []));
       params.api.setFilterModel(filterModelRef.current);
     }
-  }, [onReady, gridKey]); //行是否可选
-
+  }, [onReady, gridKey]);
+  //行是否可选
   var onRowSelectable = (0, _react.useCallback)(function (rowNode) {
     var notRemove = (0, _lodash.get)(rowNode, 'data._rowType') !== _interface.DataActions.removeTag || removeRowSelectable;
-
     if (isRowSelectable) {
       return isRowSelectable(rowNode) && notRemove;
     }
-
     return notRemove;
-  }, []); //导出设置
-
+  }, []);
+  //导出设置
   var exportParams = (0, _react.useMemo)(function () {
     var cloneColumns = (0, _lodash.cloneDeep)(exportColumns);
     (0, _lodash.remove)(cloneColumns, function (name) {
       var _a;
-
       if (!exportExcludeColumns) return false;
       return (_a = exportExcludeColumns) === null || _a === void 0 ? void 0 : _a.includes(name);
     });
@@ -724,21 +632,20 @@ var Grid = function Grid(gridProps) {
       allColumns: false,
       columnGroups: true
     }, globalConfig.defaultExportParams), defaultExportParams);
-  }, [defaultExportParams, exportColumns]); //编辑结束
-
+  }, [defaultExportParams, exportColumns]);
+  //编辑结束
   var onCellEditingStopped = (0, _react.useCallback)(function (event) {
     clickedEventRef.current = event;
     var tipDoms = document.querySelectorAll('.gant-cell-tooltip.ag-tooltip-custom');
     tipDoms.forEach(function (itemDom) {
       itemDom.remove();
     });
-  }, []); // 监听数据变化
-
+  }, []);
+  // 监听数据变化
   var onRowDataUpdated = (0, _react.useCallback)(function (event) {
     var api = event.api;
     propOnRowDataUpdated && propOnRowDataUpdated(event);
   }, []);
-
   var _defaultColDef = (0, _react.useMemo)(function () {
     return Object.assign(Object.assign(Object.assign({
       resizable: resizable,
@@ -760,23 +667,21 @@ var Grid = function Grid(gridProps) {
       }, (0, _lodash.get)(defaultColDef, 'filterParams', {}))
     });
   }, []);
-
   var currentTreeData = (0, _react.useMemo)(function () {
     if (!treeDataForcedFilter || !treeData) return treeData;
     if ((0, _lodash.isEmpty)(filterModelRef.current)) return true;
     return false;
-  }, [forcedGridKey]); // 粘贴处理
-
+  }, [forcedGridKey]);
+  // 粘贴处理
   var gridPasteProps = (0, _hooks.useGridPaste)({
     gridManager: gridManager,
     columns: columns,
     suppressManagerPaste: suppressManagerPaste,
     suppressCreateWhenPaste: suppressCreateWhenPaste
   });
-  return /*#__PURE__*/_react.default.createElement(_Receiver.default, {
+  return _react.default.createElement(_Receiver.default, {
     children: function children(defaultLocale) {
       var locale = Object.assign(Object.assign({}, defaultLocale), customLocale);
-
       var contextMenuItems = function contextMenuItems(params) {
         return (0, _contextMenuItems.gantGetcontextMenuItems)(params, {
           downShift: shiftRef.current,
@@ -794,10 +699,9 @@ var Grid = function Grid(gridProps) {
           onMenuItemClearFilter: onMenuItemClearFilter
         });
       };
-
-      return /*#__PURE__*/_react.default.createElement(_spin.default, {
+      return _react.default.createElement(_spin.default, {
         spinning: loading || !ready
-      }, /*#__PURE__*/_react.default.createElement(GridContext.Provider, {
+      }, _react.default.createElement(GridContext.Provider, {
         value: Object.assign({
           serverDataRequest: serverDataRequest,
           isServerSideGroup: isServerSideGroup,
@@ -806,19 +710,19 @@ var Grid = function Grid(gridProps) {
           computedPagination: computedPagination,
           treeData: currentTreeData
         }, context)
-      }, /*#__PURE__*/_react.default.createElement("div", {
+      }, _react.default.createElement("div", {
         style: {
           width: width,
           height: gridHeight
         },
         className: (0, _classnames.default)('gant-grid', gantThemeClass, editable && openEditSign && 'gant-grid-editable', controlCellWordWrap && "grid-control-break-line")
-      }, /*#__PURE__*/_react.default.createElement("div", {
+      }, _react.default.createElement("div", {
         style: {
           display: 'flex',
           width: width,
           height: girdWrapHeight
         }
-      }, /*#__PURE__*/_react.default.createElement("div", {
+      }, _react.default.createElement("div", {
         className: (0, _classnames.default)(themeClass, 'gant-ag-wrapper'),
         "data-refid": gridKey,
         style: {
@@ -827,7 +731,7 @@ var Grid = function Grid(gridProps) {
           fontSize: _utils.sizeDefinitions.fontSize[size]
         },
         ref: wrapperRef
-      }, !hideBox && /*#__PURE__*/_react.default.createElement(_SelectedGrid.default, {
+      }, !hideBox && _react.default.createElement(_SelectedGrid.default, {
         apiRef: apiRef,
         onChange: onBoxSelectionChanged,
         getRowNodeId: getRowNodeId,
@@ -836,7 +740,7 @@ var Grid = function Grid(gridProps) {
         selectedBoxHeight: selectedBoxHeight,
         selectedBoxWidth: selectedBoxWidth,
         locale: locale
-      }), /*#__PURE__*/_react.default.createElement(_agGridReact.AgGridReact, Object.assign({
+      }), _react.default.createElement(_agGridReact.AgGridReact, Object.assign({
         components: Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({}, componentsMaps), components), {
           agColumnHeader: gantCustomHeader ? _CustomHeader.default : null,
           agDateInput: gantDateComponent ? _GantDateComponent.default : null
@@ -903,14 +807,12 @@ var Grid = function Grid(gridProps) {
         onCellEditingStopped: onCellEditingStopped,
         onRowDataUpdated: onRowDataUpdated,
         onColumnEverythingChanged: onColumnEverythingChanged
-      })))), computedPagination && /*#__PURE__*/_react.default.createElement(_Pagination.default, Object.assign({
+      })))), computedPagination && _react.default.createElement(_Pagination.default, Object.assign({
         numberGoToMode: numberGoToMode,
         size: size
       }, computedPagination)))));
     }
   });
 };
-
 Grid.LicenseManager = _agGridEnterprise.LicenseManager;
-var _default = Grid;
-exports.default = _default;
+var _default = exports.default = Grid;

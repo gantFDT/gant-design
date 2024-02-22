@@ -1,4 +1,4 @@
-/// <reference types="react" />
+import React from 'react';
 import { ExpandIconProps } from 'antd/lib/table';
-declare function CustomExpandIcon(props: ExpandIconProps<object>, isTree?: boolean): JSX.Element;
+declare function CustomExpandIcon(props: ExpandIconProps<object>, isTree?: boolean): React.JSX.Element;
 export default CustomExpandIcon;

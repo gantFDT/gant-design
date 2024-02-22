@@ -7,5 +7,5 @@ interface IntroIF {
     content?: string | React.ReactNode;
     [props: string]: any;
 }
-declare const Intro: (props: IntroIF) => JSX.Element;
+declare const Intro: (props: IntroIF) => React.JSX.Element;
 export default Intro;

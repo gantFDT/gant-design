@@ -21,7 +21,7 @@ export interface ConfigProviderProps {
 }
 declare class ConfigProvider extends React.Component<ConfigProviderProps> {
     getPrefixCls: (suffixCls: string, customizePrefixCls?: string) => string;
-    renderProvider: (context: ConfigConsumerProps, legacyLocale: Locale) => JSX.Element;
-    render(): JSX.Element;
+    renderProvider: (context: ConfigConsumerProps, legacyLocale: Locale) => React.JSX.Element;
+    render(): React.JSX.Element;
 }
 export default ConfigProvider;
