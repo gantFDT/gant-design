@@ -104,6 +104,6 @@ export declare type ScrollElement = HTMLElement & {
     scrollloaded: boolean;
 };
 export default class GantTable<T> extends React.Component<GantTableListOuterProps<T>> {
-    render(): JSX.Element;
+    render(): React.JSX.Element;
 }
 export {};

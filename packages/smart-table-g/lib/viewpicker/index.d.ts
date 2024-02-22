@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 export declare type ViewType = 'company' | 'system' | 'custom';
 export interface UpdateViewProps {
     type: 'delete' | 'rename';
@@ -31,4 +31,4 @@ export interface ViewProps {
  * 视图组件
  * @param props
  */
-export default function View(props: ViewProps): JSX.Element;
+export default function View(props: ViewProps): React.JSX.Element;

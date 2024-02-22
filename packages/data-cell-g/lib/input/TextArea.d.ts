@@ -8,6 +8,6 @@ declare class TextArea extends React.Component<GantTextAreaProps> {
     static defaultProps: {
         style: {};
     };
-    render(): JSX.Element;
+    render(): React.JSX.Element;
 }
 export default TextArea;

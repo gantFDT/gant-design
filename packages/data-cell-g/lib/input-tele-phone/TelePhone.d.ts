@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
 import { WithBasicProps } from '../compose/withbasic';
 export interface GantTelePhoneProps extends WithBasicProps {
     value?: value;
@@ -11,6 +11,6 @@ interface value {
     value: string;
 }
 export default class TelePhoneWrapper extends Component<GantTelePhoneProps> {
-    render(): JSX.Element;
+    render(): React.JSX.Element;
 }
 export {};

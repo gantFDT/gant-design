@@ -7,15 +7,11 @@
     "rootDir": ".",
     "downlevelIteration": true,
     "target": "ES5", // 指定ECMAScript目标版本 "ES3"（默认）， "ES5"， "ES6"/ "ES2015"， "ES2016"， "ES2017"或 "ESNext"
-    "lib": [
-      "esnext",
-      "dom"
-    ],
+    "lib": ["esnext", "dom", "es6"],
     "module": "esnext", // 指定生成哪个模块系统代码
     "declaration": false, // 生成（ *.d.ts）文件
     "allowJs": false, // 允许编译 javascript 文件
     "jsx": "react", // 在 .tsx文件里支持JSX： "React"或 "Preserve"
-    "locale": "zh-CN",
     "forceConsistentCasingInFileNames": false, // 禁止对同一个文件的不一致的引用
     "noImplicitReturns": false, // 不是函数的所有返回路径都有返回值时报错
     "noImplicitThis": false, // 当 this表达式的值为 any类型的时候，生成一个错误
@@ -30,63 +26,24 @@
     "allowSyntheticDefaultImports": true, // 允许从没有设置默认导出的模块中默认导入。这并不影响代码的输出，仅为了类型检查
     "resolveJsonModule": true, //json 导入
     "paths": {
-      "@gantd": [
-        "packages/gantd/src"
-      ],
-      "@util": [
-        "packages/util-g/src"
-      ],
-      "@color-picker": [
-        "packages/color-picker-g/src"
-      ],
-      "@auto-reload": [
-        "packages/auto-reload-g/src"
-      ],
-      "@data-cell": [
-        "packages/data-cell-g/src"
-      ],
-      "@header": [
-        "packages/header-g/src"
-      ],
-      "@submenu": [
-        "packages/submenu-g/src"
-      ],
-      "@table": [
-        "packages/table-g/src"
-      ],
-      "@grid": [
-        "packages/grid-g/src"
-      ],
-      "@schema-form": [
-        "packages/schema-form-g/src"
-      ],
-      "@anchor": [
-        "packages/anchor-g/src"
-      ],
-      "@smart-table": [
-        "packages/smart-table-g/src"
-      ],
-      "@smart-grid": [
-        "packages/smart-grid-g/src"
-      ],
-      "@modal": [
-        "packages/modal-g/src"
-      ],
-      "@keyevent": [
-        "packages/keyevent-g/src"
-      ],
-      "@util/*": [
-        "packages/util-g/src/*"
-      ]
+      "@gantd": ["packages/gantd/src"],
+      "@util": ["packages/util-g/src"],
+      "@color-picker": ["packages/color-picker-g/src"],
+      "@auto-reload": ["packages/auto-reload-g/src"],
+      "@data-cell": ["packages/data-cell-g/src"],
+      "@header": ["packages/header-g/src"],
+      "@submenu": ["packages/submenu-g/src"],
+      "@table": ["packages/table-g/src"],
+      "@grid": ["packages/grid-g/src"],
+      "@schema-form": ["packages/schema-form-g/src"],
+      "@anchor": ["packages/anchor-g/src"],
+      "@smart-table": ["packages/smart-table-g/src"],
+      "@smart-grid": ["packages/smart-grid-g/src"],
+      "@modal": ["packages/modal-g/src"],
+      "@keyevent": ["packages/keyevent-g/src"],
+      "@util/*": ["packages/util-g/src/*"]
     }
   },
-  "include": [
-    "packages/**/*",
-    "stories/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "packages/node-util-g"
-  ]
+  "include": ["packages/**/*", "stories/**/*"],
+  "exclude": ["node_modules", "dist", "packages/node-util-g", "/node_modules/*"]
 }

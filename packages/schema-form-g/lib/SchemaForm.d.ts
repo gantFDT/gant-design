@@ -1,4 +1,4 @@
-/// <reference types="react" />
+import React from 'react';
 import { Schema, UISchema, TitleSchema } from './interface';
 interface SchemaFormProps {
     schema: Schema;
@@ -7,5 +7,5 @@ interface SchemaFormProps {
     withoutAnimation?: boolean;
     frameworkComponents?: object;
 }
-export default function SchemaForm(props: SchemaFormProps): JSX.Element;
+export default function SchemaForm(props: SchemaFormProps): React.JSX.Element;
 export {};

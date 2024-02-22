@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
 import { WithBasicProps } from '../compose/withbasic';
 interface value {
     key?: string;
@@ -12,6 +12,6 @@ export interface GantInputMoneyProps extends WithBasicProps {
     precision?: number;
 }
 export default class InputMoneyWrapper extends Component<GantInputMoneyProps> {
-    render(): JSX.Element;
+    render(): React.JSX.Element;
 }
 export {};

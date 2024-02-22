@@ -5,8 +5,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Types = void 0;
 var Types;
-exports.Types = Types;
-
 (function (Types) {
   Types["object"] = "object";
   Types["array"] = "array";

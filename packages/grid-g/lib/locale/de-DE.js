@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-var _default = {
+var _default = exports.default = {
   targetLang: 'de-DE',
   // for filter panel
   jumpTo: 'Gehe zu',
@@ -224,4 +224,3 @@ var _default = {
   selectedData: 'Ausgewählte Daten',
   clear: 'Löschen'
 };
-exports.default = _default;

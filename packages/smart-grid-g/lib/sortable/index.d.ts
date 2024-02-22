@@ -14,6 +14,6 @@ interface SortableProps {
     onChange: (records: RecordProps[]) => void;
     height?: number;
 }
-declare function Sortable(props: SortableProps): JSX.Element;
+declare function Sortable(props: SortableProps): React.JSX.Element;
 declare const _default: React.MemoExoticComponent<typeof Sortable>;
 export default _default;

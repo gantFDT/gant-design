@@ -1,4 +1,4 @@
-/// <reference types="react" />
+import React from 'react';
 interface RecordProps {
     dataIndex: string;
     title: string;
@@ -12,5 +12,5 @@ interface SortableProps {
     dataSource: RecordProps[];
     onChange: (records: RecordProps[]) => void;
 }
-declare function Sortable(props: SortableProps): JSX.Element;
+declare function Sortable(props: SortableProps): React.JSX.Element;
 export default Sortable;

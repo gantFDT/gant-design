@@ -1,3 +1,3 @@
-/// <reference types="react" />
-declare const SubPicker: (props: any) => JSX.Element;
+import React from 'react';
+declare const SubPicker: (props: any) => React.JSX.Element;
 export default SubPicker;

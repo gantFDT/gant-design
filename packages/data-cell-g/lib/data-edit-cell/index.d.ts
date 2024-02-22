@@ -10,6 +10,6 @@ interface DataCellProps extends WithEditInProps<any> {
 }
 export default class DataEditCell extends Component<DataCellProps> {
     componentDidUpdate(prevProps: any): void;
-    render(): JSX.Element;
+    render(): React.JSX.Element;
 }
 export {};

@@ -1,4 +1,4 @@
-/// <reference types="react" />
+import React from 'react';
 declare const BodyRow: ({ isDeleted, rowIndex, className, sortable, children, originRecord, ...props }: {
     [x: string]: any;
     isDeleted: any;
@@ -7,5 +7,5 @@ declare const BodyRow: ({ isDeleted, rowIndex, className, sortable, children, or
     sortable: any;
     children: any;
     originRecord: any;
-}) => JSX.Element;
+}) => React.JSX.Element;
 export default BodyRow;

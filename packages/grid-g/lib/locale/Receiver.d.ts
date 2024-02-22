@@ -5,5 +5,5 @@ export interface LocaleInterface {
 export interface Props {
     children: (locale: LocaleInterface) => React.ReactNode;
 }
-declare const _default: (props: Props) => JSX.Element;
+declare const _default: (props: Props) => React.JSX.Element;
 export default _default;

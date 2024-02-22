@@ -33,18 +33,6 @@ export default [
     code: require('./copyrange/code').default,
   },
   {
-    title: '侧边栏表单详情',
-    describe: '双击行打开侧边栏表单详情',
-    cmp: createElement(lazy(() => import('./sideformdetail'))),
-    code: require('./sideformdetail/code').default,
-  },
-  {
-    title: '侧边栏表格详情',
-    describe: '双击行打开侧边栏表格详情,可进行编辑、以及各种状态的联动',
-    cmp: createElement(lazy(() => import('./sidegriddetail'))),
-    code: require('./sidegriddetail/code').default,
-  },
-  {
     title: '悬浮过滤器',
     describe: '',
     cmp: createElement(lazy(() => import('./floatingfilter'))),

@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 interface HeaderIF {
     type?: 'line' | 'num' | 'icon';
     bottomLine?: boolean;
@@ -68,6 +68,6 @@ export declare const sizeDefinitions: {
         };
     };
 };
-declare const Header: (headerProps: HeaderIF) => JSX.Element;
+declare const Header: (headerProps: HeaderIF) => React.JSX.Element;
 export { setGlobalConfig } from './utils';
 export default Header;
