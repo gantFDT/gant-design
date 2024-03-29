@@ -9,7 +9,6 @@
 /build
 /.eslintcache
 link
-package-lock.json
 .idea/
 yarn.lock
 *.bak

@@ -8,6 +8,11 @@ module.exports = async ({ config, mode }) => {
 		module: {
 			rules: [
 				{
+					test: /\.mjs$/,
+					include: /node_modules/,
+					type: "javascript/auto",
+				},
+				{
 					test: /\.(jsx|js)?$/,
 					include: [
 						path.resolve(__dirname, "../packages"),
