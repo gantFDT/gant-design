@@ -244,4 +244,5 @@ export default {
   exportSelected: '导出选中',
   selectedData: '已选中数据',
   clear: '清除',
+  outOfLimit: '当前总数超过'
 };

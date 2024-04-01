@@ -193,6 +193,7 @@ export type GantPaginationProps = Omit<
       tooltipTotal?: () => number | number;
       align?: 'left' | 'right';
       Component?: any;
+      countLimitStyle?:React.CSSProperties
     }
   >,
   'onShowSizeChange'

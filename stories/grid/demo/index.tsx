@@ -104,4 +104,10 @@ export default [
     cmp: createElement(lazy(() => import('./customrowheight'))),
     code: require('./customrowheight/code').default,
   },
+  {
+    title: '模糊分页查询',
+    describe: `设置一个限定数字，总数据条数大于该数值则表现为模糊查询，否则表现为精确查询`,
+    cmp: createElement(lazy(() => import('./countlimit'))),
+    code: require('./countlimit/code').default,
+  },
 ];
