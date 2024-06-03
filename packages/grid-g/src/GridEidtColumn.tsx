@@ -198,6 +198,7 @@ export default WrapperComponent =>
         <WrapperComponent
           autoFocus={true}
           wrapperRef={inputRef}
+          defaultOpen
           {...compoentProps}
           {...defalutProps}
           {...wrapperProps}
@@ -205,7 +206,7 @@ export default WrapperComponent =>
           size={size}
           onBlur={onBlur}
           node={node}
-          defaultOpen
+          
         />
       </div>
     );
