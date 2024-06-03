@@ -9,8 +9,9 @@ declare const _default: React.NamedExoticComponent<Pick<import("./interface").Pr
     onRefresh?: () => void;
     mode?: "default" | "limit";
     tooltipTotal?: () => number;
-    align?: import("antd/lib/collapse/Collapse").ExpandIconPosition;
+    align?: "left" | "right";
     Component?: any;
-}>, "disabled" | "style" | "size" | "locale" | "onChange" | "prefixCls" | "className" | "role" | "addonBefore" | "addonAfter" | "itemRender" | "mode" | "align" | "total" | "defaultCurrent" | "current" | "defaultPageSize" | "pageSize" | "hideOnSinglePage" | "showSizeChanger" | "pageSizeOptions" | "showQuickJumper" | "showTotal" | "simple" | "selectPrefixCls" | "showLessItems" | "beginIndex" | "countLimit" | "numberGoToMode" | "onRefresh" | "tooltipTotal" | "Component">>;
+    countLimitStyle?: React.CSSProperties;
+}>, "style" | "onChange" | "prefixCls" | "size" | "disabled" | "className" | "align" | "role" | "addonBefore" | "addonAfter" | "mode" | "locale" | "total" | "defaultCurrent" | "current" | "defaultPageSize" | "pageSize" | "hideOnSinglePage" | "showSizeChanger" | "pageSizeOptions" | "showQuickJumper" | "showTotal" | "simple" | "selectPrefixCls" | "itemRender" | "showLessItems" | "beginIndex" | "countLimit" | "numberGoToMode" | "onRefresh" | "tooltipTotal" | "Component" | "countLimitStyle">>;
 export default _default;
-export declare const paginationShowTotal: (total: any, range: any, limit: any, tooltipTotal: any) => JSX.Element;
+export declare const paginationShowTotal: (total: any, range: any, limit: any, tooltipTotal: any) => React.JSX.Element;

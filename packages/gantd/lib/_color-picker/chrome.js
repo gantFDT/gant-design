@@ -1,25 +1,21 @@
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-
 var _react = _interopRequireDefault(require("react"));
-
 var _common = require("react-color/lib/components/common");
-
 var Chrome = function Chrome(props) {
   var _props$width = props.width,
-      width = _props$width === void 0 ? 225 : _props$width,
-      onChange = props.onChange,
-      rgb = props.rgb,
-      hsl = props.hsl,
-      hsv = props.hsv,
-      placement = props.placement,
-      prefixCls = props.prefixCls;
+    width = _props$width === void 0 ? 225 : _props$width,
+    onChange = props.onChange,
+    rgb = props.rgb,
+    hsl = props.hsl,
+    hsv = props.hsv,
+    placement = props.placement,
+    prefixCls = props.prefixCls;
   var styles = {
     picker: {
       width: width,
@@ -172,7 +168,4 @@ var Chrome = function Chrome(props) {
     onChange: onChange
   }))))));
 };
-
-var _default = (0, _common.ColorWrap)(Chrome);
-
-exports.default = _default;
+var _default = exports.default = (0, _common.ColorWrap)(Chrome);

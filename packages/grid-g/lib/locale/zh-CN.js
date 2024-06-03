@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-var _default = {
+var _default = exports.default = {
   //
   targetLang: 'zh-CN',
   // for filter panel
@@ -225,6 +225,6 @@ var _default = {
   importJson: '导入json',
   exportSelected: '导出选中',
   selectedData: '已选中数据',
-  clear: '清除'
+  clear: '清除',
+  outOfLimit: '当前总数超过'
 };
-exports.default = _default;

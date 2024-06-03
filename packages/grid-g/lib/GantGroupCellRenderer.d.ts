@@ -5,5 +5,5 @@ export interface GantGroupCellRendererProps extends ICellRendererParams {
     showFolder?: boolean;
     [propsname: string]: any;
 }
-declare const _default: React.MemoExoticComponent<React.ForwardRefExoticComponent<Pick<GantGroupCellRendererProps, string | number> & React.RefAttributes<unknown>>>;
+declare const _default: React.MemoExoticComponent<React.ForwardRefExoticComponent<Pick<GantGroupCellRendererProps, React.Key> & React.RefAttributes<unknown>>>;
 export default _default;

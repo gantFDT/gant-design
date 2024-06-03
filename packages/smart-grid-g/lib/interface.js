@@ -5,8 +5,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.langEnum = exports.Fields = void 0;
 var Fields;
-exports.Fields = Fields;
-
 (function (Fields) {
   Fields["Input"] = "Input";
   Fields["InputNumber"] = "InputNumber";
@@ -21,10 +19,7 @@ exports.Fields = Fields;
   Fields["Selector"] = "Selector";
   Fields["LocationSelector"] = "LocationSelector";
 })(Fields || (exports.Fields = Fields = {}));
-
 var langEnum;
-exports.langEnum = langEnum;
-
 (function (langEnum) {
   langEnum["zh-CN"] = "zh-CN";
   langEnum["en-US"] = "en-US";

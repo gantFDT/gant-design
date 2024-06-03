@@ -16,5 +16,5 @@ export interface GantAnchorProps extends AnchorProps {
     list?: ListItem[];
     content?: React.ReactNode | Element | string | number | null | React.ReactNode[];
 }
-declare const GantAnchor: (props: GantAnchorProps) => JSX.Element;
+declare const GantAnchor: (props: GantAnchorProps) => React.JSX.Element;
 export default GantAnchor;

@@ -5,8 +5,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ActionTypes = void 0;
 var ActionTypes;
-exports.ActionTypes = ActionTypes;
-
 (function (ActionTypes) {
   ActionTypes["mount"] = "mount";
   ActionTypes["unmount"] = "unmount";

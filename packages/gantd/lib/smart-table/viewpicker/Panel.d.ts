@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import { ViewType, DefaultView } from './index';
 interface PanelProps {
     viewId?: string;
@@ -15,5 +15,5 @@ interface PanelProps {
     onDefaultViewChange: (params: DefaultView) => void;
     extra?: string | ReactNode;
 }
-declare const _default: (props: PanelProps) => JSX.Element;
+declare const _default: (props: PanelProps) => React.JSX.Element;
 export default _default;

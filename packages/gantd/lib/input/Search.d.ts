@@ -8,6 +8,6 @@ declare class Search extends React.Component<GantSearchProps> {
     static defaultProps: {
         style: {};
     };
-    render(): JSX.Element;
+    render(): React.JSX.Element;
 }
 export default Search;

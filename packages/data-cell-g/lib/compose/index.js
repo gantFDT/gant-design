@@ -1,7 +1,6 @@
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -29,11 +28,7 @@ Object.defineProperty(exports, "withEdit", {
     return _withEdit.default;
   }
 });
-
 var _withEdit = _interopRequireDefault(require("../with-edit"));
-
 var _editStatus = _interopRequireDefault(require("../edit-status"));
-
 var _switchStatus = _interopRequireDefault(require("../switch-status"));
-
 var _dataEditCell = _interopRequireDefault(require("../data-edit-cell"));

@@ -6,9 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.useDrag = useDrag;
 exports.usePrev = usePrev;
 exports.useResize = useResize;
-
 var _react = require("react");
-
 function useDrag(x, y, onDrag) {
   var isDragging = (0, _react.useRef)(false);
   var initialDragState = (0, _react.useRef)({
@@ -31,17 +29,14 @@ function useDrag(x, y, onDrag) {
   var onMouseMove = (0, _react.useCallback)(function (e) {
     if (isDragging.current) {
       var _initialDragState$cur = initialDragState.current,
-          initX = _initialDragState$cur.initX,
-          mouseDownX = _initialDragState$cur.mouseDownX,
-          initY = _initialDragState$cur.initY,
-          mouseDownY = _initialDragState$cur.mouseDownY;
+        initX = _initialDragState$cur.initX,
+        mouseDownX = _initialDragState$cur.mouseDownX,
+        initY = _initialDragState$cur.initY,
+        mouseDownY = _initialDragState$cur.mouseDownY;
       var dx = e.clientX - mouseDownX;
       var dy = e.clientY - mouseDownY;
-
       var _x = initX + dx;
-
       var _y = initY + dy;
-
       onDrag({
         x: _x,
         y: _y
@@ -61,7 +56,6 @@ function useDrag(x, y, onDrag) {
       isDragging.current = false;
       setTextSelectable(true);
     };
-
     window.addEventListener('mouseup', onMouseUp);
     return function () {
       return window.removeEventListener('mouseup', onMouseUp);
@@ -69,7 +63,6 @@ function useDrag(x, y, onDrag) {
   }, []);
   return onMouseDown;
 }
-
 function useResize(x, y, width, height, minWidth, minHeight, windowSize, onResize) {
   var isDragging = (0, _react.useRef)(false);
   var initialDragState = (0, _react.useRef)({
@@ -104,16 +97,16 @@ function useResize(x, y, width, height, minWidth, minHeight, windowSize, onResiz
   var onMouseMove = (0, _react.useCallback)(function (e) {
     if (isDragging.current) {
       var _initialDragState$cur2 = initialDragState.current,
-          initX = _initialDragState$cur2.initX,
-          initY = _initialDragState$cur2.initY,
-          initWidth = _initialDragState$cur2.initWidth,
-          mouseDownX = _initialDragState$cur2.mouseDownX,
-          initHeight = _initialDragState$cur2.initHeight,
-          mouseDownY = _initialDragState$cur2.mouseDownY,
-          _minWidth = _initialDragState$cur2.minWidth,
-          _minHeight = _initialDragState$cur2.minHeight,
-          _windowSize = _initialDragState$cur2.windowSize,
-          resizeDirection = _initialDragState$cur2.resizeDirection;
+        initX = _initialDragState$cur2.initX,
+        initY = _initialDragState$cur2.initY,
+        initWidth = _initialDragState$cur2.initWidth,
+        mouseDownX = _initialDragState$cur2.mouseDownX,
+        initHeight = _initialDragState$cur2.initHeight,
+        mouseDownY = _initialDragState$cur2.mouseDownY,
+        _minWidth = _initialDragState$cur2.minWidth,
+        _minHeight = _initialDragState$cur2.minHeight,
+        _windowSize = _initialDragState$cur2.windowSize,
+        resizeDirection = _initialDragState$cur2.resizeDirection;
       var dx = e.clientX - mouseDownX;
       var dy = e.clientY - mouseDownY;
       var _x2 = initX;
@@ -123,73 +116,60 @@ function useResize(x, y, width, height, minWidth, minHeight, windowSize, onResiz
       var isToTop = dy < 0;
       var isToleft = dx < 0;
       var absDy = Math.abs(dy);
-      var absDx = Math.abs(dx); // 纵轴初始位置与高度
-
+      var absDx = Math.abs(dx);
+      // 纵轴初始位置与高度
       if (['top', 'rightTop', 'leftTop'].includes(resizeDirection)) {
         _y2 = isToTop ? _y2 - absDy : _y2 + absDy;
         _height = isToTop ? _height + absDy : _height - absDy;
-      } // 横轴初始位置与宽度
-
-
+      }
+      // 横轴初始位置与宽度
       if (['leftBottom', 'left', 'leftTop'].includes(resizeDirection)) {
         _x2 = isToleft ? _x2 - absDx : _x2 + absDx;
         _width = isToleft ? _width + absDx : _width - absDx;
-      } // 普通场景宽度
-
-
+      }
+      // 普通场景宽度
       if (['rightTop', 'right', 'rightBottom'].includes(resizeDirection)) {
         _width += dx;
-      } // 普通场景高度
-
-
+      }
+      // 普通场景高度
       if (['rightBottom', 'bottom', 'leftBottom'].includes(resizeDirection)) {
         _height += dy;
-      } // 处理边界
+      }
+      // 处理边界
       // 上边
-
-
       if (_y2 < 0) {
         _height = _height - Math.abs(_y2);
         _y2 = 0;
-      } // 下边
-
-
+      }
+      // 下边
       var maxHeight = _windowSize.height - _y2;
-
       if (_height > maxHeight) {
         _height = maxHeight;
-      } // 左边
-
-
+      }
+      // 左边
       if (_x2 < 0) {
         _width = _width - Math.abs(_x2);
         _x2 = 0;
       }
-
-      var maxWidth = _windowSize.width - _x2; // 右边
-
+      var maxWidth = _windowSize.width - _x2;
+      // 右边
       if (_width > maxWidth) {
         _width = maxWidth;
-      } // 最小宽度
-
-
+      }
+      // 最小宽度
       if (_width < _minWidth) {
         _width = _minWidth;
-
         if (!isToleft) {
           _x2 = initX + initWidth - _minHeight;
         }
-      } // 最小高度
-
-
+      }
+      // 最小高度
       if (_height < _minHeight) {
         _height = _minHeight;
-
         if (!isToTop) {
           _y2 = initY + initHeight - _minHeight;
         }
       }
-
       return onResize({
         x: _x2,
         y: _y2,
@@ -211,7 +191,6 @@ function useResize(x, y, width, height, minWidth, minHeight, windowSize, onResiz
       isDragging.current = false;
       setTextSelectable(true);
     };
-
     window.addEventListener('mouseup', onMouseUp);
     return function () {
       return window.removeEventListener('mouseup', onMouseUp);
@@ -219,7 +198,6 @@ function useResize(x, y, width, height, minWidth, minHeight, windowSize, onResiz
   }, []);
   return onMouseDown;
 }
-
 function usePrev(value) {
   var ref = (0, _react.useRef)(value);
   (0, _react.useEffect)(function () {
@@ -227,7 +205,6 @@ function usePrev(value) {
   });
   return ref.current;
 }
-
 function setTextSelectable(selectable) {
   document.onselectstart = function () {
     return selectable;

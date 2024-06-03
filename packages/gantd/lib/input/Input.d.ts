@@ -18,6 +18,6 @@ declare class Input extends React.Component<GantInputProps> {
     static setDefaultProps: (props: GantInputProps) => void;
     onChange: (e: any) => void;
     onBlur: (e: any) => void;
-    render(): JSX.Element;
+    render(): React.JSX.Element;
 }
 export default Input;

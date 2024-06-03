@@ -1,3 +1,3 @@
-/// <reference types="react" />
-declare const CombEditComponent: (props: any) => JSX.Element;
+import React from 'react';
+declare const CombEditComponent: (props: any) => React.JSX.Element;
 export default CombEditComponent;

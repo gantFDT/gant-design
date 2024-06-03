@@ -1,6 +1,6 @@
-/// <reference types="react" />
+import React from 'react';
 declare const BodyWrapper: ({ children, ...props }: {
     [x: string]: any;
     children: any;
-}) => JSX.Element;
+}) => React.JSX.Element;
 export default BodyWrapper;

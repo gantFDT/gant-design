@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-var _default = {
+var _default = exports.default = {
   targetLang: 'ko_KR',
   // for filter panel
   jumpTo: '이동',
@@ -224,4 +224,3 @@ var _default = {
   selectedData: '선택한 데이터',
   clear: '지우기'
 };
-exports.default = _default;

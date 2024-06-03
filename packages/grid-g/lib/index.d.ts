@@ -65,7 +65,7 @@ declare const Grid: {
         exportHiddenFields: boolean;
         suppressManagerPaste: boolean;
         suppressCreateWhenPaste: boolean;
-    }, import("./interface").Props<T>>>): JSX.Element;
+    }, import("./interface").Props<T>>>): React.JSX.Element;
     LicenseManager: typeof LicenseManager;
 };
 export default Grid;

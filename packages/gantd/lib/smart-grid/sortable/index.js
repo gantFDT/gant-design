@@ -1,80 +1,56 @@
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
-
 var _typeof = require("@babel/runtime/helpers/typeof");
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-
 require("antd/es/tooltip/style/css");
-
 var _tooltip = _interopRequireDefault(require("antd/es/tooltip"));
-
 require("antd/es/checkbox/style/css");
-
 var _checkbox = _interopRequireDefault(require("antd/es/checkbox"));
-
 require("antd/es/row/style/css");
-
 var _row = _interopRequireDefault(require("antd/es/row"));
-
 var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
-
 var _react = _interopRequireWildcard(require("react"));
-
 var _reactSortableHoc = require("react-sortable-hoc");
-
 var _arrayMove = _interopRequireDefault(require("array-move"));
-
 var _icon = _interopRequireDefault(require("../../icon"));
-
 var _Receiver = _interopRequireDefault(require("../locale/Receiver"));
-
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
+function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(e) { return e ? t : r; })(e); }
+function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != _typeof(e) && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
 function Sortable(props) {
   var dataSource = props.dataSource,
-      onChange = props.onChange,
-      height = props.height;
+    onChange = props.onChange,
+    height = props.height;
   if (!dataSource || !dataSource.length) return null;
-
   var _useMemo = (0, _react.useMemo)(function () {
-    return dataSource.reduce(function (total, dataItem, dataIdx) {
-      if (dataItem.fixed === 'left') {
-        total[0] = dataIdx;
-      }
-
-      if (dataItem.fixed === 'right' && total[1] === -1) {
-        total[1] = dataIdx;
-      }
-
-      if (!dataItem.dynamic && dataItem.display === 'block') {
-        total[2]++;
-
-        if (!dataItem.hide) {
-          total[3]++;
+      return dataSource.reduce(function (total, dataItem, dataIdx) {
+        if (dataItem.fixed === 'left') {
+          total[0] = dataIdx;
         }
-      }
-
-      if (dataItem.sortIndex !== undefined) {
-        total[4]++;
-      }
-
-      return total;
-    }, [-1, -1, 0, 0, 0]);
-  }, [dataSource]),
-      _useMemo2 = (0, _slicedToArray2.default)(_useMemo, 5),
-      leftSpinIdx = _useMemo2[0],
-      rightSpinIdx = _useMemo2[1],
-      selectableCount = _useMemo2[2],
-      checkedCount = _useMemo2[3],
-      sortCount = _useMemo2[4];
-
+        if (dataItem.fixed === 'right' && total[1] === -1) {
+          total[1] = dataIdx;
+        }
+        if (!dataItem.dynamic && dataItem.display === 'block') {
+          total[2]++;
+          if (!dataItem.hide) {
+            total[3]++;
+          }
+        }
+        if (dataItem.sortIndex !== undefined) {
+          total[4]++;
+        }
+        return total;
+      }, [-1, -1, 0, 0, 0]);
+    }, [dataSource]),
+    _useMemo2 = (0, _slicedToArray2.default)(_useMemo, 5),
+    leftSpinIdx = _useMemo2[0],
+    rightSpinIdx = _useMemo2[1],
+    selectableCount = _useMemo2[2],
+    checkedCount = _useMemo2[3],
+    sortCount = _useMemo2[4];
   var handlerSortLock = (0, _react.useCallback)(function (index, fixed) {
     dataSource[index].fixed = fixed === 'top' ? 'left' : 'right';
     onChange((0, _arrayMove.default)(dataSource, index, fixed === 'top' ? 0 : -1));
@@ -100,7 +76,6 @@ function Sortable(props) {
           row.sortIndex--;
         }
       });
-
       if (targetRow.sort === 'none') {
         delete targetRow.sortIndex;
       } else {
@@ -117,7 +92,6 @@ function Sortable(props) {
         }
       });
     }
-
     onChange(dataSource);
   }, [dataSource]);
   var handlerFieldVisible = (0, _react.useCallback)(function (index, event) {
@@ -134,12 +108,12 @@ function Sortable(props) {
   }, []);
   var SortableItem = (0, _reactSortableHoc.SortableElement)(function (_ref) {
     var _ref$dataItem = _ref.dataItem,
-        title = _ref$dataItem.title,
-        hide = _ref$dataItem.hide,
-        fixed = _ref$dataItem.fixed,
-        sort = _ref$dataItem.sort,
-        sortIndex = _ref$dataItem.sortIndex,
-        dataIdx = _ref.dataIdx;
+      title = _ref$dataItem.title,
+      hide = _ref$dataItem.hide,
+      fixed = _ref$dataItem.fixed,
+      sort = _ref$dataItem.sort,
+      sortIndex = _ref$dataItem.sortIndex,
+      dataIdx = _ref.dataIdx;
     return /*#__PURE__*/_react.default.createElement(_row.default, {
       type: "flex",
       align: "middle",
@@ -186,7 +160,7 @@ function Sortable(props) {
           width: 64,
           flexDirection: 'row-reverse'
         }
-      }, /*#__PURE__*/_react.default.createElement(DragHandler, null), fixed ? /*#__PURE__*/_react.default.createElement(_tooltip.default, {
+      }, /*#__PURE__*/_react.default.createElement(DragHandler, null), fixed ? ( /*#__PURE__*/_react.default.createElement(_tooltip.default, {
         style: {
           flex: 0
         },
@@ -198,7 +172,7 @@ function Sortable(props) {
           return handlerUnlock(dataIdx);
         },
         className: "disabledIcon"
-      }))) : /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(_tooltip.default, {
+      })))) : ( /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(_tooltip.default, {
         style: {
           flex: 0
         },
@@ -249,7 +223,7 @@ function Sortable(props) {
           return handlerLock(dataIdx, 'left');
         },
         className: "disabledIcon"
-      }))))));
+      })))))));
     }));
   });
   var SortableList = (0, _reactSortableHoc.SortableContainer)(function () {
@@ -266,26 +240,23 @@ function Sortable(props) {
   });
   var handlerSortEnd = (0, _react.useCallback)(function (_ref2) {
     var oldIndex = _ref2.oldIndex,
-        newIndex = _ref2.newIndex;
-    var dataItem = dataSource[oldIndex]; // 移出固定区
-
+      newIndex = _ref2.newIndex;
+    var dataItem = dataSource[oldIndex];
+    // 移出固定区
     if (newIndex > leftSpinIdx && (rightSpinIdx === -1 || newIndex < rightSpinIdx)) {
       delete dataItem.fixed;
-    } // 移到左边固定列
-
-
+    }
+    // 移到左边固定列
     if (newIndex <= leftSpinIdx) {
       dataItem.fixed = 'left';
-    } // 移到右边固定列
-
-
+    }
+    // 移到右边固定列
     if (rightSpinIdx !== -1 && newIndex >= rightSpinIdx) {
       dataItem.fixed = 'right';
     }
-
     onChange((0, _arrayMove.default)(dataSource, oldIndex, newIndex));
-  }, [dataSource, leftSpinIdx, rightSpinIdx]); // 选择
-
+  }, [dataSource, leftSpinIdx, rightSpinIdx]);
+  // 选择
   var indeterminate = (0, _react.useMemo)(function () {
     return checkedCount && checkedCount < selectableCount;
   }, [checkedCount, selectableCount]);
@@ -346,7 +317,4 @@ function Sortable(props) {
     })));
   });
 }
-
-var _default = /*#__PURE__*/_react.default.memo(Sortable);
-
-exports.default = _default;
+var _default = exports.default = /*#__PURE__*/_react.default.memo(Sortable);

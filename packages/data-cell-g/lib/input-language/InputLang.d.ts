@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
 import { WithBasicProps } from '../compose/withbasic';
 export interface GantInputLangProps extends WithBasicProps {
     allowClear?: boolean;
@@ -17,6 +17,6 @@ interface localeItem {
     label: string;
 }
 export default class InputLangWapper extends Component<GantInputLangProps> {
-    render(): JSX.Element;
+    render(): React.JSX.Element;
 }
 export {};

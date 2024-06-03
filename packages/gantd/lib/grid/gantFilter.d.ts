@@ -8,7 +8,7 @@ interface filterHooksParams {
     dataSource?: any[];
     context: any;
 }
-export declare function filterDateComparator(filterLocalDateAtMidnight: any, cellValue: any): 1 | -1 | 0;
+export declare function filterDateComparator(filterLocalDateAtMidnight: any, cellValue: any): 1 | 0 | -1;
 export declare function filterHooks(params: filterHooksParams): {
     onFilterModified: (event: FilterModifiedEvent<any>) => void;
     filterDataRef: import("react").MutableRefObject<{}>;

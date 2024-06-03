@@ -1,7 +1,6 @@
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -16,13 +15,9 @@ exports.getOrders = getOrders;
 exports.getSchemaRenderCount = getSchemaRenderCount;
 exports.getTitle = getTitle;
 exports.getUIData = getUIData;
-
 var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
-
 var _dataCell = require("data-cell-g");
-
 var _lodash = require("lodash");
-
 var uiArray = [{
   alias: "className",
   belong: ["field", "form"],
@@ -84,17 +79,14 @@ var uiArray = [{
   name: "ui:backgroundColor",
   defaultValue: undefined
 }];
-
 function getOrders(orders, targetArray) {
   var _sort = false;
   if (!orders || orders.length <= 0) return targetArray;
   var len = orders.length,
-      targetLen = targetArray.length;
-
+    targetLen = targetArray.length;
   for (var index = 0; index < len; index++) {
     if (orders[index] === "*") _sort = true;
     var targetIndex = targetArray.indexOf(orders[index]);
-
     if (targetIndex >= 0) {
       if (!_sort) {
         targetArray.splice(targetIndex, 1);
@@ -106,24 +98,19 @@ function getOrders(orders, targetArray) {
       }
     }
   }
-
   return targetArray;
 }
-
 function getUIData(uiSchema, type, pathName) {
   var uiData = {},
-      uiSchemaData = pathName ? (0, _lodash.get)(uiSchema, pathName, {}) : uiSchema;
-
+    uiSchemaData = pathName ? (0, _lodash.get)(uiSchema, pathName, {}) : uiSchema;
   if (pathName) {
     var arr = pathName.split('.');
     var index = arr.length - 1;
-
     while (index >= 0) {
       index--;
       uiSchemaData = Object.assign(Object.assign({}, (0, _lodash.get)(uiSchema, arr.slice(0, index + 1).join('.'), {})), uiSchemaData);
     }
   }
-
   uiSchemaData = Object.assign(Object.assign({}, uiSchema), uiSchemaData);
   uiArray.map(function (item) {
     if (item.belong === type || item.belong.indexOf(type) >= 0) {
@@ -143,32 +130,25 @@ function getUIData(uiSchema, type, pathName) {
   });
   return uiData;
 }
-
 function getEdit(edit, pathName) {
   if ((0, _typeof2.default)(edit) !== "object") return edit;
   var newEdit = pathName ? (0, _lodash.get)(edit, pathName) : edit;
-
   if (newEdit === undefined && pathName) {
     var arr = pathName.split('.');
     var index = arr.length - 1;
-
     while (newEdit === undefined && index >= 0) {
       index--;
       newEdit = index >= 0 ? (0, _lodash.get)(edit, arr.slice(0, index + 1)) : edit;
     }
   }
-
   if ((0, _typeof2.default)(newEdit) === "object") {
     if (newEdit['edit:status'] !== undefined) return newEdit['edit:status'];
   }
-
   if ((0, _typeof2.default)(newEdit) === "object" || newEdit === undefined) {
     return _dataCell.EditStatus.EDIT;
   }
-
   return newEdit;
 }
-
 function getTitle(title, pathName) {
   var titleArray = [{
     alias: "visible",
@@ -212,25 +192,21 @@ function getTitle(title, pathName) {
     defaultValue: false
   }];
   var titleData = {},
-      titleSchemaData = pathName ? (0, _lodash.get)(title, pathName) : title;
-
+    titleSchemaData = pathName ? (0, _lodash.get)(title, pathName) : title;
   if (titleSchemaData === undefined && pathName) {
     var arr = pathName.split('.');
     var index = arr.length - 1;
-
     while (titleSchemaData === undefined && index >= 0) {
       index--;
       titleSchemaData = (0, _lodash.get)(title, arr.slice(0, index + 1));
     }
   }
-
   titleSchemaData = Object.assign(Object.assign({}, title), titleSchemaData);
   titleArray.map(function (item) {
     titleData[item.alias] = (0, _lodash.get)(titleSchemaData, item.name, item.defaultValue);
   });
   return titleData;
 }
-
 function getColumns(items, required) {
   var columns = Object.keys(items).map(function (dataIndex) {
     return {
@@ -248,13 +224,11 @@ function getColumns(items, required) {
     schema: schema
   };
 }
-
 function getBackgroundColor(backgroundColor, len) {
   if (backgroundColor) return backgroundColor;
   if (len === 0) return "var(--component-background)";
   return "rgba(0,0,0,0.04)";
 }
-
 function getNewValue(formVals, data, schema) {
   var newVals = {};
   formVals = formVals ? formVals : {};
@@ -268,7 +242,6 @@ function getNewValue(formVals, data, schema) {
   });
   return Object.assign({}, newVals);
 }
-
 function getDateToForm(data, schema) {
   var newVals = {};
   data = data ? data : {};
@@ -282,24 +255,19 @@ function getDateToForm(data, schema) {
   });
   return newVals;
 }
-
 function getKey() {
   return Math.random().toString(32).slice(2);
 }
-
 function getFieldItemSizeClass(className) {
   switch (className) {
     case "small":
       return "gant-form-item-sm";
-
     case "large":
       return "gant-form-item-lg";
-
     default:
       return "gant-form-item";
   }
 }
-
 function getSchemaRenderCount(schema) {
   var index = 0;
   var propertyType = schema.propertyType;

@@ -133,6 +133,7 @@ export declare type GantPaginationProps = Omit<ProtoExtends<PaginationProps, {
     tooltipTotal?: () => number | number;
     align?: 'left' | 'right';
     Component?: any;
+    countLimitStyle?: React.CSSProperties;
 }>, 'onShowSizeChange'>;
 export interface DefaultJsonParams {
     title?: string;

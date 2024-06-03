@@ -1,7 +1,7 @@
 /**
  * 判断ie版本
  */
-export declare function IEVersion(): -1 | 6 | 7 | 8 | 9 | 10 | 11 | "edge";
+export declare function IEVersion(): -1 | 7 | 8 | 9 | 10 | 6 | "edge" | 11;
 export declare function getCookie(name: string): string | null;
 export declare function delCookie(name: string): void;
 export declare function setCookie(name: string, value: string, time?: any, path?: string): void;

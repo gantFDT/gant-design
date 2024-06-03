@@ -2,7 +2,7 @@
 import GantGridFormToolPanelRenderer from './GantGridFormToolPanelRenderer';
 export declare function setComponentsMaps(components: any): {};
 export declare function setFrameworkComponentsMaps(components: any): {
-    gantGroupCellRenderer: import("react").MemoExoticComponent<import("react").ForwardRefExoticComponent<Pick<import("./GantGroupCellRenderer").GantGroupCellRendererProps, string | number> & import("react").RefAttributes<unknown>>>;
+    gantGroupCellRenderer: import("react").MemoExoticComponent<import("react").ForwardRefExoticComponent<Pick<import("./GantGroupCellRenderer").GantGroupCellRendererProps, import("react").Key> & import("react").RefAttributes<unknown>>>;
     gantRenderCol: import("react").NamedExoticComponent<any>;
     gantTooltip: import("react").ForwardRefExoticComponent<Pick<any, string | number | symbol> & import("react").RefAttributes<unknown>>;
     gantPinnedRowRenderer: import("react").NamedExoticComponent<any>;
@@ -11,7 +11,7 @@ export declare function setFrameworkComponentsMaps(components: any): {
 export declare function getAllComponentsMaps(): {
     componentsMaps: {};
     frameworkComponentsMaps: {
-        gantGroupCellRenderer: import("react").MemoExoticComponent<import("react").ForwardRefExoticComponent<Pick<import("./GantGroupCellRenderer").GantGroupCellRendererProps, string | number> & import("react").RefAttributes<unknown>>>;
+        gantGroupCellRenderer: import("react").MemoExoticComponent<import("react").ForwardRefExoticComponent<Pick<import("./GantGroupCellRenderer").GantGroupCellRendererProps, import("react").Key> & import("react").RefAttributes<unknown>>>;
         gantRenderCol: import("react").NamedExoticComponent<any>;
         gantTooltip: import("react").ForwardRefExoticComponent<Pick<any, string | number | symbol> & import("react").RefAttributes<unknown>>;
         gantPinnedRowRenderer: import("react").NamedExoticComponent<any>;

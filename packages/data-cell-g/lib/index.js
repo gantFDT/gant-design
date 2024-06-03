@@ -1,7 +1,6 @@
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -119,41 +118,22 @@ Object.defineProperty(exports, "withEdit", {
     return _withEdit.default;
   }
 });
-
 var _colorPicker = _interopRequireDefault(require("./color-picker"));
-
 var _dataEditCell = _interopRequireDefault(require("./data-edit-cell"));
-
 var _datePicker = _interopRequireDefault(require("./date-picker"));
-
 var _editStatus = _interopRequireDefault(require("./edit-status"));
-
 var _icon = _interopRequireDefault(require("./icon"));
-
 var _input = _interopRequireDefault(require("./input"));
-
 var _inputCellPhone = _interopRequireDefault(require("./input-cell-phone"));
-
 var _inputEmail = _interopRequireDefault(require("./input-email"));
-
 var _inputLanguage = _interopRequireDefault(require("./input-language"));
-
 var _inputMoney = _interopRequireDefault(require("./input-money"));
-
 var _inputNumber = _interopRequireDefault(require("./input-number"));
-
 var _inputTelePhone = _interopRequireDefault(require("./input-tele-phone"));
-
 var _inputUrl = _interopRequireDefault(require("./input-url"));
-
 var _locationSelector = _interopRequireDefault(require("./location-selector"));
-
 var _vSelector = _interopRequireDefault(require("./v-selector"));
-
 var _selector = _interopRequireDefault(require("./selector"));
-
 var _switchStatus = _interopRequireDefault(require("./switch-status"));
-
 var _treeSelector = _interopRequireDefault(require("./tree-selector"));
-
 var _withEdit = _interopRequireDefault(require("./with-edit"));

@@ -2,7 +2,7 @@ import React from 'react';
 declare const _default: (WrapperedComponent: any) => {
     new (props: any): {
         componentDidUpdate(prevProps: any): void;
-        render(): JSX.Element;
+        render(): React.JSX.Element;
         context: any;
         setState<K extends never>(state: {} | ((prevState: Readonly<{}>, props: Readonly<any>) => {} | Pick<{}, K>) | Pick<{}, K>, callback?: () => void): void;
         forceUpdate(callback?: () => void): void;
@@ -27,7 +27,7 @@ declare const _default: (WrapperedComponent: any) => {
     };
     new (props: any, context: any): {
         componentDidUpdate(prevProps: any): void;
-        render(): JSX.Element;
+        render(): React.JSX.Element;
         context: any;
         setState<K extends never>(state: {} | ((prevState: Readonly<{}>, props: Readonly<any>) => {} | Pick<{}, K>) | Pick<{}, K>, callback?: () => void): void;
         forceUpdate(callback?: () => void): void;

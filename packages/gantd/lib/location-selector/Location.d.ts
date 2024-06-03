@@ -16,5 +16,5 @@ export declare const getValue: ({ value }: {
 }) => string;
 export default class LocationWrapper extends Component {
     static getLocationName: (list: any) => void;
-    render(): JSX.Element;
+    render(): React.JSX.Element;
 }

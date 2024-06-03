@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-var _default = {
+var _default = exports.default = {
   targetLang: 'ja-JP',
   jumpTo: '移動',
   page: 'ページ',
@@ -223,4 +223,3 @@ var _default = {
   selectedData: '選択したデータ',
   clear: 'クリア'
 };
-exports.default = _default;

@@ -13,7 +13,7 @@ export interface FlipOverFooterProps {
     onSelectedChange: (nowKey: string, record: Item) => void;
 }
 declare const FlipOverFooter: {
-    (props: FlipOverFooterProps): JSX.Element;
+    (props: FlipOverFooterProps): React.JSX.Element;
     defaultProps: {
         data: any[];
         itemKey: string;

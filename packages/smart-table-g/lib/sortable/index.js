@@ -1,55 +1,33 @@
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
-
 var _typeof = require("@babel/runtime/helpers/typeof");
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-
 require("antd/es/tooltip/style/css");
-
 var _tooltip = _interopRequireDefault(require("antd/es/tooltip"));
-
 require("antd/es/icon/style/css");
-
 var _icon = _interopRequireDefault(require("antd/es/icon"));
-
 require("antd/es/radio/style/css");
-
 var _radio = _interopRequireDefault(require("antd/es/radio"));
-
 require("antd/es/checkbox/style/css");
-
 var _checkbox = _interopRequireDefault(require("antd/es/checkbox"));
-
 require("antd/es/row/style/css");
-
 var _row = _interopRequireDefault(require("antd/es/row"));
-
 require("antd/es/notification/style/css");
-
 var _notification2 = _interopRequireDefault(require("antd/es/notification"));
-
 var _react = _interopRequireWildcard(require("react"));
-
 var _reactSortableHoc = require("react-sortable-hoc");
-
 var _arrayMove = _interopRequireDefault(require("array-move"));
-
 var _dataCell = require("data-cell-g");
-
 var _Receiver = _interopRequireDefault(require("../locale/Receiver"));
-
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
+function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(e) { return e ? t : r; })(e); }
+function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != _typeof(e) && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
 function Sortable(props) {
   var dataSource = props.dataSource,
-      onChange = props.onChange;
+    onChange = props.onChange;
   if (!dataSource || !dataSource.length) return null;
   var fakeDataSource = (0, _react.useMemo)(function () {
     var sliceDataSource = function sliceDataSource(start, end) {
@@ -59,7 +37,6 @@ function Sortable(props) {
         });
       });
     };
-
     var locks = dataSource.map(function (v) {
       v.clickable = false;
       v.fixed = undefined;
@@ -67,33 +44,27 @@ function Sortable(props) {
     });
     var firstIndex = locks.indexOf(false);
     var lastIndex = locks.lastIndexOf(false);
-
     if (!~firstIndex) {
       dataSource[0].clickable = true;
       dataSource[dataSource.length - 1].clickable = true;
       return [[], sliceDataSource(0), []];
     }
-
     if (~firstIndex) {
       dataSource[firstIndex - 1] && (dataSource[firstIndex - 1].clickable = true);
       dataSource[firstIndex].clickable = true;
-
       for (var idx = 0; idx < firstIndex; idx++) {
         var item = dataSource[idx];
         item.fixed = 'left';
       }
     }
-
     if (~lastIndex) {
       dataSource[lastIndex].clickable = true;
       dataSource[lastIndex + 1] && (dataSource[lastIndex + 1].clickable = true);
-
       for (var last = dataSource.length - 1, _idx = last; _idx > lastIndex; _idx--) {
         var _item = dataSource[_idx];
         _item.fixed = 'right';
       }
     }
-
     var prevDataSource = sliceDataSource(0, firstIndex);
     var unlocakDataSource = sliceDataSource(firstIndex, lastIndex + 1);
     var afterDataSource = sliceDataSource(lastIndex + 1);
@@ -139,11 +110,11 @@ function Sortable(props) {
   });
   var SortableItem = (0, _reactSortableHoc.SortableElement)(function (_ref) {
     var _ref$record = _ref.record,
-        title = _ref$record.title,
-        checked = _ref$record.checked,
-        align = _ref$record.align,
-        realIndex = _ref.realIndex,
-        lock = _ref.lock;
+      title = _ref$record.title,
+      checked = _ref$record.checked,
+      align = _ref$record.align,
+      realIndex = _ref.realIndex,
+      lock = _ref.lock;
     return /*#__PURE__*/_react.default.createElement(_row.default, {
       type: "flex",
       align: "middle",
@@ -195,7 +166,7 @@ function Sortable(props) {
           width: 56,
           flexDirection: 'row-reverse'
         }
-      }, !lock && /*#__PURE__*/_react.default.createElement(DragHandler, null), lock ? /*#__PURE__*/_react.default.createElement(_tooltip.default, {
+      }, !lock && /*#__PURE__*/_react.default.createElement(DragHandler, null), lock ? ( /*#__PURE__*/_react.default.createElement(_tooltip.default, {
         style: {
           flex: 0
         },
@@ -207,7 +178,7 @@ function Sortable(props) {
           return handlerUnlock(realIndex);
         },
         className: "disabledIcon"
-      })) : /*#__PURE__*/_react.default.createElement(_tooltip.default, {
+      }))) : ( /*#__PURE__*/_react.default.createElement(_tooltip.default, {
         placement: "top",
         title: locale.setFixedColumn
       }, /*#__PURE__*/_react.default.createElement(_icon.default, {
@@ -216,7 +187,7 @@ function Sortable(props) {
           return handlerLock(realIndex);
         },
         className: "disabledIcon"
-      })));
+      }))));
     }));
   });
   var SortableList = (0, _reactSortableHoc.SortableContainer)(function () {
@@ -237,8 +208,8 @@ function Sortable(props) {
         });
       }));
     }));
-  }); // 选择
-
+  });
+  // 选择
   var selectedRows = (0, _react.useMemo)(function () {
     return dataSource.filter(function (record) {
       return record.checked;
@@ -258,7 +229,7 @@ function Sortable(props) {
   }, [dataSource]);
   var handlerSortEnd = (0, _react.useCallback)(function (_ref2) {
     var oldIndex = _ref2.oldIndex,
-        newIndex = _ref2.newIndex;
+      newIndex = _ref2.newIndex;
     onChange((0, _arrayMove.default)(dataSource, oldIndex, newIndex));
   }, [dataSource]);
   return /*#__PURE__*/_react.default.createElement(_Receiver.default, null, function (locale) {
@@ -301,6 +272,4 @@ function Sortable(props) {
     })));
   });
 }
-
-var _default = Sortable;
-exports.default = _default;
+var _default = exports.default = Sortable;

@@ -21,5 +21,4 @@ var config = {
     desc: '抱歉,服务器出错了'
   }
 };
-var _default = config;
-exports.default = _default;
+var _default = exports.default = config;

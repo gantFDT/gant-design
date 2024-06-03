@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-var _default = {
+var _default = exports.default = {
   yes: 'Yes',
   no: 'No',
   reload: 'Reload',
@@ -61,4 +61,3 @@ var _default = {
   setFixedTopColumn: 'Put on the top',
   setFixedBottomColumn: 'Put on the bottom'
 };
-exports.default = _default;

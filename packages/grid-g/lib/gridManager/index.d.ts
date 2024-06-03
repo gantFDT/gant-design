@@ -66,9 +66,9 @@ export default class GridManage {
     private changeDiff;
     getPureData(): any[];
     batchUpdateDataSource(params: BatchUpdateDataSourceParams, keys?: string | string[], isMerge?: boolean, notMergeKeys?: string | string[]): any;
-    getLocalStorageColumns(columns: (ColDef | ColGroupDef)[], gridKey: any): (ColGroupDef<any> | ColDef<any>)[];
+    getLocalStorageColumns(columns: (ColDef | ColGroupDef)[], gridKey: any): (ColDef<any> | ColGroupDef<any>)[];
     setLocalStorageColumnsState(): void;
     clearLocalStorageColumns(): void;
-    addListener: (type: 'historyChange', func: any) => EventEmitter;
+    addListener: (type: 'historyChange', func: any) => EventEmitter<[never]>;
     removeListener: (type: 'historyChange', func: any) => void;
 }

@@ -1,93 +1,58 @@
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-
 require("antd/es/badge/style/css");
-
 var _badge = _interopRequireDefault(require("antd/es/badge"));
-
 require("antd/es/menu/style/css");
-
 var _menu = _interopRequireDefault(require("antd/es/menu"));
-
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
-
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
-
-var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
-
 var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));
-
 var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
-
+var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
 var _react = _interopRequireDefault(require("react"));
-
 var _lodash = require("lodash");
-
 var _classnames = _interopRequireDefault(require("classnames"));
-
 var _FlipOverFooter = _interopRequireDefault(require("./FlipOverFooter"));
-
 var _dataCell = require("data-cell-g");
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = (0, _getPrototypeOf2.default)(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = (0, _getPrototypeOf2.default)(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return (0, _possibleConstructorReturn2.default)(this, result); }; }
-
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
-
-var Submenu = /*#__PURE__*/function (_React$Component) {
-  (0, _inherits2.default)(Submenu, _React$Component);
-
-  var _super = _createSuper(Submenu);
-
+function _callSuper(t, o, e) { return o = (0, _getPrototypeOf2.default)(o), (0, _possibleConstructorReturn2.default)(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], (0, _getPrototypeOf2.default)(t).constructor) : o.apply(t, e)); }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+var Submenu = exports.default = /*#__PURE__*/function (_React$Component) {
   function Submenu(props) {
     var _this;
-
     (0, _classCallCheck2.default)(this, Submenu);
-    _this = _super.call(this, props);
-
+    _this = _callSuper(this, Submenu, [props]);
     _this.setMenuWidthByStatusChange = function () {
       var mode = _this.state.mode;
       var showMenuMagnet = _this.props.showMenuMagnet;
       if (!_this.warpRef || !showMenuMagnet) return;
-
       var fixedEle = _this.warpRef.querySelector(".".concat(_this.prefixCls, "-wrap")); //定位元素
-
-
       var fixedEleParent = _this.warpRef.querySelector(".".concat(_this.prefixCls, "-menubox"));
-
-      if (fixedEleParent) {//上下文菜单切换方向时menu宽度
+      if (fixedEleParent) {
+        //上下文菜单切换方向时menu宽度
         // fixedEle.style.width = `${fixedEleParent.offsetWidth - (mode == 'inline' ? 1 : 0)}px`;
       }
     };
-
     _this.handleScroll = function () {
       var _this$props = _this.props,
-          fixedTopHeight = _this$props.fixedTopHeight,
-          showFixedBoxShadow = _this$props.showFixedBoxShadow,
-          zIndex = _this$props.zIndex;
+        fixedTopHeight = _this$props.fixedTopHeight,
+        showFixedBoxShadow = _this$props.showFixedBoxShadow,
+        zIndex = _this$props.zIndex;
       var mode = _this.state.mode;
       if (!_this.warpRef) return;
-
       var fixedEle = _this.warpRef.querySelector(".".concat(_this.prefixCls, "-wrap")); //定位元素
-
-
       var fixedEleParent = _this.warpRef.querySelector(".".concat(_this.prefixCls, "-menubox"));
-
       var parentClientTop = fixedEleParent ? fixedEleParent.getBoundingClientRect().top : 0; //定位元素父级距离浏览器的高度
-
       var horEle = _this.warpRef.querySelector(".".concat(_this.prefixCls, "-menuboxhor"));
-
       if (parentClientTop <= fixedTopHeight) {
         fixedEle.classList.add("".concat(_this.prefixCls, "-fixed"));
         fixedEle.style.top = "".concat(fixedTopHeight, "px");
         zIndex && (fixedEle.style.zIndex = zIndex);
         fixedEle.style.width = "".concat(fixedEleParent.offsetWidth - (mode == 'inline' ? 1 : 0), "px");
-
         if (showFixedBoxShadow && horEle) {
           fixedEle.classList.add("".concat(_this.prefixCls, "-boxShow"));
         }
@@ -95,24 +60,19 @@ var Submenu = /*#__PURE__*/function (_React$Component) {
         fixedEle.classList.remove("".concat(_this.prefixCls, "-fixed"));
         fixedEle.classList.remove("".concat(_this.prefixCls, "-boxShow"));
       }
-    }; //点击切换mode
-
-
+    };
+    //点击切换mode
     _this.onSwitchClick = function () {
       var onSwitchChange = _this.props.onSwitchChange;
       var nowMode = _this.state.mode == 'inline' ? 'horizontal' : 'inline';
-
       _this.setState({
         mode: nowMode
       });
-
       onSwitchChange && onSwitchChange(nowMode);
-    }; //点击收缩
-
-
+    };
+    //点击收缩
     _this.toggleCollapsed = function () {
       var onCollapseChange = _this.props.onCollapseChange;
-
       _this.setState(function (state) {
         return {
           collapsed: !state.collapsed
@@ -121,37 +81,34 @@ var Submenu = /*#__PURE__*/function (_React$Component) {
         onCollapseChange && onCollapseChange(_this.state.collapsed);
         window.dispatchEvent(new Event('resize'));
       });
-    }; //点击菜单item
-
-
+    };
+    //点击菜单item
     _this.onClick = function (_ref) {
       var key = _ref.key,
-          item = _ref.item;
+        item = _ref.item;
       var _this$props2 = _this.props,
-          onSelectedChange = _this$props2.onSelectedChange,
-          menuData = _this$props2.menuData;
+        onSelectedChange = _this$props2.onSelectedChange,
+        menuData = _this$props2.menuData;
       var record = menuData.find(function (i) {
         return i.key == key;
       });
       onSelectedChange && onSelectedChange(key, record, item);
-    }; //点击翻页页脚
-
-
+    };
+    //点击翻页页脚
     _this.onFooterSelectedChange = function (nowKey, record) {
       var onSelectedChange = _this.props.onSelectedChange;
       onSelectedChange && onSelectedChange(nowKey, record);
     };
-
     var collapsed = props.collapsed,
-        mode = props.mode;
+      mode = props.mode;
     _this.state = {
       collapsed: collapsed,
       mode: mode
     };
     return _this;
   }
-
-  (0, _createClass2.default)(Submenu, [{
+  (0, _inherits2.default)(Submenu, _React$Component);
+  return (0, _createClass2.default)(Submenu, [{
     key: "componentDidMount",
     value: function componentDidMount() {
       var collapsedWidth = this.props.collapsedWidth;
@@ -169,7 +126,6 @@ var Submenu = /*#__PURE__*/function (_React$Component) {
         mode: this.state.mode,
         collapsed: this.state.collapsed
       };
-
       if (!(0, _lodash.isEqual)(prev, next)) {
         this.setMenuWidthByStatusChange();
       }
@@ -178,17 +134,17 @@ var Submenu = /*#__PURE__*/function (_React$Component) {
     key: "componentWillUnmount",
     value: function componentWillUnmount() {
       window.removeEventListener('scroll', this.handleScroll);
-    } //渲染menu主体
-
+    }
+    //渲染menu主体
   }, {
     key: "renderSubMenu",
     value: function renderSubMenu(prefixCls) {
       var _this$state = this.state,
-          collapsed = _this$state.collapsed,
-          mode = _this$state.mode;
+        collapsed = _this$state.collapsed,
+        mode = _this$state.mode;
       var _this$props3 = this.props,
-          selectedKey = _this$props3.selectedKey,
-          menuData = _this$props3.menuData;
+        selectedKey = _this$props3.selectedKey,
+        menuData = _this$props3.menuData;
       var selectedKeys = selectedKey ? [selectedKey] : menuData.length && [menuData[0].key] || [];
       var inlineCollapsed = mode == 'inline' && collapsed;
       var inlineProperty = mode == 'inline' ? {
@@ -204,29 +160,29 @@ var Submenu = /*#__PURE__*/function (_React$Component) {
           className: inlineCollapsed && "".concat(prefixCls, "-collapsed"),
           disabled: item.disabled,
           key: item.key
-        }, typeof item.icon == 'string' ? /*#__PURE__*/_react.default.createElement(_dataCell.Icon, {
+        }, typeof item.icon == 'string' ? ( /*#__PURE__*/_react.default.createElement(_dataCell.Icon, {
           type: item.icon,
           wrapperStyle: {
             width: 'auto'
           }
-        }) : item.icon, /*#__PURE__*/_react.default.createElement("span", null, item.title), item.count && /*#__PURE__*/_react.default.createElement("span", {
+        })) : item.icon, /*#__PURE__*/_react.default.createElement("span", null, item.title), item.count && ( /*#__PURE__*/_react.default.createElement("span", {
           className: "".concat(prefixCls, "-item-count")
         }, /*#__PURE__*/_react.default.createElement(_badge.default, {
           count: item.count
-        })));
+        }))));
       }));
-    } // 渲染垂直菜单
-
+    }
+    // 渲染垂直菜单
   }, {
     key: "renderInlineMenu",
     value: function renderInlineMenu(prefixCls) {
       var collapsed = this.state.collapsed;
       var _this$props4 = this.props,
-          extra = _this$props4.extra,
-          width = _this$props4.width,
-          collapsedWidth = _this$props4.collapsedWidth,
-          setMenuBoxRef = _this$props4.setMenuBoxRef,
-          style = _this$props4.style;
+        extra = _this$props4.extra,
+        width = _this$props4.width,
+        collapsedWidth = _this$props4.collapsedWidth,
+        setMenuBoxRef = _this$props4.setMenuBoxRef,
+        style = _this$props4.style;
       return /*#__PURE__*/_react.default.createElement("div", {
         ref: setMenuBoxRef,
         className: "".concat(prefixCls, "-menubox ").concat(prefixCls, "-menuboxinline"),
@@ -252,14 +208,14 @@ var Submenu = /*#__PURE__*/function (_React$Component) {
         type: "switcher",
         onClick: this.onSwitchClick
       })), !collapsed && extra, this.renderSubMenu(prefixCls)));
-    } // 渲染水平菜单
-
+    }
+    // 渲染水平菜单
   }, {
     key: "renderHorMenu",
     value: function renderHorMenu(prefixCls) {
       var _this$props5 = this.props,
-          setMenuBoxRef = _this$props5.setMenuBoxRef,
-          style = _this$props5.style;
+        setMenuBoxRef = _this$props5.setMenuBoxRef,
+        style = _this$props5.style;
       return /*#__PURE__*/_react.default.createElement("div", {
         className: "".concat(prefixCls, "-menubox ").concat(prefixCls, "-menuboxhor"),
         style: Object.assign({
@@ -288,20 +244,18 @@ var Submenu = /*#__PURE__*/function (_React$Component) {
     key: "render",
     value: function render() {
       var _this2 = this;
-
       var getPrefixCls = function getPrefixCls(cls, customizePrefixCls) {
         return customizePrefixCls || 'gant' + cls;
       };
-
       var _this$props6 = this.props,
-          customizePrefixCls = _this$props6.prefixCls,
-          classname = _this$props6.classname,
-          children = _this$props6.children,
-          subMinHeight = _this$props6.subMinHeight,
-          selectedKey = _this$props6.selectedKey,
-          menuData = _this$props6.menuData,
-          showFlipOverFooter = _this$props6.showFlipOverFooter,
-          bordered = _this$props6.bordered;
+        customizePrefixCls = _this$props6.prefixCls,
+        classname = _this$props6.classname,
+        children = _this$props6.children,
+        subMinHeight = _this$props6.subMinHeight,
+        selectedKey = _this$props6.selectedKey,
+        menuData = _this$props6.menuData,
+        showFlipOverFooter = _this$props6.showFlipOverFooter,
+        bordered = _this$props6.bordered;
       this.prefixCls = getPrefixCls('-submenu', customizePrefixCls);
       var isInline = this.state.mode == 'inline';
       var wrapStyle = {
@@ -318,18 +272,15 @@ var Submenu = /*#__PURE__*/function (_React$Component) {
         }, wrapStyle)
       }, isInline ? this.renderInlineMenu(this.prefixCls) : this.renderHorMenu(this.prefixCls), /*#__PURE__*/_react.default.createElement("div", {
         className: "".concat(this.prefixCls, "-pagecard")
-      }, /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, children), menuData.length > 0 && showFlipOverFooter && /*#__PURE__*/_react.default.createElement(_FlipOverFooter.default, {
+      }, /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, children), menuData.length > 0 && showFlipOverFooter && ( /*#__PURE__*/_react.default.createElement(_FlipOverFooter.default, {
         prefixCls: this.prefixCls,
         data: menuData,
         nowKey: selectedKey,
         onSelectedChange: this.onFooterSelectedChange
-      })));
+      }))));
     }
   }]);
-  return Submenu;
 }(_react.default.Component);
-
-exports.default = Submenu;
 Submenu.defaultProps = {
   collapsed: false,
   mode: 'inline',

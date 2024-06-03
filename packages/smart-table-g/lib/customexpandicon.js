@@ -1,26 +1,19 @@
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-
 require("antd/es/icon/style/css");
-
 var _icon = _interopRequireDefault(require("antd/es/icon"));
-
 var _react = _interopRequireDefault(require("react"));
-
 function CustomExpandIcon(props, isTree) {
   if (!isTree) {
     return null;
   }
-
   var type;
   var prefix;
-
   if (!props.expandable) {
     type = 'file';
     prefix = null;
@@ -31,7 +24,6 @@ function CustomExpandIcon(props, isTree) {
     type = 'folder';
     prefix = 'collapsed';
   }
-
   return /*#__PURE__*/_react.default.createElement("span", {
     onClick: function onClick(e) {
       return props.onExpand(props.record, e);
@@ -47,6 +39,4 @@ function CustomExpandIcon(props, isTree) {
     theme: "filled"
   }));
 }
-
-var _default = CustomExpandIcon;
-exports.default = _default;
+var _default = exports.default = CustomExpandIcon;

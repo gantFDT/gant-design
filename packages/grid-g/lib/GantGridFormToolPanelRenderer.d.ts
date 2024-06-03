@@ -1,5 +1,5 @@
-/// <reference types="react" />
 import { RowClickedEvent } from 'ag-grid-community';
+import React from 'react';
 import GridManager from './gridManager';
 interface GantGridRowFormRendererProps {
     columns?: any[];
@@ -15,5 +15,5 @@ interface GantGridRowFormRendererProps {
     context: any;
     clickRowIndex: number;
 }
-export default function GantGridRowFormRenderer(props: GantGridRowFormRendererProps): JSX.Element;
+export default function GantGridRowFormRenderer(props: GantGridRowFormRendererProps): React.JSX.Element;
 export {};

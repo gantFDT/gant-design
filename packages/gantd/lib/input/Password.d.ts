@@ -8,6 +8,6 @@ declare class Password extends React.Component<GantPasswordProps> {
     static defaultProps: {
         style: {};
     };
-    render(): JSX.Element;
+    render(): React.JSX.Element;
 }
 export default Password;

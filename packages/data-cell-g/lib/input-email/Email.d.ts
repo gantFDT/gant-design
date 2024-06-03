@@ -16,5 +16,5 @@ export interface GantEmailProps extends WithBasicProps {
     placeholder?: string;
 }
 export default class EmailWrapper extends Component<GantEmailProps> {
-    render(): JSX.Element;
+    render(): React.JSX.Element;
 }

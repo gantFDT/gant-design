@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-var _default = {
+var _default = exports.default = {
   recentSelect: 'Sélection récente',
   clearRecent: 'Effacer les sélections récentes',
   noRecent: 'Aucune sélection récente',
@@ -12,4 +12,3 @@ var _default = {
   loading: 'Chargement en cours...',
   noData: 'Aucune donnée trouvée'
 };
-exports.default = _default;

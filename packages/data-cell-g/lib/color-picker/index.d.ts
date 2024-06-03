@@ -6,6 +6,6 @@ export interface GantColorPickerProps {
 }
 declare class ColorPicker extends React.Component<GantColorPickerProps> {
     static PurePicker: typeof GantColorPicker;
-    render(): JSX.Element;
+    render(): React.JSX.Element;
 }
 export default ColorPicker;

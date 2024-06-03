@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
 import { WithBasicProps } from '../compose/withbasic';
 interface value {
     key?: string;
@@ -11,6 +11,6 @@ export interface GantCellPhoneProps extends WithBasicProps {
     allowClear?: boolean;
 }
 export default class CellPhoneWrapper extends Component<GantCellPhoneProps> {
-    render(): JSX.Element;
+    render(): React.JSX.Element;
 }
 export {};

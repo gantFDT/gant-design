@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-var _default = {
+var _default = exports.default = {
   recentSelect: 'Recent Select',
   clearRecent: 'Clear Recent',
   noRecent: 'No Recent',
@@ -12,4 +12,3 @@ var _default = {
   loading: 'Loading...',
   noData: 'No Data Was Queried'
 };
-exports.default = _default;

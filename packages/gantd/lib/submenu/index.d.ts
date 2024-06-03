@@ -56,9 +56,9 @@ export default class Submenu extends React.Component<any, Partial<SubmenuIF>> {
     toggleCollapsed: () => void;
     onClick: ({ key, item }: ClickParam) => void;
     onFooterSelectedChange: (nowKey: any, record: any) => void;
-    renderSubMenu(prefixCls: any): JSX.Element;
-    renderInlineMenu(prefixCls: any): JSX.Element;
-    renderHorMenu(prefixCls: any): JSX.Element;
-    render(): JSX.Element;
+    renderSubMenu(prefixCls: any): React.JSX.Element;
+    renderInlineMenu(prefixCls: any): React.JSX.Element;
+    renderHorMenu(prefixCls: any): React.JSX.Element;
+    render(): React.JSX.Element;
 }
 export {};

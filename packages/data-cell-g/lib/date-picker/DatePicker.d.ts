@@ -17,6 +17,6 @@ declare class DatePicker extends React.Component<GantDatePickerProps> {
     static GantdDatePicker: typeof GantdDatePicker;
     static WraperDatePick: any;
     onChange: (mom: any, timeString: any) => void;
-    render(): JSX.Element;
+    render(): React.JSX.Element;
 }
 export default DatePicker;

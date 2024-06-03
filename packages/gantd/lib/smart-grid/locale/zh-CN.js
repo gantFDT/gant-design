@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-var _default = {
+var _default = exports.default = {
   yes: '是',
   no: '否',
   reload: '刷新',
@@ -61,4 +61,3 @@ var _default = {
   setFixedTopColumn: '置顶',
   setFixedBottomColumn: '置底'
 };
-exports.default = _default;
