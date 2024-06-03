@@ -205,6 +205,7 @@ export default WrapperComponent =>
           size={size}
           onBlur={onBlur}
           node={node}
+          defaultOpen
         />
       </div>
     );
