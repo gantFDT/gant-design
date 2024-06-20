@@ -34,7 +34,8 @@ var gantGetcontextMenuItems = exports.gantGetcontextMenuItems = function gantGet
     showCut = _params$context.showCut,
     suppressExcelExport = _params$context.suppressExcelExport,
     node = params.node,
-    api = params.api;
+    api = params.api,
+    columnApi = params.columnApi;
   var exportJson = !(0, _lodash.isEmpty)(defaultJsonParams);
   var rowIndex = (0, _lodash.get)(node, 'rowIndex', 0);
   var selectedRowNodes = api.getSelectedNodes();
@@ -105,7 +106,19 @@ var gantGetcontextMenuItems = exports.gantGetcontextMenuItems = function gantGet
       name: locale.export,
       icon: '<span class="ag-icon ag-icon-save" unselectable="on" role="presentation"></span>',
       action: function action() {
-        api.exportDataAsExcel(exportParams);
+        var columnsState = columnApi.getColumnState();
+        var columnKeys = exportParams.columnKeys.sort(function (itemA, itemB) {
+          var indexA = (0, _lodash.findIndex)(columnsState, {
+            colId: itemA
+          });
+          var indexB = (0, _lodash.findIndex)(columnsState, {
+            colId: itemB
+          });
+          return indexA - indexB;
+        });
+        api.exportDataAsExcel(Object.assign(Object.assign({}, exportParams), {
+          columnKeys: columnKeys
+        }));
       }
     };
     defultMenu = defultMenu.length > 0 ? [].concat((0, _toConsumableArray2.default)(defultMenu), [exportItem]) : [exportItem];
@@ -114,7 +127,18 @@ var gantGetcontextMenuItems = exports.gantGetcontextMenuItems = function gantGet
         name: locale.exportSelected,
         icon: '<span class="ag-icon ag-icon-save" unselectable="on" role="presentation"></span>',
         action: function action() {
+          var columnsState = columnApi.getColumnState();
+          var columnKeys = exportParams.columnKeys.sort(function (itemA, itemB) {
+            var indexA = (0, _lodash.findIndex)(columnsState, {
+              colId: itemA
+            });
+            var indexB = (0, _lodash.findIndex)(columnsState, {
+              colId: itemB
+            });
+            return indexA - indexB;
+          });
           api.exportDataAsExcel(Object.assign(Object.assign({}, exportParams), {
+            columnKeys: columnKeys,
             onlySelected: true
           }));
         }
