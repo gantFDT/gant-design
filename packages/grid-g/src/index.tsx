@@ -791,6 +791,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
             onRowsCut,
             onRowsPaste,
             locale,
+            exportParams,
             getContextMenuItems,
             defaultJsonParams,
             hideMenuItemExport,

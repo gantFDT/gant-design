@@ -18,6 +18,7 @@ interface ContextMenuItemsConfig {
   showCutChild?: boolean;
   showMenuItemClearFilter?: boolean; //是否显示右键中的【清空过滤】按钮
   onMenuItemClearFilter?: () => void; // 右键中【清空过滤】按钮的点击回调
+  exportParams: any;
 }
 export const gantGetcontextMenuItems = function(
   params: GetContextMenuItemsParams,
@@ -37,6 +38,7 @@ export const gantGetcontextMenuItems = function(
     showCutChild,
     showMenuItemClearFilter,
     onMenuItemClearFilter,
+    exportParams,
   } = config;
   const {
     context: {
@@ -132,7 +134,7 @@ export const gantGetcontextMenuItems = function(
       name: locale.export,
       icon: '<span class="ag-icon ag-icon-save" unselectable="on" role="presentation"></span>',
       action: () => {
-        api.exportDataAsExcel();
+        api.exportDataAsExcel(exportParams);
       },
     };
     defultMenu = defultMenu.length > 0 ? [...defultMenu, exportItem] : [exportItem];
@@ -142,6 +144,7 @@ export const gantGetcontextMenuItems = function(
         icon: '<span class="ag-icon ag-icon-save" unselectable="on" role="presentation"></span>',
         action: () => {
           api.exportDataAsExcel({
+            ...exportParams,
             onlySelected: true,
           });
         },
@@ -255,7 +258,9 @@ export const gantGetcontextMenuItems = function(
           disabled: hasPaste,
           action: params => {
             const [rowNode] = selectedRowNodes;
-            const canPaste = onRowsPaste ? onRowsPaste(gridManager.cutRows, rowNode, 'bottom') : true;
+            const canPaste = onRowsPaste
+              ? onRowsPaste(gridManager.cutRows, rowNode, 'bottom')
+              : true;
             canPaste && gridManager.paste(rowNode, false);
           },
         },
