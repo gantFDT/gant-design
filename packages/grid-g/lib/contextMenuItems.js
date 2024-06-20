@@ -23,7 +23,8 @@ var gantGetcontextMenuItems = exports.gantGetcontextMenuItems = function gantGet
     suppressRightClickSelected = config.suppressRightClickSelected,
     showCutChild = config.showCutChild,
     showMenuItemClearFilter = config.showMenuItemClearFilter,
-    onMenuItemClearFilter = config.onMenuItemClearFilter;
+    onMenuItemClearFilter = config.onMenuItemClearFilter,
+    exportParams = config.exportParams;
   var _params$context = params.context,
     globalEditable = _params$context.globalEditable,
     treeData = _params$context.treeData,
@@ -104,7 +105,7 @@ var gantGetcontextMenuItems = exports.gantGetcontextMenuItems = function gantGet
       name: locale.export,
       icon: '<span class="ag-icon ag-icon-save" unselectable="on" role="presentation"></span>',
       action: function action() {
-        api.exportDataAsExcel();
+        api.exportDataAsExcel(exportParams);
       }
     };
     defultMenu = defultMenu.length > 0 ? [].concat((0, _toConsumableArray2.default)(defultMenu), [exportItem]) : [exportItem];
@@ -113,9 +114,9 @@ var gantGetcontextMenuItems = exports.gantGetcontextMenuItems = function gantGet
         name: locale.exportSelected,
         icon: '<span class="ag-icon ag-icon-save" unselectable="on" role="presentation"></span>',
         action: function action() {
-          api.exportDataAsExcel({
+          api.exportDataAsExcel(Object.assign(Object.assign({}, exportParams), {
             onlySelected: true
-          });
+          }));
         }
       });
     }

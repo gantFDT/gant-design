@@ -746,6 +746,7 @@ var Grid = function Grid(gridProps) {
           onRowsCut: onRowsCut,
           onRowsPaste: onRowsPaste,
           locale: locale,
+          exportParams: exportParams,
           getContextMenuItems: getContextMenuItems,
           defaultJsonParams: defaultJsonParams,
           hideMenuItemExport: hideMenuItemExport,

@@ -16,6 +16,7 @@ interface ContextMenuItemsConfig {
     showCutChild?: boolean;
     showMenuItemClearFilter?: boolean;
     onMenuItemClearFilter?: () => void;
+    exportParams: any;
 }
 export declare const gantGetcontextMenuItems: (params: GetContextMenuItemsParams, config: ContextMenuItemsConfig) => any[];
 export {};
