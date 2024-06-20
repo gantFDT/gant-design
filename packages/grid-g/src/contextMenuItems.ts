@@ -1,6 +1,6 @@
 import { GetContextMenuItemsParams, RowNode } from 'ag-grid-community';
 import { DefaultJsonParams } from './interface';
-import { get, max, min, isEmpty, remove } from 'lodash';
+import { get, max, min, isEmpty, remove, findIndex } from 'lodash';
 import FileSaver from 'file-saver';
 interface ContextMenuItemsConfig {
   downShift?: boolean;
@@ -52,6 +52,7 @@ export const gantGetcontextMenuItems = function(
     },
     node,
     api,
+    columnApi,
   } = params;
   const exportJson = !isEmpty(defaultJsonParams);
   const rowIndex = get(node, 'rowIndex', 0);
@@ -134,7 +135,14 @@ export const gantGetcontextMenuItems = function(
       name: locale.export,
       icon: '<span class="ag-icon ag-icon-save" unselectable="on" role="presentation"></span>',
       action: () => {
-        api.exportDataAsExcel(exportParams);
+        const columnsState = columnApi.getColumnState();
+        const columnKeys = exportParams.columnKeys.sort((itemA, itemB) => {
+          const indexA = findIndex(columnsState, { colId: itemA });
+          const indexB = findIndex(columnsState, { colId: itemB });
+
+          return indexA - indexB;
+        }); 
+        api.exportDataAsExcel({ ...exportParams, columnKeys });
       },
     };
     defultMenu = defultMenu.length > 0 ? [...defultMenu, exportItem] : [exportItem];
@@ -143,8 +151,15 @@ export const gantGetcontextMenuItems = function(
         name: locale.exportSelected,
         icon: '<span class="ag-icon ag-icon-save" unselectable="on" role="presentation"></span>',
         action: () => {
+          const columnsState = columnApi.getColumnState();
+          const columnKeys = exportParams.columnKeys.sort((itemA, itemB) => {
+            const indexA = findIndex(columnsState, { colId: itemA });
+            const indexB = findIndex(columnsState, { colId: itemB });
+            return indexA - indexB;
+          });
           api.exportDataAsExcel({
             ...exportParams,
+            columnKeys,
             onlySelected: true,
           });
         },
