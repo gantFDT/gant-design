@@ -153,9 +153,6 @@
 .gant-grid .ag-ltr .ag-cell-wrapper.ag-row-group-indent-20.gant-row-group-indent-20 {
   padding-left: 0px;
 }
-.gant-grid .ag-header-cell.gant-padding-h-3 {
-  padding: 0px 3px;
-}
 .gant-grid .ag-selection-checkbox {
   z-index: 2;
 }
@@ -279,4 +276,7 @@
 }
 .grid-control-break-line .ag-cell-value {
   white-space: pre !important;
+}
+.ag-popup .ag-menu-option-icon {
+  display: none;
 }

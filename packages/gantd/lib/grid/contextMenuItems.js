@@ -24,7 +24,8 @@ var gantGetcontextMenuItems = exports.gantGetcontextMenuItems = function gantGet
     showCutChild = config.showCutChild,
     showMenuItemClearFilter = config.showMenuItemClearFilter,
     onMenuItemClearFilter = config.onMenuItemClearFilter,
-    exportParams = config.exportParams;
+    exportParams = config.exportParams,
+    onContextExportCallback = config.onContextExportCallback;
   var _params$context = params.context,
     globalEditable = _params$context.globalEditable,
     treeData = _params$context.treeData,
@@ -72,8 +73,6 @@ var gantGetcontextMenuItems = exports.gantGetcontextMenuItems = function gantGet
     gridSelectedKeys.push(getRowNodeId((0, _lodash.get)(item, 'data', {})));
     return item.data;
   }, []);
-  var disabledCut = selectedRowNodes.length <= 0 || treeData && (0, _lodash.isEmpty)(createConfig);
-  var hasPaste = selectedRowNodes.length > 1 || treeData && (0, _lodash.isEmpty)(createConfig) || (0, _lodash.isEmpty)(gridManager.cutRows);
   var items = getContextMenuItems ? getContextMenuItems(Object.assign({
     selectedRows: gridSelectedRows,
     selectedKeys: gridSelectedKeys,
@@ -86,23 +85,73 @@ var gantGetcontextMenuItems = exports.gantGetcontextMenuItems = function gantGet
       });
     });
   }
-  var defultMenu = [];
-  if (treeData && !hideMenuItemExpand) {
-    defultMenu = ['expandAll', 'contractAll'];
-  }
-  // 清空过滤 按钮
-  if (showMenuItemClearFilter) {
-    defultMenu.unshift({
-      name: locale.clearFilter,
-      action: function action() {
-        api.setFilterModel({});
-        onMenuItemClearFilter === null || onMenuItemClearFilter === void 0 ? void 0 : onMenuItemClearFilter();
+  var defultMenu = Array.isArray(items) ? items : [];
+  //剪切
+  if (globalEditable) {
+    var showCutBtns = typeof showCut === 'function' ? showCut(params) : showCut;
+    if (showCutBtns) {
+      var disabledCut = selectedRowNodes.length <= 0 || treeData && (0, _lodash.isEmpty)(createConfig);
+      var hasPaste = selectedRowNodes.length > 1 || treeData && (0, _lodash.isEmpty)(createConfig) || (0, _lodash.isEmpty)(gridManager.cutRows);
+      var cutMenu = [];
+      cutMenu.push.apply(cutMenu, [{
+        name: locale.cutRows,
+        disabled: disabledCut,
+        action: function action(params) {
+          try {
+            var canPut = onRowsCut ? onRowsCut(selectedRowNodes) : true;
+            return canPut && gridManager.cut(selectedRowNodes);
+          } catch (error) {}
+        }
+      }, {
+        name: locale.cancelCut,
+        disabled: (0, _lodash.isEmpty)(gridManager.cutRows),
+        action: function action(params) {
+          try {
+            gridManager.cancelCut();
+          } catch (error) {}
+        }
+      }, {
+        name: locale.pasteTop,
+        disabled: hasPaste,
+        action: function action(params) {
+          var _selectedRowNodes = selectedRowNodes,
+            _selectedRowNodes2 = (0, _slicedToArray2.default)(_selectedRowNodes, 1),
+            rowNode = _selectedRowNodes2[0];
+          var canPaste = onRowsPaste ? onRowsPaste(gridManager.cutRows, rowNode, 'top') : true;
+          canPaste && gridManager.paste(rowNode);
+        }
+      }, {
+        name: locale.pasteBottom,
+        disabled: hasPaste,
+        action: function action(params) {
+          var _selectedRowNodes3 = selectedRowNodes,
+            _selectedRowNodes4 = (0, _slicedToArray2.default)(_selectedRowNodes3, 1),
+            rowNode = _selectedRowNodes4[0];
+          var canPaste = onRowsPaste ? onRowsPaste(gridManager.cutRows, rowNode, 'bottom') : true;
+          canPaste && gridManager.paste(rowNode, false);
+        }
+      }]);
+      if (showCutChild) cutMenu.push({
+        name: locale.pasteChild,
+        disabled: hasPaste,
+        action: function action(params) {
+          var _selectedRowNodes5 = selectedRowNodes,
+            _selectedRowNodes6 = (0, _slicedToArray2.default)(_selectedRowNodes5, 1),
+            rowNode = _selectedRowNodes6[0];
+          var canPaste = onRowsPaste ? onRowsPaste(gridManager.cutRows, rowNode, 'inner') : true;
+          canPaste && gridManager.paste(rowNode, false, true);
+        }
+      });
+      if (defultMenu.length) {
+        cutMenu.unshift('separator');
       }
-    });
+      defultMenu.push.apply(defultMenu, cutMenu);
+    }
   }
-  defultMenu = defultMenu.length > 0 ? items.length > 0 ? [].concat((0, _toConsumableArray2.default)(defultMenu), (0, _toConsumableArray2.default)(items)) : defultMenu : (0, _toConsumableArray2.default)(items);
+  //  导出相关
+  var exportMenus = [];
   if (!hideMenuItemExport && !suppressExcelExport) {
-    var exportItem = {
+    var exportMenuItem = {
       name: locale.export,
       icon: '<span class="ag-icon ag-icon-save" unselectable="on" role="presentation"></span>',
       action: function action() {
@@ -116,14 +165,16 @@ var gantGetcontextMenuItems = exports.gantGetcontextMenuItems = function gantGet
           });
           return indexA - indexB;
         });
-        api.exportDataAsExcel(Object.assign(Object.assign({}, exportParams), {
+        var params = Object.assign(Object.assign({}, exportParams), {
           columnKeys: columnKeys
-        }));
+        });
+        onContextExportCallback === null || onContextExportCallback === void 0 ? void 0 : onContextExportCallback(params);
+        api.exportDataAsExcel(params);
       }
     };
-    defultMenu = defultMenu.length > 0 ? [].concat((0, _toConsumableArray2.default)(defultMenu), [exportItem]) : [exportItem];
+    exportMenus.push(exportMenuItem);
     if (suppressRightClickSelected) {
-      defultMenu.push({
+      var exporSelectedMenuItem = {
         name: locale.exportSelected,
         icon: '<span class="ag-icon ag-icon-save" unselectable="on" role="presentation"></span>',
         action: function action() {
@@ -137,126 +188,57 @@ var gantGetcontextMenuItems = exports.gantGetcontextMenuItems = function gantGet
             });
             return indexA - indexB;
           });
-          api.exportDataAsExcel(Object.assign(Object.assign({}, exportParams), {
+          var params = Object.assign(Object.assign({}, exportParams), {
             columnKeys: columnKeys,
             onlySelected: true
-          }));
+          });
+          onContextExportCallback === null || onContextExportCallback === void 0 ? void 0 : onContextExportCallback(params);
+          api.exportDataAsExcel(params);
         }
-      });
+      };
+      exportMenus.push(exporSelectedMenuItem);
     }
   }
-  defultMenu = exportJson ? [].concat((0, _toConsumableArray2.default)(defultMenu), [{
-    name: locale.exportJson,
-    action: function action() {
-      var _defaultJsonParams$ti = defaultJsonParams.title,
-        title = _defaultJsonParams$ti === void 0 ? 'gantdGrid' : _defaultJsonParams$ti,
-        onlySelected = defaultJsonParams.onlySelected;
-      var data = [];
-      if (onlySelected) {
-        data = api.getSelectedRows();
-      } else {
-        api.forEachNode(function (node) {
-          if (node.data) data.push(node.data);
+  if (exportJson) {
+    exportMenus.push({
+      name: locale.exportJson,
+      action: function action() {
+        var _defaultJsonParams$ti = defaultJsonParams.title,
+          title = _defaultJsonParams$ti === void 0 ? 'gantdGrid' : _defaultJsonParams$ti,
+          onlySelected = defaultJsonParams.onlySelected;
+        var data = [];
+        if (onlySelected) {
+          data = api.getSelectedRows();
+        } else {
+          api.forEachNode(function (node) {
+            if (node.data) data.push(node.data);
+          });
+        }
+        var jsonBlob = new Blob([JSON.stringify(data)], {
+          type: 'text/plain;charset=utf-8'
         });
-      }
-      var jsonBlob = new Blob([JSON.stringify(data)], {
-        type: 'text/plain;charset=utf-8'
-      });
-      _fileSaver.default.saveAs(jsonBlob, "".concat(title, ".json"));
-    }
-  }]) : defultMenu;
-  if (!globalEditable) return defultMenu;
-  defultMenu = exportJson ? [].concat((0, _toConsumableArray2.default)(defultMenu), [{
-    name: locale.importJson,
-    action: function action() {
-      var coverData = defaultJsonParams.coverData;
-      var input = document.createElement('input');
-      input.type = 'file';
-      input.accept = 'application/json';
-      input.onchange = function (event) {
-        var _event$target$files = (0, _slicedToArray2.default)(event.target.files, 1),
-          file = _event$target$files[0];
-        var reader = new FileReader();
-        reader.readAsText(file);
-        reader.onload = function (event) {
-          try {
-            var update = [],
-              add = [];
-            var json = JSON.parse(event.target.result);
-            if (coverData) {
-              api.setRowData(json);
-              gridManager.reset();
-              return;
-            }
-            json.map(function (itemData) {
-              var rowNode = api.getRowNode(getRowNodeId(itemData));
-              if (rowNode && rowNode.data) {
-                update.push(Object.assign(Object.assign({}, itemData), rowNode.data));
-              } else add.push(itemData);
-            });
-            api.applyTransactionAsync({
-              update: update
-            }, function () {
-              gridManager.create(add);
-            });
-          } catch (error) {}
-        };
-      };
-      input.click();
-    }
-  }]) : defultMenu;
-  var showCutBtns = typeof showCut === 'function' ? showCut(params) : showCut;
-  var editMenu = (0, _toConsumableArray2.default)(defultMenu);
-  if (showCutBtns) {
-    editMenu.push.apply(editMenu, [{
-      name: locale.cutRows,
-      disabled: disabledCut,
-      action: function action(params) {
-        try {
-          var canPut = onRowsCut ? onRowsCut(selectedRowNodes) : true;
-          return canPut && gridManager.cut(selectedRowNodes);
-        } catch (error) {}
-      }
-    }, {
-      name: locale.cancelCut,
-      disabled: (0, _lodash.isEmpty)(gridManager.cutRows),
-      action: function action(params) {
-        try {
-          gridManager.cancelCut();
-        } catch (error) {}
-      }
-    }, {
-      name: locale.pasteTop,
-      disabled: hasPaste,
-      action: function action(params) {
-        var _selectedRowNodes = selectedRowNodes,
-          _selectedRowNodes2 = (0, _slicedToArray2.default)(_selectedRowNodes, 1),
-          rowNode = _selectedRowNodes2[0];
-        var canPaste = onRowsPaste ? onRowsPaste(gridManager.cutRows, rowNode, 'top') : true;
-        canPaste && gridManager.paste(rowNode);
-      }
-    }, {
-      name: locale.pasteBottom,
-      disabled: hasPaste,
-      action: function action(params) {
-        var _selectedRowNodes3 = selectedRowNodes,
-          _selectedRowNodes4 = (0, _slicedToArray2.default)(_selectedRowNodes3, 1),
-          rowNode = _selectedRowNodes4[0];
-        var canPaste = onRowsPaste ? onRowsPaste(gridManager.cutRows, rowNode, 'bottom') : true;
-        canPaste && gridManager.paste(rowNode, false);
-      }
-    }]);
-    if (showCutChild) editMenu.push({
-      name: locale.pasteChild,
-      disabled: hasPaste,
-      action: function action(params) {
-        var _selectedRowNodes5 = selectedRowNodes,
-          _selectedRowNodes6 = (0, _slicedToArray2.default)(_selectedRowNodes5, 1),
-          rowNode = _selectedRowNodes6[0];
-        var canPaste = onRowsPaste ? onRowsPaste(gridManager.cutRows, rowNode, 'inner') : true;
-        canPaste && gridManager.paste(rowNode, false, true);
+        _fileSaver.default.saveAs(jsonBlob, "".concat(title, ".json"));
       }
     });
   }
-  return editMenu;
+  if (exportMenus.length && defultMenu.length) exportMenus.unshift('separator');
+  defultMenu.push.apply(defultMenu, exportMenus);
+  // export ----end
+  // 清空过滤 按钮
+  if (showMenuItemClearFilter) {
+    if (defultMenu.length) defultMenu.push('separator');
+    defultMenu.push({
+      name: locale.clearFilter,
+      action: function action() {
+        api.setFilterModel({});
+        onMenuItemClearFilter === null || onMenuItemClearFilter === void 0 ? void 0 : onMenuItemClearFilter();
+      }
+    });
+  }
+  //树形展开/收起
+  if (treeData && !hideMenuItemExpand) {
+    if (defultMenu.length) defultMenu.push('separator');
+    defultMenu.push.apply(defultMenu, ['expandAll', 'contractAll']);
+  }
+  return defultMenu;
 };

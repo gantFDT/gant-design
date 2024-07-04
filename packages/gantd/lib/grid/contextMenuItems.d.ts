@@ -17,6 +17,7 @@ interface ContextMenuItemsConfig {
     showMenuItemClearFilter?: boolean;
     onMenuItemClearFilter?: () => void;
     exportParams: any;
+    onContextExportCallback?: (params: any) => void;
 }
 export declare const gantGetcontextMenuItems: (params: GetContextMenuItemsParams, config: ContextMenuItemsConfig) => any[];
 export {};

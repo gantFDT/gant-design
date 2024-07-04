@@ -171,6 +171,7 @@ export interface Props<T extends any> {
     hideMenuItemExport?: boolean;
     exportExcludeColumns?: string[];
     exportHiddenFields?: boolean;
+    onContextExportCallback?: (params: any) => void;
     hideMenuItemExpand?: boolean;
     hiddenMenuItemNames?: string[];
     showMenuItemClearFilter?: boolean;

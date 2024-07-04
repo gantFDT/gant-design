@@ -211,6 +211,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     suppressExcelExport,
     removeRowSelectable,
     exportExcludeColumns,
+    onContextExportCallback,
     ...orignProps
   } = props;
 
@@ -801,6 +802,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
             showCutChild,
             showMenuItemClearFilter,
             onMenuItemClearFilter,
+            onContextExportCallback,
           });
         };
         return (

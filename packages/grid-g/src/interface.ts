@@ -193,7 +193,7 @@ export type GantPaginationProps = Omit<
       tooltipTotal?: () => number | number;
       align?: 'left' | 'right';
       Component?: any;
-      countLimitStyle?:React.CSSProperties
+      countLimitStyle?: React.CSSProperties;
     }
   >,
   'onShowSizeChange'
@@ -270,6 +270,7 @@ export interface Props<T extends any> {
   exportExcludeColumns?: string[];
   //是否导出隐藏字段
   exportHiddenFields?: boolean;
+  onContextExportCallback?: (params: any) => void;
   //隐藏右键菜单的收缩展开按钮
   hideMenuItemExpand?: boolean;
   //隐藏的右键菜单名称
