@@ -171,6 +171,7 @@ export interface Columns<T extends {} = {}> extends ColDef {
   /** The custom header group component to be used for rendering the component header. If none specified the default ag-Grid is used**/
   headerGroupComponentParams?: any;
   tooltipRender?: (params: ITooltipParams) => string | React.ReactNode;
+  headerStyle?: React.CSSProperties | ((params: any) => React.CSSProperties);
 }
 
 export type GantPaginationProps = Omit<

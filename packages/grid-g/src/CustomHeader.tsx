@@ -13,6 +13,7 @@ export default props => {
     ColumnLabelComponent = null,
     columnApi,
     api,
+    headerStyle,
   } = props;
   const sortInfo = props.api.sortController.getSortModel();
   const [ascSort, setAscSort] = useState(false);
@@ -131,7 +132,7 @@ export default props => {
 
   return (
     <>
-      <div className="customHeaderLabel" style={{ marginRight: 5 }}>
+      <div className="customHeaderLabel" style={{ marginRight: 5, ...headerStyle }}>
         {ColumnLabelComponent ? (
           <ColumnLabelComponent title={displayName} {...props} />
         ) : (

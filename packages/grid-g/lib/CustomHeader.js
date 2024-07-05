@@ -24,7 +24,8 @@ var _default = exports.default = function _default(props) {
     _props$ColumnLabelCom = props.ColumnLabelComponent,
     ColumnLabelComponent = _props$ColumnLabelCom === void 0 ? null : _props$ColumnLabelCom,
     columnApi = props.columnApi,
-    api = props.api;
+    api = props.api,
+    headerStyle = props.headerStyle;
   var sortInfo = props.api.sortController.getSortModel();
   var _useState = (0, _react.useState)(false),
     _useState2 = (0, _slicedToArray2.default)(_useState, 2),
@@ -143,9 +144,9 @@ var _default = exports.default = function _default(props) {
   }, [isFilterActive]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement("div", {
     className: "customHeaderLabel",
-    style: {
+    style: Object.assign({
       marginRight: 5
-    }
+    }, headerStyle)
   }, ColumnLabelComponent ? ( /*#__PURE__*/_react.default.createElement(ColumnLabelComponent, Object.assign({
     title: displayName
   }, props))) : displayName), filter, sort, menu);

@@ -270,6 +270,8 @@ export const mapColumns = <T>(
           cellClassRules,
           cellClass,
           cellRendererParams,
+          headerStyle,
+          headerComponentParams,
           ...item
         },
         index,
@@ -278,6 +280,10 @@ export const mapColumns = <T>(
         const colDef = {
           headerName,
           field,
+          headerComponentParams: {
+            ...headerComponentParams,
+            headerStyle,
+          },
           cellRendererParams: {
             render,
             ...cellRendererParams,

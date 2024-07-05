@@ -291,11 +291,16 @@ var mapColumns = exports.mapColumns = function mapColumns(columns, getRowNodeId,
         cellClassRules = _a.cellClassRules,
         cellClass = _a.cellClass,
         cellRendererParams = _a.cellRendererParams,
-        item = __rest(_a, ["title", "fieldName", "children", "render", "editConfig", "fixed", "headerClass", "cellClassRules", "cellClass", "cellRendererParams"]);
+        headerStyle = _a.headerStyle,
+        headerComponentParams = _a.headerComponentParams,
+        item = __rest(_a, ["title", "fieldName", "children", "render", "editConfig", "fixed", "headerClass", "cellClassRules", "cellClass", "cellRendererParams", "headerStyle", "headerComponentParams"]);
       var ColEditable = typeof editConfig !== 'undefined';
       var colDef = Object.assign(Object.assign({
         headerName: headerName,
         field: field,
+        headerComponentParams: Object.assign(Object.assign({}, headerComponentParams), {
+          headerStyle: headerStyle
+        }),
         cellRendererParams: Object.assign({
           render: render
         }, cellRendererParams),
