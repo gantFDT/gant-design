@@ -82,7 +82,7 @@ var _default = exports.default = {
   expandAll: '展开所有',
   collapseAll: '收起所有',
   toolPanel: '工具面板',
-  export: '导出',
+  export: '导出全部行',
   csvExport: 'csv',
   excelExport: '.xlsx',
   excelXmlExport: '.xml',
@@ -223,7 +223,7 @@ var _default = exports.default = {
   cancelCut: '取消剪切',
   exportJson: '导出json',
   importJson: '导入json',
-  exportSelected: '导出选中',
+  exportSelected: '导出选中行',
   selectedData: '已选中数据',
   clear: '清除',
   outOfLimit: '当前总数超过'
