@@ -41,6 +41,7 @@ export const gantGetcontextMenuItems = function(
     onMenuItemClearFilter,
     exportParams,
     onContextExportCallback,
+    
   } = config;
   const {
     context: {

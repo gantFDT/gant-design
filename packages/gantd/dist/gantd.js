@@ -1,6 +1,6 @@
 /*!
  * 
- *             gantd v1.3.7
+ *             gantd v1.3.8
  *             Copyright 2019-present, Gant SoftWare, Inc.
  *             All rights reserved.
  *         
