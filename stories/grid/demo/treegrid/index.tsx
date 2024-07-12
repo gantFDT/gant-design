@@ -80,6 +80,14 @@ const dataSource = [
     en: 'body',
   },
   {
+    id: '1-1-1',
+    path: ['1', '1-1', '1-1-1'],
+    partName: '机体1-1-1',
+    partNum: 'P00000111',
+    zh: '机体',
+    en: 'body',
+  },
+  {
     id: '1-2',
     path: ['1', '1-2'],
     partName: '机体22',
