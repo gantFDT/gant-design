@@ -161,22 +161,27 @@ const Demo2 = () => {
     [],
   );
   const [value, setValue] = useState(1);
+  const [loading, setLoading] = useState(false);
 
   return (
-    <Selector
-      selectorId="tasks"
-      edit={EditStatus.EDIT}
-      dataSource={dataSource}
-      value={value}
-      valuePropType="number"
-      loading
-      onChange={v => {
-        console.log(v);
-        setValue(v);
-      }}
-      multiple
-      onSave={(id, value, cb) => cb()}
-    />
+    <>
+      <Button onClick={() => setLoading(!loading)}>setLoading</Button>
+      {`${loading}`}
+      <Selector
+        selectorId="tasks"
+        edit={EditStatus.EDIT}
+        dataSource={dataSource}
+        value={value}
+        valuePropType="number"
+        loading={loading}
+        onChange={v => {
+          console.log(v);
+          setValue(v);
+        }}
+        multiple
+        onSave={(id, value, cb) => cb()}
+      />
+    </>
   );
 };
 /*! Split !*/

@@ -164,7 +164,7 @@ const withSelector = compose(
   defaultProps(defaultprop),
   withState('label', 'setLabel', null), // 读模式下的显示文本
   withState('cacheLabel', 'setCacheLabel', ({ optionLabel }) => optionLabel), // 当前选项的文本, 在点确认的时候才更新
-  withState('loading', 'setLoading', ({ loading }) => loading),
+  withState('_loading', 'setLoading', ({ loading }) => loading),
   withState('filter', 'setFilter', ''),
   withState('selectRef', 'setSelectRef', null), // select组件
   withState('dataList', 'setDataList', ({ dataSource }) => dataSource),
@@ -172,6 +172,10 @@ const withSelector = compose(
   // 监听搜索
   withPropsOnChange(['filter'], ({ filter, selectorId }) => ({
     taskId: `${selectorId}:${escape(filter).replace(/\%u/g, '')}`,
+  })),
+  // // 监听loading
+  withPropsOnChange(['loading', '_loading'], ({ _loading, loading }) => ({
+    loading: _loading || loading,
   })),
   withHandlers({
     //将最近选择的项的key转化为真实的key
