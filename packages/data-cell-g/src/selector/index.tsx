@@ -1,5 +1,5 @@
 import React, { PureComponent, Component } from 'react';
-import { Select, Icon, Tooltip } from 'antd';
+import { Select, Icon, Tooltip, Spin } from 'antd';
 import AntSelect, { SelectProps, SelectValue as AntSelectValue } from 'antd/lib/select';
 import {
   debounce,
@@ -164,7 +164,7 @@ const withSelector = compose(
   defaultProps(defaultprop),
   withState('label', 'setLabel', null), // 读模式下的显示文本
   withState('cacheLabel', 'setCacheLabel', ({ optionLabel }) => optionLabel), // 当前选项的文本, 在点确认的时候才更新
-  withState('loading', 'setLoading', false),
+  withState('loading', 'setLoading', ({ loading }) => loading),
   withState('filter', 'setFilter', ''),
   withState('selectRef', 'setSelectRef', null), // select组件
   withState('dataList', 'setDataList', ({ dataSource }) => dataSource),
@@ -756,6 +756,7 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
         onDropdownVisibleChange={onopen}
         labelInValue
         filterOption={false}
+        dropdownRender={menu => <Spin spinning={loading}>{menu}</Spin>}
         dropdownClassName={classnames(dropdownClassName, 'gant-selector-dropdown')}
       >
         {children || renderList}

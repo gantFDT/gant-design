@@ -92,9 +92,10 @@ const Demo1 = () => {
       <Selector
         dataSource={dataSource2}
         selectorId="language"
-        edit={EditStatus.EDIT}
+        // edit={EditStatus.EDIT}
         style={{ margin: '5px 0' }}
         value={value2}
+        loading
         // defaultValue={'ssss'}
         multiple
         onChange={setValue2}
@@ -168,6 +169,7 @@ const Demo2 = () => {
       dataSource={dataSource}
       value={value}
       valuePropType="number"
+      loading
       onChange={v => {
         console.log(v);
         setValue(v);
