@@ -20,6 +20,20 @@ var isEmptyObj = function isEmptyObj(value) {
   if ((0, _typeof2.default)(value) === 'object') return (0, _lodash.isEmpty)(value);
   return !value;
 };
+function getCellSpace(column) {
+  try {
+    var _window$getComputedSt = window.getComputedStyle((0, _lodash.get)(column, 'gridOptionsWrapper.eGridDiv').querySelector('.ag-cell')),
+      paddingLeft = _window$getComputedSt.paddingLeft,
+      paddingRight = _window$getComputedSt.paddingRight,
+      borderLeftWidth = _window$getComputedSt.borderLeftWidth,
+      borderRightWidth = _window$getComputedSt.borderRightWidth;
+    var space = parseFloat(paddingLeft) + parseFloat(paddingRight) + parseFloat(borderLeftWidth) + parseFloat(borderRightWidth);
+    return space;
+  } catch (error) {
+    console.error(error);
+    return cellPadding;
+  }
+}
 var _default = exports.default = /*#__PURE__*/(0, _react.forwardRef)(function (props, ref) {
   var value = props.value,
     valueFormatted = props.valueFormatted,
@@ -66,8 +80,25 @@ var _default = exports.default = /*#__PURE__*/(0, _react.forwardRef)(function (p
   });
   (0, _react.useEffect)(function () {
     var width = (0, _lodash.get)(containerRef.current, 'clientWidth');
+    var cellPadding = getCellSpace(column);
+    var extraWidth = 0;
+    var isTreeRender = (0, _lodash.get)(column, 'colDef.cellRenderer') === 'gantGroupCellRenderer';
+    var isRowDrag = function () {
+      var isRowDrag = (0, _lodash.get)(column, 'colDef.rowDrag');
+      if (typeof isRowDrag === 'function') {
+        return isRowDrag(props);
+      }
+      return isRowDrag;
+    }();
+    if (isTreeRender) {
+      var level = (0, _lodash.get)(node, 'level');
+      extraWidth = 36 + level * 18;
+    }
+    if (isRowDrag) {
+      extraWidth += 28;
+    }
     if (width) {
-      if (width + cellPadding > actualColumnWidth) {
+      if (width + cellPadding + extraWidth > actualColumnWidth) {
         setTipShow(true);
       }
     }

@@ -13,3 +13,5 @@ link
 yarn.lock
 *.bak
 docs
+dist
+lib
