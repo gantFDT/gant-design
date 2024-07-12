@@ -17,6 +17,30 @@ const isEmptyObj = value => {
   return !value;
 };
 
+function getCellSpace(column) {
+  try {
+    const {
+      paddingLeft,
+      paddingRight,
+      borderLeftWidth,
+      borderRightWidth,
+    } = window.getComputedStyle(
+      get(column, 'gridOptionsWrapper.eGridDiv').querySelector('.ag-cell'),
+    );
+
+    const space =
+      parseFloat(paddingLeft) +
+      parseFloat(paddingRight) +
+      parseFloat(borderLeftWidth) +
+      parseFloat(borderRightWidth);
+
+    return space;
+  } catch (error) {
+    console.error(error);
+    return cellPadding;
+  }
+}
+
 export default forwardRef((props: any, ref) => {
   const {
     value,
@@ -62,8 +86,30 @@ export default forwardRef((props: any, ref) => {
 
   useEffect(() => {
     const width = get(containerRef.current, 'clientWidth');
+    const cellPadding = getCellSpace(column);
+    let extraWidth = 0;
+
+    const isTreeRender = get(column, 'colDef.cellRenderer') === 'gantGroupCellRenderer';
+    const isRowDrag = (() => {
+      let isRowDrag = get(column, 'colDef.rowDrag');
+      if (typeof isRowDrag === 'function') {
+        return isRowDrag(props);
+      }
+
+      return isRowDrag;
+    })();
+
+    if (isTreeRender) {
+      const level = get(node, 'level');
+      extraWidth = 36 + level * 18;
+    }
+
+    if (isRowDrag) {
+      extraWidth += 28;
+    }
+
     if (width) {
-      if (width + cellPadding > actualColumnWidth) {
+      if (width + cellPadding + extraWidth > actualColumnWidth) {
         setTipShow(true);
       }
     }
