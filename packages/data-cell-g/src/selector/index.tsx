@@ -727,7 +727,7 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
       multiple,
       readOnly,
       renderList,
-      loading,
+      loading = false,
       style,
       wrapperRef,
       addonAfter,
