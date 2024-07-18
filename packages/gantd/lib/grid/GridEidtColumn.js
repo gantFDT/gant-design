@@ -220,6 +220,7 @@ var _default = exports.default = function _default(WrapperComponent) {
             value: nodeValue
           })) : nodeValue;
           if ((0, _utils.isEqualObj)(value, newValue)) return nodeValue;
+          gridManager.loading = true;
           setTimeout(function () {
             handleCellEditChange(newValue);
           }, 1);
