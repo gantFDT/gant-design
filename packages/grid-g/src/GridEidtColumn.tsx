@@ -149,6 +149,7 @@ export default WrapperComponent =>
                 })
               : nodeValue;
             if (isEqualObj(value, newValue)) return nodeValue;
+            gridManager.loading = true;
             setTimeout(() => {
               handleCellEditChange(newValue);
             }, 1);
@@ -206,7 +207,6 @@ export default WrapperComponent =>
           size={size}
           onBlur={onBlur}
           node={node}
-          
         />
       </div>
     );
