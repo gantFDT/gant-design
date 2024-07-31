@@ -98,7 +98,7 @@ var _default = exports.default = function _default(WrapperComponent) {
               gridManager.loading = true;
               res = editData;
               if (!onCellEditingChange) {
-                _context.next = 17;
+                _context.next = 18;
                 break;
               }
               _context.next = 5;
@@ -132,7 +132,6 @@ var _default = exports.default = function _default(WrapperComponent) {
               return gridManager.modify(res);
             case 16:
               typeof onCellChanged == 'function' && onCellChanged(editData, field, chageVal, value);
-            case 17:
               gridManager.loading = false;
             case 18:
             case "end":
@@ -219,7 +218,10 @@ var _default = exports.default = function _default(WrapperComponent) {
             data: node.data,
             value: nodeValue
           })) : nodeValue;
-          if ((0, _utils.isEqualObj)(value, newValue)) return nodeValue;
+          if ((0, _utils.isEqualObj)(value, newValue)) {
+            gridManager.loading = false;
+            return nodeValue;
+          }
           gridManager.loading = true;
           setTimeout(function () {
             handleCellEditChange(newValue);

@@ -81,8 +81,8 @@ export default WrapperComponent =>
           if (isEmpty(res)) return console.warn('celleditingChange must be callbak result');
           await gridManager.modify(res);
           typeof onCellChanged == 'function' && onCellChanged(editData, field, chageVal, value);
+          gridManager.loading = false;
         }
-        gridManager.loading = false;
       },
       [onCellEditingChange, onCellChanged, props.context],
     );
@@ -148,7 +148,10 @@ export default WrapperComponent =>
                   value: nodeValue,
                 })
               : nodeValue;
-            if (isEqualObj(value, newValue)) return nodeValue;
+            if (isEqualObj(value, newValue)) {
+              gridManager.loading = false;
+              return nodeValue;
+            }
             gridManager.loading = true;
             setTimeout(() => {
               handleCellEditChange(newValue);
