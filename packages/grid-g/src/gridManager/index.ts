@@ -119,6 +119,10 @@ export default class GridManage {
     this.agGridApi.applyTransaction(transaction);
     callback && callback();
   }
+  private updateHistoryStack = (pushData: any) => {
+    this.historyStack.push(pushData);
+    this.redoStack = [];
+  } 
   appendChild(keys, add) {
     const { isCompute, treeDataChildrenName, getRowNodeId } = this.agGridConfig;
     const addData = isCompute ? flattenTreeData(add, getRowNodeId, treeDataChildrenName) : add;
@@ -334,11 +338,10 @@ export default class GridManage {
         resolve('');
       });
     });
-
-    this.historyStack.push({
+    this.updateHistoryStack({
       type: DataActions.modify,
       records: hisRecords,
-    });
+    })
     if (this.agGridConfig?.multiLineVerify) {
       const { diff } = this;
       const { modify, add } = diff;
@@ -367,10 +370,10 @@ export default class GridManage {
         },
         () => {
           this.validate(addRecords);
-          this.historyStack.push({
+          this.updateHistoryStack({
             type: DataActions.add,
             records: addRecords,
-          });
+          })
         },
       );
       return;
@@ -390,10 +393,10 @@ export default class GridManage {
       },
       () => {
         this.validate(addRecords);
-        this.historyStack.push({
+        this.updateHistoryStack({
           type: DataActions.add,
           records: addRecords,
-        });
+        })
       },
     );
   }
@@ -484,11 +487,11 @@ export default class GridManage {
         records.unshift(data);
       }
     });
-    this.historyStack.push({
+    this.updateHistoryStack({
       type: DataActions.remove,
       recordsIndex: recordsIndex,
       records: records,
-    });
+    })
     this.batchUpdateGrid({
       remove: records,
     });
@@ -511,11 +514,11 @@ export default class GridManage {
     );
     if (newRecords.length == 0 && remove.length == 0) return;
     this.batchUpdateGrid({ update: newRecords, remove });
-    this.historyStack.push({
+    this.updateHistoryStack({
       type: DataActions.removeTag,
       records: hisRecords,
       recordsIndex: removeIndexs,
-    });
+    })
     this.afterTagRemove &&
       this.afterTagRemove({ removeRecords: remove, removeKeys: targetKeys, removeNodes });
   }
@@ -533,10 +536,10 @@ export default class GridManage {
       return get(itemData, '_rowData', omit(itemData, '_rowType'));
     });
     this.batchUpdateGrid({ update: newData });
-    this.historyStack.push({
+    this.updateHistoryStack({
       type: DataActions.modify,
       records: removeNodes.map(itemNode => ({ ...itemNode.data, _rowType: DataActions.removeTag })),
-    });
+    })
   }
   private toggleUndoRedo(hisStack: OperationAction, undo: boolean = true) {
     const { getRowNodeId } = this.agGridConfig;
