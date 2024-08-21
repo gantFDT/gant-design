@@ -124,8 +124,11 @@ export default class GridManage {
     this.redoStack = [];
   } 
   appendChild(keys, add) {
-    const { isCompute, treeDataChildrenName, getRowNodeId } = this.agGridConfig;
+    const { isCompute, treeDataChildrenName, getRowNodeId, dataSource } = this.agGridConfig;
     const addData = isCompute ? flattenTreeData(add, getRowNodeId, treeDataChildrenName) : add;
+    if (!isEmpty(addData)) {
+      set(this.agGridConfig, 'dataSource', [...dataSource, ...addData]);
+    }
     this.batchUpdateGrid({ add: addData });
   }
   async validate(data?: any[]) {
