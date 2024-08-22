@@ -34,6 +34,7 @@ export enum DataActions {
   remove = 'remove',
   modify = 'modify',
   removeTag = 'remove_tag',
+  drag = 'drag',
 }
 
 export enum Fixed {
