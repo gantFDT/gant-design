@@ -101,9 +101,9 @@ export default WrapperComponent =>
     );
 
     const handleCellEditChange = useCallback(
-      async newValue => {
+      async (newValue: any, _oldData?: any) => {
         let editData = cloneDeep(get(node, `data`));
-        const oldData = cloneDeep(data);
+        const oldData = _oldData ? _oldData : cloneDeep(data);
         set(editData, `${field}`, newValue);
         gridManager.loading = true;
         if (onCellEditChange) {
@@ -154,9 +154,10 @@ export default WrapperComponent =>
             }
             gridManager.loading = true;
             setTimeout(() => {
-              handleCellEditChange(newValue);
+              handleCellEditChange(newValue, cloneDeep(node.data));
             }, 1);
-            return nodeValue;
+            console.log('newValue', newValue);
+            return newValue;
           },
           // isCancelAfterEnd:()=>false
         };

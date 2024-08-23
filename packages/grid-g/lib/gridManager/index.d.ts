@@ -1,7 +1,7 @@
 /// <reference types="node" />
-import { GridApi, RowNode, ColDef, ColGroupDef, ColumnApi } from 'ag-grid-community';
+import { RowDataTransaction, GridApi, RowNode, ColDef, ColGroupDef, ColumnApi } from 'ag-grid-community';
 import { Rules } from 'async-validator';
-import { AgGridConfig, BatchUpdateDataSourceParams } from './interface';
+import { AgGridConfig, OperationAction, BatchUpdateDataSourceParams } from './interface';
 import { RowKey } from '../interface';
 import { EventEmitter } from 'events';
 export default class GridManage {
@@ -40,6 +40,7 @@ export default class GridManage {
     private watchHistory;
     private getRowItemData;
     private batchUpdateGrid;
+    addHistoryRecords: (pushData: OperationAction) => void;
     appendChild(keys: any, add: any): void;
     validate(data?: any[]): Promise<any>;
     errorSign(validateErros: any, newData: any[]): void;
@@ -58,6 +59,7 @@ export default class GridManage {
     remove(targetid: any, deleteChildren?: boolean): any[];
     tagRemove(targetKeys: string | number | string[] | number[], deleteChildren?: boolean): void;
     redoTagRemove(targetKeys: string | number | string[] | number[], deleteChildren?: boolean): void;
+    applyTransactionAsync: (transaction: RowDataTransaction) => Promise<unknown>;
     private toggleUndoRedo;
     undo(): void;
     redo(): void;

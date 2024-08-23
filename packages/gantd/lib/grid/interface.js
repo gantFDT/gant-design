@@ -46,6 +46,7 @@ var DataActions;
   DataActions["remove"] = "remove";
   DataActions["modify"] = "modify";
   DataActions["removeTag"] = "remove_tag";
+  DataActions["drag"] = "drag";
 })(DataActions || (exports.DataActions = DataActions = {}));
 var Fixed;
 (function (Fixed) {

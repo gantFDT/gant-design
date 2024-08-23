@@ -11,12 +11,18 @@ export interface GantDatePickerProps extends PickerProps, WithBasicProps {
     defaultPickerValue?: moment.Moment | string | null;
     placeholder?: string;
     renderExtraFooter?: (mode: DatePickerMode) => React.ReactNode;
+    defaultOpen?: boolean;
 }
-declare class DatePicker extends React.Component<GantDatePickerProps> {
+export interface PickerState {
+    open: boolean;
+}
+declare class DatePicker extends React.Component<GantDatePickerProps, PickerState> {
     static RangePicker: typeof RangePicker;
     static GantdDatePicker: typeof GantdDatePicker;
     static WraperDatePick: any;
+    constructor(props: any);
     onChange: (mom: any, timeString: any) => void;
+    handleOpenChange: (open: boolean) => void;
     render(): React.JSX.Element;
 }
 export default DatePicker;

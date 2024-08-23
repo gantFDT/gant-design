@@ -81,6 +81,31 @@ var GridManage = /*#__PURE__*/function () {
         data: Object.assign({}, oldData)
       });
     };
+    this.addHistoryRecords = function (pushData) {
+      _this.historyStack.push(pushData);
+      _this.redoStack = [];
+    };
+    this.applyTransactionAsync = function (transaction) {
+      return __awaiter(_this, void 0, void 0, /*#__PURE__*/_regenerator.default.mark(function _callee() {
+        var _this2 = this;
+        return _regenerator.default.wrap(function _callee$(_context) {
+          while (1) switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return new Promise(function (resolve) {
+                _this2.agGridApi.applyTransactionAsync(transaction, function (res) {
+                  resolve(res);
+                });
+              });
+            case 2:
+              return _context.abrupt("return", _context.sent);
+            case 3:
+            case "end":
+              return _context.stop();
+          }
+        }, _callee);
+      }));
+    };
     this.addListener = function (type, func) {
       return _this.gridEvent.addListener(type, func);
     };
@@ -127,64 +152,64 @@ var GridManage = /*#__PURE__*/function () {
   }, {
     key: "outAsyncFunStack",
     value: function outAsyncFunStack() {
-      return __awaiter(this, void 0, void 0, /*#__PURE__*/_regenerator.default.mark(function _callee() {
-        var asyncFun;
-        return _regenerator.default.wrap(function _callee$(_context) {
-          while (1) switch (_context.prev = _context.next) {
-            case 0:
-              if (!(this.loading || this.dataAsyncStack.length <= 0)) {
-                _context.next = 2;
-                break;
-              }
-              return _context.abrupt("return");
-            case 2:
-              if (!(!this.loading && this.dataAsyncStack.length > 0)) {
-                _context.next = 9;
-                break;
-              }
-              asyncFun = this.dataAsyncStack.shift();
-              if (!(typeof asyncFun === 'function')) {
-                _context.next = 7;
-                break;
-              }
-              _context.next = 7;
-              return asyncFun();
-            case 7:
-              _context.next = 2;
-              break;
-            case 9:
-            case "end":
-              return _context.stop();
-          }
-        }, _callee, this);
-      }));
-    }
-  }, {
-    key: "onDataAsyncEnd",
-    value: function onDataAsyncEnd(func) {
       return __awaiter(this, void 0, void 0, /*#__PURE__*/_regenerator.default.mark(function _callee2() {
+        var asyncFun;
         return _regenerator.default.wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
-              if (!(typeof func !== 'function')) {
+              if (!(this.loading || this.dataAsyncStack.length <= 0)) {
                 _context2.next = 2;
                 break;
               }
               return _context2.abrupt("return");
             case 2:
-              if (!(this.loading === false)) {
-                _context2.next = 4;
+              if (!(!this.loading && this.dataAsyncStack.length > 0)) {
+                _context2.next = 9;
                 break;
               }
-              return _context2.abrupt("return", func());
-            case 4:
-              this.dataAsyncStack.push(func);
-              return _context2.abrupt("return", null);
-            case 6:
+              asyncFun = this.dataAsyncStack.shift();
+              if (!(typeof asyncFun === 'function')) {
+                _context2.next = 7;
+                break;
+              }
+              _context2.next = 7;
+              return asyncFun();
+            case 7:
+              _context2.next = 2;
+              break;
+            case 9:
             case "end":
               return _context2.stop();
           }
         }, _callee2, this);
+      }));
+    }
+  }, {
+    key: "onDataAsyncEnd",
+    value: function onDataAsyncEnd(func) {
+      return __awaiter(this, void 0, void 0, /*#__PURE__*/_regenerator.default.mark(function _callee3() {
+        return _regenerator.default.wrap(function _callee3$(_context3) {
+          while (1) switch (_context3.prev = _context3.next) {
+            case 0:
+              if (!(typeof func !== 'function')) {
+                _context3.next = 2;
+                break;
+              }
+              return _context3.abrupt("return");
+            case 2:
+              if (!(this.loading === false)) {
+                _context3.next = 4;
+                break;
+              }
+              return _context3.abrupt("return", func());
+            case 4:
+              this.dataAsyncStack.push(func);
+              return _context3.abrupt("return", null);
+            case 6:
+            case "end":
+              return _context3.stop();
+          }
+        }, _callee3, this);
       }));
     }
   }, {
@@ -211,8 +236,12 @@ var GridManage = /*#__PURE__*/function () {
       var _this$agGridConfig = this.agGridConfig,
         isCompute = _this$agGridConfig.isCompute,
         treeDataChildrenName = _this$agGridConfig.treeDataChildrenName,
-        getRowNodeId = _this$agGridConfig.getRowNodeId;
+        getRowNodeId = _this$agGridConfig.getRowNodeId,
+        dataSource = _this$agGridConfig.dataSource;
       var addData = isCompute ? (0, _utils2.flattenTreeData)(add, getRowNodeId, treeDataChildrenName) : add;
+      if (!(0, _lodash.isEmpty)(addData)) {
+        (0, _lodash.set)(this.agGridConfig, 'dataSource', [].concat((0, _toConsumableArray2.default)(dataSource), (0, _toConsumableArray2.default)(addData)));
+      }
       this.batchUpdateGrid({
         add: addData
       });
@@ -220,11 +249,11 @@ var GridManage = /*#__PURE__*/function () {
   }, {
     key: "validate",
     value: function validate(data) {
-      return __awaiter(this, void 0, void 0, /*#__PURE__*/_regenerator.default.mark(function _callee3() {
-        var _this2 = this;
+      return __awaiter(this, void 0, void 0, /*#__PURE__*/_regenerator.default.mark(function _callee4() {
+        var _this3 = this;
         var getRowNodeId, _this$diff2, add, modify, initsource, source, fields, validateFields, descriptor, schema, errors, validateErros, nodeIds, nodeFields;
-        return _regenerator.default.wrap(function _callee3$(_context3) {
-          while (1) switch (_context3.prev = _context3.next) {
+        return _regenerator.default.wrap(function _callee4$(_context4) {
+          while (1) switch (_context4.prev = _context4.next) {
             case 0:
               getRowNodeId = this.agGridConfig.getRowNodeId;
               _this$diff2 = this.diff, add = _this$diff2.add, modify = _this$diff2.modify;
@@ -252,18 +281,18 @@ var GridManage = /*#__PURE__*/function () {
                 }
               };
               schema = new _asyncValidator.default(descriptor);
-              _context3.prev = 9;
-              _context3.next = 12;
+              _context4.prev = 9;
+              _context4.next = 12;
               return schema.validate({
                 source: source
               });
             case 12:
               this.errorSign({}, initsource);
-              return _context3.abrupt("return", null);
+              return _context4.abrupt("return", null);
             case 16:
-              _context3.prev = 16;
-              _context3.t0 = _context3["catch"](9);
-              errors = _context3.t0.errors;
+              _context4.prev = 16;
+              _context4.t0 = _context4["catch"](9);
+              errors = _context4.t0.errors;
               validateErros = {};
               nodeIds = [];
               nodeFields = [];
@@ -275,10 +304,10 @@ var GridManage = /*#__PURE__*/function () {
                   field = _itemError$field$spli2[2];
                 field = field.replace(/\-/g, '.');
                 var nodeId = getRowNodeId((0, _lodash.get)(source, "[".concat(index, "]"), {}));
-                var rowNode = _this2.agGridApi.getRowNode(nodeId);
+                var rowNode = _this3.agGridApi.getRowNode(nodeId);
                 var message = itemError.message;
                 if (rowNode) {
-                  _this2.getNodeExtendsParent(rowNode);
+                  _this3.getNodeExtendsParent(rowNode);
                   var rowIndex = rowNode.rowIndex;
                   if (Reflect.has(validateErros, rowIndex)) {
                     validateErros[rowIndex].push({
@@ -296,29 +325,29 @@ var GridManage = /*#__PURE__*/function () {
                 }
               });
               if (!(0, _lodash.isEmpty)(validateErros)) {
-                _context3.next = 25;
+                _context4.next = 25;
                 break;
               }
-              return _context3.abrupt("return");
+              return _context4.abrupt("return");
             case 25:
               this.errorSign(validateErros, initsource);
-              return _context3.abrupt("return", validateErros);
+              return _context4.abrupt("return", validateErros);
             case 27:
             case "end":
-              return _context3.stop();
+              return _context4.stop();
           }
-        }, _callee3, this, [[9, 16]]);
+        }, _callee4, this, [[9, 16]]);
       }));
     }
   }, {
     key: "errorSign",
     value: function errorSign(validateErros, newData) {
-      var _this3 = this;
+      var _this4 = this;
       var update = [];
       var indexArr = [];
       update = newData.map(function (itemData) {
-        var nodeId = _this3.agGridConfig.getRowNodeId(itemData);
-        var rowNode = _this3.agGridApi.getRowNode(nodeId);
+        var nodeId = _this4.agGridConfig.getRowNodeId(itemData);
+        var rowNode = _this4.agGridApi.getRowNode(nodeId);
         var rowIndex = (0, _lodash.get)(rowNode, 'rowIndex', -1);
         var errorsArr = validateErros[rowIndex];
         var mergeData = Object.assign(Object.assign({}, (0, _lodash.get)(rowNode, 'data', {})), itemData);
@@ -379,7 +408,7 @@ var GridManage = /*#__PURE__*/function () {
   }, {
     key: "paste",
     value: function paste(node) {
-      var _this4 = this;
+      var _this5 = this;
       var up = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
       var isChild = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
       var _a;
@@ -425,7 +454,7 @@ var GridManage = /*#__PURE__*/function () {
         this.agGridApi.applyTransactionAsync({
           remove: removeData
         }, function (params) {
-          var rowData = _this4.getRowData();
+          var rowData = _this5.getRowData();
           var newDataSource = (0, _utils.replaceRowData)({
             rowData: rowData,
             targetData: node.data,
@@ -433,9 +462,9 @@ var GridManage = /*#__PURE__*/function () {
             getRowNodeId: getRowNodeId,
             up: up
           });
-          _this4.agGridApi.setRowData(newDataSource);
-          _this4.cutRows = [];
-          _this4.agGridConfig.onRowsPasteEnd && _this4.agGridConfig.onRowsPasteEnd(newDataSource);
+          _this5.agGridApi.setRowData(newDataSource);
+          _this5.cutRows = [];
+          _this5.agGridConfig.onRowsPasteEnd && _this5.agGridConfig.onRowsPasteEnd(newDataSource);
         });
       } catch (error) {
         console.error(error);
@@ -477,75 +506,75 @@ var GridManage = /*#__PURE__*/function () {
     value: function modify(records) {
       var oldRecords = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
       var _a;
-      return __awaiter(this, void 0, void 0, /*#__PURE__*/_regenerator.default.mark(function _callee4() {
-        var _this5 = this;
+      return __awaiter(this, void 0, void 0, /*#__PURE__*/_regenerator.default.mark(function _callee5() {
+        var _this6 = this;
         var _getModifyData, hisRecords, newRecords, updateRowData, diff, modify, add, data;
-        return _regenerator.default.wrap(function _callee4$(_context4) {
-          while (1) switch (_context4.prev = _context4.next) {
+        return _regenerator.default.wrap(function _callee5$(_context5) {
+          while (1) switch (_context5.prev = _context5.next) {
             case 0:
               if (!((0, _lodash.isEmpty)(records) && (0, _typeof2.default)(records) !== 'object')) {
-                _context4.next = 2;
+                _context5.next = 2;
                 break;
               }
-              return _context4.abrupt("return");
+              return _context5.abrupt("return");
             case 2:
               records = Array.isArray(records) ? records : [records];
               if (!(records.length <= 0)) {
-                _context4.next = 5;
+                _context5.next = 5;
                 break;
               }
-              return _context4.abrupt("return");
+              return _context5.abrupt("return");
             case 5:
               _getModifyData = (0, _utils.getModifyData)(records, this.getRowItemData, oldRecords, this.agGridConfig.getRowNodeId), hisRecords = _getModifyData.hisRecords, newRecords = _getModifyData.newRecords;
               if (!(newRecords.length <= 0)) {
-                _context4.next = 8;
+                _context5.next = 8;
                 break;
               }
-              return _context4.abrupt("return");
+              return _context5.abrupt("return");
             case 8:
               updateRowData = [];
               newRecords.map(function (data) {
-                var nodeId = _this5.agGridConfig.getRowNodeId(data);
-                var node = _this5.agGridApi.getRowNode(nodeId);
+                var nodeId = _this6.agGridConfig.getRowNodeId(data);
+                var node = _this6.agGridApi.getRowNode(nodeId);
                 if (node && node.data && data) return updateRowData.push(data);
               });
-              _context4.next = 12;
+              _context5.next = 12;
               return new Promise(function (resolve) {
-                _this5.batchUpdateGrid({
+                _this6.batchUpdateGrid({
                   update: updateRowData
                 }, function () {
                   resolve('');
                 });
               });
             case 12:
-              this.historyStack.push({
+              this.addHistoryRecords({
                 type: _interface.DataActions.modify,
                 records: hisRecords
               });
               if (!((_a = this.agGridConfig) === null || _a === void 0 ? void 0 : _a.multiLineVerify)) {
-                _context4.next = 19;
+                _context5.next = 19;
                 break;
               }
               diff = this.diff;
               modify = diff.modify, add = diff.add;
               data = [].concat((0, _toConsumableArray2.default)(modify), (0, _toConsumableArray2.default)(add));
               this.validate(data);
-              return _context4.abrupt("return");
+              return _context5.abrupt("return");
             case 19:
-              _context4.next = 21;
+              _context5.next = 21;
               return this.validate(updateRowData);
             case 21:
             case "end":
-              return _context4.stop();
+              return _context5.stop();
           }
-        }, _callee4, this);
+        }, _callee5, this);
       }));
     }
     // 创建;
   }, {
     key: "create",
     value: function create(records, targetId) {
-      var _this6 = this;
+      var _this7 = this;
       var isSub = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
       var getRowNodeId = this.agGridConfig.getRowNodeId;
       var addRecords = Array.isArray(records) ? records : [records];
@@ -563,8 +592,8 @@ var GridManage = /*#__PURE__*/function () {
           add: addRecords,
           addIndex: isFirst ? 0 : undefined
         }, function () {
-          _this6.validate(addRecords);
-          _this6.historyStack.push({
+          _this7.validate(addRecords);
+          _this7.addHistoryRecords({
             type: _interface.DataActions.add,
             records: addRecords
           });
@@ -579,8 +608,8 @@ var GridManage = /*#__PURE__*/function () {
         add: addRecords,
         addIndex: isSub ? targetIndex + 1 : targetIndex
       }, function () {
-        _this6.validate(addRecords);
-        _this6.historyStack.push({
+        _this7.validate(addRecords);
+        _this7.addHistoryRecords({
           type: _interface.DataActions.add,
           records: addRecords
         });
@@ -690,7 +719,7 @@ var GridManage = /*#__PURE__*/function () {
           records.unshift(data);
         }
       });
-      this.historyStack.push({
+      this.addHistoryRecords({
         type: _interface.DataActions.remove,
         recordsIndex: recordsIndex,
         records: records
@@ -722,7 +751,7 @@ var GridManage = /*#__PURE__*/function () {
         update: newRecords,
         remove: remove
       });
-      this.historyStack.push({
+      this.addHistoryRecords({
         type: _interface.DataActions.removeTag,
         records: hisRecords,
         recordsIndex: removeIndexs
@@ -749,7 +778,7 @@ var GridManage = /*#__PURE__*/function () {
       this.batchUpdateGrid({
         update: newData
       });
-      this.historyStack.push({
+      this.addHistoryRecords({
         type: _interface.DataActions.modify,
         records: removeNodes.map(function (itemNode) {
           return Object.assign(Object.assign({}, itemNode.data), {
@@ -761,7 +790,7 @@ var GridManage = /*#__PURE__*/function () {
   }, {
     key: "toggleUndoRedo",
     value: function toggleUndoRedo(hisStack) {
-      var _this7 = this;
+      var _this8 = this;
       var undo = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
       var getRowNodeId = this.agGridConfig.getRowNodeId;
       var rowData = this.getRowData();
@@ -769,7 +798,36 @@ var GridManage = /*#__PURE__*/function () {
       var records = hisStack.records,
         recordsIndex = hisStack.recordsIndex,
         type = hisStack.type;
-      if (type === _interface.DataActions.remove) {
+      if (type === _interface.DataActions.drag) {
+        var dragIndex = hisStack.dragIndex;
+        var flattenArray = (0, _lodash.flatten)(records);
+        var newRecords = records.map(function (childreRecords) {
+          return childreRecords.map(function (itemData) {
+            var _a;
+            var data = (_a = _this8.agGridApi.getRowNode(getRowNodeId(itemData))) === null || _a === void 0 ? void 0 : _a.data;
+            return data;
+          });
+        });
+        this.applyTransactionAsync({
+          remove: flattenArray
+        }).then(function () {
+          if (undo) {
+            return recordsIndex.map(function (addIndex, index) {
+              console.log(index, addIndex, records);
+              _this8.agGridApi.applyTransaction({
+                addIndex: addIndex,
+                add: [records[index]]
+              });
+            });
+          }
+          _this8.agGridApi.applyTransaction({
+            addIndex: dragIndex,
+            add: records
+          });
+        });
+        hisStack.records = newRecords;
+        return hisStack;
+      } else if (type === _interface.DataActions.remove) {
         recordsIndex.map(function (removeIndex, index) {
           rowData = [].concat((0, _toConsumableArray2.default)(rowData.slice(0, removeIndex)), [records[index]], (0, _toConsumableArray2.default)(rowData.slice(removeIndex)));
         });
@@ -793,8 +851,8 @@ var GridManage = /*#__PURE__*/function () {
       } else if (type === _interface.DataActions.modify) {
         var hisRecords = [];
         console.log('records', records);
-        var newRecords = records.map(function (item) {
-          var rowNode = _this7.agGridApi.getRowNode(getRowNodeId(item));
+        var _newRecords = records.map(function (item) {
+          var rowNode = _this8.agGridApi.getRowNode(getRowNodeId(item));
           var _nextRowData = item._nextRowData,
             data = __rest(item, ["_nextRowData"]);
           hisRecords.push(Object.assign({}, (0, _lodash.get)(rowNode, 'data', {})));
@@ -802,7 +860,7 @@ var GridManage = /*#__PURE__*/function () {
         });
         records = hisRecords;
         this.batchUpdateGrid({
-          update: newRecords
+          update: _newRecords
         });
       } else {
         var _hisRecords = [];
@@ -817,7 +875,7 @@ var GridManage = /*#__PURE__*/function () {
             _hisRecords.push(item);
           } else {
             rowData = [].concat((0, _toConsumableArray2.default)(rowData.slice(0, removeIndex)), [item], (0, _toConsumableArray2.default)(rowData.slice(removeIndex + 1)));
-            var rowNode = _this7.agGridApi.getRowNode(getRowNodeId(item));
+            var rowNode = _this8.agGridApi.getRowNode(getRowNodeId(item));
             _hisRecords.push(Object.assign({}, (0, _lodash.get)(rowNode, 'data', {})));
           }
         });
@@ -861,28 +919,28 @@ var GridManage = /*#__PURE__*/function () {
   }, {
     key: "save",
     value: function save(cb) {
-      return __awaiter(this, void 0, void 0, /*#__PURE__*/_regenerator.default.mark(function _callee5() {
+      return __awaiter(this, void 0, void 0, /*#__PURE__*/_regenerator.default.mark(function _callee6() {
         var cansave, data;
-        return _regenerator.default.wrap(function _callee5$(_context5) {
-          while (1) switch (_context5.prev = _context5.next) {
+        return _regenerator.default.wrap(function _callee6$(_context6) {
+          while (1) switch (_context6.prev = _context6.next) {
             case 0:
               cansave = null;
               if (!cb) {
-                _context5.next = 8;
+                _context6.next = 8;
                 break;
               }
-              _context5.next = 4;
+              _context6.next = 4;
               return cb();
             case 4:
-              cansave = _context5.sent;
+              cansave = _context6.sent;
               this.afterSave && this.afterSave({
                 diff: this.diff
               });
               if (cansave) {
-                _context5.next = 8;
+                _context6.next = 8;
                 break;
               }
-              return _context5.abrupt("return");
+              return _context6.abrupt("return");
             case 8:
               data = Array.isArray(cansave) ? cansave : this.getPureData();
               this.agGridApi.setRowData(data);
@@ -891,16 +949,16 @@ var GridManage = /*#__PURE__*/function () {
               });
             case 11:
             case "end":
-              return _context5.stop();
+              return _context6.stop();
           }
-        }, _callee5, this);
+        }, _callee6, this);
       }));
     }
     //
   }, {
     key: "changeDiff",
     value: function changeDiff() {
-      var _this8 = this;
+      var _this9 = this;
       var getRowNodeId = this.agGridConfig.getRowNodeId;
       var diffRecords = [];
       var diffArray = [];
@@ -918,7 +976,7 @@ var GridManage = /*#__PURE__*/function () {
         records.map(function (recordItem, recordItemIndex) {
           var isRecorded = diffRecords.indexOf(getRowNodeId(recordItem)) >= 0;
           if (isRecorded) return;
-          var rowNode = _this8.agGridApi.getRowNode(getRowNodeId(recordItem));
+          var rowNode = _this9.agGridApi.getRowNode(getRowNodeId(recordItem));
           var _nextRowData = (0, _lodash.get)(rowNode, 'data', recordItem);
           var _rowData = _nextRowData._rowData,
             _rowType = _nextRowData._rowType,
@@ -1068,13 +1126,13 @@ var GridManage = /*#__PURE__*/function () {
   }, {
     key: "clearLocalStorageColumns",
     value: function clearLocalStorageColumns() {
-      var _this9 = this;
+      var _this10 = this;
       this.clearloding = true;
       localStorage.removeItem("gantd-grid-column-".concat(this.gridKey));
       this.agGridApi.setColumnDefs(this.columnsDefs);
       this.agGridColumnApi.resetColumnState();
       setTimeout(function () {
-        _this9.clearloding = false;
+        _this10.clearloding = false;
       }, 10);
     }
   }]);

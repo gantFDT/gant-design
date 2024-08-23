@@ -47,13 +47,27 @@ var withDatePicker = (0, _recompose.compose)(_recompose.toClass, (0, _recompose.
   onChange: function onChange() {}
 }));
 var DatePicker = /*#__PURE__*/function (_React$Component) {
-  function DatePicker() {
+  function DatePicker(props) {
     var _this;
     (0, _classCallCheck2.default)(this, DatePicker);
-    _this = _callSuper(this, DatePicker, arguments);
+    _this = _callSuper(this, DatePicker, [props]);
     _this.onChange = function (mom, timeString) {
       var onChange = _this.props.onChange;
       onChange(timeString);
+    };
+    _this.handleOpenChange = function (open) {
+      var onOpenChange = _this.props.onOpenChange;
+      if (!('open' in _this.props)) {
+        _this.setState({
+          open: open
+        });
+      }
+      if (onOpenChange) {
+        onOpenChange(open);
+      }
+    };
+    _this.state = {
+      open: props === null || props === void 0 ? void 0 : props.defaultOpen
     };
     return _this;
   }
@@ -66,13 +80,16 @@ var DatePicker = /*#__PURE__*/function (_React$Component) {
         defaultPickerValue = _a.defaultPickerValue,
         defaultValue = _a.defaultValue,
         props = __rest(_a, ["value", "defaultPickerValue", "defaultValue"]);
+      var open = this.state.open;
       var className = (0, _classnames.default)('gant-calendar-picker', props.className);
       return /*#__PURE__*/_react.default.createElement(_datePicker.default, Object.assign({}, props, {
         value: (0, _utils.getCurTime)(value, props.format),
         defaultValue: (0, _utils.getCurTime)(defaultValue, props.format),
         defaultPickerValue: (0, _utils.getCurTime)(defaultPickerValue, props.format),
         className: className,
-        onChange: this.onChange
+        onChange: this.onChange,
+        open: open,
+        onOpenChange: this.handleOpenChange
       }));
     }
   }]);

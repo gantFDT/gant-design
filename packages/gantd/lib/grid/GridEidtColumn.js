@@ -163,14 +163,14 @@ var _default = exports.default = function _default(WrapperComponent) {
         }, _callee2);
       }));
     }, [changeFormatter, field, node, handleCellEditingChange]);
-    var handleCellEditChange = (0, _react.useCallback)(function (newValue) {
+    var handleCellEditChange = (0, _react.useCallback)(function (newValue, _oldData) {
       return __awaiter(_this, void 0, void 0, /*#__PURE__*/_regenerator.default.mark(function _callee3() {
         var editData, oldData;
         return _regenerator.default.wrap(function _callee3$(_context3) {
           while (1) switch (_context3.prev = _context3.next) {
             case 0:
               editData = (0, _lodash.cloneDeep)((0, _lodash.get)(node, "data"));
-              oldData = (0, _lodash.cloneDeep)(data);
+              oldData = _oldData ? _oldData : (0, _lodash.cloneDeep)(data);
               (0, _lodash.set)(editData, "".concat(field), newValue);
               gridManager.loading = true;
               if (!onCellEditChange) {
@@ -224,9 +224,10 @@ var _default = exports.default = function _default(WrapperComponent) {
           }
           gridManager.loading = true;
           setTimeout(function () {
-            handleCellEditChange(newValue);
+            handleCellEditChange(newValue, (0, _lodash.cloneDeep)(node.data));
           }, 1);
-          return nodeValue;
+          console.log('newValue', newValue);
+          return newValue;
         }
       };
     }, [newValue]);

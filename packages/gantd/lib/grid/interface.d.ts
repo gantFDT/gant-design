@@ -18,7 +18,8 @@ export declare enum DataActions {
     add = "add",
     remove = "remove",
     modify = "modify",
-    removeTag = "remove_tag"
+    removeTag = "remove_tag",
+    drag = "drag"
 }
 export declare enum Fixed {
     left = "left",
