@@ -19,6 +19,7 @@ import {
   isEqual,
   merge,
   omit,
+  flatten,
 } from 'lodash';
 import {
   getModifyData,
@@ -119,9 +120,16 @@ export default class GridManage {
     this.agGridApi.applyTransaction(transaction);
     callback && callback();
   }
+  public addHistoryRecords = (pushData: OperationAction) => {
+    this.historyStack.push(pushData);
+    this.redoStack = [];
+  } 
   appendChild(keys, add) {
-    const { isCompute, treeDataChildrenName, getRowNodeId } = this.agGridConfig;
+    const { isCompute, treeDataChildrenName, getRowNodeId, dataSource } = this.agGridConfig;
     const addData = isCompute ? flattenTreeData(add, getRowNodeId, treeDataChildrenName) : add;
+    if (!isEmpty(addData)) {
+      set(this.agGridConfig, 'dataSource', [...dataSource, ...addData]);
+    }
     this.batchUpdateGrid({ add: addData });
   }
   async validate(data?: any[]) {
@@ -334,11 +342,10 @@ export default class GridManage {
         resolve('');
       });
     });
-
-    this.historyStack.push({
+    this.addHistoryRecords({
       type: DataActions.modify,
       records: hisRecords,
-    });
+    })
     if (this.agGridConfig?.multiLineVerify) {
       const { diff } = this;
       const { modify, add } = diff;
@@ -367,10 +374,10 @@ export default class GridManage {
         },
         () => {
           this.validate(addRecords);
-          this.historyStack.push({
+          this.addHistoryRecords({
             type: DataActions.add,
             records: addRecords,
-          });
+          })
         },
       );
       return;
@@ -390,10 +397,10 @@ export default class GridManage {
       },
       () => {
         this.validate(addRecords);
-        this.historyStack.push({
+        this.addHistoryRecords({
           type: DataActions.add,
           records: addRecords,
-        });
+        })
       },
     );
   }
@@ -484,11 +491,11 @@ export default class GridManage {
         records.unshift(data);
       }
     });
-    this.historyStack.push({
+    this.addHistoryRecords({
       type: DataActions.remove,
       recordsIndex: recordsIndex,
       records: records,
-    });
+    })
     this.batchUpdateGrid({
       remove: records,
     });
@@ -511,11 +518,11 @@ export default class GridManage {
     );
     if (newRecords.length == 0 && remove.length == 0) return;
     this.batchUpdateGrid({ update: newRecords, remove });
-    this.historyStack.push({
+    this.addHistoryRecords({
       type: DataActions.removeTag,
       records: hisRecords,
       recordsIndex: removeIndexs,
-    });
+    })
     this.afterTagRemove &&
       this.afterTagRemove({ removeRecords: remove, removeKeys: targetKeys, removeNodes });
   }
@@ -533,17 +540,47 @@ export default class GridManage {
       return get(itemData, '_rowData', omit(itemData, '_rowType'));
     });
     this.batchUpdateGrid({ update: newData });
-    this.historyStack.push({
+    this.addHistoryRecords({
       type: DataActions.modify,
       records: removeNodes.map(itemNode => ({ ...itemNode.data, _rowType: DataActions.removeTag })),
-    });
+    })
   }
+  applyTransactionAsync = async (transaction: RowDataTransaction) => {
+    return await new Promise(resolve => {
+      this.agGridApi.applyTransactionAsync(transaction, res => {
+        resolve(res);
+      });
+    });
+  };
   private toggleUndoRedo(hisStack: OperationAction, undo: boolean = true) {
     const { getRowNodeId } = this.agGridConfig;
     let rowData = this.getRowData();
     if (rowData.length == 0) this.agGridApi.setRowData([]);
     let { records, recordsIndex, type } = hisStack;
-    if (type === DataActions.remove) {
+    if (type === DataActions.drag) {
+      const { dragIndex } = hisStack;
+      const flattenArray = flatten(records);
+      const newRecords = records.map(childreRecords => {
+        return childreRecords.map((itemData: any) => {
+          const data = this.agGridApi.getRowNode(getRowNodeId(itemData))?.data;
+          return data;
+        });
+      });
+      this.applyTransactionAsync({ remove: flattenArray }).then(() => {
+        if (undo) {
+          return recordsIndex.map((addIndex: number, index: number) => {
+            console.log(index, addIndex, records);
+            this.agGridApi.applyTransaction({ addIndex, add: [records[index]] });
+          });
+        }
+        this.agGridApi.applyTransaction({
+          addIndex: dragIndex,
+          add: records,
+        });
+      });
+      hisStack.records = newRecords;
+      return hisStack;
+    } else if (type === DataActions.remove) {
       recordsIndex.map((removeIndex, index) => {
         rowData = [...rowData.slice(0, removeIndex), records[index], ...rowData.slice(removeIndex)];
       });

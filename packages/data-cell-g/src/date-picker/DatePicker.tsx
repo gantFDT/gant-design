@@ -17,6 +17,10 @@ export interface GantDatePickerProps extends PickerProps, WithBasicProps {
   defaultPickerValue?: moment.Moment | string | null;
   placeholder?: string;
   renderExtraFooter?: (mode: DatePickerMode) => React.ReactNode;
+  defaultOpen?: boolean;
+}
+export interface PickerState {
+  open: boolean;
 }
 const getText = ({ value, format }) => (value ? getCurTime(value, format).format(format) : '');
 const withDatePicker = compose(
@@ -29,16 +33,33 @@ const withDatePicker = compose(
 );
 
 @compose(withDatePicker, withEdit(getText, 'ant-calendar-picker-container'))
-class DatePicker extends React.Component<GantDatePickerProps> {
+class DatePicker extends React.Component<GantDatePickerProps, PickerState> {
   static RangePicker: typeof RangePicker;
   static GantdDatePicker: typeof GantdDatePicker;
   static WraperDatePick: any;
+  constructor(props) {
+    super(props);
+    this.state = {
+      open: props?.defaultOpen,
+    }
+  }
   onChange = (mom, timeString) => {
     const { onChange } = this.props;
     onChange(timeString);
   };
+  handleOpenChange = (open: boolean) => {
+    const { onOpenChange } = this.props;
+    if (!('open' in this.props)) {
+      this.setState({ open });
+    }
+
+    if (onOpenChange) {
+      onOpenChange(open);
+    }
+  };
   render() {
     const { value, defaultPickerValue, defaultValue, ...props } = this.props;
+    const { open } = this.state;
     const className = classnames('gant-calendar-picker', props.className);
     return (
       <AntDatePicker
@@ -48,6 +69,8 @@ class DatePicker extends React.Component<GantDatePickerProps> {
         defaultPickerValue={getCurTime(defaultPickerValue, props.format)}
         className={className}
         onChange={this.onChange}
+        open={open}
+        onOpenChange={this.handleOpenChange}
       />
     );
   }
