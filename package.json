@@ -65,6 +65,7 @@
     "@babel/register": "^7.4.4",
     "@commitlint/cli": "^8.3.5",
     "@commitlint/config-conventional": "^8.3.4",
+    "@storybook/theming": "5.3.14",
     "@storybook/addon-actions": "5.3.14",
     "@storybook/addon-backgrounds": "5.3.14",
     "@storybook/addon-console": "^1.1.0",
@@ -133,12 +134,12 @@
     "webpackbar": "^3.2.0"
   },
   "dependencies": {
-    "ag-grid-community": "28.2.0",
-    "ag-grid-react": "28.2.0",
-    "ag-grid-enterprise": "28.2.0",
     "@ant-design/colors": "^3.1.0",
     "@ant-design/icons": "2.1.1",
     "@types/react": "^16.9.52",
+    "ag-grid-community": "28.2.0",
+    "ag-grid-enterprise": "28.2.0",
+    "ag-grid-react": "28.2.0",
     "antd": "^3.22.0",
     "antd-virtual-select": "^1.1.2",
     "array-move": "^2.2.1",

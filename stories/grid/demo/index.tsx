@@ -8,6 +8,12 @@ export default [
   //   code: require('./basegrid/code').default,
   // },
   {
+    title: '右键上下文菜单',
+    describe: `自定义右键上下文菜单`,
+    cmp: createElement(lazy(() => import('./contextmenugrid'))),
+    code: require('./contextmenugrid/code').default,
+  },
+  {
     title: '单元格编辑',
     describe:
       '校验规则参考：https://3x.ant.design/components/form-cn/#%E6%A0%A1%E9%AA%8C%E8%A7%84%E5%88%99；valueGetter与editConfig.initValueFormatter配合方式参考‘国籍’',

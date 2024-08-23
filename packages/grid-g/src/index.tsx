@@ -22,7 +22,7 @@ import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import { AgGridReact, AgGridColumn } from 'ag-grid-react';
 import { LicenseManager } from 'ag-grid-enterprise';
 import 'ag-grid-enterprise';
-import { Spin } from 'antd';
+import { Spin, Dropdown } from 'antd';
 import Receiver from './locale/Receiver';
 import classnames from 'classnames';
 import _, { findIndex, get, isEmpty, isEqual, isObject, remove, cloneDeep, omit } from 'lodash';
@@ -38,6 +38,7 @@ import key from './license';
 import { getAllComponentsMaps, getGridConfig } from './maps';
 import GantPagination from './Pagination';
 import SelectedGrid from './SelectedGrid';
+import { useContextMenu } from './GantContextMenu';
 import GantDateComponent from './GantDateComponent';
 import './style';
 import {
@@ -212,6 +213,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     removeRowSelectable,
     exportExcludeColumns,
     onContextExportCallback,
+    onCellContextMenu,
     ...orignProps
   } = props;
 
@@ -261,7 +263,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     return rowkey(data) + '';
   }, []);
 
-  const getRowId = useCallback(function(params) {
+  const getRowId = useCallback(function (params) {
     return getRowNodeId(params.data);
   }, []);
 
@@ -298,9 +300,8 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
       return '100%';
     }
     return computedPagination
-      ? `calc(100% - ${get(sizeDefinitions, `paginationHeight.${size}`)}px - ${
-          gantThemeClass === 'gant-grid-theme' ? 'var(--space,10px) - 2px' : '0px'
-        })`
+      ? `calc(100% - ${get(sizeDefinitions, `paginationHeight.${size}`)}px - ${gantThemeClass === 'gant-grid-theme' ? 'var(--space,10px) - 2px' : '0px'
+      })`
       : '100%';
   }, [autoHeight, computedPagination, sizeDefinitions, size]);
 
@@ -447,7 +448,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
       };
     const dataSource = gridManager.agGridConfig.dataSource;
     selectedRows.map(itemRow => {
-      const index = findIndex(dataSource, function(itemData) {
+      const index = findIndex(dataSource, function (itemData) {
         return getRowNodeId(itemData) === getRowNodeId(itemRow);
       });
       if (
@@ -538,6 +539,8 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
   //单击行
   const handleRowClicked = useCallback(
     (event: RowClickedEvent) => {
+      console.log(event, '查看0201987');
+
       if (drawerMode && visibleDrawer) {
         if (typeof propVisibleDrawer !== 'boolean') setVisibleDrawer(true);
         clickedEventRef.current = event;
@@ -782,11 +785,13 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     suppressCreateWhenPaste,
   });
 
+  const { getCellContextMenu, contextMenuListDom, contextMenuVisible, onVisibleChange } = useContextMenu(apiRef, getContextMenuItems, onCellContextMenu);
+
   return (
     <Receiver
       children={defaultLocale => {
         const locale = { ...defaultLocale, ...customLocale };
-        const contextMenuItems = function(params: GetContextMenuItemsParams) {
+        const contextMenuItems = function (params: GetContextMenuItemsParams) {
           return gantGetcontextMenuItems(params, {
             downShift: shiftRef.current,
             onRowsCut,
@@ -805,174 +810,185 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
             onContextExportCallback,
           });
         };
+
         return (
-          <Spin spinning={loading || !ready}>
-            <GridContext.Provider
-              value={{
-                serverDataRequest,
-                isServerSideGroup,
-                size,
-                getDataPath: getDataPath,
-                computedPagination,
-                treeData: currentTreeData,
-                ...context,
-              }}
-            >
-              <div
-                style={{ width, height: gridHeight }}
-                className={classnames(
-                  'gant-grid',
-                  gantThemeClass,
-                  editable && openEditSign && 'gant-grid-editable',
-                  controlCellWordWrap && `grid-control-break-line`,
-                )}
+          <Dropdown
+            overlay={contextMenuListDom}
+            visible={contextMenuVisible}
+            onVisibleChange={onVisibleChange}
+            trigger={['contextMenu']}
+          >
+            <Spin spinning={loading || !ready}>
+              <GridContext.Provider
+                value={{
+                  serverDataRequest,
+                  isServerSideGroup,
+                  size,
+                  getDataPath: getDataPath,
+                  computedPagination,
+                  treeData: currentTreeData,
+                  ...context,
+                }}
               >
                 <div
-                  style={{
-                    display: 'flex',
-                    width,
-                    height: girdWrapHeight,
-                  }}
+                  style={{ width, height: gridHeight }}
+                  className={classnames(
+                    'gant-grid',
+                    gantThemeClass,
+                    editable && openEditSign && 'gant-grid-editable',
+                    controlCellWordWrap && `grid-control-break-line`,
+                  )}
                 >
                   <div
-                    className={classnames(themeClass, 'gant-ag-wrapper')}
-                    data-refid={gridKey}
                     style={{
-                      width: '100%',
-                      height: '100%',
-                      fontSize: sizeDefinitions.fontSize[size],
+                      display: 'flex',
+                      width,
+                      height: girdWrapHeight,
                     }}
-                    ref={wrapperRef}
-                    {...gridForcedProps}
                   >
-                    {!hideBox && (
-                      <SelectedGrid
-                        apiRef={apiRef}
-                        onChange={onBoxSelectionChanged}
-                        getRowNodeId={getRowNodeId}
-                        columnDefs={selectedColumns as any}
-                        rowData={boxSelectedRows}
-                        selectedBoxHeight={selectedBoxHeight}
-                        selectedBoxWidth={selectedBoxWidth}
-                        locale={locale}
+                    <div
+                      className={classnames(themeClass, 'gant-ag-wrapper')}
+                      data-refid={gridKey}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        fontSize: sizeDefinitions.fontSize[size],
+                      }}
+                      ref={wrapperRef}
+                      {...gridForcedProps}
+                    >
+                      {!hideBox && (
+                        <SelectedGrid
+                          apiRef={apiRef}
+                          onChange={onBoxSelectionChanged}
+                          getRowNodeId={getRowNodeId}
+                          columnDefs={selectedColumns as any}
+                          rowData={boxSelectedRows}
+                          selectedBoxHeight={selectedBoxHeight}
+                          selectedBoxWidth={selectedBoxWidth}
+                          locale={locale}
+                        />
+                      )}
+
+                      <AgGridReact
+                        frameworkComponents={{
+                          agColumnHeader: gantCustomHeader ? CustomHeader : null,
+                          agDateInput: gantDateComponent ? GantDateComponent : null,
+                          ...frameworkComponentsMaps,
+                          ...frameworkComponents,
+                        }}
+                        components={{
+                          ...componentsMaps,
+                          ...components,
+                        }}
+                        onRowClicked={handleRowClicked}
+                        onSelectionChanged={onSelectionChanged}
+                        onRowSelected={onRowSelected}
+                        rowSelection={rowSelection}
+                        // getRowNodeId={getRowNodeId}
+                        getRowId={getRowId}
+                        onGridReady={onGridReady}
+                        enableFillHandle
+                        headerHeight={headerHeight || get(sizeDefinitions, `headerHeight.${size}`)}
+                        floatingFiltersHeight={get(sizeDefinitions, `floatingFiltersHeight.${size}`)}
+                        singleClickEdit
+                        defaultExportParams={exportParams}
+                        context={{
+                          serverDataRequest,
+                          isServerSideGroup,
+                          size,
+                          suppressExcelExport,
+                          getDataPath: getDataPath,
+                          computedPagination,
+                          groupSelectsChildren,
+                          ...context,
+                          treeData: currentTreeData,
+                          requireds,
+                        }}
+                        onFilterModified={onFilterModified}
+                        suppressCsvExport
+                        stopEditingWhenGridLosesFocus={false}
+                        treeData={currentTreeData}
+                        suppressContextMenu
+                        suppressScrollOnNewData
+                        tooltipShowDelay={0}
+                        tooltipMouseTrack
+                        excludeChildrenWhenTreeDataFiltering
+                        {...selection}
+                        excelStyles={[{ id: 'stringType', dataType: 'String' }, ...excelStyles]}
+                        enableCellTextSelection
+                        domLayout={domLayout}
+                        rowHeight={rowHeight || get(sizeDefinitions, `rowHeight.${size}`)}
+                        getRowHeight={getRowHeight}
+                        {...orignProps}
+                        getDataPath={getDataPath}
+                        gridOptions={{
+                          ...orignProps?.gridOptions,
+                        }}
+                        isRowSelectable={onRowSelectable}
+                        defaultColDef={_defaultColDef}
+                        onRowDoubleClicked={handleRowDoubleClicked}
+                        groupSelectsChildren={treeData ? false : groupSelectsChildren}
+                        groupDefaultExpanded={groupDefaultExpanded}
+                        localeText={locale}
+                        rowClassRules={{
+                          'gant-grid-row-isdeleted': params =>
+                            get(params, 'data._rowType') === DataActions.removeTag,
+                          'gant-grid-row-cut': params => get(params, 'data._rowCut'),
+                          ...rowClassRules,
+                        }}
+                        {...gridPasteProps}
+                        getContextMenuItems={contextMenuItems as any}
+                        onCellEditingStopped={onCellEditingStopped}
+                        onRowDataUpdated={onRowDataUpdated}
+                        onColumnMoved={onColumnsChange}
+                        onColumnVisible={onColumnsChange}
+                        onColumnResized={onColumnsChange}
+                        onColumnEverythingChanged={onColumnEverythingChanged}
+                        columnDefs={localColumnsDefs}
+                        onCellContextMenu={getCellContextMenu}
+                      ></AgGridReact>
+                    </div>
+                    {drawerMode && visibleDrawer && (
+                      <GantGridFormToolPanelRenderer
+                        columns={columns}
+                        clickedEvent={clickedEventRef.current}
+                        gridManager={gridManager}
+                        visible={visibleDrawer}
+                        closeDrawer={() =>
+                          typeof propVisibleDrawer !== 'boolean' && setVisibleDrawer(false)
+                        }
+                        onCellEditChange={onCellEditChange}
+                        onCellEditingChange={onCellEditingChange}
+                        defaultDrawerWidth={defaultDrawerWidth}
+                        customDrawerContent={customDrawerContent}
+                        editable={editable}
+                        clickRowIndex={clickRowIndex}
+                        context={{
+                          serverDataRequest,
+                          isServerSideGroup,
+                          size,
+                          getDataPath: getDataPath,
+                          computedPagination,
+                          groupSelectsChildren,
+                          ...context,
+                          treeData: currentTreeData,
+                          requireds,
+                        }}
                       />
                     )}
-                    <AgGridReact
-                      frameworkComponents={{
-                        agColumnHeader: gantCustomHeader ? CustomHeader : null,
-                        agDateInput: gantDateComponent ? GantDateComponent : null,
-                        ...frameworkComponentsMaps,
-                        ...frameworkComponents,
-                      }}
-                      components={{
-                        ...componentsMaps,
-                        ...components,
-                      }}
-                      onRowClicked={handleRowClicked}
-                      onSelectionChanged={onSelectionChanged}
-                      onRowSelected={onRowSelected}
-                      rowSelection={rowSelection}
-                      // getRowNodeId={getRowNodeId}
-                      getRowId={getRowId}
-                      onGridReady={onGridReady}
-                      enableFillHandle
-                      headerHeight={headerHeight || get(sizeDefinitions, `headerHeight.${size}`)}
-                      floatingFiltersHeight={get(sizeDefinitions, `floatingFiltersHeight.${size}`)}
-                      singleClickEdit
-                      defaultExportParams={exportParams}
-                      context={{
-                        serverDataRequest,
-                        isServerSideGroup,
-                        size,
-                        suppressExcelExport,
-                        getDataPath: getDataPath,
-                        computedPagination,
-                        groupSelectsChildren,
-                        ...context,
-                        treeData: currentTreeData,
-                        requireds,
-                      }}
-                      onFilterModified={onFilterModified}
-                      suppressCsvExport
-                      stopEditingWhenGridLosesFocus={false}
-                      treeData={currentTreeData}
-                      suppressScrollOnNewData
-                      tooltipShowDelay={0}
-                      tooltipMouseTrack
-                      excludeChildrenWhenTreeDataFiltering
-                      {...selection}
-                      excelStyles={[{ id: 'stringType', dataType: 'String' }, ...excelStyles]}
-                      enableCellTextSelection
-                      domLayout={domLayout}
-                      rowHeight={rowHeight || get(sizeDefinitions, `rowHeight.${size}`)}
-                      getRowHeight={getRowHeight}
-                      {...orignProps}
-                      getDataPath={getDataPath}
-                      gridOptions={{
-                        ...orignProps?.gridOptions,
-                      }}
-                      isRowSelectable={onRowSelectable}
-                      defaultColDef={_defaultColDef}
-                      onRowDoubleClicked={handleRowDoubleClicked}
-                      groupSelectsChildren={treeData ? false : groupSelectsChildren}
-                      groupDefaultExpanded={groupDefaultExpanded}
-                      localeText={locale}
-                      rowClassRules={{
-                        'gant-grid-row-isdeleted': params =>
-                          get(params, 'data._rowType') === DataActions.removeTag,
-                        'gant-grid-row-cut': params => get(params, 'data._rowCut'),
-                        ...rowClassRules,
-                      }}
-                      {...gridPasteProps}
-                      getContextMenuItems={contextMenuItems as any}
-                      onCellEditingStopped={onCellEditingStopped}
-                      onRowDataUpdated={onRowDataUpdated}
-                      onColumnMoved={onColumnsChange}
-                      onColumnVisible={onColumnsChange}
-                      onColumnResized={onColumnsChange}
-                      onColumnEverythingChanged={onColumnEverythingChanged}
-                      columnDefs={localColumnsDefs}
-                    ></AgGridReact>
                   </div>
-                  {drawerMode && visibleDrawer && (
-                    <GantGridFormToolPanelRenderer
-                      columns={columns}
-                      clickedEvent={clickedEventRef.current}
-                      gridManager={gridManager}
-                      visible={visibleDrawer}
-                      closeDrawer={() =>
-                        typeof propVisibleDrawer !== 'boolean' && setVisibleDrawer(false)
-                      }
-                      onCellEditChange={onCellEditChange}
-                      onCellEditingChange={onCellEditingChange}
-                      defaultDrawerWidth={defaultDrawerWidth}
-                      customDrawerContent={customDrawerContent}
-                      editable={editable}
-                      clickRowIndex={clickRowIndex}
-                      context={{
-                        serverDataRequest,
-                        isServerSideGroup,
-                        size,
-                        getDataPath: getDataPath,
-                        computedPagination,
-                        groupSelectsChildren,
-                        ...context,
-                        treeData: currentTreeData,
-                        requireds,
-                      }}
+                  {computedPagination && (
+                    <GantPagination
+                      numberGoToMode={numberGoToMode}
+                      size={size}
+                      {...computedPagination}
                     />
                   )}
                 </div>
-                {computedPagination && (
-                  <GantPagination
-                    numberGoToMode={numberGoToMode}
-                    size={size}
-                    {...computedPagination}
-                  />
-                )}
-              </div>
-            </GridContext.Provider>
-          </Spin>
+              </GridContext.Provider>
+            </Spin>
+          </Dropdown>
         );
       }}
     />

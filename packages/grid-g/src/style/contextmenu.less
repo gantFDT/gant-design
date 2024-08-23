@@ -1,0 +1,36 @@
+.menuClassName {
+    min-width: 100px;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3) !important;
+    border: solid 1px #ccc;
+
+    // :global {
+        .ant-dropdown-menu-item {
+            width: 100% !important;
+            height: 30px !important;
+            margin: 0 !important;
+            padding: 0 8px !important;
+            border-radius:  0 !important;
+            font-size: 12px !important;
+        }
+
+        .ant-dropdown-menu-submenu {
+            width: 100% !important;
+            height: 30px !important;
+            margin: 0 !important;
+            padding: 0 !important;
+
+            .ant-dropdown-menu-submenu-title {
+                padding: 0 8px !important;
+                width: 100% !important;
+                margin: 0 !important;
+                height: 30px !important;
+                border-radius:  0 !important;
+
+                .ant-dropdown-menu-submenu-arrow{
+                    right: 8px !important;
+                }
+            }
+        }
+    // }
+   
+}
