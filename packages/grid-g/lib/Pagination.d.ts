@@ -12,6 +12,6 @@ declare const _default: React.NamedExoticComponent<Pick<import("./interface").Pr
     align?: "left" | "right";
     Component?: any;
     countLimitStyle?: React.CSSProperties;
-}>, "style" | "onChange" | "prefixCls" | "size" | "disabled" | "className" | "align" | "role" | "addonBefore" | "addonAfter" | "mode" | "locale" | "total" | "defaultCurrent" | "current" | "defaultPageSize" | "pageSize" | "hideOnSinglePage" | "showSizeChanger" | "pageSizeOptions" | "showQuickJumper" | "showTotal" | "simple" | "selectPrefixCls" | "itemRender" | "showLessItems" | "beginIndex" | "countLimit" | "numberGoToMode" | "onRefresh" | "tooltipTotal" | "Component" | "countLimitStyle">>;
+}>, "style" | "mode" | "className" | "prefixCls" | "role" | "onChange" | "disabled" | "size" | "align" | "addonBefore" | "addonAfter" | "locale" | "total" | "defaultCurrent" | "current" | "defaultPageSize" | "pageSize" | "hideOnSinglePage" | "showSizeChanger" | "pageSizeOptions" | "showQuickJumper" | "showTotal" | "simple" | "selectPrefixCls" | "itemRender" | "showLessItems" | "beginIndex" | "countLimit" | "numberGoToMode" | "onRefresh" | "tooltipTotal" | "Component" | "countLimitStyle">>;
 export default _default;
 export declare const paginationShowTotal: (total: any, range: any, limit: any, tooltipTotal: any) => React.JSX.Element;

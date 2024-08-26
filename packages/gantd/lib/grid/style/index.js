@@ -7,3 +7,4 @@ require("./tooltip.css");
 require("./selectedbox.css");
 require("./footer.css");
 require("./theme.css");
+require("./contextmenu.css");

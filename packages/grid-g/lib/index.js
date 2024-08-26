@@ -63,6 +63,8 @@ Object.defineProperty(exports, "setGridConfig", {
 });
 require("antd/es/spin/style/css");
 var _spin = _interopRequireDefault(require("antd/es/spin"));
+require("antd/es/dropdown/style/css");
+var _dropdown = _interopRequireDefault(require("antd/es/dropdown"));
 var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
 var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
 require("ag-grid-community/dist/styles/ag-grid.css");
@@ -95,6 +97,7 @@ var _license = _interopRequireDefault(require("./license"));
 var _maps = require("./maps");
 var _Pagination = _interopRequireDefault(require("./Pagination"));
 var _SelectedGrid = _interopRequireDefault(require("./SelectedGrid"));
+var _GantContextMenu = require("./GantContextMenu");
 var _GantDateComponent = _interopRequireDefault(require("./GantDateComponent"));
 require("./style");
 var _utils = require("./utils");
@@ -276,7 +279,8 @@ var Grid = function Grid(gridProps) {
     removeRowSelectable = props.removeRowSelectable,
     exportExcludeColumns = props.exportExcludeColumns,
     onContextExportCallback = props.onContextExportCallback,
-    orignProps = __rest(props, ["dataSource", "onReady", "columns", "editable", "rowSelection", "rowkey", "gridKey", "resizable", "filter", "sortable", "width", "height", "treeData", "pagination", "loading", "isServerSideGroup", "getServerSideGroupKey", "frameworkComponents", "treeDataChildrenName", "locale", "serverGroupExpend", "groupDefaultExpanded", "defaultColDef", "context", "components", "serialNumber", "rowClassRules", "isCompute", "getDataPath", "onCellEditChange", "onCellEditingChange", "onCellChanged", "openEditSign", "getContextMenuItems", "createConfig", "onRowsCut", "onRowsPaste", "onRowsPasteEnd", "showCut", "pasteToGridManager", "onContextChangeRender", "defaultExportParams", "defaultJsonParams", "editChangeCallback", "isRowSelectable", "boxColumnIndex", "hideSelectedBox", "suppressKeyboardEvent", "onSelectionChanged", "onRowSelected", "onRowDataUpdated", "onRowDataChanged", "groupSelectsChildren", "onColumnMoved", "onColumnResized", "onColumnVisible", "onRowClicked", "drawerMode", "multiLineVerify", "defaultDrawerWidth", "selectedBoxHeight", "selectedBoxWidth", "onRowDoubleClicked", "onFilterModified", "doubleClickedExpanded", "customDrawerContent", "visibleDrawer", "hideMenuItemExport", "hideMenuItemExpand", "hiddenMenuItemNames", "showMenuItemClearFilter", "onMenuItemClearFilter", "excelStyles", "suppressRightClickSelected", "treeDataForcedFilter", "themeClass", "gantThemeClass", "gantDateComponent", "autoHeight", "maxAutoHeight", "minAutoHeight", "showCutChild", "gantCustomHeader", "numberGoToMode", "domLayout", "size", "border", "zebra", "rowHeight", "getRowHeight", "headerHeight", "controlCellWordWrap", "suppressGroupSelectParent", "exportHiddenFields", "onColumnsChange", "suppressManagerPaste", "suppressCreateWhenPaste", "suppressExcelExport", "removeRowSelectable", "exportExcludeColumns", "onContextExportCallback"]);
+    onCellContextMenu = props.onCellContextMenu,
+    orignProps = __rest(props, ["dataSource", "onReady", "columns", "editable", "rowSelection", "rowkey", "gridKey", "resizable", "filter", "sortable", "width", "height", "treeData", "pagination", "loading", "isServerSideGroup", "getServerSideGroupKey", "frameworkComponents", "treeDataChildrenName", "locale", "serverGroupExpend", "groupDefaultExpanded", "defaultColDef", "context", "components", "serialNumber", "rowClassRules", "isCompute", "getDataPath", "onCellEditChange", "onCellEditingChange", "onCellChanged", "openEditSign", "getContextMenuItems", "createConfig", "onRowsCut", "onRowsPaste", "onRowsPasteEnd", "showCut", "pasteToGridManager", "onContextChangeRender", "defaultExportParams", "defaultJsonParams", "editChangeCallback", "isRowSelectable", "boxColumnIndex", "hideSelectedBox", "suppressKeyboardEvent", "onSelectionChanged", "onRowSelected", "onRowDataUpdated", "onRowDataChanged", "groupSelectsChildren", "onColumnMoved", "onColumnResized", "onColumnVisible", "onRowClicked", "drawerMode", "multiLineVerify", "defaultDrawerWidth", "selectedBoxHeight", "selectedBoxWidth", "onRowDoubleClicked", "onFilterModified", "doubleClickedExpanded", "customDrawerContent", "visibleDrawer", "hideMenuItemExport", "hideMenuItemExpand", "hiddenMenuItemNames", "showMenuItemClearFilter", "onMenuItemClearFilter", "excelStyles", "suppressRightClickSelected", "treeDataForcedFilter", "themeClass", "gantThemeClass", "gantDateComponent", "autoHeight", "maxAutoHeight", "minAutoHeight", "showCutChild", "gantCustomHeader", "numberGoToMode", "domLayout", "size", "border", "zebra", "rowHeight", "getRowHeight", "headerHeight", "controlCellWordWrap", "suppressGroupSelectParent", "exportHiddenFields", "onColumnsChange", "suppressManagerPaste", "suppressCreateWhenPaste", "suppressExcelExport", "removeRowSelectable", "exportExcludeColumns", "onContextExportCallback", "onCellContextMenu"]);
   var apiRef = (0, _react.useRef)();
   var shiftRef = (0, _react.useRef)(false);
   var wrapperRef = (0, _react.useRef)();
@@ -540,6 +544,7 @@ var Grid = function Grid(gridProps) {
   }, [getAllSelectedRows, propsOnSelectionChanged, rowSelection, hideBox]);
   //单击行
   var handleRowClicked = (0, _react.useCallback)(function (event) {
+    console.log(event, '查看0201987');
     if (drawerMode && visibleDrawer) {
       if (typeof propVisibleDrawer !== 'boolean') setVisibleDrawer(true);
       clickedEventRef.current = event;
@@ -738,6 +743,11 @@ var Grid = function Grid(gridProps) {
     suppressManagerPaste: suppressManagerPaste,
     suppressCreateWhenPaste: suppressCreateWhenPaste
   });
+  var _useContextMenu = (0, _GantContextMenu.useContextMenu)(apiRef, getContextMenuItems, onCellContextMenu),
+    getCellContextMenu = _useContextMenu.getCellContextMenu,
+    contextMenuListDom = _useContextMenu.contextMenuListDom,
+    contextMenuVisible = _useContextMenu.contextMenuVisible,
+    onVisibleChange = _useContextMenu.onVisibleChange;
   return /*#__PURE__*/_react.default.createElement(_Receiver.default, {
     children: function children(defaultLocale) {
       var locale = Object.assign(Object.assign({}, defaultLocale), customLocale);
@@ -760,7 +770,12 @@ var Grid = function Grid(gridProps) {
           onContextExportCallback: onContextExportCallback
         });
       };
-      return /*#__PURE__*/_react.default.createElement(_spin.default, {
+      return /*#__PURE__*/_react.default.createElement(_dropdown.default, {
+        overlay: contextMenuListDom,
+        visible: contextMenuVisible,
+        onVisibleChange: onVisibleChange,
+        trigger: ['contextMenu']
+      }, /*#__PURE__*/_react.default.createElement(_spin.default, {
         spinning: loading || !ready
       }, /*#__PURE__*/_react.default.createElement(GridContext.Provider, {
         value: Object.assign({
@@ -835,6 +850,7 @@ var Grid = function Grid(gridProps) {
         suppressCsvExport: true,
         stopEditingWhenGridLosesFocus: false,
         treeData: currentTreeData,
+        suppressContextMenu: true,
         suppressScrollOnNewData: true,
         tooltipShowDelay: 0,
         tooltipMouseTrack: true,
@@ -873,7 +889,8 @@ var Grid = function Grid(gridProps) {
         onColumnVisible: onColumnsChange,
         onColumnResized: onColumnsChange,
         onColumnEverythingChanged: onColumnEverythingChanged,
-        columnDefs: localColumnsDefs
+        columnDefs: localColumnsDefs,
+        onCellContextMenu: getCellContextMenu
       }))), drawerMode && visibleDrawer && ( /*#__PURE__*/_react.default.createElement(_GantGridFormToolPanelRenderer.default, {
         columns: columns,
         clickedEvent: clickedEventRef.current,
@@ -902,7 +919,7 @@ var Grid = function Grid(gridProps) {
       }))), computedPagination && ( /*#__PURE__*/_react.default.createElement(_Pagination.default, Object.assign({
         numberGoToMode: numberGoToMode,
         size: size
-      }, computedPagination))))));
+      }, computedPagination)))))));
     }
   });
 };

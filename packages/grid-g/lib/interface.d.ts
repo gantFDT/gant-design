@@ -216,6 +216,8 @@ export interface Props<T extends any> {
     suppressManagerPaste?: boolean;
     suppressCreateWhenPaste?: boolean;
     removeRowSelectable?: boolean;
+    rowClicked?: (params: any) => void;
+    getContextMenuItems?: (params: any) => void;
 }
 export declare type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>;
 export declare type GridProps<T> = ProtoExtends<AgGridReactProps, CustomProps<T>>;
