@@ -358,6 +358,10 @@ export interface Props<T extends any> {
   suppressCreateWhenPaste?: boolean;
   //删除数据是否可选
   removeRowSelectable?: boolean;
+  //点击击表格回调
+  rowClicked?: (params: any) => void
+  //上下文菜单
+  getContextMenuItems?: (params: any) => void
 }
 
 export type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>;
