@@ -263,7 +263,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     return rowkey(data) + '';
   }, []);
 
-  const getRowId = useCallback(function (params) {
+  const getRowId = useCallback(function(params) {
     return getRowNodeId(params.data);
   }, []);
 
@@ -300,8 +300,9 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
       return '100%';
     }
     return computedPagination
-      ? `calc(100% - ${get(sizeDefinitions, `paginationHeight.${size}`)}px - ${gantThemeClass === 'gant-grid-theme' ? 'var(--space,10px) - 2px' : '0px'
-      })`
+      ? `calc(100% - ${get(sizeDefinitions, `paginationHeight.${size}`)}px - ${
+          gantThemeClass === 'gant-grid-theme' ? 'var(--space,10px) - 2px' : '0px'
+        })`
       : '100%';
   }, [autoHeight, computedPagination, sizeDefinitions, size]);
 
@@ -448,7 +449,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
       };
     const dataSource = gridManager.agGridConfig.dataSource;
     selectedRows.map(itemRow => {
-      const index = findIndex(dataSource, function (itemData) {
+      const index = findIndex(dataSource, function(itemData) {
         return getRowNodeId(itemData) === getRowNodeId(itemRow);
       });
       if (
@@ -785,13 +786,18 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     suppressCreateWhenPaste,
   });
 
-  const { getCellContextMenu, contextMenuListDom, contextMenuVisible, onVisibleChange } = useContextMenu(apiRef, getContextMenuItems, onCellContextMenu);
+  const {
+    getCellContextMenu,
+    contextMenuListDom,
+    contextMenuVisible,
+    onVisibleChange,
+  } = useContextMenu(apiRef, getContextMenuItems, onCellContextMenu);
 
   return (
     <Receiver
       children={defaultLocale => {
         const locale = { ...defaultLocale, ...customLocale };
-        const contextMenuItems = function (params: GetContextMenuItemsParams) {
+        const contextMenuItems = function(params: GetContextMenuItemsParams) {
           return gantGetcontextMenuItems(params, {
             downShift: shiftRef.current,
             onRowsCut,
@@ -890,7 +896,10 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                         onGridReady={onGridReady}
                         enableFillHandle
                         headerHeight={headerHeight || get(sizeDefinitions, `headerHeight.${size}`)}
-                        floatingFiltersHeight={get(sizeDefinitions, `floatingFiltersHeight.${size}`)}
+                        floatingFiltersHeight={get(
+                          sizeDefinitions,
+                          `floatingFiltersHeight.${size}`,
+                        )}
                         singleClickEdit
                         defaultExportParams={exportParams}
                         context={{
