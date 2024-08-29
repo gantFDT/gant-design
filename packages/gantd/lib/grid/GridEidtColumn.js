@@ -223,10 +223,10 @@ var _default = exports.default = function _default(WrapperComponent) {
             return nodeValue;
           }
           gridManager.loading = true;
+          var nodeData = (0, _lodash.cloneDeep)(node.data);
           setTimeout(function () {
-            handleCellEditChange(newValue, (0, _lodash.cloneDeep)(node.data));
+            handleCellEditChange(newValue, nodeData);
           }, 1);
-          console.log('newValue', newValue);
           return newValue;
         }
       };

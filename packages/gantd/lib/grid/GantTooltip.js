@@ -44,7 +44,9 @@ var _default = exports.default = /*#__PURE__*/(0, _react.forwardRef)(function (p
     tooltip = _props$colDef.tooltip,
     tooltipRender = _props$colDef.tooltipRender,
     field = _props$colDef.field,
-    requireds = props.context.requireds,
+    _props$context = props.context,
+    requireds = _props$context.requireds,
+    showErrorTooltip = _props$context.showErrorTooltip,
     columnApi = props.columnApi,
     api = props.api;
   var required = (0, _react.useMemo)(function () {
@@ -104,8 +106,7 @@ var _default = exports.default = /*#__PURE__*/(0, _react.forwardRef)(function (p
     }
   }, []);
   var errorMsg = (0, _lodash.get)(data, "_rowError.".concat(field), null);
-  // errorMsg = isEmptyObj(get(data, `${field}`, null)) && required ? null : errorMsg;
-  errorMsg = undefined;
+  errorMsg = !showErrorTooltip ? null : errorMsg;
   var ToolTipRender = tooltipRender ? tooltipRender(params) : null;
   if (!showTip && !ToolTipRender && !errorMsg) {
     return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_reactDom.default.createPortal( /*#__PURE__*/_react.default.createElement("div", {

@@ -280,7 +280,8 @@ var Grid = function Grid(gridProps) {
     exportExcludeColumns = props.exportExcludeColumns,
     onContextExportCallback = props.onContextExportCallback,
     onCellContextMenu = props.onCellContextMenu,
-    orignProps = __rest(props, ["dataSource", "onReady", "columns", "editable", "rowSelection", "rowkey", "gridKey", "resizable", "filter", "sortable", "width", "height", "treeData", "pagination", "loading", "isServerSideGroup", "getServerSideGroupKey", "frameworkComponents", "treeDataChildrenName", "locale", "serverGroupExpend", "groupDefaultExpanded", "defaultColDef", "context", "components", "serialNumber", "rowClassRules", "isCompute", "getDataPath", "onCellEditChange", "onCellEditingChange", "onCellChanged", "openEditSign", "getContextMenuItems", "createConfig", "onRowsCut", "onRowsPaste", "onRowsPasteEnd", "showCut", "pasteToGridManager", "onContextChangeRender", "defaultExportParams", "defaultJsonParams", "editChangeCallback", "isRowSelectable", "boxColumnIndex", "hideSelectedBox", "suppressKeyboardEvent", "onSelectionChanged", "onRowSelected", "onRowDataUpdated", "onRowDataChanged", "groupSelectsChildren", "onColumnMoved", "onColumnResized", "onColumnVisible", "onRowClicked", "drawerMode", "multiLineVerify", "defaultDrawerWidth", "selectedBoxHeight", "selectedBoxWidth", "onRowDoubleClicked", "onFilterModified", "doubleClickedExpanded", "customDrawerContent", "visibleDrawer", "hideMenuItemExport", "hideMenuItemExpand", "hiddenMenuItemNames", "showMenuItemClearFilter", "onMenuItemClearFilter", "excelStyles", "suppressRightClickSelected", "treeDataForcedFilter", "themeClass", "gantThemeClass", "gantDateComponent", "autoHeight", "maxAutoHeight", "minAutoHeight", "showCutChild", "gantCustomHeader", "numberGoToMode", "domLayout", "size", "border", "zebra", "rowHeight", "getRowHeight", "headerHeight", "controlCellWordWrap", "suppressGroupSelectParent", "exportHiddenFields", "onColumnsChange", "suppressManagerPaste", "suppressCreateWhenPaste", "suppressExcelExport", "removeRowSelectable", "exportExcludeColumns", "onContextExportCallback", "onCellContextMenu"]);
+    showErrorTooltip = props.showErrorTooltip,
+    orignProps = __rest(props, ["dataSource", "onReady", "columns", "editable", "rowSelection", "rowkey", "gridKey", "resizable", "filter", "sortable", "width", "height", "treeData", "pagination", "loading", "isServerSideGroup", "getServerSideGroupKey", "frameworkComponents", "treeDataChildrenName", "locale", "serverGroupExpend", "groupDefaultExpanded", "defaultColDef", "context", "components", "serialNumber", "rowClassRules", "isCompute", "getDataPath", "onCellEditChange", "onCellEditingChange", "onCellChanged", "openEditSign", "getContextMenuItems", "createConfig", "onRowsCut", "onRowsPaste", "onRowsPasteEnd", "showCut", "pasteToGridManager", "onContextChangeRender", "defaultExportParams", "defaultJsonParams", "editChangeCallback", "isRowSelectable", "boxColumnIndex", "hideSelectedBox", "suppressKeyboardEvent", "onSelectionChanged", "onRowSelected", "onRowDataUpdated", "onRowDataChanged", "groupSelectsChildren", "onColumnMoved", "onColumnResized", "onColumnVisible", "onRowClicked", "drawerMode", "multiLineVerify", "defaultDrawerWidth", "selectedBoxHeight", "selectedBoxWidth", "onRowDoubleClicked", "onFilterModified", "doubleClickedExpanded", "customDrawerContent", "visibleDrawer", "hideMenuItemExport", "hideMenuItemExpand", "hiddenMenuItemNames", "showMenuItemClearFilter", "onMenuItemClearFilter", "excelStyles", "suppressRightClickSelected", "treeDataForcedFilter", "themeClass", "gantThemeClass", "gantDateComponent", "autoHeight", "maxAutoHeight", "minAutoHeight", "showCutChild", "gantCustomHeader", "numberGoToMode", "domLayout", "size", "border", "zebra", "rowHeight", "getRowHeight", "headerHeight", "controlCellWordWrap", "suppressGroupSelectParent", "exportHiddenFields", "onColumnsChange", "suppressManagerPaste", "suppressCreateWhenPaste", "suppressExcelExport", "removeRowSelectable", "exportExcludeColumns", "onContextExportCallback", "onCellContextMenu", "showErrorTooltip"]);
   var apiRef = (0, _react.useRef)();
   var shiftRef = (0, _react.useRef)(false);
   var wrapperRef = (0, _react.useRef)();
@@ -844,7 +845,8 @@ var Grid = function Grid(gridProps) {
           groupSelectsChildren: groupSelectsChildren
         }, context), {
           treeData: currentTreeData,
-          requireds: requireds
+          requireds: requireds,
+          showErrorTooltip: showErrorTooltip
         }),
         onFilterModified: onFilterModified,
         suppressCsvExport: true,
@@ -914,7 +916,8 @@ var Grid = function Grid(gridProps) {
           groupSelectsChildren: groupSelectsChildren
         }, context), {
           treeData: currentTreeData,
-          requireds: requireds
+          requireds: requireds,
+          showErrorTooltip: showErrorTooltip
         })
       }))), computedPagination && ( /*#__PURE__*/_react.default.createElement(_Pagination.default, Object.assign({
         numberGoToMode: numberGoToMode,
