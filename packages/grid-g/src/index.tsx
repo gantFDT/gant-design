@@ -214,6 +214,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     exportExcludeColumns,
     onContextExportCallback,
     onCellContextMenu,
+    showErrorTooltip,
     ...orignProps
   } = props;
 
@@ -904,6 +905,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                           ...context,
                           treeData: currentTreeData,
                           requireds,
+                          showErrorTooltip,
                         }}
                         onFilterModified={onFilterModified}
                         suppressCsvExport
@@ -974,6 +976,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                           ...context,
                           treeData: currentTreeData,
                           requireds,
+                          showErrorTooltip,
                         }}
                       />
                     )}
