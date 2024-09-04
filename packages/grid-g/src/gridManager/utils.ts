@@ -53,14 +53,16 @@ export function removeTagData(removeNodes: RowNode[], rowData: any[], getRowNode
     if (itemData._rowType === DataActions.removeTag || itemData._rowType === DataActions.remove)
       return console.warn('Deleted data cannot be deleted');
     let hisRecordItem = { ...itemData };
-    itemData._rowType !== DataActions.add
-      ? newRecords.push(recordItem)
-      : removeRecords.push(itemData);
-    const rowIndex = findIndex(
-      rowData,
-      rowItemData => getRowNodeId(rowItemData) === getRowNodeId(itemData),
-    );
-    removeIndexs.unshift(rowIndex);
+    if (itemData._rowType === DataActions.add) {
+      removeRecords.unshift(itemData);
+      const rowIndex = findIndex(
+        rowData,
+        rowItemData => getRowNodeId(rowItemData) === getRowNodeId(itemData),
+      );
+      removeIndexs.unshift(rowIndex);
+    } else {
+      newRecords.unshift(recordItem)
+    }
     hisRecords.unshift(hisRecordItem);
   });
   return { newRecords, hisRecords, removeIndexs, removeRecords };
@@ -279,4 +281,18 @@ export function replaceRowData({
         ...rowData.slice(targetIndex + 1),
       ];
   return newDataSource;
+}
+
+export function getUnRemovedNewRowData(remove: any, removeIndexs: number[], rowData: any[]): any[] {
+  const cloneRowData = cloneDeep(rowData);
+  const removeGroupArr = removeIndexs.map((recordIndex, index) => ({index: recordIndex, data: remove[index]}));
+  return ([...remove, ...rowData]).map((item: any, index: number) => {
+    const idx = removeGroupArr.length ? removeGroupArr.findIndex((groupData) => groupData.index === index) : -1;
+    if (idx > -1) {
+      const item = removeGroupArr[idx].data;
+      removeGroupArr.splice(idx, 1);
+      return item;
+    }
+    return cloneRowData.splice(0, 1)[0];
+  }, []);
 }

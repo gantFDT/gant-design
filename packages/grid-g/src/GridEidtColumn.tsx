@@ -153,10 +153,10 @@ export default WrapperComponent =>
               return nodeValue;
             }
             gridManager.loading = true;
+            const nodeData = cloneDeep(node.data);
             setTimeout(() => {
-              handleCellEditChange(newValue, cloneDeep(node.data));
+              handleCellEditChange(newValue, nodeData);
             }, 1);
-            console.log('newValue', newValue);
             return newValue;
           },
           // isCancelAfterEnd:()=>false

@@ -32,6 +32,7 @@ import {
   sortAndMergeColumns,
   getAllCoumns,
   replaceRowData,
+  getUnRemovedNewRowData,
 } from './utils';
 import { bindAll } from 'lodash-decorators';
 import { generateUuid } from '@util';
@@ -494,7 +495,8 @@ export default class GridManage {
     this.addHistoryRecords({
       type: DataActions.remove,
       recordsIndex: recordsIndex,
-      records: records,
+      records: [],
+      remove: records,
     })
     this.batchUpdateGrid({
       remove: records,
@@ -522,6 +524,7 @@ export default class GridManage {
       type: DataActions.removeTag,
       records: hisRecords,
       recordsIndex: removeIndexs,
+      remove,
     })
     this.afterTagRemove &&
       this.afterTagRemove({ removeRecords: remove, removeKeys: targetKeys, removeNodes });
@@ -557,84 +560,88 @@ export default class GridManage {
     let rowData = this.getRowData();
     if (rowData.length == 0) this.agGridApi.setRowData([]);
     let { records, recordsIndex, type } = hisStack;
-    if (type === DataActions.drag) {
-      const { dragIndex } = hisStack;
-      const flattenArray = flatten(records);
-      const newRecords = records.map(childreRecords => {
-        return childreRecords.map((itemData: any) => {
-          const data = this.agGridApi.getRowNode(getRowNodeId(itemData))?.data;
-          return data;
-        });
-      });
-      this.applyTransactionAsync({ remove: flattenArray }).then(() => {
-        if (undo) {
-          return recordsIndex.map((addIndex: number, index: number) => {
-            console.log(index, addIndex, records);
-            this.agGridApi.applyTransaction({ addIndex, add: [records[index]] });
+    switch(type) {
+      case DataActions.drag: {
+        const { dragIndex } = hisStack;
+        const flattenArray = flatten(records);
+        const newRecords = records.map(childreRecords => {
+          return childreRecords.map((itemData: any) => {
+            const data = this.agGridApi.getRowNode(getRowNodeId(itemData))?.data;
+            return data;
           });
-        }
-        this.agGridApi.applyTransaction({
-          addIndex: dragIndex,
-          add: records,
         });
-      });
-      hisStack.records = newRecords;
-      return hisStack;
-    } else if (type === DataActions.remove) {
-      recordsIndex.map((removeIndex, index) => {
-        rowData = [...rowData.slice(0, removeIndex), records[index], ...rowData.slice(removeIndex)];
-      });
-      this.agGridApi.setRowData(rowData);
-      recordsIndex = [];
-      type = DataActions.add;
-    } else if (type === DataActions.add) {
-      recordsIndex = [];
-      records.map(itemRecord => {
-        const removeIndex = findIndex(
-          rowData,
-          data => getRowNodeId(data) === getRowNodeId(itemRecord),
-        );
-        rowData = [...rowData.slice(0, removeIndex), ...rowData.slice(removeIndex + 1)];
-        recordsIndex.unshift(removeIndex);
-      });
-      records = records.reverse();
-      type = DataActions.remove;
-      this.batchUpdateGrid({
-        remove: records,
-      });
-    } else if (type === DataActions.modify) {
-      const hisRecords: any[] = [];
-      console.log('records', records);
-      const newRecords = records.map(item => {
-        const rowNode = this.agGridApi.getRowNode(getRowNodeId(item));
-        const { _nextRowData, ...data } = item;
-        hisRecords.push({ ...get(rowNode, 'data', {}) });
-        return item;
-      });
-      records = hisRecords;
-      this.batchUpdateGrid({ update: newRecords });
-    } else {
-      const hisRecords: any[] = [];
-      recordsIndex.map((removeIndex, index) => {
-        const item = records[index];
-        if (item._rowType === DataActions.add) {
+        this.applyTransactionAsync({ remove: flattenArray }).then(() => {
           if (undo) {
-            rowData = [...rowData.slice(0, removeIndex), item, ...rowData.slice(removeIndex)];
-          } else {
-            rowData = [...rowData.slice(0, removeIndex), ...rowData.slice(removeIndex + 1)];
+            return recordsIndex.map((addIndex: number, index: number) => {
+              this.agGridApi.applyTransaction({ addIndex, add: [records[index]] });
+            });
           }
-          hisRecords.push(item);
-        } else {
-          rowData = [...rowData.slice(0, removeIndex), item, ...rowData.slice(removeIndex + 1)];
+          this.agGridApi.applyTransaction({
+            addIndex: dragIndex,
+            add: records,
+          });
+        });
+        hisStack.records = newRecords;
+        return hisStack;
+      };
+      case DataActions.remove:
+      case DataActions.removeTag: {
+        const { remove } = hisStack;
+        const hisRecords = [];
+        records?.map(item => {
           const rowNode = this.agGridApi.getRowNode(getRowNodeId(item));
-          hisRecords.push({ ...get(rowNode, 'data', {}) });
+          if (rowNode) hisRecords.push({ ...get(rowNode, 'data', {}) });
+          return item;
+        });
+        this.batchUpdateGrid({ update: records });
+        hisStack.records = hisRecords;
+
+        if (undo) {
+          const rowData = this.getRowData();
+          const newRowData = getUnRemovedNewRowData(remove, recordsIndex, rowData);
+          this.agGridApi.setRowData(newRowData);
+        } else {
+          this.batchUpdateGrid({ remove });
         }
-      });
-      records = hisRecords.reverse();
-      recordsIndex = recordsIndex.reverse();
-      this.agGridApi.setRowData(rowData);
+        hisStack.remove = remove.reverse();
+        hisStack.recordsIndex = recordsIndex.reverse();
+        return hisStack;
+      };
+      case DataActions.add:
+        if (undo) {
+          const newRecords = [];
+          const recordsIndex = [];
+          records.forEach((item) => {
+            const rowIndex = findIndex(
+              rowData,
+              rowItemData => getRowNodeId(rowItemData) === getRowNodeId(item),
+            );
+            newRecords.push(rowData[rowIndex]);
+            recordsIndex.push(rowIndex);
+          });
+          hisStack.records = newRecords;
+          hisStack.recordsIndex = recordsIndex;
+          this.batchUpdateGrid({ remove: records });
+        } else {
+          const rowData = this.getRowData();
+          const newRowData = getUnRemovedNewRowData(records, recordsIndex, rowData);
+          this.agGridApi.setRowData(newRowData);
+        }
+        return hisStack;
+      case DataActions.modify:
+        const hisRecords: any[] = [];
+        const newRecords = records.map(item => {
+          const rowNode = this.agGridApi.getRowNode(getRowNodeId(item));
+          const { _nextRowData, ...data } = item;
+          hisRecords.push({ ...get(rowNode, 'data', {}) });
+          return item;
+        });
+        hisStack.records = hisRecords;
+        this.batchUpdateGrid({ update: newRecords });
+        return hisStack;
+      default:
+        return hisStack;
     }
-    return { type, records, recordsIndex };
   }
   //撤销；
   @hisDecorator()

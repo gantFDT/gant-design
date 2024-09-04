@@ -362,6 +362,8 @@ export interface Props<T extends any> {
   rowClicked?: (params: any) => void
   //上下文菜单
   getContextMenuItems?: (params: any) => void
+  //是否在鼠标悬浮时显示错误原因
+  showErrorTooltip?: boolean;
 }
 
 export type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>;

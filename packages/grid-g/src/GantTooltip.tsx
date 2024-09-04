@@ -49,7 +49,7 @@ export default forwardRef((props: any, ref) => {
     context,
     rowIndex,
     colDef: { tooltip, tooltipRender, field },
-    context: { requireds },
+    context: { requireds, showErrorTooltip },
     columnApi,
     api,
   } = props;
@@ -116,8 +116,8 @@ export default forwardRef((props: any, ref) => {
   }, []);
 
   let errorMsg = get(data, `_rowError.${field}`, null);
-  // errorMsg = isEmptyObj(get(data, `${field}`, null)) && required ? null : errorMsg;
-  errorMsg = undefined;
+  errorMsg = !showErrorTooltip ? null : errorMsg;
+  
   const ToolTipRender = tooltipRender ? tooltipRender(params) : null;
 
   if (!showTip && !ToolTipRender && !errorMsg) {
