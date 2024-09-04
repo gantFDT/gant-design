@@ -722,7 +722,8 @@ var GridManage = /*#__PURE__*/function () {
       this.addHistoryRecords({
         type: _interface.DataActions.remove,
         recordsIndex: recordsIndex,
-        records: records
+        records: [],
+        remove: records
       });
       this.batchUpdateGrid({
         remove: records
@@ -754,7 +755,8 @@ var GridManage = /*#__PURE__*/function () {
       this.addHistoryRecords({
         type: _interface.DataActions.removeTag,
         records: hisRecords,
-        recordsIndex: removeIndexs
+        recordsIndex: removeIndexs,
+        remove: remove
       });
       this.afterTagRemove && this.afterTagRemove({
         removeRecords: remove,
@@ -798,96 +800,105 @@ var GridManage = /*#__PURE__*/function () {
       var records = hisStack.records,
         recordsIndex = hisStack.recordsIndex,
         type = hisStack.type;
-      if (type === _interface.DataActions.drag) {
-        var dragIndex = hisStack.dragIndex;
-        var flattenArray = (0, _lodash.flatten)(records);
-        var newRecords = records.map(function (childreRecords) {
-          return childreRecords.map(function (itemData) {
-            var _a;
-            var data = (_a = _this8.agGridApi.getRowNode(getRowNodeId(itemData))) === null || _a === void 0 ? void 0 : _a.data;
-            return data;
-          });
-        });
-        this.applyTransactionAsync({
-          remove: flattenArray
-        }).then(function () {
-          if (undo) {
-            return recordsIndex.map(function (addIndex, index) {
-              console.log(index, addIndex, records);
-              _this8.agGridApi.applyTransaction({
-                addIndex: addIndex,
-                add: [records[index]]
+      switch (type) {
+        case _interface.DataActions.drag:
+          {
+            var dragIndex = hisStack.dragIndex;
+            var flattenArray = (0, _lodash.flatten)(records);
+            var _newRecords = records.map(function (childreRecords) {
+              return childreRecords.map(function (itemData) {
+                var _a;
+                var data = (_a = _this8.agGridApi.getRowNode(getRowNodeId(itemData))) === null || _a === void 0 ? void 0 : _a.data;
+                return data;
               });
             });
+            this.applyTransactionAsync({
+              remove: flattenArray
+            }).then(function () {
+              if (undo) {
+                return recordsIndex.map(function (addIndex, index) {
+                  _this8.agGridApi.applyTransaction({
+                    addIndex: addIndex,
+                    add: [records[index]]
+                  });
+                });
+              }
+              _this8.agGridApi.applyTransaction({
+                addIndex: dragIndex,
+                add: records
+              });
+            });
+            hisStack.records = _newRecords;
+            return hisStack;
           }
-          _this8.agGridApi.applyTransaction({
-            addIndex: dragIndex,
-            add: records
-          });
-        });
-        hisStack.records = newRecords;
-        return hisStack;
-      } else if (type === _interface.DataActions.remove) {
-        recordsIndex.map(function (removeIndex, index) {
-          rowData = [].concat((0, _toConsumableArray2.default)(rowData.slice(0, removeIndex)), [records[index]], (0, _toConsumableArray2.default)(rowData.slice(removeIndex)));
-        });
-        this.agGridApi.setRowData(rowData);
-        recordsIndex = [];
-        type = _interface.DataActions.add;
-      } else if (type === _interface.DataActions.add) {
-        recordsIndex = [];
-        records.map(function (itemRecord) {
-          var removeIndex = (0, _lodash.findIndex)(rowData, function (data) {
-            return getRowNodeId(data) === getRowNodeId(itemRecord);
-          });
-          rowData = [].concat((0, _toConsumableArray2.default)(rowData.slice(0, removeIndex)), (0, _toConsumableArray2.default)(rowData.slice(removeIndex + 1)));
-          recordsIndex.unshift(removeIndex);
-        });
-        records = records.reverse();
-        type = _interface.DataActions.remove;
-        this.batchUpdateGrid({
-          remove: records
-        });
-      } else if (type === _interface.DataActions.modify) {
-        var hisRecords = [];
-        console.log('records', records);
-        var _newRecords = records.map(function (item) {
-          var rowNode = _this8.agGridApi.getRowNode(getRowNodeId(item));
-          var _nextRowData = item._nextRowData,
-            data = __rest(item, ["_nextRowData"]);
-          hisRecords.push(Object.assign({}, (0, _lodash.get)(rowNode, 'data', {})));
-          return item;
-        });
-        records = hisRecords;
-        this.batchUpdateGrid({
-          update: _newRecords
-        });
-      } else {
-        var _hisRecords = [];
-        recordsIndex.map(function (removeIndex, index) {
-          var item = records[index];
-          if (item._rowType === _interface.DataActions.add) {
+          ;
+        case _interface.DataActions.remove:
+        case _interface.DataActions.removeTag:
+          {
+            var remove = hisStack.remove;
+            var _hisRecords = [];
+            records === null || records === void 0 ? void 0 : records.map(function (item) {
+              var rowNode = _this8.agGridApi.getRowNode(getRowNodeId(item));
+              if (rowNode) _hisRecords.push(Object.assign({}, (0, _lodash.get)(rowNode, 'data', {})));
+              return item;
+            });
+            this.batchUpdateGrid({
+              update: records
+            });
+            hisStack.records = _hisRecords;
             if (undo) {
-              rowData = [].concat((0, _toConsumableArray2.default)(rowData.slice(0, removeIndex)), [item], (0, _toConsumableArray2.default)(rowData.slice(removeIndex)));
+              var _rowData2 = this.getRowData();
+              var newRowData = (0, _utils.getUnRemovedNewRowData)(remove, recordsIndex, _rowData2);
+              this.agGridApi.setRowData(newRowData);
             } else {
-              rowData = [].concat((0, _toConsumableArray2.default)(rowData.slice(0, removeIndex)), (0, _toConsumableArray2.default)(rowData.slice(removeIndex + 1)));
+              this.batchUpdateGrid({
+                remove: remove
+              });
             }
-            _hisRecords.push(item);
-          } else {
-            rowData = [].concat((0, _toConsumableArray2.default)(rowData.slice(0, removeIndex)), [item], (0, _toConsumableArray2.default)(rowData.slice(removeIndex + 1)));
-            var rowNode = _this8.agGridApi.getRowNode(getRowNodeId(item));
-            _hisRecords.push(Object.assign({}, (0, _lodash.get)(rowNode, 'data', {})));
+            hisStack.remove = remove.reverse();
+            hisStack.recordsIndex = recordsIndex.reverse();
+            return hisStack;
           }
-        });
-        records = _hisRecords.reverse();
-        recordsIndex = recordsIndex.reverse();
-        this.agGridApi.setRowData(rowData);
+          ;
+        case _interface.DataActions.add:
+          if (undo) {
+            var _newRecords2 = [];
+            var _recordsIndex = [];
+            records.forEach(function (item) {
+              var rowIndex = (0, _lodash.findIndex)(rowData, function (rowItemData) {
+                return getRowNodeId(rowItemData) === getRowNodeId(item);
+              });
+              _newRecords2.push(rowData[rowIndex]);
+              _recordsIndex.push(rowIndex);
+            });
+            hisStack.records = _newRecords2;
+            hisStack.recordsIndex = _recordsIndex;
+            this.batchUpdateGrid({
+              remove: records
+            });
+          } else {
+            var _rowData3 = this.getRowData();
+            var _newRowData = (0, _utils.getUnRemovedNewRowData)(records, recordsIndex, _rowData3);
+            this.agGridApi.setRowData(_newRowData);
+          }
+          return hisStack;
+        case _interface.DataActions.modify:
+          var hisRecords = [];
+          var newRecords = records.map(function (item) {
+            var rowNode = _this8.agGridApi.getRowNode(getRowNodeId(item));
+            var _nextRowData = item._nextRowData,
+              data = __rest(item, ["_nextRowData"]);
+            hisRecords.push(Object.assign({}, (0, _lodash.get)(rowNode, 'data', {})));
+            return item;
+          });
+          hisStack.records = hisRecords;
+          this.batchUpdateGrid({
+            update: newRecords
+          });
+          return hisStack;
+        default:
+          return hisStack;
       }
-      return {
-        type: type,
-        records: records,
-        recordsIndex: recordsIndex
-      };
     }
     //撤销；
   }, {

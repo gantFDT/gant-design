@@ -3,6 +3,7 @@ export interface OperationAction {
     type: DataActions;
     recordsIndex?: number[];
     records: any[];
+    remove?: any[];
     dragIndex?: number;
 }
 export interface Diff {

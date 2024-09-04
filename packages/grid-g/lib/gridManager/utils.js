@@ -9,6 +9,7 @@ exports.getAllChildrenNode = getAllChildrenNode;
 exports.getAllCoumns = getAllCoumns;
 exports.getModifyData = getModifyData;
 exports.getRowsToUpdate = getRowsToUpdate;
+exports.getUnRemovedNewRowData = getUnRemovedNewRowData;
 exports.isEqualObj = exports.isEmptyObj = void 0;
 exports.isSelectionParentOfTarget = isSelectionParentOfTarget;
 exports.onSetcutData = onSetcutData;
@@ -74,11 +75,15 @@ function removeTagData(removeNodes, rowData, getRowNodeId) {
     });
     if (itemData._rowType === _interface.DataActions.removeTag || itemData._rowType === _interface.DataActions.remove) return console.warn('Deleted data cannot be deleted');
     var hisRecordItem = Object.assign({}, itemData);
-    itemData._rowType !== _interface.DataActions.add ? newRecords.push(recordItem) : removeRecords.push(itemData);
-    var rowIndex = (0, _lodash.findIndex)(rowData, function (rowItemData) {
-      return getRowNodeId(rowItemData) === getRowNodeId(itemData);
-    });
-    removeIndexs.unshift(rowIndex);
+    if (itemData._rowType === _interface.DataActions.add) {
+      removeRecords.unshift(itemData);
+      var rowIndex = (0, _lodash.findIndex)(rowData, function (rowItemData) {
+        return getRowNodeId(rowItemData) === getRowNodeId(itemData);
+      });
+      removeIndexs.unshift(rowIndex);
+    } else {
+      newRecords.unshift(recordItem);
+    }
     hisRecords.unshift(hisRecordItem);
   });
   return {
@@ -273,4 +278,24 @@ function replaceRowData(_ref) {
   });
   var newDataSource = up ? [].concat((0, _toConsumableArray2.default)(rowData.slice(0, targetIndex)), (0, _toConsumableArray2.default)(newData), (0, _toConsumableArray2.default)(rowData.slice(targetIndex))) : [].concat((0, _toConsumableArray2.default)(rowData.slice(0, targetIndex)), [rowData[targetIndex]], (0, _toConsumableArray2.default)(newData), (0, _toConsumableArray2.default)(rowData.slice(targetIndex + 1)));
   return newDataSource;
+}
+function getUnRemovedNewRowData(remove, removeIndexs, rowData) {
+  var cloneRowData = (0, _lodash.cloneDeep)(rowData);
+  var removeGroupArr = removeIndexs.map(function (recordIndex, index) {
+    return {
+      index: recordIndex,
+      data: remove[index]
+    };
+  });
+  return [].concat((0, _toConsumableArray2.default)(remove), (0, _toConsumableArray2.default)(rowData)).map(function (item, index) {
+    var idx = removeGroupArr.length ? removeGroupArr.findIndex(function (groupData) {
+      return groupData.index === index;
+    }) : -1;
+    if (idx > -1) {
+      var _item = removeGroupArr[idx].data;
+      removeGroupArr.splice(idx, 1);
+      return _item;
+    }
+    return cloneRowData.splice(0, 1)[0];
+  }, []);
 }

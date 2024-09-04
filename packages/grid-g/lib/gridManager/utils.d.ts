@@ -29,3 +29,4 @@ export declare function replaceRowData({ rowData, targetData, newData, getRowNod
     getRowNodeId: any;
     up: boolean;
 }): any[];
+export declare function getUnRemovedNewRowData(remove: any, removeIndexs: number[], rowData: any[]): any[];
