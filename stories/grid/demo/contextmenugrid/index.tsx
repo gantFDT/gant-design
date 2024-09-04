@@ -220,7 +220,6 @@ import Grid, {
         context: { gridManager, globalEditable },
         selectedKeys,
       } = res;
-  
       if (!globalEditable) {
         return [
           {
@@ -356,7 +355,7 @@ import Grid, {
           editChangeCallback={onEditChangeCallback}
           onReady={onReady}
           getContextMenuItems={getContextMenuItems}
-          suppressContextMenu
+          // suppressContextMenu
           size="default"
           gantThemeClass="gant-grid-theme"
           removeRowSelectable

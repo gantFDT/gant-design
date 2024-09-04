@@ -2,19 +2,19 @@ import React, { createElement, useCallback, useEffect, useMemo, useState } from 
 import { map, isString } from 'lodash';
 import { Menu } from 'antd';
 
-export const useContextMenu = (apiRef: any, getCustomContextMenuItems: any, onCellContextMenu: any) => {
+export const useContextMenu = (apiRef: any, getCustomContextMenuItems: any, onCellContextMenu: any, suppressContextMenu?: boolean) => {
     const [contextMenuParams, setContextMenuParams] = useState([]);
     const [contextMenuVisible, setContextMenuVisible] = useState(false);
 
     //rowClicked
     const getCellContextMenu = useCallback((params: any) => {
-        if (params.event.which === 3) {
+        if (params.event.which === 3 && !suppressContextMenu) {
             setContextMenuParams(params);
             setContextMenuVisible(true);
             params.event.preventDefault(); // 阻止默认上下文菜单
         }
         onCellContextMenu && onCellContextMenu(params);
-    }, []);
+    }, [suppressContextMenu]);
 
     const onVisibleChange = useCallback((visible: any) => {
         setContextMenuVisible(visible);
@@ -56,11 +56,8 @@ export const useContextMenu = (apiRef: any, getCustomContextMenuItems: any, onCe
     const itemsList = useMemo(() => {
         if (contextMenuParams.length === 0) return [];
         const contextMenuItems = getCustomContextMenuItems ? getCustomContextMenuItems(contextMenuParams) : [];
-        const data = transData(contextMenuItems);
+        const data = transData(contextMenuItems).length == 0 ? [] : [...transData(contextMenuItems), { type: 'divider' }];
         const list = [
-            {
-                type: 'divider',
-            },
             {
                 key: 'export',
                 label: '全部导出',

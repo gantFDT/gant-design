@@ -214,6 +214,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     exportExcludeColumns,
     onContextExportCallback,
     onCellContextMenu,
+    suppressContextMenu,
     ...orignProps
   } = props;
 
@@ -785,7 +786,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     suppressCreateWhenPaste,
   });
 
-  const { getCellContextMenu, contextMenuListDom, contextMenuVisible, onVisibleChange } = useContextMenu(apiRef, getContextMenuItems, onCellContextMenu);
+  const { getCellContextMenu, contextMenuListDom, contextMenuVisible, onVisibleChange } = useContextMenu(apiRef, getContextMenuItems, onCellContextMenu, suppressContextMenu);
 
   return (
     <Receiver
