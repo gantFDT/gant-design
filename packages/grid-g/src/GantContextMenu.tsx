@@ -1,9 +1,9 @@
 import React, { createElement, useCallback, useEffect, useMemo, useState } from 'react';
-import { map, isString } from 'lodash';
+import { map, get } from 'lodash';
 import { Menu } from 'antd';
 
 export const useContextMenu = (apiRef: any, getCustomContextMenuItems: any, onCellContextMenu: any, suppressContextMenu?: boolean) => {
-    const [contextMenuParams, setContextMenuParams] = useState([]);
+    const [contextMenuParams, setContextMenuParams] = useState<any>([]);
     const [contextMenuVisible, setContextMenuVisible] = useState(false);
 
     //rowClicked
@@ -55,6 +55,7 @@ export const useContextMenu = (apiRef: any, getCustomContextMenuItems: any, onCe
 
     const itemsList = useMemo(() => {
         if (contextMenuParams.length === 0) return [];
+        const gridOptions = get(contextMenuParams, 'api.gridOptionsWrapper.gridOptions');
         const contextMenuItems = getCustomContextMenuItems ? getCustomContextMenuItems(contextMenuParams) : [];
         const data = transData(contextMenuItems).length == 0 ? [] : [...transData(contextMenuItems), { type: 'divider' }];
         const list = [
@@ -74,6 +75,8 @@ export const useContextMenu = (apiRef: any, getCustomContextMenuItems: any, onCe
                     });
                 },
             },
+        ];
+        const expandBtnList = gridOptions?.treeData ? [
             {
                 type: 'divider',
             },
@@ -91,8 +94,8 @@ export const useContextMenu = (apiRef: any, getCustomContextMenuItems: any, onCe
                     apiRef.current.forEachNode((node) => node.setExpanded(false));
                 },
             },
-        ];
-        return [...data, ...list];
+        ] : []
+        return [...data, ...list, ...expandBtnList];
     }, [apiRef, getCustomContextMenuItems, contextMenuParams]);
 
     const menuOnClick = useCallback((action) => {
