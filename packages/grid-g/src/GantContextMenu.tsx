@@ -58,7 +58,7 @@ export const useContextMenu = (apiRef: any, getCustomContextMenuItems: any, onCe
         const gridOptions = get(contextMenuParams, 'api.gridOptionsWrapper.gridOptions');
         const contextMenuItems = getCustomContextMenuItems ? getCustomContextMenuItems(contextMenuParams) : [];
         const data = transData(contextMenuItems).length == 0 ? [] : [...transData(contextMenuItems), { type: 'divider' }];
-        const list = [
+        const exportList = gridOptions?.rowSelection ? [
             {
                 key: 'export',
                 label: '全部导出',
@@ -75,7 +75,15 @@ export const useContextMenu = (apiRef: any, getCustomContextMenuItems: any, onCe
                     });
                 },
             },
-        ];
+        ] : [
+                {
+                    key: 'export',
+                    label: '全部导出',
+                    action: () => {
+                        apiRef.current.exportDataAsExcel();
+                    },
+                }
+            ];
         const expandBtnList = gridOptions?.treeData ? [
             {
                 type: 'divider',
@@ -95,7 +103,7 @@ export const useContextMenu = (apiRef: any, getCustomContextMenuItems: any, onCe
                 },
             },
         ] : []
-        return [...data, ...list, ...expandBtnList];
+        return [...data, ...exportList, ...expandBtnList];
     }, [apiRef, getCustomContextMenuItems, contextMenuParams]);
 
     const menuOnClick = useCallback((action) => {
