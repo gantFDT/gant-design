@@ -83,6 +83,8 @@ export default {
   resetColumns: 'Spalten zurücksetzen',
   expandAll: 'Alle erweitern',
   collapseAll: 'Alle reduzieren',
+  exportDataAsExcel: 'Alle exportieren',
+  exportSelectedDataAsExcel: 'Exportieren auswählen',
   toolPanel: 'Werkzeugleiste',
   export: 'Exportieren',
   csvExport: 'CSV Export',

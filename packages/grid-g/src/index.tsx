@@ -542,8 +542,6 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
   //单击行
   const handleRowClicked = useCallback(
     (event: RowClickedEvent) => {
-      console.log(event, '查看0201987');
-
       if (drawerMode && visibleDrawer) {
         if (typeof propVisibleDrawer !== 'boolean') setVisibleDrawer(true);
         clickedEventRef.current = event;
@@ -793,7 +791,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     contextMenuListDom,
     contextMenuVisible,
     onVisibleChange,
-  } = useContextMenu(apiRef, getContextMenuItems, onCellContextMenu, suppressContextMenu);
+  } = useContextMenu(apiRef, getContextMenuItems, onCellContextMenu, hideMenuItemExport, suppressContextMenu);
 
   return (
     <Receiver

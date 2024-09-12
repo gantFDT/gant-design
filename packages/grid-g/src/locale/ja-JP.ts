@@ -81,6 +81,8 @@ export default {
   ungroupBy: 'グループ化解除',
   resetColumns: '列のリセット',
   expandAll: 'すべて展開',
+  exportDataAsExcel: 'すべてエクスポート',
+  exportSelectedDataAsExcel: 'エクスポートを選択',
   collapseAll: 'すべて折りたたむ',
   toolPanel: 'ツールパネル',
   export: 'エクスポート',

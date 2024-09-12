@@ -1,8 +1,9 @@
 import React, { createElement, useCallback, useEffect, useMemo, useState } from 'react';
 import { map, get } from 'lodash';
 import { Menu } from 'antd';
+import Receiver from './locale/Receiver'
 
-export const useContextMenu = (apiRef: any, getCustomContextMenuItems: any, onCellContextMenu: any, suppressContextMenu?: boolean) => {
+export const useContextMenu = (apiRef: any, getCustomContextMenuItems: any, onCellContextMenu: any, hideMenuItemExport: boolean = false, suppressContextMenu?: boolean,) => {
     const [contextMenuParams, setContextMenuParams] = useState<any>([]);
     const [contextMenuVisible, setContextMenuVisible] = useState(false);
 
@@ -57,18 +58,20 @@ export const useContextMenu = (apiRef: any, getCustomContextMenuItems: any, onCe
         if (contextMenuParams.length === 0) return [];
         const gridOptions = get(contextMenuParams, 'api.gridOptionsWrapper.gridOptions');
         const contextMenuItems = getCustomContextMenuItems ? getCustomContextMenuItems(contextMenuParams) : [];
-        const data = transData(contextMenuItems).length == 0 ? [] : [...transData(contextMenuItems), { type: 'divider' }];
-        const exportList = gridOptions?.rowSelection ? [
+        const selectedRows = apiRef.current?.getSelectedRows() || [];
+        const data = transData(contextMenuItems).length == 0 ? [] : [...transData(contextMenuItems)];
+        const exportList = hideMenuItemExport ? [] : selectedRows.length > 0 ? [
+            { type: 'divider' },
             {
                 key: 'export',
-                label: '全部导出',
+                label: <Receiver>{(locale) => locale?.exportDataAsExcel}</Receiver>,
                 action: () => {
                     apiRef.current.exportDataAsExcel();
                 },
             },
             {
                 key: 'selectexport',
-                label: '选中导出',
+                label: <Receiver>{(locale) => locale?.exportSelectedDataAsExcel}</Receiver>,
                 action: () => {
                     apiRef.current.exportDataAsExcel({
                         onlySelected: true, // 只导出勾选的行
@@ -76,9 +79,10 @@ export const useContextMenu = (apiRef: any, getCustomContextMenuItems: any, onCe
                 },
             },
         ] : [
+                { type: 'divider' },
                 {
                     key: 'export',
-                    label: '全部导出',
+                    label: <Receiver>{(locale) => locale?.exportDataAsExcel}</Receiver>,
                     action: () => {
                         apiRef.current.exportDataAsExcel();
                     },
@@ -90,21 +94,21 @@ export const useContextMenu = (apiRef: any, getCustomContextMenuItems: any, onCe
             },
             {
                 key: 'expand',
-                label: '展开所有',
+                label: <Receiver>{(locale) => locale?.expandAll}</Receiver>,
                 action: () => {
                     apiRef.current.expandAll();
                 },
             },
             {
                 key: 'noexpand',
-                label: '收起所有',
+                label: <Receiver>{(locale) => locale?.collapseAll}</Receiver>,
                 action: () => {
                     apiRef.current.forEachNode((node) => node.setExpanded(false));
                 },
             },
         ] : []
         return [...data, ...exportList, ...expandBtnList];
-    }, [apiRef, getCustomContextMenuItems, contextMenuParams]);
+    }, [apiRef, getCustomContextMenuItems, contextMenuParams, hideMenuItemExport]);
 
     const menuOnClick = useCallback((action) => {
         setContextMenuVisible(false);

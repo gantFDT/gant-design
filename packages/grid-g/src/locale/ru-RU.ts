@@ -71,6 +71,8 @@ export default {
   resetColumns: 'Сбросить столбцы',
   expandAll: 'Развернуть все',
   collapseAll: 'Свернуть все',
+  exportDataAsExcel: 'Весь экспорт',
+  exportSelectedDataAsExcel: 'Выбрать экспорт',
   toolPanel: 'Панель инструментов',
   export: 'Экспорт',
   csvExport: 'Экспорт в CSV',

@@ -82,6 +82,8 @@ export default {
   ungroupBy: 'Rimuovi raggruppamento per',
   resetColumns: 'Reimposta colonne',
   expandAll: 'Espandi tutto',
+  exportDataAsExcel: 'Esporta tutto',
+  exportSelectedDataAsExcel: 'Esporta seleziona',
   collapseAll: 'Comprimi tutto',
   toolPanel: 'Pannello degli Strumenti',
   export: 'Esporta',

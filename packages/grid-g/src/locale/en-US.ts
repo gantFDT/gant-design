@@ -83,6 +83,8 @@ export default {
   resetColumns: 'Reset Those Cols',
   expandAll: 'Open-em-up',
   collapseAll: 'Close-em-up',
+  exportDataAsExcel: 'Export All',
+  exportSelectedDataAsExcel: 'Select Export',
   toolPanel: 'Tool Panel',
   export: 'Export',
   csvExport: 'CSV Export',
