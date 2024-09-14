@@ -78,6 +78,8 @@ var _default = exports.default = {
   resetColumns: 'Réinitialiser les colonnes',
   expandAll: 'Tout ouvrir',
   collapseAll: 'Tout fermer',
+  exportDataAsExcel: 'Tout exporter',
+  exportSelectedDataAsExcel: 'Sélectionner exporter',
   toolPanel: "Panneau d'outils",
   export: 'Exporter',
   csvExport: 'Exporter en CSV',

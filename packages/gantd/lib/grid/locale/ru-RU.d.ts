@@ -60,6 +60,8 @@ declare const _default: {
     resetColumns: string;
     expandAll: string;
     collapseAll: string;
+    exportDataAsExcel: string;
+    exportSelectedDataAsExcel: string;
     toolPanel: string;
     export: string;
     csvExport: string;

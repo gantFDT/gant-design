@@ -59,6 +59,8 @@ declare const _default: {
     ungroupBy: string;
     resetColumns: string;
     expandAll: string;
+    exportDataAsExcel: string;
+    exportSelectedDataAsExcel: string;
     collapseAll: string;
     toolPanel: string;
     export: string;

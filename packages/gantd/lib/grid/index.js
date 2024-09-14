@@ -546,7 +546,6 @@ var Grid = function Grid(gridProps) {
   }, [getAllSelectedRows, propsOnSelectionChanged, rowSelection, hideBox]);
   //单击行
   var handleRowClicked = (0, _react.useCallback)(function (event) {
-    console.log(event, '查看0201987');
     if (drawerMode && visibleDrawer) {
       if (typeof propVisibleDrawer !== 'boolean') setVisibleDrawer(true);
       clickedEventRef.current = event;
@@ -745,7 +744,7 @@ var Grid = function Grid(gridProps) {
     suppressManagerPaste: suppressManagerPaste,
     suppressCreateWhenPaste: suppressCreateWhenPaste
   });
-  var _useContextMenu = (0, _GantContextMenu.useContextMenu)(apiRef, getContextMenuItems, onCellContextMenu, suppressContextMenu),
+  var _useContextMenu = (0, _GantContextMenu.useContextMenu)(apiRef, getContextMenuItems, onCellContextMenu, hideMenuItemExport, suppressContextMenu),
     getCellContextMenu = _useContextMenu.getCellContextMenu,
     contextMenuListDom = _useContextMenu.contextMenuListDom,
     contextMenuVisible = _useContextMenu.contextMenuVisible,
