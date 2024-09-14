@@ -78,6 +78,8 @@ var _default = exports.default = {
   resetColumns: '열 리셋',
   expandAll: '모두 펼치기',
   collapseAll: '모두 축소하기',
+  exportDataAsExcel: '모두 내보내기',
+  exportSelectedDataAsExcel: '내보내기 선택',
   toolPanel: '도구 패널',
   export: '내보내기',
   csvExport: 'CSV 내보내기',
