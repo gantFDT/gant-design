@@ -203,5 +203,7 @@ declare const _default: {
     selectedData: string;
     clear: string;
     outOfLimit: string;
+    exportDataAsExcel: string;
+    exportSelectedDataAsExcel: string;
 };
 export default _default;

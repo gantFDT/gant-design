@@ -226,5 +226,7 @@ var _default = exports.default = {
   exportSelected: '导出选中行',
   selectedData: '已选中数据',
   clear: '清除',
-  outOfLimit: '当前总数超过'
+  outOfLimit: '当前总数超过',
+  exportDataAsExcel: '全部导出',
+  exportSelectedDataAsExcel: '选中导出'
 };
