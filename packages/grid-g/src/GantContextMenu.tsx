@@ -59,9 +59,8 @@ export const useContextMenu = (apiRef: any, getCustomContextMenuItems: any, onCe
         const gridOptions = get(contextMenuParams, 'api.gridOptionsWrapper.gridOptions');
         const contextMenuItems = getCustomContextMenuItems ? getCustomContextMenuItems(contextMenuParams) : [];
         const selectedRows = apiRef.current?.getSelectedRows() || [];
-        const data = transData(contextMenuItems).length == 0 ? [] : [...transData(contextMenuItems)];
+        const data = transData(contextMenuItems).length == 0 ? [] : [...transData(contextMenuItems), { type: 'divider' }];
         const exportList = hideMenuItemExport ? [] : selectedRows.length > 0 ? [
-            { type: 'divider' },
             {
                 key: 'export',
                 label: <Receiver>{(locale) => locale?.exportDataAsExcel}</Receiver>,
@@ -77,9 +76,8 @@ export const useContextMenu = (apiRef: any, getCustomContextMenuItems: any, onCe
                         onlySelected: true, // 只导出勾选的行
                     });
                 },
-            },
+            }
         ] : [
-                { type: 'divider' },
                 {
                     key: 'export',
                     label: <Receiver>{(locale) => locale?.exportDataAsExcel}</Receiver>,
@@ -89,9 +87,6 @@ export const useContextMenu = (apiRef: any, getCustomContextMenuItems: any, onCe
                 }
             ];
         const expandBtnList = gridOptions?.treeData ? [
-            {
-                type: 'divider',
-            },
             {
                 key: 'expand',
                 label: <Receiver>{(locale) => locale?.expandAll}</Receiver>,
@@ -107,7 +102,8 @@ export const useContextMenu = (apiRef: any, getCustomContextMenuItems: any, onCe
                 },
             },
         ] : []
-        return [...data, ...exportList, ...expandBtnList];
+        const newExpandBtnList = (exportList.length != 0 && gridOptions?.treeData) ? [{ type: 'divider' }, ...expandBtnList] : expandBtnList
+        return [...data, ...exportList, ...newExpandBtnList];
     }, [apiRef, getCustomContextMenuItems, contextMenuParams, hideMenuItemExport]);
 
     const menuOnClick = useCallback((action) => {
