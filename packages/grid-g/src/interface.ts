@@ -18,6 +18,7 @@ import { defaultProps } from './index';
 export * from 'ag-grid-community';
 export { default as GridManager } from './gridManager';
 import { ICellRendererParams } from 'ag-grid-community';
+import { ScrollLoadPanelProps } from './scrollloadpanel';
 // 大小
 export type Size = 'small' | 'large' | 'default';
 
@@ -359,11 +360,13 @@ export interface Props<T extends any> {
   //删除数据是否可选
   removeRowSelectable?: boolean;
   //点击击表格回调
-  rowClicked?: (params: any) => void
+  rowClicked?: (params: any) => void;
   //上下文菜单
-  getContextMenuItems?: (params: any) => void
+  getContextMenuItems?: (params: any) => void;
   //是否在鼠标悬浮时显示错误原因
   showErrorTooltip?: boolean;
+  // 滚动加载配置
+  scrollLoad?: ScrollLoadPanelProps;
 }
 
 export type CustomProps<T> = ProtoExtends<typeof defaultProps, Props<T>>;

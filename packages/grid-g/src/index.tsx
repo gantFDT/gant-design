@@ -50,6 +50,8 @@ import {
   usePagination,
   sizeDefinitions,
 } from './utils';
+import OperationBar from './operationbar';
+import ScrollLoadPanel from './scrollloadpanel';
 export { default as GantGroupCellRenderer } from './GantGroupCellRenderer';
 export { default as c } from './GantPromiseCellRender';
 export * from './interface';
@@ -216,6 +218,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     onCellContextMenu,
     suppressContextMenu,
     showErrorTooltip,
+    scrollLoad,
     ...orignProps
   } = props;
 
@@ -301,6 +304,8 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     if (autoHeight) {
       return '100%';
     }
+
+    return '100%';
     return computedPagination
       ? `calc(100% - ${get(sizeDefinitions, `paginationHeight.${size}`)}px - ${
           gantThemeClass === 'gant-grid-theme' ? 'var(--space,10px) - 2px' : '0px'
@@ -791,7 +796,13 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     contextMenuListDom,
     contextMenuVisible,
     onVisibleChange,
-  } = useContextMenu(apiRef, getContextMenuItems, onCellContextMenu, hideMenuItemExport, suppressContextMenu);
+  } = useContextMenu(
+    apiRef,
+    getContextMenuItems,
+    onCellContextMenu,
+    hideMenuItemExport,
+    suppressContextMenu,
+  );
 
   return (
     <Receiver
@@ -863,7 +874,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                       ref={wrapperRef}
                       {...gridForcedProps}
                     >
-                      {!hideBox && (
+                      {/* {!hideBox && (
                         <SelectedGrid
                           apiRef={apiRef}
                           onChange={onBoxSelectionChanged}
@@ -874,7 +885,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                           selectedBoxWidth={selectedBoxWidth}
                           locale={locale}
                         />
-                      )}
+                      )} */}
 
                       <AgGridReact
                         frameworkComponents={{
@@ -989,13 +1000,47 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                       />
                     )}
                   </div>
-                  {computedPagination && (
-                    <GantPagination
-                      numberGoToMode={numberGoToMode}
-                      size={size}
-                      {...computedPagination}
-                    />
-                  )}
+                  <OperationBar
+                    ready={ready}
+                    apiRef={apiRef}
+                    selectedRows={boxSelectedRows}
+                    disabled={hideBox && !computedPagination && !scrollLoad}
+                    show={scrollLoad?.hasError}
+                    left={
+                      <>
+                        {computedPagination && (
+                          <GantPagination
+                            numberGoToMode={numberGoToMode}
+                            size={size}
+                            {...computedPagination}
+                          />
+                        )}
+                        {scrollLoad && (
+                          <ScrollLoadPanel
+                            gridApiRef={apiRef}
+                            size="default"
+                            scrollLoad={scrollLoad}
+                          />
+                        )}
+                      </>
+                    }
+                    right={
+                      <>
+                        {!hideBox && (
+                          <SelectedGrid
+                            apiRef={apiRef}
+                            onChange={onBoxSelectionChanged}
+                            getRowNodeId={getRowNodeId}
+                            columnDefs={selectedColumns as any}
+                            rowData={boxSelectedRows}
+                            selectedBoxHeight={selectedBoxHeight}
+                            selectedBoxWidth={selectedBoxWidth}
+                            locale={locale}
+                          />
+                        )}
+                      </>
+                    }
+                  ></OperationBar>
                 </div>
               </GridContext.Provider>
             </Spin>

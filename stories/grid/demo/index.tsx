@@ -1,6 +1,12 @@
 import { createElement, lazy } from 'react';
 
 export default [
+  {
+    title: '滚动加载示例',
+    describe: `另一个分页加载的模式`,
+    cmp: createElement(lazy(() => import('./pulldownload'))),
+    code: require('./pulldownload/code').default,
+  },
   // {
   //   title: '基础展示',
   //   describe: '单击行快捷选中,多选时需点击勾选框',

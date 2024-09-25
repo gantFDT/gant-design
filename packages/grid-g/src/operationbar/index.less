@@ -1,0 +1,37 @@
+.operation {
+  border-top: none !important;
+  z-index: 2;
+
+  &-float:before {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 3px;
+    width: 100%;
+    content: '';
+    z-index: 2;
+    box-shadow: 0px -3px 3px 0px rgba(0, 0, 0, 0.15);
+    pointer-events: none;
+  }
+
+  &-border {
+    border-top: 1px solid var(--ag-border-color, #bdc3c7);
+  }
+
+  &-hide {
+    display: none;
+  }
+
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  height: 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--ag-background-color, white);
+}
+
+.left-wrapper {
+  flex: 1;
+}

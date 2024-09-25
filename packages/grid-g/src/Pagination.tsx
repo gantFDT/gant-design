@@ -53,11 +53,13 @@ export default memo(function GantPagination(props: GantPaginationProps) {
     return total < countLimit;
   }, [total, countLimit]);
 
-  const showSwitch = useMemo(()=>{
-    if(mode!=='limit' ) return false
-    return (innerMode==='limit' && !disableLimit) // 模糊模式下，接口totalCount小于countLimit
-    || (innerMode==='default')  // 在外部开启模糊模式下，手动切换到精确模式
-  },[innerMode, disableLimit, mode])
+  const showSwitch = useMemo(() => {
+    if (mode !== 'limit') return false;
+    return (
+      (innerMode === 'limit' && !disableLimit) || // 模糊模式下，接口totalCount小于countLimit
+      innerMode === 'default'
+    ); // 在外部开启模糊模式下，手动切换到精确模式
+  }, [innerMode, disableLimit, mode]);
 
   useEffect(() => {
     const pageSize = PropPageSize ? PropPageSize : defaultPageSize;
@@ -132,7 +134,7 @@ export default memo(function GantPagination(props: GantPaginationProps) {
   }, []);
 
   return (
-    <div className="gantd-grid-footer">
+    <div /* className="gantd-grid-footer" */>
       <div
         style={{
           display: 'flex',
@@ -174,7 +176,7 @@ export default memo(function GantPagination(props: GantPaginationProps) {
         )}
         {addonAfter && <div>{addonAfter}</div>}
       </div>
-      {showSwitch&& (
+      {showSwitch && (
         <Receiver>
           {locale => (
             <>
@@ -195,7 +197,15 @@ export default memo(function GantPagination(props: GantPaginationProps) {
 });
 
 function PaginationTotal(props: any) {
-  const { total: propsTotal, range, limit, tooltipTotal, size ,countLimit,countLimitStyle} = props;
+  const {
+    total: propsTotal,
+    range,
+    limit,
+    tooltipTotal,
+    size,
+    countLimit,
+    countLimitStyle,
+  } = props;
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState(0);
   const onHover = useCallback(async () => {
@@ -220,12 +230,12 @@ function PaginationTotal(props: any) {
             <>
               {`第${range[0]} - ${range[1]}条，`}
               <Tooltip
-                title={locale.outOfLimit+countLimit+'条'}
+                title={locale.outOfLimit + countLimit + '条'}
                 onVisibleChange={visible => {
                   visible && onHover();
                 }}
               >
-                <span style={{cursor:'pointer', ...countLimitStyle,}}>{`${propsTotal}+ `}</span>
+                <span style={{ cursor: 'pointer', ...countLimitStyle }}>{`${propsTotal}+ `}</span>
               </Tooltip>
             </>
           ) : (
