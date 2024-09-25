@@ -599,6 +599,9 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
     this.onSelect = this.onSelect.bind(this);
     this.onSearch = this.onSearch.bind(this);
   }
+  
+  // 保存组件内部使用的选择器实例
+  ref = { current: null };
 
   componentDidMount() {
     const { onApiRef, updateStorage, cleanStorage, forceUpdateStorageList } = this.props;
@@ -704,11 +707,18 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
   };
 
   onFocus = () => {
-    if (!this.props.selectRef) return;
+    const selectInstance = this.ref.current as any;
+
+    // 手动调用 focus 事件 (以前是通过 defaultOpen 自动打开下拉框但不能聚焦，优化后defaultOpen仍必须传递才能实现聚焦)
+    if (this.props.autoFocus) {
+      selectInstance?.rcSelect?.inputRef?.focus?.();
+    }
+
+    if (!selectInstance) return;
     const { readOnly, isMultiple, setFilter } = this.props;
     const {
       rcSelect: { getInputDOMNode, getInputElement },
-    } = this.props.selectRef as any;
+    } = selectInstance;
     const input = getInputDOMNode() || getInputElement();
     if (input) {
       if (readOnly && isMultiple) {
@@ -752,7 +762,10 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
         dropdownMatchSelectWidth={false}
         {...props}
         onFocus={onFocus}
-        ref={setSelectRef}
+        ref={(instance) => {
+          this.ref.current = instance;
+          setSelectRef(instance);
+        }}
         className={classnames('gant-selector', className, !wrap && 'gant-selector-no-wrap')}
         onSearch={onSearch}
         onSelect={onSelect}
