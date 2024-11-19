@@ -304,8 +304,9 @@ export default class GridManage {
   }
   dataSourceChanged(dataSource: any[] = []) {
     if (!Array.isArray(dataSource) || !this.agGridApi) return;
+    const cloneDataSource = cloneDeep(dataSource);
     this.reset({
-      dataSource: dataSource,
+      dataSource: cloneDataSource,
     });
     this.agGridApi.setRowData([]);
     this.agGridApi.setRowData(dataSource);

@@ -157,7 +157,7 @@ export default WrapperComponent =>
             setTimeout(() => {
               handleCellEditChange(newValue, nodeData);
             }, 1);
-            return nodeValue;
+            return newValue;
           },
           // isCancelAfterEnd:()=>false
         };
