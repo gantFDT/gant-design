@@ -614,6 +614,10 @@ var BasicSelector = /*#__PURE__*/function (_PureComponent) {
     var _this;
     (0, _classCallCheck2.default)(this, BasicSelector);
     _this = _callSuper(this, BasicSelector, [props]);
+    // 保存组件内部使用的选择器实例
+    _this.ref = {
+      current: null
+    };
     _this.onSearch = (0, _lodash.debounce)(function (value) {
       var _this$props = _this.props,
         onSearch = _this$props.onSearch,
@@ -708,14 +712,20 @@ var BasicSelector = /*#__PURE__*/function (_PureComponent) {
       onDropdownVisibleChange(open);
     };
     _this.onFocus = function () {
-      if (!_this.props.selectRef) return;
+      var _a, _b, _c;
+      var selectInstance = _this.ref.current;
+      // 手动调用 focus 事件 (以前是通过 defaultOpen 自动打开下拉框但不能聚焦，优化后defaultOpen仍必须传递才能实现聚焦)
+      if (_this.props.autoFocus) {
+        (_c = (_b = (_a = selectInstance === null || selectInstance === void 0 ? void 0 : selectInstance.rcSelect) === null || _a === void 0 ? void 0 : _a.inputRef) === null || _b === void 0 ? void 0 : _b.focus) === null || _c === void 0 ? void 0 : _c.call(_b);
+      }
+      if (!selectInstance) return;
       var _this$props5 = _this.props,
         readOnly = _this$props5.readOnly,
         isMultiple = _this$props5.isMultiple,
         setFilter = _this$props5.setFilter;
-      var _this$props$selectRef = _this.props.selectRef.rcSelect,
-        getInputDOMNode = _this$props$selectRef.getInputDOMNode,
-        getInputElement = _this$props$selectRef.getInputElement;
+      var _selectInstance$rcSel = selectInstance.rcSelect,
+        getInputDOMNode = _selectInstance$rcSel.getInputDOMNode,
+        getInputElement = _selectInstance$rcSel.getInputElement;
       var input = getInputDOMNode() || getInputElement();
       if (input) {
         if (readOnly && isMultiple) {
@@ -760,7 +770,10 @@ var BasicSelector = /*#__PURE__*/function (_PureComponent) {
         dropdownMatchSelectWidth: false
       }, props, {
         onFocus: onFocus,
-        ref: setSelectRef,
+        ref: function ref(instance) {
+          _this.ref.current = instance;
+          setSelectRef(instance);
+        },
         className: (0, _classnames.default)('gant-selector', className, !wrap && 'gant-selector-no-wrap'),
         onSearch: onSearch,
         onSelect: onSelect,

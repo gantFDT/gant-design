@@ -483,8 +483,9 @@ var GridManage = /*#__PURE__*/function () {
     value: function dataSourceChanged() {
       var dataSource = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
       if (!Array.isArray(dataSource) || !this.agGridApi) return;
+      var cloneDataSource = (0, _lodash.cloneDeep)(dataSource);
       this.reset({
-        dataSource: dataSource
+        dataSource: cloneDataSource
       });
       this.agGridApi.setRowData([]);
       this.agGridApi.setRowData(dataSource);
