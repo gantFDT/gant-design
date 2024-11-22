@@ -923,10 +923,10 @@ var GridManage = /*#__PURE__*/function () {
   }, {
     key: "cancel",
     value: function cancel() {
-      var dataSource = this.agGridConfig.dataSource;
-      this.agGridApi.setRowData(dataSource);
+      var cloneDataSource = (0, _lodash.cloneDeep)(this.agGridConfig.dataSource);
+      this.agGridApi.setRowData(cloneDataSource);
       this.reset(this.agGridConfig);
-      this.afterCancel && this.afterCancel(this.agGridConfig.dataSource);
+      this.afterCancel && this.afterCancel(cloneDataSource);
     }
   }, {
     key: "save",
