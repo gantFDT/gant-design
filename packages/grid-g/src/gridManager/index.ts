@@ -663,10 +663,10 @@ export default class GridManage {
   }
 
   cancel() {
-    const { dataSource } = this.agGridConfig;
-    this.agGridApi.setRowData(dataSource);
+    const cloneDataSource = cloneDeep(this.agGridConfig.dataSource);
+    this.agGridApi.setRowData(cloneDataSource);
     this.reset(this.agGridConfig);
-    this.afterCancel && this.afterCancel(this.agGridConfig.dataSource);
+    this.afterCancel && this.afterCancel(cloneDataSource);
   }
   async save(cb?) {
     let cansave = null;
