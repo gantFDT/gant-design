@@ -677,7 +677,7 @@ export default class GridManage {
     }
     const data = Array.isArray(cansave) ? cansave : this.getPureData();
     this.agGridApi.setRowData(data);
-    this.reset({ dataSource: data });
+    this.reset({ dataSource: cloneDeep(data) });
   }
   //
   private changeDiff() {
