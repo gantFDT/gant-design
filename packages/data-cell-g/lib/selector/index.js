@@ -758,17 +758,20 @@ var BasicSelector = /*#__PURE__*/function (_PureComponent) {
         className = _a.className,
         wrap = _a.wrap,
         children = _a.children,
-        props = __rest(_a, ["multiple", "readOnly", "renderList", "loading", "style", "wrapperRef", "addonAfter", "setSelectRef", "dropdownClassName", "className", "wrap", "children"]);
+        value = _a.value,
+        props = __rest(_a, ["multiple", "readOnly", "renderList", "loading", "style", "wrapperRef", "addonAfter", "setSelectRef", "dropdownClassName", "className", "wrap", "children", "value"]);
       if (readOnly) {
         props.open = false;
         props.showSearch = false;
       }
       if (multiple) props.mode = 'multiple';
+      var labelValue = loading ? undefined : value;
       var select = /*#__PURE__*/_react.default.createElement(_select.default, Object.assign({
         showArrow: true,
         loading: loading,
         dropdownMatchSelectWidth: false
       }, props, {
+        value: labelValue,
         onFocus: onFocus,
         ref: function ref(instance) {
           _this.ref.current = instance;
