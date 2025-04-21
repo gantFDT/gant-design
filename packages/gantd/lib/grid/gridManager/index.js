@@ -957,7 +957,7 @@ var GridManage = /*#__PURE__*/function () {
               data = Array.isArray(cansave) ? cansave : this.getPureData();
               this.agGridApi.setRowData(data);
               this.reset({
-                dataSource: data
+                dataSource: (0, _lodash.cloneDeep)(data)
               });
             case 11:
             case "end":

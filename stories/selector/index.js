@@ -161,14 +161,14 @@ const Demo2 = () => {
     [],
   );
   const [value, setValue] = useState(1);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   return (
     <>
       <Button onClick={() => setLoading(!loading)}>setLoading</Button>
       {`${loading}`}
       <Selector
-        selectorId="tasks"
+        // selectorId="tasks"
         edit={EditStatus.EDIT}
         dataSource={dataSource}
         value={value}

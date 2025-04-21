@@ -164,7 +164,7 @@ const withSelector = compose(
   defaultProps(defaultprop),
   withState('label', 'setLabel', null), // 读模式下的显示文本
   withState('cacheLabel', 'setCacheLabel', ({ optionLabel }) => optionLabel), // 当前选项的文本, 在点确认的时候才更新
-  withState('_loading', 'setLoading', ({ loading }) => loading),
+  withState('_loading', 'setLoading', null),
   withState('filter', 'setFilter', ''),
   withState('selectRef', 'setSelectRef', null), // select组件
   withState('dataList', 'setDataList', ({ dataSource }) => dataSource),

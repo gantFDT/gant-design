@@ -123,35 +123,32 @@ var withSelector = (0, _recompose.compose)((0, _recompose.defaultProps)(defaultp
   return optionLabel;
 }),
 // 当前选项的文本, 在点确认的时候才更新
-(0, _recompose.withState)('_loading', 'setLoading', function (_ref5) {
-  var loading = _ref5.loading;
-  return loading;
-}), (0, _recompose.withState)('filter', 'setFilter', ''), (0, _recompose.withState)('selectRef', 'setSelectRef', null),
+(0, _recompose.withState)('_loading', 'setLoading', null), (0, _recompose.withState)('filter', 'setFilter', ''), (0, _recompose.withState)('selectRef', 'setSelectRef', null),
 // select组件
-(0, _recompose.withState)('dataList', 'setDataList', function (_ref6) {
-  var dataSource = _ref6.dataSource;
+(0, _recompose.withState)('dataList', 'setDataList', function (_ref5) {
+  var dataSource = _ref5.dataSource;
   return dataSource;
 }),
 // 监听搜索
-(0, _recompose.withPropsOnChange)(['filter'], function (_ref7) {
-  var filter = _ref7.filter,
-    selectorId = _ref7.selectorId;
+(0, _recompose.withPropsOnChange)(['filter'], function (_ref6) {
+  var filter = _ref6.filter,
+    selectorId = _ref6.selectorId;
   return {
     taskId: "".concat(selectorId, ":").concat(escape(filter).replace(/\%u/g, ''))
   };
 }),
 // // 监听loading
-(0, _recompose.withPropsOnChange)(['loading', '_loading'], function (_ref8) {
-  var _loading = _ref8._loading,
-    loading = _ref8.loading;
+(0, _recompose.withPropsOnChange)(['loading', '_loading'], function (_ref7) {
+  var _loading = _ref7._loading,
+    loading = _ref7.loading;
   return {
     loading: _loading || loading
   };
 }), (0, _recompose.withHandlers)({
   //将最近选择的项的key转化为真实的key
-  storageToReal: function storageToReal(_ref9) {
-    var selectorId = _ref9.selectorId,
-      reg = _ref9.reg;
+  storageToReal: function storageToReal(_ref8) {
+    var selectorId = _ref8.selectorId,
+      reg = _ref8.reg;
     return function (value) {
       if (typeof value !== 'string') return value;
       var newValue = value;
@@ -167,40 +164,40 @@ var withSelector = (0, _recompose.compose)((0, _recompose.defaultProps)(defaultp
     };
   }
 }), (0, _recompose.withHandlers)({
-  getValue: function getValue(_ref10) {
-    var valueProp = _ref10.valueProp;
+  getValue: function getValue(_ref9) {
+    var valueProp = _ref9.valueProp;
     return function (data) {
       return valueProp && (0, _lodash.isPlainObject)(data) ? data[valueProp] : data;
     };
   },
-  getLabel: function getLabel(_ref11) {
-    var storageToReal = _ref11.storageToReal,
-      valueProp = _ref11.valueProp,
-      labelProp = _ref11.labelProp;
+  getLabel: function getLabel(_ref10) {
+    var storageToReal = _ref10.storageToReal,
+      valueProp = _ref10.valueProp,
+      labelProp = _ref10.labelProp;
     return function (data) {
       if (labelProp && (0, _lodash.isPlainObject)(data)) return valueProp == labelProp ? storageToReal(data[labelProp]) : data[labelProp];
       return data;
     };
   },
-  setLabel: function setLabel(_ref12) {
-    var originSetLabel = _ref12.setLabel,
-      _ref12$splitStr = _ref12.splitStr,
-      splitStr = _ref12$splitStr === void 0 ? '、' : _ref12$splitStr;
+  setLabel: function setLabel(_ref11) {
+    var originSetLabel = _ref11.setLabel,
+      _ref11$splitStr = _ref11.splitStr,
+      splitStr = _ref11$splitStr === void 0 ? '、' : _ref11$splitStr;
     return function (labels) {
       return originSetLabel(Array.isArray(labels) ? labels.filter(Boolean).join(splitStr) : labels);
     };
   }
 }), (0, _recompose.withHandlers)({
   // 从dataList或者storageList中找到数据
-  getItemLabel: function getItemLabel(_ref13) {
-    var dataList = _ref13.dataList,
-      storageList = _ref13.storageList,
-      selectorId = _ref13.selectorId,
-      getValue = _ref13.getValue,
-      storageToReal = _ref13.storageToReal,
-      getLabel = _ref13.getLabel,
-      optionLabel = _ref13.optionLabel,
-      useStorage = _ref13.useStorage;
+  getItemLabel: function getItemLabel(_ref12) {
+    var dataList = _ref12.dataList,
+      storageList = _ref12.storageList,
+      selectorId = _ref12.selectorId,
+      getValue = _ref12.getValue,
+      storageToReal = _ref12.storageToReal,
+      getLabel = _ref12.getLabel,
+      optionLabel = _ref12.optionLabel,
+      useStorage = _ref12.useStorage;
     return function (value, index) {
       var list = (0, _lodash.concat)(dataList, storageList);
       // 启用缓存的情况下执行判断
@@ -212,19 +209,19 @@ var withSelector = (0, _recompose.compose)((0, _recompose.defaultProps)(defaultp
       return optionLabelArray[index];
     };
   }
-}), (0, _recompose.withPropsOnChange)(['multiple', 'mode'], function (_ref14) {
-  var multiple = _ref14.multiple,
-    mode = _ref14.mode;
+}), (0, _recompose.withPropsOnChange)(['multiple', 'mode'], function (_ref13) {
+  var multiple = _ref13.multiple,
+    mode = _ref13.mode;
   return {
     isMultiple: multiple || mode === 'multiple' || mode === 'tags'
   };
-}), (0, _recompose.withPropsOnChange)(['value'], function (_ref15) {
-  var dataList = _ref15.dataList,
-    storageList = _ref15.storageList,
-    value = _ref15.value,
-    getValue = _ref15.getValue,
-    selectorId = _ref15.selectorId,
-    isMultiple = _ref15.isMultiple;
+}), (0, _recompose.withPropsOnChange)(['value'], function (_ref14) {
+  var dataList = _ref14.dataList,
+    storageList = _ref14.storageList,
+    value = _ref14.value,
+    getValue = _ref14.getValue,
+    selectorId = _ref14.selectorId,
+    isMultiple = _ref14.isMultiple;
   if ((0, _lodash.isNil)(value)) {
     return {
       value: undefined
@@ -237,16 +234,16 @@ var withSelector = (0, _recompose.compose)((0, _recompose.defaultProps)(defaultp
   };
 }), (0, _recompose.withHandlers)({
   // 依赖转化后的value
-  transformDataToList: function transformDataToList(_ref16) {
-    var getLabel = _ref16.getLabel,
-      getValue = _ref16.getValue,
-      renderItem = _ref16.renderItem,
-      optionLabelProp = _ref16.optionLabelProp,
-      hideSelected = _ref16.hideSelected,
-      isMultiple = _ref16.isMultiple,
-      comValue = _ref16.value,
-      selectorId = _ref16.selectorId,
-      customLabel = _ref16.customLabel;
+  transformDataToList: function transformDataToList(_ref15) {
+    var getLabel = _ref15.getLabel,
+      getValue = _ref15.getValue,
+      renderItem = _ref15.renderItem,
+      optionLabelProp = _ref15.optionLabelProp,
+      hideSelected = _ref15.hideSelected,
+      isMultiple = _ref15.isMultiple,
+      comValue = _ref15.value,
+      selectorId = _ref15.selectorId,
+      customLabel = _ref15.customLabel;
     return function (list) {
       var isStorage = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
       return list.map(function (item) {
@@ -305,11 +302,11 @@ var withSelector = (0, _recompose.compose)((0, _recompose.defaultProps)(defaultp
       });
     };
   },
-  setLabelWithValue: function setLabelWithValue(_ref18) {
-    var value = _ref18.value,
-      setLabel = _ref18.setLabel,
-      setCacheLabel = _ref18.setCacheLabel,
-      getItemLabel = _ref18.getItemLabel;
+  setLabelWithValue: function setLabelWithValue(_ref17) {
+    var value = _ref17.value,
+      setLabel = _ref17.setLabel,
+      setCacheLabel = _ref17.setCacheLabel,
+      getItemLabel = _ref17.getItemLabel;
     return function () {
       if ((0, _lodash.isNil)(value)) {
         setLabel(null);
@@ -332,15 +329,15 @@ var withSelector = (0, _recompose.compose)((0, _recompose.defaultProps)(defaultp
     };
   }
 }), (0, _recompose.withHandlers)({
-  updateStorage: function updateStorage(_ref19) {
-    var selectorId = _ref19.selectorId,
-      selectorStorageId = _ref19.selectorStorageId,
-      storageList = _ref19.storageList,
-      getValue = _ref19.getValue,
-      valueProp = _ref19.valueProp,
-      setStorageList = _ref19.setStorageList,
-      useStorage = _ref19.useStorage,
-      historyLength = _ref19.historyLength;
+  updateStorage: function updateStorage(_ref18) {
+    var selectorId = _ref18.selectorId,
+      selectorStorageId = _ref18.selectorStorageId,
+      storageList = _ref18.storageList,
+      getValue = _ref18.getValue,
+      valueProp = _ref18.valueProp,
+      setStorageList = _ref18.setStorageList,
+      useStorage = _ref18.useStorage,
+      historyLength = _ref18.historyLength;
     return function (data, update) {
       if (!useStorage) return; // 不启用缓存
       var copyList = (0, _lodash.cloneDeep)(storageList);
@@ -377,23 +374,23 @@ var withSelector = (0, _recompose.compose)((0, _recompose.defaultProps)(defaultp
       localStorage.setItem(selectorStorageId, JSON.stringify(copyList)); // 更新缓存
     };
   },
-  cleanStorage: function cleanStorage(_ref20) {
-    var selectorStorageId = _ref20.selectorStorageId,
-      setStorageList = _ref20.setStorageList;
+  cleanStorage: function cleanStorage(_ref19) {
+    var selectorStorageId = _ref19.selectorStorageId,
+      setStorageList = _ref19.setStorageList;
     return function () {
       setStorageList([]); // 更新list
       localStorage.setItem(selectorStorageId, JSON.stringify([])); // 更新缓存
     };
   },
-  getData: function getData(_ref21) {
-    var taskId = _ref21.taskId,
-      useCache = _ref21.useCache,
-      loading = _ref21.loading,
-      setLoading = _ref21.setLoading,
-      query = _ref21.query,
-      afterQuery = _ref21.afterQuery,
-      filter = _ref21.filter,
-      setDataList = _ref21.setDataList;
+  getData: function getData(_ref20) {
+    var taskId = _ref20.taskId,
+      useCache = _ref20.useCache,
+      loading = _ref20.loading,
+      setLoading = _ref20.setLoading,
+      query = _ref20.query,
+      afterQuery = _ref20.afterQuery,
+      filter = _ref20.filter,
+      setDataList = _ref20.setDataList;
     return function () {
       if (!query) return;
       var task = null;
@@ -425,20 +422,20 @@ var withSelector = (0, _recompose.compose)((0, _recompose.defaultProps)(defaultp
 }),
 // 更新选项列表
 //#region
-(0, _recompose.withPropsOnChange)(['dataList', 'filter', 'storageList', 'loading'], function (_ref22) {
-  var dataList = _ref22.dataList,
-    filter = _ref22.filter,
-    storageList = _ref22.storageList,
-    cleanStorage = _ref22.cleanStorage,
-    transformDataToList = _ref22.transformDataToList,
-    loading = _ref22.loading,
-    useStorage = _ref22.useStorage,
-    query = _ref22.query,
-    labelProp = _ref22.labelProp,
-    getLabel = _ref22.getLabel,
-    isFilter = _ref22.isFilter,
-    getValue = _ref22.getValue,
-    customNotDataContent = _ref22.customNotDataContent;
+(0, _recompose.withPropsOnChange)(['dataList', 'filter', 'storageList', 'loading'], function (_ref21) {
+  var dataList = _ref21.dataList,
+    filter = _ref21.filter,
+    storageList = _ref21.storageList,
+    cleanStorage = _ref21.cleanStorage,
+    transformDataToList = _ref21.transformDataToList,
+    loading = _ref21.loading,
+    useStorage = _ref21.useStorage,
+    query = _ref21.query,
+    labelProp = _ref21.labelProp,
+    getLabel = _ref21.getLabel,
+    isFilter = _ref21.isFilter,
+    getValue = _ref21.getValue,
+    customNotDataContent = _ref21.customNotDataContent;
   var result = dataList;
   var toFilter = !query && filter && isFilter;
   if (toFilter) {
@@ -478,10 +475,10 @@ var withSelector = (0, _recompose.compose)((0, _recompose.defaultProps)(defaultp
       list = transformDataToList(result);
     } else {
       var group = (0, _lodash.groupBy)(result, 'group');
-      list = Object.entries(group).reduce(function (result, _ref23) {
-        var _ref24 = (0, _slicedToArray2.default)(_ref23, 2),
-          key = _ref24[0],
-          data = _ref24[1];
+      list = Object.entries(group).reduce(function (result, _ref22) {
+        var _ref23 = (0, _slicedToArray2.default)(_ref22, 2),
+          key = _ref23[0],
+          data = _ref23[1];
         if (key !== 'undefined') {
           result.push( /*#__PURE__*/_react.default.createElement(_select.default.OptGroup, {
             key: key,
@@ -543,13 +540,13 @@ var withSelector = (0, _recompose.compose)((0, _recompose.defaultProps)(defaultp
   }
 }),
 //#endregion
-(0, _recompose.withPropsOnChange)(['query'], function (_ref25) {
-  var getData = _ref25.getData;
+(0, _recompose.withPropsOnChange)(['query'], function (_ref24) {
+  var getData = _ref24.getData;
   return getData();
 }),
 // 下列属性变化的时候重新根据value值设置label
-(0, _recompose.withPropsOnChange)(['value', 'optionLabel', 'dataList'], function (_ref26) {
-  var setLabelWithValue = _ref26.setLabelWithValue;
+(0, _recompose.withPropsOnChange)(['value', 'optionLabel', 'dataList'], function (_ref25) {
+  var setLabelWithValue = _ref25.setLabelWithValue;
   return setLabelWithValue();
 }),
 // 监听label
@@ -559,9 +556,9 @@ var withSelector = (0, _recompose.compose)((0, _recompose.defaultProps)(defaultp
 //   }
 // }),
 // 去支持只传递dataSource，并且希望更新dataSource的情况
-(0, _recompose.withPropsOnChange)(['dataSource'], function (_ref27) {
-  var dataSource = _ref27.dataSource,
-    setDataList = _ref27.setDataList;
+(0, _recompose.withPropsOnChange)(['dataSource'], function (_ref26) {
+  var dataSource = _ref26.dataSource,
+    setDataList = _ref26.setDataList;
   return setDataList(dataSource);
 }), (0, _recompose.mapProps)(function (_a) {
   var dataSource = _a.dataSource,
@@ -571,11 +568,11 @@ var withSelector = (0, _recompose.compose)((0, _recompose.defaultProps)(defaultp
 }));
 var withChange = (0, _recompose.withPropsOnChange)(
 // 外部value到内部value对象形式的转换
-['value', 'cacheLabel'], function (_ref28) {
-  var value = _ref28.value,
-    optionLabel = _ref28.optionLabel,
-    cacheLabel = _ref28.cacheLabel,
-    isMultiple = _ref28.isMultiple;
+['value', 'cacheLabel'], function (_ref27) {
+  var value = _ref27.value,
+    optionLabel = _ref27.optionLabel,
+    cacheLabel = _ref27.cacheLabel,
+    isMultiple = _ref27.isMultiple;
   // 这里的value是外部传进来的value,约定是一个基础类型的值
   if ((0, _lodash.isNil)(value)) return {
     value: undefined
@@ -662,9 +659,9 @@ var BasicSelector = /*#__PURE__*/function (_PureComponent) {
         if (Array.isArray(value)) {
           var keyMap = new Map();
           var ItemMap = new Map();
-          value.forEach(function (_ref29) {
-            var key = _ref29.key,
-              label = _ref29.label;
+          value.forEach(function (_ref28) {
+            var key = _ref28.key,
+              label = _ref28.label;
             var realKey = storageToReal(key);
             if (!keyMap.has(realKey)) {
               keyMap.set(realKey, label);
@@ -843,8 +840,8 @@ var BasicSelector = /*#__PURE__*/function (_PureComponent) {
     }
   }]);
 }(_react.PureComponent);
-var SelectorComponent = (0, _recompose.compose)(_recompose.toClass, withLocalStorage, withSelector, (0, _withEdit.default)(function (_ref30) {
-  var label = _ref30.label;
+var SelectorComponent = (0, _recompose.compose)(_recompose.toClass, withLocalStorage, withSelector, (0, _withEdit.default)(function (_ref29) {
+  var label = _ref29.label;
   return label;
 }, 'gant-selector-dropdown'), withChange)(BasicSelector);
 var Selector = exports.default = /*#__PURE__*/function (_Component) {
