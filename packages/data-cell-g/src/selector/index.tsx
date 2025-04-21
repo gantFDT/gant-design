@@ -599,7 +599,7 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
     this.onSelect = this.onSelect.bind(this);
     this.onSearch = this.onSearch.bind(this);
   }
-  
+
   // 保存组件内部使用的选择器实例
   ref = { current: null };
 
@@ -746,6 +746,7 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
       className,
       wrap,
       children,
+      value,
       ...props
     } = this.props;
     if (readOnly) {
@@ -755,14 +756,17 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
 
     if (multiple) props.mode = 'multiple';
 
+    const labelValue = loading ? undefined : value;
+
     const select = (
       <Select
         showArrow
         loading={loading}
         dropdownMatchSelectWidth={false}
         {...props}
+        value={labelValue}
         onFocus={onFocus}
-        ref={(instance) => {
+        ref={instance => {
           this.ref.current = instance;
           setSelectRef(instance);
         }}
