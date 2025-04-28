@@ -1,6 +1,7 @@
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _typeof = require("@babel/runtime/helpers/typeof");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -52,10 +53,34 @@ Object.defineProperty(exports, "Exception", {
     return _exception.default;
   }
 });
+Object.defineProperty(exports, "Fields", {
+  enumerable: true,
+  get: function get() {
+    return _schemaForm.Fields;
+  }
+});
+Object.defineProperty(exports, "Fixed", {
+  enumerable: true,
+  get: function get() {
+    return _grid.Fixed;
+  }
+});
 Object.defineProperty(exports, "Grid", {
   enumerable: true,
   get: function get() {
     return _grid.default;
+  }
+});
+Object.defineProperty(exports, "GridContext", {
+  enumerable: true,
+  get: function get() {
+    return _grid.GridContext;
+  }
+});
+Object.defineProperty(exports, "GridManager", {
+  enumerable: true,
+  get: function get() {
+    return _grid.GridManager;
   }
 });
 Object.defineProperty(exports, "Header", {
@@ -214,6 +239,30 @@ Object.defineProperty(exports, "VisibleMenu", {
     return _visibleMenu.default;
   }
 });
+Object.defineProperty(exports, "getFields", {
+  enumerable: true,
+  get: function get() {
+    return _schemaForm.getFields;
+  }
+});
+Object.defineProperty(exports, "setFields", {
+  enumerable: true,
+  get: function get() {
+    return _schemaForm.setFields;
+  }
+});
+Object.defineProperty(exports, "setGlobalConfig", {
+  enumerable: true,
+  get: function get() {
+    return _header.setGlobalConfig;
+  }
+});
+Object.defineProperty(exports, "setGridConfig", {
+  enumerable: true,
+  get: function get() {
+    return _grid.setGridConfig;
+  }
+});
 Object.defineProperty(exports, "withEdit", {
   enumerable: true,
   get: function get() {
@@ -245,11 +294,11 @@ var _selector = _interopRequireDefault(require("./selector"));
 var _switchStatus = _interopRequireDefault(require("./switch-status"));
 var _withEdit = _interopRequireDefault(require("./with-edit"));
 var _vSelector = _interopRequireDefault(require("./v-selector"));
-var _grid = _interopRequireDefault(require("./grid"));
-var _header = _interopRequireDefault(require("./header"));
+var _grid = _interopRequireWildcard(require("./grid"));
+var _header = _interopRequireWildcard(require("./header"));
 var _keyevent = _interopRequireDefault(require("./keyevent"));
 var _modal = _interopRequireDefault(require("./modal"));
-var _schemaForm = _interopRequireDefault(require("./schema-form"));
+var _schemaForm = _interopRequireWildcard(require("./schema-form"));
 var _smartGrid = _interopRequireDefault(require("./smart-grid"));
 var _smartTable = _interopRequireDefault(require("./smart-table"));
 var _submenu = _interopRequireDefault(require("./submenu"));
@@ -263,6 +312,8 @@ var _profileCard = _interopRequireDefault(require("./profile-card"));
 var _taskBoard = _interopRequireDefault(require("./task-board"));
 var _toolbar = _interopRequireDefault(require("./toolbar"));
 var _visibleMenu = _interopRequireDefault(require("./visible-menu"));
+function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(e) { return e ? t : r; })(e); }
+function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != _typeof(e) && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
 var ENV = process.env.NODE_ENV;
 if (ENV !== 'production' && ENV !== 'test' && typeof console !== 'undefined' && console.warn && typeof window !== 'undefined') {
   console.warn('You are using a whole package of gantd, ' + 'please use https://www.npmjs.com/package/babel-plugin-import to reduce app bundle size.');

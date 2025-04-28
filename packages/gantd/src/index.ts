@@ -37,12 +37,28 @@ export {
 } from '@data-cell';
 
 //grid
-export { default as Grid } from '@grid';
-export { default as Header } from '@header';
+export {
+  default as Grid,
+  GridContext,
+  setGridConfig,
+  Fixed,
+  GridApi,
+  GridManager,
+  Columns,
+  OnReady,
+} from '@grid';
+export { default as Header, setGlobalConfig } from '@header';
 export { default as withKeyevent } from '@keyevent';
 export { default as Modal } from '@modal';
 //表单
-export { default as SchemaForm } from '@schema-form';
+export {
+  default as SchemaForm,
+  Fields,
+  setFields,
+  getFields,
+  UISchema,
+  Schema,
+} from '@schema-form';
 export { default as SmartGrid } from '@smart-grid';
 export { default as SmartTable } from '@smart-table';
 export { default as Submenu } from '@submenu';

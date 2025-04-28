@@ -17,11 +17,11 @@ export { default as Selector } from './selector'
 export { default as SwitchStatus } from './switch-status'
 export { default as withEdit } from './with-edit'
 export { default as VSelector } from './v-selector';
-export { default as Grid } from './grid';
-export { default as Header } from './header';
+export { default as Grid, GridContext, setGridConfig, Fixed, GridApi, GridManager, Columns, OnReady, } from './grid';
+export { default as Header, setGlobalConfig } from './header';
 export { default as withKeyevent } from './keyevent';
 export { default as Modal } from './modal';
-export { default as SchemaForm } from './schema-form';
+export { default as SchemaForm, Fields, setFields, getFields, UISchema, Schema, } from './schema-form';
 export { default as SmartGrid } from './smart-grid';
 export { default as SmartTable } from './smart-table';
 export { default as Submenu } from './submenu';
