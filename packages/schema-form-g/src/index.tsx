@@ -146,7 +146,16 @@ class SchemaForm extends React.Component<Props, { schemaCount: number }> {
       hideTitle,
       formKey,
       frameworkComponents,
-    } = this.props;
+      style,
+      resetDependenciesChange,
+      onSchemaChange,
+      onChange,
+      wrappedComponentRef,
+      onRef,
+      ref,
+      onSizeChange,
+      ...restProps
+    } = this.props as Props;
     if (isEmpty(schema)) {
       return null;
     }
@@ -172,9 +181,10 @@ class SchemaForm extends React.Component<Props, { schemaCount: number }> {
         <ReactResizeDetector handleWidth handleHeight onResize={this.onResize}>
           <div
             className={classnames(className)}
-            style={{ backgroundColor }}
+            style={{ ...style, backgroundColor }}
             ref="formNodeRef"
             data-refid={formKey}
+            {...restProps}
           >
             <_SchemaForm
               schema={schema}

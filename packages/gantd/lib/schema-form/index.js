@@ -73,6 +73,14 @@ var __decorate = void 0 && (void 0).__decorate || function (decorators, target, 
   if ((typeof Reflect === "undefined" ? "undefined" : (0, _typeof2.default)(Reflect)) === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
   return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __rest = void 0 && (void 0).__rest || function (s, e) {
+  var t = {};
+  for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+  if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
+  }
+  return t;
+};
 var FormContext = exports.FormContext = /*#__PURE__*/_react.default.createContext({});
 var SchemaForm = /*#__PURE__*/function (_React$Component) {
   function SchemaForm(props) {
@@ -190,26 +198,35 @@ var SchemaForm = /*#__PURE__*/function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this$props3 = this.props,
-        schema = _this$props3.schema,
-        form = _this$props3.form,
-        edit = _this$props3.edit,
-        allowEdit = _this$props3.allowEdit,
-        uiSchema = _this$props3.uiSchema,
-        titleConfig = _this$props3.titleConfig,
-        onSave = _this$props3.onSave,
-        data = _this$props3.data,
-        customFields = _this$props3.customFields,
-        backgroundColor = _this$props3.backgroundColor,
-        className = _this$props3.className,
-        _this$props3$withoutA = _this$props3.withoutAnimation,
-        withoutAnimation = _this$props3$withoutA === void 0 ? false : _this$props3$withoutA,
-        _this$props3$prefixCl = _this$props3.prefixCls,
-        customizePrefixCls = _this$props3$prefixCl === void 0 ? 'gant' : _this$props3$prefixCl,
-        size = _this$props3.size,
-        hideTitle = _this$props3.hideTitle,
-        formKey = _this$props3.formKey,
-        frameworkComponents = _this$props3.frameworkComponents;
+      var _a = this.props,
+        schema = _a.schema,
+        form = _a.form,
+        edit = _a.edit,
+        allowEdit = _a.allowEdit,
+        uiSchema = _a.uiSchema,
+        titleConfig = _a.titleConfig,
+        onSave = _a.onSave,
+        data = _a.data,
+        customFields = _a.customFields,
+        backgroundColor = _a.backgroundColor,
+        className = _a.className,
+        _a$withoutAnimation = _a.withoutAnimation,
+        withoutAnimation = _a$withoutAnimation === void 0 ? false : _a$withoutAnimation,
+        _a$prefixCls = _a.prefixCls,
+        customizePrefixCls = _a$prefixCls === void 0 ? 'gant' : _a$prefixCls,
+        size = _a.size,
+        hideTitle = _a.hideTitle,
+        formKey = _a.formKey,
+        frameworkComponents = _a.frameworkComponents,
+        style = _a.style,
+        resetDependenciesChange = _a.resetDependenciesChange,
+        onSchemaChange = _a.onSchemaChange,
+        onChange = _a.onChange,
+        wrappedComponentRef = _a.wrappedComponentRef,
+        onRef = _a.onRef,
+        ref = _a.ref,
+        onSizeChange = _a.onSizeChange,
+        restProps = __rest(_a, ["schema", "form", "edit", "allowEdit", "uiSchema", "titleConfig", "onSave", "data", "customFields", "backgroundColor", "className", "withoutAnimation", "prefixCls", "size", "hideTitle", "formKey", "frameworkComponents", "style", "resetDependenciesChange", "onSchemaChange", "onChange", "wrappedComponentRef", "onRef", "ref", "onSizeChange"]);
       if ((0, _lodash.isEmpty)(schema)) {
         return null;
       }
@@ -236,14 +253,14 @@ var SchemaForm = /*#__PURE__*/function (_React$Component) {
         handleWidth: true,
         handleHeight: true,
         onResize: this.onResize
-      }, /*#__PURE__*/_react.default.createElement("div", {
+      }, /*#__PURE__*/_react.default.createElement("div", Object.assign({
         className: (0, _classnames.default)(className),
-        style: {
+        style: Object.assign(Object.assign({}, style), {
           backgroundColor: backgroundColor
-        },
+        }),
         ref: "formNodeRef",
         "data-refid": formKey
-      }, /*#__PURE__*/_react.default.createElement(_SchemaForm2.default, {
+      }, restProps), /*#__PURE__*/_react.default.createElement(_SchemaForm2.default, {
         schema: schema,
         uiSchema: uiSchema,
         titleConfig: titleConfig,

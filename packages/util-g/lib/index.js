@@ -21,6 +21,7 @@ exports.getType = void 0;
 exports.hexToRgba = hexToRgba;
 exports.isParamsEmpty = void 0;
 exports.setCookie = setCookie;
+exports.splitPropsByPrefix = void 0;
 exports.tree2Array = tree2Array;
 var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
 var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
@@ -360,3 +361,27 @@ function hexToRgba(hex, opacity) {
   }).join();
   return "rgba(".concat(convertHex, ",").concat(opacity, ")");
 }
+/**
+ * 根据前缀拆分属性对象
+ * @param props - 原始属性对象，包含多个键值对
+ * @param prefix - 用于筛选属性的前缀，默认为'data-'
+ * @returns 返回包含两个对象的数组：[匹配前缀的属性对象, 剩余属性对象]
+ *
+ * @example
+ * const [dataProps, otherProps] = splitPropsByPrefix({ 'data-id': 1, name: 'test' });
+ * // dataProps => { 'data-id': 1 }
+ * // otherProps => { name: 'test' }
+ */
+var splitPropsByPrefix = exports.splitPropsByPrefix = function splitPropsByPrefix(props) {
+  var prefix = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'data-';
+  var matched = {};
+  var rest = {};
+  for (var key in props) {
+    if (key.startsWith(prefix)) {
+      matched[key] = props[key];
+    } else {
+      rest[key] = props[key];
+    }
+  }
+  return [matched, rest];
+};

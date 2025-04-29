@@ -101,6 +101,7 @@ var _GantContextMenu = require("./GantContextMenu");
 var _GantDateComponent = _interopRequireDefault(require("./GantDateComponent"));
 require("./style");
 var _utils = require("./utils");
+var _util = require("util-g");
 var _GantGroupCellRenderer = _interopRequireDefault(require("./GantGroupCellRenderer"));
 var _GantPromiseCellRender = _interopRequireDefault(require("./GantPromiseCellRender"));
 var _sidegriddetail = _interopRequireDefault(require("./sidegriddetail"));
@@ -162,7 +163,11 @@ var Grid = function Grid(gridProps) {
   var globalConfig = (0, _react.useMemo)(function () {
     return (0, _maps.getGridConfig)();
   }, []);
-  var props = Object.assign(Object.assign(Object.assign({}, defaultProps), (0, _lodash.omit)(globalConfig, ['pagination'])), gridProps);
+  var _splitPropsByPrefix = (0, _util.splitPropsByPrefix)(gridProps),
+    _splitPropsByPrefix2 = (0, _slicedToArray2.default)(_splitPropsByPrefix, 2),
+    dataProps = _splitPropsByPrefix2[0],
+    otherProps = _splitPropsByPrefix2[1];
+  var props = Object.assign(Object.assign(Object.assign({}, defaultProps), (0, _lodash.omit)(globalConfig, ['pagination'])), otherProps);
   var initDataSource = props.dataSource,
     onReady = props.onReady,
     columns = props.columns,
@@ -787,13 +792,13 @@ var Grid = function Grid(gridProps) {
           computedPagination: computedPagination,
           treeData: currentTreeData
         }, context)
-      }, /*#__PURE__*/_react.default.createElement("div", {
+      }, /*#__PURE__*/_react.default.createElement("div", Object.assign({
         style: {
           width: width,
           height: gridHeight
         },
         className: (0, _classnames.default)('gant-grid', gantThemeClass, editable && openEditSign && 'gant-grid-editable', controlCellWordWrap && "grid-control-break-line")
-      }, /*#__PURE__*/_react.default.createElement("div", {
+      }, dataProps), /*#__PURE__*/_react.default.createElement("div", {
         style: {
           display: 'flex',
           width: width,

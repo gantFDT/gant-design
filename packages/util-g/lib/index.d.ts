@@ -48,3 +48,15 @@ export declare function findDomParentNode(target: object, className: string): an
  */
 export declare const getPerformanceTiming: () => {};
 export declare function hexToRgba(hex: any, opacity: number): string;
+/**
+ * 根据前缀拆分属性对象
+ * @param props - 原始属性对象，包含多个键值对
+ * @param prefix - 用于筛选属性的前缀，默认为'data-'
+ * @returns 返回包含两个对象的数组：[匹配前缀的属性对象, 剩余属性对象]
+ *
+ * @example
+ * const [dataProps, otherProps] = splitPropsByPrefix({ 'data-id': 1, name: 'test' });
+ * // dataProps => { 'data-id': 1 }
+ * // otherProps => { name: 'test' }
+ */
+export declare const splitPropsByPrefix: (props: any, prefix?: string) => {}[];

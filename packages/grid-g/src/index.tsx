@@ -50,6 +50,7 @@ import {
   usePagination,
   sizeDefinitions,
 } from './utils';
+import { splitPropsByPrefix } from '@util';
 export { default as GantGroupCellRenderer } from './GantGroupCellRenderer';
 export { default as c } from './GantPromiseCellRender';
 export * from './interface';
@@ -107,8 +108,8 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
   const globalConfig: any = useMemo(() => {
     return getGridConfig();
   }, []);
-
-  const props = { ...defaultProps, ...omit(globalConfig, ['pagination']), ...gridProps };
+  const [dataProps, otherProps] = splitPropsByPrefix(gridProps);
+  const props = { ...defaultProps, ...omit(globalConfig, ['pagination']), ...otherProps };
 
   const {
     dataSource: initDataSource,
@@ -844,6 +845,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
                     editable && openEditSign && 'gant-grid-editable',
                     controlCellWordWrap && `grid-control-break-line`,
                   )}
+                  {...dataProps}
                 >
                   <div
                     style={{

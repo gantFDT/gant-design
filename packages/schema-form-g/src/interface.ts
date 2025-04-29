@@ -1,4 +1,4 @@
-import { ReactElement, ReactHTML, ComponentProps } from 'react';
+import { ReactElement, ReactHTML, ComponentProps, CSSProperties } from 'react';
 import { EditStatus } from '@data-cell';
 import { Gutter } from 'antd/lib/grid/row';
 import { ColProps } from 'antd/lib/grid/col';
@@ -70,6 +70,7 @@ export interface OptionalProps {
   wrappedComponentRef?: any;
   onRef?: any;
   className?: any;
+  style?: CSSProperties;
   ref?: any | ReactElement | ReactHTML | HTMLDivElement;
   size?: 'small' | 'defalut' | 'large';
   onSizeChange?: (size: { height: number; width: number }) => void;
