@@ -330,7 +330,8 @@ var mapColumns = exports.mapColumns = function mapColumns(columns, getRowNodeId,
           }
         }, cellClassRules),
         cellRenderer: render ? 'gantRenderCol' : undefined,
-        headerClass: headerClass
+        headerClass: headerClass,
+        minWidth: typeof headerName === 'string' ? headerName.length * 16 + 50 : 100
       }, item), {
         hide: (0, _lodash.has)(item, 'hide') ? item.hide : hide
       });

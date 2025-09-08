@@ -244,7 +244,7 @@ var Grid = function Grid(gridProps) {
     hideMenuItemExpand = props.hideMenuItemExpand,
     hiddenMenuItemNames = props.hiddenMenuItemNames,
     _props$showMenuItemCl = props.showMenuItemClearFilter,
-    showMenuItemClearFilter = _props$showMenuItemCl === void 0 ? false : _props$showMenuItemCl,
+    showMenuItemClearFilter = _props$showMenuItemCl === void 0 ? true : _props$showMenuItemCl,
     onMenuItemClearFilter = props.onMenuItemClearFilter,
     _props$excelStyles = props.excelStyles,
     excelStyles = _props$excelStyles === void 0 ? [] : _props$excelStyles,
@@ -749,7 +749,7 @@ var Grid = function Grid(gridProps) {
     suppressManagerPaste: suppressManagerPaste,
     suppressCreateWhenPaste: suppressCreateWhenPaste
   });
-  var _useContextMenu = (0, _GantContextMenu.useContextMenu)(apiRef, getContextMenuItems, onCellContextMenu, hideMenuItemExport, suppressContextMenu),
+  var _useContextMenu = (0, _GantContextMenu.useContextMenu)(wrapperRef, apiRef, getContextMenuItems, onCellContextMenu, hideMenuItemExport, suppressContextMenu, computedPagination, onMenuItemClearFilter, showMenuItemClearFilter),
     getCellContextMenu = _useContextMenu.getCellContextMenu,
     contextMenuListDom = _useContextMenu.contextMenuListDom,
     contextMenuVisible = _useContextMenu.contextMenuVisible,

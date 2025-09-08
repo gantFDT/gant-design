@@ -182,7 +182,7 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     hideMenuItemExport,
     hideMenuItemExpand,
     hiddenMenuItemNames,
-    showMenuItemClearFilter = false,
+    showMenuItemClearFilter = true,
     onMenuItemClearFilter,
     excelStyles = [],
     suppressRightClickSelected,
@@ -792,13 +792,24 @@ const Grid = function Grid<T extends any>(gridProps: GridProps<T>) {
     contextMenuListDom,
     contextMenuVisible,
     onVisibleChange,
-  } = useContextMenu(apiRef, getContextMenuItems, onCellContextMenu, hideMenuItemExport, suppressContextMenu);
+  } = useContextMenu(
+    wrapperRef,
+    apiRef,
+    getContextMenuItems,
+    onCellContextMenu,
+    hideMenuItemExport,
+    suppressContextMenu,
+    computedPagination,
+    onMenuItemClearFilter,
+    showMenuItemClearFilter,
+  );
 
   return (
     <Receiver
       children={defaultLocale => {
         const locale = { ...defaultLocale, ...customLocale };
         const contextMenuItems = function(params: GetContextMenuItemsParams) {
+       
           return gantGetcontextMenuItems(params, {
             downShift: shiftRef.current,
             onRowsCut,

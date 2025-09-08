@@ -245,6 +245,7 @@ export default {
   selectedData: '已选中数据',
   clear: '清除',
   outOfLimit: '当前总数超过',
-  exportDataAsExcel: '全部导出',
-  exportSelectedDataAsExcel: '选中导出'
+  exportCurrentPageDataAsExcel: '导出当前页',
+  exportDataAsExcel: '导出全部',
+  exportSelectedDataAsExcel: '导出选中',
 };

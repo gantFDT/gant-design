@@ -41,7 +41,6 @@ export const gantGetcontextMenuItems = function(
     onMenuItemClearFilter,
     exportParams,
     onContextExportCallback,
-    
   } = config;
   const {
     context: {
@@ -52,6 +51,7 @@ export const gantGetcontextMenuItems = function(
       gridManager,
       showCut,
       suppressExcelExport,
+      computedPagination,
     },
     node,
     api,
@@ -183,11 +183,13 @@ export const gantGetcontextMenuItems = function(
     }
   }
 
+  const hasPagination = computedPagination && computedPagination.total > 0;
+
   //  导出相关
   const exportMenus: any[] = [];
   if (!hideMenuItemExport && !suppressExcelExport) {
     const exportMenuItem = {
-      name: locale.export,
+      name: hasPagination ? locale.exportCurrentPageDataAsExcel : locale.export,
       icon: '<span class="ag-icon ag-icon-save" unselectable="on" role="presentation"></span>',
       action: () => {
         const columnsState = columnApi.getColumnState();

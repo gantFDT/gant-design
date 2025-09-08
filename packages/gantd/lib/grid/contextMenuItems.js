@@ -34,6 +34,7 @@ var gantGetcontextMenuItems = exports.gantGetcontextMenuItems = function gantGet
     gridManager = _params$context.gridManager,
     showCut = _params$context.showCut,
     suppressExcelExport = _params$context.suppressExcelExport,
+    computedPagination = _params$context.computedPagination,
     node = params.node,
     api = params.api,
     columnApi = params.columnApi;
@@ -148,11 +149,12 @@ var gantGetcontextMenuItems = exports.gantGetcontextMenuItems = function gantGet
       defultMenu.push.apply(defultMenu, cutMenu);
     }
   }
+  var hasPagination = computedPagination && computedPagination.total > 0;
   //  导出相关
   var exportMenus = [];
   if (!hideMenuItemExport && !suppressExcelExport) {
     var exportMenuItem = {
-      name: locale.export,
+      name: hasPagination ? locale.exportCurrentPageDataAsExcel : locale.export,
       icon: '<span class="ag-icon ag-icon-save" unselectable="on" role="presentation"></span>',
       action: function action() {
         var columnsState = columnApi.getColumnState();
