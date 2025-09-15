@@ -315,7 +315,6 @@ export const mapColumns = <T>(
           },
           cellRenderer: render ? 'gantRenderCol' : undefined,
           headerClass,
-          minWidth: typeof headerName === 'string' ? headerName.length * 16 + 50 : 100,
           ...item,
           hide: has(item, 'hide') ? item.hide : hide,
         } as Col;

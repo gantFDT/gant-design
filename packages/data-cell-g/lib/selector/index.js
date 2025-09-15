@@ -819,7 +819,9 @@ var BasicSelector = /*#__PURE__*/function (_PureComponent) {
         query = _this$props7.query,
         filter = _this$props7.filter,
         setFilter = _this$props7.setFilter,
-        blurOnSelect = _this$props7.blurOnSelect;
+        blurOnSelect = _this$props7.blurOnSelect,
+        _this$props7$autoClea = _this$props7.autoClearSearchValue,
+        autoClearSearchValue = _this$props7$autoClea === void 0 ? true : _this$props7$autoClea;
       onSelect(select.key, option);
       if (blurOnSelect && !isMultiple) {
         // 单选的情况下、选中失焦
@@ -829,7 +831,7 @@ var BasicSelector = /*#__PURE__*/function (_PureComponent) {
       }
       // 配合在不是通过query获取数据的情况下的过滤行为，
       // 选中的时候要去掉过滤条件
-      if (!query && filter) {
+      if (!query && filter && autoClearSearchValue) {
         setFilter('');
       }
     }

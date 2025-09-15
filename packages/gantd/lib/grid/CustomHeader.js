@@ -84,15 +84,14 @@ var _default = exports.default = function _default(props) {
     setSort(order, event.shiftKey);
   };
   (0, _react.useEffect)(function () {
+    onSortChanged();
+    filterChanged();
     api.addEventListener('sortChanged', onSortChanged);
     column.addEventListener('filterChanged', filterChanged);
     return function () {
       api.removeEventListener('sortChanged', onSortChanged);
       column.removeEventListener('filterChanged', filterChanged);
     };
-  }, []);
-  (0, _react.useEffect)(function () {
-    onSortChanged();
   }, []);
   var menu = null;
   if (enableMenu) {

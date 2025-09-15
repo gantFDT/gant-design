@@ -54,16 +54,14 @@ export default props => {
   };
 
   useEffect(() => {
+    onSortChanged();
+    filterChanged();
     api.addEventListener('sortChanged', onSortChanged);
     column.addEventListener('filterChanged', filterChanged);
     return () => {
       api.removeEventListener('sortChanged', onSortChanged);
       column.removeEventListener('filterChanged', filterChanged);
     };
-  }, []);
-
-  useEffect(() => {
-    onSortChanged();
   }, []);
 
   let menu = null;

@@ -678,7 +678,16 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
   };
 
   onSelect(select, option) {
-    const { onSelect, selectRef, isMultiple, query, filter, setFilter, blurOnSelect } = this.props;
+    const {
+      onSelect,
+      selectRef,
+      isMultiple,
+      query,
+      filter,
+      setFilter,
+      blurOnSelect,
+      autoClearSearchValue = true,
+    } = this.props;
 
     onSelect(select.key, option);
     if (blurOnSelect && !isMultiple) {
@@ -690,7 +699,7 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
 
     // 配合在不是通过query获取数据的情况下的过滤行为，
     // 选中的时候要去掉过滤条件
-    if (!query && filter) {
+    if (!query && filter && autoClearSearchValue) {
       setFilter('');
     }
   }
