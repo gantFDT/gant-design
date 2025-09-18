@@ -280,7 +280,7 @@ const Demo6 = () => {
   const [list] = useState([
     {
       value: 'INITIAL_CREATE',
-      label: '初始创建',
+      label: '初始创建V',
     },
     {
       value: 'EARLY_CONTROL',
@@ -330,7 +330,7 @@ const Demo6 = () => {
   const [value, setValue] = useState();
 
   return (
-    <Selector
+    <VSelector
       multiple
       edit={EditStatus.EDIT}
       selectorId="multiple"

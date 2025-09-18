@@ -741,7 +741,9 @@ var BasicSelector = /*#__PURE__*/function (_PureComponent) {
         filter = _this$props7.filter,
         setFilter = _this$props7.setFilter,
         blurOnSelect = _this$props7.blurOnSelect,
-        storageToReal = _this$props7.storageToReal;
+        storageToReal = _this$props7.storageToReal,
+        _this$props7$autoClea = _this$props7.autoClearSearchValue,
+        autoClearSearchValue = _this$props7$autoClea === void 0 ? true : _this$props7$autoClea;
       var key = storageToReal(select.key); // 获取真实的key值
       var originItem = dataList.find(function (item) {
         return getValue(item) === key;
@@ -765,7 +767,8 @@ var BasicSelector = /*#__PURE__*/function (_PureComponent) {
       }
       // 配合在不是通过query获取数据的情况下的过滤行为，
       // 选中的时候要去掉过滤条件
-      if (!query && filter) {
+      // 选中的时候要去掉过滤条件
+      if (!query && filter && autoClearSearchValue) {
         setFilter('');
       }
     }

@@ -126,7 +126,7 @@ type SelectorInnerProps<T, R> = ProtoExtends<
     forceUpdateStorageList(): void;
     reg: RegExp;
     addonAfter: React.ReactElement;
-    
+
     renderList: React.ReactElement[];
 
     storageToReal: <T>(v: T) => T;
@@ -628,6 +628,7 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
       setFilter,
       blurOnSelect,
       storageToReal,
+      autoClearSearchValue = true,
     } = this.props;
 
     const key = storageToReal(select.key); // 获取真实的key值
@@ -652,7 +653,8 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
 
     // 配合在不是通过query获取数据的情况下的过滤行为，
     // 选中的时候要去掉过滤条件
-    if (!query && filter) {
+    // 选中的时候要去掉过滤条件
+    if (!query && filter && autoClearSearchValue) {
       setFilter('');
     }
   }
@@ -671,7 +673,7 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
   onFocus = () => {
     const { readOnly, isMultiple, selectRef = {}, setFilter } = this.props;
     const { rcSelect } = selectRef as any;
-    if(!rcSelect) return;
+    if (!rcSelect) return;
     const { getInputDOMNode, getInputElement } = rcSelect;
     const getInput = getInputDOMNode || getInputElement;
     const input = getInput?.();
@@ -703,7 +705,7 @@ class BasicSelector<T, R> extends PureComponent<SelectorInnerProps<T, R>> {
       children,
       ...props
     } = this.props;
-    
+
     if (readOnly) {
       props.open = false;
       props.showSearch = false;
