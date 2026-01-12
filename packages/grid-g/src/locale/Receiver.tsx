@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
+import { getGridConfig } from '../maps';
 import en from './en-US';
 import zh from './zh-CN';
 import de from './de-DE';
@@ -7,7 +8,6 @@ import fr from './fr-FR';
 import ja from './ja-JP';
 import ru from './ru-RU';
 import it from './it-IT';
-
 
 //参考antd的locale文件的定义规范
 const langs = {
@@ -29,10 +29,14 @@ export interface Props {
 }
 
 export default (props: Props) => {
+  const { locale: _locale }: any = useMemo(() => getGridConfig(), []);
   return (
     <LocaleReceiver>
       {(local, localeCode = 'zh-cn') => {
         let locale = langs[localeCode] || langs['zh-cn'];
+        if (_locale) {
+          locale = { ...locale, ..._locale };
+        }
         return <>{props.children(locale)}</>;
       }}
     </LocaleReceiver>

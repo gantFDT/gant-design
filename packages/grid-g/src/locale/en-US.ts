@@ -241,4 +241,5 @@ export default {
   exportSelected: 'export selected',
   selectedData: 'selected Data',
   clear: 'clear',
+  exportCurrentPageDataAsExcel: 'export current page data as excel',
 };
