@@ -202,5 +202,6 @@ declare const _default: {
     exportSelected: string;
     selectedData: string;
     clear: string;
+    exportCurrentPageDataAsExcel: string;
 };
 export default _default;

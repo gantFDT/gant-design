@@ -224,5 +224,6 @@ var _default = exports.default = {
   importJson: 'import json',
   exportSelected: 'export selected',
   selectedData: 'selected Data',
-  clear: 'clear'
+  clear: 'clear',
+  exportCurrentPageDataAsExcel: 'export current page data as excel'
 };
